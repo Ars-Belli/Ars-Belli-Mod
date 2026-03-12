@@ -10,7 +10,7 @@ Introduction What is this document for? The purpose of this document is to help 
 willing to help out with Mod development on the same page. I consider it important that before we
 start working on specific changes there should be an agreement on what we are trying to achieve with
 regards to gameplay to begin with. Why make the mod? The vast majority of players of each Paradox
-game are singleplayer only, meaning PDX rightly balances the game mainly with them in mind.
+game are multiplayer only, meaning PDX rightly balances the game mainly with them in mind.
 Furthermore, while the devs do play MP amongst themselves the level of experience they have is not
 comparable to the more hardcore part of the MP playerbase (in all likelihood this means you if you
 are reading this). TLDR: If we want MP balance we have to create it ourselves. Why make the mod now?
