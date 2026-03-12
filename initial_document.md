@@ -14,6 +14,7 @@ game are singleplayer only, meaning PDX rightly balances the game mainly with th
 Furthermore, while the devs do play MP amongst themselves the level of experience they have is not
 comparable to the more hardcore part of the MP playerbase (in all likelihood this means you if you
 are reading this). TLDR: If we want MP balance we have to create it ourselves. Why make the mod now?
+Why not?
 In the beginning the patch releases were too frequent to start working on the mod as keeping it
 updated would have been a lot of wasted effort when each patch potentially invalidates previous work
 done. Based on major bugs still present in the release candidate version of 1.1 it seems like the
