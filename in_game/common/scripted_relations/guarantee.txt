@@ -24,7 +24,7 @@
         scope:actor = {
             not = { has_blocked_treaties = scope:recipient }
             modifier:allowed_guarantee = yes
-            country_rank_level >= scope:recipient.country_rank_level
+            is_mp_normal = no # GP and Major can give guarantees
             has_limited_diplomacy = no
             not = { is_rival_of = scope:recipient }
             not = { is_subject_of = scope:recipient }
@@ -46,14 +46,14 @@
             not = { has_blocked_treaties = scope:recipient }
             has_limited_diplomacy = no
             not = { is_rival_of = scope:actor }
-            is_great_power  = no
+            is_mp_normal = yes # Only Normal can receive guarantees
         }
     }
 
 	request_enabled = {
         scope:actor = {
             not = { has_blocked_treaties = scope:recipient }
-            country_rank_level < scope:recipient.country_rank_level
+            is_mp_normal = yes # Only Normal can request/receive guarantees
             has_limited_diplomacy = no
             not = { is_rival_of = scope:recipient }
             not = {
@@ -62,12 +62,12 @@
                     country = scope:recipient
                 }
             }
-            is_great_power  = no
 			can_add_defensive_rule = yes
         }
         scope:recipient = {
             not = { has_blocked_treaties = scope:recipient }
             modifier:allowed_guarantee = yes
+            is_mp_normal = no # Only GP/Major can give
             has_limited_diplomacy = no
             not = { is_rival_of = scope:actor }
         }
@@ -82,7 +82,10 @@
                 modifier:allowed_guarantee = no
             }
             scope:actor = {
-                country_rank_level < scope:recipient.country_rank_level
+                is_mp_normal = yes
+            }
+            scope:recipient = {
+                is_mp_normal = no
             }
             scope:recipient = {
                 is_rival_of = scope:actor
