@@ -15,7 +15,7 @@ country_power_score = {
 	    # take into account expected_army_size_modifier because of age modifier
 		# value = expected_army_size
 		# divide = 10000
-		value = total_population
+		value = total_accepted_culture_population
 		divide = 1000
 	}
 	
@@ -27,14 +27,54 @@ country_power_score = {
 
 	# Manpower: 1 point per 50k max manpower
 	add = {
-		value = country_manpower_max
-		divide = 50000
+		value = max_manpower
+		divide = 25
 	}
 
 	# Army: 1 point per 20k troops
 	# Using country_total_army_levy_size as requested "regular army size"
 	add = {
-		value = country_total_army_levy_size
+		value = regular_army_size
+		divide = 20000
+	}
+}
+
+country_pop_score = {
+	value = 0
+
+	add = {
+		# take into account expected_army_size_modifier because of age modifier
+		# value = expected_army_size
+		# divide = 10000
+		value = total_accepted_culture_population
+		divide = 1000
+	}
+}
+
+country_eco_score = {
+	value = 0
+
+	add = {
+		value = country_tax_base
+		divide = 500
+	}
+}
+
+country_manpower_score = {
+	value = 0
+
+	add = {
+		# value =
+		value = max_manpower
+		divide = 25
+	}
+}
+
+country_military_score = {
+	value = 0
+
+	add = {
+		value = regular_army_size
 		divide = 20000
 	}
 }
