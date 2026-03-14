@@ -1,4 +1,18 @@
-﻿can_add_alliance_rule = {
+﻿is_mp_gp = {
+	has_variable = mp_is_gp
+}
+is_mp_major = {
+	has_variable = mp_is_major
+}
+is_mp_normal = {
+	OR = {
+		has_variable = mp_is_normal
+		not = { has_variable = mp_is_gp }
+		not = { has_variable = mp_is_major }
+	}
+}
+
+can_add_alliance_rule = {
 	custom_description = {
 		text = "MP_ALLIANCE_LIMIT_REACHED"
 		object = scope:recipient
@@ -8,7 +22,7 @@
 			AND = {
 				is_ai = no
 				scope:recipient = { is_ai = no }
-				total_player_alliance_weight <= 5
+				total_player_alliance_weight <= mp_alliance_points_limit
 			}
 		}
 	}
@@ -24,7 +38,7 @@ can_add_defensive_rule = {
 			AND = {
 				is_ai = no
 				scope:recipient = { is_ai = no }
-				total_player_defensive_weight <= 2
+				total_player_defensive_weight <= mp_defensive_points_limit
 			}
 		}
 	}

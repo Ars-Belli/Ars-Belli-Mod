@@ -86,18 +86,36 @@ country_slot_weight = {
 	}
 	else_if = {
 		limit = {
-			country_power_score > 10
+			has_variable = mp_is_gp
 		}
-		value = 3
+		value = 5
 	}
 	else_if = {
 		limit = {
-			country_power_score >= 2
+			has_variable = mp_is_major
 		}
+		value = 4
+	}
+	else = {
+		value = 3
+	}
+}
+
+mp_alliance_points_limit = {
+	value = 6
+}
+
+mp_defensive_points_limit = {
+	if = {
+		limit = { has_variable = mp_is_gp }
+		value = 1
+	}
+	else_if = {
+		limit = { has_variable = mp_is_major }
 		value = 2
 	}
 	else = {
-		value = 1
+		value = 3
 	}
 }
 
