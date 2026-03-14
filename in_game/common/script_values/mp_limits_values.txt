@@ -176,6 +176,20 @@ total_player_defensive_pact_weight = {
 	# 	}
 	# 	add = country_slot_weight
 	# }
+
+	# Defensive League members
+	every_country = {
+		limit = {
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:defensive_league
+				any_international_organization_member = {
+					this = root
+				}
+			}
+			not = { this = root }
+		}
+		add = country_slot_weight
+	}
 }
 
 total_player_guarantee_weight = {
