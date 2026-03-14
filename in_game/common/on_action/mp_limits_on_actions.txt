@@ -1,4 +1,10 @@
 ﻿monthly_country_pulse = {
+	on_actions = {
+		mp_limits_monthly_pulse
+	}
+}
+
+mp_limits_monthly_pulse = {
 	effect = {
 		set_variable = {
 			name = mp_pop_score
@@ -20,6 +26,11 @@
 			name = mp_power_score
 			value = country_power_score
 		}
+
+		# set_variable = { # Debug
+		# 	name = mp_debug_total_pop
+		# 	value = total_population
+		# }
 
 		if = {
 			# limit = { is_ai = no }
@@ -92,6 +103,41 @@
 			}
 			else_if = {
 				limit = {
+					OR = {
+						AND = {
+							current_age = age_1_traditions
+							total_population < 500
+						}
+						AND = {
+							current_age = age_2_renaissance
+							total_population < 600
+						}
+						AND = {
+							current_age = age_3_discovery
+							total_population < 700
+						}
+						AND = {
+							current_age = age_4_reformation
+							total_population < 800
+						}
+						AND = {
+							current_age = age_5_absolutism
+							total_population < 900
+						}
+						AND = {
+							current_age = age_6_revolutions
+							total_population < 1000
+						}
+					}
+				}
+				remove_variable = mp_is_gp
+				remove_variable = mp_is_major
+				remove_variable = mp_is_small
+				set_variable = { name = mp_is_minor value = yes }
+				remove_variable = mp_is_normal
+			}
+			else_if = {
+				limit = {
 					country_power_score < {
 						value = var:mp_avg_player_score
 						multiply = 0.5
@@ -101,41 +147,6 @@
 				remove_variable = mp_is_major
 				set_variable = { name = mp_is_small value = yes }
 				remove_variable = mp_is_minor
-				remove_variable = mp_is_normal
-			}
-			else_if = {
-				limit = {
-					OR = {
-						AND = {
-							current_age = age:age_1_traditions
-							total_population < 500000
-						}
-						AND = {
-							current_age = age:age_2_renaissance
-							total_population < 600000
-						}
-						AND = {
-							current_age = age:age_3_discovery
-							total_population < 700000
-						}
-						AND = {
-							current_age = age:age_4_reformation
-							total_population < 800000
-						}
-						AND = {
-							current_age = age:age_5_absolutism
-							total_population < 900000
-						}
-						AND = {
-							current_age = age:age_6_revolutions
-							total_population < 1000000
-						}
-					}
-				}
-				remove_variable = mp_is_gp
-				remove_variable = mp_is_major
-				remove_variable = mp_is_small
-				set_variable = { name = mp_is_minor value = yes }
 				remove_variable = mp_is_normal
 			}
 			else = {
