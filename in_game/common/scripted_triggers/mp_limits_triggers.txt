@@ -1,0 +1,31 @@
+﻿can_add_alliance_rule = {
+	custom_description = {
+		text = "MP_ALLIANCE_LIMIT_REACHED"
+		object = scope:recipient
+		OR = {
+			is_ai = yes
+			scope:recipient = { is_ai = yes }
+			AND = {
+				is_ai = no
+				scope:recipient = { is_ai = no }
+				total_player_alliance_weight <= 5
+			}
+		}
+	}
+}
+
+can_add_defensive_rule = {
+	custom_description = {
+		text = "MP_DEFENSIVE_LIMIT_REACHED"
+		object = scope:recipient
+		OR = {
+			is_ai = yes
+			scope:recipient = { is_ai = yes }
+			AND = {
+				is_ai = no
+				scope:recipient = { is_ai = no }
+				total_player_defensive_weight <= 2
+			}
+		}
+	}
+}

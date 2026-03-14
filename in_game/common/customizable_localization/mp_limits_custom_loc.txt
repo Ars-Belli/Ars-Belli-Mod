@@ -1,0 +1,32 @@
+﻿mp_rank = {
+	type = country
+	text = {
+		localization_key = MP_RANK_AI
+		trigger = { is_ai = yes }
+	}
+	text = {
+		localization_key = MP_RANK_GREAT
+		trigger = {
+			is_ai = no
+			var:mp_power_score > 10
+		}
+	}
+	text = {
+		localization_key = MP_RANK_MAJOR
+		trigger = {
+			is_ai = no
+			var:mp_power_score <= 10
+			var:mp_power_score >= 2
+		}
+	}
+	text = {
+		localization_key = MP_RANK_MINOR
+		trigger = {
+			is_ai = no
+			OR = {
+				not = { has_variable = mp_power_score }
+				var:mp_power_score < 2
+			}
+		}
+	}
+}

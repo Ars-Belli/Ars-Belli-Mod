@@ -1,0 +1,116 @@
+﻿# Mapping:
+# Great Power (score > 10) = 3
+# Major (score 2-10) = 2
+# Minor (score < 2) = 1
+# AI weight = 0
+
+country_power_score = {
+	value = 0
+
+    # check sengoku_reevaluate_strongest_daimyos for relative power
+
+	# Population: 1 point per 1M pops (approx)
+	# Using total_population as accepted culture population specific property not found
+	add = {
+	    # take into account expected_army_size_modifier because of age modifier
+		# value = expected_army_size
+		# divide = 10000
+		value = total_population
+		divide = 1000
+	}
+	
+	# Economy: 1 point per 1000 tax base
+	add = {
+		value = country_tax_base
+		divide = 500
+	}
+
+	# Manpower: 1 point per 50k max manpower
+	add = {
+		value = country_manpower_max
+		divide = 50000
+	}
+
+	# Army: 1 point per 20k troops
+	# Using country_total_army_levy_size as requested "regular army size"
+	add = {
+		value = country_total_army_levy_size
+		divide = 20000
+	}
+}
+
+country_slot_weight = {
+	if = {
+		limit = { is_ai = yes }
+		value = 0
+	}
+	else_if = {
+		limit = {
+			country_power_score > 10
+		}
+		value = 3
+	}
+	else_if = {
+		limit = {
+			country_power_score >= 2
+		}
+		value = 2
+	}
+	else = {
+		value = 1
+	}
+}
+
+total_player_alliance_weight = {
+	value = 0
+	every_country = {
+		limit = {
+			has_diplomacy_with = {
+				type = alliance
+				country = root
+			}
+			is_ai = no
+		}
+		add = country_slot_weight
+	}
+	# Add the potential new ally's weight if this is called from a trigger checking a potential action
+	if = {
+		limit = {
+			exists = scope:recipient
+			not = {
+				has_diplomacy_with = {
+					type = alliance
+					country = scope:recipient
+				}
+			}
+		}
+		add = scope:recipient.country_slot_weight
+	}
+}
+
+total_player_defensive_weight = {
+	value = 0
+	every_country = {
+		limit = {
+			has_diplomacy_with = {
+				type = giving_defensive_support
+				country = root
+			}
+			is_ai = no
+		}
+		add = country_slot_weight
+	}
+	# Add the potential new defensive partner's weight
+	if = {
+		limit = {
+			exists = scope:recipient
+			not = {
+				has_diplomacy_with = {
+					type = giving_defensive_support
+					country = scope:recipient
+				}
+			}
+		}
+		add = scope:recipient.country_slot_weight
+	}
+}
