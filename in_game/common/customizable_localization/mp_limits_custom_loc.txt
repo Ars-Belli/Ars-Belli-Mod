@@ -8,25 +8,21 @@
 		localization_key = MP_RANK_GREAT
 		trigger = {
 			is_ai = no
-			var:mp_power_score > 10
+			is_mp_gp = yes
 		}
 	}
 	text = {
 		localization_key = MP_RANK_MAJOR
 		trigger = {
 			is_ai = no
-			var:mp_power_score <= 10
-			var:mp_power_score >= 2
+			is_mp_major = yes
 		}
 	}
 	text = {
 		localization_key = MP_RANK_MINOR
 		trigger = {
 			is_ai = no
-			OR = {
-				not = { has_variable = mp_power_score }
-				var:mp_power_score < 2
-			}
+			is_mp_normal = yes
 		}
 	}
 }

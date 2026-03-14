@@ -44,6 +44,17 @@
 	offer_enabled = {
         alliance_can_exist = yes
 		can_add_alliance_rule = yes
+		custom_description = {
+			text = "MP_GP_CANNOT_ALLY_GP"
+			subject = scope:actor
+			object = scope:recipient
+			NOT = {
+				AND = {
+					scope:actor = { is_mp_gp = yes }
+					scope:recipient = { is_mp_gp = yes }
+				}
+			}
+		}
 	}
 
 	request_visible = { always = no }
