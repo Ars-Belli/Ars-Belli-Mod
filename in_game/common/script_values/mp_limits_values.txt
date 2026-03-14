@@ -192,6 +192,16 @@ total_player_defensive_pact_weight = {
 	}
 }
 
+displayed_defensive_pact_weight = {
+	value = total_player_defensive_pact_weight
+	if = {
+		limit = {
+			total_player_defensive_pact_weight > mp_defensive_points_limit
+		}
+		value = mp_defensive_points_limit
+	}
+}
+
 total_player_guarantee_weight = {
 	value = 0
 	every_country = {
