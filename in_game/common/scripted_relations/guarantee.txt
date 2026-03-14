@@ -36,6 +36,7 @@
             }
             country_tax_base > scope:recipient.country_tax_base
             expected_army_size > scope:recipient.expected_army_size
+			can_add_defensive_rule = yes
         }
         scope:recipient = {
             opinion = {
@@ -62,6 +63,7 @@
                 }
             }
             is_great_power  = no
+			can_add_defensive_rule = yes
         }
         scope:recipient = {
             not = { has_blocked_treaties = scope:recipient }
@@ -73,20 +75,17 @@
 
     will_expire_trigger = {
         OR = {
-            scope:first = {
-                is_rival_of = scope:second
+            scope:actor = {
+                is_rival_of = scope:recipient
             }
-            scope:first = {
+            scope:actor = {
                 modifier:allowed_guarantee = no
             }
-            scope:first = {
-                country_rank_level < scope:second.country_rank_level
+            scope:actor = {
+                country_rank_level < scope:recipient.country_rank_level
             }
-            scope:second = {
-                is_rival_of = scope:first
-            }
-            scope:second = {
-                is_great_power = yes
+            scope:recipient = {
+                is_rival_of = scope:actor
             }
         }
     }
@@ -106,15 +105,15 @@
     expire_effect = {
         if = {
             limit = {
-                scope:first = {
-                    country_rank_level = scope:second.country_rank_level
+                scope:actor = {
+                    country_rank_level = scope:recipient.country_rank_level
                 }
             }
-            scope:first = {
+            scope:actor = {
                 #upgrade to an alliance
                 create_relation = {
-                    first = scope:first
-                    second = scope:second
+                    first = scope:actor
+                    second = scope:recipient
                     type = relation_type:alliance
                 }
             }
@@ -163,13 +162,6 @@
                     }
                 }
             }
-        }
-
-        add = {
-            desc = "COMMON_RIVALS"
-            value = "scope:recipient.num_of_common_rivals(scope:actor)"
-            max = 3
-            multiply = 5
         }
     }
 }	
