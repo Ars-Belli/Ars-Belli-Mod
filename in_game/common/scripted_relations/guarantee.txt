@@ -24,7 +24,10 @@
         scope:actor = {
             not = { has_blocked_treaties = scope:recipient }
             modifier:allowed_guarantee = yes
-            is_mp_normal = no # GP and Major can give guarantees
+            OR = {
+                is_mp_gp = yes
+                is_mp_major = yes
+            }
             has_limited_diplomacy = no
             not = { is_rival_of = scope:recipient }
             not = { is_subject_of = scope:recipient }
@@ -46,14 +49,22 @@
             not = { has_blocked_treaties = scope:recipient }
             has_limited_diplomacy = no
             not = { is_rival_of = scope:actor }
-            is_mp_normal = yes # Only Normal can receive guarantees
+            OR = {
+                is_mp_normal = yes
+                is_mp_small = yes
+                is_mp_minor = yes
+            }
         }
     }
 
 	request_enabled = {
         scope:actor = {
             not = { has_blocked_treaties = scope:recipient }
-            is_mp_normal = yes # Only Normal can request/receive guarantees
+            OR = {
+                is_mp_normal = yes
+                is_mp_small = yes
+                is_mp_minor = yes
+            }
             has_limited_diplomacy = no
             not = { is_rival_of = scope:recipient }
             not = {
@@ -67,7 +78,10 @@
         scope:recipient = {
             not = { has_blocked_treaties = scope:recipient }
             modifier:allowed_guarantee = yes
-            is_mp_normal = no # Only GP/Major can give
+            OR = {
+                is_mp_gp = yes
+                is_mp_major = yes
+            }
             has_limited_diplomacy = no
             not = { is_rival_of = scope:actor }
         }
@@ -82,10 +96,17 @@
                 modifier:allowed_guarantee = no
             }
             scope:actor = {
-                is_mp_normal = yes
+                OR = {
+                    is_mp_normal = yes
+                    is_mp_small = yes
+                    is_mp_minor = yes
+                }
             }
             scope:recipient = {
-                is_mp_normal = no
+                OR = {
+                    is_mp_gp = yes
+                    is_mp_major = yes
+                }
             }
             scope:recipient = {
                 is_rival_of = scope:actor

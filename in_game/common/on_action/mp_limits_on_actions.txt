@@ -27,17 +27,50 @@
 				name = mp_rank_count
 				value = 0
 			}
-			# Count how many players have a higher power score
+			set_variable = {
+				name = mp_total_player_score
+				value = 0
+			}
+			set_variable = {
+				name = mp_player_count
+				value = 0
+			}
+
+			# Count how many players have a higher power score and sum scores
 			every_country = {
 				limit = {
 					# is_ai = no
-					country_power_score > root.country_power_score
 				}
 				root = {
 					change_variable = {
-						name = mp_rank_count
+						name = mp_total_player_score
+						add = prev.country_power_score
+					}
+					change_variable = {
+						name = mp_player_count
 						add = 1
 					}
+					if = {
+						limit = {
+							prev.country_power_score > root.country_power_score
+						}
+						change_variable = {
+							name = mp_rank_count
+							add = 1
+						}
+					}
+				}
+			}
+
+			set_variable = {
+				name = mp_avg_player_score
+				value = var:mp_total_player_score
+			}
+			if = {
+				limit = { var:mp_player_count > 0 }
+				change_variable = {
+					name = mp_avg_player_score
+					divide = var:mp_player_count
 				}
 			}
 
@@ -45,17 +78,71 @@
 				limit = { var:mp_rank_count < 6 }
 				set_variable = { name = mp_is_gp value = yes }
 				remove_variable = mp_is_major
+				remove_variable = mp_is_small
+				remove_variable = mp_is_minor
 				remove_variable = mp_is_normal
 			}
 			else_if = {
 				limit = { var:mp_rank_count < 12 }
 				remove_variable = mp_is_gp
 				set_variable = { name = mp_is_major value = yes }
+				remove_variable = mp_is_small
+				remove_variable = mp_is_minor
+				remove_variable = mp_is_normal
+			}
+			else_if = {
+				limit = {
+					country_power_score < {
+						value = var:mp_avg_player_score
+						multiply = 0.5
+					}
+				}
+				remove_variable = mp_is_gp
+				remove_variable = mp_is_major
+				set_variable = { name = mp_is_small value = yes }
+				remove_variable = mp_is_minor
+				remove_variable = mp_is_normal
+			}
+			else_if = {
+				limit = {
+					OR = {
+						AND = {
+							current_age = age:age_1_traditions
+							total_population < 500000
+						}
+						AND = {
+							current_age = age:age_2_renaissance
+							total_population < 600000
+						}
+						AND = {
+							current_age = age:age_3_discovery
+							total_population < 700000
+						}
+						AND = {
+							current_age = age:age_4_reformation
+							total_population < 800000
+						}
+						AND = {
+							current_age = age:age_5_absolutism
+							total_population < 900000
+						}
+						AND = {
+							current_age = age:age_6_revolutions
+							total_population < 1000000
+						}
+					}
+				}
+				remove_variable = mp_is_gp
+				remove_variable = mp_is_major
+				remove_variable = mp_is_small
+				set_variable = { name = mp_is_minor value = yes }
 				remove_variable = mp_is_normal
 			}
 			else = {
 				remove_variable = mp_is_gp
 				remove_variable = mp_is_major
+				remove_variable = mp_is_small
+				remove_variable = mp_is_minor
 				set_variable = { name = mp_is_normal value = yes }
 			}
 		}
