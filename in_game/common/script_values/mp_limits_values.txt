@@ -106,19 +106,33 @@ mp_defensive_points_limit = {
 	}
 }
 
+mp_guarantee_points_limit = {
+	if = {
+		limit = { has_variable = mp_is_gp }
+		value = 1
+	}
+	else_if = {
+		limit = { has_variable = mp_is_major }
+		value = 2
+	}
+	else = {
+		value = 3
+	}
+}
+
 total_player_alliance_weight = {
 	value = 0
+	# Alliance weight
 	every_country = {
 		limit = {
 			has_mutual_scripted_relation = {
 				type = relation_type:alliance
 				target = root
 			}
-			# is_ai = no
 		}
 		add = country_slot_weight
 	}
-	# Add the potential new ally's weight if this is called from a trigger checking a potential action
+	# Potential alliance weight
 	if = {
 		limit = {
 			exists = scope:recipient
@@ -128,12 +142,43 @@ total_player_alliance_weight = {
 					target = scope:recipient
 				}
 			}
+			# Check if this is an alliance relation being checked
+			# We don't want to add potential weight if we are checking a defensive pact or guarantee
+			# In scripted_relations/alliance.txt, can_add_alliance_rule is called
 		}
 		add = scope:recipient.country_slot_weight
 	}
+
+	# Overflow from Defensive Pact weight
+	# AP = Alliance Weight + max(0, Defensive Pact Weight - DP Limit)
+	if = {
+		limit = {
+			total_player_defensive_pact_weight > mp_defensive_points_limit
+		}
+		add = {
+			value = total_player_defensive_pact_weight
+			subtract = mp_defensive_points_limit
+		}
+	}
 }
 
-total_player_defensive_weight = {
+total_player_defensive_pact_weight = {
+	value = 0
+	# Count any relation that should use defensive points
+	# For now, let's assume 'anti_coalition_treaty' or a custom one
+	# If 'defensive_pact' doesn't exist, this will stay 0
+	# every_country = {
+	# 	limit = {
+	# 		has_mutual_scripted_relation = {
+	# 			type = relation_type:defensive_pact
+	# 			target = root
+	# 		}
+	# 	}
+	# 	add = country_slot_weight
+	# }
+}
+
+total_player_guarantee_weight = {
 	value = 0
 	every_country = {
 		limit = {
@@ -141,11 +186,10 @@ total_player_defensive_weight = {
 				type = relation_type:guarantee
 				target = root
 			}
-			# is_ai = no
 		}
 		add = country_slot_weight
 	}
-	# Add the potential new defensive partner's weight
+	# Potential guarantee weight
 	if = {
 		limit = {
 			exists = scope:recipient
@@ -174,7 +218,18 @@ is_over_defensive_limit = {
 	value = 0
 	if = {
 		limit = {
-			total_player_defensive_weight > mp_defensive_points_limit
+			total_player_defensive_pact_weight > mp_defensive_points_limit
+			total_player_alliance_weight >= mp_alliance_points_limit
+		}
+		value = 1
+	}
+}
+
+is_over_guarantee_limit = {
+	value = 0
+	if = {
+		limit = {
+			total_player_guarantee_weight > mp_guarantee_points_limit
 		}
 		value = 1
 	}

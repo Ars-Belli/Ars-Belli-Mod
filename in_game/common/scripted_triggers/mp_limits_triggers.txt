@@ -33,13 +33,17 @@ can_add_defensive_rule = {
 		text = "MP_DEFENSIVE_LIMIT_REACHED"
 		object = scope:recipient
 		OR = {
-			# is_ai = yes
-			# scope:recipient = { is_ai = yes }
-			AND = {
-				# is_ai = no
-				# scope:recipient = { is_ai = no }
-				total_player_defensive_weight <= mp_defensive_points_limit
-			}
+			is_over_defensive_limit = 0
+		}
+	}
+}
+
+can_add_guarantee_rule = {
+	custom_description = {
+		text = "MP_GUARANTEE_LIMIT_REACHED"
+		object = scope:recipient
+		OR = {
+			is_over_guarantee_limit = 0
 		}
 	}
 }

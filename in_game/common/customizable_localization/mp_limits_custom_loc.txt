@@ -27,6 +27,13 @@
 	}
 }
 
+mp_rank_tooltip = {
+	type = country
+	text = {
+		localization_key = MP_RANK_TOOLTIP
+	}
+}
+
 alliance_points_display = {
 	type = country
 	text = {
@@ -45,10 +52,23 @@ defensive_points_display = {
 	text = {
 		localization_key = MP_DEFENSIVE_POINTS_RED
 		trigger = {
-			total_player_defensive_weight > mp_defensive_points_limit
+			is_over_defensive_limit = 1
 		}
 	}
 	text = {
 		localization_key = MP_DEFENSIVE_POINTS_NORMAL
+	}
+}
+
+guarantee_points_display = {
+	type = country
+	text = {
+		localization_key = MP_GUARANTEE_POINTS_RED
+		trigger = {
+			total_player_guarantee_weight > mp_guarantee_points_limit
+		}
+	}
+	text = {
+		localization_key = MP_GUARANTEE_POINTS_NORMAL
 	}
 }
