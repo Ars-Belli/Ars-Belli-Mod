@@ -46,14 +46,35 @@ types RightPanelTypes
 				}
 
 				flowcontainer = {
-					parentanchor = center
+					direction = vertical
 					spacing = 5
+					parentanchor = vcenter
+
+					tooltip = "ALLIANCE_LIMIT_TOPBAR_TOOLTIP"
+
+					text_single = {
+						text = "[GetPlayer.MakeScope.ScriptValue('total_player_alliance_weight')|0] / [GetPlayer.MakeScope.ScriptValue('mp_alliance_points_limit')|0]"
+						using = Font_Size_Small
+						align = center
+						autoresize = yes
+						default_format = "#high"
+					}
+					text_single = {
+						text = "[GetPlayer.MakeScope.ScriptValue('total_player_defensive_weight')|0] / [GetPlayer.MakeScope.ScriptValue('mp_defensive_points_limit')|0]"
+						using = Font_Size_Small
+						align = center
+						autoresize = yes
+						default_format = "#low"
+					}
+				}
+
+				flowcontainer = {
+					parentanchor = center
+					spacing = 30
 					datacontext = "[GetCurrentAge]"
 					alwaystransparent = no
 					filter_mouse = all
 					allow_outside = yes
-
-
 
 					text_single = {
 						allow_outside = yes
