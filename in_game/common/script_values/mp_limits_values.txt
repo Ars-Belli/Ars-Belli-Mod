@@ -83,6 +83,18 @@ country_slot_weight = {
 		}
 		value = 4
 	}
+	else_if = {
+		limit = {
+			has_variable = mp_is_small
+		}
+		value = 2
+	}
+	else_if = {
+		limit = {
+			has_variable = mp_is_minor
+		}
+		value = 1
+	}
 	else = {
 		value = 3
 	}
@@ -100,6 +112,14 @@ mp_defensive_points_limit = {
 	else_if = {
 		limit = { has_variable = mp_is_major }
 		value = 2
+	}
+	else_if = {
+		limit = { has_variable = mp_is_small }
+		value = 4
+	}
+	else_if = {
+		limit = { has_variable = mp_is_minor }
+		value = 5
 	}
 	else = {
 		value = 3
