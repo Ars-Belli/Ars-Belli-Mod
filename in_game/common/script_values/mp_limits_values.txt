@@ -95,13 +95,23 @@ country_slot_weight = {
 		}
 		value = var:mp_small_cost_rule
 	}
-	else = {
+	else_if = {
+		limit = {
+			has_variable = mp_is_normal
+		}
 		value = var:mp_normal_cost_rule
+	}
+	else = { # Fallback
+		value = 3
 	}
 }
 
 mp_alliance_points_limit = {
 	value = var:mp_alliance_limit_rule
+	if = {
+		limit = { not = { has_variable = mp_alliance_limit_rule } }
+		value = 6
+	}
 }
 
 mp_defensive_points_limit = {
@@ -125,6 +135,16 @@ mp_defensive_points_limit = {
 		value = var:mp_normal_def_limit_rule
 	}
 	add = var:mp_defensive_limit_rule_mod
+	if = {
+		limit = {
+			not = { has_variable = mp_is_gp }
+			not = { has_variable = mp_is_major }
+			not = { has_variable = mp_is_minor }
+			not = { has_variable = mp_is_small }
+			not = { has_variable = mp_normal_def_limit_rule }
+		}
+		value = 3
+	}
 }
 
 mp_guarantee_points_limit = {
@@ -143,7 +163,7 @@ mp_guarantee_points_limit = {
 
 total_player_alliance_weight = {
 	value = 0
-	# Alliance weight
+	# Current Alliance weight
 	every_country = {
 		limit = {
 			has_mutual_scripted_relation = {
@@ -157,15 +177,13 @@ total_player_alliance_weight = {
 	if = {
 		limit = {
 			exists = scope:recipient
+			not = { this = scope:recipient }
 			not = {
 				has_mutual_scripted_relation = {
 					type = relation_type:alliance
 					target = scope:recipient
 				}
 			}
-			# Check if this is an alliance relation being checked
-			# We don't want to add potential weight if we are checking a defensive pact or guarantee
-			# In scripted_relations/alliance.txt, can_add_alliance_rule is called
 		}
 		add = scope:recipient.country_slot_weight
 	}
@@ -211,6 +229,26 @@ total_player_defensive_pact_weight = {
 		}
 		add = country_slot_weight
 	}
+
+	# Potential defensive weight (if checking in UI or relation offer)
+	if = {
+		limit = {
+			exists = scope:recipient
+			not = { this = scope:recipient }
+			not = {
+				any_international_organizations_member_of = {
+					international_organization_type = international_organization_type:defensive_league
+					any_international_organization_member = {
+						this = root
+					}
+				}
+			}
+			# Since we call this script value from multiple triggers, we need to ensure 
+			# we only add potential weight for the RIGHT relation type.
+			# But for DP, we only have one type (Defensive League).
+		}
+		add = scope:recipient.country_slot_weight
+	}
 }
 
 displayed_defensive_pact_weight = {
@@ -238,6 +276,7 @@ total_player_guarantee_weight = {
 	if = {
 		limit = {
 			exists = scope:recipient
+			not = { this = scope:recipient }
 			not = {
 				giving_scripted_relation = {
 					type = relation_type:guarantee
