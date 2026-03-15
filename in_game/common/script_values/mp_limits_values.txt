@@ -75,55 +75,56 @@ country_slot_weight = {
 		limit = {
 			has_variable = mp_is_gp
 		}
-		value = 5
+		value = var:mp_gp_cost_rule
 	}
 	else_if = {
 		limit = {
 			has_variable = mp_is_major
 		}
-		value = 4
+		value = var:mp_major_cost_rule
 	}
 	else_if = {
 		limit = {
 			has_variable = mp_is_minor
 		}
-		value = 1
+		value = var:mp_minor_cost_rule
 	}
 	else_if = {
 		limit = {
 			has_variable = mp_is_small
 		}
-		value = 2
+		value = var:mp_small_cost_rule
 	}
 	else = {
-		value = 3
+		value = var:mp_normal_cost_rule
 	}
 }
 
 mp_alliance_points_limit = {
-	value = 6
+	value = var:mp_alliance_limit_rule
 }
 
 mp_defensive_points_limit = {
 	if = {
 		limit = { has_variable = mp_is_gp }
-		value = 1
+		value = var:mp_gp_def_limit_rule
 	}
 	else_if = {
 		limit = { has_variable = mp_is_major }
-		value = 2
+		value = var:mp_major_def_limit_rule
 	}
 	else_if = {
 		limit = { has_variable = mp_is_minor }
-		value = 5
+		value = var:mp_minor_def_limit_rule
 	}
 	else_if = {
 		limit = { has_variable = mp_is_small }
-		value = 4
+		value = var:mp_small_def_limit_rule
 	}
 	else = {
-		value = 3
+		value = var:mp_normal_def_limit_rule
 	}
+	add = var:mp_defensive_limit_rule_mod
 }
 
 mp_guarantee_points_limit = {
