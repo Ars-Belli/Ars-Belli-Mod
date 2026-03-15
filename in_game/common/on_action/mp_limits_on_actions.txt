@@ -6,94 +6,25 @@
 
 on_game_start = {
 	effect = {
-		every_country = {
-			mp_limits_rules_initialization = yes
-		}
+		mp_limits_monthly_calculation = yes
 	}
 }
 
 mp_limits_monthly_pulse = {
 	effect = {
-		set_variable = {
-			name = mp_pop_score
-			value = country_pop_score
-		}
-		set_variable = {
-			name = mp_eco_score
-			value = country_eco_score
-		}
-		set_variable = {
-			name = mp_manpower_score
-			value = country_manpower_score
-		}
-		set_variable = {
-			name = mp_military_score
-			value = country_military_score
-		}
-		set_variable = {
-			name = mp_power_score
-			value = country_power_score
-		}
+		mp_limits_monthly_calculation = yes
 
-		# set_variable = { # Debug
-		# 	name = mp_debug_total_pop
-		# 	value = total_population
-		# }
+		# Local copy of global variables for easy access in UI/triggers if needed
+		# Though they can also be accessed via global_var:
+		set_variable = {
+			name = mp_avg_player_score
+			value = global_var:mp_avg_player_score
+		}
 
 		if = {
 			# limit = { is_ai = no }
-			set_variable = {
-				name = mp_rank_count
-				value = 0
-			}
-			set_variable = {
-				name = mp_total_player_score
-				value = 0
-			}
-			set_variable = {
-				name = mp_player_count
-				value = 0
-			}
-
-			# Count how many players have a higher power score and sum scores
-			every_country = {
-				limit = {
-					# is_ai = no
-				}
-				root = {
-					change_variable = {
-						name = mp_total_player_score
-						add = prev.country_power_score
-					}
-					change_variable = {
-						name = mp_player_count
-						add = 1
-					}
-					if = {
-						limit = {
-							prev.country_power_score > root.country_power_score
-						}
-						change_variable = {
-							name = mp_rank_count
-							add = 1
-						}
-					}
-				}
-			}
-
-			set_variable = {
-				name = mp_avg_player_score
-				value = var:mp_total_player_score
-			}
-			if = {
-				limit = { var:mp_player_count > 0 }
-				change_variable = {
-					name = mp_avg_player_score
-					divide = var:mp_player_count
-				}
-			}
-
-			mp_limits_rules_initialization = yes
+			
+			# mp_rank_count, mp_power_score and others are already set by mp_limits_monthly_calculation
 
 			set_variable = {
 				name = mp_total_top_limit
