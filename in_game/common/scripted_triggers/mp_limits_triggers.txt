@@ -20,37 +20,37 @@ is_mp_normal = {
 	}
 }
 
-can_add_alliance_rule = {
-	custom_description = {
-		text = "MP_ALLIANCE_LIMIT_REACHED"
-		object = scope:recipient
-		# is_ai = yes
-		# scope:recipient = { is_ai = yes }
-		# is_ai = no
-		# scope:recipient = { is_ai = no }
-		total_player_alliance_weight <= mp_alliance_points_limit
-	}
-}
+# can_add_alliance_rule = {
+# 	custom_description = {
+# 		text = "MP_ALLIANCE_LIMIT_REACHED"
+# 		object = scope:recipient
+# 		# is_ai = yes
+# 		# scope:recipient = { is_ai = yes }
+# 		# is_ai = no
+# 		# scope:recipient = { is_ai = no }
+# 		total_player_alliance_weight <= mp_alliance_points_limit
+# 	}
+# }
 
-can_add_defensive_rule = {
-	custom_description = {
-		text = "MP_DEFENSIVE_LIMIT_REACHED"
-		object = scope:recipient
-		# is_over_defensive_limit checks current weight, but we need to check if adding this one will push us over
-		# total_player_defensive_pact_weight includes potential weight of recipient
-		total_player_defensive_pact_weight <= mp_defensive_points_limit
-		OR = {
-			total_player_defensive_pact_weight <= mp_defensive_points_limit
-			total_player_alliance_weight < mp_alliance_points_limit
-		}
-	}
-}
+# can_add_defensive_rule = {
+# 	custom_description = {
+# 		text = "MP_DEFENSIVE_LIMIT_REACHED"
+# 		object = scope:recipient
+# 		# is_over_defensive_limit checks current weight, but we need to check if adding this one will push us over
+# 		# total_player_defensive_pact_weight includes potential weight of recipient
+# 		total_player_defensive_pact_weight <= mp_defensive_points_limit
+# 		OR = {
+# 			total_player_defensive_pact_weight <= mp_defensive_points_limit
+# 			total_player_alliance_weight < mp_alliance_points_limit
+# 		}
+# 	}
+# }
 
-can_add_guarantee_rule = {
-	custom_description = {
-		text = "MP_GUARANTEE_LIMIT_REACHED"
-		object = scope:recipient
-		# total_player_guarantee_weight includes potential weight of recipient
-		total_player_guarantee_weight <= mp_guarantee_points_limit
-	}
-}
+# can_add_guarantee_rule = {
+# 	custom_description = {
+# 		text = "MP_GUARANTEE_LIMIT_REACHED"
+# 		object = scope:recipient
+# 		# total_player_guarantee_weight includes potential weight of recipient
+# 		total_player_guarantee_weight <= mp_guarantee_points_limit
+# 	}
+# }
