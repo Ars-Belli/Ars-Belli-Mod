@@ -1,191 +1,121 @@
-mp_limits_rules_initialization = {
-	set_variable = {
-		name = mp_gp_limit
-		value = 6
-	}
+mp_limits_monthly_calculation = {
+	# Check if it's a new month
 	if = {
-		limit = { has_game_rule = gp_1 }
-		set_variable = { name = mp_gp_limit value = 1 }
-	}
-	else_if = {
-		limit = { has_game_rule = gp_2 }
-		set_variable = { name = mp_gp_limit value = 2 }
-	}
-	else_if = {
-		limit = { has_game_rule = gp_3 }
-		set_variable = { name = mp_gp_limit value = 3 }
-	}
-	else_if = {
-		limit = { has_game_rule = gp_4 }
-		set_variable = { name = mp_gp_limit value = 4 }
-	}
-	else_if = {
-		limit = { has_game_rule = gp_5 }
-		set_variable = { name = mp_gp_limit value = 5 }
-	}
-	else_if = {
-		limit = { has_game_rule = gp_6 }
-		set_variable = { name = mp_gp_limit value = 6 }
-	}
-	else_if = {
-		limit = { has_game_rule = gp_7 }
-		set_variable = { name = mp_gp_limit value = 7 }
-	}
-	else_if = {
-		limit = { has_game_rule = gp_8 }
-		set_variable = { name = mp_gp_limit value = 8 }
+		limit = {
+			OR = {
+				not = { has_global_variable = mp_limits_last_month }
+				not = { global_var:mp_limits_last_month = current_month }
+			}
+		}
+		set_global_variable = {
+			name = mp_limits_last_month
+			value = current_month
+		}
+		remove_global_variable = mp_limits_calculation_done
 	}
 
-	set_variable = {
-		name = mp_major_limit
-		value = 6
-	}
+	# Only run once per month globally
 	if = {
-		limit = { has_game_rule = major_1 }
-		set_variable = { name = mp_major_limit value = 1 }
-	}
-	else_if = {
-		limit = { has_game_rule = major_2 }
-		set_variable = { name = mp_major_limit value = 2 }
-	}
-	else_if = {
-		limit = { has_game_rule = major_3 }
-		set_variable = { name = mp_major_limit value = 3 }
-	}
-	else_if = {
-		limit = { has_game_rule = major_4 }
-		set_variable = { name = mp_major_limit value = 4 }
-	}
-	else_if = {
-		limit = { has_game_rule = major_5 }
-		set_variable = { name = mp_major_limit value = 5 }
-	}
-	else_if = {
-		limit = { has_game_rule = major_6 }
-		set_variable = { name = mp_major_limit value = 6 }
-	}
-	else_if = {
-		limit = { has_game_rule = major_7 }
-		set_variable = { name = mp_major_limit value = 7 }
-	}
-	else_if = {
-		limit = { has_game_rule = major_8 }
-		set_variable = { name = mp_major_limit value = 8 }
-	}
-	else_if = {
-		limit = { has_game_rule = major_9 }
-		set_variable = { name = mp_major_limit value = 9 }
-	}
-	else_if = {
-		limit = { has_game_rule = major_10 }
-		set_variable = { name = mp_major_limit value = 10 }
-	}
+		limit = {
+			not = {
+				has_global_variable = mp_limits_calculation_done
+			}
+		}
+		set_global_variable = mp_limits_calculation_done
 
-	set_variable = {
-		name = mp_alliance_limit_rule
-		value = 6
+		# Initialize rules globally
+		mp_limits_rules_initialization = yes
+
+		# Step 1: All countries calculate their basic scores
+		set_global_variable = {
+			name = mp_total_player_score
+			value = 0
+		}
+		set_global_variable = {
+			name = mp_player_count
+			value = 0
+		}
+
+		every_country = {
+			# Store other scores for UI
+			set_variable = { name = mp_pop_score value = country_pop_score }
+			set_variable = { name = mp_eco_score value = country_eco_score }
+			set_variable = { name = mp_manpower_score value = country_manpower_score }
+			set_variable = { name = mp_military_score value = country_military_score }
+
+			# Calculate and store power score
+			set_variable = {
+				name = mp_power_score
+				value = country_power_score
+			}
+
+			# Sum for average
+			change_global_variable = {
+				name = mp_total_player_score
+				add = var:mp_power_score
+			}
+			change_global_variable = {
+				name = mp_player_count
+				add = 1
+			}
+
+			# Increment calculation counter
+			if = {
+				limit = { not = { has_global_variable = mp_limits_calc_counter } }
+				set_global_variable = {
+					name = mp_limits_calc_counter
+					value = 0
+				}
+			}
+			change_global_variable = {
+				name = mp_limits_calc_counter
+				add = 1
+			}
+		}
+
+		# Step 2: Calculate average
+		set_global_variable = {
+			name = mp_avg_player_score
+			value = global_var:mp_total_player_score
+		}
+		if = {
+			limit = { global_var:mp_player_count > 0 }
+			change_global_variable = {
+				name = mp_avg_player_score
+				divide = global_var:mp_player_count
+			}
+		}
+
+		# Step 3: Calculate Ranks
+		# This is still O(N^2) but we do it once per month instead of N times.
+		every_country = {
+			set_variable = {
+				name = mp_rank_count
+				value = 0
+			}
+			# Store current country power score for nested loop comparison
+			set_variable = {
+				name = current_power_score_tmp
+				value = var:mp_power_score
+			}
+			every_country = {
+				if = {
+					limit = {
+						var:mp_power_score > prev.var:current_power_score_tmp
+					}
+					prev = {
+						change_variable = {
+							name = mp_rank_count
+							add = 1
+						}
+					}
+				}
+			}
+			remove_variable = current_power_score_tmp # Cleanup
+		}
 	}
-	if = { limit = { has_game_rule = alliance_1 } set_variable = { name = mp_alliance_limit_rule value = 1 } }
-	else_if = { limit = { has_game_rule = alliance_2 } set_variable = { name = mp_alliance_limit_rule value = 2 } }
-	else_if = { limit = { has_game_rule = alliance_3 } set_variable = { name = mp_alliance_limit_rule value = 3 } }
-	else_if = { limit = { has_game_rule = alliance_4 } set_variable = { name = mp_alliance_limit_rule value = 4 } }
-	else_if = { limit = { has_game_rule = alliance_5 } set_variable = { name = mp_alliance_limit_rule value = 5 } }
-	else_if = { limit = { has_game_rule = alliance_6 } set_variable = { name = mp_alliance_limit_rule value = 6 } }
-	else_if = { limit = { has_game_rule = alliance_7 } set_variable = { name = mp_alliance_limit_rule value = 7 } }
-	else_if = { limit = { has_game_rule = alliance_8 } set_variable = { name = mp_alliance_limit_rule value = 8 } }
-	else_if = { limit = { has_game_rule = alliance_9 } set_variable = { name = mp_alliance_limit_rule value = 9 } }
-	else_if = { limit = { has_game_rule = alliance_10 } set_variable = { name = mp_alliance_limit_rule value = 10 } }
-	else_if = { limit = { has_game_rule = alliance_11 } set_variable = { name = mp_alliance_limit_rule value = 11 } }
-	else_if = { limit = { has_game_rule = alliance_12 } set_variable = { name = mp_alliance_limit_rule value = 12 } }
-	else_if = { limit = { has_game_rule = alliance_13 } set_variable = { name = mp_alliance_limit_rule value = 13 } }
-	else_if = { limit = { has_game_rule = alliance_14 } set_variable = { name = mp_alliance_limit_rule value = 14 } }
-	else_if = { limit = { has_game_rule = alliance_15 } set_variable = { name = mp_alliance_limit_rule value = 15 } }
-	else_if = { limit = { has_game_rule = alliance_16 } set_variable = { name = mp_alliance_limit_rule value = 16 } }
-	else_if = { limit = { has_game_rule = alliance_17 } set_variable = { name = mp_alliance_limit_rule value = 17 } }
-	else_if = { limit = { has_game_rule = alliance_18 } set_variable = { name = mp_alliance_limit_rule value = 18 } }
-	else_if = { limit = { has_game_rule = alliance_19 } set_variable = { name = mp_alliance_limit_rule value = 19 } }
-	else_if = { limit = { has_game_rule = alliance_20 } set_variable = { name = mp_alliance_limit_rule value = 20 } }
+}
 
-	set_variable = {
-		name = mp_defensive_limit_rule_mod
-		value = 0
-	}
-	if = { limit = { has_game_rule = def_limit_minus_2 } set_variable = { name = mp_defensive_limit_rule_mod value = -2 } }
-	else_if = { limit = { has_game_rule = def_limit_minus_1 } set_variable = { name = mp_defensive_limit_rule_mod value = -1 } }
-	else_if = { limit = { has_game_rule = def_limit_0 } set_variable = { name = mp_defensive_limit_rule_mod value = 0 } }
-	else_if = { limit = { has_game_rule = def_limit_plus_1 } set_variable = { name = mp_defensive_limit_rule_mod value = 1 } }
-	else_if = { limit = { has_game_rule = def_limit_plus_2 } set_variable = { name = mp_defensive_limit_rule_mod value = 2 } }
-
-	set_variable = { name = mp_gp_def_limit_rule value = 1 }
-	if = { limit = { has_game_rule = def_gp_1 } set_variable = { name = mp_gp_def_limit_rule value = 1 } }
-	else_if = { limit = { has_game_rule = def_gp_2 } set_variable = { name = mp_gp_def_limit_rule value = 2 } }
-	else_if = { limit = { has_game_rule = def_gp_3 } set_variable = { name = mp_gp_def_limit_rule value = 3 } }
-	else_if = { limit = { has_game_rule = def_gp_4 } set_variable = { name = mp_gp_def_limit_rule value = 4 } }
-	else_if = { limit = { has_game_rule = def_gp_5 } set_variable = { name = mp_gp_def_limit_rule value = 5 } }
-
-	set_variable = { name = mp_major_def_limit_rule value = 2 }
-	if = { limit = { has_game_rule = def_major_1 } set_variable = { name = mp_major_def_limit_rule value = 1 } }
-	else_if = { limit = { has_game_rule = def_major_2 } set_variable = { name = mp_major_def_limit_rule value = 2 } }
-	else_if = { limit = { has_game_rule = def_major_3 } set_variable = { name = mp_major_def_limit_rule value = 3 } }
-	else_if = { limit = { has_game_rule = def_major_4 } set_variable = { name = mp_major_def_limit_rule value = 4 } }
-	else_if = { limit = { has_game_rule = def_major_5 } set_variable = { name = mp_major_def_limit_rule value = 5 } }
-
-	set_variable = { name = mp_minor_def_limit_rule value = 5 }
-	if = { limit = { has_game_rule = def_minor_1 } set_variable = { name = mp_minor_def_limit_rule value = 1 } }
-	else_if = { limit = { has_game_rule = def_minor_2 } set_variable = { name = mp_minor_def_limit_rule value = 2 } }
-	else_if = { limit = { has_game_rule = def_minor_3 } set_variable = { name = mp_minor_def_limit_rule value = 3 } }
-	else_if = { limit = { has_game_rule = def_minor_4 } set_variable = { name = mp_minor_def_limit_rule value = 4 } }
-	else_if = { limit = { has_game_rule = def_minor_5 } set_variable = { name = mp_minor_def_limit_rule value = 5 } }
-	else_if = { limit = { has_game_rule = def_minor_6 } set_variable = { name = mp_minor_def_limit_rule value = 6 } }
-
-	set_variable = { name = mp_small_def_limit_rule value = 4 }
-	if = { limit = { has_game_rule = def_small_1 } set_variable = { name = mp_small_def_limit_rule value = 1 } }
-	else_if = { limit = { has_game_rule = def_small_2 } set_variable = { name = mp_small_def_limit_rule value = 2 } }
-	else_if = { limit = { has_game_rule = def_small_3 } set_variable = { name = mp_small_def_limit_rule value = 3 } }
-	else_if = { limit = { has_game_rule = def_small_4 } set_variable = { name = mp_small_def_limit_rule value = 4 } }
-	else_if = { limit = { has_game_rule = def_small_5 } set_variable = { name = mp_small_def_limit_rule value = 5 } }
-
-	set_variable = { name = mp_normal_def_limit_rule value = 3 }
-	if = { limit = { has_game_rule = def_normal_1 } set_variable = { name = mp_normal_def_limit_rule value = 1 } }
-	else_if = { limit = { has_game_rule = def_normal_2 } set_variable = { name = mp_normal_def_limit_rule value = 2 } }
-	else_if = { limit = { has_game_rule = def_normal_3 } set_variable = { name = mp_normal_def_limit_rule value = 3 } }
-	else_if = { limit = { has_game_rule = def_normal_4 } set_variable = { name = mp_normal_def_limit_rule value = 4 } }
-	else_if = { limit = { has_game_rule = def_normal_5 } set_variable = { name = mp_normal_def_limit_rule value = 5 } }
-
-	set_variable = { name = mp_gp_cost_rule value = 5 }
-	if = { limit = { has_game_rule = cost_gp_1 } set_variable = { name = mp_gp_cost_rule value = 1 } }
-	else_if = { limit = { has_game_rule = cost_gp_2 } set_variable = { name = mp_gp_cost_rule value = 2 } }
-	else_if = { limit = { has_game_rule = cost_gp_3 } set_variable = { name = mp_gp_cost_rule value = 3 } }
-	else_if = { limit = { has_game_rule = cost_gp_4 } set_variable = { name = mp_gp_cost_rule value = 4 } }
-	else_if = { limit = { has_game_rule = cost_gp_5 } set_variable = { name = mp_gp_cost_rule value = 5 } }
-	else_if = { limit = { has_game_rule = cost_gp_6 } set_variable = { name = mp_gp_cost_rule value = 6 } }
-
-	set_variable = { name = mp_major_cost_rule value = 4 }
-	if = { limit = { has_game_rule = cost_major_1 } set_variable = { name = mp_major_cost_rule value = 1 } }
-	else_if = { limit = { has_game_rule = cost_major_2 } set_variable = { name = mp_major_cost_rule value = 2 } }
-	else_if = { limit = { has_game_rule = cost_major_3 } set_variable = { name = mp_major_cost_rule value = 3 } }
-	else_if = { limit = { has_game_rule = cost_major_4 } set_variable = { name = mp_major_cost_rule value = 4 } }
-	else_if = { limit = { has_game_rule = cost_major_5 } set_variable = { name = mp_major_cost_rule value = 5 } }
-	else_if = { limit = { has_game_rule = cost_major_6 } set_variable = { name = mp_major_cost_rule value = 6 } }
-
-	set_variable = { name = mp_minor_cost_rule value = 1 }
-	if = { limit = { has_game_rule = cost_minor_1 } set_variable = { name = mp_minor_cost_rule value = 1 } }
-	else_if = { limit = { has_game_rule = cost_minor_2 } set_variable = { name = mp_minor_cost_rule value = 2 } }
-	else_if = { limit = { has_game_rule = cost_minor_3 } set_variable = { name = mp_minor_cost_rule value = 3 } }
-	else_if = { limit = { has_game_rule = cost_minor_4 } set_variable = { name = mp_minor_cost_rule value = 4 } }
-	else_if = { limit = { has_game_rule = cost_minor_5 } set_variable = { name = mp_minor_cost_rule value = 5 } }
-
-	set_variable = { name = mp_small_cost_rule value = 2 }
-	if = { limit = { has_game_rule = cost_small_1 } set_variable = { name = mp_small_cost_rule value = 1 } }
-	else_if = { limit = { has_game_rule = cost_small_2 } set_variable = { name = mp_small_cost_rule value = 2 } }
-	else_if = { limit = { has_game_rule = cost_small_3 } set_variable = { name = mp_small_cost_rule value = 3 } }
-	else_if = { limit = { has_game_rule = cost_small_4 } set_variable = { name = mp_small_cost_rule value = 4 } }
-	else_if = { limit = { has_game_rule = cost_small_5 } set_variable = { name = mp_small_cost_rule value = 5 } }
-
-	set_variable = { name = mp_normal_cost_rule value = 3 }
-	if = { limit = { has_game_rule = cost_normal_1 } set_variable = { name = mp_normal_cost_rule value = 1 } }
-	else_if = { limit = { has_game_rule = cost_normal_2 } set_variable = { name = mp_normal_cost_rule value = 2 } }
-	else_if = { limit = { has_game_rule = cost_normal_3 } set_variable = { name = mp_normal_cost_rule value = 3 } }
-	else_if = { limit = { has_game_rule = cost_normal_4 } set_variable = { name = mp_normal_cost_rule value = 4 } }
-	else_if = { limit = { has_game_rule = cost_normal_5 } set_variable = { name = mp_normal_cost_rule value = 5 } }
+mp_limits_clear_monthly_flag = {
+	# remove_global_variable = mp_limits_calculation_done
 }
