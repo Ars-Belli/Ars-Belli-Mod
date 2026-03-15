@@ -201,6 +201,30 @@ total_player_alliance_weight = {
 	}
 }
 
+current_player_alliance_weight = {
+	value = 0
+	# Current Alliance weight
+	every_country = {
+		limit = {
+			has_mutual_scripted_relation = {
+				type = relation_type:alliance
+				target = root
+			}
+		}
+		add = country_slot_weight
+	}
+	# Overflow from Defensive Pact weight
+	if = {
+		limit = {
+			current_player_defensive_pact_weight > mp_defensive_points_limit
+		}
+		add = {
+			value = current_player_defensive_pact_weight
+			subtract = mp_defensive_points_limit
+		}
+	}
+}
+
 total_player_defensive_pact_weight = {
 	value = 0
 	# Count any relation that should use defensive points
@@ -248,6 +272,36 @@ total_player_defensive_pact_weight = {
 			# But for DP, we only have one type (Defensive League).
 		}
 		add = scope:recipient.country_slot_weight
+	}
+}
+
+current_player_defensive_pact_weight = {
+	value = 0
+	# Defensive League members
+	every_country = {
+		limit = {
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:defensive_league
+				any_international_organization_member = {
+					this = root
+				}
+			}
+			not = { this = root }
+		}
+		add = country_slot_weight
+	}
+}
+
+current_player_guarantee_weight = {
+	value = 0
+	every_country = {
+		limit = {
+			giving_scripted_relation = {
+				type = relation_type:guarantee
+				target = root
+			}
+		}
+		add = country_slot_weight
 	}
 }
 
