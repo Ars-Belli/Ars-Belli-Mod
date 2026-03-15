@@ -1820,7 +1820,6 @@ countries = {
 			budejovice j_hradec benesov mlada_boleslav kourim kutna_hora
 			bechyne jicin podebrady caslav nachod nemecky_brod
 			chrudim hradec_kralove klodzko litomysl trebon
-			bautzen gorlitz hoyerswerda rothenburg_oberlausitz marienstern
 		}
 
 		starting_technology_level = 3
@@ -4320,7 +4319,7 @@ countries = {
 
 	ENG = { # England
 		own_control_core = {
-			appleby hythe alnwick barnstaple bedford dunstable birmingham boston bosworth shoreham lewes bristol buckingham bury glossop cambridge canterbury carlisle rochester cheltenham chelmsford chesterfield chichester chippenham cockermouth colchester kettering coventry cirencester derby dorchester dover exeter gloucester grimsby guildford reigate harrow hastings hedingham hertford hexham hull huntingdon ipswich kendal grantham penrith kidderminster leeds leicester lincoln london loughborough lowestoft lynn daventry newark newcastle northampton norwich nottingham oxford ely plymouth bideford bampton okehampton poole portsmouth amesbury lymington retford rutland salisbury southampton prittlewell kingston stafford stoke stratford trowbridge taunton wells barking weymouth shaftesbury wight winchester windsor worcester yarmouth york scarborough tamworth bedale richmond whitby bridlington selby pontefract skipton wakefield louth thetford fakenham reading tonbridge minehead portishead bath henley royston aylesbury wycombe lavenham abingdon st_albans banbury walden spalding woking morpeth billingham norton ripon doncaster egremont basingstoke
+			hythe barnstaple bedford dunstable birmingham boston bosworth shoreham lewes bristol buckingham bury glossop cambridge canterbury rochester cheltenham chelmsford chesterfield chichester chippenham colchester kettering coventry cirencester derby dorchester dover exeter gloucester grimsby guildford reigate harrow hastings hedingham hertford huntingdon ipswich grantham kidderminster leicester lincoln london loughborough lowestoft lynn daventry newark northampton norwich nottingham oxford ely plymouth bideford bampton okehampton poole portsmouth amesbury lymington retford rutland salisbury southampton prittlewell kingston stafford stoke stratford trowbridge taunton wells barking weymouth shaftesbury wight winchester windsor worcester yarmouth tamworth louth thetford fakenham reading tonbridge minehead portishead bath henley royston aylesbury wycombe lavenham abingdon st_albans banbury walden spalding woking basingstoke
 
 			# Earldom of Chester
 			#chester macclesfield nantwich
@@ -4336,9 +4335,6 @@ countries = {
 			jersey
 			# france			
 			abbeville montreuil #Ponthieu
-		}
-		own_control_conquered = {
-			berwick
 		}
 
 		include = "catholic_monarchy"
@@ -4624,7 +4620,7 @@ countries = {
 	}
 
 	DHM = { #Palatinate of Durham
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			durham darlington stockton
 		}
 
@@ -4859,7 +4855,7 @@ countries = {
 	}
 
 	NOL = { # Northumberland
-		our_cores_conquered_by_others = {
+		own_control_core = {
 			newcastle hexham alnwick morpeth billingham
 			carlisle cockermouth penrith egremont
 			kendal appleby
@@ -4932,14 +4928,13 @@ countries = {
 		own_control_core = {
 			glasgow paisley dumbarton aberdeen dunbar banff dunfermline st_andrews dundee buchan mar inverurie stonehaven clackmannan aberfeldy irvine
 			oban inverary cowal forfar arbroath arran selkirk scone
-			dornoch durness tongue	
+			dornoch durness tongue berwick
 		}	
 		own_control_conquered = {
 			thurso
 		}
 
 		our_cores_conquered_by_others = {
-			berwick
 			perth kirkcudbright kenmure stranraer
 			edinburgh stirling roxburgh dumfries lanark ayr
 			strathearn cupar
@@ -17194,14 +17189,13 @@ countries = {
 		include = "catholic_monarchy_no_coast"
 		include = "german_principality"
 		government = {
-			ruler = boh_john_luxembourg
+			ruler = random
 
 			ruler_term = { character = fcb_otton_hohenstaufen start_date = 1196.8.14 end_date = 1197.1.1 regnal_number = 1 }
 
 			ruler_term = { character = lux_henri_v_luxembourg start_date = 1247.2.17 end_date = 1281.12.24 regnal_number = 5 }
 			ruler_term = { character = lux_henry_vi_luxembourg start_date = 1281.12.24 end_date = 1288.6.5 regnal_number = 6 }
 			ruler_term = { character = lux_henry_vii_luxembourg start_date = 1288.6.5 end_date = 1313.8.24 regnal_number = 7 }
-			ruler_term = { character = boh_john_luxembourg start_date = 1313.8.24 regnal_number = 1 }
 
 			regnal_numbers = {
 				name_sigfrid = 1
@@ -17717,6 +17711,7 @@ countries = {
 				nobles_land_rights
 				noble_marriage_rights
 				noble_fortification_licenses
+				golden_bull_of_1222
 
 				#clergy
 				clergy_literacy_rights
@@ -21776,7 +21771,7 @@ countries = {
 		include = "expl_muslim_mediterranean"
 		include = "expl_horn_of_africa"
 		include = "muslim_monarchy"
-		country_rank = rank_kingdom
+		country_rank = rank_duchy
 		government = {
 			type = monarchy
 			heir_selection = mamluk_succesion
@@ -21842,7 +21837,7 @@ countries = {
 		include = "expl_muslim_mediterranean"
 		include = "expl_horn_of_africa"
 		include = "muslim_monarchy"
-		country_rank = rank_kingdom
+		country_rank = rank_duchy
 		government = {
 			type = monarchy
 			heir_selection = mamluk_succesion
@@ -21905,7 +21900,7 @@ countries = {
 		include = "expl_muslim_mediterranean"
 		include = "expl_horn_of_africa"
 		include = "muslim_monarchy"
-		country_rank = rank_kingdom
+		country_rank = rank_duchy
 		government = {
 			type = monarchy
 			heir_selection = mamluk_succesion
@@ -36204,6 +36199,25 @@ countries = {
 		government = { ruler = random }
 		country_rank = rank_county
 		capital =  schesslitz
+	}
+	
+	SEL = { #Southern Lusitania
+		own_control_core = {
+		bautzen gorlitz hoyerswerda rothenburg_oberlausitz marienstern
+		}
+
+		starting_technology_level = 3
+		include = "expl_western_europe"
+		include = "expl_northern_europe"
+		include = "catholic_monarchy_no_coast"
+		include = "german_principality"
+		country_rank = rank_county
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = random
+		}
+		capital = gorlitz
 	}
 
 	WIE = {  # Wied (North Germany)
