@@ -5,14 +5,18 @@
 }
 
 on_game_start = {
-	effect = {
-		every_country = {
-			mp_limits_rules_initialization = yes
-		}
+	on_actions = {
+		mp_limits_monthly_pulse_effect
 	}
 }
 
 mp_limits_monthly_pulse = {
+	on_actions = {
+		mp_limits_monthly_pulse_effect
+	}
+}
+
+mp_limits_monthly_pulse_effect = {
 	effect = {
 		set_variable = {
 			name = mp_pop_score
