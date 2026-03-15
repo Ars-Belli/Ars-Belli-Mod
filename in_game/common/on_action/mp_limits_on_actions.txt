@@ -85,8 +85,91 @@ mp_limits_monthly_pulse = {
 				}
 			}
 
+			set_variable = {
+				name = mp_gp_limit
+				value = 6
+			}
 			if = {
-				limit = { var:mp_rank_count < 6 }
+				limit = { has_game_rule = gp_1 }
+				set_variable = { name = mp_gp_limit value = 1 }
+			}
+			else_if = {
+				limit = { has_game_rule = gp_2 }
+				set_variable = { name = mp_gp_limit value = 2 }
+			}
+			else_if = {
+				limit = { has_game_rule = gp_3 }
+				set_variable = { name = mp_gp_limit value = 3 }
+			}
+			else_if = {
+				limit = { has_game_rule = gp_4 }
+				set_variable = { name = mp_gp_limit value = 4 }
+			}
+			else_if = {
+				limit = { has_game_rule = gp_5 }
+				set_variable = { name = mp_gp_limit value = 5 }
+			}
+			else_if = {
+				limit = { has_game_rule = gp_7 }
+				set_variable = { name = mp_gp_limit value = 7 }
+			}
+			else_if = {
+				limit = { has_game_rule = gp_8 }
+				set_variable = { name = mp_gp_limit value = 8 }
+			}
+
+			set_variable = {
+				name = mp_major_limit
+				value = 6
+			}
+			if = {
+				limit = { has_game_rule = major_1 }
+				set_variable = { name = mp_major_limit value = 1 }
+			}
+			else_if = {
+				limit = { has_game_rule = major_2 }
+				set_variable = { name = mp_major_limit value = 2 }
+			}
+			else_if = {
+				limit = { has_game_rule = major_3 }
+				set_variable = { name = mp_major_limit value = 3 }
+			}
+			else_if = {
+				limit = { has_game_rule = major_4 }
+				set_variable = { name = mp_major_limit value = 4 }
+			}
+			else_if = {
+				limit = { has_game_rule = major_5 }
+				set_variable = { name = mp_major_limit value = 5 }
+			}
+			else_if = {
+				limit = { has_game_rule = major_7 }
+				set_variable = { name = mp_major_limit value = 7 }
+			}
+			else_if = {
+				limit = { has_game_rule = major_8 }
+				set_variable = { name = mp_major_limit value = 8 }
+			}
+			else_if = {
+				limit = { has_game_rule = major_9 }
+				set_variable = { name = mp_major_limit value = 9 }
+			}
+			else_if = {
+				limit = { has_game_rule = major_10 }
+				set_variable = { name = mp_major_limit value = 10 }
+			}
+
+			set_variable = {
+				name = mp_total_top_limit
+				value = var:mp_gp_limit
+			}
+			change_variable = {
+				name = mp_total_top_limit
+				add = var:mp_major_limit
+			}
+
+			if = {
+				limit = { var:mp_rank_count < var:mp_gp_limit }
 				set_variable = { name = mp_is_gp value = yes }
 				remove_variable = mp_is_major
 				remove_variable = mp_is_small
@@ -94,7 +177,7 @@ mp_limits_monthly_pulse = {
 				remove_variable = mp_is_normal
 			}
 			else_if = {
-				limit = { var:mp_rank_count < 12 }
+				limit = { var:mp_rank_count < var:mp_total_top_limit }
 				remove_variable = mp_is_gp
 				set_variable = { name = mp_is_major value = yes }
 				remove_variable = mp_is_small
