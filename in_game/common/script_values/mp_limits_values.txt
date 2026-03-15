@@ -75,31 +75,31 @@ country_slot_weight = {
 		limit = {
 			has_variable = mp_is_gp
 		}
-		value = var:mp_gp_cost_rule
+		value = global_var:mp_gp_cost_rule
 	}
 	else_if = {
 		limit = {
 			has_variable = mp_is_major
 		}
-		value = var:mp_major_cost_rule
+		value = global_var:mp_major_cost_rule
 	}
 	else_if = {
 		limit = {
 			has_variable = mp_is_minor
 		}
-		value = var:mp_minor_cost_rule
+		value = global_var:mp_minor_cost_rule
 	}
 	else_if = {
 		limit = {
 			has_variable = mp_is_small
 		}
-		value = var:mp_small_cost_rule
+		value = global_var:mp_small_cost_rule
 	}
 	else_if = {
 		limit = {
 			has_variable = mp_is_normal
 		}
-		value = var:mp_normal_cost_rule
+		value = global_var:mp_normal_cost_rule
 	}
 	else = { # Fallback
 		value = 3
@@ -107,9 +107,9 @@ country_slot_weight = {
 }
 
 mp_alliance_points_limit = {
-	value = var:mp_alliance_limit_rule
+	value = global_var:mp_alliance_limit_rule
 	if = {
-		limit = { not = { has_variable = mp_alliance_limit_rule } }
+		limit = { not = { has_global_variable = mp_alliance_limit_rule } }
 		value = 6
 	}
 }
@@ -117,31 +117,31 @@ mp_alliance_points_limit = {
 mp_defensive_points_limit = {
 	if = {
 		limit = { has_variable = mp_is_gp }
-		value = var:mp_gp_def_limit_rule
+		value = global_var:mp_gp_def_limit_rule
 	}
 	else_if = {
 		limit = { has_variable = mp_is_major }
-		value = var:mp_major_def_limit_rule
+		value = global_var:mp_major_def_limit_rule
 	}
 	else_if = {
 		limit = { has_variable = mp_is_minor }
-		value = var:mp_minor_def_limit_rule
+		value = global_var:mp_minor_def_limit_rule
 	}
 	else_if = {
 		limit = { has_variable = mp_is_small }
-		value = var:mp_small_def_limit_rule
+		value = global_var:mp_small_def_limit_rule
 	}
 	else = {
-		value = var:mp_normal_def_limit_rule
+		value = global_var:mp_normal_def_limit_rule
 	}
-	add = var:mp_defensive_limit_rule_mod
+	add = global_var:mp_defensive_limit_rule_mod
 	if = {
 		limit = {
 			not = { has_variable = mp_is_gp }
 			not = { has_variable = mp_is_major }
 			not = { has_variable = mp_is_minor }
 			not = { has_variable = mp_is_small }
-			not = { has_variable = mp_normal_def_limit_rule }
+			not = { has_global_variable = mp_normal_def_limit_rule }
 		}
 		value = 3
 	}

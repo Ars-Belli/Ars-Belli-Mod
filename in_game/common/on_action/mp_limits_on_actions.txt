@@ -22,6 +22,14 @@ mp_limits_monthly_pulse = {
 			name = mp_avg_player_score
 			value = global_var:mp_avg_player_score
 		}
+		set_variable = {
+			name = mp_gp_limit
+			value = global_var:mp_gp_limit
+		}
+		set_variable = {
+			name = mp_major_limit
+			value = global_var:mp_major_limit
+		}
 
 		if = {
 			# limit = { is_ai = no }
@@ -38,7 +46,7 @@ mp_limits_monthly_pulse = {
 			}
 
 			if = {
-				limit = { var:mp_rank_count < 6 }
+				limit = { var:mp_rank_count < var:mp_gp_limit }
 				set_variable = { name = mp_is_gp value = yes }
 				remove_variable = mp_is_major
 				remove_variable = mp_is_small
@@ -46,7 +54,7 @@ mp_limits_monthly_pulse = {
 				remove_variable = mp_is_normal
 			}
 			else_if = {
-				limit = { var:mp_rank_count < 12 }
+				limit = { var:mp_rank_count < var:mp_total_top_limit }
 				remove_variable = mp_is_gp
 				set_variable = { name = mp_is_major value = yes }
 				remove_variable = mp_is_small
