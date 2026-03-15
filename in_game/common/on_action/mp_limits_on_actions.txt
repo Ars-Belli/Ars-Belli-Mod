@@ -156,6 +156,18 @@ mp_limits_monthly_pulse = {
 				remove_variable = mp_is_minor
 				set_variable = { name = mp_is_normal value = yes }
 			}
+
+			if = {
+				limit = {
+					is_over_alliance_limit = 1
+				}
+				add_country_modifier = {
+					modifier = mp_over_alliance_limit_penalty
+				}
+			}
+			else = {
+				remove_country_modifier = mp_over_alliance_limit_penalty
+			}
 		}
 	}
 }
