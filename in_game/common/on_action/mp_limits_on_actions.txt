@@ -4,11 +4,13 @@
 	}
 }
 
-# on_game_start = {
-# 	effect = {
-# 		mp_limits_monthly_calculation = yes
-# 	}
-# }
+on_game_start = {
+	effect = {
+		every_country = {
+			mp_limits_rules_initialization = yes
+		}
+	}
+}
 
 mp_limits_monthly_pulse = {
 	effect = {
@@ -36,7 +38,7 @@ mp_limits_monthly_pulse = {
 			}
 
 			if = {
-				limit = { var:mp_rank_count < var:mp_gp_limit }
+				limit = { var:mp_rank_count < 6 }
 				set_variable = { name = mp_is_gp value = yes }
 				remove_variable = mp_is_major
 				remove_variable = mp_is_small
@@ -44,7 +46,7 @@ mp_limits_monthly_pulse = {
 				remove_variable = mp_is_normal
 			}
 			else_if = {
-				limit = { var:mp_rank_count < var:mp_total_top_limit }
+				limit = { var:mp_rank_count < 12 }
 				remove_variable = mp_is_gp
 				set_variable = { name = mp_is_major value = yes }
 				remove_variable = mp_is_small
