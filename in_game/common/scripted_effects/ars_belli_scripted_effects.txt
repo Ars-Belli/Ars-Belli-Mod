@@ -87,32 +87,28 @@ mp_limits_monthly_calculation = {
 		}
 
 		# Step 3: Calculate Ranks
-		# This is still O(N^2) but we do it once per month instead of N times.
-		every_country = {
-			set_variable = {
-				name = mp_rank_count
-				value = 0
-			}
-			# Store current country power score for nested loop comparison
-			set_variable = {
-				name = current_power_score_tmp
+		# Using ordered_country iterator for O(N log N) or O(N) internal sorting
+		# instead of manual O(N^2) nested loops.
+		set_global_variable = {
+			name = mp_rank_assigner
+			value = 0
+		}
+		ordered_country = {
+			order_by = {
 				value = var:mp_power_score
 			}
-			every_country = {
-				if = {
-					limit = {
-						var:mp_power_score > prev.var:current_power_score_tmp
-					}
-					prev = {
-						change_variable = {
-							name = mp_rank_count
-							add = 1
-						}
-					}
-				}
+			# The iterator orders from highest value to lowest value by default.
+			# We want rank 0 to be the highest score.
+			set_variable = {
+				name = mp_rank_count
+				value = global_var:mp_rank_assigner
 			}
-			remove_variable = current_power_score_tmp # Cleanup
+			change_global_variable = {
+				name = mp_rank_assigner
+				add = 1
+			}
 		}
+		remove_global_variable = mp_rank_assigner
 	}
 }
 
