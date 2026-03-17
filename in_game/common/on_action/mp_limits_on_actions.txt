@@ -5,8 +5,10 @@
 }
 
 on_game_start = {
-	on_actions = {
-		mp_limits_monthly_pulse
+	effect = {
+		# Force calculation on start
+		remove_global_variable = mp_limits_calculation_done
+		mp_limits_monthly_calculation_force = yes
 	}
 }
 
