@@ -43,18 +43,18 @@
 
 	offer_enabled = {
         alliance_can_exist = yes
-		custom_description = {
-			text = "MP_GP_CANNOT_ALLY_GP"
-			subject = scope:actor
-			object = scope:recipient
-			NOT = {
-				AND = {
-					scope:actor = { is_mp_gp = yes }
-					scope:recipient = { is_mp_gp = yes }
-				}
-			}
-		}
-		# Small and Minor powers CAN ally with Great Powers
+               custom_description = {
+                       text = "MP_GP_CANNOT_ALLY_GP"
+                       subject = scope:actor
+                       object = scope:recipient
+                       NOT = {
+                               AND = {
+                                       scope:actor = { is_mp_gp = yes }
+                                       scope:recipient = { is_mp_gp = yes }
+                               }
+                       }
+               }
+               # Small and Minor powers CAN ally with Great Powers
 		# This is already allowed by the above logic (only GP+GP is blocked)
 		# But they still need to respect points limit via can_add_alliance_rule
 	}
