@@ -130,6 +130,36 @@ mp_limits_assign_ranks = {
 	}
 }
 
+mp_limits_game_start = {
+	# Initialize rules globally
+	mp_limits_rules_initialization = yes
+
+	# on game start initialize all countries and ranks, including AI
+	if = {
+		limit = {
+			global_var:mp_limits_players_only = 1
+		}
+		set_variable = {
+			name = mp_is_player_only_local
+			value = 1
+		}
+		set_global_variable = { name = mp_limits_players_only value = 0 }
+	}
+
+	mp_limits_once_per_month_calculations = yes
+
+	if = {
+		limit = {
+			var:mp_is_player_only_local = 1
+		}
+		set_variable = {
+			name = mp_is_player_only_local
+			value = 0
+		}
+		set_global_variable = { name = mp_limits_players_only value = 1 }
+	}
+}
+
 mp_limits_monthly_calculation = {
 	mp_limits_month_tick_reset = yes
 
@@ -145,8 +175,7 @@ mp_limits_monthly_calculation = {
 		# Initialize rules globally
 		mp_limits_rules_initialization = yes
 
-		mp_limits_calculate_scores_and_avg = yes
-		mp_limits_initialize_ranks_and_cleanup = yes
+		mp_limits_once_per_month_calculations = yes
 
 		# Increment calculation counter
 		# if = {
@@ -160,9 +189,16 @@ mp_limits_monthly_calculation = {
 		# 	name = mp_limits_calc_counter
 		# 	add = 1
 		# }
-
-		mp_limits_assign_ranks = yes
 	}
+}
+
+mp_limits_once_per_month_calculations = {
+
+	mp_limits_calculate_scores_and_avg = yes
+
+	mp_limits_initialize_ranks_and_cleanup = yes
+
+	mp_limits_assign_ranks = yes
 }
 
 mp_limits_assign_category_markers = {
