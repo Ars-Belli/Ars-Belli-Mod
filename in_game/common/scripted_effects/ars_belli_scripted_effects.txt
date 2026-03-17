@@ -80,10 +80,9 @@ mp_limits_monthly_calculation = {
 		}
 
 		# Step 3: Calculate Ranks
-		# Using ordered_in_global_list iterator for O(N log N) or O(N) internal sorting
-		# instead of manual O(N^2) nested loops.
-		clear_global_variable_list = mp_ranking_list
-
+		# Using every_country with a filter and nested comparison for rank calculation.
+		# This is O(N^2) but stable and correct in this environment.
+		
 		# If AI and players only mode, clear any potential markers/modifiers
 		every_country = {
 			if = {
@@ -97,7 +96,6 @@ mp_limits_monthly_calculation = {
 				remove_variable = mp_is_minor
 				remove_variable = mp_is_normal
 				remove_variable = mp_rank_count
-				remove_variable = mp_rank_calculated_flag
 				remove_variable = mp_power_score
 				remove_variable = mp_pop_score
 				remove_variable = mp_eco_score
@@ -108,20 +106,9 @@ mp_limits_monthly_calculation = {
 			else = {
 				# Force initialization to prevent unset errors
 				set_variable = { name = mp_rank_count value = 1000 }
-				set_variable = { name = mp_rank_calculated_flag value = 0 } # Initialize to 0 explicitly
-
-				add_to_global_variable_list = {
-					name = mp_ranking_list
-					target = this
-				}
 			}
 		}
 
-		set_global_variable = {
-			name = mp_rank_assigner
-			value = 0
-		}
-		
 		# Increment calculation counter
 		if = {
 			limit = { not = { has_global_variable = mp_limits_calc_counter } }
@@ -135,17 +122,7 @@ mp_limits_monthly_calculation = {
 			add = 1
 		}
 
-		# Iterate and assign ranks
-		# We need to manually loop through the list if ordered_in_global_list only returns one
-		# But since we want to assign ranks to ALL, we use every_in_global_variable_list
-		# and since it's NOT ordered, we have to do it differently.
-		# Actually, ordered_in_global_list with a loop might work if we remove from list.
-		
-		# Alternative: use the O(N^2) approach again but optimized or use a different iterator
-		# The user suggested ordered_country. Let's try that if it exists.
-		# If it doesn't, we'll use the O(N^2) approach which is guaranteed to work.
-		
-		# Let's try O(N^2) again but simplified.
+		# Calculate and assign ranks
 		every_country = {
 			save_scope_as = target_country
 			limit = {
@@ -170,11 +147,7 @@ mp_limits_monthly_calculation = {
 					}
 				}
 			}
-			set_variable = { name = mp_rank_calculated_flag value = 1 }
 		}
-		
-		clear_global_variable_list = mp_ranking_list
-		remove_global_variable = mp_rank_assigner
 	}
 }
 
@@ -191,7 +164,6 @@ mp_limits_rank_classification = {
 		remove_variable = mp_is_minor
 		remove_variable = mp_is_normal
 		remove_variable = mp_rank_count
-		remove_variable = mp_rank_calculated_flag
 		remove_variable = mp_power_score
 		remove_variable = mp_pop_score
 		remove_variable = mp_eco_score
@@ -218,10 +190,6 @@ mp_limits_rank_classification = {
 		if = {
 			limit = { NOT = { has_variable = mp_rank_count } }
 			set_variable = { name = mp_rank_count value = 1000 }
-		}
-		if = {
-			limit = { NOT = { has_variable = mp_rank_calculated_flag } }
-			set_variable = { name = mp_rank_calculated_flag value = 0 }
 		}
 
 		set_variable = {
