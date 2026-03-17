@@ -188,4 +188,17 @@ mp_limits_rules_initialization = {
     else_if = { limit = { has_game_rule = cost_normal_3 } set_global_variable = { name = mp_normal_cost_rule value = 3 } }
     else_if = { limit = { has_game_rule = cost_normal_4 } set_global_variable = { name = mp_normal_cost_rule value = 4 } }
     else_if = { limit = { has_game_rule = cost_normal_5 } set_global_variable = { name = mp_normal_cost_rule value = 5 } }
+
+    set_global_variable = {
+        name = mp_limits_players_only
+        value = 1
+    }
+    if = {
+        limit = { has_game_rule = mp_limits_players_only }
+        set_global_variable = { name = mp_limits_players_only value = 1 }
+    }
+    else_if = {
+        limit = { has_game_rule = mp_limits_all_countries }
+        set_global_variable = { name = mp_limits_players_only value = 0 }
+    }
 }

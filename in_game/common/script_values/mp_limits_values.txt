@@ -67,11 +67,14 @@ country_military_score = {
 }
 
 country_slot_weight = {
-	# if = {
-	# limit = { is_ai = yes }
-	# value = 0
-	# }
 	if = {
+		limit = {
+			global_var:mp_limits_players_only = 1
+			is_ai = yes
+		}
+		value = 0
+	}
+	else_if = {
 		limit = {
 			has_variable = mp_is_gp
 		}
@@ -107,15 +110,31 @@ country_slot_weight = {
 }
 
 mp_alliance_points_limit = {
-	value = global_var:mp_alliance_limit_rule
 	if = {
-		limit = { not = { has_global_variable = mp_alliance_limit_rule } }
-		value = 6
+		limit = {
+			global_var:mp_limits_players_only = 1
+			is_ai = yes
+		}
+		value = 999
+	}
+	else = {
+		value = global_var:mp_alliance_limit_rule
+		if = {
+			limit = { not = { has_global_variable = mp_alliance_limit_rule } }
+			value = 6
+		}
 	}
 }
 
 mp_defensive_points_limit = {
 	if = {
+		limit = {
+			global_var:mp_limits_players_only = 1
+			is_ai = yes
+		}
+		value = 999
+	}
+	else_if = {
 		limit = { has_variable = mp_is_gp }
 		value = global_var:mp_gp_def_limit_rule
 	}
@@ -149,6 +168,13 @@ mp_defensive_points_limit = {
 
 mp_guarantee_points_limit = {
 	if = {
+		limit = {
+			global_var:mp_limits_players_only = 1
+			is_ai = yes
+		}
+		value = 999
+	}
+	else_if = {
 		limit = { has_variable = mp_is_gp }
 		value = 1
 	}
