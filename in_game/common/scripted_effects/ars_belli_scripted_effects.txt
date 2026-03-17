@@ -83,38 +83,39 @@ mp_limits_monthly_calculation = {
 		# Using ordered_in_global_list iterator for O(N log N) or O(N) internal sorting
 		# instead of manual O(N^2) nested loops.
 		clear_global_variable_list = mp_ranking_list
-	every_country = {
+
 		# If AI and players only mode, clear any potential markers/modifiers
-		if = {
-			limit = {
-				global_var:mp_limits_players_only = 1
-				is_ai = yes
+		every_country = {
+			if = {
+				limit = {
+					global_var:mp_limits_players_only = 1
+					is_ai = yes
+				}
+				remove_variable = mp_is_gp
+				remove_variable = mp_is_major
+				remove_variable = mp_is_small
+				remove_variable = mp_is_minor
+				remove_variable = mp_is_normal
+				remove_variable = mp_rank_count
+				remove_variable = mp_rank_calculated_flag
+				remove_variable = mp_power_score
+				remove_variable = mp_pop_score
+				remove_variable = mp_eco_score
+				remove_variable = mp_manpower_score
+				remove_variable = mp_military_score
+				remove_country_modifier = mp_over_alliance_limit_penalty
 			}
-			remove_variable = mp_is_gp
-			remove_variable = mp_is_major
-			remove_variable = mp_is_small
-			remove_variable = mp_is_minor
-			remove_variable = mp_is_normal
-			remove_variable = mp_rank_count
-			remove_variable = mp_rank_calculated_flag
-			remove_variable = mp_power_score
-			remove_variable = mp_pop_score
-			remove_variable = mp_eco_score
-			remove_variable = mp_manpower_score
-			remove_variable = mp_military_score
-			remove_country_modifier = mp_over_alliance_limit_penalty
-		}
-		else = {
-			# Force initialization to prevent unset errors
-			set_variable = { name = mp_rank_count value = 1000 }
-			set_variable = { name = mp_rank_calculated_flag value = 0 } # Initialize to 0 explicitly
-			
-			add_to_global_variable_list = {
-				name = mp_ranking_list
-				target = this
+			else = {
+				# Force initialization to prevent unset errors
+				set_variable = { name = mp_rank_count value = 1000 }
+				set_variable = { name = mp_rank_calculated_flag value = 0 } # Initialize to 0 explicitly
+
+				add_to_global_variable_list = {
+					name = mp_ranking_list
+					target = this
+				}
 			}
 		}
-	}
 
 		set_global_variable = {
 			name = mp_rank_assigner
@@ -170,11 +171,6 @@ mp_limits_monthly_calculation = {
 				}
 			}
 			set_variable = { name = mp_rank_calculated_flag value = 1 }
-		}
-
-		# Now classify every country based on their new rank
-		every_country = {
-			mp_limits_rank_classification = yes
 		}
 		
 		clear_global_variable_list = mp_ranking_list
@@ -325,8 +321,4 @@ mp_limits_rank_classification = {
 			remove_country_modifier = mp_over_alliance_limit_penalty
 		}
 	}
-}
-
-mp_limits_clear_monthly_flag = {
-	# remove_global_variable = mp_limits_calculation_done
 }
