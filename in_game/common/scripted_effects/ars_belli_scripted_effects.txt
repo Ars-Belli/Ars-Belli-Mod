@@ -132,15 +132,133 @@ mp_limits_monthly_calculation = {
 			}
 			set_variable = { name = mp_rank_calculated_flag value = 1 }
 		}
-		# Use map-like iteration if ordered_in_global_list fails
-		# every_key_in_global_variable_map, add_to_global_variable_map etc.
-		# are likely part of an engine version that doesn't use standard scripted effects.
-		# However, we can use set_global_variable_map if it exists.
-		# But we'll try to use set_variable on global_var:mp_ranks_map[this.tag] pattern if supported.
-		# Since it's not supported in standard EU5 scripts found, we stick to variables.
+
+		# Now classify every country based on their new rank
+		every_country = {
+			mp_limits_rank_classification = yes
+		}
 		
 		clear_global_variable_list = mp_ranking_list
 		remove_global_variable = mp_rank_assigner
+	}
+}
+
+mp_limits_rank_classification = {
+	# Local copy of global variables for easy access in UI/triggers if needed
+	# Though they can also be accessed via global_var:
+	set_variable = {
+		name = mp_avg_player_score
+		value = global_var:mp_avg_player_score
+	}
+	set_variable = {
+		name = mp_gp_limit
+		value = global_var:mp_gp_limit
+	}
+	set_variable = {
+		name = mp_major_limit
+		value = global_var:mp_major_limit
+	}
+
+	if = {
+		limit = { NOT = { has_variable = mp_rank_count } }
+		set_variable = { name = mp_rank_count value = 1000 }
+	}
+	if = {
+		limit = { NOT = { has_variable = mp_rank_calculated_flag } }
+		set_variable = { name = mp_rank_calculated_flag value = 0 }
+	}
+
+	set_variable = {
+		name = mp_total_top_limit
+		value = var:mp_gp_limit
+	}
+	change_variable = {
+		name = mp_total_top_limit
+		add = var:mp_major_limit
+	}
+
+	if = {
+		limit = { var:mp_rank_count < var:mp_gp_limit }
+		set_variable = { name = mp_is_gp value = yes }
+		remove_variable = mp_is_major
+		remove_variable = mp_is_small
+		remove_variable = mp_is_minor
+		remove_variable = mp_is_normal
+	}
+	else_if = {
+		limit = { var:mp_rank_count < var:mp_total_top_limit }
+		remove_variable = mp_is_gp
+		set_variable = { name = mp_is_major value = yes }
+		remove_variable = mp_is_small
+		remove_variable = mp_is_minor
+		remove_variable = mp_is_normal
+	}
+	else_if = {
+		limit = {
+			OR = {
+				AND = {
+					current_age = age_1_traditions
+					total_population < 500
+				}
+				AND = {
+					current_age = age_2_renaissance
+					total_population < 600
+				}
+				AND = {
+					current_age = age_3_discovery
+					total_population < 700
+				}
+				AND = {
+					current_age = age_4_reformation
+					total_population < 800
+				}
+				AND = {
+					current_age = age_5_absolutism
+					total_population < 900
+				}
+				AND = {
+					current_age = age_6_revolutions
+					total_population < 1000
+				}
+			}
+		}
+		remove_variable = mp_is_gp
+		remove_variable = mp_is_major
+		remove_variable = mp_is_small
+		set_variable = { name = mp_is_minor value = yes }
+		remove_variable = mp_is_normal
+	}
+	else_if = {
+		limit = {
+			country_power_score < {
+				value = var:mp_avg_player_score
+				multiply = 0.5
+			}
+		}
+		remove_variable = mp_is_gp
+		remove_variable = mp_is_major
+		set_variable = { name = mp_is_small value = yes }
+		remove_variable = mp_is_minor
+		remove_variable = mp_is_normal
+	}
+	else = {
+		remove_variable = mp_is_gp
+		remove_variable = mp_is_major
+		remove_variable = mp_is_small
+		remove_variable = mp_is_minor
+		set_variable = { name = mp_is_normal value = yes }
+	}
+
+	if = {
+		limit = {
+			is_over_alliance_limit = 1
+		}
+		add_country_modifier = {
+			modifier = mp_over_alliance_limit_penalty
+		}
+	}
+	else = {
+		remove_country_modifier = mp_over_alliance_limit_penalty
 	}
 }
 
