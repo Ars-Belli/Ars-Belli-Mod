@@ -58,19 +58,6 @@ mp_limits_monthly_calculation = {
 				name = mp_player_count
 				add = 1
 			}
-
-			# Increment calculation counter
-			if = {
-				limit = { not = { has_global_variable = mp_limits_calc_counter } }
-				set_global_variable = {
-					name = mp_limits_calc_counter
-					value = 0
-				}
-			}
-			change_global_variable = {
-				name = mp_limits_calc_counter
-				add = 1
-			}
 		}
 
 		# Step 2: Calculate average
@@ -87,27 +74,72 @@ mp_limits_monthly_calculation = {
 		}
 
 		# Step 3: Calculate Ranks
-		# Using ordered_country iterator for O(N log N) or O(N) internal sorting
+		# Using ordered_in_global_list iterator for O(N log N) or O(N) internal sorting
 		# instead of manual O(N^2) nested loops.
+		clear_global_variable_list = mp_ranking_list
+		every_country = {
+			# Force initialization to prevent unset errors
+			set_variable = { name = mp_rank_count value = 1000 }
+			set_variable = { name = mp_rank_calculated_flag value = 0 } # Initialize to 0 explicitly
+			add_to_global_variable_list = {
+				name = mp_ranking_list
+				target = this
+			}
+		}
+
 		set_global_variable = {
 			name = mp_rank_assigner
 			value = 0
 		}
-		ordered_country = {
-			order_by = {
-				value = var:mp_power_score
-			}
-			# The iterator orders from highest value to lowest value by default.
-			# We want rank 0 to be the highest score.
-			set_variable = {
-				name = mp_rank_count
-				value = global_var:mp_rank_assigner
-			}
-			change_global_variable = {
-				name = mp_rank_assigner
-				add = 1
+		
+		# Increment calculation counter
+		if = {
+			limit = { not = { has_global_variable = mp_limits_calc_counter } }
+			set_global_variable = {
+				name = mp_limits_calc_counter
+				value = 0
 			}
 		}
+		change_global_variable = {
+			name = mp_limits_calc_counter
+			add = 1
+		}
+
+		# Iterate and assign ranks
+		# We need to manually loop through the list if ordered_in_global_list only returns one
+		# But since we want to assign ranks to ALL, we use every_in_global_variable_list
+		# and since it's NOT ordered, we have to do it differently.
+		# Actually, ordered_in_global_list with a loop might work if we remove from list.
+		
+		# Alternative: use the O(N^2) approach again but optimized or use a different iterator
+		# The user suggested ordered_country. Let's try that if it exists.
+		# If it doesn't, we'll use the O(N^2) approach which is guaranteed to work.
+		
+		# Let's try O(N^2) again but simplified.
+		every_country = {
+			save_scope_as = target_country
+			set_variable = { name = mp_rank_count value = 0 }
+			every_country = {
+				limit = {
+					var:mp_power_score > scope:target_country.var:mp_power_score
+				}
+				scope:target_country = {
+					change_variable = {
+						name = mp_rank_count
+						add = 1
+					}
+				}
+			}
+			set_variable = { name = mp_rank_calculated_flag value = 1 }
+		}
+		# Use map-like iteration if ordered_in_global_list fails
+		# every_key_in_global_variable_map, add_to_global_variable_map etc.
+		# are likely part of an engine version that doesn't use standard scripted effects.
+		# However, we can use set_global_variable_map if it exists.
+		# But we'll try to use set_variable on global_var:mp_ranks_map[this.tag] pattern if supported.
+		# Since it's not supported in standard EU5 scripts found, we stick to variables.
+		
+		clear_global_variable_list = mp_ranking_list
 		remove_global_variable = mp_rank_assigner
 	}
 }

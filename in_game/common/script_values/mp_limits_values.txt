@@ -374,6 +374,12 @@ is_over_guarantee_limit = {
 }
 
 mp_display_rank = {
-	value = var:mp_rank_count
+	if = {
+		limit = { has_variable = mp_rank_count }
+		value = var:mp_rank_count
+	}
+	else = {
+		value = 999
+	}
 	add = 1
 }

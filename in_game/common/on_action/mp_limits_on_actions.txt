@@ -8,6 +8,7 @@ on_game_start = {
 	effect = {
 		every_country = {
 			mp_limits_rules_initialization = yes
+			mp_limits_monthly_calculation = yes
 		}
 	}
 }
@@ -32,102 +33,105 @@ mp_limits_monthly_pulse = {
 		}
 
 		if = {
-			# limit = { is_ai = no }
+			limit = { NOT = { has_variable = mp_rank_count } }
+			set_variable = { name = mp_rank_count value = 1000 }
+		}
+		if = {
+			limit = { NOT = { has_variable = mp_rank_calculated_flag } }
+			set_variable = { name = mp_rank_calculated_flag value = 0 }
+		}
 
-			# mp_rank_count, mp_power_score and others are already set by mp_limits_monthly_calculation
+		set_variable = {
+			name = mp_total_top_limit
+			value = var:mp_gp_limit
+		}
+		change_variable = {
+			name = mp_total_top_limit
+			add = var:mp_major_limit
+		}
 
-			set_variable = {
-				name = mp_total_top_limit
-				value = var:mp_gp_limit
-			}
-			change_variable = {
-				name = mp_total_top_limit
-				add = var:mp_major_limit
-			}
-
-			if = {
-				limit = { var:mp_rank_count < var:mp_gp_limit }
-				set_variable = { name = mp_is_gp value = yes }
-				remove_variable = mp_is_major
-				remove_variable = mp_is_small
-				remove_variable = mp_is_minor
-				remove_variable = mp_is_normal
-			}
-			else_if = {
-				limit = { var:mp_rank_count < var:mp_total_top_limit }
-				remove_variable = mp_is_gp
-				set_variable = { name = mp_is_major value = yes }
-				remove_variable = mp_is_small
-				remove_variable = mp_is_minor
-				remove_variable = mp_is_normal
-			}
-			else_if = {
-				limit = {
-					OR = {
-						AND = {
-							current_age = age_1_traditions
-							total_population < 500
-						}
-						AND = {
-							current_age = age_2_renaissance
-							total_population < 600
-						}
-						AND = {
-							current_age = age_3_discovery
-							total_population < 700
-						}
-						AND = {
-							current_age = age_4_reformation
-							total_population < 800
-						}
-						AND = {
-							current_age = age_5_absolutism
-							total_population < 900
-						}
-						AND = {
-							current_age = age_6_revolutions
-							total_population < 1000
-						}
+		if = {
+			limit = { var:mp_rank_count < var:mp_gp_limit }
+			set_variable = { name = mp_is_gp value = yes }
+			remove_variable = mp_is_major
+			remove_variable = mp_is_small
+			remove_variable = mp_is_minor
+			remove_variable = mp_is_normal
+		}
+		else_if = {
+			limit = { var:mp_rank_count < var:mp_total_top_limit }
+			remove_variable = mp_is_gp
+			set_variable = { name = mp_is_major value = yes }
+			remove_variable = mp_is_small
+			remove_variable = mp_is_minor
+			remove_variable = mp_is_normal
+		}
+		else_if = {
+			limit = {
+				OR = {
+					AND = {
+						current_age = age_1_traditions
+						total_population < 500
+					}
+					AND = {
+						current_age = age_2_renaissance
+						total_population < 600
+					}
+					AND = {
+						current_age = age_3_discovery
+						total_population < 700
+					}
+					AND = {
+						current_age = age_4_reformation
+						total_population < 800
+					}
+					AND = {
+						current_age = age_5_absolutism
+						total_population < 900
+					}
+					AND = {
+						current_age = age_6_revolutions
+						total_population < 1000
 					}
 				}
-				remove_variable = mp_is_gp
-				remove_variable = mp_is_major
-				remove_variable = mp_is_small
-				set_variable = { name = mp_is_minor value = yes }
-				remove_variable = mp_is_normal
 			}
-			else_if = {
-				limit = {
-					country_power_score < {
-						value = var:mp_avg_player_score
-						multiply = 0.5
-					}
+			remove_variable = mp_is_gp
+			remove_variable = mp_is_major
+			remove_variable = mp_is_small
+			set_variable = { name = mp_is_minor value = yes }
+			remove_variable = mp_is_normal
+		}
+		else_if = {
+			limit = {
+				country_power_score < {
+					value = var:mp_avg_player_score
+					multiply = 0.5
 				}
-				remove_variable = mp_is_gp
-				remove_variable = mp_is_major
-				set_variable = { name = mp_is_small value = yes }
-				remove_variable = mp_is_minor
-				remove_variable = mp_is_normal
 			}
-			else = {
-				remove_variable = mp_is_gp
-				remove_variable = mp_is_major
-				remove_variable = mp_is_small
-				remove_variable = mp_is_minor
-				set_variable = { name = mp_is_normal value = yes }
-			}
+			remove_variable = mp_is_gp
+			remove_variable = mp_is_major
+			set_variable = { name = mp_is_small value = yes }
+			remove_variable = mp_is_minor
+			remove_variable = mp_is_normal
+		}
+		else = {
+			remove_variable = mp_is_gp
+			remove_variable = mp_is_major
+			remove_variable = mp_is_small
+			remove_variable = mp_is_minor
+			set_variable = { name = mp_is_normal value = yes }
+		}
 
-			if = {
-				limit = {
-					is_over_alliance_limit = 1
-				}
-				add_country_modifier = {
-					modifier = mp_over_alliance_limit_penalty
-				}
+		if = {
+			limit = {
+				is_over_alliance_limit = 1
 			}
-			else = {
-				remove_country_modifier = mp_over_alliance_limit_penalty
+			add_country_modifier = {
+				modifier = mp_over_alliance_limit_penalty
 			}
+		}
+		else = {
+			remove_country_modifier = mp_over_alliance_limit_penalty
 		}
 	}
 }
