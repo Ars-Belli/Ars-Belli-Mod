@@ -216,4 +216,17 @@ mp_limits_rules_initialization = {
     else_if = { limit = { has_game_rule = threshold_70 } set_global_variable = { name = mp_small_power_threshold_var value = 0.70 } }
     else_if = { limit = { has_game_rule = threshold_75 } set_global_variable = { name = mp_small_power_threshold_var value = 0.75 } }
     else_if = { limit = { has_game_rule = threshold_80 } set_global_variable = { name = mp_small_power_threshold_var value = 0.80 } }
+
+    set_global_variable = {
+        name = mp_alliance_limit_penalty_enabled
+        value = 1
+    }
+    if = {
+        limit = { has_game_rule = penalty_enabled }
+        set_global_variable = { name = mp_alliance_limit_penalty_enabled value = 1 }
+    }
+    else_if = {
+        limit = { has_game_rule = penalty_disabled }
+        set_global_variable = { name = mp_alliance_limit_penalty_enabled value = 0 }
+    }
 }
