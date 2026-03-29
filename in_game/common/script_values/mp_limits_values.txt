@@ -40,6 +40,10 @@ country_power_score = {
 	add = {
 		value = country_control_pop_score
 	}
+
+	add = {
+		value = country_vassal_pop_score
+	}
 }
 
 country_pop_score = {
@@ -51,6 +55,17 @@ country_pop_score = {
 		# divide = 10000
 		value = total_accepted_culture_population
 		divide = 1000
+	}
+}
+
+country_vassal_pop_score = {
+	value = 0
+
+	every_subject = {
+		add = {
+			value = total_population
+			divide = 2000 # 1000 for standard pop scaling, then 50% for vassal
+		}
 	}
 }
 
