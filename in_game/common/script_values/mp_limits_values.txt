@@ -4,6 +4,8 @@
 # Minor (score < 2) = 1
 # AI weight = 0
 
+@county_pop_divide_by = 1000
+
 country_power_score = {
 	value = 0
 
@@ -50,11 +52,8 @@ country_pop_score = {
 	value = 0
 
 	add = {
-		# take into account expected_army_size_modifier because of age modifier
-		# value = expected_army_size
-		# divide = 10000
 		value = total_accepted_culture_population
-		divide = 1000
+		divide = @county_pop_divide_by
 	}
 }
 
@@ -64,7 +63,8 @@ country_vassal_pop_score = {
 	every_subject = {
 		add = {
 			value = total_population
-			divide = 2000 # 1000 for standard pop scaling, then 50% for vassal
+			divide = @county_pop_divide_by # for standard pop scaling
+			divide = 2 # then 50% for being a vassal vassal
 		}
 	}
 }
@@ -130,7 +130,8 @@ country_control_pop_score = {
 
 	add = {
 		value = total_control_scaled_population
-		divide = 4000
+		divide = @county_pop_divide_by
+		divide = 4
 	}
 }
 
