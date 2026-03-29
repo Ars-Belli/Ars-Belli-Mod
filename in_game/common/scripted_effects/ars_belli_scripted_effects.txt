@@ -81,8 +81,10 @@ mp_limits_initialize_ranks_and_cleanup = {
 	every_country = {
 		if = {
 			limit = {
-				global_var:mp_limits_players_only = 1
-				is_ai = yes
+				AND = {
+					global_var:mp_limits_players_only = 1
+					is_ai = yes
+				}
 			}
 			remove_variable = mp_is_gp
 			remove_variable = mp_is_major
@@ -144,7 +146,7 @@ mp_limits_game_start_effect = {
 	# Initialize rules globally
 	mp_limits_rules_initialization = yes
 
-	# on game start initialize all countries and ranks, including AI
+	# keep track of ai game rule, it shouldn't apply apply on game start (only 1337, not saves)
 	if = {
 		limit = {
 			global_var:mp_limits_players_only = 1
@@ -156,7 +158,12 @@ mp_limits_game_start_effect = {
 		set_global_variable = { name = mp_limits_players_only value = 0 }
 	}
 
+	# on game start initialize all countries and ranks, including AI
 	mp_limits_once_per_month_calculations = yes
+
+	every_country = {
+		mp_limits_rank_classification = yes
+	}
 
 	if = {
 		limit = {
@@ -314,8 +321,10 @@ mp_limits_rank_classification = {
 	# If AI and players only mode, clear any potential markers/modifiers and exit
 	if = {
 		limit = {
-			global_var:mp_limits_players_only = 1
-			is_ai = yes
+			AND = {
+				global_var:mp_limits_players_only = 1
+				is_ai = yes
+			}
 		}
 		remove_variable = mp_is_gp
 		remove_variable = mp_is_major

@@ -1,13 +1,6 @@
 ﻿mp_rank = {
 	type = country
 	text = {
-		localization_key = MP_RANK_AI
-		trigger = {
-			is_ai = yes
-			global_var:mp_limits_players_only = 1
-		}
-	}
-	text = {
 		localization_key = MP_RANK_GREAT
 		trigger = { has_variable = mp_is_gp }
 	}
@@ -16,7 +9,7 @@
 		trigger = { has_variable = mp_is_major }
 	}
 	text = {
-		localization_key = MP_RANK_MINOR_POWER
+		localization_key = MP_RANK_MINOR
 		trigger = { has_variable = mp_is_minor }
 	}
 	text = {
@@ -24,8 +17,22 @@
 		trigger = { has_variable = mp_is_small }
 	}
 	text = {
-		localization_key = MP_RANK_MINOR
+		localization_key = MP_RANK_NORMAL
 		trigger = { has_variable = mp_is_normal }
+	}
+	text = {
+		localization_key = MP_RANK_AI
+		trigger = {
+			NOT = {
+				OR = {
+					has_variable = mp_is_gp
+					has_variable = mp_is_major
+					has_variable = mp_is_minor
+					has_variable = mp_is_small
+					has_variable = mp_is_normal
+				}
+			}
+		}
 	}
 }
 
