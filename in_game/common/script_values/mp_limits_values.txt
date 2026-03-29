@@ -36,6 +36,10 @@ country_power_score = {
 	add = {
 		value = country_galley_score
 	}
+
+	add = {
+		value = country_control_pop_score
+	}
 }
 
 country_pop_score = {
@@ -84,7 +88,7 @@ county_navy_score = {
 	add = {
 		# value =
 		value = max_sailors
-		divide = 25
+		divide = 50
 	}
 }
 
@@ -103,6 +107,15 @@ country_galley_score = {
 	add = {
 		value = total_sub_unit_count:navy_galley
 		divide = 200
+	}
+}
+
+country_control_pop_score = {
+	value = 0
+
+	add = {
+		value = total_control_scaled_population
+		divide = 4000
 	}
 }
 
