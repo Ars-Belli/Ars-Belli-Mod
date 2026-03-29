@@ -16,7 +16,7 @@ if (-not (Test-Path -Path $destDir)) {
 }
 
 # Directories and files to copy (mod content)
-$includeList = @("in_game", "main_menu", ".metadata")
+$includeList = @("in_game", "main_menu", "loading_screen", ".metadata")
 
 foreach ($item in $includeList) {
     $srcPath = Join-Path $sourceDir $item
