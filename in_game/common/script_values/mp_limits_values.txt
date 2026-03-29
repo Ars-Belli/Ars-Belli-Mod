@@ -28,6 +28,14 @@ country_power_score = {
 	add = {
 		value = county_navy_score
 	}
+
+	add = {
+		value = country_heavy_ship_score
+	}
+
+	add = {
+		value = country_galley_score
+	}
 }
 
 country_pop_score = {
@@ -77,6 +85,24 @@ county_navy_score = {
 		# value =
 		value = max_sailors
 		divide = 25
+	}
+}
+
+country_heavy_ship_score = {
+	value = 0
+
+	add = {
+		value = total_sub_unit_count:navy_heavy_ship
+		divide = 50
+	}
+}
+
+country_galley_score = {
+	value = 0
+
+	add = {
+		value = total_sub_unit_count:navy_galley
+		divide = 100
 	}
 }
 
