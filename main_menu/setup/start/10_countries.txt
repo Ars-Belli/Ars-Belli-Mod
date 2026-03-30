@@ -1,5 +1,8 @@
 current_age = age_1_traditions
 
+# Ars Belli override file
+# Based on EU5 vanilla 1.1.10
+
 # own_control_core
 # own_control_integrated
 # own_control_conquered
@@ -21806,19 +21809,11 @@ countries = {
 		}
 
 		own_control_integrated = {
+			# Ars Belli: remove Levant and northern Hejaz from direct Mamluk control at game start.
 			el_arish nekhel qatya warrada
 			matruh sallum tobruk
 			el_qoseir ras_gharib safaga
 			el_jundi faran nuweiba saint_katrine
-			ayntab dluk
-			jerusalem acre amman aqaba beersheba gaza hebron karak maan majdal nablus safed sughar jaffa al_quwayrah
-			beirut baalbek deir_qamar sidon tripoli_syria shoubak madaba
-			damascus al_bab aleppo antioch arsuz artah baniyas dabiq hama homs idlib jabbul jableh kafartab latakia manbij maskanah masyaf nabek qusayr tartus zardana
-			umluj al_hawra al_manjur al_maramiyah
-			al_ula al_bleiteh al_farah_ula al_marwa az_zubayir mughayra
-			duba ad_disah al_azlam al_wajh bada_yaqub bir_al_qurr
-			tabuk_arabia al_khanbarah al_muazzam al_ukhaydir bajdah bir_ibn_hermas dhat_al_hajj
-			aynuna al_bad al_muwaylih haql makna
 		}
 
 		own_control_conquered = {
@@ -31978,67 +31973,23 @@ countries = {
 	}
 
 	KOJ = { #Kingdom of Jerusalem
-		our_cores_conquered_by_others = { }
+		# Ars Belli: repurpose KOJ as a Sunni Quds/Jerusalem start tag.
+		own_control_core = {
+			jerusalem acre amman aqaba beersheba gaza hebron karak maan majdal nablus safed sughar jaffa al_quwayrah shoubak madaba
+		}
 		starting_technology_level = 3
-		include = "expl_eastern_europe"
-		include = "eastern_european_catholic_monarchy_not_present"
+		include = "expl_middle_east"
+		include = "muslim_monarchy_no_abrahamic_dhimmi"
 		government = {
 			type = monarchy
 			heir_selection = cognatic_primogeniture
+			ruler = random
 
-			ruler_term = { character = koj_baldovino_v_jerusalem start_date = 1183.11.20 end_date = 1186.8.1 regnal_number = 5 }
-
-			ruler_term = { character = cyp_guy_i_lusignan start_date = 1190.10.21 end_date = 1192.4.1 regnal_number = 1 }
-
-			ruler_term = { character = koj_corrado_i_monferrato start_date = 1192.4.1 end_date = 1192.4.28 regnal_number = 1 } # Marital Co-Ruler
-			ruler_term = { character = koj_henri_ii_blois start_date = 1192.5.5 end_date = 1197.9.10 regnal_number = 2 } # Marital Co-Ruler
-
-			ruler_term = { character = koj_aimery_ii_lusignan start_date = 1198.1.1 end_date = 1205.4.1 regnal_number = 1 regnal_name = name_amalric } # Marital Co-Ruler
-
-			ruler_term = { character = koj_maria_i_monferrato start_date = 1205.4.1 end_date = 1210.9.14 regnal_number = 1 }
-			ruler_term = {
-				character = koj_maria_i_monferrato start_date = 1210.9.14 end_date = 1212.4.1 regnal_number = 1
-				character = lat_jean_i_brienne start_date = 1210.9.14 end_date = 1212.4.1 regnal_number = 1 # Marital Co-Ruler
-			}
-			ruler_term = {
-				character = lat_jean_i_brienne start_date = 1212.4.1 end_date = 1225.11.9 regnal_number = 1
-				character = sic_isabelle_ii_brienne start_date = 1212.4.1 end_date = 1225.11.9 regnal_number = 2 regnal_name = name_elizabeth
-			}
-			ruler_term = {
-				character = sic_isabelle_ii_brienne start_date = 1225.11.9 end_date = 1228.5.5 regnal_number = 2 regnal_name = name_elizabeth
-				character = ogk_friedrich_ii_hohenstaufen start_date = 1225.11.9 end_date = 1228.5.5 regnal_number = 1 # Marital Co-Ruler
-			}
-			ruler_term = {
-				character = ogk_friedrich_ii_hohenstaufen start_date = 1228.5.5 end_date = 1250.12.13 regnal_number = 1
-				character = ogk_konrad_iv_hohenstaufen start_date = 1228.5.5 end_date = 1250.12.13 regnal_number = 2
-			}
-
-			ruler_term = { character = ogk_konrad_iv_hohenstaufen start_date = 1250.12.13 end_date = 1254.5.21 regnal_number = 2 }
-			ruler_term = { character = sic_conradin_hohenstaufen start_date = 1254.5.21 end_date = 1268.10.29 regnal_number = 3 }
-
-			ruler_term = { character = cyp_hugues_iii_lusignan start_date = 1268.10.29 end_date = 1284.1.1 regnal_number = 1 }
-			ruler_term = { character = cyp_jean_i_lusignan start_date = 1284.1.1 end_date = 1285.5.20 regnal_number = 2 }
-			ruler_term = { character = cyp_henri_ii_lusignan start_date = 1285.5.20 end_date = 1291.5.28 regnal_number = 2 }
-
-			regnal_numbers = {
-				name_godfrey = 1
-				name_baldwin = 5
-				#Melisende = 1
-				name_fulk = 1
-				name_amalric = 2
-				name_sybil = 1
-				name_wido = 1
-				name_elizabeth = 2
-				name_conrad = 3
-				name_henry = 2
-				name_mary = 1
-				name_john = 2
-				name_frederick = 1
-				name_hugh = 1
+			laws = {
+				sharia_law = hanafi_policy
 			}
 		}
-		country_rank = rank_kingdom
-		court_language = french_language
+		religious_school = hanafi_school
 		capital = jerusalem
 	}
 	#Dilmaçids - DIL https://en.wikipedia.org/wiki/Beylik_of_Dilma%C3%A7
@@ -33850,10 +33801,14 @@ countries = {
 		}
 
 		own_control_integrated = {
+			# Ars Belli: extend Al Fadl to hold the released Syrian lands.
 			zubala al_labbah al_thulayma al_waqbi linah lowqah
 			al_anbar hit ayn_tamr karbala
 			anah abu_kemal haditha
 			deir_ez_zor tabqah rahba
+			ayntab dluk
+			beirut baalbek deir_qamar sidon tripoli_syria
+			damascus al_bab aleppo antioch arsuz artah baniyas dabiq hama homs idlib jabbul jableh kafartab latakia manbij maskanah masyaf nabek qusayr tartus zardana
 		}
 
 		starting_technology_level = 3
@@ -59595,6 +59550,15 @@ countries = {
 			yanbu al_ahmar al_jar ash_shibahah badr_hunayn yanbu_an_nakhil
 			al_thamad buwat shajwa
 			al_ais
+		}
+
+		# Ars Belli: extend Medina to hold the released northern Hejaz lands.
+		own_control_integrated = {
+			umluj al_hawra al_manjur al_maramiyah
+			al_ula al_bleiteh al_farah_ula al_marwa az_zubayir mughayra
+			duba ad_disah al_azlam al_wajh bada_yaqub bir_al_qurr
+			tabuk_arabia al_khanbarah al_muazzam al_ukhaydir bajdah bir_ibn_hermas dhat_al_hajj
+			aynuna al_bad al_muwaylih haql makna
 		}
 
 	include = "expl_middle_east"
