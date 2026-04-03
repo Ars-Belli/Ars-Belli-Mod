@@ -1,0 +1,4701 @@
+﻿namespace = flavor_sco
+flavor_sco.1 = {
+	type = country_event
+	title = flavor_sco.1.title
+	desc = flavor_sco.1.desc
+	historical_info = flavor_sco.1.historical_info
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1440.1.1
+		to = 1460.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		exists = ruler
+		any_character = {
+			has_estate = estate_type:nobles_estate
+			has_dynasty = yes
+			dynasty != root.ruler.dynasty
+			is_adult = yes
+		}
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_character = {
+			limit = {
+				has_estate = estate_type:nobles_estate
+				dynasty != root.ruler.dynasty
+				is_adult = yes
+			}
+			save_scope_as = target_character
+		}
+		ruler = { save_scope_as = target_ruler }
+	}
+
+	option = {
+		name = flavor_sco.1.a
+		historical_option = yes
+		add_gold = {
+			value = root.estate_tax_base:nobles_estate
+			multiply = 6
+		}
+
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+		add_gold_to_estate = {
+			estate_type = estate_type:nobles_estate
+			value = {
+			value = root.estate_tax_base:nobles_estate
+				multiply = -6
+			}
+		}
+
+		add_government_power = government_power_extreme_bonus
+
+	}
+	
+	option = {
+		name = flavor_sco.1.b
+		add_prestige = prestige_mild_penalty
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+		add_stability = stability_mild_bonus
+	}
+}
+
+flavor_sco.2 = {
+	type = country_event
+	title = flavor_sco.2.title
+	desc = flavor_sco.2.desc
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1339.1.1
+		to = 1366.1.1
+		monthly_chance = 40
+	}
+
+	image = "gfx/interface/illustrations/government/diplomacy_illustration.dds"
+
+	trigger = {
+		at_war = no
+		country_exists = c:FRA
+		country_exists = c:ENG
+	}
+
+	immediate = {
+		character:sco_john_balliol_of_scotland = {
+			save_scope_as = old_sco_ruler
+		}
+		character:fra_philippe_iv_capet = {
+			save_scope_as = old_fra_ruler
+		}
+	}
+
+	option = {
+		name = flavor_sco.2.a
+		historical_option = yes
+		add_trust = {
+			modifier = trust_sco_fra_renaissance_auld_alliance
+			target = c:FRA
+		}
+		c:FRA = {
+			add_trust = {
+				modifier = trust_sco_fra_renaissance_auld_alliance
+				target = c:SCO
+			}
+		}
+		c:FRA = {
+			add_opinion = { target = c:SCO modifier = opinion_good_relations }
+		}
+		add_opinion = { target = c:FRA modifier = opinion_good_relations }
+		c:ENG = {
+			add_opinion = { target = c:SCO modifier = opinion_irritated }
+		}
+	}
+	option = {
+		name = flavor_sco.2.b
+		add_prestige = prestige_severe_bonus
+		c:ENG = {
+			add_opinion = { target = c:SCO modifier = opinion_pleased }
+		}
+		c:FRA = {
+			add_opinion = { target = c:SCO modifier = opinion_mildly_displeased }
+		}
+	}
+}
+
+flavor_sco.3 = {
+	type = country_event
+	title = flavor_sco.3.title
+	desc = flavor_sco.3.desc
+	historical_info = flavor_sco.3.historical_info
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1529.1.1
+		to = 1556.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		religion = religion:catholic
+		religion:calvinist = { is_religion_enabled = yes}
+		country_exists = c:FRA
+		NOT = {	is_at_war_with = c:FRA	}
+		any_owned_location = {
+			has_building = building_type:calvinist_preachers
+		}
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:nobles_estate }
+		create_character = {
+			first_name = name_david
+			last_name = name_beaton
+			adm = {50 70}
+			dip = {50 70}
+			mil = {50 70}
+			culture = culture:scottish
+			religion = religion:catholic
+			add_trait = trait:unsuited_for_naval_command
+			add_trait = trait:unsuited_for_army_command
+			estate = estate_type:clergy_estate
+			save_scope_as = target_character
+			create_in_limbo = yes
+		}
+	}
+
+	option = {
+		name = flavor_sco.3.a
+		historical_option = yes
+		scope:target_character = { move_country = root }
+		add_government_power = government_power_extreme_bonus
+		ordered_owned_location = {
+			order_by = population
+			limit = { has_building = building_type:calvinist_preachers }
+			max = 3
+			check_range_bounds = no
+			destroy_all_buildings_of_type = building_type:calvinist_preachers
+		}
+	}
+
+	option = {
+		name = flavor_sco.3.b
+		hidden_effect = {
+			kill_character_silently = scope:target_character
+		}
+		add_prestige = prestige_weak_penalty
+	}
+}
+
+flavor_sco.4 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_sco.4.title
+	desc = flavor_sco.4.desc
+	historical_info = flavor_sco.4.historical_info
+
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1545.1.1
+		to = 1570.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		religion = religion:catholic
+		religion:calvinist = { is_religion_enabled = yes }
+		character:script_john_knox ?= {
+			is_alive = yes
+			owner = ROOT
+		}
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		character:script_john_knox = {
+			save_scope_as = target_character
+		}
+		random_known_country = {
+			limit = {
+				religion = religion:calvinist
+				opinion = { target = root value < -50 }
+			}
+			save_scope_as = target_enemy
+		}
+	}
+
+	option = {
+		name = flavor_sco.4.a
+		historical_option = yes
+		trigger = {
+			exists = scope:target_enemy
+		}
+		custom_tooltip = {
+			text = flavor_sco.4.a.tt
+			ordered_owned_location = {
+				limit = {
+					continent = continent:europe
+					NOT = { dominant_religion = religion:calvinist }
+					NOT = { has_building = building_type:calvinist_preachers }
+				}
+				order_by = population
+				max = {
+					value = num_of_non_rural
+					multiply = 0.5
+				}
+				construct_building = {
+					building_type = building_type:calvinist_preachers
+				}
+			}
+		}
+		scope:target_character = { move_country = scope:target_enemy }
+	}
+
+	option = {
+		name = flavor_sco.4.b
+		custom_tooltip = {
+			text = flavor_sco.4.b.tt
+			ordered_owned_location = {
+				limit = {
+					continent = continent:europe
+					NOT = { dominant_religion = religion:calvinist }
+					NOT = { has_building = building_type:calvinist_preachers }
+				}
+				order_by = population
+				max = {
+					value = num_of_non_rural
+				}
+				construct_building = {
+					building_type = building_type:calvinist_preachers
+				}
+			}
+		}
+		add_prestige = prestige_weak_penalty
+	}
+}
+
+flavor_sco.5 = { # The First Congregation
+	hide_portraits = yes
+	type = country_event
+	title = flavor_sco.5.title
+	desc = flavor_sco.5.desc
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1557.1.1
+		to = 1584.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		religion = religion:catholic
+		"religion_percentage_in_country(religion:calvinist)" > 0.15
+		exists = character:script_john_knox
+		character:script_john_knox ?= {
+			owner = ROOT
+		}
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:clergy_estate }
+		character:script_john_knox = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_sco.5.a
+		historical_option = yes
+		add_stability = stability_mild_bonus
+		add_country_modifier = { modifier = sco_the_first_congregation years = 12 mode = add_and_extend }
+		custom_tooltip = sco_prevent_catholic_conversion
+	}
+	option = {
+		name = flavor_sco.5.b
+		add_stability = stability_mild_penalty
+		add_religious_influence = religious_influence_mild_bonus
+	}
+}
+
+flavor_sco.6 = {
+	type = country_event
+	title = flavor_sco.6.title
+	desc = flavor_sco.6.desc
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1650.1.1
+		to = 1776.1.1
+		monthly_chance = 8
+	}
+
+	trigger = {
+		num_of_ports > 1
+		discovered_route_to_india = yes
+		OR = {
+			any_owned_non_rural_location = {
+				sub_continent = sub_continent:south_asia
+			}
+			any_owned_foreign_building_location = {
+				sub_continent = sub_continent:south_asia
+			}
+		}
+
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+	
+	option = {
+		name = flavor_sco.6.a
+		custom_tooltip = flavor_sco.6.a.tt
+		set_variable = { name = has_east_india_trading_company value = 1 }
+	}
+
+	option = {
+		name = flavor_sco.6.b
+		add_stability = stability_severe_bonus
+		add_legitimacy = legitimacy_severe_bonus
+		add_country_modifier = { modifier = sco_no_east_india years = 12 mode = add_and_extend }
+	}
+}
+
+flavor_sco.7 = {
+	type = country_event
+	title = flavor_sco.7.title
+	desc = flavor_sco.7.desc
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		tag = GBR
+		from = 1725.1.1
+		to = 1800.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_advance = modern_road_advance
+		any_owned_location = {
+			area = area:scottish_highlands_area
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+	
+	option = {
+		name = flavor_sco.7.a
+		historical_option = yes
+		change_gold_effect = { scale = -6 }
+		custom_tooltip = {
+			text = flavor_sco.7.tt
+			area:scottish_highlands_area = {
+				every_location_in_area = {
+					change_development = development_mild_bonus
+					add_road_to = {
+						target = root.capital
+						type = modern_road
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = flavor_sco.7.b
+		change_gold_effect = { scale = -6 }
+		add_country_modifier = { modifier = sco_global_road_construction years = 12 mode = add_and_extend }
+	}
+	option = {
+		name = flavor_sco.7.c
+
+		change_societal_value = {
+			type = centralization_vs_decentralization
+			value = societal_value_large_move_to_right
+		}
+	}
+}
+
+flavor_sco.8 = {
+	type = country_event
+	title = flavor_sco.8.title
+	desc = flavor_sco.8.desc
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1700.1.1
+		to = 1800.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		if = {
+			limit = {
+				owns = location:glasgow
+			}
+			location:glasgow = { save_scope_as = target_location }
+		}
+		else = {
+			random_owned_location = {
+				limit = {
+					is_city = yes
+					dominant_culture = root.culture
+				}
+			}
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_sco.8.a
+		historical_option = yes
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_move_to_left }
+	}
+	option = {
+		name = flavor_sco.8.b
+		change_societal_value = { type = mercantilism_vs_free_trade value = societal_value_move_to_left }
+	}
+}
+
+flavor_sco.9 = {
+	type = country_event
+	title = flavor_sco.9.title
+	desc = flavor_sco.9.desc
+	historical_info = flavor_sco.9.historical_info
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1570.1.1
+		to = 1625.1.1
+		monthly_chance = 5
+	}
+
+image = "gfx/interface/illustrations/institutions/scientific_revolution.dds"
+
+	immediate = {
+		create_character = {
+			first_name = name_george
+			last_name = Bruce
+			culture = culture:scottish
+			estate = estate_type:burghers_estate
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_sco.9.a
+		add_research_progress = research_progress_severe_bonus
+	}
+}
+
+flavor_sco.10 = {
+	type = country_event
+	title = flavor_sco.10.title
+	desc = flavor_sco.10.desc
+	historical_info = flavor_sco.10.historical_info
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1570.1.1
+		to = 1625.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_regent = no
+		exists = ruler
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:peasants_estate }
+		set_variable = witchcraft_decision
+		ruler = { save_scope_as = target_ruler }
+	}
+
+	option = {
+		name = flavor_sco.10.a
+		historical_option = yes
+		add_stability = stability_mild_penalty
+		add_legitimacy = legitimacy_mild_bonus
+		add_policy = policy:witchcraft_banned
+	}
+	option = {
+		name = flavor_sco.10.b
+		add_stability = stability_mild_bonus
+		add_legitimacy = legitimacy_mild_penalty
+		add_policy = policy:witchcraft_ignored
+	}
+}
+
+flavor_sco.11 = {
+	type = country_event
+	title = flavor_sco.11.title
+	desc = flavor_sco.11.desc
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1300.1.1
+		to = 2000.1.1
+		monthly_chance = 50
+	}
+
+	trigger = {
+		owns = location:london
+		capital != location:london
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:burghers background = pop_type:soldiers }
+	}
+	
+	option = {
+		name = flavor_sco.11.a
+		add_prestige = prestige_extreme_bonus
+		location:london = {
+			change_development  = development_severe_penalty
+		}
+		capital = {
+			change_development  = development_severe_bonus
+		}
+
+		add_migration = {
+			owner = this
+			from = location:london.province_definition
+			to = capital.province_definition
+			type = pop_type:peasants
+			amount = 0.250
+			months = 120
+		}
+
+	}
+	
+	option = {
+		name = flavor_sco.11.b
+		add_stability = stability_extreme_bonus
+	}
+}
+
+flavor_sco.12 = {
+	type = country_event
+	title = flavor_sco.12.title
+	desc = flavor_sco.12.desc
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1340.3.5
+		to = 1344.1.1
+		monthly_chance = 80
+	}
+
+	trigger = {
+		government_type = government_type:monarchy
+		character:sco_david_ii ?= {
+			is_alive = yes
+		}
+		character:sco_edward_balliol ?= {
+			root.ruler != this
+		}
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		if = {
+			limit = {
+				has_regent = yes
+			}
+			regent = { save_scope_as = guardian_of_scotland }
+		}
+		character:sco_david_ii = {
+			save_scope_as = young_king_david
+		}
+		c:ENG = { save_scope_as = england }
+	}
+
+	option = {
+		name = flavor_sco.12.a
+
+		if = {
+			limit = {
+				scope:young_king_david = {
+					is_ruler = no
+				}
+			}
+			set_new_ruler = scope:young_king_david
+		}
+		scope:young_king_david = {
+			move_country = root
+		}
+		add_government_power = government_power_ultimate_bonus
+	}
+
+	option = {
+		name = flavor_sco.12.b
+		trigger = {
+			has_regent = yes
+		}
+		scope:young_king_david = {
+			move_country = root
+		}
+		extend_regency = 5
+	}
+
+	option = {
+		name = flavor_sco.12.c
+		trigger = {
+			has_regent = yes
+		}
+		set_new_ruler = scope:guardian_of_scotland
+		c:FRA = {
+			set_variable = { name = scotland_did_not_extend_regency value = 1 }
+		}
+	}
+}
+
+flavor_sco.13 = { # We are diverse.... or?
+	type = country_event
+	title = flavor_sco.13.title
+	desc = flavor_sco.13.desc
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = SCO
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		culture = { save_scope_as = previous_culture }
+		event_illustration_culture_effect = { culture = culture:highland }
+	}
+
+	option = { # Aye we are diverse
+		name = flavor_sco.13.a
+		culture = { add_cultural_tradition = cultural_tradition_radical_bonus }
+	}
+
+	option = { # Nay we are Lowlanders
+		name = flavor_sco.13.b
+		if = {
+			limit = { NOT = { culture = culture:scottish } }
+			change_culture = culture:scottish
+			add_accepted_culture = scope:previous_culture
+		}
+		if = {
+			limit = { has_reform = government_reform:celtic_traditions_reform }
+			remove_reform = government_reform:celtic_traditions_reform
+		}
+		every_primary_or_accepted_culture = {
+			limit = { NOT = { language = culture:scottish.language } }
+			root = {
+				if = {
+					limit = { NOT = { culture = prev } }
+					remove_accepted_culture = prev
+				}
+			}
+		}
+		if = {
+			limit = { court_dialect != culture:scottish.dialect }
+			set_court_language = culture:scottish.dialect
+		}
+		culture:scottish = { add_cultural_influence = cultural_influence_radical_bonus }
+	}
+
+	option = { # Nay we are Highlanders
+		name = flavor_sco.13.c
+		if = {
+			limit = { NOT = { culture = culture:highland } }
+			change_culture = culture:highland
+			add_accepted_culture = scope:previous_culture
+		}
+		if = {
+			limit = { NOT = { has_reform = government_reform:celtic_traditions_reform } }
+			add_reform = government_reform:celtic_traditions_reform
+		}
+		every_primary_or_accepted_culture = {
+			limit = { NOT = { language = culture:highland.language } }
+			root = {
+				if = {
+					limit = { NOT = { culture = prev } }
+					remove_accepted_culture = prev
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { court_dialect = culture:highland.dialect  } }
+			set_court_language = culture:highland.dialect
+		}
+		culture:highland = { add_cultural_influence = cultural_influence_radical_bonus }
+	}
+}
+
+flavor_sco.14 = { # raising David II
+	type = country_event
+	title = flavor_sco.14.title
+	desc = flavor_sco.14.desc
+
+	fire_only_once = yes
+
+	illustration_tags = {
+		10 = interior
+		10 = angry
+	}
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1337.1.1
+		to = 1342.3.5
+		monthly_chance = 10
+	}
+
+	trigger = {
+		has_ruler = no
+		has_regent = yes
+		government_type = government_type:monarchy
+		heir = {
+			this = character:sco_david_ii
+			is_adult = no
+			is_alive = yes
+		}
+	}
+
+	immediate = {
+		character:sco_david_ii = { save_scope_as = young_king_david }
+		c:FRA = { save_scope_as = france }
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	option = {
+		name = flavor_sco.14.a
+		add_legitimacy = legitimacy_mild_bonus
+		scope:young_king_david = {
+			if = {
+				limit = { NOT = { culture = culture:scottish }  }
+				change_character_culture = culture:scottish
+			}
+			if = {
+				limit = {
+					NOR = {
+						has_child_education = administrative_education
+						has_child_education = expensive_in_depth_education
+					}
+				}
+				set_child_education = child_education:administrative_education
+				add_adm = 10
+			}
+		}
+	}
+
+	option = {
+		name = flavor_sco.14.b
+		add_legitimacy = legitimacy_mild_bonus
+		scope:young_king_david = {
+			if = {
+				limit = { NOT = { culture = culture:highland }  }
+				change_character_culture = culture:highland
+			}
+			if = {
+				limit = {
+					NOR = {
+						has_child_education = military_education
+						has_child_education = expensive_in_depth_education
+					}
+			}
+				set_child_education = child_education:military_education
+				add_mil = 10
+			}
+		}
+	}
+
+	option = {
+		name = flavor_sco.14.c
+		add_prestige = prestige_mild_bonus
+		scope:young_king_david = {
+			if = {
+				limit = { NOT = { culture = culture:french }  }
+				change_character_culture = culture:french
+			}
+			if = {
+				limit = {
+					NOR = {
+						has_child_education = diplomatic_education
+						has_child_education = expensive_in_depth_education
+					}
+				}
+				set_child_education = child_education:diplomatic_education
+			}
+			add_dip = 10
+		}
+	}
+}
+
+flavor_sco.15 = { # Loch Ness Monster sighting
+	type = country_event
+	title = flavor_sco.15.title
+	desc = flavor_sco.15.desc
+
+	fire_only_once = yes
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+		location:inverness = {
+			save_scope_as = target_location
+		}
+	}
+
+	trigger = {
+		location:inverness = {
+			owner = root
+		}
+	}
+
+	option = {
+		name = flavor_sco.15.a
+		add_stability = stability_mild_penalty
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_move_to_left }
+		location:inverness = {
+			add_location_modifier = {
+				modifier = sco_loch_ness_sightings
+				years = 10
+				mode = add_and_extend
+			}
+		}
+	}
+
+	option = {
+		name = flavor_sco.15.b
+		add_stability = stability_weak_penalty
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_move_to_right }
+	}
+}
+
+flavor_sco.16 = { # Mons Meg bombard
+	type = country_event
+	title = flavor_sco.16.title
+	desc = flavor_sco.16.desc
+
+	fire_only_once = yes
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_cannons.dds"
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1400.1.1
+		to = 1500.3.5
+		monthly_chance = 1
+	}
+
+	trigger = {
+		has_advance = unlock_houfnice_advance
+		location:mons = {
+			market = { is_produced_in_market = goods:cannons }
+			owner ?= {
+				NOR = {
+					opinion = { target = root value <= 0 }
+					is_rival_of = root
+					is_enemy_of = root
+					is_at_war_with = root
+				}
+			}
+		}
+		any_owned_location = {
+			is_core_of = root
+			has_building_with_at_least_one_level = castle
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				location:edinburgh = {
+					owner ?= root
+					is_core_of = root
+					has_building_with_at_least_one_level = castle
+				}
+			}
+			location:edinburgh = { save_scope_as = destination }
+		}
+		else_if = {
+			limit = { capital = { has_building_with_at_least_one_level = castle } }
+			capital = { save_scope_as = destination }
+		}
+		else = {
+			random_owned_location = {
+				limit = {
+					is_core_of = root
+					has_building_with_at_least_one_level = castle
+				}
+				save_scope_as = destination
+			}
+		}
+		location:mons = {
+			save_scope_as = origin
+			owner ?= {
+				save_scope_as = gifter
+			}
+		}
+
+		add_opinion = { target = scope:gifter modifier = sco_opinion_sent_mons_meg }
+	}
+
+	# turn it into a work of art
+	option = {
+		name = flavor_sco.16.a
+		change_societal_value = { type = offensive_vs_defensive value = societal_value_move_to_right }
+
+		scope:origin = {
+			create_art = {
+				artist = scope:gifter.ruler
+				quality = 63
+				location = scope:destination
+				type = work_of_art_type:weapon
+				key = work_of_art_mons_meg
+			}
+		}
+		scope:gifter = { add_opinion = { target = root modifier = sco_opinion_accepted_mons_meg } }
+	}
+
+	# turn it into a regiment
+	option = {
+		name = flavor_sco.16.b
+		scope:destination = { create_sub_unit_of_category = sub_unit_category:army_artillery }
+		change_societal_value = { type = offensive_vs_defensive value = societal_value_move_to_left }
+		scope:gifter = { add_opinion = { target = root modifier = sco_opinion_accepted_mons_meg } }
+	}
+
+	# turn it into moneyyyy ££££££ €€€€€ $$$$$$ SEKSEKSEKSEKSEK
+	option = {
+		name = flavor_sco.16.c
+		scope:destination.market = {
+			sell_goods_from_location = { goods = goods:iron amount = 25 location = scope:destination }
+		}
+		scope:gifter = { add_opinion = { target = root modifier = sco_opinion_destroyed_mons_meg } }
+	}
+}
+
+scripted_trigger sco_17_location_trigger = {
+	is_discovered_by = root
+	has_owner = yes
+	owner ?= {
+		NOT = { this = root }
+		religion = location:ayr.dominant_religion
+	}
+}
+
+flavor_sco.17 = { # Robert Burns
+	hide_portraits = yes
+	type = country_event
+	title = flavor_sco.17.title
+	desc = flavor_sco.17.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		tag = GBR
+		from = 1770.1.1
+		to = 1800.1.1
+		monthly_chance = 2
+	}
+
+	fire_only_once = yes
+
+	trigger = {
+		any_owned_location = { count >= 2 }
+		location:ayr = {
+			owner ?= root
+			any_pop = {
+				pop_type = pop_type:peasants
+				culture = culture:scottish
+			}
+		}
+		region:caribbean_region = {
+			any_location_in_region = {
+				sco_17_location_trigger = yes
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+		region:caribbean_region = {
+			save_scope_as = west_indies
+		}
+		random_owned_location = {
+			limit = { this = location:ayr }
+			save_scope_as = origin
+		}
+		create_character = {
+			first_name = name_robert
+			last_name = name_burns
+			female = no
+			artist = writer
+			artist_skill = 0.85
+			culture = culture:scottish
+			birth_location = scope:origin
+			religion = scope:origin.dominant_religion
+			birth_date = 1759.1.25
+			save_scope_as = burns
+			estate = estate_type:peasants_estate
+		}
+		if = {
+			limit = {
+				location:edinburgh = {
+					owner ?= root
+				}
+			}
+			location:edinburgh = { save_scope_as = destination }
+		}
+		else_if = {
+			limit = {
+				any_owned_location = {
+					NOT = { this = scope:origin }
+					is_core_of = root
+					OR = {
+						location_rank = location_rank:town
+						location_rank = location_rank:city
+					}
+				}
+			}
+			random_owned_location = {
+				limit = {
+					NOT = { this = scope:origin }
+					is_core_of = root
+					OR = {
+						location_rank = location_rank:town
+						location_rank = location_rank:city
+					}
+				}
+				save_scope_as = destination
+			}
+		}
+		else = {
+			random_owned_location = {
+				limit = {
+					NOT = { this = scope:origin }
+				}
+				save_scope_as = destination
+			}
+		}
+	}
+
+	option = {
+		name = flavor_sco.17.a
+
+		scope:origin = {
+			create_art = {
+				artist = scope:burns
+				quality = 75
+				location = scope:destination
+				type = work_of_art_type:poem
+				key = robert_burns_poems_chiefly_in_the_scottish_dialect
+			}
+		}
+	}
+
+	option = {
+		name = flavor_sco.17.b
+
+		scope:origin = {
+			create_art = {
+				artist = scope:burns
+				quality = 75
+				location = scope:destination
+				type = work_of_art_type:poem
+				key = robert_burns_poems_chiefly_in_the_scottish_dialect
+			}
+			create_art = {
+				artist = scope:burns
+				quality = 60
+				location = scope:destination
+				type = work_of_art_type:poem
+			}
+			create_art = {
+				artist = scope:burns
+				quality = 50
+				location = scope:destination
+				type = work_of_art_type:poem
+			}
+		}
+
+		scope:west_indies = {
+			random_location_in_region = {
+				limit = {
+					sco_17_location_trigger = yes
+				}
+				owner ?= {
+					scope:burns = { move_country = prev }
+				}
+			}
+		}
+
+		change_gold_effect = { scale = -6 }
+	}
+}
+
+flavor_sco.18 = { # Wolf of Badenoch
+	type = country_event
+	title = flavor_sco.18.title
+	desc = flavor_sco.18.desc
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1350.1.1
+		to = 1450.1.1
+		monthly_chance = 1
+	}
+
+	fire_only_once = yes
+
+	trigger = {
+		location:elgin = {
+			owner ?= ROOT
+			has_building_with_at_least_one_level = cathedral
+		}
+	}
+
+	immediate = {
+		location:elgin = {
+			save_scope_as = target_location
+			change_prosperity = prosperity_radical_penalty
+			destroy_building = "building(building_type:cathedral|owner)"
+		}
+		location:badenoch = { save_scope_as = wolf_origin }
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+	}
+
+	option = {
+		name = flavor_sco.18.a
+		location:badenoch = {
+			change_control = control_severe_bonus
+		}
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_weak_bonus }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_weak_penalty }
+	}
+
+	option = {
+		name = flavor_sco.18.b
+		location:elgin = {
+			construct_building = {
+				building_type = building_type:cathedral
+			}
+			change_control = control_severe_bonus
+			change_prosperity = prosperity_ultimate_bonus
+		}
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_extreme_bonus }
+		add_prestige = prestige_mild_bonus
+	}
+
+	option = {
+		name = flavor_sco.18.c
+		trigger = {
+			any_owned_location = {
+				this != scope:target_location
+				has_building_with_at_least_one_level = cathedral
+			}
+		}
+		random_owned_location = {
+			limit = {
+				this != scope:target_location
+				has_building_with_at_least_one_level = cathedral
+			}
+			change_prosperity = prosperity_radical_penalty
+			destroy_building = "building(building_type:cathedral|owner)"
+		}
+
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_extreme_penalty }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_weak_bonus }
+		change_societal_value = { type = belligerent_vs_conciliatory value = societal_value_tiny_move_to_left }
+	}
+}
+
+flavor_sco.19 = { # John Fordun - Chronica Gentis Scotorum
+	type = country_event
+	title = flavor_sco.19.title
+	desc = flavor_sco.19.desc
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_paper.dds"
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1360.1.1
+		to = 1386.1.1
+		monthly_chance = 5
+	}
+
+	fire_only_once = yes
+
+	trigger = {
+		country_exists = c:SCO
+		c:SCO = {
+			in_civil_war = no
+		}
+	}
+
+	immediate = {
+		create_character = {
+			first_name = name_john
+			last_name = fordun
+			adm = 70
+			dip = 60
+			mil = 20
+			artist = writer
+			birth_date = 1325.1.1
+			artist_skill = 0.75
+			culture = culture:scottish
+			birth_location = location:aberdeen
+			script = john_fordun
+			save_scope_as = target_artist
+			estate = estate_type:clergy_estate
+		}
+		capital = { save_scope_as = target_capital_location }
+	}
+
+	option = {
+		name = flavor_sco.19.a
+		scope:target_capital_location = {
+			create_art = {
+				artist = scope:target_artist
+				quality = 62
+				type = work_of_art_type:chronicle
+				key = chronica_gentis_scotorum
+			}
+		}
+		add_legitimacy = legitimacy_mild_bonus
+		add_prestige = prestige_mild_bonus
+	}
+
+	historical_info = flavor_sco.19.historical_info
+
+}
+
+flavor_sco.20 = { # Wild Haggis
+	type = country_event
+	title = flavor_sco.20.title
+	desc = flavor_sco.20.desc
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_fur.dds"
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1700.1.1
+		to = 1800.1.1
+		monthly_chance = 1
+	}
+
+	fire_only_once = yes
+
+	trigger = {
+		any_owned_location = {
+			area = area:scottish_highlands_area
+		}
+	}
+
+	immediate = {
+	}
+
+	option = {
+		name = flavor_sco.20.a # substitute
+		add_stability = stability_mild_bonus
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_tiny_move_to_right }
+
+		historical_option = yes
+	}
+	option = {
+		name = flavor_sco.20.b # breeding programme
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_tiny_move_to_left }
+		capital.market = {
+			add_goods_supply = {
+				goods = goods:fur
+				amount = market_goods_mild_gain
+			}
+		}
+	}
+}
+
+flavor_sco.100 = { # Aftermath of Halidon Hill
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.100.title
+ 	desc = flavor_sco.100.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1337.1.1
+		to = 1345.1.1
+		monthly_chance = 100
+	}
+
+ 	trigger = {
+		country_exists = c:SBL
+		is_at_war_with = c:SBL
+		has_regent = yes
+		has_heir = yes
+		c:SBL = {
+			has_ruler = yes
+		}
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		regent ?= {
+            save_scope_as = sco_regent
+        }
+		heir ?= {
+			save_scope_as = sco_heir
+		}
+		c:SBL = {
+			ruler ?= {
+           		save_scope_as = sbl_ruler
+        	}
+		}
+	}
+
+ 	option = { # We will press on and defeat Balliol!
+		name = flavor_sco.100.a
+		historical_option = yes
+		add_stability = stability_severe_bonus
+		add_legitimacy = legitimacy_mild_bonus
+		add_country_modifier = { modifier = sco_civil_war_aggressive years = 12 mode = add_and_extend }
+		change_societal_value = { type = offensive_vs_defensive value = societal_value_move_to_left }
+		ai_chance = {
+			factor = 0.9
+		}
+ 	}
+
+ 	option = { # We shall force Balliol hand.
+		name = flavor_sco.100.b
+		add_stability = stability_mild_bonus
+		add_legitimacy = legitimacy_severe_bonus
+		add_country_modifier = { modifier = sco_civil_war_defensive years = 12 mode = add_and_extend }
+		change_societal_value = { type = offensive_vs_defensive value = societal_value_move_to_right }
+		ai_chance = {
+			factor = 0.1
+		}
+ 	}
+}
+
+flavor_sco.101 = { # The Balliol Claim
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.101.title
+ 	desc = flavor_sco.101.desc
+
+	dynamic_historical_event = {
+		tag = SBL
+		from = 1337.1.1
+		to = 1345.1.1
+		monthly_chance = 100
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		country_exists = c:SCO
+		is_at_war_with = c:SCO
+		c:SCO = {
+			has_regent = yes
+			has_heir = yes
+		}
+ 	}
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		c:SCO = {
+			regent ?= {
+          		save_scope_as = sco_regent
+       		}
+		}
+		ruler ?= {
+			save_scope_as = sbl_ruler
+		}
+		c:SCO = {
+			heir ?= {
+           		save_scope_as = sco_heir
+        	}
+		}
+	}
+
+ 	option = { # We will crush this insurgency and push out the Brus for good!
+		name = flavor_sco.101.a
+		historical_option = yes
+		add_stability = stability_mild_bonus
+		add_legitimacy = legitimacy_mild_bonus
+		add_country_modifier = { modifier = sbl_english_backing years = 12 mode = add_and_extend }
+ 	}
+}
+
+flavor_sco.102 = { # Resurgence Against the Rebels
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.102.title
+ 	desc = flavor_sco.102.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1337.1.1
+		to = 1356.1.1
+		monthly_chance = 100
+	}
+
+ 	trigger = {
+		has_regent = yes
+		has_heir = yes
+		country_exists = c:SBL
+		is_at_war_with = c:SBL
+		c:SBL = {
+			num_locations < 4
+			is_ai = yes
+			has_ruler = yes
+		}
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		regent ?= {
+            save_scope_as = sco_regent
+        }
+		heir ?= {
+			save_scope_as = sco_heir
+		}
+		c:SBL = {
+			ruler ?= {
+           		save_scope_as = sbl_ruler
+        	}
+		}
+	}
+
+ 	option = { #We will drive out this puppet for good!
+		name = flavor_sco.102.a
+		c:SBL = {
+			add_country_modifier = { modifier = sco_desertion_among_balliol years = 12 mode = add_and_extend }
+		}
+		add_legitimacy = legitimacy_extreme_bonus
+		add_army_tradition = army_tradition_extreme_bonus
+ 	}
+}
+
+flavor_sco.103 = { # Honoring the Auld Alliance
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.103.title
+ 	desc = flavor_sco.103.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1347.1.1
+		to = 1376.1.1
+		monthly_chance = 33
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		country_exists = c:FRA
+		country_exists = c:ENG
+		in_civil_war = no
+		at_war = no
+		NOT = {	is_at_war_with = c:ENG }
+		NOT = {	has_truce_with = c:ENG }
+		c:FRA = {
+			is_at_war_with = c:ENG
+		}
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # We shall make preparations to invade England at once!
+		name = flavor_sco.103.a
+		historical_option = yes
+		add_stability = stability_mild_penalty
+		create_relation = {
+			first = c:FRA
+			second = c:SCO
+			type = relation_type:guarantee
+		}
+		add_casus_belli = {
+			target = c:ENG
+			type = casus_belli:cb_sco_invade_england
+		}
+		add_country_modifier = { modifier = sco_advance_into_england years = 5 mode = add_and_extend }
+		c:FRA = {
+			add_opinion = { target = c:SCO modifier = opinion_sco_hyw_auld_alliance }
+		}
+		add_opinion = { target = c:FRA modifier = opinion_sco_hyw_auld_alliance }
+		ai_chance = {
+			factor = 0.7
+			modifier = {
+				factor = 0
+				stability < 10
+			}
+		}
+ 	}
+
+ 	option = { # We cannot afford a war with England, but we can aid France by other means
+		name = flavor_sco.103.b
+		create_relation = {
+			first = c:FRA
+			second = c:SCO
+			type = relation_type:guarantee
+		}
+		add_country_modifier = { modifier = sco_auld_alliance_funding_fra years = 5 mode = add_and_extend }
+		c:FRA = {
+			add_country_modifier = { modifier = sco_fra_receiving_auld_funding years = 5 mode = add_and_extend }
+		}
+		c:FRA = {
+			add_opinion = { target = c:SCO modifier = opinion_sco_hyw_monetary_auld_alliance }
+		}
+		add_opinion = { target = c:FRA modifier = opinion_sco_hyw_monetary_auld_alliance }
+		ai_chance = {
+			factor = 0.2
+		}
+ 	}
+
+ 	option = { # Avoid involving ourselves for now
+		name = flavor_sco.103.c
+		add_country_modifier = { modifier = sco_fortifying_against_england years = 5 mode = add_and_extend }
+		c:FRA = {
+			add_opinion = { target = c:SCO modifier = opinion_sco_dishonored_hyw_auld_alliance }
+		}
+		ai_chance = {
+			factor = 0.1
+		}
+ 	}
+}
+
+flavor_sco.104 = { # A Free and Independent Kingdom
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.104.title
+ 	desc = flavor_sco.104.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1353.1.1
+		to = 1370.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		government_type = government_type:monarchy
+		at_war = no
+		stability > 50
+		legitimacy > 75
+		war_exhaustion < 0.25
+ 	}
+
+	illustration_tags = {
+		10 = happy
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # Scotland's independence is finally secured
+		name = flavor_sco.104.a
+		historical_option = yes
+		add_country_modifier = { modifier = sco_independence_from_england years = 15 mode = add_and_extend }
+		add_prestige = prestige_extreme_bonus
+		ai_chance = {
+			factor = 0.75
+		}
+ 	}
+
+ 	option = { # Now is the time for peace and prosperity
+		name = flavor_sco.104.b
+		add_country_modifier = { modifier = sco_focus_on_peace years = 15 mode = add_and_extend }
+		add_stability = stability_mild_bonus
+		add_legitimacy = legitimacy_mild_bonus
+		ai_chance = {
+			factor = 0.25
+		}
+ 	}
+}
+
+flavor_sco.105 = { # Rise of the Stewarts (Stuart)
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.105.title
+ 	desc = flavor_sco.105.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1360.1.1
+		to = 1390.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		at_war = no
+		character:sco_robert_ii ?= {
+			is_alive = yes
+		}
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		character:sco_robert_ii ?= {
+			save_scope_as = target_character
+		}
+	}
+
+ 	option = { # Robert Stewart should succeed David as King
+		name = flavor_sco.105.a
+		historical_option = yes
+		custom_tooltip = tooltip_house_of_stewart_council_succession
+		add_legitimacy = legitimacy_mild_bonus
+		ruler ?= {
+			set_variable = { name = designated_stewart_heir value = 1 }
+		}
+		scope:target_character = {
+			add_adm = 10
+			add_dip = 10
+			add_mil = 10
+			set_variable = { name = sco_stewart_heir value = 1 }
+		}
+		set_variable = { name = sco_went_stewarts_route value = 1 }
+		ai_chance = {
+			factor = 0.7
+		}
+ 	}
+
+ 	option = { # The Brus line shall continue to rule!
+		name = flavor_sco.105.b
+		ruler ?= {
+			add_adm = 7
+			add_dip = 7
+			add_mil = 7
+		}
+		add_stability = stability_mild_bonus
+		add_legitimacy = legitimacy_mild_bonus
+		ai_chance = {
+			factor = 0.3
+		}
+ 	}
+}
+
+flavor_sco.106 = { # Ascension of the Stewarts
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.106.title
+ 	desc = flavor_sco.106.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1362.1.1
+		to = 1399.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		ruler = {
+			NOT = { has_variable = designated_stewart_heir }
+			NOT = { has_variable = sco_stewart_heir }
+		}
+		at_war = no
+		has_variable = sco_went_stewarts_route
+		character:sco_robert_ii ?= {
+			is_alive = yes
+		}
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		previous_ruler ?= {
+			save_scope_as = sco_old_ruler
+		}
+		character:sco_robert_ii ?= {
+			save_scope_as = target_character
+		}
+	}
+
+ 	option = { # The Stewarts will now preside as rulers of Scotland
+		name = flavor_sco.106.a
+		set_new_ruler = scope:target_character
+		add_stability = stability_mild_bonus
+		add_legitimacy = legitimacy_mild_bonus
+ 	}
+
+	after = {
+		previous_ruler ?= {
+			remove_variable = designated_stewart_heir
+		}
+		character:sco_robert_ii ?= {
+			remove_variable = sco_stewart_heir
+		}
+		remove_variable = sco_went_stewarts_route
+	}
+}
+
+flavor_sco.107 = { # Scottish Clans Rebuke Stewart Rule
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.107.title
+ 	desc = flavor_sco.107.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1371.1.1
+		to = 1391.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		at_war = no
+		has_policy = dynastic_holdings_conslidated
+ 	}
+
+	illustration_tags = {
+		10 = angry
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # These unruly clans will be reined in
+		name = flavor_sco.107.a
+		historical_option = yes
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_severe_penalty }
+		add_estate_satisfaction = { type = estate_type:tribes_estate value = estate_satisfaction_severe_penalty }
+		ai_chance = {
+			factor = 0.65
+		}
+ 	}
+
+ 	option = { # Offer concessions to appease the unruly clans
+		name = flavor_sco.107.b
+		add_policy = policy:inherited_clan_holdings
+		add_stability = stability_mild_bonus
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_severe_bonus }
+		add_estate_satisfaction = { type = estate_type:tribes_estate value = estate_satisfaction_severe_bonus }
+		ai_chance = {
+			factor = 0.35
+		}
+ 	}
+}
+
+flavor_sco.108 = { # Consolidation of Clan Holdings
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.108.title
+ 	desc = flavor_sco.108.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1371.1.1
+		to = 1391.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		at_war = no
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		
+		unlock_policy_effect = { type = dynastic_holdings_conslidated }
+	}
+
+ 	option = { # Confiscated Holdings will now be deferred to <dynasty> ownership
+		name = flavor_sco.108.a
+		historical_option = yes
+		add_prestige = prestige_mild_bonus
+		add_policy = policy:dynastic_holdings_conslidated
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+		add_estate_satisfaction = { type = estate_type:tribes_estate value = estate_satisfaction_mild_penalty }
+		ai_chance = {
+			factor = 0.85
+		}
+ 	}
+
+ 	option = { # Offer concessions to appease the unruly clans
+		name = flavor_sco.108.b
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:tribes_estate value = estate_satisfaction_mild_bonus }
+		ai_chance = {
+			factor = 0.15
+		}
+ 	}
+}
+
+flavor_sco.109 = { # The Brus Work of Art
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.109.title
+ 	desc = flavor_sco.109.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1371.1.1
+		to = 1381.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		at_war = no
+		owns = location:perth
+ 	}
+
+	illustration_tags = {
+		10 = happy
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+        create_character = {
+            first_name = name_john
+            last_name = barbour
+            adm = {20 50}
+            dip = {20 50}
+            mil = {20 50}
+			artist_skill = 0.60
+			artist = writer
+            culture = culture:scottish
+            birth_location = location:aberdeen
+            religion = religion:catholic
+            birth_date = 1320.1.1
+            save_scope_as = target_character
+			script = john_barbour
+			estate = estate_type:burghers_estate
+			create_in_limbo = yes
+        }
+		location:perth = {
+			create_art = {
+				quality = 55
+				artist = scope:target_character
+				type = work_of_art_type:poem
+				key = the_brus
+			}
+		}
+	}
+
+ 	option = { # This narrative poem will further legitimize our rule
+		name = flavor_sco.109.a
+		historical_option = yes
+		scope:target_character = { move_country = root }
+		change_gold_effect = { scale = -3 }
+		culture = {
+			add_cultural_influence = cultural_influence_mild_bonus
+		}
+		add_legitimacy = legitimacy_severe_bonus
+		show_as_tooltip = {
+			location:perth = {
+				create_art = {
+					quality = 55
+					artist = scope:target_character
+					type = work_of_art_type:poem
+					key = the_brus
+				}
+			}
+		}
+		ai_chance = {
+			factor = 0.90
+		}
+ 	}
+
+ 	option = { # We have no need for writing the poem
+		name = flavor_sco.109.b
+		add_stability = stability_weak_bonus
+		change_gold_effect = { scale = 3 }
+		ai_chance = {
+			factor = 0.10
+		}
+		hidden_effect = {
+			destroy_art = work_of_art:the_brus
+		}
+		scope:target_character = { banish_character = yes }
+ 	}
+}
+
+flavor_sco.110 = { # Flourishing Reign of Robert III (Strong Wool and Cloth production)
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.110.title
+ 	desc = flavor_sco.110.desc
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_cloth.dds"
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1371.1.1
+		to = 1391.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		government_type = government_type:monarchy
+		at_war = no
+		owns = location:perth
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # Reap the benefits of the wool trade
+		name = flavor_sco.110.a
+		historical_option = yes
+		change_gold_effect = { scale = 12 }
+		add_country_modifier = { modifier = sco_strong_wool_trade years = 10 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.75
+		}
+ 	}
+
+ 	option = { # Utilize the Royal purse and rewards the <peasants>
+		name = flavor_sco.110.b
+		change_gold_effect = { scale = 6 }
+		add_country_modifier = { modifier = sco_royal_purse_wool_trade years = 10 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.25
+		}
+ 	}
+}
+
+flavor_sco.111 = { # English Border Enclaves
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.111.title
+ 	desc = flavor_sco.111.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1390.1.1
+		to = 1407.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		at_war = no
+		country_exists = c:ENG
+		NOT = { is_at_war_with = c:ENG }
+		any_political_border_location = {
+			is_neighbor_of = c:ENG
+		}
+		c:ENG ?= {
+			has_ruler = yes
+		}
+ 	}
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		c:ENG = {
+			save_scope_as = eng_country
+        	ruler ?= {
+            	save_scope_as = eng_ruler
+        	}
+		}
+	}
+
+ 	option = { # These enclaves must be rooted out!
+		name = flavor_sco.111.a
+		historical_option = yes
+		add_prestige = prestige_mild_bonus
+		add_stability = stability_weak_penalty
+		c:ENG = {
+			add_opinion = { target = c:SCO modifier = opinion_sco_attacking_enclaves }
+		}
+		add_country_modifier = { modifier = sco_purging_enclaves years = 10 mode = add_and_extend }
+		change_societal_value = {
+			type = offensive_vs_defensive
+			value = societal_value_move_to_left
+		}
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_large_move_to_left
+		}
+		every_political_border_location = {
+			limit = { is_neighbor_of = c:ENG }
+			add_location_modifier = {
+ 				modifier = sco_english_enclave
+ 				years = 5
+ 				mode = add_and_extend
+ 			}
+		}
+		ai_chance = {
+			factor = 0.7
+		}
+ 	}
+
+ 	option = { # Leave the enclaves uncontested for now
+		name = flavor_sco.111.b
+		add_prestige = prestige_mild_penalty
+		add_stability = stability_mild_bonus
+		change_societal_value = {
+			type = centralization_vs_decentralization
+			value = societal_value_move_to_right
+		}
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_move_to_right
+		}
+		every_political_border_location = {
+			limit = { is_neighbor_of = c:ENG }
+			add_location_modifier = {
+ 				modifier = sco_english_enclave
+ 				years = 10
+ 				mode = add_and_extend
+ 			}
+		}
+		ai_chance = {
+			factor = 0.3
+		}
+ 	}
+}
+
+flavor_sco.112 = { # Introduction of Modern Artillery
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.112.title
+ 	desc = flavor_sco.112.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1425.1.1
+		to = 1453.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		at_war = no
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # Introduce the Artillery!
+		name = flavor_sco.112.a
+		historical_option = yes
+		add_country_modifier = { modifier = sco_introduction_of_artillery years = 10 mode = add_and_extend }
+		add_army_tradition = army_tradition_mild_bonus
+		add_prestige = prestige_mild_bonus
+		ai_chance = {
+			factor = 0.6
+		}
+ 	}
+
+ 	option = { # Stick to traditional warfare
+		name = flavor_sco.111.b
+		add_country_modifier = { modifier = sco_traditional_warfare_preferred years = 15 mode = add_and_extend }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+		ai_chance = {
+			factor = 0.4
+		}
+ 	}
+}
+
+
+flavor_sco.200 = { # Asserting Authority over the Clergy
+	hide_portraits = yes
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.200.title
+ 	desc = flavor_sco.200.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1407.1.1
+		to = 1436.1.1
+		monthly_chance = 25
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		stability > 25
+		country_exists = c:PAP
+		c:PAP ?= {
+			has_ruler = yes
+		}
+ 	}
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		unlock_law_effect = {
+			type = sco_authority_over_the_clergy
+		}
+		c:PAP = {
+        	ruler ?= {
+            	save_scope_as = pap_ruler
+        	}
+		}
+	}
+
+ 	option = { # The jurisdiction of the <scots> belongs solely to <king>!
+		name = flavor_sco.200.a
+		historical_option = yes
+		show_as_tooltip = {
+			unlock_law_effect = {
+				type = sco_authority_over_the_clergy
+			}
+		}
+		add_religious_influence = religious_influence_severe_penalty
+		add_policy = policy:crown_religious_jurisdiction
+		custom_tooltip = sco_retain_clergy_jurisdiction_requirements
+		ai_chance = {
+			factor = 0.50
+		}
+ 	}
+
+ 	option = { # Limit papal oversight, but allow prelates free access to the Curia.
+		name = flavor_sco.200.b
+		show_as_tooltip = {
+			unlock_law_effect = {
+				type = sco_authority_over_the_clergy
+			}
+		}
+		add_religious_influence = religious_influence_mild_penalty
+		add_policy = policy:limited_curia_oversight
+		custom_tooltip = sco_retain_clergy_jurisdiction_requirements
+		ai_chance = {
+			factor = 0.25
+		}
+ 	}
+
+ 	option = { # Drop the proposal entirely.
+		name = flavor_sco.200.c
+		add_religious_influence = religious_influence_extreme_bonus
+		ai_chance = {
+			factor = 0.25
+		}
+ 	}
+}
+
+flavor_sco.201 = { # Pope Requests Reconciliation With <Ruler>
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.201.title
+ 	desc = flavor_sco.201.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1416.1.1
+		to = 1436.1.1
+		monthly_chance = 15
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		country_exists = c:PAP
+		c:PAP ?= {
+			has_ruler = yes
+		}
+		has_law = sco_authority_over_the_clergy
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		c:PAP = {
+        	ruler ?= {
+            	save_scope_as = pap_ruler
+        	}
+		}
+	}
+
+ 	option = { # Abolish the jurisdiction laws
+		name = flavor_sco.201.a
+		historical_option = yes
+		remove_law = law:sco_authority_over_the_clergy
+		lock_law_effect = {
+			type = sco_authority_over_the_clergy
+		}
+		add_religious_influence = religious_influence_extreme_bonus
+		ai_chance = {
+			factor = 0.7
+		}
+ 	}
+
+ 	option = { # Reject the proposed reconiliation
+		name = flavor_sco.201.b
+		add_prestige = prestige_extreme_bonus
+		ai_chance = {
+			factor = 0.3
+		}
+ 	}
+}
+
+flavor_sco.202 = { # Expedition into the Highlands
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.202.title
+ 	desc = flavor_sco.202.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1415.1.1
+		to = 1435.1.1
+		monthly_chance = 10
+	}
+
+ 	trigger = {
+		has_ruler = yes
+ 	}
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # The old clans must be reined in
+		name = flavor_sco.202.a
+		historical_option = yes
+		add_stability = stability_mild_penalty
+		add_country_modifier = { modifier = sco_highland_clan_tax years = 15 mode = add_and_extend }
+		culture:highland = { add_cultural_influence = cultural_influence_extreme_penalty }
+		ai_chance = {
+			factor = 0.60
+		}
+ 	}
+
+ 	option = { # It would be unwise to enrage the highland clans
+		name = flavor_sco.202.b
+		add_stability = stability_mild_bonus
+		add_country_modifier = { modifier = sco_did_not_press_highlands_issue years = 10 mode = add_and_extend }
+		culture:highland = { add_cultural_influence = cultural_influence_severe_bonus }
+		ai_chance = {
+			factor = 0.4
+		}
+ 	}
+}
+
+flavor_sco.203 = { # Renewal of the Auld Alliance
+	hide_portraits = yes
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.203.title
+ 	desc = flavor_sco.203.desc
+	historical_info = flavor_sco.203.historical_info
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1496.1.1
+		to = 1516.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		country_exists = c:FRA
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # Let us continue to maintain close relations with France
+		name = flavor_sco.203.a
+		historical_option = yes
+		add_legitimacy = legitimacy_mild_bonus
+		add_opinion = { target = c:FRA modifier = opinion_sco_renewed_auld_alliance }
+		add_trust = {
+			modifier = trust_sco_fra_auld_alliance
+			target = c:FRA
+		}
+		c:FRA = {
+			add_opinion = { target = c:SCO modifier = opinion_sco_renewed_auld_alliance }
+			add_trust = {
+				modifier = trust_sco_fra_auld_alliance
+				target = c:SCO
+			}
+		}
+		ai_chance = {
+			factor = 0.8
+		}
+ 	}
+
+ 	option = { # It is time we sough other European allies
+		name = flavor_sco.203.b
+		add_opinion = { target = c:FRA modifier = opinion_sco_abandon_auld_alliance }
+		add_country_modifier = { modifier = sco_seeking_new_alliances years = 10 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.2
+		}
+ 	}
+}
+
+flavor_sco.204 = { # Founding of Aberdeen University
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.204.title
+ 	desc = flavor_sco.204.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		tag = GBR
+		from = 1485.1.1
+		to = 1510.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		owns = location:aberdeen
+		location:paris = {
+			has_building = building_type:university
+		}
+		NOT = { location:aberdeen = { has_building = building_type:university } }
+		country_exists = c:PAP
+		c:PAP ?= {
+			has_ruler = yes
+		}
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		c:PAP = {
+        	ruler ?= {
+            	save_scope_as = pap_ruler
+        	}
+		}
+	}
+
+ 	option = { # Sponsor the University!
+		name = flavor_sco.204.a
+		historical_option = yes
+		change_gold_effect = { scale = -6 }
+		location:aberdeen = {
+			construct_building = {
+				building_type = building_type:university
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_concept_event"
+			}
+		}
+		add_research_progress = research_progress_severe_bonus
+		ai_chance = {
+			factor = 0.75
+		}
+ 	}
+
+ 	option = { # We have no need for this college
+		name = flavor_sco.204.b
+		add_stability = stability_mild_bonus
+		add_legitimacy = legitimacy_mild_bonus
+		ai_chance = {
+			factor = 0.25
+		}
+ 	}
+}
+
+flavor_sco.205 = { # Expansion of the Scottish Royal Navy
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.205.title
+ 	desc = flavor_sco.205.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1485.1.1
+		to = 1510.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		at_war = no
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # Divert the treasury for the expansion of the navy!
+		name = flavor_sco.205.a
+		historical_option = yes
+		add_country_modifier = { modifier = sco_royal_navy_expansion years = 10 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.45
+		}
+ 	}
+
+ 	option = { # its would be better to double our focus on the army
+		name = flavor_sco.205.b
+		add_country_modifier = { modifier = sco_army_focus years = 10 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.55
+		}
+ 	}
+}
+
+flavor_sco.206 = { # The Decline of the Scottish Parliament
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.206.title
+ 	desc = flavor_sco.206.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1485.1.1
+		to = 1510.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		at_war = no
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # The parliament will only be summoned when needed.
+		name = flavor_sco.206.a
+		historical_option = yes
+		add_prestige = prestige_severe_bonus
+		add_stability = stability_mild_penalty
+		add_country_modifier = { modifier = sco_decline_of_parliament years = 12 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.5
+		}
+ 	}
+
+ 	option = { # Let us move to reconvene parliament like the days of old.
+		name = flavor_sco.206.b
+		add_legitimacy = legitimacy_mild_bonus
+		add_stability = stability_mild_bonus
+		add_country_modifier = { modifier = sco_summoning_of_parliament years = 12 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.5
+		}
+ 	}
+}
+
+flavor_sco.207 = { # Palace of Holyroodhouse
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.207.title
+ 	desc = flavor_sco.207.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1495.1.1
+		to = 1510.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		at_war = no
+		owns = location:edinburgh
+		has_consort = yes
+ 	}
+
+	illustration_tags = {
+		10 = happy
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		consort ?= {
+            save_scope_as = sco_consort
+        }
+	}
+
+ 	option = { # Build the Palace!
+		name = flavor_sco.207.a
+		historical_option = yes
+		add_prestige = prestige_extreme_bonus
+		change_gold_effect = { scale = -6 }
+		location:edinburgh = {
+			construct_building = {
+				building_type = building_type:sco_palace_of_holyroodhouse
+				instant = yes
+				cost_multiplier = 0
+				cost_multiplier_reason = "game_concept_event"
+			}
+		}
+		ai_chance = {
+			factor = 0.75
+		}
+ 	}
+
+ 	option = { # Scrap the plans for the palace and reallocate the resources
+		name = flavor_sco.207.b
+		add_prestige = prestige_mild_penalty
+		change_gold_effect = { scale = 4 }
+		ai_chance = {
+			factor = 0.25
+		}
+ 	}
+}
+
+flavor_sco.209 = { # <ruler> and the Religious Transformation of Scotland
+	hide_portraits = yes
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.209.title
+ 	desc = flavor_sco.209.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1537.1.1
+		to = 1567.1.1
+		monthly_chance = 30
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		government_type = government_type:monarchy
+		at_war = no
+		religion:calvinist = { is_religion_enabled = yes }
+		NOT = { religion = religion:calvinist }
+		exists = character:script_john_knox
+ 	}
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		character:script_john_knox ?= {
+			save_scope_as = target_character
+		}
+	}
+
+ 	option = { # Catholic Monarch, Calvinist State
+		name = flavor_sco.209.a
+		historical_option = yes
+		add_stability = stability_severe_penalty
+		add_country_modifier = { modifier = sco_knox_religious_turmoil years = 12 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.8
+		}
+ 	}
+
+ 	option = { # Adopt the Religion!
+		name = flavor_sco.209.b
+		add_stability = stability_severe_bonus
+		change_religion = religion:calvinist
+		change_religion_for_ruler_and_family = { country = ROOT religion = religion:calvinist }
+		add_country_modifier = { modifier = sco_reformation_adopted years = 12 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.05
+		}
+ 	}
+
+ 	option = { # Fight back against the Heretics
+		name = flavor_sco.209.c
+		add_stability = stability_severe_penalty
+		add_country_modifier = { modifier = sco_fight_the_heretics years = 12 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.15
+		}
+ 	}
+}
+
+flavor_sco.210 = { # The Rough Wooing
+	hide_portraits = yes
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.210.title
+ 	desc = flavor_sco.210.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1542.1.1
+		to = 1561.1.1
+		monthly_chance = 12
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		country_exists = c:ENG
+		country_exists = c:FRA
+		NOT = { is_at_war_with = c:ENG }
+		NOT = { has_truce_with = c:ENG }
+		NOT = { is_subject_of = c:ENG }
+		NOT = { in_union_with = c:ENG }
+		is_allied_with = { target = c:FRA }
+		c:ENG = {
+			has_ruler = yes
+			NOT = { is_subject_of = c:SCO }
+			NOT = { in_union_with = c:SCO }
+		}
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		c:ENG = {
+			ruler ?= {
+            	save_scope_as = eng_ruler
+        	}
+		}
+	}
+
+ 	option = { # Prepare for a defense against England
+		name = flavor_sco.210.a
+		historical_option = yes
+		c:ENG = {
+			add_casus_belli = {
+				type = casus_belli:cb_annex
+				target = c:SCO
+			}
+		}
+		add_country_modifier = { modifier = sco_on_the_defensive years = 8 mode = add_and_extend }
+		c:FRA = {
+			add_opinion = { target = c:SCO modifier = opinion_sco_hyw_auld_alliance }
+		}
+		add_opinion = { target = c:FRA modifier = opinion_sco_hyw_auld_alliance }
+		ai_chance = {
+			factor = 0.90
+		}
+ 	}
+
+ 	option = { # Appease England and breakdown relations with France
+		name = flavor_sco.210.b
+		add_truce_with = { target = c:ENG mutual = yes }
+		remove_relation = {
+			first = c:SCO
+			second = c:FRA
+			type = relation_type:alliance
+		}
+		add_prestige = prestige_severe_penalty
+		c:ENG = {
+			add_opinion = { target = c:SCO modifier = sco_appease_great_wooing }
+		}
+		c:FRA = {
+			add_opinion = { target = c:SCO modifier = sco_broke_auld_alliance_great_wooing }
+		}
+		ai_chance = {
+			factor = 0.10
+		}
+ 	}
+}
+
+flavor_sco.301 = { # Internal Division, Old Enemies
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.301.title
+ 	desc = flavor_sco.301.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1542.1.1
+		to = 1572.1.1
+		monthly_chance = 10
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		government_type = government_type:monarchy
+		exists = character:script_john_knox
+		religion:calvinist = { is_religion_enabled = yes }
+		country_exists = c:ENG
+		NOT = { is_at_war_with = c:ENG }
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		character:script_john_knox ?= {
+			save_scope_as = target_character
+		}
+	}
+
+ 	option = { # Despite our internal conflicts, we must stay focus on our exterior enemies
+		name = flavor_sco.301.a
+		historical_option = yes
+		add_country_modifier = { modifier = sco_focus_on_exterior_enemies years = 5 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.65
+		}
+ 	}
+
+ 	option = { # The internal stability of Scotland must be our focus
+		name = flavor_sco.301.b
+		add_country_modifier = { modifier = sco_focus_on_interior years = 15 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.35
+		}
+ 	}
+}
+
+flavor_sco.302 = { # True Law and Basilikon
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.302.title
+ 	desc = flavor_sco.302.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		tag = GBR
+		from = 1597.1.1
+		to = 1612.1.1
+		monthly_chance = 10
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		owns = location:perth
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		location:perth = {
+			create_art = {
+				quality = 50
+				artist = scope:sco_ruler
+				type = work_of_art_type:treatise
+				key = sco_true_law
+			}
+			create_art = {
+				quality = 50
+				artist = scope:sco_ruler
+				type = work_of_art_type:treatise
+				key = sco_basilikon
+			}
+		}
+	}
+
+ 	option = { # Publish the King's Work!
+		name = flavor_sco.302.a
+		historical_option = yes
+		culture = { add_cultural_tradition = cultural_tradition_mild_bonus }
+		ai_chance = {
+			factor = 0.75
+		}
+ 	}
+
+ 	option = { # Have the works be kept as a family heirloom
+		name = flavor_sco.302.b
+		add_prestige = prestige_severe_bonus
+		add_legitimacy = legitimacy_extreme_bonus
+		ai_chance = {
+			factor = 0.25
+		}
+ 	}
+}
+
+flavor_sco.303 = { # The Statutes of Iona
+	hide_portraits = yes
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.303.title
+ 	desc = flavor_sco.303.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1605.1.1
+		to = 1616.1.1
+		monthly_chance = 25
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		OR = {
+			has_estate_privilege = estate_privilege:scottish_clans
+			has_estate_privilege = estate_privilege:tribes_scotland_gaelic_heritage
+		}
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # Implement the Statutes
+		name = flavor_sco.303.a
+		historical_option = yes
+		unlock_estate_privilege_effect = { type = sco_statutes_of_iona }
+		if = {
+			limit = { has_estate_privilege = estate_privilege:scottish_clans }
+			revoke_estate_privilege = estate_privilege:scottish_clans
+		}
+		if = {
+			limit =  { has_estate_privilege = estate_privilege:tribes_scotland_gaelic_heritage }
+			revoke_estate_privilege = estate_privilege:tribes_scotland_gaelic_heritage
+		}
+		grant_estate_privilege = estate_privilege:sco_statutes_of_iona
+		add_stability = stability_mild_bonus
+		ai_chance = {
+			factor = 0.75
+		}
+ 	}
+
+ 	option = { # Allow the clans to retain their autonomy
+		name = flavor_sco.303.b
+		set_variable = { name = preserved_clan_autonomy value = 1 }
+		if = {
+			limit = { has_estate_privilege = estate_privilege:scottish_clans }
+			revoke_estate_privilege = estate_privilege:scottish_clans
+			grant_estate_privilege = estate_privilege:autonomous_scottish_clans
+		}
+		if = {
+			limit =  { has_estate_privilege = estate_privilege:tribes_scotland_gaelic_heritage }
+			revoke_estate_privilege = estate_privilege:tribes_scotland_gaelic_heritage
+			grant_estate_privilege = estate_privilege:autonomous_tribes_scotland_gaelic_heritage
+		}
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_severe_bonus }
+		add_estate_satisfaction = { type = estate_type:tribes_estate value = estate_satisfaction_severe_bonus }
+		ai_chance = {
+			factor = 0.25
+		}
+ 	}
+}
+
+flavor_sco.304 = { # Divine Art of Poesie
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.304.title
+ 	desc = flavor_sco.304.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1597.1.1
+		to = 1612.1.1
+		monthly_chance = 25
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		owns = location:perth
+ 	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+    immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		location:perth = {
+			create_art = {
+				quality = 50
+				artist = scope:sco_ruler
+				type = work_of_art_type:poem
+				key = sco_divine_art_of_poesie
+			}
+		}
+	}
+
+ 	option = { # Publish the Poem for the public!
+		name = flavor_sco.304.a
+		historical_option = yes
+		culture = { add_cultural_tradition = cultural_tradition_mild_bonus }
+		ai_chance = {
+			factor = 0.7
+		}
+ 	}
+
+ 	option = { # Publish the poem and gift personal copies to other rulers
+		name = flavor_sco.304.b
+		add_prestige = prestige_severe_bonus
+		change_gold_effect = { scale = -6 }
+		ai_chance = {
+			factor = 0.3
+		}
+ 	}
+}
+
+flavor_sco.400 = { # Expedition to the New World
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.400.title
+ 	desc = flavor_sco.400.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1636.1.1
+		to = 1702.1.1
+		monthly_chance = 8
+	}
+
+ 	trigger = {
+		has_ruler = yes
+ 	}
+
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+
+    immediate = {
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+		unlock_law_effect = {
+			type = sco_colonial_affairs_law
+		}
+	}
+
+ 	option = { # We shall strive to join the other colonial powers
+		name = flavor_sco.400.a
+		historical_option = yes
+		add_prestige = prestige_mild_bonus
+		add_policy = policy:sco_limited_colonial_ventures
+		add_country_modifier = { modifier = sco_darien_scheme years = 12 mode = add_and_extend }
+		ai_chance = {
+			factor = 0.6
+		}
+ 	}
+
+ 	option = { # Halt any colonial ambitions for now
+		name = flavor_sco.400.b
+		add_stability = stability_mild_bonus
+		add_policy = policy:sco_no_colonial_affairs
+		ai_chance = {
+			factor = 0.4
+		}
+ 	}
+}
+
+flavor_sco.401 = { # David Hume, Treatise of Human Nature
+	hide_portraits = yes
+	type = country_event
+	fire_only_once = yes
+ 	title = flavor_sco.401.title
+ 	desc = flavor_sco.401.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		tag = ENG
+		tag = GBR
+		from = 1733.1.1
+		to = 1775.1.1
+		monthly_chance = 20
+	}
+
+ 	trigger = {
+		has_ruler = yes
+		NOT = { exists = character:david_hume }
+ 	}
+
+	image = "gfx/interface/illustrations/institutions/scientific_revolution.dds"
+
+    immediate = {
+		create_character = {
+			first_name = name_david
+			last_name = hume
+			adm = 62
+			dip = 44
+			mil = 35
+			culture = culture:scottish
+			birth_location = location:edinburgh
+			religion = religion:calvinist
+			birth_date = 1711.4.26
+			estate = estate_type:burghers_estate
+			add_trait = trait:unsuited_for_naval_command
+			add_trait = trait:unsuited_for_army_command
+			script = david_hume
+			save_scope_as = target_character
+			artist = philosopher
+			artist_skill = 0.75
+			create_in_limbo = yes
+		}
+		root.capital = {
+			create_art = {
+				quality = 70
+				artist = scope:target_character
+				type = work_of_art_type:treatise
+				key = treatise_of_human_nature
+			}
+		}
+		ruler ?= {
+            save_scope_as = sco_ruler
+        }
+	}
+
+ 	option = { # Sponsor his work!
+		name = flavor_sco.401.a
+		historical_option = yes
+		scope:target_character = { move_country = root }
+		change_gold_effect = { scale = -4 }
+		culture = {
+			add_cultural_influence = cultural_influence_extreme_bonus
+		}
+		ai_chance = {
+			factor = 0.95
+		}
+ 	}
+
+ 	option = { # The resources of the state would be better spent elsewhere
+		name = flavor_sco.401.b
+		add_legitimacy = legitimacy_mild_bonus
+		scope:target_character = { banish_character = yes }
+		culture = {
+			add_cultural_influence = cultural_influence_mild_bonus
+		}
+		ai_chance = {
+			factor = 0.05
+		}
+ 	}
+}
+
+# End of Scottish Civil War
+flavor_sco.1000 = {
+	hide_portraits = yes
+	type = country_event
+
+	title = flavor_sco.1000.title
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					character:sco_edward_balliol ?= {
+						c:SCO.ruler != this
+					}
+				}
+				desc = flavor_sco.1000.desc_no_balliol
+			}
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = flavor_sco.1000.desc
+			}
+		}
+	}
+
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = ENG
+		from = 1330.1.1
+		to = 1500.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		has_ruler = yes
+		country_exists = c:SCO
+		c:SCO = {
+			in_civil_war = no
+			at_war = no
+			has_ruler = yes
+			NOT = { is_subject_of = root }
+			is_neighbor_of = root
+		}
+		province_definition:lothian_province = {
+			any_location_in_province_definition = { owner ?= c:SCO }
+		}
+		province_definition:teviotdale_province = {
+			any_location_in_province_definition = { owner ?= c:SCO }
+		}
+		at_war = no
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		character:sco_edward_balliol ?= {
+			save_scope_as = balliol
+		}
+
+		c:SCO.ruler = {
+			if = {
+				limit = { this != character:sco_edward_balliol }
+				save_scope_as = target_character
+			}
+		}
+
+		province_definition:lothian_province = { save_scope_as = lothian }
+
+		province_definition:teviotdale_province = { save_scope_as = teviotdale }
+
+		location:edinburgh = { save_scope_as = target_location }
+
+	}
+
+	option = {
+		name = flavor_sco.1000.a
+		historical_option = yes
+
+		hidden_effect = {
+			c:SCO = { trigger_event_silently = flavor_sco.1001 }
+		}
+
+		custom_tooltip = flavor_sco.1000.tt
+
+	}
+
+	option = {
+		name = flavor_sco.1000.b
+
+		c:SCO = {
+			add_opinion = {
+				target = root
+				modifier = opinion_pleased
+			}
+		}
+
+	}
+
+	historical_info = flavor_sco.1000.historical_info
+
+}
+
+# Treaty of Newcastle
+flavor_sco.1001 = {
+	hide_portraits = yes
+	type = country_event
+
+	title = flavor_sco.1001.title
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					character:sco_edward_balliol ?= {
+						root.ruler != this
+					}
+				}
+				desc = flavor_sco.1001.desc_no_balliol
+			}
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = flavor_sco.1001.desc
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		save_scope_as = sender
+
+		c:ENG = {
+			ruler ?= { save_scope_as = target_character }
+			save_scope_as = england
+		}
+
+		province_definition:lothian_province = {
+			random_location_in_province_definition = {
+				save_scope_as = lothian_cb_location
+			}
+		save_scope_as = lothian
+		}
+
+		province_definition:teviotdale_province = {
+			random_location_in_province_definition = {
+				save_scope_as = teviotdale_cb_location
+			}
+		save_scope_as = teviotdale
+		}
+
+		location:edinburgh = { save_scope_as = target_location }
+
+	}
+
+	option = {
+		name = flavor_sco.1001.a
+
+		trigger = {
+			character:sco_edward_balliol ?= {
+				root.ruler = this
+			}
+		}
+		every_owned_location = {
+			limit = {
+				OR = {
+				province_definition = province_definition:lothian_province
+				province_definition = province_definition:teviotdale_province
+				}
+			}
+			change_location_owner = c:ENG
+		}
+
+		make_subject_of = { target = c:ENG  type = subject_type:vassal }
+
+		c:ENG = {
+			add_opinion = { target = root modifier = opinion_pleased }
+		}
+
+	}
+
+	option = {
+		name = flavor_sco.1001.b
+
+		set_variable = { name = treaty_of_newcastle_declined value = 1 }
+
+		c:ENG = { trigger_event_silently = { id = flavor_eng_diplomacy.2 days = 5 } }
+
+		custom_tooltip = flavor_sco.1001.tt
+
+	}
+
+}
+
+# Border Reivers
+flavor_sco.1100 = {
+	type = country_event
+
+	fire_only_once = yes
+
+	title = flavor_sco.1100.title
+	desc = flavor_sco.1100.desc
+
+	dynamic_historical_event = {
+		tag = ENG
+		from = 1300.1.1
+		to = 1600.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		country_exists = c:SCO
+		root = {
+			opinion = {
+				target = c:SCO
+				value <= 50
+			}
+		}
+
+		c:SCO = {
+			opinion = {
+				target = root
+				value <= 50
+			}
+		}
+
+		has_truce_with = c:SCO
+
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		random_owned_location = {
+			limit = {
+				region = region:great_britain_region
+				any_neighbor_location = {
+					has_owner = yes
+					owner ?= c:SCO
+				}
+			}
+			save_scope_as = target_location
+		}
+
+		set_variable = { name = border_reivers_enabled value = 1 }
+
+		c:SCO = {
+			trigger_event_silently = { id = flavor_sco.1101 }
+		}
+
+	}
+
+	option = {
+		name = flavor_sco.1100.a
+
+		custom_tooltip = flavor_sco.1100.tt1
+		custom_tooltip = flavor_sco.1100.tt3
+
+	}
+
+	option = {
+		name = flavor_sco.1100.b
+
+		change_gold_effect = { scale = -6 }
+
+		set_variable = { name = border_raids_less_severe value = 1 }
+
+		custom_tooltip = flavor_sco.1100.tt2
+		custom_tooltip = flavor_sco.1100.tt3
+
+	}
+
+	historical_info = flavor_sco.1100.historical_info
+
+}
+
+# Border Reivers
+flavor_sco.1101 = {
+	type = country_event
+
+	title = flavor_sco.1101.title
+	desc = flavor_sco.1101.desc
+	historical_info = flavor_sco.1101.historical_info
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_owned_location = {
+			limit = {
+				region = region:great_britain_region
+				any_neighbor_location = {
+					owner ?= c:ENG
+				}
+			}
+			save_scope_as = target_location
+		}
+
+		set_variable = border_reivers_enabled
+
+	}
+
+	option = {
+		name = flavor_sco.1101.a
+
+		custom_tooltip = flavor_sco.1101.tt1
+
+	}
+
+	option = {
+		name = flavor_sco.1101.b
+
+		change_gold_effect = { scale = -6 }
+
+		set_variable = border_raids_less_severe
+
+		custom_tooltip = flavor_sco.1101.tt2
+
+	}
+
+}
+
+# Border Reivers - raid origin
+flavor_sco.1102 = {
+	type = country_event
+
+	title = flavor_sco.1102.title
+	desc = flavor_sco.1102.desc
+
+	trigger = {
+		tag = ENG
+		has_truce_with = c:SCO
+		has_variable = border_reivers_enabled
+		any_owned_location = {
+			region = region:great_britain_region
+			any_neighbor_location = { owner ?= c:SCO }
+			prosperity <= 0.5
+			local_control <= 0.5
+		}
+
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_owned_location = {
+		 	limit = {
+		 		region = region:great_britain_region
+		 		any_neighbor_location = {
+					has_owner = yes
+					owner ?= c:SCO
+				}
+		 		prosperity <= 0.5
+		 		local_control <= 0.5
+		 	}
+			save_scope_as = raider_origin
+		 	random_neighbor_location = {
+		 		limit = {
+		 			region = region:great_britain_region
+		 			owner ?= c:SCO
+		 		}
+		 		save_scope_as = raided_location
+		 	}
+		}
+
+	}
+
+	option = {
+		name = flavor_sco.1102.a
+
+
+		c:SCO = { trigger_event_silently = { id = flavor_sco.1104 } }
+
+		if = {
+			limit = {
+				has_variable = border_raids_less_severe
+			}
+			scope:raider_origin = { change_prosperity  = prosperity_weak_bonus }
+		}
+
+		else = {
+			scope:raider_origin = { change_prosperity = prosperity_mild_bonus }
+		}
+
+		custom_tooltip = flavor_sco.1102.tt
+
+	}
+
+}
+
+# Border Reivers - raid origin
+flavor_sco.1103 = {
+	hide_portraits = yes
+	type = country_event
+
+	title = flavor_sco.1103.title
+	desc = flavor_sco.1103.desc
+
+	trigger = {
+
+		tag = SCO
+		has_truce_with = c:ENG
+		has_variable = border_reivers_enabled
+		any_owned_location = {
+			region = region:great_britain_region
+			any_neighbor_location = {
+				has_owner = yes
+				owner ?= c:ENG
+			}
+			prosperity <= 0.5
+			local_control <= 0.5
+		}
+
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_owned_location = {
+		 	limit = {
+		 		region = region:great_britain_region
+		 		any_neighbor_location = { owner ?= c:ENG }
+		 		prosperity <= 0.5
+		 		local_control <= 0.5
+		 	}
+			save_scope_as = raider_origin
+		 	random_neighbor_location = {
+		 		limit = {
+		 			region = region:great_britain_region
+		 			owner ?= c:ENG
+		 		}
+		 		save_scope_as = raided_location
+		 	}
+		}
+
+	}
+
+	option = {
+		name = flavor_sco.1103.a
+
+
+		c:ENG = { trigger_event_silently = { id = flavor_sco.1104 } }
+
+		if = {
+			limit = {
+				has_variable = border_raids_less_severe
+			}
+			scope:raider_origin = { change_prosperity  = prosperity_weak_bonus }
+		}
+
+		else = {
+			scope:raider_origin = { change_prosperity = prosperity_mild_bonus }
+		}
+
+		custom_tooltip = flavor_sco.1103.tt
+
+	}
+
+}
+
+# Border Reivers - raided province
+flavor_sco.1104 = {
+	type = country_event
+
+	title = flavor_sco.1104.title
+	desc = flavor_sco.1104.desc
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+	}
+	
+	option = {
+		name = flavor_sco.1104.a
+
+		scope:raided_location= {
+			change_prosperity = prosperity_mild_penalty
+		}
+		if = {
+			limit = { tag = SCO }
+			add_opinion = {
+				target = c:ENG
+				modifier = opinion_irritated
+			}
+		}
+		if = {
+			limit = { tag = ENG }
+			add_opinion = {
+				target = c:SCO
+				modifier = opinion_irritated
+			}
+		}
+	}
+
+	option = {
+		name = flavor_sco.1104.b
+
+		scope:raided_location = {
+			change_prosperity = prosperity_weak_penalty
+		}
+
+		change_gold_effect = { scale = -1 }
+
+		if = {
+			limit = { tag = SCO }
+			add_opinion = {
+				target = c:ENG
+				modifier = opinion_irritated
+			}
+		}
+		if = {
+			limit = { tag = ENG }
+			add_opinion = {
+				target = c:SCO
+				modifier = opinion_irritated
+			}
+		}
+	}
+
+}
+
+# The Treaty of Perpetual Peace
+flavor_sco.1200 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_sco.1200.title
+	desc = flavor_sco.1200.desc
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = ENG
+		from = 1490.1.1
+		to = 1600.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_ruler = yes
+		OR = {
+			AND = {
+				character:eng_henry_tudor ?= { is_alive = yes }
+				ruler = character:eng_henry_tudor
+			}
+			ruler = { dip >= 50 }
+		}
+
+		country_exists = c:SCO
+		c:SCO = {
+			is_neighbor_of = root
+			NOT = { is_allied_with = { target = root } }
+			has_regent = no
+		}
+
+		at_war = no
+
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		c:SCO = { save_scope_as = scotland }
+
+		capital = { save_scope_as = target_location }
+
+		c:SCO.ruler = { save_scope_as = target_character }
+
+		root = { save_scope_as = target_root_country }
+
+	}
+
+	option = {
+		name = flavor_sco.1200.a
+		historical_option = yes
+
+		add_trust = {
+			modifier = trust_treaty_of_perpetual_peace
+			target = scope:scotland
+		}
+
+		hidden_effect = {
+			c:SCO = { trigger_event_silently = flavor_sco.1201 }
+		}
+
+		custom_tooltip = flavor_sco.1200.tt1
+
+		if = {
+			limit = {
+				has_variable = border_reivers_enabled
+			}
+			custom_tooltip = flavor_sco.1200.tt2
+		}
+
+		custom_tooltip = flavor_sco.1200.tt3
+		custom_tooltip = flavor_sco.1200.tt4
+
+	}
+
+	option = {
+		name = flavor_sco.1200.b
+
+		add_prestige = prestige_weak_bonus
+
+	}
+
+	historical_info = flavor_sco.1200.historical_info
+}
+
+# Treaty of Perpetual Peace
+flavor_sco.1201 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_sco.1201.title
+	desc = flavor_sco.1201.desc
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		c:ENG.ruler = { save_scope_as = target_character }
+
+		capital = { save_scope_as = target_location }
+
+		save_scope_as = sender
+
+	}
+
+	option = {
+		historical_option = yes
+		name = flavor_sco.1201.a
+
+		set_variable = { name = treaty_approved value = 1 }
+
+		add_trust = {
+			modifier = trust_treaty_of_perpetual_peace
+			target = c:ENG
+		}
+
+		c:ENG = { trigger_event_silently = { id = flavor_eng_diplomacy.1 days = 0 } }
+
+		custom_tooltip = flavor_sco.1201.tt1
+		custom_tooltip = flavor_sco.1201.tt2
+
+	}
+
+	option = {
+		name = flavor_sco.1201.b
+
+		set_variable = { name = treaty_declined value = 1 }
+
+		c:ENG = {
+			remove_trust = {
+				modifier = trust_treaty_of_perpetual_peace
+				target = c:SCO
+			}
+		}
+
+		c:ENG = { trigger_event_silently = { id = flavor_eng_diplomacy.2 days = 0 } }
+
+		custom_tooltip = flavor_sco.1201.tt3
+
+	}
+
+}
+
+# Mary Tudor?
+flavor_sco.1202 = {
+	type = country_event
+
+	fire_only_once = yes
+
+	title = flavor_sco.1202.title
+	desc = flavor_sco.1202.desc
+
+	dynamic_historical_event = {
+		tag = ENG
+		from = 1490.1.1
+		to = 1550.1.1
+		monthly_chance = 5
+	}
+
+	trigger = {
+		has_ruler = yes
+		any_character = {
+			is_sibling_of = c:ENG.ruler
+			is_female = yes
+			is_married = no
+		}
+
+		has_trust = { modifier = trust_treaty_of_perpetual_peace target = c:SCO }
+
+		country_exists = c:SCO
+		c:SCO = {
+			has_ruler = yes
+			ruler = {
+				is_female = no
+				is_married = no
+			}
+			NOT = { is_at_war_with = root }
+			in_civil_war = no
+		}
+
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_character = {
+			limit = {
+				is_sibling_of = c:ENG.ruler
+				is_female = yes
+				is_married = no
+			}
+			save_scope_as = suitable_sister
+		}
+
+	}
+
+	option = {
+		name = flavor_sco.1202.a
+
+		c:SCO = { trigger_event_silently = { id = flavor_sco.1203 days = 0 } }
+
+		custom_tooltip = flavor_sco.1202.tt1
+		custom_tooltip = flavor_sco.1202.tt2
+
+	}
+
+	option = {
+		name = flavor_sco.1202.b
+
+		remove_trust = {
+			modifier = trust_treaty_of_perpetual_peace
+			target = c:SCO
+		}
+
+		set_variable = { name = wedding_cancelled value = 1 }
+
+		c:SCO = { trigger_event_silently = { id = flavor_sco.1203 days = 0 } }
+
+		custom_tooltip = flavor_sco.1202.tt3
+
+	}
+
+	historical_info = flavor_sco.1202.historical_info
+
+}
+
+# The Matter of Matrimony
+flavor_sco.1203 = {
+	hide_portraits = yes
+	type = country_event
+
+	title = flavor_sco.1203.title
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					NOT = { root = c:ENG }
+					c:ENG = { has_variable = wedding_cancelled }
+				}
+				desc = flavor_sco.1203.desc_marriage_refused
+			}
+			triggered_desc = {
+				trigger = {
+					root = c:ENG
+				}
+				desc = flavor_sco.1203.desc_marriage_refused
+			}
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = flavor_sco.1203.desc
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		capital = { save_scope_as = target_location }
+
+		save_scope_as = sender
+
+	}
+
+	option = {
+		historical_option = yes
+		name = flavor_sco.1203.a
+		trigger = {
+			NOT = { root = c:ENG }
+			NOT = { c:ENG = { has_variable = wedding_cancelled } }
+		}
+
+		set_variable = { name = treaty_of_perpetual_peace_marriage value = 1 }
+
+		scope:suitable_sister = {
+			marry_character = c:SCO.ruler
+		}
+
+		c:ENG = { trigger_event_silently = { id = flavor_eng_diplomacy.1 days = 0 } }
+
+		custom_tooltip = flavor_sco.1203.tt1
+
+	}
+
+	option = {
+		name = flavor_sco.1203.b
+		trigger = {
+			NOT = { root = c:ENG }
+			NOT = { c:ENG = { has_variable = wedding_cancelled } }
+		}
+
+		remove_trust = {
+			modifier = trust_treaty_of_perpetual_peace
+			target = c:ENG
+		}
+
+		c:ENG = { trigger_event_silently = { id = flavor_sco.1203 days = 0 } }
+
+	}
+
+	option = {
+		name = flavor_sco.1203.c
+		trigger = {
+			NOT = { root = c:ENG }
+			c:ENG = { has_variable = wedding_cancelled }
+		}
+
+		remove_trust = {
+			modifier = trust_treaty_of_perpetual_peace
+			target = c:ENG
+		}
+
+		c:ENG = {
+			remove_variable = wedding_cancelled
+		}
+
+		custom_tooltip = flavor_sco.1203.tt2
+
+	}
+
+	option = {
+		name = flavor_sco.1203.d
+		trigger = {	root = c:ENG }
+
+		remove_trust = {
+			modifier = trust_treaty_of_perpetual_peace
+			target = c:SCO
+		}
+
+		custom_tooltip = flavor_sco.1203.tt2
+
+	}
+
+}
+
+scripted_trigger flavor_sco_1300_valid_inheritance_trigger = {
+	has_heir = no
+	ruler = {
+		age_in_years > 40
+		is_pregnant = no
+		OR = {
+			is_married = no
+			first_spouse ?= { is_pregnant = no }
+		}
+	}
+}
+
+# Union of the Crowns - prelude
+flavor_sco.1300 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_sco.1300.title
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					c:SCO = { flavor_sco_1300_valid_inheritance_trigger = yes }
+				}
+				desc = flavor_sco.1300.desc_england_inherit
+			}
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = flavor_sco.1300.desc
+			}
+		}
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = ENG
+		from = 1550.1.1
+		to = 1700.1.1
+		monthly_chance = 50
+	}
+
+	trigger = {
+		country_exists = c:SCO
+		c:SCO = {
+			has_ruler = yes
+		}
+		ruler ?= { is_close_relative = c:SCO.ruler }
+
+		government_type = government_type:monarchy
+
+		OR = {
+			c:SCO = { has_heir = yes }
+			root = { has_heir = yes }
+		}
+
+		OR = {
+			c:SCO = { flavor_sco_1300_valid_inheritance_trigger = yes }
+			root = { flavor_sco_1300_valid_inheritance_trigger = yes }
+		}
+
+		at_war = no
+		c:SCO = { at_war = no }
+
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		if = {
+			limit = { c:SCO = { flavor_sco_1300_valid_inheritance_trigger = yes } }
+			c:SCO.ruler = { save_scope_as = dying_monarch }
+			ruler = { save_scope_as = target_character }
+		}
+		else = {
+			c:SCO.ruler = { save_scope_as = target_character }
+			ruler = { save_scope_as = dying_monarch }
+		}
+
+		capital = { save_scope_as = target_location }
+
+	}
+
+	option = {
+		name = flavor_sco.1300.a
+		historical_option = yes
+
+		if = {
+			limit = {
+				c:SCO = { flavor_sco_1300_valid_inheritance_trigger = yes }
+			}
+			set_variable = { name = england_inherit value = 1 }
+			custom_tooltip = flavor_sco.1300.tt1
+			custom_tooltip = flavor_sco.1300.tt2
+		}
+		else = {
+			add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+			custom_tooltip = flavor_sco.1300.tt3
+			custom_tooltip = flavor_sco.1300.tt4
+		}
+
+		c:SCO = { trigger_event_silently = { id = flavor_sco.1301 days = 0 } }
+
+	}
+
+	option = {
+		name = flavor_sco.1300.b
+
+		custom_tooltip = flavor_sco.1300.tt5
+
+	}
+
+	historical_info = flavor_sco.1300.historical_info
+
+}
+
+# Secret negotiations
+flavor_sco.1301 = {
+	hide_portraits = yes
+	type = country_event
+
+	title = flavor_sco.1301.title
+	desc = flavor_sco.1301.desc
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		capital = { save_scope_as = target_location }
+
+		save_scope_as = sender
+
+		if = {
+			limit = {
+				c:ENG = { has_variable = england_inherit }
+			}
+			root.ruler = {
+				save_scope_as = dying_monarch
+				set_variable = {
+					name = dying_monarch
+					value = 1
+				}
+			}
+			c:ENG.ruler = {
+				save_scope_as = target_character
+				set_variable = {
+					name = inheriting_monarch
+					value = 1
+				}
+			}
+		}
+		else = {
+			c:ENG.ruler = {
+				save_scope_as = dying_monarch
+				set_variable = {
+					name = dying_monarch
+					value = 1
+				}
+			}
+			root.ruler = {
+				save_scope_as = target_character
+				set_variable = {
+					name = inheriting_monarch
+					value = 1
+				}
+			}
+		}
+
+	}
+
+	option = {
+		historical_option = yes
+		name = flavor_sco.1301.a
+
+		set_variable = { name = union_of_the_crowns value = 1 }
+
+		c:ENG = { trigger_event_silently = { id = flavor_eng_diplomacy.1 days = 0 } }
+
+		custom_tooltip = flavor_sco.1301.tt1
+
+		if = {
+			limit = {
+				c:ENG = { has_variable = england_inherit }
+			}
+			add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+			custom_tooltip = flavor_sco.1301.tt2
+		}
+		else = {
+			custom_tooltip = flavor_sco.1301.tt3
+		}
+
+	}
+
+	option = {
+		name = flavor_sco.1301.b
+
+		set_variable = { name = union_of_the_crowns_declined value = 1 }
+
+		custom_tooltip = flavor_sco.1301.tt4
+
+		c:ENG = { trigger_event_silently = { id = flavor_eng_diplomacy.2 days = 0 } }
+
+	}
+
+}
+
+flavor_sco.1400 = { #Dunbar Castle
+	type = country_event
+	title = flavor_sco.1400.title
+	desc = flavor_sco.1400.desc
+
+	dynamic_historical_event = {
+		tag = SBL
+		from = 1337.1.1
+		to = 1340.1.1
+		monthly_chance = 50
+	}
+
+	fire_only_once = yes
+
+	trigger = {
+		location:dunbar = {
+			owner != root
+			modifier:fort_level > 0
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		location:dunbar = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_sco.1400.a
+		c:SCO = { trigger_event_silently = flavor_sco.1401 }
+		trigger_event_silently = { id = flavor_sco.1402 days = { 90 120 } }
+		add_country_modifier = { modifier = sco_hostile_dunbar_castle years = -1 mode = add_and_extend }
+		add_prestige = prestige_weak_penalty
+	}
+}
+
+flavor_sco.1401 = { #Dunbar Castle (SCO)
+	type = country_event
+	title = flavor_sco.1401.title
+	desc = flavor_sco.1401.desc
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+	}
+	
+	option = {
+		name = flavor_sco.1401.a
+		location:dunbar = {
+			add_location_modifier = { modifier = sco_dunbar_castle years = -1 mode = add_and_extend }
+		}
+		location:selkirk = {
+			add_location_modifier = { modifier = sco_dunbar_castle years = -1 mode = add_and_extend }
+		}
+	}
+}
+
+flavor_sco.1402 = { #Dunbar Castle has still not fallen
+	type = country_event
+	title = flavor_sco.1402.title
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { tag = SBL }
+				desc = flavor_sco.1402.desc.SBL
+			}
+			triggered_desc = {
+				trigger = {	always = yes }
+				desc = flavor_sco.1402.desc
+			}
+		}
+	}
+
+	trigger = {
+		location:dunbar = {
+			owner != root
+			has_siege = no
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		location:dunbar = { save_scope_as = target_location }
+		trigger_event_silently = { id = flavor_sco.1402 days = { 90 120 } }
+	}
+
+	option = {
+		name = flavor_sco.1402.a
+		add_prestige = prestige_mild_penalty
+		every_unit = {
+			limit = { is_navy = no }
+			damage_unit_morale_percent = 0.2
+		}
+	}
+
+	option = {
+		name = flavor_sco.1402.b
+		trigger = {
+			tag = SBL
+		}
+		add_prestige = prestige_extreme_penalty
+		add_stability = stability_mild_penalty
+		change_gold_effect = { scale = -5 }
+	}
+}
+
+flavor_sco.1403 = { #Agnes the Black
+	type = country_event
+	title = flavor_sco.1403.title
+	desc = flavor_sco.1403.desc
+
+	dynamic_historical_event = {
+		tag = SCO
+		from = 1337.1.1
+		to = 1340.1.1
+		monthly_chance = 50
+	}
+
+	fire_only_once = yes
+
+	trigger = {
+		location:dunbar = {
+			has_siege = yes
+			has_location_modifier = sco_dunbar_castle
+		}
+		character:sco_black_agnes ?= { is_alive = yes }
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		character:sco_black_agnes = { save_scope_as = target_character }
+		location:dunbar = {
+			save_scope_as = target_location
+			siege = {
+				random_besieging_unit = {
+					owner ?= { save_scope_as = target_enemy }
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_sco.1403.a
+		change_gold_effect = { scale = -2 }
+		location:dunbar = {
+			siege = {
+				if = {
+					limit = { has_breach = yes }
+					remove_breach = 1
+				}
+				every_besieging_unit = {
+					damage_unit_percent = 0.05
+					damage_unit_morale_percent = 0.1
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_sco.1403.b
+		add_prestige = prestige_extreme_penalty
+	}
+}
+
+flavor_sco.1404 = { #The Fall of Dunbar Castle
+	type = country_event
+	title = flavor_sco.1404.title
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { NOT = { tag = SCO } }
+				desc = flavor_sco.1404.desc.SBL
+			}
+			triggered_desc = {
+				trigger = { always = yes }
+				desc = flavor_sco.1404.desc
+			}
+		}
+	}
+
+	trigger = {
+		scope:target = {
+			location_key = dunbar
+			OR = {
+				has_location_modifier = sco_dunbar_castle
+				has_variable = sco_dunbar_castle_taken
+			}
+		}
+	}
+
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		location:dunbar = {
+			save_scope_as = target_location
+			if = {
+				limit = { has_variable = sco_dunbar_castle_taken }
+				remove_variable = sco_dunbar_castle_taken
+			}
+			if = {
+				limit = { has_location_modifier = sco_dunbar_castle }
+				remove_location_modifier = sco_dunbar_castle
+				set_variable = { name = sco_dunbar_castle_taken value = yes years = 20 }
+			}
+		}
+	}
+
+	option = {
+		name = flavor_sco.1404.a
+		add_prestige = prestige_mild_bonus
+		if = {
+			limit = { tag = SBL }
+			if = {
+				limit = { has_country_modifier = sco_hostile_dunbar_castle }
+				remove_country_modifier = sco_hostile_dunbar_castle
+			}
+			c:SCO = {
+				trigger_event_silently = { id = flavor_sco.1402 days = { 90 120 } }
+			}
+		}
+	}
+}
+
+#flavor_sco.1500 = { #Stone of Scone returns to Scotland
+#	type = country_event
+#	title = flavor_sco.1500.title
+#	desc = flavor_sco.1500.desc
+#
+#	fire_only_once = yes
+#
+#	trigger = {
+#		OR = {
+#			tag = SCO
+#			culture = { has_culture_group = culture_group:scottish_group }
+#		}
+#	}
+#
+#	option = {
+#		name = flavor_sco.1500.a
+#		add_legitimacy = legitimacy_severe_bonus
+#		add_prestige = prestige_severe_bonus
+#		show_as_tooltip = {
+#			c:ENG = {
+#				add_legitimacy = legitimacy_severe_penalty
+#				add_prestige = prestige_severe_penalty
+#			}
+#		}
+#		hidden_effect = {
+#			c:ENG = { trigger_event_silently = flavor_sco.1501 }
+#		}
+#	}
+#}
+#
+#flavor_sco.1501 = { #England gets notified about Stone of Scone
+#	type = country_event
+#	title = flavor_sco.1501.title
+#	desc = flavor_sco.1501.desc
+#
+#	fire_only_once = yes
+#
+#	option = {
+#		name = flavor_sco.1501.a
+#		add_legitimacy = legitimacy_severe_penalty
+#		add_prestige = prestige_severe_penalty
+#	}
+#}
