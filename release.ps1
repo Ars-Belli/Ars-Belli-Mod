@@ -7,7 +7,7 @@ $zipName = "ArsBelliMod.zip"
 $zipPath = Join-Path $sourceDir $zipName
 
 # Directories and files to include (matching deploy.ps1)
-$includeList = @("in_game", "main_menu", ".metadata")
+$includeList = @("in_game", "main_menu", "loading_screen", ".metadata")
 
 # Define a temporary staging directory
 $stagingDir = Join-Path $sourceDir "release_staging"
@@ -42,7 +42,7 @@ foreach ($item in $includeList) {
 }
 
 # Note: deploy.ps1 has a specific step to copy metadata content to $destDir.
-# However, usually for a Paradox mod, the .metadata folder itself or its contents 
+# However, usually for a Paradox mod, the .metadata folder itself or its contents
 # should be at the root of the ZIP if it's meant to be in the mod root.
 # Looking at deploy.ps1, it copies the .metadata folder AND then its contents again.
 # 19: $includeList = @("in_game", "main_menu", ".metadata")
