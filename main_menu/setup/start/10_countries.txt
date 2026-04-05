@@ -4393,15 +4393,23 @@ countries = {
 
 			# English towns on the Welsh March
 			shrewsbury hereford
+			
+			# Northumberland
+			york scarborough bedale whitby
+			hull bridlington selby norton
+			leeds pontefract wakefield doncaster ripon
+			
+			# france
+			abbeville montreuil saint_pol saint_omer bethune calais hesdin boulogne_sur_mer
+			amiens breteuil corbie 
+			tancarville arques fecamp longueville aumale
 		}
 		own_control_integrated = {
 			# Earldom of Chester
 			# cornwall
 			launceston truro bodmin
 			# channel
-			jersey
-			# france			
-			abbeville montreuil saint_pol saint_omer bethune calais hesdin boulogne_sur_mer #Ponthieu
+			jersey			
 		}
 
 		include = "catholic_monarchy"
@@ -4518,8 +4526,10 @@ countries = {
 
 		accepted_cultures = {
 			northumbrian
+			picard
+			norman
 		}
-		tolerated_cultures = { cornish welsh }
+		tolerated_cultures = { cornish }
 
 		court_language = norman_dialect
 		country_rank = rank_kingdom
@@ -4897,10 +4907,13 @@ countries = {
 		own_control_core = {
 			newcastle hexham alnwick morpeth billingham
 			carlisle cockermouth penrith egremont
-			kendal appleby
-			york scarborough bedale richmond whitby
+			kendal appleby 
+			richmond skipton 
+		}
+		our_cores_conquered_by_others = { 
+			york scarborough bedale whitby
 			hull bridlington selby norton
-			leeds pontefract skipton wakefield doncaster ripon
+			leeds pontefract wakefield doncaster ripon
 		}
 		government = {
 			type = monarchy
@@ -11493,6 +11506,11 @@ countries = {
 			}
 		}
 
+		accepted_cultures = {
+			vivaro_alpine
+			auvergnat
+		}
+
 		tolerated_cultures = {
 			piedmontese
 		}
@@ -14162,14 +14180,13 @@ countries = {
 	FRA = {
 		own_control_core = {
 			paris brie_comte_robert corbeil montmorency
-			amiens breteuil corbie nesle peronne
-			montargis sens senlis nemours melun
+			nesle peronne
+			montargis senlis nemours melun
 			beauvais saint_quentin noyon la_rochelle
 			ribemont laon
 			cahors mirepoix limoux carcassonne lavaur castelnaudary condom nerac bazas agen
 			bergerac montauban albi millau saint_pons beziers agde sauveterre_de_guyenne
 			figeac villefranche chaumont_vexin
-			bar_sur_seine
 			limeuil sarlat marmande montflanquin
 			braine loudun
 			mauriac riom tour_auvergne brioude saint_flour vodable
@@ -14184,8 +14201,6 @@ countries = {
 			limoges nontron segur st_leonard aixe thiviers #Vic. Limoges
 			turenne gourdon #Vic.Turenne
 			mende #C. de Gevaudan
-			le_puy #C. du Velay
-			viviers # C. de Viviers
 			nimes uzes melgueil
 			french_ales #S. Ales
 			chambon #B. de Combraille
@@ -14206,7 +14221,7 @@ countries = {
 			meaux
 			provins
 			peyrusse entraigues st_affrique
-			allegre chalancon peyre chateauneuf_de_randon florac st_ambroix
+			allegre peyre chateauneuf_de_randon florac st_ambroix
 		}
 		own_control_integrated = {
 			#Appanages
@@ -14221,14 +14236,13 @@ countries = {
 			vitry_en_pertois troyes epernay menehould
 
 			#Too small/unimportant appanages
-			guise hirson
-			rosnay villemaur
+			guise 
+			rosnay
 
 			#Too small/unimportant vassals (fiefs movants)
 			coucy marle #S. Coucy
 			brienne #C. Brienne
 			joinville #S. Joinville
-			grandpre #C. Grandpre
 		}
 
 
@@ -14309,7 +14323,7 @@ countries = {
 				name_lothar = 2
 			}
 
-			centralization_vs_decentralization = 85
+			centralization_vs_decentralization = 60
 			aristocracy_vs_plutocracy = -75
 			serfdom_vs_free_subjects = -80
 			traditionalist_vs_innovative = -30
@@ -14349,18 +14363,21 @@ countries = {
 			}
 		}
 
+		accepted_cultures = {
+			poitevin
+			champenais
+			berrichon
+			picard
+			saintongeais
+		}
+
 		tolerated_cultures = {
 			arpitan
 			languedocien
-			picard
 			gascon
 			burgundian
 			auvergnat
-			champenais
 			limousin
-			poitevin
-			saintongeais
-			berrichon
 		}
 
 		country_rank = rank_kingdom
@@ -14466,6 +14483,7 @@ countries = {
 			beaujeu perreux joigny saint_florentin
             choiseul la_mothe_en_bassigny
 			chaumont langres grancey vaucouleurs
+			sens bar_sur_seine villemaur
 		}
 
 		starting_technology_level = 3
@@ -14520,8 +14538,10 @@ countries = {
 			}
 		}
 
-		tolerated_cultures = {
+		accepted_cultures = {
 			arpitan
+			lorrain
+			champenais
 		}
 
 		capital = dijon
@@ -15509,7 +15529,6 @@ countries = {
 	#Bar (Vassal, Fief Mouvant)
 	BAR = {
 		own_control_core = {
-		    bar_le_duc
 			# own_control_integrated, but culture accepted
 			alluyes #B. du Perche-Gou t
 		}
@@ -15552,7 +15571,7 @@ countries = {
 			french
 		}
 
-		capital = bar_le_duc
+		capital = alluyes
 	}
 
 	#Blois (Vassal, Fief Mouvant)
@@ -15773,6 +15792,7 @@ countries = {
 	VLN = {
 		own_control_core = {
 			valence die privas montlaur condorcet
+			le_puy viviers chalancon
 
 			# own_control_integrated, but culture accepted
 			tournon #S. de Tournon
@@ -15808,10 +15828,11 @@ countries = {
 		}
 
 		accepted_cultures = {
-			arpitan
 			auvergnat
 		}
-
+		tolerated_cultures = {	
+			arpitan
+		}
 		country_rank = rank_county
 		capital = valence
 	}
@@ -15989,7 +16010,7 @@ countries = {
 
 	#Aumale (Vassal, Fief Mouvant)
 	AUM = {
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			aumale
 		}
 
@@ -16762,6 +16783,7 @@ countries = {
 		own_control_core = {
 			rethel #C. Rethel
 			chateau_porcien #C. Porcien, vassal of Rethiel
+			grandpre hirson
 		}
 
 		starting_technology_level = 3
@@ -16802,7 +16824,6 @@ countries = {
 		own_control_core = {
 			evreux harcourt #Normandy
 			mantes #Ile de France
-			longueville #Longueville
 		}
 
 		starting_technology_level = 3
@@ -16852,7 +16873,7 @@ countries = {
 			bernay laigle louviers pont_audemer
 			caen argentan bayeux domfront falaise lisieux pont_douilly
 			cherbourg coutances avranches st_sauveur vire
-			rouen arques fecamp gisors tancarville
+			rouen gisors 
 		}
 
 		our_cores_conquered_by_others = {
@@ -37099,7 +37120,7 @@ countries = {
 
 	VDU = { #Verdun
 		own_control_core = {
-			verdun fresnes saint_mihiel longwy clermont_en_argonne ligny etain
+			verdun fresnes saint_mihiel longwy clermont_en_argonne ligny etain bar_le_duc
 		}
 
 		starting_technology_level = 3
