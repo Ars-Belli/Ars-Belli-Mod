@@ -1,0 +1,70 @@
+﻿unconditional_surrender = {
+    type = diplomacy
+    category = CATEGORY_HOSTILE_ACTIONS
+
+    block_when_at_war = no
+    use_enroute = no
+
+    potential = {
+        scope:actor = {
+            at_war = yes
+            is_ai = no
+        }
+    }
+
+    allow = {
+        scope:actor = {
+            at_war = yes
+            is_ai = no
+        }
+    }
+
+    select_trigger = {
+        looking_for_a = country
+        target_flag = recipient
+        interaction_source_list = {
+            scope:actor = {
+                every_enemy_war_leader = {
+                    add_to_list = source
+                }
+            }
+        }
+        cache_interaction_source_list = yes
+        name = "choose_war_to_unconditional_surrender"
+        none_available_msg_key = "unconditional_surrender_no_countries"
+        column = {
+            data = name
+        }
+        visible = {
+            is_at_war_with = scope:actor
+        }
+        enabled = {
+            scope:actor = {
+                any_current_war = {
+                    scope:recipient = {
+                        is_war_leader_of = prev
+                    }
+                }
+            }
+        }
+    }
+
+    effect = {
+        scope:actor = {
+            every_owned_location = {
+                limit = {
+                    controller ?= scope:actor
+                }
+                change_location_controller = scope:recipient
+            }
+            every_subject = {
+                every_owned_location = {
+                    limit = {
+                        controller ?= prev
+                    }
+                    change_location_controller = scope:recipient
+                }
+            }
+        }
+    }
+}
