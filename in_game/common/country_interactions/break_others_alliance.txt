@@ -1,4 +1,5 @@
-﻿break_others_alliance =  { 
+﻿# disable isolate from allies with favors:
+break_others_alliance =  {
 	type = diplomacy
 	category = CATEGORY_HOSTILE_ACTIONS
 
@@ -18,8 +19,10 @@
 	}
 
 	allow = {
+		# disable isolate from allies with favors:
+		always = no
 	}
-	
+
 
 	select_trigger = {
 		looking_for_a = country
@@ -46,7 +49,6 @@
 		interaction_source_list = {
 			scope:recipient = {
 				every_country_with_relation_that_can_be_annulled = {
-					limit = { NOT = { is_subject_of = scope:recipient } }
 					add_to_list = source
 				}
 			}
@@ -59,16 +61,6 @@
 		column = {
 			data = population
 		}
-		visible = {
-			trigger_if = {
-				limit = {
-					is_subject = yes
-				}
-				not = {
-					overlord = scope:recipient
-				}
-			}
-		}
 	}
 
 	effect = {
@@ -77,7 +69,7 @@
 				exists = scope:recipient
 				exists = scope:target
 			}
-			scope:recipient = {	
+			scope:recipient = {
 				annul_all_treaties_with = scope:target
 			}
 			scope:recipient = {
@@ -94,4 +86,4 @@
 			}
 		}
 	}
-}	
+}
