@@ -62,7 +62,7 @@ country_vassal_pop_score = {
 
 	every_subject = {
 		add = {
-			value = total_population
+			value = total_control_scaled_population
 			divide = @county_pop_divide_by # for standard pop scaling
 			divide = 2 # then 50% for being a vassal vassal
 		}
@@ -362,7 +362,7 @@ total_player_defensive_pact_weight = {
 					}
 				}
 			}
-			# Since we call this script value from multiple triggers, we need to ensure 
+			# Since we call this script value from multiple triggers, we need to ensure
 			# we only add potential weight for the RIGHT relation type.
 			# But for DP, we only have one type (Defensive League).
 		}
