@@ -1,0 +1,485 @@
+﻿# Mapping:
+# Great Power (score > 10) = 3
+# Major (score 2-10) = 2
+# Minor (score < 2) = 1
+# AI weight = 0
+
+@county_pop_divide_by = 1000
+
+country_power_score = {
+	value = 0
+
+    # check sengoku_reevaluate_strongest_daimyos for relative power
+
+	add = {
+		value = country_pop_score
+	}
+
+	add = {
+		value = country_eco_score
+	}
+
+	add = {
+		value = country_manpower_score
+	}
+
+	add = {
+		value = country_military_score
+	}
+
+	add = {
+		value = county_navy_score
+	}
+
+	add = {
+		value = country_heavy_ship_score
+	}
+
+	add = {
+		value = country_galley_score
+	}
+
+	add = {
+		value = country_control_pop_score
+	}
+
+	add = {
+		value = country_vassal_pop_score
+	}
+}
+
+country_pop_score = {
+	value = 0
+
+	add = {
+		value = total_accepted_culture_population
+		divide = @county_pop_divide_by
+	}
+}
+
+country_vassal_pop_score = {
+	value = 0
+
+	every_subject = {
+		add = {
+			value = total_population
+			divide = @county_pop_divide_by # for standard pop scaling
+			divide = 2 # then 50% for being a vassal vassal
+		}
+	}
+}
+
+country_eco_score = {
+	value = 0
+
+	add = {
+		value = country_tax_base
+		divide = 500
+	}
+}
+
+country_manpower_score = {
+	value = 0
+
+	add = {
+		# value =
+		value = max_manpower
+		divide = 25
+	}
+}
+
+country_military_score = {
+	value = 0
+
+	add = {
+		value = regular_army_size
+		divide = 10
+	}
+}
+
+county_navy_score = {
+	value = 0
+
+	add = {
+		# value =
+		value = max_sailors
+		divide = 50
+	}
+}
+
+country_heavy_ship_score = {
+	value = 0
+
+	add = {
+		value = total_sub_unit_count:navy_heavy_ship
+		divide = 50
+	}
+}
+
+country_galley_score = {
+	value = 0
+
+	add = {
+		value = total_sub_unit_count:navy_galley
+		divide = 200
+	}
+}
+
+country_control_pop_score = {
+	value = 0
+
+	add = {
+		value = total_control_scaled_population
+		divide = @county_pop_divide_by
+		divide = 4
+	}
+}
+
+country_slot_weight = {
+	if = {
+		limit = {
+			global_var:mp_limits_players_only = 1
+			is_ai = yes
+		}
+		value = 0
+	}
+	else_if = {
+		limit = {
+			has_variable = mp_is_gp
+		}
+		value = global_var:mp_gp_cost_rule
+	}
+	else_if = {
+		limit = {
+			has_variable = mp_is_major
+		}
+		value = global_var:mp_major_cost_rule
+	}
+	else_if = {
+		limit = {
+			has_variable = mp_is_minor
+		}
+		value = global_var:mp_minor_cost_rule
+	}
+	else_if = {
+		limit = {
+			has_variable = mp_is_small
+		}
+		value = global_var:mp_small_cost_rule
+	}
+	else_if = {
+		limit = {
+			has_variable = mp_is_normal
+		}
+		value = global_var:mp_normal_cost_rule
+	}
+	else = { # Fallback
+		value = 3
+	}
+}
+
+mp_alliance_points_limit = {
+	if = {
+		limit = {
+			global_var:mp_limits_players_only = 1
+			is_ai = yes
+		}
+		value = 999
+	}
+	else = {
+		value = global_var:mp_alliance_limit_rule
+		if = {
+			limit = { not = { has_global_variable = mp_alliance_limit_rule } }
+			value = 6
+		}
+	}
+}
+
+mp_defensive_points_limit = {
+	if = {
+		limit = {
+			global_var:mp_limits_players_only = 1
+			is_ai = yes
+		}
+		value = 999
+	}
+	else_if = {
+		limit = { has_variable = mp_is_gp }
+		value = global_var:mp_gp_def_limit_rule
+	}
+	else_if = {
+		limit = { has_variable = mp_is_major }
+		value = global_var:mp_major_def_limit_rule
+	}
+	else_if = {
+		limit = { has_variable = mp_is_minor }
+		value = global_var:mp_minor_def_limit_rule
+	}
+	else_if = {
+		limit = { has_variable = mp_is_small }
+		value = global_var:mp_small_def_limit_rule
+	}
+	else = {
+		value = global_var:mp_normal_def_limit_rule
+	}
+	add = global_var:mp_defensive_limit_rule_mod
+	if = {
+		limit = {
+			not = { has_variable = mp_is_gp }
+			not = { has_variable = mp_is_major }
+			not = { has_variable = mp_is_minor }
+			not = { has_variable = mp_is_small }
+			not = { has_global_variable = mp_normal_def_limit_rule }
+		}
+		value = 3
+	}
+}
+
+mp_guarantee_points_limit = {
+	if = {
+		limit = {
+			global_var:mp_limits_players_only = 1
+			is_ai = yes
+		}
+		value = 999
+	}
+	else_if = {
+		limit = { has_variable = mp_is_gp }
+		value = 1
+	}
+	else_if = {
+		limit = { has_variable = mp_is_major }
+		value = 2
+	}
+	else = {
+		value = 3
+	}
+}
+
+total_player_alliance_weight = {
+	value = 0
+	# Current Alliance weight
+	every_country = {
+		limit = {
+			has_mutual_scripted_relation = {
+				type = relation_type:alliance
+				target = root
+			}
+		}
+		add = country_slot_weight
+	}
+	# Potential alliance weight
+	if = {
+		limit = {
+			exists = scope:recipient
+			not = { this = scope:recipient }
+			not = {
+				has_mutual_scripted_relation = {
+					type = relation_type:alliance
+					target = scope:recipient
+				}
+			}
+		}
+		add = scope:recipient.country_slot_weight
+	}
+
+	# Overflow from Defensive Pact weight
+	# AP = Alliance Weight + max(0, Defensive Pact Weight - DP Limit)
+	if = {
+		limit = {
+			total_player_defensive_pact_weight > mp_defensive_points_limit
+		}
+		add = {
+			value = total_player_defensive_pact_weight
+			subtract = mp_defensive_points_limit
+		}
+	}
+}
+
+current_player_alliance_weight = {
+	value = 0
+	# Current Alliance weight
+	every_country = {
+		limit = {
+			has_mutual_scripted_relation = {
+				type = relation_type:alliance
+				target = root
+			}
+		}
+		add = country_slot_weight
+	}
+	# Overflow from Defensive Pact weight
+	if = {
+		limit = {
+			current_player_defensive_pact_weight > mp_defensive_points_limit
+		}
+		add = {
+			value = current_player_defensive_pact_weight
+			subtract = mp_defensive_points_limit
+		}
+	}
+}
+
+total_player_defensive_pact_weight = {
+	value = 0
+	# Count any relation that should use defensive points
+	# For now, let's assume 'anti_coalition_treaty' or a custom one
+	# If 'defensive_pact' doesn't exist, this will stay 0
+	# every_country = {
+	# 	limit = {
+	# 		has_mutual_scripted_relation = {
+	# 			type = relation_type:defensive_pact
+	# 			target = root
+	# 		}
+	# 	}
+	# 	add = country_slot_weight
+	# }
+
+	# Defensive League members
+	every_country = {
+		limit = {
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:defensive_league
+				any_international_organization_member = {
+					this = root
+				}
+			}
+			not = { this = root }
+		}
+		add = country_slot_weight
+	}
+
+	# Potential defensive weight (if checking in UI or relation offer)
+	if = {
+		limit = {
+			exists = scope:recipient
+			not = { this = scope:recipient }
+			not = {
+				any_international_organizations_member_of = {
+					international_organization_type = international_organization_type:defensive_league
+					any_international_organization_member = {
+						this = root
+					}
+				}
+			}
+			# Since we call this script value from multiple triggers, we need to ensure 
+			# we only add potential weight for the RIGHT relation type.
+			# But for DP, we only have one type (Defensive League).
+		}
+		add = scope:recipient.country_slot_weight
+	}
+}
+
+current_player_defensive_pact_weight = {
+	value = 0
+	# Defensive League members
+	every_country = {
+		limit = {
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:defensive_league
+				any_international_organization_member = {
+					this = root
+				}
+			}
+			not = { this = root }
+		}
+		add = country_slot_weight
+	}
+}
+
+current_player_guarantee_weight = {
+	value = 0
+	every_country = {
+		limit = {
+			giving_scripted_relation = {
+				type = relation_type:guarantee
+				target = root
+			}
+		}
+		add = country_slot_weight
+	}
+}
+
+displayed_defensive_pact_weight = {
+	value = total_player_defensive_pact_weight
+	if = {
+		limit = {
+			total_player_defensive_pact_weight > mp_defensive_points_limit
+		}
+		value = mp_defensive_points_limit
+	}
+}
+
+total_player_guarantee_weight = {
+	value = 0
+	every_country = {
+		limit = {
+			giving_scripted_relation = {
+				type = relation_type:guarantee
+				target = root
+			}
+		}
+		add = country_slot_weight
+	}
+	# Potential guarantee weight
+	if = {
+		limit = {
+			exists = scope:recipient
+			not = { this = scope:recipient }
+			not = {
+				giving_scripted_relation = {
+					type = relation_type:guarantee
+					target = scope:recipient
+				}
+			}
+		}
+		add = scope:recipient.country_slot_weight
+	}
+}
+
+is_over_alliance_limit = {
+	value = 0
+	if = {
+		limit = {
+			total_player_alliance_weight > mp_alliance_points_limit
+		}
+		value = 1
+	}
+}
+
+is_over_defensive_limit = {
+	value = 0
+	if = {
+		limit = {
+			total_player_defensive_pact_weight > mp_defensive_points_limit
+			total_player_alliance_weight >= mp_alliance_points_limit
+		}
+		value = 1
+	}
+}
+
+is_over_guarantee_limit = {
+	value = 0
+	if = {
+		limit = {
+			total_player_guarantee_weight > mp_guarantee_points_limit
+		}
+		value = 1
+	}
+}
+
+mp_display_rank = {
+	if = {
+		limit = { has_variable = mp_rank_count }
+		value = var:mp_rank_count
+	}
+	else = {
+		value = 999
+	}
+	add = 1
+}
+
+mp_small_power_threshold = {
+	value = var:mp_avg_player_score
+	multiply = global_var:mp_small_power_threshold_var
+}
