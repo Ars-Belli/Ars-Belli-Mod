@@ -1,0 +1,371 @@
+mp_limits_month_tick_reset = {
+	# Check if it's a new month
+	if = {
+		limit = {
+			OR = {
+				not = { has_global_variable = mp_limits_last_month }
+				not = { global_var:mp_limits_last_month = current_month }
+			}
+		}
+		set_global_variable = {
+			name = mp_limits_last_month
+			value = current_month
+		}
+		remove_global_variable = mp_limits_calculation_done
+	}
+}
+
+mp_limits_calculate_scores_and_avg = {
+	# Step 1: All countries calculate their basic scores
+	set_global_variable = {
+		name = mp_total_player_score
+		value = 0
+	}
+	set_global_variable = {
+		name = mp_player_count
+		value = 0
+	}
+
+	every_country = {
+		limit = {
+			OR = {
+				global_var:mp_limits_players_only = 0
+				is_ai = no
+			}
+		}
+		# Store other scores for UI
+		set_variable = { name = mp_pop_score value = country_pop_score }
+		set_variable = { name = mp_eco_score value = country_eco_score }
+		set_variable = { name = mp_manpower_score value = country_manpower_score }
+		set_variable = { name = mp_sailors_score value = county_navy_score }
+		set_variable = { name = mp_heavy_ships_score value = country_heavy_ship_score }
+		set_variable = { name = mp_galleys_score value = country_galley_score }
+		set_variable = { name = mp_control_pop_score value = country_control_pop_score }
+		set_variable = { name = mp_vassal_pop_score value = country_vassal_pop_score }
+		set_variable = { name = mp_military_score value = country_military_score }
+
+		# Calculate and store power score
+		set_variable = {
+			name = mp_power_score
+			value = country_power_score
+		}
+
+		# Sum for average
+		change_global_variable = {
+			name = mp_total_player_score
+			add = var:mp_power_score
+		}
+		change_global_variable = {
+			name = mp_player_count
+			add = 1
+		}
+	}
+
+	# Step 2: Calculate average
+	set_global_variable = {
+		name = mp_avg_player_score
+		value = global_var:mp_total_player_score
+	}
+	if = {
+		limit = { global_var:mp_player_count > 0 }
+		change_global_variable = {
+			name = mp_avg_player_score
+			divide = global_var:mp_player_count
+		}
+	}
+}
+
+mp_limits_initialize_ranks_and_cleanup = {
+	# Step 3: Initialize Ranks
+	# If AI and players only mode, clear any potential markers/modifiers
+	every_country = {
+		if = {
+			limit = {
+				AND = {
+					global_var:mp_limits_players_only = 1
+					is_ai = yes
+				}
+			}
+			remove_variable = mp_is_gp
+			remove_variable = mp_is_major
+			remove_variable = mp_is_small
+			remove_variable = mp_is_minor
+			remove_variable = mp_is_normal
+			remove_variable = mp_rank_count
+			remove_variable = mp_power_score
+			remove_variable = mp_pop_score
+			remove_variable = mp_eco_score
+			remove_variable = mp_manpower_score
+			remove_variable = mp_sailors_score
+			remove_variable = mp_heavy_ships_score
+			remove_variable = mp_galleys_score
+			remove_variable = mp_control_pop_score
+			remove_variable = mp_vassal_pop_score
+			remove_variable = mp_military_score
+			remove_country_modifier = mp_over_alliance_limit_penalty
+		}
+		else = {
+			# Force initialization to prevent unset errors
+			set_variable = { name = mp_rank_count value = 1000 }
+		}
+	}
+}
+
+mp_limits_assign_ranks = {
+	# Step 4: Calculate and assign ranks
+	# Using every_country with a filter and nested comparison for rank calculation.
+	# This is O(N^2) but stable and correct in this environment.
+	every_country = {
+		save_scope_as = target_country
+		limit = {
+			OR = {
+				global_var:mp_limits_players_only = 0
+				is_ai = no
+			}
+		}
+		set_variable = { name = mp_rank_count value = 0 }
+		every_country = {
+			limit = {
+				OR = {
+					global_var:mp_limits_players_only = 0
+					is_ai = no
+				}
+				var:mp_power_score > scope:target_country.var:mp_power_score
+			}
+			scope:target_country = {
+				change_variable = {
+					name = mp_rank_count
+					add = 1
+				}
+			}
+		}
+	}
+}
+
+mp_limits_game_start_effect = {
+	# Initialize rules globally
+	mp_limits_rules_initialization = yes
+
+	# keep track of ai game rule, it shouldn't apply apply on game start (only 1337, not saves)
+	if = {
+		limit = {
+			global_var:mp_limits_players_only = 1
+		}
+		set_variable = {
+			name = mp_is_player_only_local
+			value = 1
+		}
+		set_global_variable = { name = mp_limits_players_only value = 0 }
+	}
+
+	# on game start initialize all countries and ranks, including AI
+	mp_limits_once_per_month_calculations = yes
+
+	every_country = {
+		mp_limits_rank_classification = yes
+	}
+
+	if = {
+		limit = {
+			var:mp_is_player_only_local = 1
+		}
+		set_variable = {
+			name = mp_is_player_only_local
+			value = 0
+		}
+		set_global_variable = { name = mp_limits_players_only value = 1 }
+	}
+}
+
+mp_limits_monthly_calculation = {
+	mp_limits_month_tick_reset = yes
+
+	# Only run once per month globally
+	if = {
+		limit = {
+			not = {
+				has_global_variable = mp_limits_calculation_done
+			}
+		}
+		set_global_variable = mp_limits_calculation_done
+
+		# Initialize rules globally
+		mp_limits_rules_initialization = yes
+
+		mp_limits_once_per_month_calculations = yes
+
+		# Increment calculation counter
+		# if = {
+		# 	limit = { not = { has_global_variable = mp_limits_calc_counter } }
+		# 	set_global_variable = {
+		# 		name = mp_limits_calc_counter
+		# 		value = 0
+		# 	}
+		# }
+		# change_global_variable = {
+		# 	name = mp_limits_calc_counter
+		# 	add = 1
+		# }
+	}
+}
+
+mp_limits_once_per_month_calculations = {
+
+	mp_limits_calculate_scores_and_avg = yes
+
+	mp_limits_initialize_ranks_and_cleanup = yes
+
+	mp_limits_assign_ranks = yes
+}
+
+mp_limits_assign_category_markers = {
+	set_variable = {
+		name = mp_total_top_limit
+		value = var:mp_gp_limit
+	}
+	change_variable = {
+		name = mp_total_top_limit
+		add = var:mp_major_limit
+	}
+
+	if = {
+		limit = { var:mp_rank_count < var:mp_gp_limit }
+		set_variable = { name = mp_is_gp value = yes }
+		remove_variable = mp_is_major
+		remove_variable = mp_is_small
+		remove_variable = mp_is_minor
+		remove_variable = mp_is_normal
+	}
+	else_if = {
+		limit = { var:mp_rank_count < var:mp_total_top_limit }
+		remove_variable = mp_is_gp
+		set_variable = { name = mp_is_major value = yes }
+		remove_variable = mp_is_small
+		remove_variable = mp_is_minor
+		remove_variable = mp_is_normal
+	}
+	else_if = {
+		limit = {
+			OR = {
+				AND = {
+					current_age = age_1_traditions
+					total_population < 500
+				}
+				AND = {
+					current_age = age_2_renaissance
+					total_population < 600
+				}
+				AND = {
+					current_age = age_3_discovery
+					total_population < 700
+				}
+				AND = {
+					current_age = age_4_reformation
+					total_population < 800
+				}
+				AND = {
+					current_age = age_5_absolutism
+					total_population < 900
+				}
+				AND = {
+					current_age = age_6_revolutions
+					total_population < 1000
+				}
+			}
+		}
+		remove_variable = mp_is_gp
+		remove_variable = mp_is_major
+		remove_variable = mp_is_small
+		set_variable = { name = mp_is_minor value = yes }
+		remove_variable = mp_is_normal
+	}
+	else_if = {
+		limit = {
+			country_power_score < mp_small_power_threshold
+		}
+		remove_variable = mp_is_gp
+		remove_variable = mp_is_major
+		set_variable = { name = mp_is_small value = yes }
+		remove_variable = mp_is_minor
+		remove_variable = mp_is_normal
+	}
+	else = {
+		remove_variable = mp_is_gp
+		remove_variable = mp_is_major
+		remove_variable = mp_is_small
+		remove_variable = mp_is_minor
+		set_variable = { name = mp_is_normal value = yes }
+	}
+}
+
+mp_limits_apply_alliance_limit_penalty = {
+	if = {
+		limit = {
+			global_var:mp_alliance_limit_penalty_enabled = 1
+			is_over_alliance_limit = 1
+			OR = {
+				is_ai = no
+				global_var:mp_limits_players_only = 0
+			}
+		}
+		add_country_modifier = {
+			modifier = mp_over_alliance_limit_penalty
+		}
+	}
+	else = {
+		remove_country_modifier = mp_over_alliance_limit_penalty
+	}
+}
+
+mp_limits_rank_classification = {
+	# If AI and players only mode, clear any potential markers/modifiers and exit
+	if = {
+		limit = {
+			AND = {
+				global_var:mp_limits_players_only = 1
+				is_ai = yes
+			}
+		}
+		remove_variable = mp_is_gp
+		remove_variable = mp_is_major
+		remove_variable = mp_is_small
+		remove_variable = mp_is_minor
+		remove_variable = mp_is_normal
+		remove_variable = mp_rank_count
+		remove_variable = mp_power_score
+		remove_variable = mp_pop_score
+		remove_variable = mp_eco_score
+		remove_variable = mp_manpower_score
+		remove_variable = mp_sailors_score
+		remove_variable = mp_heavy_ships_score
+		remove_variable = mp_galleys_score
+		remove_variable = mp_control_pop_score
+		remove_variable = mp_vassal_pop_score
+		remove_variable = mp_military_score
+		remove_country_modifier = mp_over_alliance_limit_penalty
+	}
+	else = {
+		# Local copy of global variables for easy access in UI/triggers if needed
+		# Though they can also be accessed via global_var:
+		set_variable = {
+			name = mp_avg_player_score
+			value = global_var:mp_avg_player_score
+		}
+		set_variable = {
+			name = mp_gp_limit
+			value = global_var:mp_gp_limit
+		}
+		set_variable = {
+			name = mp_major_limit
+			value = global_var:mp_major_limit
+		}
+
+		if = {
+			limit = { NOT = { has_variable = mp_rank_count } }
+			set_variable = { name = mp_rank_count value = 1000 }
+		}
+
+		mp_limits_assign_category_markers = yes
+		mp_limits_apply_alliance_limit_penalty = yes
+	}
+}
