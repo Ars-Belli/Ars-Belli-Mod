@@ -4,6 +4,10 @@ mp_limits_rules_initialization = {
         value = 6
     }
     if = {
+        limit = { has_game_rule = gp_0 }
+        set_global_variable = { name = mp_gp_limit value = 0 }
+    }
+    else_if = {
         limit = { has_game_rule = gp_1 }
         set_global_variable = { name = mp_gp_limit value = 1 }
     }
@@ -41,6 +45,10 @@ mp_limits_rules_initialization = {
         value = 6
     }
     if = {
+        limit = { has_game_rule = major_0 }
+        set_global_variable = { name = mp_major_limit value = 0 }
+    }
+    else_if = {
         limit = { has_game_rule = major_1 }
         set_global_variable = { name = mp_major_limit value = 1 }
     }
