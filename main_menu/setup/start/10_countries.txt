@@ -4403,6 +4403,9 @@ countries = {
 			abbeville montreuil saint_pol saint_omer bethune calais hesdin boulogne_sur_mer
 			amiens breteuil corbie 
 			tancarville arques fecamp longueville aumale
+			caen bayeux 
+			cherbourg st_sauveur
+			rouen gisors lisieux louviers pont_audemer
 		}
 		own_control_integrated = {
 			# Earldom of Chester
@@ -4977,8 +4980,8 @@ countries = {
 
 	SCO = { # Scotland
 		own_control_core = {
-			glasgow paisley dumbarton aberdeen dunbar banff dundee buchan mar inverurie stonehaven aberfeldy irvine
-			oban inverary cowal forfar arbroath arran selkirk scone ayr lanark linlithgow stirling strathearn
+			glasgow paisley dumbarton aberdeen dunbar banff buchan mar inverurie aberfeldy irvine
+			oban inverary cowal arran selkirk scone ayr lanark linlithgow stirling strathearn
 			dornoch durness tongue thurso	
 		}
 
@@ -4986,6 +4989,7 @@ countries = {
 			perth kirkcudbright kenmure stranraer
 			edinburgh roxburgh dumfries
 			cupar dunfermline st_andrews clackmannan berwick
+			arbroath dundee stonehaven forfar
 			#ross
 			dingwall gairloch ullapool
 		}
@@ -5054,7 +5058,6 @@ countries = {
 			privilege = {
 				#nobles
 				scottish_clans
-				banal_lordship
 				nobility_council
 				primacy_of_nobility
 				#burghers
@@ -5112,6 +5115,7 @@ countries = {
 		own_control_core = {
 			kirkcudbright kenmure stranraer perth edinburgh roxburgh duns dumfries dunfermline st_andrews clackmannan berwick
 			cupar
+			arbroath dundee stonehaven forfar
 		}
 		our_cores_conquered_by_others = {
 			glasgow paisley dumbarton aberdeen dunbar elgin banff dundee buchan mar inverurie stonehaven aberfeldy irvine dornoch durness tongue
@@ -10769,6 +10773,7 @@ countries = {
 			apt barcelonnette forcalquier sisteron
 			nice barjols castellane digne draguignan frejus grasse puget_theniers
 			cuneo
+			nimes uzes 
 		}
 		our_cores_conquered_by_others = {
 			avignon #Controlled by the Pope, but historically owned by Naples
@@ -10827,6 +10832,9 @@ countries = {
 			}
 		}
 
+		accepted_cultures = {
+			languedocien
+		}
 		tolerated_cultures = {
 			vivaro_alpine
 		}
@@ -11465,7 +11473,7 @@ countries = {
 			geneve annecy la_roche_sur_foron
 			yverdon_les_bains nyon montreux monthey
 			faucigny sallanches #Barony of 	Faucigny
-			trevoux grenoble
+			trevoux grenoble la_mure morgex briancon
 		}
 
 		starting_technology_level = 3
@@ -11522,7 +11530,7 @@ countries = {
 	#Principality of Piedmont - PIE
 	PIE = {
 		own_control_core = {
-			pinerolo susa turin
+			pinerolo susa turin pragelato
 		}
 
 		starting_technology_level = 3
@@ -12943,7 +12951,7 @@ countries = {
 
 	ALB = {
 		own_control_core = {
-			durres elbasan kavaje kruje tirana
+			durres elbasan kavaje kruje tirana berat ballsh
 		}
 
 		starting_technology_level = 3
@@ -13638,7 +13646,7 @@ countries = {
 			palma ciudadela_de_menorca ibiza manacor pollensa #Kingdom of Mallorca
 			puigcerda prades #County of Cerdanya
 			perpignan #County of Roselló
-			montpellier #Lordship of Montpellier
+			montpellier melgueil #Lordship of Montpellier
 		}
 
 		starting_technology_level = 3
@@ -13665,8 +13673,10 @@ countries = {
 			}
 		}
 
-		tolerated_cultures = {
+		accepted_cultures = {
 			languedocien
+		}
+		tolerated_cultures = {
 			sephardi
 			andalusi
 		}
@@ -14182,15 +14192,13 @@ countries = {
 			paris brie_comte_robert corbeil montmorency
 			nesle peronne
 			montargis senlis nemours melun
-			beauvais saint_quentin noyon la_rochelle
+			beauvais saint_quentin noyon
 			ribemont laon
-			cahors mirepoix limoux carcassonne lavaur castelnaudary condom nerac bazas agen
-			bergerac montauban albi millau saint_pons beziers agde sauveterre_de_guyenne
+			cahors limoux carcassonne lavaur castelnaudary agen
+			montauban albi millau
 			figeac villefranche chaumont_vexin
-			limeuil sarlat marmande montflanquin
-			braine loudun
-			mauriac riom tour_auvergne brioude saint_flour vodable
-			montaigut herment
+			marmande montflanquin
+			braine
 
 			tours chinon loches chatillon_sur_indre #D. de Touraine
 
@@ -14198,12 +14206,10 @@ countries = {
 
 			chartres auneau #C. Chartres
 			tulle #Limousin
-			limoges nontron segur st_leonard aixe thiviers #Vic. Limoges
+			limoges segur st_leonard aixe #Vic. Limoges
 			turenne gourdon #Vic.Turenne
 			mende #C. de Gevaudan
-			nimes uzes melgueil
 			french_ales #S. Ales
-			chambon #B. de Combraille
 			chalons_champagne #C. de Chalon
 			reims #D. Reims
 
@@ -14211,26 +14217,19 @@ countries = {
 
 			orleans sully vitry_aux_loges #D. de Orleans, Appanage in 1344
 
-			issoudun bourges lignieres sancoins vierzon #Berry(On October 1360, King John II created the title)
+			issoudun bourges lignieres vierzon #Berry(On October 1360, King John II created the title)
 
-			chateauroux boussac #S. de Chateauroux
-
-			lodeve #C. Lodeve
+			chateauroux #S. de Chateauroux
 
 			fenouillet toulouse verdun_sur_garonne villemur
 			meaux
 			provins
 			peyrusse entraigues st_affrique
-			allegre peyre chateauneuf_de_randon florac st_ambroix
-		}
-		own_control_integrated = {
-			#Appanages
-
-			#Poitou (Own by the ruler)
-			poitiers la_roche_sur_yon montaigu thouars parthenay fontenay montmorillon
-			niort bourganeuf chatellerault brosse lusignan aulnay st_jean_dangely
-			talmont beauvoir mauleon_poitou
-
+			peyre chateauneuf_de_randon florac
+			
+			#Poitou
+			brosse 
+			
 			#C. de Champagne
 			chateau_thierry broyes vertus nogent_sur_seine bar_sur_aube
 			vitry_en_pertois troyes epernay menehould
@@ -14244,7 +14243,9 @@ countries = {
 			brienne #C. Brienne
 			joinville #S. Joinville
 		}
-
+		
+		own_control_integrated = {	
+		}
 
 		our_cores_conquered_by_others = {
 		}
@@ -14369,15 +14370,15 @@ countries = {
 			berrichon
 			picard
 			saintongeais
-		}
-
-		tolerated_cultures = {
-			arpitan
 			languedocien
-			gascon
 			burgundian
 			auvergnat
 			limousin
+		}
+
+		tolerated_cultures = {
+			gascon
+			arpitan
 		}
 
 		country_rank = rank_kingdom
@@ -14560,7 +14561,7 @@ countries = {
 		include = "expl_western_europe"
 		include = "catholic_monarchy_no_coast"
 		government = {
-			ruler = bur_jeanne_iii_capet
+			ruler = random
 
 			ruler_term = { character = fcb_othon_guillaume_burgundy start_date = 982.1.1 end_date = 1027.9.21 regnal_number = 1 }
 			ruler_term = { character = fcb_renaud_i_burgundy start_date = 1027.9.21 end_date = 1057.9.4 regnal_number = 1 }
@@ -14607,7 +14608,6 @@ countries = {
 				character = fra_philippe_v_capet start_date = 1307.1.21 end_date = 1322.1.3 regnal_number = 2 # Marital Co-Ruler
 			}
 			ruler_term = { character = fra_jeanne_ii_chalon_burgundy start_date = 1322.1.3 end_date = 1330.1.21 regnal_number = 2 }
-			ruler_term = { character = bur_jeanne_iii_capet start_date = 1330.1.21 regnal_number = 3 }
 
 			regnal_numbers = {
 				name_otto.name_william = 1
@@ -14651,7 +14651,7 @@ countries = {
 	#Alencon (Appanage)
 	ALE = {
 		own_control_core = {
-			alencon #Alencon
+			alencon mortagne senonches #Alencon
 			# own_control_integrated, but culture accepted
 		}
 		starting_technology_level = 3
@@ -14686,7 +14686,7 @@ countries = {
 	#Auvergne (Appanage)
 	AUV = {
 		own_control_core = {
-			vic_le_comte clermont
+			vic_le_comte clermont vodable brioude allegre riom montaigut 
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -14741,7 +14741,7 @@ countries = {
 	#Ventadour
 	VNT = {
 		own_control_core = {
-			ventadour ussel
+			ventadour ussel tour_auvergne herment
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -14769,13 +14769,17 @@ countries = {
 			}
 		}
 
+		accepted_cultures = {
+			auvergnat
+		}
+
 		capital = ventadour
 	}
 
 	#Rochechouart
 	RCC = {
 		own_control_core = {
-			rochechouart
+			rochechouart thiviers nontron
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -14799,7 +14803,7 @@ countries = {
 	#Carlat
 	CLT = {
 		own_control_core = {
-			aurillac
+			aurillac mauriac saint_flour
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -14898,6 +14902,7 @@ countries = {
 			jaligny st_gerand
 			# own_control_integrated, but culture accepted
 			clermont_en_beauvaisis #C. Clermont-en-Beauvaisis
+			sancoins
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -14936,7 +14941,7 @@ countries = {
 	#La Marche (In PU with Bourbonnais)
 	MRC = {
 		own_control_core = {
-			bellac charroux gueret aubusson #La Marche
+			bellac charroux gueret aubusson chambon boussac bourganeuf #La Marche
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -14986,9 +14991,11 @@ countries = {
 			}
 		}
 
+		accepted_cultures = {
+			poitevin
+		}
 		tolerated_cultures = {
 			limousin
-			poitevin
 		}
 
 		capital = gueret
@@ -15113,7 +15120,7 @@ countries = {
 	#Foix (Vassal, Fief Mouvant of France) Special case
 	FOI = {
 		own_control_core = {
-			foix pamiers
+			foix pamiers mirepoix
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -15195,6 +15202,7 @@ countries = {
 	MDM = {
 		own_control_core = {
 			mont_de_marsan aire #Vic. of Mont-de-Marsan
+			sauveterre_de_guyenne nerac bazas
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -15244,6 +15252,7 @@ countries = {
 			auch nogaro rodez
 			lectoure #Vic. de Lomagne
 			lautrec #Vic. de Lautrec
+			condom
 		}
 
 		starting_technology_level = 3
@@ -15294,7 +15303,7 @@ countries = {
 			}
 		}
 
-		tolerated_cultures = {
+		accepted_cultures = {
 			languedocien
 		}
 
@@ -15792,10 +15801,11 @@ countries = {
 	VLN = {
 		own_control_core = {
 			valence die privas montlaur condorcet
-			le_puy viviers chalancon
+			le_puy viviers chalancon 
 
 			# own_control_integrated, but culture accepted
 			tournon #S. de Tournon
+			st_ambroix
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -15832,6 +15842,7 @@ countries = {
 		}
 		tolerated_cultures = {	
 			arpitan
+			languedocien
 		}
 		country_rank = rank_county
 		capital = valence
@@ -15840,7 +15851,7 @@ countries = {
 	#Perigord (Vassal, Fief Mouvant)
 	PER = {
 		own_control_core = {
-			perigueux riberac
+			perigueux riberac sarlat limeuil bergerac
 		}
 
 		starting_technology_level = 3
@@ -16311,7 +16322,7 @@ countries = {
 	#Perche (In PU with Alençon)
 	PRC = {
 		own_control_core = {
-			belleme mortagne senonches
+			belleme
 		}
 
 		starting_technology_level = 3
@@ -16353,7 +16364,7 @@ countries = {
 	#Mortain
 	MRT = {
 		own_control_core = {
-			mortain
+			mortain coutances avranches vire
 		}
 
 		starting_technology_level = 3
@@ -16549,9 +16560,10 @@ countries = {
 
 	#Poitou (Revolter)
 	POI = {
-		our_cores_conquered_by_others = {
+		own_control_core = {
 			poitiers la_roche_sur_yon montaigu thouars parthenay fontenay montmorillon
-			niort rochechouart bourganeuf chatellerault
+			niort chatellerault lusignan aulnay st_jean_dangely
+			talmont beauvoir mauleon_poitou loudun la_rochelle
 		}
 
 		starting_technology_level = 3
@@ -16598,6 +16610,15 @@ countries = {
 				name_philip = 1
 			}
 		}
+		
+		accepted_cultures = {
+			angevin
+			french
+			saintongeais
+			berrichon
+			gallo
+		}
+		country_rank = rank_duchy
 		capital = poitiers
 	}
 
@@ -16870,10 +16891,8 @@ countries = {
 	#Normandy
 	NRM = {
 		own_control_core = {
-			bernay laigle louviers pont_audemer
-			caen argentan bayeux domfront falaise lisieux pont_douilly
-			cherbourg coutances avranches st_sauveur vire
-			rouen gisors 
+			bernay laigle
+			argentan domfront falaise pont_douilly
 		}
 
 		our_cores_conquered_by_others = {
@@ -16924,13 +16943,13 @@ countries = {
 			}
 		}
 		country_rank = rank_duchy
-		capital = rouen
+		capital = argentan
 	}
 
 	#Narbonne
 	NRB = {
 		own_control_core = {
-			narbonne
+			narbonne saint_pons beziers agde lodeve
 		}
 
 		starting_technology_level = 3
@@ -17101,9 +17120,7 @@ countries = {
 	#Dauphine
 	DAU = {
 		own_control_core = {
-			gap briancon pragelato
-			la_mure  
-			mevouillon
+			gap mevouillon
 		}
 
 		starting_technology_level = 3
@@ -35510,7 +35527,7 @@ countries = {
 
 	AOS = {  # Aosta (South Germany)
 		own_control_core = {
-			aosta  chatillonaos morgex
+			aosta  chatillonaos
 		}
 		starting_technology_level = 3
 		include = "expl_mediterranean"
