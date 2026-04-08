@@ -1,6 +1,25 @@
 ﻿
+REPLACE:positive_stability_impact = {
+	potential_trigger = {
+		stability > 0
+	}	
+
+	scales_with = {
+		value = stability
+		multiply = 0.01
+	}
+
+		
+	global_estate_target_satisfaction = positive_stability_satisfaction_scale
+	global_pop_promotion_speed_modifier = 1.0
+	global_mercenaries_modifier = -0.5
+	monthly_doom = -0.1
+	monthly_righteousness = 0.1
+}
+
 INJECT:country_base_values = {
 	fort_limit = 4 # 4 + 1 from vanilla = 5
+	mercenary_range = 250
 }
 
 REPLACE:num_locations_impact = {
