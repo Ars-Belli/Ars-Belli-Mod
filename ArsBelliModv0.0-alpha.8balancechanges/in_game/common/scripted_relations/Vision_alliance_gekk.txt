@@ -1,0 +1,53 @@
+﻿Vision_sharing = {
+	type = diplomacy
+	relation_type = mutual
+    uses_diplo_capacity = no
+    block_when_at_war = yes
+    break_on_war = yes
+    break_on_becoming_subject = yes
+    lifts_fog_of_war = yes
+    mutual_color = define:NMapColors|DIPLOMACY_ALLIANCE_COLOR
+    category = {
+        offer = CATEGORY_FRIENDLY_ACTIONS
+        cancellation = CATEGORY_HOSTILE_ACTIONS
+    }
+
+    relation_type_for_ai = friendly
+    show_break_alert = yes
+
+	offer_enabled = {
+        alliance_can_exist = yes
+	}
+
+	request_visible = { always = no }
+	break_visible = { always = no }
+
+    cancel_enabled = {
+        scope:actor = {
+            not = { is_fighting_war_together_with = scope:recipient }
+        }
+    }
+
+    will_expire_trigger = {
+    }
+
+	offer_declined_effect = {
+	}
+
+    wants_to_give_diplo_chance = {
+        actor_is_rival = -100
+        actor_overlord_is_rival = -100
+        base = -100
+        #not_10_trust = -100
+        trust_in_actor = -100
+        positive_opinion = -100
+        negative_opinion = -100
+        border_distance = -100
+        few_relations = -100
+        same_court_language = -100
+        royal_ties = -100
+        strategic_interest = -100
+        common_threat = -100
+        relative_strength = -100
+    }
+}

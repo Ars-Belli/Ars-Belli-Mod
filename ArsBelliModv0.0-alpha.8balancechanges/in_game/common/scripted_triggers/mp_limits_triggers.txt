@@ -1,0 +1,21 @@
+﻿is_mp_gp = {
+	has_variable = mp_is_gp
+}
+is_mp_major = {
+	has_variable = mp_is_major
+}
+is_mp_small = {
+	has_variable = mp_is_small
+}
+is_mp_minor = {
+	has_variable = mp_is_minor
+}
+is_mp_normal = {
+	OR = {
+		has_variable = mp_is_normal
+		not = { has_variable = mp_is_gp }
+		not = { has_variable = mp_is_major }
+		not = { has_variable = mp_is_small }
+		not = { has_variable = mp_is_minor }
+	}
+}
