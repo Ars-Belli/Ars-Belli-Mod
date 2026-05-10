@@ -48,6 +48,25 @@ The repository mirrors the EU5 file structure:
 - **Monthly Pulse:** The `mp_limits_monthly_pulse` on-action triggers the recalculation of scores and ranks.
 - **Localization:** Multiplayer-specific rules and settings are localized in `main_menu\localization\english\ars_belli_rules_l_english.yml`.
 
+## GUI File Update Procedure
+The mod overrides two vanilla `.gui` files with mod-specific additions on top:
+- `in_game\gui\panels\right_panel\right_panel.gui`
+- `in_game\gui\foreign_country_lateralview.gui`
+
+When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\common\Europa Universalis V\game\in_game\gui\` and reapply the mod blocks:
+
+**right_panel.gui** mod additions (3 blocks):
+1. **Alliance/Defensive/Guarantee points display** — a `flowcontainer` with `# Ars Belli multiplayer limits display:` comment, inserted after the `non_clickable_color_gold_texture` corner icon, before the age `flowcontainer`.
+2. **Remove `max_width = 200`** from the age name `text_single`.
+3. **Country rank display** — a `flowcontainer` with `# Ars Belli Current country Rank:` comment, inserted after the age tooltip block, before `### CORNER2`.
+
+**foreign_country_lateralview.gui** mod additions (1 block):
+1. **MP Rank and Power Score hbox** — with `# MP Rank and Power Score` comment, inserted after the country rank icon's `glow` block (around the `GetCountryRankIcon` section), inside the same parent container.
+
+To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
+
+Last updated: 2026-05-10 (game update).
+
 ## Important Files
 - `README.md`: Basic mod title.
 - `changes.txt`: High-level summary of mechanical changes (forts, combat).

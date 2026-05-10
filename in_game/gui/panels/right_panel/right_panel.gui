@@ -42,7 +42,7 @@ types RightPanelTypes
 					# texture = "gfx/interface/graphical_cultures/european_gfx/panel_bar_corner.dds"
 					texture_density = 2
 
-					using = non_clickable_color_gold_texture
+ 				using = non_clickable_color_gold_texture
 				}
 
 				# Ars Belli multiplayer limits display:
@@ -54,11 +54,11 @@ types RightPanelTypes
 					tooltip = "ALLIANCE_LIMIT_TOPBAR_TOOLTIP"
 
 					# text_single = {
-					# 	text = "[GetPlayer.Custom('mp_calc_counter_display')]"
-					# 	using = Font_Size_Small
-					# 	align = left
-					# 	autoresize = yes
-					# 	margin = { 5 -4 }
+					#	text = "[GetPlayer.Custom('mp_calc_counter_display')]"
+					#	using = Font_Size_Small
+					#	align = left
+					#	autoresize = yes
+					#	margin = { 5 -4 }
 					# }
 					text_single = {
 						text = "[GetPlayer.Custom('alliance_points_display')]"
@@ -111,16 +111,16 @@ types RightPanelTypes
 							tooltipwidget = {
 								using = Age_tooltip
 							}
-		
+
 							background = {
 								texture = "gfx/interface/component_tiles/hud_corners/circle_background.dds"
 								texture_density = 2
 								alpha = 1
-		
+
 								modify_texture = {
 									using = color_mid_blue_texture
 								}
-		
+
 								modify_texture = {
 									texture = "gfx/interface/component_overlay/gold_overlay_circle.dds"
 									texture_density = 2
@@ -130,44 +130,44 @@ types RightPanelTypes
 									alpha = 0.7
 								}
 							}
-		
+
 							background = {
 								texture = "gfx/interface/component_tiles/hud_corners/circle_shadow.dds"
 								texture_density = 2
 								margin = { 1 1 }
 								alpha = 1
 							}
-		
+
 							background = {
 								texture = "gfx/interface/component_tiles/hud_corners/circle_frame.dds"
 								texture_density = 2
 								alpha = 1
-		
+
 								modify_texture = {
 									using = color_gold_texture
 								}
-		
+
 								using = overlay_gold
 							}
-		
+
 							piechart = {
 								parentanchor = center
 								size = { 100% 100% }
 								using = piechart_angles
-		
+
 								pieslice_no_highlight = {
 									texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
 									value = "[GetCurrentAgePercentage]"
 									color = { 1 1 1 1 }
 								}
-		
+
 								pieslice_no_highlight = {
 									texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
 									value = "[Subtract_float('(float)1.0', GetCurrentAgePercentage)]"
 									color = { 1 1 1 0 }
 								}
 							}
-		
+
 							button = {
 								parentanchor = center
 								size = { 80% 80% }
@@ -183,7 +183,6 @@ types RightPanelTypes
 						using = Age_tooltip
 					}
 				}
-
 
 				# Ars Belli Current country Rank:
 				flowcontainer = {
@@ -448,7 +447,7 @@ types RightPanelTypes
 							blockoverride "icon_effect_visible" { visible = no }
 						}
 					}
-					
+
 					button_panel_tab_alt = { ### HINTS
 						using = layoutpolicy_expanding
 						name = "button_hints"
@@ -497,7 +496,7 @@ types RightPanelTypes
 							blockoverride "icon_effect_visible" { visible = no }
 						}
 					}
-					
+
 					button_panel_tab_alt = { ### AGENDA
 						name = "agenda_button"
 						visible = "[Not(IsObserving)]"
@@ -522,7 +521,7 @@ types RightPanelTypes
 								}
 							}
 						}
-						
+
 						icon = {
 							texture = "gfx/interface/icons/flat_icons/tabicons/agenda.dds"
 							texture_density = 2
@@ -547,8 +546,8 @@ types RightPanelTypes
 						}
 						action_tooltip = {
 							click_type = right
-							title = "MUSIC_PLAYER_NEXT"
-							clicksound = "mus_player_next_all"
+							title = "MUSIC_PLAYER_NEXT_TRACK"
+							on_action = "[TriggerMusicPlayerNext]"
 						}
 
 						tooltipwidget = {
@@ -590,10 +589,10 @@ types RightPanelTypes
 										texture = "gfx/interface/icons/messages_settings/next.dds"
 									}
 									action_tooltip = {
-										title = "MUSIC_PLAYER_NEXT"
+										title = "MUSIC_PLAYER_NEXT_TRACK"
 										on_action = "[UnPauseMusicPlayer]"
+										on_action = "[TriggerMusicPlayerNext]"
 									}
-									clicksound = "mus_player_next_all"
 								}
 							}
 							ContextualTooltipType = {
@@ -611,7 +610,7 @@ types RightPanelTypes
 								blockoverride "tooltip_content" {}
 							}
 						}
-						
+
 						background = {
 							block "bg_panel_group_tabs_color" {
 								visible = "[IsLateralViewOpened('music_player')]"
@@ -629,7 +628,7 @@ types RightPanelTypes
 							blockoverride "icon_effect_visible" { visible = no }
 						}
 					}
-					
+
 					button_panel_tab_alt = { ## MENU
 						onclick = "[OnPauseMenu]"
 						enabled = "[CanShowPauseMenu]"
@@ -667,7 +666,7 @@ types RightPanelTypes
 							using = button_panel_tab_icon_effect
 							blockoverride "icon_effect_visible" { visible = no }
 						}
-					}					
+					}
 				}
 			}
 		}
@@ -684,7 +683,7 @@ types RightPanelTypes
 
 			vbox = {
 				visible = "[Not(And(RightView.IsSideAttached, Not(IsLateralViewFullScreen)))]"
-				
+
 				allow_outside = yes
 				using = layoutpolicy_expanding
 				using = right_panel_maxmin_width
