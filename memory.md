@@ -26,7 +26,10 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - Rules are defined in `main_menu\common\game_rules\ars_belli_rules.txt` and localized in `main_menu\localization\english\ars_belli_rules_l_english.yml`.
 - Penalties are applied via static modifiers if limits are exceeded.
 
-### 3. Military & Fort Rebalancing
+### 3. War & Military Rebalancing
+- **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
+
+### 3b. Fort Rebalancing
 Significant changes to siege mechanics and fort limits (documented in `changes.txt` and `loading_screen\common\defines\01_ars_belli_defines.txt`):
 - **Fort Limit:** Base limit of 5. Affected by tech and locations, NOT country rank or city count.
 - **Defensiveness:** Removed movement speed/combat bonuses; focuses on scaling siege ability penalties.
