@@ -1,0 +1,37 @@
+﻿# Worsen OUR opinion of THEM
+worsen_opinion = {
+	type = diplomacy
+	category = CATEGORY_HOSTILE_ACTIONS
+
+	allow = {
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "worsen_opinion_SELECT_TITLE"
+		none_available_msg_key = "worsen_opinion_no_countries"
+		column = {
+			data = name
+		}
+		visible = {
+			not = { this = scope:actor }
+		}
+		enabled = {
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:recipient
+			}
+			scope:actor = {
+				add_opinion = {
+					target = scope:recipient
+					modifier = opinion_worsen_opinion
+				}
+			}
+		}
+	}
+}
