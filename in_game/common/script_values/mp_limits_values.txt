@@ -258,12 +258,30 @@ mp_guarantee_points_limit = {
 
 total_player_alliance_weight = {
 	value = 0
-	# Current Alliance weight
+	# Current Alliance weight (exclude countries already in defensive league or PU with root, they count under DP)
 	every_country = {
 		limit = {
 			has_mutual_scripted_relation = {
 				type = relation_type:alliance
 				target = root
+			}
+			# Skip if already in same defensive league
+			not = {
+				any_international_organizations_member_of = {
+					international_organization_type = international_organization_type:defensive_league
+					any_international_organization_member = {
+						this = root
+					}
+				}
+			}
+			# Skip if in same personal union
+			not = {
+				any_international_organizations_member_of = {
+					international_organization_type = international_organization_type:union
+					any_international_organization_member = {
+						this = root
+					}
+				}
 			}
 		}
 		add = country_slot_weight
@@ -298,12 +316,28 @@ total_player_alliance_weight = {
 
 current_player_alliance_weight = {
 	value = 0
-	# Current Alliance weight
+	# Current Alliance weight (exclude countries already in defensive league or PU with root)
 	every_country = {
 		limit = {
 			has_mutual_scripted_relation = {
 				type = relation_type:alliance
 				target = root
+			}
+			not = {
+				any_international_organizations_member_of = {
+					international_organization_type = international_organization_type:defensive_league
+					any_international_organization_member = {
+						this = root
+					}
+				}
+			}
+			not = {
+				any_international_organizations_member_of = {
+					international_organization_type = international_organization_type:union
+					any_international_organization_member = {
+						this = root
+					}
+				}
 			}
 		}
 		add = country_slot_weight
@@ -349,6 +383,29 @@ total_player_defensive_pact_weight = {
 		add = country_slot_weight
 	}
 
+	# Personal Union members (count as defensive, but skip if already in same defensive league)
+	every_country = {
+		limit = {
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:union
+				any_international_organization_member = {
+					this = root
+				}
+			}
+			not = { this = root }
+			# Don't double-count if already in same defensive league
+			not = {
+				any_international_organizations_member_of = {
+					international_organization_type = international_organization_type:defensive_league
+					any_international_organization_member = {
+						this = root
+					}
+				}
+			}
+		}
+		add = country_slot_weight
+	}
+
 	# Potential defensive weight (if checking in UI or relation offer)
 	if = {
 		limit = {
@@ -362,9 +419,6 @@ total_player_defensive_pact_weight = {
 					}
 				}
 			}
-			# Since we call this script value from multiple triggers, we need to ensure
-			# we only add potential weight for the RIGHT relation type.
-			# But for DP, we only have one type (Defensive League).
 		}
 		add = scope:recipient.country_slot_weight
 	}
@@ -382,6 +436,27 @@ current_player_defensive_pact_weight = {
 				}
 			}
 			not = { this = root }
+		}
+		add = country_slot_weight
+	}
+	# Personal Union members (skip if already in same defensive league)
+	every_country = {
+		limit = {
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:union
+				any_international_organization_member = {
+					this = root
+				}
+			}
+			not = { this = root }
+			not = {
+				any_international_organizations_member_of = {
+					international_organization_type = international_organization_type:defensive_league
+					any_international_organization_member = {
+						this = root
+					}
+				}
+			}
 		}
 		add = country_slot_weight
 	}
