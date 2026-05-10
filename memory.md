@@ -33,6 +33,10 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - File: `in_game\common\country_interactions\break_others_guarantee.txt`
 - Requires not being at war. Creates a truce on use.
 
+### 2c. Worsen Opinion
+- Country interaction allowing a player to worsen their own opinion of another country (-100 opinion, decays over 10 years).
+- Files: `in_game\common\country_interactions\worsen_opinion.txt`, `in_game\common\biases\ars_belli_opinion.txt`
+
 ### 3. War & Military Rebalancing
 - **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
 - **Unconditional Surrender:** Removed (base game now has one). Previously in `in_game\common\country_interactions\unconditional_surrender.txt`.
