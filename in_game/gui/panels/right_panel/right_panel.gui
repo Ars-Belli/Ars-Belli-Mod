@@ -213,16 +213,17 @@ types RightPanelTypes
 				# Ars Belli tier list panel (toggled by clicking the rank label):
 				widget = {
 					name = "ars_belli_tier_panel"
+					layer = top
 					parentanchor = top|right
 					widgetanchor = top|right
-					position = { -10 90 }
-					size = { 360 600 }
+					position = { -420 200 }
+					size = { 380 620 }
 					allow_outside = yes
+					alwaystransparent = no
 					visible = "[GetGlobalVariable('mp_tier_panel_open').IsSet]"
 
-					background = {
-						using = bg_window_default_alt
-					}
+					using = bg_paper_card
+					using = bg_cabinet_card_frame
 
 					vbox = {
 						margin = { 8 8 }
