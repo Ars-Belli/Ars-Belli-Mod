@@ -1,4 +1,4 @@
-﻿guarantee =  {
+﻿guarantee =  { 
 	type = diplomacy
 	relation_type = oneway
     uses_diplo_capacity = giving
@@ -17,19 +17,13 @@
     }
 
     relation_type_for_ai = friendly
-
+	
 	diplomatic_capacity_cost = guarantee_upkeep_cost
 
 	offer_enabled = {
         scope:actor = {
             not = { has_blocked_treaties = scope:recipient }
             modifier:allowed_guarantee = yes
-            custom_description = {
-                text = "MP_GUARANTEE_LIMIT_REACHED"
-                subject = scope:actor
-                object = scope:recipient
-                can_add_guarantee_rule = yes
-            }
             OR = {
                 is_mp_gp = yes
                 is_mp_major = yes
@@ -82,12 +76,6 @@
         scope:recipient = {
             not = { has_blocked_treaties = scope:recipient }
             modifier:allowed_guarantee = yes
-            custom_description = {
-                text = "MP_GUARANTEE_LIMIT_REACHED"
-                subject = scope:actor
-                object = scope:recipient
-                can_add_guarantee_rule = yes
-            }
             OR = {
                 is_mp_gp = yes
                 is_mp_major = yes
@@ -186,7 +174,7 @@
             add = {
                 desc = "COALITION_GRADE_ANTAGONISM_TOWARDS_THEM"
                 value = {
-                    every_country_with_coalition_grade_antagonism_against_us = {
+                    every_country_with_coalition_grade_antagonism_against_us = {                    
                         limit = {
                             not = { is_subject_or_below_of = prev }
                         }
@@ -198,4 +186,4 @@
             }
         }
     }
-}
+}	

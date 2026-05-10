@@ -55,6 +55,12 @@ if (Test-Path -Path $metadataDir) {
     Copy-Item -Path (Join-Path $metadataDir "*") -Destination $stagingDir -Force
 }
 
+# Remove any .exe files from staging
+Get-ChildItem -Path $stagingDir -Recurse -Filter "*.exe" | ForEach-Object {
+    Write-Host "Excluding $($_.FullName)..."
+    Remove-Item -Path $_.FullName -Force
+}
+
 # Compress the staging directory into a ZIP
 Write-Host "Creating $zipName..."
 Compress-Archive -Path (Join-Path $stagingDir "*") -DestinationPath $zipPath -Force
