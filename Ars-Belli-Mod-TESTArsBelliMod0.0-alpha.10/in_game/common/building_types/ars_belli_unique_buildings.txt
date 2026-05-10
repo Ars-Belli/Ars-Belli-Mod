@@ -1,0 +1,136 @@
+#manpower nerfed to 25 (from 50), employed soldiers to 2500 (from 5000) and no longer buildable in town/city (starting ones in cities should still function regardless)
+REPLACE:kurultai = {
+	is_special = yes
+	is_foreign = no
+	pop_type = soldiers
+	
+	max_levels = 1
+	employment_size = 2.5
+	
+	category = military_category
+	
+	rural_settlement = yes
+	town = no
+	city = no
+	
+	allow_wrong_startup = yes
+	
+	expensive = yes
+	
+	country_potential = {
+		has_advance = kurultai_advance		# just to hide from those who do not get the tech.
+		government_type = government_type:steppe_horde
+	}
+	
+	location_potential = {
+		custom_tooltip = {
+			text = dominant_culture_is_of_owners_culture_group
+			dominant_culture = {
+				has_culture_group = culture_group:steppe_group
+			}
+		}
+	}
+	
+	remove_if = {
+		OR = {
+			NOT = { owner = { has_advance = kurultai_advance } }
+			owner = { government_type != government_type:steppe_horde }
+		}
+	}
+	
+	
+	build_time = soldier_building
+	
+	modifier = {
+		local_manpower = 0.025
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	possible_production_methods = {
+		new_kurultai_maintenance
+	}
+
+	construction_demand = early_soldier_building_construction
+}
+
+#manpower nerfed to 2 (from 5), employed clergy to 200 (from 400) and no longer buildable in rural (starting ones in rural should still function regardless)
+REPLACE:order_commandery = {
+	is_special = yes
+	is_foreign = yes
+	stronger_power_projection = no
+	need_good_relation = yes
+	pop_type = clergy
+	
+	category = religious_category
+	
+	max_levels = 1
+	employment_size = 0.2
+	
+	rural_settlement = no
+	town = yes
+	city = yes
+	
+	allow_wrong_startup = yes
+	
+	
+	location_potential = {
+		custom_tooltip = {
+			text = order_commandery_tt
+			owner = {
+				giving_scripted_relation = {
+					type = relation_type:military_sponsorship
+					target = scope:actor
+				}
+			}
+		}
+	}
+	
+	
+	country_potential = {
+		modifier:target_of_military_sponsorships = yes
+		religion = religion:catholic
+	}
+	
+	build_time = soldier_building
+	
+	allow = {
+		owner = { within_diplomatic_range = scope:actor }
+		dominant_religion = religion:catholic
+	}
+
+	remove_if = {
+		OR = {
+			location = {
+				dominant_religion != religion:catholic
+			}
+			owner = {
+				OR = {
+					modifier:target_of_military_sponsorships = no
+					religion != religion:catholic
+				}
+			}	
+		}
+	}
+
+
+	on_built = {
+		if = {
+			limit = {
+				location.owner != root.owner 
+			}
+			location.owner = {
+				add_opinion = { target = root.owner modifier = opinion_reformation_diplomacy } 
+			}
+		}
+	}
+
+	modifier = {
+		gold_to_building_owner = 0.1
+		manpower_to_building_owner = 0.002
+	}
+	construction_demand = order_commandery_construction
+	possible_production_methods = {
+		order_commandery_maintenance
+	}
+	graphical_tags = { small_military }
+}
