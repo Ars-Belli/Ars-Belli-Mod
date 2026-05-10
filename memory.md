@@ -28,6 +28,8 @@ The mod implements a custom ranking system that classifies countries into tiers 
 
 ### 3. War & Military Rebalancing
 - **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
+- **Unconditional Surrender:** Removed (base game now has one). Previously in `in_game\common\country_interactions\unconditional_surrender.txt`.
+- **Enforce Peace Warning:** Removed (base game now asks both defender and attacker to accept). Previously in `main_menu\localization\english\replace\01_ars_belli_locals_vanilla_l_english.yml`.
 
 ### 3b. Fort Rebalancing
 Significant changes to siege mechanics and fort limits (documented in `changes.txt` and `loading_screen\common\defines\01_ars_belli_defines.txt`):
