@@ -1,0 +1,49 @@
+﻿# Break another country's guarantee on you
+break_others_guarantee = {
+	type = diplomacy
+	category = CATEGORY_HOSTILE_ACTIONS
+
+	allow = {
+		scope:actor = {
+			at_war = no
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "break_others_guarantee_SELECT_TITLE"
+		none_available_msg_key = "break_others_guarantee_no_countries"
+		column = {
+			data = name
+		}
+		visible = {
+			root = {
+				receiving_scripted_relation = {
+					type = relation_type:guarantee
+					target = scope:actor
+				}
+			}
+		}
+		enabled = {
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:recipient
+			}
+			# Remove the guarantee (recipient is the guarantor, actor is the guaranteed)
+			remove_relation = {
+				first = scope:recipient
+				second = scope:actor
+				type = relation_type:guarantee
+			}
+			# Add truce between both parties
+			scope:actor = {
+				add_truce_with = { target = scope:recipient }
+			}
+		}
+	}
+}
