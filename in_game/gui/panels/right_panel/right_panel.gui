@@ -187,7 +187,7 @@ types RightPanelTypes
 				# Ars Belli Current country Rank:
 				flowcontainer = {
 					direction = vertical
-					spacing = 5
+					spacing = 2
 					parentanchor = right
 
 					datacontext = "[GetPlayer]"
@@ -199,6 +199,247 @@ types RightPanelTypes
 						align = right
 						autoresize = yes
 						margin = { 5 0 }
+						parentanchor = right
+					}
+
+					button_regular = {
+						text = "AB_TIER_PANEL_TOGGLE"
+						onclick = "[GetScriptedGui('mp_limits_toggle_tier_panel').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						size = { 110 22 }
+						parentanchor = right
+					}
+				}
+
+				# Ars Belli tier list panel (toggled by clicking the rank label):
+				widget = {
+					name = "ars_belli_tier_panel"
+					parentanchor = top|right
+					widgetanchor = top|right
+					position = { -10 90 }
+					size = { 360 600 }
+					allow_outside = yes
+					visible = "[GetGlobalVariable('mp_tier_panel_open').IsSet]"
+
+					background = {
+						using = bg_window_default_alt
+					}
+
+					vbox = {
+						margin = { 8 8 }
+						spacing = 6
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+
+						# Title bar
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 4
+
+							text_single = {
+								text = "AB_TIER_PANEL_TITLE"
+								using = Font_Type_Headers
+								align = left
+								layoutpolicy_horizontal = expanding
+							}
+
+							button_regular = {
+								text = "AB_TIER_PANEL_CLOSE"
+								onclick = "[GetScriptedGui('mp_limits_close_tier_panel').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								size = { 80 26 }
+							}
+						}
+
+						# Scrollable list of tier sections
+						scrollarea = {
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+							scrollbarpolicy_horizontal = always_off
+							scrollbar_vertical = {
+								using = Scrollbar_Vertical
+							}
+
+							scrollwidget = {
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									spacing = 8
+
+									# --- Great Power section ---
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 2
+										text_single = {
+											text = "AB_TIER_PANEL_GP_HEADER"
+											using = Font_Type_Headers
+										}
+										dynamicgridbox = {
+											layoutpolicy_horizontal = expanding
+											flipdirection = yes
+											datamodel_wrap = 1
+											datamodel = "[GetGlobalList('mp_gp_list')]"
+											item = {
+												button = {
+													datacontext = "[Scope.GetCountry]"
+													layoutpolicy_horizontal = expanding
+													size = { -1 22 }
+													onclick = "[OpenDiplomacy(Country.Self)]"
+													tooltipwidget = {
+														using = CountryTooltip
+													}
+
+													text_single = {
+														text = "AB_TIER_PANEL_ROW"
+														align = left|nobaseline
+														layoutpolicy_horizontal = expanding
+														margin = { 4 0 }
+														using = Font_Size_Small
+													}
+												}
+											}
+										}
+									}
+
+									# --- Major Power section ---
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 2
+										text_single = {
+											text = "AB_TIER_PANEL_MAJOR_HEADER"
+											using = Font_Type_Headers
+										}
+										dynamicgridbox = {
+											layoutpolicy_horizontal = expanding
+											flipdirection = yes
+											datamodel_wrap = 1
+											datamodel = "[GetGlobalList('mp_major_list')]"
+											item = {
+												button = {
+													datacontext = "[Scope.GetCountry]"
+													layoutpolicy_horizontal = expanding
+													size = { -1 22 }
+													onclick = "[OpenDiplomacy(Country.Self)]"
+													tooltipwidget = {
+														using = CountryTooltip
+													}
+
+													text_single = {
+														text = "AB_TIER_PANEL_ROW"
+														align = left|nobaseline
+														layoutpolicy_horizontal = expanding
+														margin = { 4 0 }
+														using = Font_Size_Small
+													}
+												}
+											}
+										}
+									}
+
+									# --- Normal Power section ---
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 2
+										text_single = {
+											text = "AB_TIER_PANEL_NORMAL_HEADER"
+											using = Font_Type_Headers
+										}
+										dynamicgridbox = {
+											layoutpolicy_horizontal = expanding
+											flipdirection = yes
+											datamodel_wrap = 1
+											datamodel = "[GetGlobalList('mp_normal_list')]"
+											item = {
+												button = {
+													datacontext = "[Scope.GetCountry]"
+													layoutpolicy_horizontal = expanding
+													size = { -1 22 }
+													onclick = "[OpenDiplomacy(Country.Self)]"
+													tooltipwidget = {
+														using = CountryTooltip
+													}
+
+													text_single = {
+														text = "AB_TIER_PANEL_ROW"
+														align = left|nobaseline
+														layoutpolicy_horizontal = expanding
+														margin = { 4 0 }
+														using = Font_Size_Small
+													}
+												}
+											}
+										}
+									}
+
+									# --- Small Power section ---
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 2
+										text_single = {
+											text = "AB_TIER_PANEL_SMALL_HEADER"
+											using = Font_Type_Headers
+										}
+										dynamicgridbox = {
+											layoutpolicy_horizontal = expanding
+											flipdirection = yes
+											datamodel_wrap = 1
+											datamodel = "[GetGlobalList('mp_small_list')]"
+											item = {
+												button = {
+													datacontext = "[Scope.GetCountry]"
+													layoutpolicy_horizontal = expanding
+													size = { -1 22 }
+													onclick = "[OpenDiplomacy(Country.Self)]"
+													tooltipwidget = {
+														using = CountryTooltip
+													}
+
+													text_single = {
+														text = "AB_TIER_PANEL_ROW"
+														align = left|nobaseline
+														layoutpolicy_horizontal = expanding
+														margin = { 4 0 }
+														using = Font_Size_Small
+													}
+												}
+											}
+										}
+									}
+
+									# --- Minor Power section ---
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 2
+										text_single = {
+											text = "AB_TIER_PANEL_MINOR_HEADER"
+											using = Font_Type_Headers
+										}
+										dynamicgridbox = {
+											layoutpolicy_horizontal = expanding
+											flipdirection = yes
+											datamodel_wrap = 1
+											datamodel = "[GetGlobalList('mp_minor_list')]"
+											item = {
+												button = {
+													datacontext = "[Scope.GetCountry]"
+													layoutpolicy_horizontal = expanding
+													size = { -1 22 }
+													onclick = "[OpenDiplomacy(Country.Self)]"
+													tooltipwidget = {
+														using = CountryTooltip
+													}
+
+													text_single = {
+														text = "AB_TIER_PANEL_ROW"
+														align = left|nobaseline
+														layoutpolicy_horizontal = expanding
+														margin = { 4 0 }
+														using = Font_Size_Small
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 

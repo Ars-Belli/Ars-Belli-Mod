@@ -216,6 +216,61 @@ mp_limits_once_per_month_calculations = {
 	mp_limits_initialize_ranks_and_cleanup = yes
 
 	mp_limits_assign_ranks = yes
+
+	mp_limits_store_tier_lists = yes
+}
+
+# Store countries per tier in score-descending lists. Iterated in GUI via
+# `datamodel = "[GetGlobalList('mp_<tier>_list')]"` (see ars_belli_tier_list_panel).
+# Two-pass: every_country has no order guarantee, so we collect into a temp list
+# and re-iterate via ordered_in_list to get score-desc order.
+mp_limits_store_tier_lists = {
+	clear_global_variable_list = mp_gp_list
+	clear_global_variable_list = mp_major_list
+	clear_global_variable_list = mp_normal_list
+	clear_global_variable_list = mp_small_list
+	clear_global_variable_list = mp_minor_list
+	clear_global_variable_list = mp_tier_sort_buffer
+
+	every_country = {
+		limit = {
+			OR = {
+				global_var:mp_limits_players_only = 0
+				is_ai = no
+			}
+		}
+		add_to_global_variable_list = { name = mp_tier_sort_buffer target = this }
+	}
+
+	ordered_in_list = {
+		list = mp_tier_sort_buffer
+		order_by = var:mp_power_score
+		max = 1000
+		check_range_bounds = no
+
+		if = {
+			limit = { has_variable = mp_is_gp }
+			add_to_global_variable_list = { name = mp_gp_list target = this }
+		}
+		else_if = {
+			limit = { has_variable = mp_is_major }
+			add_to_global_variable_list = { name = mp_major_list target = this }
+		}
+		else_if = {
+			limit = { has_variable = mp_is_normal }
+			add_to_global_variable_list = { name = mp_normal_list target = this }
+		}
+		else_if = {
+			limit = { has_variable = mp_is_small }
+			add_to_global_variable_list = { name = mp_small_list target = this }
+		}
+		else_if = {
+			limit = { has_variable = mp_is_minor }
+			add_to_global_variable_list = { name = mp_minor_list target = this }
+		}
+	}
+
+	clear_global_variable_list = mp_tier_sort_buffer
 }
 
 mp_limits_assign_category_markers = {

@@ -1,0 +1,17 @@
+mp_limits_toggle_tier_panel = {
+	effect = {
+		if = {
+			limit = { has_global_variable = mp_tier_panel_open }
+			remove_global_variable = mp_tier_panel_open
+		}
+		else = {
+			set_global_variable = { name = mp_tier_panel_open value = 1 }
+		}
+	}
+}
+
+mp_limits_close_tier_panel = {
+	effect = {
+		remove_global_variable = mp_tier_panel_open
+	}
+}
