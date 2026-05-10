@@ -485,6 +485,40 @@ displayed_defensive_pact_weight = {
 	}
 }
 
+# DP that spills over into AP (player). 0 when not over limit.
+mp_defensive_overflow = {
+	value = 0
+	if = {
+		limit = {
+			total_player_defensive_pact_weight > mp_defensive_points_limit
+		}
+		value = total_player_defensive_pact_weight
+		subtract = mp_defensive_points_limit
+	}
+}
+
+# Foreign country variants (used by foreign_country_lateralview).
+current_player_displayed_defensive_pact_weight = {
+	value = current_player_defensive_pact_weight
+	if = {
+		limit = {
+			current_player_defensive_pact_weight > mp_defensive_points_limit
+		}
+		value = mp_defensive_points_limit
+	}
+}
+
+current_player_defensive_overflow = {
+	value = 0
+	if = {
+		limit = {
+			current_player_defensive_pact_weight > mp_defensive_points_limit
+		}
+		value = current_player_defensive_pact_weight
+		subtract = mp_defensive_points_limit
+	}
+}
+
 total_player_guarantee_weight = {
 	value = 0
 	every_country = {
