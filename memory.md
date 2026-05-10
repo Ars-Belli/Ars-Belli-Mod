@@ -1,6 +1,7 @@
 # Ars Belli Mod - Project Memory
 
 This document provides context for AI agents working on the Ars Belli Mod for Europa Universalis V (EU5).
+AI agents will keep this file updated from now on, and use caveman-speak to save up tokens. Care will be taken not to read big files directly unless necessary.
 
 ## Project Overview
 Ars Belli Mod is a gameplay-focused mod primarily designed for multiplayer sessions. It introduces custom power ranking systems, diplomatic constraints, and extensive military rebalancing.
@@ -27,6 +28,11 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - Penalties are applied via static modifiers if limits are exceeded.
 - **Deduplication:** A country in both an alliance and a defensive league (or PU) with the player counts only once — under DP, not AP. Personal Unions count as defensive alliances (DP) but don't double-count if already in a defensive league. Logic in `in_game\common\script_values\mp_limits_values.txt`.
 - **Display:** Player's own AP/DP/GP shown in `right_panel.gui` top bar. Foreign country AP/DP/GP shown in `foreign_country_lateralview.gui`. DP display shows actual (uncapped) values so overflow is visible.
+- **Tier Country List Panel:** Click the rank label in `right_panel.gui` → opens an overlay panel listing all countries per tier (GP, Major, Normal, Small, Minor) with flag, name, score. No 20-entry cap.
+    - **Storage**: `mp_limits_store_tier_lists` populates `mp_gp_list` / `mp_major_list` / `mp_normal_list` / `mp_small_list` / `mp_minor_list` global variable lists. Two-pass population (every_country into temp buffer `mp_tier_sort_buffer`, then `ordered_in_list` by `var:mp_power_score` to split into tier lists in score-desc order).
+    - **Display**: Panel widget embedded in `right_panel.gui` (top|right anchor, search `# Ars Belli tier list panel`). Each tier section uses `dynamicgridbox` with `datamodel = "[GetGlobalList('mp_<tier>_list')]"` — vanilla pattern from `war_of_religions.gui`. Rows are clickable buttons (`OpenDiplomacy(Country.Self)`) with country tooltip.
+    - **Toggle**: Scripted_gui effects `mp_limits_toggle_tier_panel` / `mp_limits_close_tier_panel` in `in_game/common/scripted_guis/ars_belli_tier_panel_gui.txt` set/remove global var `mp_tier_panel_open`. GUI uses `visible = "[GetGlobalVariable('mp_tier_panel_open').IsSet]"` — presence of the variable is the open state, so no init is needed (and a `GetValue` check would error before init).
+    - **Tooltip**: `MP_RANK_TOOLTIP` retains score breakdown + per-tier limits/counts (no longer lists countries). Counts via `[GetDataModelSize(GetGlobalList('mp_<tier>_list'))]`.
 
 ### 2b. Break Others' Guarantee
 - Country interaction allowing a player to break another country's guarantee on them (hostile action).
@@ -72,10 +78,11 @@ The mod overrides two vanilla `.gui` files with mod-specific additions on top:
 
 When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\common\Europa Universalis V\game\in_game\gui\` and reapply the mod blocks:
 
-**right_panel.gui** mod additions (3 blocks):
+**right_panel.gui** mod additions (4 blocks):
 1. **Alliance/Defensive/Guarantee points display** — a `flowcontainer` with `# Ars Belli multiplayer limits display:` comment, inserted after the `non_clickable_color_gold_texture` corner icon, before the age `flowcontainer`.
 2. **Remove `max_width = 200`** from the age name `text_single`.
-3. **Country rank display** — a `flowcontainer` with `# Ars Belli Current country Rank:` comment, inserted after the age tooltip block, before `### CORNER2`.
+3. **Country rank display (clickable)** — a `flowcontainer` with `# Ars Belli Current country Rank:` comment, inserted after the age tooltip block, before `### CORNER2`. Inner `button` with onclick → `mp_limits_toggle_tier_panel` scripted_gui.
+4. **Tier list panel** — a `widget` with `# Ars Belli tier list panel` comment, inserted right after the rank flowcontainer, before `### CORNER2`. Toggled by global var `mp_tier_panel_open`. Contains 5 `dynamicgridbox` sections iterating `GetGlobalList('mp_<tier>_list')`.
 
 **foreign_country_lateralview.gui** mod additions (2 blocks):
 1. **MP Rank and Power Score hbox** — with `# MP Rank and Power Score` comment, inserted after the country rank icon's `glow` block (around the `GetCountryRankIcon` section), inside the same parent container.
@@ -89,3 +96,5 @@ Last updated: 2026-05-10 (game update).
 - `README.md`: Basic mod title.
 - `changes.txt`: High-level summary of mechanical changes (forts, combat).
 - `.metadata/metadata.json`: Mod ID, version, and supported game version.
+
+All files should have UTF-8 BOM encoding, especially localisation files
