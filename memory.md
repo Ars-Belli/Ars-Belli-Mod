@@ -26,6 +26,7 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - Rules are defined in `main_menu\common\game_rules\ars_belli_rules.txt` and localized in `main_menu\localization\english\ars_belli_rules_l_english.yml`.
 - Penalties are applied via static modifiers if limits are exceeded.
 - **Deduplication:** A country in both an alliance and a defensive league (or PU) with the player counts only once — under DP, not AP. Personal Unions count as defensive alliances (DP) but don't double-count if already in a defensive league. Logic in `in_game\common\script_values\mp_limits_values.txt`.
+- **Display:** Player's own AP/DP/GP shown in `right_panel.gui` top bar. Foreign country AP/DP/GP shown in `foreign_country_lateralview.gui`. DP display shows actual (uncapped) values so overflow is visible.
 
 ### 3. War & Military Rebalancing
 - **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
@@ -67,8 +68,9 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 2. **Remove `max_width = 200`** from the age name `text_single`.
 3. **Country rank display** — a `flowcontainer` with `# Ars Belli Current country Rank:` comment, inserted after the age tooltip block, before `### CORNER2`.
 
-**foreign_country_lateralview.gui** mod additions (1 block):
+**foreign_country_lateralview.gui** mod additions (2 blocks):
 1. **MP Rank and Power Score hbox** — with `# MP Rank and Power Score` comment, inserted after the country rank icon's `glow` block (around the `GetCountryRankIcon` section), inside the same parent container.
+2. **Foreign Diplo Limits hbox** — with `# Ars Belli Foreign Diplo Limits` comment, inserted immediately after the MP Rank block. Shows the viewed country's AP/DP/GP usage and limits.
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
