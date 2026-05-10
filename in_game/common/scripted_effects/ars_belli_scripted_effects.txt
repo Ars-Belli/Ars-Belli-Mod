@@ -366,9 +366,23 @@ mp_limits_apply_alliance_limit_penalty = {
 		add_country_modifier = {
 			modifier = mp_over_alliance_limit_penalty
 		}
+
+		# Pop up the warning event the first time the player crosses the limit,
+		# but only if they've opted in via the tier list panel (default: off).
+		# Re-arms when they drop back under.
+		if = {
+			limit = {
+				is_human = yes
+				NOT = { has_variable = mp_was_over_alliance_limit }
+				has_variable = mp_alliance_alert_enabled
+			}
+			trigger_event_non_silently = ars_belli_mp_limits.1
+		}
+		set_variable = { name = mp_was_over_alliance_limit value = 1 }
 	}
 	else = {
 		remove_country_modifier = mp_over_alliance_limit_penalty
+		remove_variable = mp_was_over_alliance_limit
 	}
 }
 

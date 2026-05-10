@@ -1,0 +1,20 @@
+﻿namespace = ars_belli_mp_limits
+
+# Fired once when the player first transitions into "over alliance limit",
+# but only if they've explicitly enabled the alert via the tier list panel.
+# Default state for every country is muted (variable not set).
+ars_belli_mp_limits.1 = {
+	type = country_event
+
+	title = ars_belli_mp_limits.1.title
+	desc = ars_belli_mp_limits.1.desc
+	outcome = bad
+
+	trigger = {
+		is_human = yes
+	}
+
+	option = {
+		name = ars_belli_mp_limits.1.a
+	}
+}
