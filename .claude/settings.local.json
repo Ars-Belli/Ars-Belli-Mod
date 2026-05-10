@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(xxd)",
-      "PowerShell($path = 'E:\\\\Modding\\\\EU5\\\\Ars-Belli-Mod\\\\main_menu\\\\localization\\\\english\\\\00_mp_limits_l_english.yml'; $content = [System.IO.File]::ReadAllText\\($path\\); $utf8Bom = New-Object System.Text.UTF8Encoding\\($true\\); [System.IO.File]::WriteAllText\\($path, $content, $utf8Bom\\); $bom = [System.IO.File]::ReadAllBytes\\($path\\)[0..2]; \"BOM bytes: $\\($bom | ForEach-Object { '{0:X2}' -f $_ }\\)\")"
+      "PowerShell($path = 'E:\\\\Modding\\\\EU5\\\\Ars-Belli-Mod\\\\main_menu\\\\localization\\\\english\\\\00_mp_limits_l_english.yml'; $content = [System.IO.File]::ReadAllText\\($path\\); $utf8Bom = New-Object System.Text.UTF8Encoding\\($true\\); [System.IO.File]::WriteAllText\\($path, $content, $utf8Bom\\); $bom = [System.IO.File]::ReadAllBytes\\($path\\)[0..2]; \"BOM bytes: $\\($bom | ForEach-Object { '{0:X2}' -f $_ }\\)\")",
+      "Bash(awk 'NR>=1343 && NR<=1346 {printf \"%d|%s|\\\\n\", NR, $0}' \"E:/Modding/EU5/Ars-Belli-Mod/in_game/gui/foreign_country_lateralview.gui\")",
+      "Bash(awk 'NR>=1343 && NR<=1358 {printf \"%d|%s|\\\\n\", NR, $0}' \"E:/Modding/EU5/Ars-Belli-Mod/in_game/gui/foreign_country_lateralview.gui\")"
     ]
   }
 }
