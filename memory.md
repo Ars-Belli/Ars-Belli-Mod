@@ -42,6 +42,7 @@ The repository mirrors the EU5 file structure:
 - `main_menu/`: Contains game rules, localization, and static modifiers.
 - `loading_screen/`: Contains defines.
 - `deploy.ps1`, `release.ps1`, `watch.ps1`: Automation scripts for mod development.
+- `release.ps1` excludes `.exe` files from the release archive.
 
 ## Implementation Details for Agents
 - **Scripted Effects:** Check `in_game\common\scripted_effects\ars_belli_scripted_effects.txt` for the core logic of the ranking system.
