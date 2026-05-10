@@ -28,6 +28,11 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - **Deduplication:** A country in both an alliance and a defensive league (or PU) with the player counts only once — under DP, not AP. Personal Unions count as defensive alliances (DP) but don't double-count if already in a defensive league. Logic in `in_game\common\script_values\mp_limits_values.txt`.
 - **Display:** Player's own AP/DP/GP shown in `right_panel.gui` top bar. Foreign country AP/DP/GP shown in `foreign_country_lateralview.gui`. DP display shows actual (uncapped) values so overflow is visible.
 
+### 2b. Break Others' Guarantee
+- Country interaction allowing a player to break another country's guarantee on them (hostile action).
+- File: `in_game\common\country_interactions\break_others_guarantee.txt`
+- Requires not being at war. Creates a truce on use.
+
 ### 3. War & Military Rebalancing
 - **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
 - **Unconditional Surrender:** Removed (base game now has one). Previously in `in_game\common\country_interactions\unconditional_surrender.txt`.
