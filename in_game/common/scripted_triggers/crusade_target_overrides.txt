@@ -1,4 +1,4 @@
-is_valid_target_for_crusade = {
+﻿REPLACE:is_valid_target_for_crusade = {
 	exists = yes
 	country_exists = this
 	save_temporary_scope_as = this_country
@@ -34,5 +34,19 @@ is_valid_target_for_crusade = {
 				sub_continent = sub_continent:middle_east
 			}
 		}
+	}
+}
+
+crusade_global_cooldown = {
+	custom_description = {
+		text = crusade_global_cooldown_text
+		NOT = { has_global_variable = crusade_recently_called_global }
+	}
+}
+
+jihad_global_cooldown = {
+	custom_description = {
+		text = jihad_global_cooldown_text
+		NOT = { has_global_variable = jihad_recently_called_global }
 	}
 }
