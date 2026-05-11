@@ -1,0 +1,30 @@
+﻿template io_force_break_union_button_tooltip {
+	ContextualTooltipType = {
+		blockoverride "title_icon" {
+			icon = {
+				using = tooltip_title_icon_size
+				texture = "[InternationalOrganizationsView.GetInternationalOrganization.GetIcon]"
+			}
+		}
+		blockoverride "title_text" {
+			text = "force_break_union"
+		}
+		blockoverride "concept_link" {
+			text = [diplomatic_action|E]
+		}
+		blockoverride "tooltip_content" {
+			TooltipFlavorTextBlock = {
+				blockoverride "text" {
+					text = "force_break_union_desc"
+				}
+			}
+			TooltipRequirementsList = {
+				visible = "[Not(UIAction.IsEnabled)]"
+				blockoverride "block_title" {
+					text = "NOT_POSSIBLE_DUE_TO"
+				}
+				textcontext = "generic_not_allowed_tt"
+			}
+		}
+	}
+}
