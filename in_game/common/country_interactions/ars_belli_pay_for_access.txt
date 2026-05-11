@@ -1,0 +1,451 @@
+﻿pay_for_military_access = {
+	type = diplomacy
+	category = CATEGORY_ACCESS_ACTIONS
+
+	potential = {
+		scope:actor = {
+			has_limited_diplomacy = no
+			not = { has_blocked_treaties = scope:recipient }
+			not = { receives_military_access_from = scope:recipient }
+		}
+	}
+
+	allow = {
+		scope:actor = {
+			gold > 0
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = value
+		target_flag = target_value
+		name = "pay_for_access_select_gold_amount"
+		min = 0
+		max = scope:actor.gold
+		step = scope:recipient.monthly_income_total
+		default = {
+			value = scope:recipient.monthly_income_total
+			multiply = 12
+		}
+		ai_override_value = 0
+	}
+
+	effect = {
+		if = {
+			limit = { exists = scope:target_value }
+			scope:actor = {
+				add_gold = {
+					value = scope:target_value
+					multiply = -1
+				}
+			}
+			scope:recipient = {
+				add_gold = scope:target_value
+			}
+		}
+		create_relation = {
+			first = scope:recipient
+			second = scope:actor
+			type = relation_type:military_access
+		}
+	}
+
+	reject_effect = {
+		scope:actor = {
+			add_casus_belli = {
+				target = scope:recipient
+				type = casus_belli:cb_denied_military_access
+			}
+		}
+	}
+
+	block_when_at_war = yes
+
+	ai_will_do = {
+		add = -1000
+	}
+
+	diplo_chance = {
+		base = 1000
+	}
+
+	accept = {
+		if = {
+			limit = { exists = scope:target_value }
+			add = {
+				desc = "OFFERED_GOLD"
+				value = scope:target_value
+				divide = scope:recipient.monthly_income_total
+				multiply = 8
+			}
+		}
+		if = {
+			limit = {
+				scope:recipient = { is_rival_of = scope:actor }
+			}
+			subtract = {
+				desc = "game_concept_rival"
+				value = 2000
+			}
+		}
+	}
+}
+
+pay_for_fleet_basing_rights = {
+	type = diplomacy
+	category = CATEGORY_ACCESS_ACTIONS
+
+	potential = {
+		scope:actor = {
+			has_limited_diplomacy = no
+			not = { has_blocked_treaties = scope:recipient }
+			OR = {
+				has_ports = yes
+				country_type = building
+			}
+			not = { receives_fleet_basing_rights_from = scope:recipient }
+		}
+		scope:recipient = {
+			has_ports = yes
+		}
+	}
+
+	allow = {
+		scope:actor = {
+			gold > 0
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = value
+		target_flag = target_value
+		name = "pay_for_access_select_gold_amount"
+		min = 0
+		max = scope:actor.gold
+		step = scope:recipient.monthly_income_total
+		default = {
+			value = scope:recipient.monthly_income_total
+			multiply = 12
+		}
+		ai_override_value = 0
+	}
+
+	effect = {
+		if = {
+			limit = { exists = scope:target_value }
+			scope:actor = {
+				add_gold = {
+					value = scope:target_value
+					multiply = -1
+				}
+			}
+			scope:recipient = {
+				add_gold = scope:target_value
+			}
+		}
+		create_relation = {
+			first = scope:recipient
+			second = scope:actor
+			type = relation_type:fleet_basing_rights
+		}
+	}
+
+	block_when_at_war = yes
+
+	ai_will_do = {
+		add = -1000
+	}
+
+	diplo_chance = {
+		base = 1000
+	}
+
+	accept = {
+		if = {
+			limit = { exists = scope:target_value }
+			add = {
+				desc = "OFFERED_GOLD"
+				value = scope:target_value
+				divide = scope:recipient.monthly_income_total
+				multiply = 8
+			}
+		}
+		if = {
+			limit = {
+				scope:recipient = { is_rival_of = scope:actor }
+			}
+			subtract = {
+				desc = "game_concept_rival"
+				value = 2000
+			}
+		}
+	}
+}
+
+pay_for_trade_access = {
+	type = diplomacy
+	category = CATEGORY_ECONOMY_ACTIONS
+
+	potential = {
+		scope:actor = {
+			has_markets = no
+		}
+		scope:recipient = {
+			has_markets = yes
+		}
+	}
+
+	allow = {
+		scope:actor = {
+			gold > 0
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = value
+		target_flag = target_value
+		name = "pay_for_access_select_gold_amount"
+		min = 0
+		max = scope:actor.gold
+		step = scope:recipient.monthly_income_total
+		default = {
+			value = scope:recipient.monthly_income_total
+			multiply = 12
+		}
+		ai_override_value = 0
+	}
+
+	effect = {
+		if = {
+			limit = { exists = scope:target_value }
+			scope:actor = {
+				add_gold = {
+					value = scope:target_value
+					multiply = -1
+				}
+			}
+			scope:recipient = {
+				add_gold = scope:target_value
+			}
+		}
+		create_relation = {
+			first = scope:recipient
+			second = scope:actor
+			type = relation_type:trade_access
+		}
+	}
+
+	block_when_at_war = yes
+
+	ai_will_do = {
+		add = -1000
+	}
+
+	diplo_chance = {
+		base = -20
+	}
+
+	accept = {
+		if = {
+			limit = { exists = scope:target_value }
+			add = {
+				desc = "OFFERED_GOLD"
+				value = scope:target_value
+				divide = scope:recipient.monthly_income_total
+				multiply = 8
+			}
+		}
+		add = {
+			desc = "game_concept_opinion"
+			value = "scope:recipient.opinion(scope:actor)"
+			divide = 5
+		}
+		if = {
+			limit = {
+				scope:recipient = { is_rival_of = scope:actor }
+			}
+			subtract = {
+				desc = "game_concept_rival"
+				value = 200
+			}
+		}
+	}
+}
+
+pay_for_food_access = {
+	type = diplomacy
+	category = CATEGORY_ACCESS_ACTIONS
+
+	potential = {
+		scope:actor = {
+			has_limited_diplomacy = no
+			not = { has_blocked_treaties = scope:recipient }
+			not = { receives_food_access_from = scope:recipient }
+		}
+	}
+
+	allow = {
+		scope:actor = {
+			gold > 0
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = value
+		target_flag = target_value
+		name = "pay_for_access_select_gold_amount"
+		min = 0
+		max = scope:actor.gold
+		step = scope:recipient.monthly_income_total
+		default = {
+			value = scope:recipient.monthly_income_total
+			multiply = 12
+		}
+		ai_override_value = 0
+	}
+
+	effect = {
+		if = {
+			limit = { exists = scope:target_value }
+			scope:actor = {
+				add_gold = {
+					value = scope:target_value
+					multiply = -1
+				}
+			}
+			scope:recipient = {
+				add_gold = scope:target_value
+			}
+		}
+		create_relation = {
+			first = scope:recipient
+			second = scope:actor
+			type = relation_type:food_access
+		}
+	}
+
+	block_when_at_war = yes
+
+	ai_will_do = {
+		add = -1000
+	}
+
+	diplo_chance = {
+		base = -50
+	}
+
+	accept = {
+		if = {
+			limit = { exists = scope:target_value }
+			add = {
+				desc = "OFFERED_GOLD"
+				value = scope:target_value
+				divide = scope:recipient.monthly_income_total
+				multiply = 8
+			}
+		}
+		add = {
+			desc = "game_concept_opinion"
+			value = "scope:recipient.opinion(scope:actor)"
+			divide = 5
+		}
+		if = {
+			limit = {
+				scope:recipient = { is_rival_of = scope:actor }
+			}
+			subtract = {
+				desc = "game_concept_rival"
+				value = 200
+			}
+		}
+	}
+}
+
+pay_for_fondaco_rights = {
+	type = diplomacy
+	category = CATEGORY_ECONOMY_ACTIONS
+
+	potential = {
+		scope:recipient = {
+			is_merchant_republic = yes
+			culture = { has_culture_group = culture_group:italian_group }
+			within_diplomatic_range = scope:actor
+		}
+	}
+
+	allow = {
+		scope:actor = {
+			gold > 0
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = value
+		target_flag = target_value
+		name = "pay_for_access_select_gold_amount"
+		min = 0
+		max = scope:actor.gold
+		step = scope:recipient.monthly_income_total
+		default = {
+			value = scope:recipient.monthly_income_total
+			multiply = 12
+		}
+		ai_override_value = 0
+	}
+
+	effect = {
+		if = {
+			limit = { exists = scope:target_value }
+			scope:actor = {
+				add_gold = {
+					value = scope:target_value
+					multiply = -1
+				}
+			}
+			scope:recipient = {
+				add_gold = scope:target_value
+			}
+		}
+		create_relation = {
+			first = scope:recipient
+			second = scope:actor
+			type = relation_type:fondaco_rights
+		}
+	}
+
+	block_when_at_war = yes
+
+	ai_will_do = {
+		add = -1000
+	}
+
+	diplo_chance = {
+		base = -50
+	}
+
+	accept = {
+		if = {
+			limit = { exists = scope:target_value }
+			add = {
+				desc = "OFFERED_GOLD"
+				value = scope:target_value
+				divide = scope:recipient.monthly_income_total
+				multiply = 8
+			}
+		}
+		add = {
+			desc = "game_concept_opinion"
+			value = "scope:recipient.opinion(scope:actor)"
+			divide = 5
+		}
+		if = {
+			limit = {
+				scope:recipient = { is_rival_of = scope:actor }
+			}
+			subtract = {
+				desc = "game_concept_rival"
+				value = 200
+			}
+		}
+	}
+}
