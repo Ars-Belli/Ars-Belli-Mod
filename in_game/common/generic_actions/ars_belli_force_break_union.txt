@@ -1,0 +1,48 @@
+﻿force_break_union = {
+	type = owncountry
+
+	potential = {
+		scope:actor = {
+			exists = union
+		}
+	}
+
+	allow = {
+		scope:actor = {
+			has_ruler = yes
+			custom_tooltip = {
+				text = force_break_union_legitimacy_tt
+				legitimacy >= 20
+			}
+		}
+	}
+
+	cooldown = {
+		type = force_break_union_cd
+		years = 50
+	}
+
+	ai_tick = never
+
+	effect = {
+		scope:actor = {
+			add_legitimacy = legitimacy_extreme_penalty
+
+			union ?= {
+				remove_country_from_international_organization = scope:actor
+			}
+
+			create_character = {
+				culture = scope:actor.culture
+				religion = scope:actor.religion
+				save_scope_as = ars_belli_new_random_ruler
+			}
+
+			set_new_ruler = scope:ars_belli_new_random_ruler
+		}
+	}
+
+	ai_will_do = {
+		add = -1000
+	}
+}
