@@ -54,6 +54,13 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **Defensiveness:** Removed movement speed/combat bonuses; focuses on scaling siege ability penalties.
 - **Offensiveness:** Grants Logistics Distance, Assault Ability, and Siege Ability.
 
+### 3d. Force Break Union
+- Junior partner of a senioritied union, or any member of a federal union (no active senior partner), gets a **Force Break Union** button in the union panel.
+- **Effect:** spends 20 legitimacy (`legitimacy_extreme_penalty`), generates a random new ruler via `create_character` matching the actor's culture/religion, calls `set_new_ruler`, then `remove_country_from_international_organization` for an immediate exit.
+- **Limit:** 50-year per-actor cooldown via `cooldown = { type = force_break_union_cd years = 50 }`. `block_when_at_war = yes`. Senior partner is excluded by `potential` (NOT `country_is_senior_partner`).
+- **Files:** `in_game\common\country_interactions\ars_belli_force_break_union.txt`, GUI button hand-placed in `in_game\gui\panels\organization\union.gui` (after `place_relative_on_throne` in MAIN_ACTIONS), tooltip template `io_force_break_union_button_tooltip` in `in_game\gui\shared\ars_belli_force_break_union.gui`, loc strings in `in_game\localization\english\ars_belli_force_break_union_l_english.yml`.
+- **GUI override:** `union.gui` is a full-file copy (added to `replaced_files.txt`); reapply the `# Ars Belli force_break_union button` block after `place_relative_on_throne` when vanilla updates.
+
 ### 3c. Crusade & Jihad
 - **Targeting:** Crusades can now hit any heathen kingdom/empire whose capital is in `continent:europe`, `sub_continent:north_africa`, or `sub_continent:middle_east`, OR holds a Catholic holy site (vanilla path). Override of `is_valid_target_for_crusade` in `in_game\common\scripted_triggers\crusade_target_overrides.txt`.
 - **Global cooldown:** Both Crusade and Jihad limited to once per 100 years globally per religion. Enforced via global vars `crusade_recently_called_global` / `jihad_recently_called_global` (set in effect with `years = 100`), checked through scripted triggers `crusade_global_cooldown` / `jihad_global_cooldown` (same overrides file). Per-actor `cooldown` block also bumped to 100 for UI consistency.
@@ -96,7 +103,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-05-11 (crusade/jihad rebalance).
+Last updated: 2026-05-11 (crusade/jihad rebalance + force-break-union).
 
 ## Important Files
 - `README.md`: Basic mod title.

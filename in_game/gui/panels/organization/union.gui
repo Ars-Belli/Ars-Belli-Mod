@@ -1,4 +1,4 @@
-organization_geodiplomatic_theme = {
+﻿organization_geodiplomatic_theme = {
 	blockoverride "organization_overview_tab_visible" {}
 	blockoverride "organization_panel_overview_visible" {
 		visible = "[InternationalOrganizationsView.Vars.NotExistOrHasValue( 'organizations', 'overview' )]"
@@ -109,6 +109,28 @@ organization_geodiplomatic_theme = {
 							text = "place_relative_on_throne"
 							visible = "[Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)]"
 						}
+
+						# Ars Belli force_break_union button
+						action_button_diamond = {
+							parentanchor = hcenter
+							size = { 470 30 }
+							title = "force_break_union"
+							actor = "[InternationalOrganizationsView.GetPlayer]"
+							left_action = {
+								action_name = "force_break_union"
+								action_direction = "offer"
+								parameter = {
+									parameter_name = "international_organization"
+									parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
+								}
+							}
+							tooltipwidget = {
+								using = io_force_break_union_button_tooltip
+							}
+							text = "force_break_union"
+							visible = "[Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)]"
+						}
+
 						visible = "[Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)]"
 					}
 
