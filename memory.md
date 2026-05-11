@@ -54,6 +54,11 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **Defensiveness:** Removed movement speed/combat bonuses; focuses on scaling siege ability penalties.
 - **Offensiveness:** Grants Logistics Distance, Assault Ability, and Siege Ability.
 
+### 3c. Crusade & Jihad
+- **Targeting:** Crusades can now hit any heathen kingdom/empire whose capital is in `continent:europe`, `sub_continent:north_africa`, or `sub_continent:middle_east`, OR holds a Catholic holy site (vanilla path). Override of `is_valid_target_for_crusade` in `in_game\common\scripted_triggers\crusade_target_overrides.txt`.
+- **Global cooldown:** Both Crusade and Jihad limited to once per 100 years globally per religion. Enforced via global vars `crusade_recently_called_global` / `jihad_recently_called_global` (set in effect with `years = 100`), checked through scripted triggers `crusade_global_cooldown` / `jihad_global_cooldown` (same overrides file). Per-actor `cooldown` block also bumped to 100 for UI consistency.
+- **Files:** `in_game\common\resolutions\ars_belli_crusade.txt` (REPLACE:call_crusade), `in_game\common\generic_actions\ars_belli_jihad.txt` (REPLACE:call_jihad). Cooldown loc strings in `in_game\localization\english\ars_belli_crusade_l_english.yml`.
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
@@ -70,6 +75,7 @@ The repository mirrors the EU5 file structure:
 - **Scripted Effects:** Check `in_game\common\scripted_effects\ars_belli_scripted_effects.txt` for the core logic of the ranking system.
 - **Monthly Pulse:** The `mp_limits_monthly_pulse` on-action triggers the recalculation of scores and ranks.
 - **Localization:** Multiplayer-specific rules and settings are localized in `main_menu\localization\english\ars_belli_rules_l_english.yml`.
+- **REPLACE: prefix:** EU5 supports `REPLACE:key = { ... }` in mod files to override a single vanilla definition without copying the whole vanilla file. Use a separately-named mod file (convention: `ars_belli_<topic>.txt`); avoid same-name file replacement so future vanilla additions in that file still load. Works for resolutions, generic_actions, scripted_triggers, static_modifiers, auto_modifiers, prices, diplomatic_costs, advances. Only fall back to whole-file replacement (and `replaced_files.txt`) for non-keyed files like GUI.
 
 ## GUI File Update Procedure
 The mod overrides two vanilla `.gui` files with mod-specific additions on top:
@@ -90,7 +96,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-05-10 (game update).
+Last updated: 2026-05-11 (crusade/jihad rebalance).
 
 ## Important Files
 - `README.md`: Basic mod title.
