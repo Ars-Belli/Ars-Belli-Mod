@@ -54,6 +54,12 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **Defensiveness:** Removed movement speed/combat bonuses; focuses on scaling siege ability penalties.
 - **Offensiveness:** Grants Logistics Distance, Assault Ability, and Siege Ability.
 
+### 3e. Access Diplomacy
+- **"Pay for X" sliders:** new country_interactions in `in_game\common\country_interactions\ars_belli_pay_for_access.txt` — `pay_for_military_access`, `pay_for_fleet_basing_rights`, `pay_for_trade_access`, `pay_for_food_access`, `pay_for_fondaco_rights`. Each uses `select_trigger { looking_for_a = value ... }` (pattern from `bribe_voter_for_policy`) to expose a gold slider; default is 12 months of recipient income, min 0, max actor's gold. `effect` transfers gold actor→recipient and `create_relation = { first = scope:recipient second = scope:actor type = relation_type:<X> }`. `ai_will_do = -1000` (AI never proposes these).
+- **Auto-accept on the slider-paths for Mil Access / Fleet Basing:** `pay_for_military_access` and `pay_for_fleet_basing_rights` have `diplo_chance.base = 1000` with `accept` subtracting 2000 for rivalry — so AI auto-accepts unless the actor is its rival, regardless of offered gold. Trade/food/fondaco use neutral `diplo_chance.base = -20/-50` and require enough offered gold (8 acceptance points per month of recipient income offered) to convince the AI.
+- **Vanilla request paths untouched.** The vanilla `military_access` and `fleet_basing_rights` scripted_relations are NOT overridden — the auto-accept only applies to the new slider-based actions, so the vanilla 5-favor flow keeps its normal acceptance logic.
+- **Files:** 5 country_interactions in one file + loc file `ars_belli_pay_for_access_l_english.yml`. No GUI edits — country_interactions auto-appear in the diplomacy panel under their category (ACCESS_ACTIONS / ECONOMY_ACTIONS).
+
 ### 3d. Force Break Union
 - Any union member (senior, junior, or federal peer) gets a **Force Break Union** button in the union panel.
 - **Effect:** spends 20 legitimacy (`legitimacy_extreme_penalty`), removes the actor from the union IO (`remove_country_from_international_organization`), then generates a random new ruler via `create_character` matching the actor's culture/religion and calls `set_new_ruler`.
