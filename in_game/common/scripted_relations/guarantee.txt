@@ -20,6 +20,10 @@
 
 	diplomatic_capacity_cost = guarantee_upkeep_cost
 
+	# Ars Belli: vanilla "Offer Guarantee" is hidden; use the propose_guarantee country_interaction instead
+	# (gives the recipient an explicit accept/reject step)
+	offer_visible = { always = no }
+
 	offer_enabled = {
         scope:actor = {
             not = { has_blocked_treaties = scope:recipient }

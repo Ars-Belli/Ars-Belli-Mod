@@ -39,6 +39,12 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - File: `in_game\common\country_interactions\break_others_guarantee.txt`
 - Requires not being at war. Creates a truce on use.
 
+### 2d. Propose Guarantee (two-step accept/reject)
+- Vanilla "Offer Guarantee" is hidden via `offer_visible = { always = no }` in mod's `in_game\common\scripted_relations\guarantee.txt`.
+- New `propose_guarantee` country_interaction in `in_game\common\country_interactions\ars_belli_propose_guarantee.txt` replaces it. As a country_interaction, the engine handles the recipient flow: AI uses the `accept` block; player recipient sees a popup with Accept/Reject.
+- Effect on accept: `create_relation = { first = scope:actor second = scope:recipient type = relation_type:guarantee }` (actor is the GP guaranteeing). Rejection just clears the offer (no `reject_effect` — per user spec).
+- Allow trigger mirrors mod's `guarantee.txt` `offer_enabled` (GP/major actor, normal/small/minor recipient, tax base + army size advantage, no rivalry, etc.). Loc in `ars_belli_propose_guarantee_l_english.yml`.
+
 ### 2c. Worsen Opinion
 - Country interaction allowing a player to worsen their own opinion of another country (-100 opinion, decays over 10 years).
 - Files: `in_game\common\country_interactions\worsen_opinion.txt`, `in_game\common\biases\ars_belli_opinion.txt`
