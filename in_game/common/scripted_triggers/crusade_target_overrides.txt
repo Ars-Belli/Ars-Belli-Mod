@@ -1,0 +1,38 @@
+is_valid_target_for_crusade = {
+	exists = yes
+	country_exists = this
+	save_temporary_scope_as = this_country
+	NOT = { religion.group = religion_group:christian }
+	OR = {
+		country_rank = country_rank:rank_kingdom
+		country_rank = country_rank:rank_empire
+	}
+	trigger_if = {
+		limit = {
+			country_exists = c:PAP
+		}
+		capital = {
+			is_discovered_by = c:PAP
+		}
+		not = { is_subject_of = c:PAP }
+		c:PAP = {
+			not = { is_subject_of = scope:this_country }
+		}
+	}
+	OR = {
+		religion:catholic = {
+			any_holy_site_in_religion = {
+				location = {
+					owner = scope:this_country
+				}
+			}
+		}
+		capital = {
+			OR = {
+				continent = continent:europe
+				sub_continent = sub_continent:north_africa
+				sub_continent = sub_continent:middle_east
+			}
+		}
+	}
+}
