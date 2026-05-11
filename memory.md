@@ -55,11 +55,13 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **Offensiveness:** Grants Logistics Distance, Assault Ability, and Siege Ability.
 
 ### 3d. Force Break Union
-- Junior partner of a senioritied union, or any member of a federal union (no active senior partner), gets a **Force Break Union** button in the union panel.
-- **Effect:** spends 20 legitimacy (`legitimacy_extreme_penalty`), generates a random new ruler via `create_character` matching the actor's culture/religion, calls `set_new_ruler`, then `remove_country_from_international_organization` for an immediate exit.
-- **Limit:** 50-year per-actor cooldown via `cooldown = { type = force_break_union_cd years = 50 }`. `block_when_at_war = yes`. Senior partner is excluded by `potential` (NOT `country_is_senior_partner`).
-- **Files:** `in_game\common\country_interactions\ars_belli_force_break_union.txt`, GUI button hand-placed in `in_game\gui\panels\organization\union.gui` (after `place_relative_on_throne` in MAIN_ACTIONS), tooltip template `io_force_break_union_button_tooltip` in `in_game\gui\shared\ars_belli_force_break_union.gui`, loc strings in `in_game\localization\english\ars_belli_force_break_union_l_english.yml`.
-- **GUI override:** `union.gui` is a full-file copy (added to `replaced_files.txt`); reapply the `# Ars Belli force_break_union button` block after `place_relative_on_throne` when vanilla updates.
+- Any union member (senior, junior, or federal peer) gets a **Force Break Union** button in the union panel.
+- **Effect:** spends 20 legitimacy (`legitimacy_extreme_penalty`), removes the actor from the union IO (`remove_country_from_international_organization`), then generates a random new ruler via `create_character` matching the actor's culture/religion and calls `set_new_ruler`.
+- **Limit:** 50-year per-actor cooldown (`cooldown = { type = force_break_union_cd years = 50 }`). Legitimacy gating surfaces via the `force_break_union_legitimacy_tt` custom_tooltip in `allow`. `ai_tick = never`.
+- **Why `generic_action` (type=owncountry), not country_interaction:** the action only affects the actor — country_interactions force a recipient `select_trigger` step in the UI ("pick a country" panel) that is meaningless here. Generic_actions with `type = owncountry` need no recipient and no select_trigger.
+- **GUI button** uses `left_click_and_hold_action = { action_name = "force_break_union" }` (click-and-hold acts as a built-in confirmation). No `action_direction`, no IO `parameter` — those are country_interaction concepts.
+- **Files:** `in_game\common\generic_actions\ars_belli_force_break_union.txt`, GUI button hand-placed in `in_game\gui\panels\organization\union.gui` (after `place_relative_on_throne` in MAIN_ACTIONS — search for `# Ars Belli force_break_union button`), tooltip template `io_force_break_union_button_tooltip` in `in_game\gui\shared\ars_belli_force_break_union.gui`, loc strings in `in_game\localization\english\ars_belli_force_break_union_l_english.yml`.
+- **GUI override:** `union.gui` is a full-file copy (added to `replaced_files.txt`); reapply the mod block after `place_relative_on_throne` when vanilla updates.
 
 ### 3c. Crusade & Jihad
 - **Targeting:** Crusades can now hit any heathen kingdom/empire whose capital is in `continent:europe`, `sub_continent:north_africa`, or `sub_continent:middle_east`, OR holds a Catholic holy site (vanilla path). Override of `is_valid_target_for_crusade` in `in_game\common\scripted_triggers\crusade_target_overrides.txt`.
