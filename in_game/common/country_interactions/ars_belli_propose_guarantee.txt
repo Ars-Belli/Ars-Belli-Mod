@@ -1,0 +1,122 @@
+﻿propose_guarantee = {
+	type = diplomacy
+	category = CATEGORY_FRIENDLY_ACTIONS
+
+	potential = {
+		scope:actor = {
+			modifier:allowed_guarantee = yes
+			OR = {
+				is_mp_gp = yes
+				is_mp_major = yes
+			}
+		}
+	}
+
+	allow = {
+		scope:actor = {
+			not = { has_blocked_treaties = scope:recipient }
+			has_limited_diplomacy = no
+			not = { is_rival_of = scope:recipient }
+			not = { is_subject_of = scope:recipient }
+			not = {
+				has_diplomacy_with = {
+					type = giving_defensive_support
+					country = scope:recipient
+				}
+			}
+			not = {
+				giving_scripted_relation = {
+					type = relation_type:guarantee
+					target = scope:recipient
+				}
+			}
+			country_tax_base > scope:recipient.country_tax_base
+			expected_army_size > scope:recipient.expected_army_size
+		}
+		scope:recipient = {
+			not = { has_blocked_treaties = scope:actor }
+			has_limited_diplomacy = no
+			not = { is_rival_of = scope:actor }
+			OR = {
+				is_mp_normal = yes
+				is_mp_small = yes
+				is_mp_minor = yes
+			}
+		}
+	}
+
+	block_when_at_war = yes
+
+	effect = {
+		create_relation = {
+			first = scope:actor
+			second = scope:recipient
+			type = relation_type:guarantee
+		}
+	}
+
+	ai_tick = monthly
+	ai_tick_frequency = 6
+
+	ai_will_do = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = -20
+		}
+		add = {
+			desc = "game_concept_opinion"
+			value = "opinion(scope:recipient)"
+			divide = 5
+		}
+		if = {
+			limit = {
+				scope:recipient = { is_rival_of = scope:actor }
+			}
+			subtract = {
+				desc = "game_concept_rival"
+				value = 1000
+			}
+		}
+		if = {
+			limit = {
+				scope:actor = {
+					giving_scripted_relation = {
+						type = relation_type:guarantee
+						target = scope:recipient
+					}
+				}
+			}
+			subtract = {
+				desc = "ALREADY_GUARANTEEING"
+				value = 1000
+			}
+		}
+	}
+
+	diplo_chance = {
+		base = -10
+		trust_in_actor = 1
+		actor_is_rival = -200
+		positive_opinion = 0.3
+		negative_opinion = -1
+		common_threat = 1.5
+		relative_strength = 30
+	}
+
+	accept = {
+		add = {
+			desc = "DIPLOREASON_OPINION"
+			value = "scope:recipient.opinion(scope:actor)"
+			divide = 5
+		}
+		if = {
+			limit = {
+				scope:actor = { is_rival_of = scope:recipient }
+			}
+			subtract = {
+				desc = "game_concept_rival"
+				value = 200
+			}
+		}
+	}
+}
