@@ -738,7 +738,7 @@
 	puyang = { rank = town town_setup = chinese_town }
 	hehe = { rank = town town_setup = chinese_town }
 	yexian_laizhou = { rank = town town_setup = chinese_coastal_town }
-	qingdao = { rank = town town_setup = chinese_coastal_town }
+	qingdao = { rank = city town_setup = chinese_coastal_city } #NEW town >>> city
 	yangshan = { rank = town town_setup = chinese_town }
 	hepu = { rank = town town_setup = chinese_coastal_town }
 	yushe = { rank = town town_setup = chinese_town }
@@ -764,7 +764,7 @@
 	yinxian = { rank = town town_setup = chinese_coastal_town }
 	huichang = { rank = town town_setup = chinese_town }
 	ningguo = { rank = town town_setup = chinese_town }
-	muping = { rank = town town_setup = chinese_coastal_town }
+	muping = { rank = city town_setup = chinese_coastal_city } #NEW town >>> city
 	fuchuan_ningxia = { rank = town town_setup = chinese_town }
 	fenning = { rank = town town_setup = chinese_town }
 	conghua = { rank = town town_setup = chinese_town }
@@ -905,12 +905,12 @@
 	indrapura_khmer = { rank = town town_setup = south_east_asia_town }
 	vyadhapura = { rank = town town_setup = south_east_asia_town }
 
-	sunda_kelapa = { rank = town town_setup = south_east_asia_port_town }
+	sunda_kelapa = { rank = town town_setup = majapahit_coastal_town } #NEW - now majapahit coastal town instead of regular
 	kawali = { rank = town town_setup = south_east_asia_town }
 	palembang = { rank = town town_setup = south_east_asia_town }
 	pasai = { rank = town town_setup = south_east_asia_port_town }
 	maynila = { rank = town town_setup = south_east_asia_port_town }
-	berune = { rank = town town_setup = south_east_asia_port_town }
+	berune = { rank = city town_setup = south_east_asia_city } #NEW town >>> city
 	temasek = { rank = town town_setup = south_east_asia_port_town }
 	ternate = { rank = town town_setup = south_east_asia_port_town }
 	gowa = { rank = town town_setup = south_east_asia_port_town }
@@ -1157,7 +1157,7 @@
 	memba = { rank = rural_settlement town_setup = kilwan_fishing_settlement }
 
 	#Majapahit
-	gresik = { rank = town town_setup = majapahit_coastal_town }
+	gresik = { rank = town town_setup = south_east_asia_port_town } #NEW - regular SEA coastal town instead of majapahit with dock
 	surabaya = { rank = town town_setup = majapahit_coastal_town }
 	daha = { rank = town town_setup = majapahit_town }
 
@@ -1187,6 +1187,35 @@
 	#NEW - Western African cities
 	abomey = { rank = town town_setup = sahel_town }	#NEW
 	agadez = { rank = town 	town_setup = sahel_town }	#NEW
+
+	#NEW - China cities
+	yongjia = { rank = city town_setup = chinese_coastal_city } #NEW
+
+	#NEW - India cities
+	somnath = { rank = town town_setup = indian_town }	#NEW
+	trincomalee = { rank = town town_setup = indian_town }	#NEW
+	galle = { rank = town town_setup = indian_town }	#NEW
+	dera_ghazi_khan = { rank = town town_setup = indian_town }	#NEW
+	busal = { rank = town town_setup = indian_town }	#NEW
+	sirhind = { rank = city town_setup = indian_city }	#NEW
+	kathmandu = { rank = town town_setup = indian_town } #NEW
+	jaunpur = { rank = town town_setup = indian_town } #NEW
+
+	#NEW - Southeast Asia Cities
+	taungoo = { rank = city town_setup = south_east_asia_city }	#NEW
+	thandaunggyi = { rank = town town_setup = south_east_asia_town }	#NEW
+
+	#NEW - Indonesia Cities
+	tutong = { rank = town town_setup = south_east_asia_port_town }	#NEW
+	sandakan = { rank = town town_setup = south_east_asia_port_town }	#NEW
+	kota_marudu = { rank = town town_setup = south_east_asia_port_town }	#NEW
+	kinabatangan = { rank = town town_setup = south_east_asia_port_town }	#NEW
+	padas = { rank = town town_setup = south_east_asia_port_town }	#NEW
+	
+	johor_lama = { rank = town town_setup = south_east_asia_port_town }	#NEW
+	pahang = { rank = town town_setup = south_east_asia_port_town }	#NEW
+	klang = { rank = town town_setup = south_east_asia_port_town }	#NEW
+	malacca = { rank = city town_setup = south_east_asia_city }	#NEW
 
 	#NEW - Horde eco buffs
 	enice = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
@@ -3557,7 +3586,7 @@ building_manager = {
 
 	#Forts
 	castle = { tag = VIJ level = 1 location = gutti }
-	castle = { tag = VIJ level = 1 location = anegandi }
+#	castle = { tag = VIJ level = 1 location = anegandi } #REMOVED - commented out due to adjecency rules
 	castle = { tag = VIJ level = 1 location = udayagiri }
 	castle = { tag = VIJ level = 1 location = basavapattana }
 
@@ -3589,7 +3618,7 @@ building_manager = {
 	tar_kiln = { tag = SPN level = 1 location = chaisri } 
 	tar_kiln = { tag = MUA level = 1 location = kut_ling } 
 	
-	stockade = { tag = BEI level = 1 location = berune }
+#	stockade = { tag = BEI level = 1 location = berune } #REMOVED
 
 	
 	#China
@@ -3962,7 +3991,7 @@ building_manager = {
 	stockade = { tag = CHI level = 1 location = huizhou }
 	stockade = { tag = CHI level = 1 location = jiezhou }
 	stockade = { tag = CHI level = 1 location = chengji }
-	stockade = { tag = CHI level = 1 location = daan }
+#	stockade = { tag = CHI level = 1 location = daan } #commented out as there is now a castle there
 	stockade = { tag = CHI level = 1 location = lanzhou }
 	stockade = { tag = CHI level = 1 location = anzhou }
 	stockade = { tag = CHI level = 1 location = mianzhou }
@@ -4315,6 +4344,92 @@ building_manager = {
 	aqueduct_system = { tag = PAP level = 1 location = avignon }
 	aqueduct_system = { tag = CAS level = 1 location = segovia }
 
+	#NEW - China buildings
+	tar_kiln = { tag = CNP level = 10 location = yongchun }
+	tar_kiln = { tag = CNP level = 10 location = dehua }
+	tar_kiln = { tag = CNP level = 10 location = anxi }
+	monastery = { tag = ZHG level = 1 location = zhangping }
+	
+	dock = { tag = LEZ level = 1 location = qingdao }
+	dock = { tag = CFN level = 1 location = yongjia }
+	castle = { tag = JNX level = 1 location = xingan_linjiang }
+	castle = { tag = MNG level = 1 location = wuwei }
+	castle = { tag = CGU level = 1 location = xuzhou }
+	castle = { tag = ANX level = 1 location = anxi_dingzhou }
+	castle = { tag = LCG level = 1 location = liaocheng }
+	castle = { tag = SHD level = 1 location = licheng }
+	castle = { tag = JXN level = 1 location = juxian }
+	castle = { tag = BIG level = 1 location = dinghu }
+	castle = { tag = JNG level = 1 location = jingbian }
+	castle = { tag = QNY level = 1 location = huanzhou_qingyang }
+	castle = { tag = PNG level = 1 location = pingliang }
+	castle = { tag = HNG level = 1 location = daan }
+	castle = { tag = XZU level = 1 location = xizhou }
+	castle = { tag = BYN level = 1 location = biyang }
+	castle = { tag = RXN level = 1 location = rangxian }
+	castle = { tag = CNG level = 1 location = macheng }
+	castle = { tag = MEG level = 1 location = mengcheng }
+	castle = { tag = TNS level = 1 location = tongshan }
+	castle = { tag = HME level = 1 location = haimen }
+	stockade = { tag = HII level = 1 location = hailing } #only a stockade due to adjecency rules
+	stockade = { tag = DTU level = 1 location = dantu } #only a stockade due to adjecency rules
+	stockade = { tag = NGG level = 1 location = ningguo } #only a stockade due to adjecency rules
+	stockade = { tag = CUN level = 1 location = chunan } #only a stockade due to adjecency rules
+	castle = { tag = GDE level = 1 location = guangde }
+	castle = { tag = XAN level = 1 location = xian_quzhou }
+	castle = { tag = JNH level = 1 location = dongyang }
+	castle = { tag = PCG level = 1 location = pucheng_jianning }
+	castle = { tag = SHW level = 1 location = shaowu }
+	castle = { tag = SGG level = 1 location = shanghang }
+	castle = { tag = ZHG level = 1 location = zhangping }
+	stockade = { tag = LXI level = 1 location = longxi } #rural location
+	stockade = { tag = COU level = 1 location = haiyang } #rural location
+	castle = { tag = BCG level = 1 location = baochang_nanxiong }
+	stockade = { tag = YNZ level = 1 location = lingling } #only a stockade due to adjecency rules
+	stockade = { tag = SZH level = 1 location = luyang } #poor
+	stockade = { tag = MNE level = 1 location = lingui } #poor
+	stockade = { tag = MPG level = 1 location = maping } #poor
+	castle = { tag = TNJ level = 1 location = tanjin }
+	castle = { tag = LNZ level = 1 location = hepu }
+	stockade = { tag = NNL level = 1 location = nanliu } #poor
+	stockade = { tag = XNY level = 1 location = xinyi_gaozhou } #poor
+	stockade = { tag = YAJ level = 1 location = yangjiang } #rural location
+	stockade = { tag = BZU level = 1 location = bozhou } #poor
+	castle = { tag = HTG level = 1 location = hongtong }
+	castle = { tag = ZHX level = 1 location = zhaoxin }
+	castle = { tag = WDI level = 1 location = wudi }
+	stockade = { tag = BZO level = 1 location = bohai } #rural location
+	stockade = { tag = LQU level = 1 location = linqu } #rural location
+	stockade = { tag = LXN level = 1 location = lingxian_shanxi } #mobility corridor
+	stockade = { tag = SYI level = 1 location = shanyin } #mobility corridor
+	stockade = { tag = GZO level = 1 location = guozhou } #mobility corridor
+
+	#NEW - Southeast Asia buildings
+	sergeantry	= { tag = BEI level = 1 location = berune }
+	wharf = { tag = BEI level = 1 location = berune }
+	city_walls = { tag = BEI level = 1 location = berune }
+	dock = { tag = BEI level = 1 location = berune }
+	dock = { tag = BEI level = 1 location = tutong }
+	dock = { tag = BEI level = 1 location = sandakan }
+	dock = { tag = BEI level = 1 location = kota_marudu }
+	dock = { tag = BEI level = 1 location = kinabatangan }	
+	dock = { tag = BEI level = 1 location = padas } 
+	
+	castle = { tag = MAJ level = 1 location = trowulan }
+	castle = { tag = SUN level = 1 location = sunda_kelapa }
+	
+	sergeantry	= { tag = MLC level = 1 location = malacca }
+	wharf = { tag = MLC level = 1 location = malacca }
+	city_walls = { tag = MLC level = 1 location = malacca }
+	dock = { tag = MLC level = 1 location = temasek }
+	dock = { tag = MLC level = 1 location = malacca }
+	dock = { tag = MLC level = 1 location = klang }
+	dock = { tag = MLC level = 1 location = johor_lama }
+	dock = { tag = MLC level = 1 location = pahang } 
+	
+	sergeantry	= { tag = TNG level = 1 location = taungoo }
+	city_walls = { tag = TNG level = 1 location = taungoo }
+	
 	#NEW - England and Scotland castles
 	peel_towers = { tag = SCO level = 1 location = selkirk} #NEW instead of extending Dunbar modifier to Selkirk
 	castle 		= { tag = ENG level = 1 location = london }
@@ -4507,12 +4622,94 @@ building_manager = {
 	castle = { tag = MAM level = 1 location = asyut }
 	castle = { tag = MAM level = 1 location = qus }
 
+	#NEW - Persia
+	sergeantry = { tag = ORM level = 1 location = hormuz }
+	dock = { tag = ORM level = 1 location = hormuz }
+	wharf = { tag = ORM level = 1 location = hormuz }
+
 	#NEW - India Buildings
+	tar_kiln = { tag = BAH level = 3 location = kolhapur }
+	tar_kiln = { tag = ZMR level = 4 location = malapuram }
+	tar_kiln = { tag = SMV level = 4 location = kanchipuram }
+	tar_kiln = { tag = ORI level = 3 location = kulada }
+	tar_kiln = { tag = ARK level = 3 location = chittagong }
+	tar_kiln = { tag = JNP level = 3 location = vijaygarh }
+	tar_kiln = { tag = GJR level = 6 location = limbdi }
+	tar_kiln = { tag = DLH level = 3 location = narnaul }
+	tar_kiln = { tag = ULN level = 2 location = tulamba }	
+	
 	royal_court = { tag = DLH level = 1 location = delhi } #NEW changed from sargadwari to delhi
+	castle = { tag = RDY level = 1 location = adanki }
+	castle = { tag = CHD level = 1 location = ballarpur }
+	
+	stockade = { tag = BDH level = 1 location = mithri }
+	stockade = { tag = 7AM level = 1 location = duki }
+	stockade = { tag = 6AM level = 1 location = zhob }
+	stockade = { tag = 5AM level = 1 location = urgun }
+	stockade = { tag = 1AM level = 1 location = tank }
+	stockade = { tag = KHO level = 1 location = khost }
+	stockade = { tag = GWL level = 1 location = srinagar_garhwal }
+	stockade = { tag = KMN level = 1 location = champavati }
+	stockade = { tag = DTI level = 1 location = dipayal }
+	stockade = { tag = KHS level = 1 location = jagatipur }
+	stockade = { tag = KRB level = 1 location = khairabad }
+	stockade = { tag = BCR level = 1 location = bahraich }
+	stockade = { tag = BTT level = 1 location = bettiah }
+	stockade = { tag = ONW level = 1 location = madhubani }
+	stockade = { tag = LUR level = 1 location = nabagram }
+	stockade = { tag = AHO level = 1 location = charaideo }
+	stockade = { tag = JNT level = 1 location = jaintiapur }
+	stockade = { tag = TRF level = 1 location = laskarpur }
+	stockade = { tag = TWI level = 1 location = rangamati }
+	stockade = { tag = ZOO level = 1 location = thada }
+	stockade = { tag = ARK level = 1 location = launggyet }
+	
+	stockade = { tag = KUT level = 1 location = lakhiyarvira }
+	stockade = { tag = JLR level = 1 location = chandravati }
+	stockade = { tag = MRW level = 1 location = khed }
+	stockade = { tag = JSL level = 1 location = jaisalmer }
+	stockade = { tag = GDA level = 1 location = sardarshahar }
+	stockade = { tag = JHI level = 1 location = suratgarh }
+	stockade = { tag = BHA level = 1 location = bhatnir }
+	stockade = { tag = DRW level = 1 location = taranagar }
+	stockade = { tag = KLI level = 1 location = karauli }
+	stockade = { tag = HAD level = 1 location = bundi }
+	stockade = { tag = BND level = 1 location = kundar }
+	stockade = { tag = BGK level = 1 location = bandogarh }
+	stockade = { tag = GHR level = 1 location = garha }
+	stockade = { tag = RKS level = 1 location = ramkola }
+	stockade = { tag = CER level = 1 location = rohtas }
+	stockade = { tag = KKR level = 1 location = khukhragarh }
+	stockade = { tag = UJJ level = 1 location = buxar }
+	stockade = { tag = BHP level = 1 location = raipur_bengal }
+	stockade = { tag = PTN level = 1 location = patna_garjat }
+	stockade = { tag = BAD level = 1 location = baud }
+	stockade = { tag = KJA level = 1 location = keonjhar }
+	stockade = { tag = MJU level = 1 location = baripada }
+	stockade = { tag = SRG level = 1 location = sarangarh }
+	stockade = { tag = RTP level = 1 location = ratnapura }
+	stockade = { tag = KLH level = 1 location = kalahandinagara }
+	stockade = { tag = KNK level = 1 location = kanker }
+	stockade = { tag = JPO level = 1 location = nandapur }
+	stockade = { tag = BST level = 1 location = bastar }
+	stockade = { tag = WRG level = 1 location = wairagarh }
+	stockade = { tag = BGR level = 1 location = bandhugara }
+	stockade = { tag = KHR level = 1 location = kherla }
+	stockade = { tag = SNA level = 1 location = burhanpur }
+	stockade = { tag = NNA level = 1 location = mandleshwar }
+	stockade = { tag = YDR level = 1 location = tirupati }
+	stockade = { tag = TKU level = 1 location = manikandapuram }
+	stockade = { tag = PDU level = 1 location = kochi }
+	stockade = { tag = KDU level = 1 location = kodungallur }
+	stockade = { tag = VLD level = 1 location = palghat }
+	stockade = { tag = KLT level = 1 location = kannur }
+	stockade = { tag = ALU level = 1 location = kasaragod }
+	stockade = { tag = JFN level = 1 location = jaffna }
 
 	#NEW - Steppes Castle & Stockade additions
 	stockade = { tag = CRI level = 1 location = enice }
 	sergeantry	= { tag = OXN level = 1 location = kokand }
+	stockade = { tag = TIB level = 1 location = sakya } #Tibet
 	
 	#NEW - Middle East Castle & Stockade additions
 	castle = { tag = UPE level = 1 location = minya }
