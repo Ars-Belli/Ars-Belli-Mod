@@ -61,6 +61,7 @@
 
 	block_when_at_war = yes
 
+	ai_tick = never
 	ai_will_do = {
 		add = -1000
 	}
@@ -98,21 +99,21 @@ pay_for_fleet_basing_rights = {
 	potential = {
 		scope:actor = {
 			has_limited_diplomacy = no
-			not = { has_blocked_treaties = scope:recipient }
 			OR = {
 				has_ports = yes
 				country_type = building
 			}
-			not = { receives_fleet_basing_rights_from = scope:recipient }
-		}
-		scope:recipient = {
-			has_ports = yes
 		}
 	}
 
 	allow = {
 		scope:actor = {
 			gold > 0
+			not = { has_blocked_treaties = scope:recipient }
+			not = { receives_fleet_basing_rights_from = scope:recipient }
+		}
+		scope:recipient = {
+			has_ports = yes
 		}
 	}
 
@@ -152,6 +153,7 @@ pay_for_fleet_basing_rights = {
 
 	block_when_at_war = yes
 
+	ai_tick = never
 	ai_will_do = {
 		add = -1000
 	}
@@ -190,14 +192,14 @@ pay_for_trade_access = {
 		scope:actor = {
 			has_markets = no
 		}
-		scope:recipient = {
-			has_markets = yes
-		}
 	}
 
 	allow = {
 		scope:actor = {
 			gold > 0
+		}
+		scope:recipient = {
+			has_markets = yes
 		}
 	}
 
@@ -237,6 +239,7 @@ pay_for_trade_access = {
 
 	block_when_at_war = yes
 
+	ai_tick = never
 	ai_will_do = {
 		add = -1000
 	}
@@ -326,6 +329,7 @@ pay_for_food_access = {
 
 	block_when_at_war = yes
 
+	ai_tick = never
 	ai_will_do = {
 		add = -1000
 	}
@@ -366,16 +370,16 @@ pay_for_fondaco_rights = {
 	category = CATEGORY_ECONOMY_ACTIONS
 
 	potential = {
-		scope:recipient = {
-			is_merchant_republic = yes
-			culture = { has_culture_group = culture_group:italian_group }
-			within_diplomatic_range = scope:actor
-		}
 	}
 
 	allow = {
 		scope:actor = {
 			gold > 0
+		}
+		scope:recipient = {
+			is_merchant_republic = yes
+			culture = { has_culture_group = culture_group:italian_group }
+			within_diplomatic_range = scope:actor
 		}
 	}
 
@@ -415,6 +419,7 @@ pay_for_fondaco_rights = {
 
 	block_when_at_war = yes
 
+	ai_tick = never
 	ai_will_do = {
 		add = -1000
 	}
