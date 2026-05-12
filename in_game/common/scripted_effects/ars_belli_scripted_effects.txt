@@ -218,6 +218,9 @@ mp_limits_once_per_month_calculations = {
 	mp_limits_assign_ranks = yes
 
 	mp_limits_store_tier_lists = yes
+
+	# Must run AFTER assign_ranks since country_slot_weight depends on rank vars.
+	mp_limits_calculate_diplo_weights = yes
 }
 
 # Store countries per tier in score-descending lists. Iterated in GUI via
@@ -436,5 +439,144 @@ mp_limits_rank_classification = {
 
 		mp_limits_assign_category_markers = yes
 		mp_limits_apply_alliance_limit_penalty = yes
+	}
+}
+
+# Precompute AP/DP/GP weights per country with proper dedup. Runs in effect context
+# where `any_international_organizations_member_of` works (it errors with "Event target
+# link 'international_organization_type' returned an invalid object" when used inside
+# `every_country` in a script_value). Stores results in country variables which the
+# `total_player_*` / `current_player_*` script_values just read back.
+#
+# Dedup rules (matching the mod's diplo-limit design):
+#   - DP weight: defensive-league members PLUS personal-union members, each counted once
+#   - AP weight: alliance partners NOT already counted in DP
+#   - GP weight: countries this country is guaranteeing (no dedup)
+mp_limits_calculate_diplo_weights = {
+	every_country = {
+		limit = {
+			OR = {
+				global_var:mp_limits_players_only = 0
+				is_ai = no
+			}
+		}
+		save_scope_as = mp_dw_p
+
+		set_variable = { name = mp_ap_weight value = 0 }
+		set_variable = { name = mp_dp_weight value = 0 }
+		set_variable = { name = mp_gp_weight value = 0 }
+		clear_variable_list = mp_dp_mates_buf
+
+		# 1. Defensive League members
+		every_international_organizations_member_of = {
+			limit = {
+				international_organization_type = international_organization_type:defensive_league
+			}
+			every_international_organization_member = {
+				limit = { NOT = { this = scope:mp_dw_p } }
+				save_temporary_scope_as = mp_dw_mate
+				scope:mp_dw_p = {
+					if = {
+						limit = {
+							NOT = {
+								is_target_in_variable_list = {
+									name = mp_dp_mates_buf
+									target = scope:mp_dw_mate
+								}
+							}
+						}
+						add_to_variable_list = {
+							name = mp_dp_mates_buf
+							target = scope:mp_dw_mate
+						}
+						change_variable = {
+							name = mp_dp_weight
+							add = { value = "scope:mp_dw_mate.country_slot_weight" }
+						}
+					}
+				}
+			}
+		}
+
+		# 2. Personal Union members (dedup against defensive league)
+		every_international_organizations_member_of = {
+			limit = {
+				international_organization_type = international_organization_type:union
+			}
+			every_international_organization_member = {
+				limit = { NOT = { this = scope:mp_dw_p } }
+				save_temporary_scope_as = mp_dw_mate
+				scope:mp_dw_p = {
+					if = {
+						limit = {
+							NOT = {
+								is_target_in_variable_list = {
+									name = mp_dp_mates_buf
+									target = scope:mp_dw_mate
+								}
+							}
+						}
+						add_to_variable_list = {
+							name = mp_dp_mates_buf
+							target = scope:mp_dw_mate
+						}
+						change_variable = {
+							name = mp_dp_weight
+							add = { value = "scope:mp_dw_mate.country_slot_weight" }
+						}
+					}
+				}
+			}
+		}
+
+		# 3. Alliance partners (dedup against DP — they count under DP, not AP)
+		every_country = {
+			limit = {
+				has_mutual_scripted_relation = {
+					type = relation_type:alliance
+					target = scope:mp_dw_p
+				}
+				NOT = { this = scope:mp_dw_p }
+			}
+			save_temporary_scope_as = mp_dw_mate
+			if = {
+				limit = {
+					scope:mp_dw_p = {
+						NOT = {
+							is_target_in_variable_list = {
+								name = mp_dp_mates_buf
+								target = scope:mp_dw_mate
+							}
+						}
+					}
+				}
+				scope:mp_dw_p = {
+					change_variable = {
+						name = mp_ap_weight
+						add = { value = "scope:mp_dw_mate.country_slot_weight" }
+					}
+				}
+			}
+		}
+
+		# 4. Guarantees (this country guarantees them)
+		every_country = {
+			limit = {
+				receiving_scripted_relation = {
+					type = relation_type:guarantee
+					target = scope:mp_dw_p
+				}
+				NOT = { this = scope:mp_dw_p }
+			}
+			save_temporary_scope_as = mp_dw_mate
+			scope:mp_dw_p = {
+				change_variable = {
+					name = mp_gp_weight
+					add = { value = "scope:mp_dw_mate.country_slot_weight" }
+				}
+			}
+		}
+
+		clear_variable_list = mp_dp_mates_buf
 	}
 }
