@@ -6166,10 +6166,13 @@ countries = {
 			}
 
 		}
-		tolerated_cultures = {
+		accepted_cultures = {
 			braji
-			haryanvi_culture
 			kannauji
+		}
+		tolerated_cultures = {
+			bundeli
+			mewati
 		}
 
 		#Delhi Setup to accurately portray the starting situation
@@ -6190,6 +6193,7 @@ countries = {
 			vijaygarh sidhi agori
 			lucknow bilgram hardoi ibrahimabad
 			azamgarh andar chillupar rudrapur sonepur_bihar thawe
+			ballia #Arrah
 		}
 
 		court_language = persian_language
@@ -6215,8 +6219,11 @@ countries = {
 			}
 
 		}
-		tolerated_cultures = {
+		accepted_cultures = {
 			bhojpuri_culture
+		}
+		tolerated_cultures = {
+			bagheli
 		}
 
 	}
@@ -7114,8 +7121,8 @@ countries = {
 		khambat dholka ashaval modasa danduka
 		}
 
-		include = "indian_hindu_monarchy_jain"
-		capital = chhaya
+		include = "indian_muslim_monarchy"
+		capital = somnath
 		country_rank = rank_duchy
 		religious_school = hanafi_school
 		government = {
@@ -7131,7 +7138,7 @@ countries = {
 			}
 
 			#Societal Values
-			land_vs_naval = 50
+			land_vs_naval = 65
 		}
 	}
 	#ahmednagar - north of bahmanis new tag
@@ -7167,9 +7174,6 @@ countries = {
 		own_control_core = {
 		pachora illichpur gawilgarh asirgarh burhanpur thalner sultanpur nandurbar laling dharangaon
 		}
-		
-		
-
 		include = "indian_muslim_monarchy"
 		capital = burhanpur
 		country_rank = rank_duchy
@@ -7185,6 +7189,11 @@ countries = {
 			#Societal Values
 			land_vs_naval = 50
 		}
+		
+		accepted_cultures = {
+			khandeshi
+		}
+		
 	}
 	
 	#Northern Narmada
@@ -7192,9 +7201,6 @@ countries = {
 		own_control_core = {
 		mandleshwar bijagarh alirajpur mandu maheshwar khategaon khandwa handia
 		}
-		
-		
-
 		include = "indian_muslim_monarchy"
 		capital = mandleshwar
 		country_rank = rank_duchy
@@ -7210,6 +7216,11 @@ countries = {
 			#Societal Values
 			land_vs_naval = 50
 		}
+		
+		accepted_cultures = {
+			nimadi
+		}
+		
 	}
 
 	#JLW - Jhalawar / Limbdi
@@ -7476,7 +7487,7 @@ countries = {
 
 		include = "indian_muslim_monarchy"
 		capital = multan
-        country_rank = rank_county
+        country_rank = rank_duchy
 		government = {
 			ruler = random 
 
@@ -7508,7 +7519,7 @@ countries = {
 
 		include = "expl_india_muslim"
 		include = "india_limited_muslim_monarchy"
-		capital = bhera
+		capital = busal
         country_rank = rank_kingdom
 		government = {
 			ruler = random 
@@ -7538,7 +7549,7 @@ countries = {
 
 		include = "expl_india_muslim"
 		include = "india_limited_muslim_monarchy"
-		capital = karor
+		capital = dera_ghazi_khan
         country_rank = rank_duchy
 		government = {
 			ruler = random 
@@ -7652,7 +7663,7 @@ countries = {
 
 		include = "indian_muslim_monarchy"
 		capital = umarkot
-        country_rank = rank_duchy
+        country_rank = rank_kingdom
 		government = {
 			ruler = random 
 
@@ -7668,7 +7679,11 @@ countries = {
 			land_vs_naval = 50
 		}
 
-		tolerated_cultures = { bundeli }
+		accepted_cultures = { 
+			bundeli 
+			harauti
+			nimadi
+		}
 	}
 	
 	#SRH - Sirhind
@@ -7701,6 +7716,12 @@ countries = {
 			#Societal Values
 			land_vs_naval = 50
 		}
+		
+		accepted_cultures = {
+			haryanvi_culture
+			dehlavi
+		}
+		
 	}
 	
 	#LAH - Lahor sultanate
@@ -8018,7 +8039,7 @@ countries = {
 			land_vs_naval = 50
 		}
 
-		tolerated_cultures = { kannadiga }
+		accepted_cultures = { kannadiga }
 	}
 
 	#JJK - Jejakabhukti
@@ -8469,7 +8490,16 @@ countries = {
 			}
 		}
 
-		tolerated_cultures = { bhil }
+		accepted_cultures = {
+			dhundhari
+			malvi
+			shekhawati
+			harauti
+		}
+
+		tolerated_cultures = { 
+			bhil			
+		}
 	}
 
 	#HAD - Hadoti / Bundi
@@ -8742,7 +8772,7 @@ countries = {
 
 		include = "expl_india_hindu"
 		include = "india_limited_monarchy"
-		capital = salagiri
+		capital = broach
 		government = {
 			ruler = random #Unkown ruler of Rathore dynasty
 			laws = {
@@ -8753,7 +8783,7 @@ countries = {
 
 		tolerated_cultures = {
 			bhil
-			gujarati
+			marathi_culture
 		 }
 	}
 
@@ -9210,6 +9240,9 @@ countries = {
 
 		accepted_cultures = {
 			telugu
+			tamil
+			kodaga
+			banjara
 		 }
 	}
 
@@ -9594,7 +9627,7 @@ countries = {
 
 		include = "expl_india_hindu"
 		include = "indian_hindu_monarchy"
-		capital = kurunegala
+		capital = galle
 		government = {
 			#https://en.wikipedia.org/wiki/List_of_Sri_Lankan_monarchs
 			ruler = dbd_vijayabahu_siri_sanga_bo
@@ -23895,10 +23928,10 @@ countries = {
 		capital = suez
 	}
 	
-	#Alexandria
-	ALX = {
+	#Matruh
+	TUH = {
 		own_control_core = {
-			alexandria el_alamein matruh
+			el_alamein matruh sallum #Alexandria
 			siwa
 		}
 
@@ -23946,15 +23979,14 @@ countries = {
 			mizrahi
 		}
 
-		country_rank = rank_duchy
-		capital = alexandria
+		capital = matruh
 	}
 	
 	#Aswan
 	ASW = {
 		own_control_core = {
 			aswan kom_ombo edfu esna qus hiw qena #Qusiyya
-			baris kharga el_qasr #Western Oases
+			baris kharga #Western Oases
 			el_balyana akhmim #Asyut
 		}
 
@@ -24011,10 +24043,11 @@ countries = {
 			cairo atfih giza dakahla
 			damietta al_mima el_burullus el_mahalla fuwa menouf samanoud tidah
 			mansoura bilbeis faqus ushmum_tannah qalyub tarrana tinnis
+			alexandria #Alexandria
 			asyut el_buwit #Asyut
 			minya ashmunayn tahna manfalut #Minya
 			el_bahnasa sharuna beni_suef faiyum #Bahnasawiya
-			bahariyya qasr_farafra #Western Oases
+			bahariyya qasr_farafra el_qasr #Western Oases
 		}
 
 		include = "expl_muslim_mediterranean"
@@ -24138,9 +24171,7 @@ countries = {
 	BQA = {
 		own_control_core = {
 			benghazi ajdabiya al_bayda al_khuimat barca derna mechili msus qaminis suluntah tmimi
-			awjila el_agheila tobruk
-			#NEW
-			sallum
+			awjila el_agheila tobruk			
 		}
 
 		starting_technology_level = 3
@@ -25582,19 +25613,9 @@ countries = {
 
 	#Korea
 	KOR = {
-		own_control_core = {		
-			jeonju gimje
-			 
-			jinan 
-
-			yeongdong 
-
+		own_control_core = {				 
 			chungju eumseong icheon goeju
 			wonju jecheon
-			gongju yeonsan jinjam
-			cheonan cheongju
-			hongju boryeong hansan
-			aju seosan
 			namgyeong yangju gwangju papyeong jipyeong pocheon
 			inju suwon
 			chunju hongcheon inje hoengcheon nangcheon
@@ -25608,8 +25629,9 @@ countries = {
 			gwiju jeongju_jeongju
 			seogyeong jeungsan samhwa junghwa
 			gaeju sukju sunju
-			deokju yeongwon 
 			seongcheon
+			aju #Hongju
+			cheonan #Gongju
 		}
 
 		our_cores_conquered_by_others = {
@@ -25676,6 +25698,68 @@ countries = {
 		}
 	}
 
+	BKJ = {
+		own_control_core = {
+			haenam jindo yeonggam naju muan jangheung hwasun yeonggwang #Naju
+			gokseong #Suncheon
+			namwon jeongeup musong imsil #Namwon
+			mupung jeonju gimje jinan #Jeonju
+			cheongju gongju yeonsan jinjam yeongdong #Gongju
+			hongju boryeong hansan seosan #Hongju
+		}
+
+		include = "far_east_asia_monarchy"
+		
+		government = {
+			ruler = random
+
+			centralization_vs_decentralization = 50
+			aristocracy_vs_plutocracy = -20
+			land_vs_naval = 90
+			individualism_vs_communalism = 40
+			serfdom_vs_free_subjects = 10
+			
+			reforms = {
+				
+			}
+			
+			laws = {
+				legal_code_law = goryeon_code_policy
+				medieval_levy_law = peasant_levies
+				royal_court_customs_law = balanced_court_policy
+				administrative_system = central_councils
+				piracy_law = anti_piracy_policy
+				distribution_of_power_law = dop_traditional_distribution_of_power
+			}
+			
+			privilege = {
+				#Nobles
+				noble_armies
+
+				#Clergy
+				tax_exemption
+
+				#Peasants
+				partial_yield
+			}
+		}
+		
+		capital = jeonju
+		country_rank = rank_kingdom
+		
+		variables = {
+			data = {
+				{
+					flag = "year_of_start_of_examination_system"
+					data = {
+						type = value
+						identity = 133700000
+					}
+				}
+			}
+		}
+	}
+
 	ILL = {
 		own_control_core = {
 			gyeongju yeongil yeongju boseongbu yeongyang yeongdeok #Gyeongju
@@ -25685,10 +25769,7 @@ countries = {
 			seongju seonsan gaeryeong taegu uiseong #Seongju
 			sangju mungyeong yeongcheon andong bonghwa #Andong
 			geochang hapcheon jinju hadong namhae sacheon geoje #Jinju
-			suncheon gokseong boseong heungyang #Suncheon
-			haenam jindo yeonggam naju muan jangheung hwasun yeonggwang #Naju
-			namwon jeongeup musong imsil #Namwon
-			mupung #Jeonju
+			suncheon boseong heungyang #Suncheon
 			danyang_korea #Chungju
 		}
 
@@ -25747,8 +25828,9 @@ countries = {
 	#Ssangseong https://en.wikipedia.org/wiki/Ssangseong_Prefecture
 	SSG = {
 		own_control_core = {
-			deungju munju goju hwaju north_jeongju
-			yangam
+			deungju munju goju hwaju north_jeongju #Hwaju
+			yangam #Seogyeong
+			deokju yeongwon #Anbuk
 		}
 
 		include = "far_east_asia_monarchy"
@@ -31763,7 +31845,7 @@ countries = {
 		own_control_core = {
 			licheng jiyang zhangqiu qidong zouping xincheng_jinan gaoyuan_jinan #Jinan
 			changqing feicheng fengfu laiwu xintai yanshen #Tai'an
-			xucheng shouzhang pingyin donge yanggu_yanzhou #Dongping 
+			xucheng shouzhang pingyin donge #Dongping 
 			linyi_jinan yucheng qihe #Dezhou
 			yanci yangxin shanghe #Wuding			
 		}
@@ -32292,7 +32374,7 @@ countries = {
 			mengcheng #Bozhou
 			huaiyuan #Fengyang
 			xiacai #Shouzhou
-			yingzhou yingshui yingshang #Yingzhou
+			yingshang #Yingzhou
 		}
 	
 		our_cores_conquered_by_others = {}
@@ -32633,11 +32715,48 @@ countries = {
 		include = "chinese_monarchy"
 
 		government = {
-			type = monarchy
+			type = republic
+			heir_selection = oligarchic_elective
 			ruler = random
-			centralization_vs_decentralization = 40
+
+			laws = {
+				republican_foundation_law = republicanism_policy
+				heir_religion_law = heir_same_religion
+			}
+			reforms = {
+				merchant_republic
+			}
+
+			privilege = {
+				#nobles
+				elaborate_court_ceremonies
+
+				#burghers
+				land_of_commerce
+				sponsor_maritime_contracts
+				shipwright_contracts
+				market_fairs
+			}
+
+			parliament = {
+				parliament_type = estate_parliament
+			}
+
+			centralization_vs_decentralization = 70
+			aristocracy_vs_plutocracy = 60
+			serfdom_vs_free_subjects = 15
+			traditionalist_vs_innovative = 15
+			spiritualist_vs_humanist = 45
+			mercantilism_vs_free_trade = -50
+			offensive_vs_defensive = 20
 			land_vs_naval = 75
+			quality_vs_quantity = 10
+			belligerent_vs_conciliatory = 25
+
+			capital_economy_vs_traditional_economy = -80
+			individualism_vs_communalism = -10
 		}
+		
 		court_language = southern_mandarin_dialect
 		liturgical_language = classical_chinese_language
 
@@ -32691,9 +32810,43 @@ countries = {
 		include = "chinese_monarchy"
 
 		government = {
-			type = monarchy
+			type = republic
+			heir_selection = peasant_elective
 			ruler = random
+			laws = {
+				republican_foundation_law = republicanism_policy
+				heir_religion_law = heir_same_religion
+			}
+			reforms = {
+				peasant_republic_reform
+			}
+
+			privilege = {
+				#nobles
+				increased_civic_engagement
+				nobles_offensive_military_doctrine
+
+				#burghers
+				land_of_commerce
+				market_fairs
+				
+				#commoners
+				peasants_allowed_weapons_privilege
+				peasants_in_administration
+			}
+			centralization_vs_decentralization = 75
+			aristocracy_vs_plutocracy = -20
+			serfdom_vs_free_subjects = 75
+			traditionalist_vs_innovative = -15
+			spiritualist_vs_humanist = -50
+			offensive_vs_defensive = 50
+			land_vs_naval = -70
+			quality_vs_quantity = 40
+			belligerent_vs_conciliatory = -20
+			capital_economy_vs_traditional_economy = 80
+			individualism_vs_communalism = 50
 		}
+		
 		court_language = southern_mandarin_dialect
 		liturgical_language = classical_chinese_language
 
@@ -32765,10 +32918,58 @@ countries = {
 	
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+
 		government = {
-			type = monarchy
+			type = theocracy
+			heir_selection = theocratic_elective
 			ruler = random
+
+			reforms = {
+				abbey_reform
+			}
+
+			aristocracy_vs_plutocracy = -60
+			centralization_vs_decentralization = 100
+			traditionalist_vs_innovative = -50
+			spiritualist_vs_humanist = -75
+			serfdom_vs_free_subjects = -40
+			belligerent_vs_conciliatory = 80
+			quality_vs_quantity = 20
+			offensive_vs_defensive = 80
+			land_vs_naval = -100
+			capital_economy_vs_traditional_economy = 80
+			individualism_vs_communalism = 60
+
+			parliament = {
+				parliament_type = council
+			}
+
+			laws = {
+				censorship = limited_censorship
+				education_masses_law = basic_religious_education
+				administrative_system = feudal_administration
+				cultural_traditions_law = civil_society
+				marriage_law = monogamous_marriage
+				heir_religion_law = heir_special_succession
+				legal_code_law = traditional_law_policy
+				distribution_of_power_law = dop_traditional_distribution_of_power
+			}
+			
+			privilege = {
+				#Clergy
+				clergy_literacy_rights
+				clergy_land_rights
+				embellish_great_works_of_faith
+				promote_cultural_unity
+				
+				#Nobles
+				nobles_land_rights
+				noble_serfdom_rights
+				noble_fortification_licenses
+				elaborate_court_ceremonies
+			}
 		}
+
 		court_language = southern_mandarin_dialect
 		liturgical_language = classical_chinese_language
 
@@ -33203,6 +33404,7 @@ countries = {
 			shouchun shuihu #Shouzhou
 			luan huoqiu huoshan mabu shucheng yuexi yingshan_luan #Lu'an
 			dingyuan_fengyang #Fengyang
+			pengze #Jiujiang
 		}
 	
 		our_cores_conquered_by_others = {}
@@ -33247,6 +33449,8 @@ countries = {
 			huixian qizhou jixian xinxiang #Weihui
 			henei jiyuan mengxian wuzhi wenxian xiuwu #Huaiqing
 			fanxian juancheng chaocheng shenxian #Puzhou
+			yanggu_yanzhou #Dongping
+			yingzhou yingshui #Yingzhou
 		}
 		
 		our_cores_conquered_by_others = {}
@@ -33265,6 +33469,7 @@ countries = {
 			jilu_culture 
 			jin_culture
 			jianghuai_culture
+			hui_muslim_culture
 		}
 	}
 
@@ -33322,10 +33527,12 @@ countries = {
 		accepted_cultures = { 
 			laoxiang_culture
 			changde_culture
-			xinxiang_culture
 			hengzhou_culture
 			xianxi_culture
 			waxiang_culture
+		}
+		tolerated_cultures = {
+			gan_culture
 			chu_culture
 			yongzhou_culture
 		}
@@ -33333,7 +33540,7 @@ countries = {
 
 	CHE = {	#Chén
 		own_control_core = {
-			dehua_jiujiang pengze dean ruichang hukou #Jiujiang
+			dehua_jiujiang dean ruichang hukou #Jiujiang
 			wuning fenning jingan tonggu fengxin #Ningzhou
 			xingzi duchang anyi jianchang #Nankang
 			gaoan shanggao xinchang_yifeng #Ruizhou
@@ -33355,7 +33562,11 @@ countries = {
 		liturgical_language = classical_chinese_language
 		country_rank = rank_kingdom
 		capital = nanchang
-		tolerated_cultures = { tunxi_culture }
+		tolerated_cultures = {
+			tunxi_culture 
+			jianghuai_culture
+			qiwu_culture
+		}
 	}
 
 	CSH = {	#Shùn
@@ -33481,7 +33692,19 @@ countries = {
 
 		government = {
 			type = monarchy
-			ruler = random
+			ruler = random		
+			centralization_vs_decentralization = 70
+			aristocracy_vs_plutocracy = -30
+			serfdom_vs_free_subjects = 35
+			traditionalist_vs_innovative = 25
+			spiritualist_vs_humanist = 25
+			mercantilism_vs_free_trade = 50
+			offensive_vs_defensive = -25
+			land_vs_naval = 65
+			quality_vs_quantity = -25
+			belligerent_vs_conciliatory = -40
+			capital_economy_vs_traditional_economy = 55
+			individualism_vs_communalism = 25
 		}
 		court_language = wu_language
 		liturgical_language = classical_chinese_language
@@ -52042,8 +52265,7 @@ countries = {
 		
 		own_control_core = {
 			jizzakh pishagar ura_tyube zomin #Jizzakh
-			khujand dakhkat isfara kokand konibodom #Khujand
-			
+			khujand dakhkat isfara kokand konibodom #Khujand			
 			fergana marghinan osh quva rishton #Farghana
 			andijan arslanbob gulcha jalalabad_fergana uzkand #Andijan
 			akhsikath asht karasuu kasan kerben pop_fargana #Akhsikath
@@ -52051,7 +52273,7 @@ countries = {
 			chach almalik_chach altyntobe bogiston burchmullo fanakat nuket #Chach
 			otrar artyk_ata kyr_uzkand mardankuyik sutkent zemukh zhaushikumtobe #Otrar
 			turkestan aktas_kystagy baydibek_ata ikan karnak sawran shilik #Turkestan
-			isbijab arsubaniket badam karabulak kazatlyk shymkent #Isbijab			
+			isbijab arsubaniket badam karabulak kazatlyk shymkent #Isbijab				
 		}
 
 		starting_technology_level = 3
@@ -52155,14 +52377,23 @@ countries = {
 	}
 
 	TIM = {	#The Timurid tag
-		type = army
-		own_control_core = { }
+		own_control_core = {
+			akhsisek guzor nasaf navidakh #Kelif
+			chiroqchi firabr kish_shahrisabz koson muborak paikend
+			samarkand dimishk primkent #Samarkand
+			bukhara tim_samarkand
+			darganata hazarasp
+			alat daya_kathyn paykend vardanzi
+			nurota ishtixon karmana yangirabod
+		}
 		our_cores_conquered_by_others = {}
 		starting_technology_level = 3
 		include = "expl_mongols"
 		include = "eurasian_horde_not_present"
 		government = {
 			type = steppe_horde
+			ruler = chg_taraghai_noyan_borjigin
+			heir = chg_timur_lame_borjigin
 			heir_selection = tribal_oldest_male
 			laws = {
 				iqta_law = land_acquisition
@@ -52174,7 +52405,6 @@ countries = {
 			}
 			privilege = {
 				#Nobles
-				banal_lordship
 				primacy_of_nobility
 				noble_serfdom_rights
 				nobility_council
@@ -52194,7 +52424,7 @@ countries = {
 		liturgical_language = classical_arabic_dialect
 		religious_school = naqshbandi_school
 		country_rank = rank_kingdom
-		capital = samarkand
+		capital = bukhara
 	}
 
 	MGE = { #The Mongol Empire
@@ -52260,10 +52490,15 @@ countries = {
 			heir_selection = cognatic_primogeniture
 			ruler = random
 			laws = {
-				sharia_law = hanafi_policy
+				sharia_law = maliki_policy
 			}
-			centralization_vs_decentralization = 100
+			
+			traditionalist_vs_innovative = 50
+			centralization_vs_decentralization = 90
+			offensive_vs_defensive = 40
 			land_vs_naval = -100
+			sinicized_vs_unsinicized = -35
+			mysticism_vs_jurisprudence = 50
 		
 			reforms = {
 				agricultural_cultivation
@@ -52276,8 +52511,7 @@ countries = {
 			pamiri_culture
 		}
 
-		religious_school = hanafi_school
-		government = { mysticism_vs_jurisprudence = -15 }
+		religious_school = maliki_school
 
 		country_rank = rank_kingdom
 		capital = yarkand
@@ -54592,7 +54826,7 @@ countries = {
 			batak_culture
 		}
 
-		capital = temasek
+		capital = malacca
 		government = {
 			ruler = random
 			centralization_vs_decentralization = 70
@@ -54684,13 +54918,20 @@ countries = {
 
 	TNG = { #Toungoo
 		own_control_core = {
-			taungoo
-			thandaunggyi
+			taungoo thandaunggyi #Taungoo			
+		}
+		
+		our_cores_conquered_by_others = {
+			lewe pyinmana nwamethin #Taungoo
 		}
 
 		include = "south_east_asia_monarchy_no_coast"
 		government = {
 			ruler = tng_kayin_ba
+		}
+
+		accepted_cultures = {
+			karen_culture
 		}
 
 		capital = taungoo
@@ -55294,7 +55535,7 @@ countries = {
 	SGN = { #Sonargaon
 		own_control_core = {
 			sonargaon bikrampur chandpur kobirhat kumilla savar
-			khalifatabad barguna chandrawip fathabad kotalipara qasba shahbazpur
+			fathabad qasba shahbazpur #Khalifatabad
 			mymensingh atiya belabo kapasia muktagacha tarakanda
 		}
 
@@ -55350,11 +55591,15 @@ countries = {
 			satgaon pandua baragram bardhaman dubrajpur ilambazar
 			khulna east_sundarban husaynabad jaynagar kulpi west_sundarban
 			nadia chandrabad jessore jhenaidah maheshpur pipli sreepur
+			madaran bankura bishnupur #Bishnupur
+			khalifatabad kotalipara chandrawip barguna #Khalifatabad
 		}
 
 		include = "indian_muslim_monarchy"
 		court_language = persian_language
 		religious_school = hanafi_school
+		country_rank = rank_duchy
+		
 		government = { mysticism_vs_jurisprudence = -15 }
 		
 		government = {
@@ -55369,7 +55614,7 @@ countries = {
 			}
 		}
 
-		tolerated_cultures = {
+		accepted_cultures = {
 			santal_culture
 		}
 
@@ -55550,7 +55795,7 @@ countries = {
 
 	BHP = { #Mallabhum
 		own_control_core = {
-			bishnupur bankura barabhum chandrakona hijli madaran raipur_bengal tamluk
+			barabhum hijli raipur_bengal chandrakona tamluk 
 			ghatsila chaibasa kharsawan
 		}
 
@@ -55566,7 +55811,7 @@ countries = {
 			munda_culture
 		}
 
-		capital = bishnupur
+		capital = raipur_bengal
 	}
 
 	CER = { #Chero
@@ -55590,7 +55835,7 @@ countries = {
 
 	UJJ = { #Ujjainiya
 		own_control_core = {
-			buxar arrah ballia jaund sasaram
+			buxar arrah jaund sasaram
 		}
 
 		include = "expl_india_hindu"
@@ -55620,7 +55865,7 @@ countries = {
 			bagheli
 		}
 
-		capital = palamau
+		capital = ramkola
 		government = {
 			ruler = random
 		}
@@ -55684,7 +55929,7 @@ countries = {
 			dehlavi
 		}
 
-		capital = chandpur_garhi
+		capital = srinagar_garhwal
 	}
 
 	KHS = { #Khasa
@@ -55703,7 +55948,7 @@ countries = {
 			tharu_culture
 		}
 
-		capital = sinja
+		capital = jagatipur
 		government = {
 			ruler = pur_punyamalla
 		}
@@ -56358,7 +56603,7 @@ countries = {
 		}
 
 		country_rank = rank_duchy
-		capital = kawali
+		capital = sunda_kelapa
 	}
 
 	JMB = { #Jambi/Melayu/Dharmasraya
@@ -58011,51 +58256,45 @@ countries = {
 
 	#Waigeo
 	WGE = { 
-		type = pop
-
-		add_pops_from_locations = {
+		own_control_core = {
 			waigeo
 		}
 		include = "expl_indonesia"
-		starting_technology_level = 0
-		include = "asia_tribe"
+		include = "indonesia_limited_monarchy"
+		starting_technology_level = 3
 		government = {
-			type = tribe
-			heir_selection = tribal_oldest_male
+			type = monarchy
+			heir_selection = cognatic_primogeniture
 			ruler = random
 		}
 	}
 
 	#Maden
 	MAD = { 
-		type = pop
-
-		add_pops_from_locations = {
+		own_control_core = {
 			maden
 		}
 		include = "expl_indonesia"
-		starting_technology_level = 0
-		include = "asia_tribe"
+		include = "indonesia_limited_monarchy"
+		starting_technology_level = 3
 		government = {
-			type = tribe
-			heir_selection = tribal_oldest_male
+			type = monarchy
+			heir_selection = cognatic_primogeniture
 			ruler = random
 		}
 	}
 
 	#Misool
 	MSL = { 
-		type = pop
-
-		add_pops_from_locations = {
+		own_control_core = {
 			misool
 		}
 		include = "expl_indonesia"
-		starting_technology_level = 0
-		include = "asia_tribe"
+		include = "indonesia_limited_monarchy"
+		starting_technology_level = 3
 		government = {
-			type = tribe
-			heir_selection = tribal_oldest_male
+			type = monarchy
+			heir_selection = cognatic_primogeniture
 			ruler = random
 		}
 	}
@@ -62132,6 +62371,7 @@ countries = {
 		own_control_core = {
 			merv barkdiz pandjih #Merv
 			qasr_ahnaf #Badgis
+			amol_turkmenabad #Amol
 		}
 
 		include = "expl_middle_east"
@@ -62145,6 +62385,10 @@ countries = {
 			laws = {
 				sharia_law = shafii_policy
 			}
+		}
+
+		accepted_cultures = {
+			khorezmian_culture
 		}
 
 		religious_school = shafii_school
@@ -62362,7 +62606,8 @@ countries = {
 		
 		own_control_core = {
 			hissar aiwanj basand darzanji denov qubodijon shuman termez #Hissar
-			ayni #Samarkand
+			ayni panjakent #Samarkand
+			kelif #Kelif
 		}
 
 		starting_technology_level = 3
@@ -62389,6 +62634,7 @@ countries = {
 			arkhan kunduz ashkamesh baghlan taleqan #Kunduz
 			andarab #Barmyan
 			ghormach #Badgis
+			kerki khoja_idat_kala #Kelif
 		}
 
 		starting_technology_level = 3
@@ -62401,6 +62647,10 @@ countries = {
 			heir_selection = cognatic_primogeniture
 			
 			land_vs_naval = -100
+		}
+	
+		accepted_cultures = {
+			khorezmian_culture
 		}
 	
 		country_rank = rank_duchy
@@ -62515,15 +62765,14 @@ countries = {
 
 	BRL = { #Barlas
 		type = army
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			akhsisek guzor kerki khoja_idat_kala nasaf navidakh kelif #Kelif
-			amol_turkmenabad
 			chiroqchi firabr kish_shahrisabz koson muborak paikend
-			samarkand dimishk panjakent
+			samarkand dimishk #Samarkand
 			bukhara tim_samarkand
 			darganata hazarasp
 			alat daya_kathyn paykend vardanzi
-			nurota ishtixon karmana primkent yangirabod
+			nurota ishtixon karmana yangirabod
 		}
 
 		include = "expl_middle_east"
