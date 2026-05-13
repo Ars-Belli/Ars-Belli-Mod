@@ -15,6 +15,23 @@ if ([string]::IsNullOrWhiteSpace($version)) {
     throw "Could not read 'version' from $metadataPath"
 }
 
+# Bump trailing integer in version (e.g. "0.0-alpha.10" -> "0.0-alpha.11") BEFORE archiving
+# so the produced ZIP and its embedded metadata.json carry the new version.
+if ($version -match '^(.*?)(\d+)$') {
+    $newVersion = $matches[1] + ([int]$matches[2] + 1)
+    $rawJson = Get-Content -Raw -Path $metadataPath
+    $pattern = '("version"\s*:\s*")' + [regex]::Escape($version) + '(")'
+    $updatedJson = [regex]::Replace($rawJson, $pattern, ('${1}' + $newVersion + '${2}'))
+    if ($updatedJson -eq $rawJson) {
+        throw "Version string '$version' not found in metadata.json - aborting before archive."
+    }
+    [System.IO.File]::WriteAllText($metadataPath, $updatedJson, (New-Object System.Text.UTF8Encoding($false)))
+    Write-Host "Bumped version: $version -> $newVersion"
+    $version = $newVersion
+} else {
+    throw "Version '$version' does not end in a number - aborting before archive."
+}
+
 $zipName = "ArsBelliMod_$version.zip"
 $zipPath = Join-Path $sourceDir $zipName
 
@@ -82,19 +99,3 @@ Write-Host "Cleaning up staging..."
 Remove-Item -Path $stagingDir -Recurse -Force
 
 Write-Host "Release ZIP created at $zipPath"
-
-# Bump trailing integer in version (e.g. "0.0-alpha.10" -> "0.0-alpha.11")
-if ($version -match '^(.*?)(\d+)$') {
-    $newVersion = $matches[1] + ([int]$matches[2] + 1)
-    $rawJson = Get-Content -Raw -Path $metadataPath
-    $pattern = '("version"\s*:\s*")' + [regex]::Escape($version) + '(")'
-    $updatedJson = [regex]::Replace($rawJson, $pattern, ('${1}' + $newVersion + '${2}'))
-    if ($updatedJson -eq $rawJson) {
-        Write-Warning "Version string not found in metadata.json - skipping bump."
-    } else {
-        [System.IO.File]::WriteAllText($metadataPath, $updatedJson, (New-Object System.Text.UTF8Encoding($false)))
-        Write-Host "Bumped version: $version -> $newVersion"
-    }
-} else {
-    Write-Warning "Version '$version' does not end in a number - skipping bump."
-}
