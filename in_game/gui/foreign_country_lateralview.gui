@@ -1321,22 +1321,84 @@ lateralview = {
  							# Ars Belli Foreign Diplo Limits
  							hbox = {
  								spacing = 4
- 								tooltip = "FOREIGN_DIPLO_LIMITS_TOOLTIP"
 
  								text_single = {
  									text = "FOREIGN_MP_ALLIANCE_POINTS"
  									using = Font_Size_Small
  									align = nobaseline
+ 									tooltipwidget = {
+ 										ContextualTooltipType = {
+ 											blockoverride "title_text" {
+ 												text = "AB_AP_PARTNERS_HEADER_FOREIGN"
+ 											}
+ 											blockoverride "tooltip_content" {
+ 												flowcontainer = {
+ 													direction = vertical
+ 													datamodel = "[Country.MakeScope.GetList('mp_ap_partners')]"
+ 													item = {
+ 														text_single = {
+ 															datacontext = "[Scope.GetCountry]"
+ 															text = "AB_DIPLO_PARTNER_ROW"
+ 															using = Font_Size_Small
+ 															align = left
+ 														}
+ 													}
+ 												}
+ 											}
+ 										}
+ 									}
  								}
  								text_single = {
  									text = "[Country.Custom('foreign_defensive_points_display')]"
  									using = Font_Size_Small
  									align = nobaseline
+ 									tooltipwidget = {
+ 										ContextualTooltipType = {
+ 											blockoverride "title_text" {
+ 												text = "AB_DP_PARTNERS_HEADER_FOREIGN"
+ 											}
+ 											blockoverride "tooltip_content" {
+ 												flowcontainer = {
+ 													direction = vertical
+ 													datamodel = "[Country.MakeScope.GetList('mp_dp_partners')]"
+ 													item = {
+ 														text_single = {
+ 															datacontext = "[Scope.GetCountry]"
+ 															text = "AB_DIPLO_PARTNER_ROW"
+ 															using = Font_Size_Small
+ 															align = left
+ 														}
+ 													}
+ 												}
+ 											}
+ 										}
+ 									}
  								}
  								text_single = {
  									text = "FOREIGN_MP_GUARANTEE_POINTS"
  									using = Font_Size_Small
  									align = nobaseline
+ 									tooltipwidget = {
+ 										ContextualTooltipType = {
+ 											blockoverride "title_text" {
+ 												text = "AB_GP_PARTNERS_HEADER_FOREIGN"
+ 											}
+ 											blockoverride "tooltip_content" {
+ 												flowcontainer = {
+ 													direction = vertical
+ 													datamodel = "[Country.MakeScope.GetList('mp_gp_partners')]"
+ 													item = {
+ 														text_single = {
+ 															datacontext = "[Scope.GetCountry]"
+ 															text = "AB_DIPLO_PARTNER_ROW"
+ 															using = Font_Size_Small
+ 															align = left
+ 														}
+ 													}
+ 												}
+ 											}
+ 										}
+ 									}
  								}
  							}
  						}

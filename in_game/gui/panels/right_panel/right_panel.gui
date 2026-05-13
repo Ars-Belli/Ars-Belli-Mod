@@ -51,8 +51,6 @@ types RightPanelTypes
 					spacing = 5
 					parentanchor = vcenter
 
-					tooltip = "ALLIANCE_LIMIT_TOPBAR_TOOLTIP"
-
 					# text_single = {
 					#	text = "[GetPlayer.Custom('mp_calc_counter_display')]"
 					#	using = Font_Size_Small
@@ -66,6 +64,27 @@ types RightPanelTypes
 						align = left
 						autoresize = yes
 						margin = { 5 -4 }
+						tooltipwidget = {
+							ContextualTooltipType = {
+								blockoverride "title_text" {
+									text = "AB_AP_PARTNERS_HEADER"
+								}
+								blockoverride "tooltip_content" {
+									flowcontainer = {
+										direction = vertical
+										datamodel = "[GetPlayer.MakeScope.GetList('mp_ap_partners')]"
+										item = {
+											text_single = {
+												datacontext = "[Scope.GetCountry]"
+												text = "AB_DIPLO_PARTNER_ROW"
+												using = Font_Size_Small
+												align = left
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 					text_single = {
 						text = "[GetPlayer.Custom('defensive_points_display')]"
@@ -73,6 +92,27 @@ types RightPanelTypes
 						align = left
 						autoresize = yes
 						margin = { 5 -4 }
+						tooltipwidget = {
+							ContextualTooltipType = {
+								blockoverride "title_text" {
+									text = "AB_DP_PARTNERS_HEADER"
+								}
+								blockoverride "tooltip_content" {
+									flowcontainer = {
+										direction = vertical
+										datamodel = "[GetPlayer.MakeScope.GetList('mp_dp_partners')]"
+										item = {
+											text_single = {
+												datacontext = "[Scope.GetCountry]"
+												text = "AB_DIPLO_PARTNER_ROW"
+												using = Font_Size_Small
+												align = left
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 					text_single = {
 						text = "[GetPlayer.Custom('guarantee_points_display')]"
@@ -80,6 +120,27 @@ types RightPanelTypes
 						align = left
 						autoresize = yes
 						margin = { 5 -4 }
+						tooltipwidget = {
+							ContextualTooltipType = {
+								blockoverride "title_text" {
+									text = "AB_GP_PARTNERS_HEADER"
+								}
+								blockoverride "tooltip_content" {
+									flowcontainer = {
+										direction = vertical
+										datamodel = "[GetPlayer.MakeScope.GetList('mp_gp_partners')]"
+										item = {
+											text_single = {
+												datacontext = "[Scope.GetCountry]"
+												text = "AB_DIPLO_PARTNER_ROW"
+												using = Font_Size_Small
+												align = left
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 
@@ -278,6 +339,111 @@ types RightPanelTypes
 									layoutpolicy_horizontal = expanding
 									spacing = 8
 
+									# --- Your AP Partners section ---
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 2
+										text_single = {
+											text = "AB_AP_PARTNERS_HEADER"
+											using = Font_Type_Headers
+										}
+										dynamicgridbox = {
+											layoutpolicy_horizontal = expanding
+											flipdirection = yes
+											datamodel_wrap = 1
+											datamodel = "[GetPlayer.MakeScope.GetList('mp_ap_partners')]"
+											item = {
+												button = {
+													datacontext = "[Scope.GetCountry]"
+													layoutpolicy_horizontal = expanding
+													size = { -1 22 }
+													onclick = "[OpenDiplomacy(Country.Self)]"
+													tooltipwidget = {
+														using = CountryTooltip
+													}
+
+													text_single = {
+														text = "AB_DIPLO_PARTNER_ROW"
+														align = left|nobaseline
+														layoutpolicy_horizontal = expanding
+														margin = { 4 0 }
+														using = Font_Size_Small
+													}
+												}
+											}
+										}
+									}
+
+									# --- Your DP Partners section ---
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 2
+										text_single = {
+											text = "AB_DP_PARTNERS_HEADER"
+											using = Font_Type_Headers
+										}
+										dynamicgridbox = {
+											layoutpolicy_horizontal = expanding
+											flipdirection = yes
+											datamodel_wrap = 1
+											datamodel = "[GetPlayer.MakeScope.GetList('mp_dp_partners')]"
+											item = {
+												button = {
+													datacontext = "[Scope.GetCountry]"
+													layoutpolicy_horizontal = expanding
+													size = { -1 22 }
+													onclick = "[OpenDiplomacy(Country.Self)]"
+													tooltipwidget = {
+														using = CountryTooltip
+													}
+
+													text_single = {
+														text = "AB_DIPLO_PARTNER_ROW"
+														align = left|nobaseline
+														layoutpolicy_horizontal = expanding
+														margin = { 4 0 }
+														using = Font_Size_Small
+													}
+												}
+											}
+										}
+									}
+
+									# --- Your GP Partners section ---
+									vbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 2
+										text_single = {
+											text = "AB_GP_PARTNERS_HEADER"
+											using = Font_Type_Headers
+										}
+										dynamicgridbox = {
+											layoutpolicy_horizontal = expanding
+											flipdirection = yes
+											datamodel_wrap = 1
+											datamodel = "[GetPlayer.MakeScope.GetList('mp_gp_partners')]"
+											item = {
+												button = {
+													datacontext = "[Scope.GetCountry]"
+													layoutpolicy_horizontal = expanding
+													size = { -1 22 }
+													onclick = "[OpenDiplomacy(Country.Self)]"
+													tooltipwidget = {
+														using = CountryTooltip
+													}
+
+													text_single = {
+														text = "AB_DIPLO_PARTNER_ROW"
+														align = left|nobaseline
+														layoutpolicy_horizontal = expanding
+														margin = { 4 0 }
+														using = Font_Size_Small
+													}
+												}
+											}
+										}
+									}
+
 									# --- Great Power section ---
 									vbox = {
 										layoutpolicy_horizontal = expanding
@@ -452,6 +618,7 @@ types RightPanelTypes
 											}
 										}
 									}
+
 								}
 							}
 						}

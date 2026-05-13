@@ -466,6 +466,9 @@ mp_limits_calculate_diplo_weights = {
 		set_variable = { name = mp_dp_weight value = 0 }
 		set_variable = { name = mp_gp_weight value = 0 }
 		clear_variable_list = mp_dp_mates_buf
+		clear_variable_list = mp_ap_partners
+		clear_variable_list = mp_dp_partners
+		clear_variable_list = mp_gp_partners
 
 		# 1. Alliance partners (alliance > defensive league / PU for dedup)
 		every_country = {
@@ -480,6 +483,10 @@ mp_limits_calculate_diplo_weights = {
 			scope:mp_dw_p = {
 				add_to_variable_list = {
 					name = mp_dp_mates_buf
+					target = scope:mp_dw_mate
+				}
+				add_to_variable_list = {
+					name = mp_ap_partners
 					target = scope:mp_dw_mate
 				}
 				change_variable = {
@@ -509,6 +516,10 @@ mp_limits_calculate_diplo_weights = {
 						}
 						add_to_variable_list = {
 							name = mp_dp_mates_buf
+							target = scope:mp_dw_mate
+						}
+						add_to_variable_list = {
+							name = mp_dp_partners
 							target = scope:mp_dw_mate
 						}
 						change_variable = {
@@ -542,6 +553,10 @@ mp_limits_calculate_diplo_weights = {
 							name = mp_dp_mates_buf
 							target = scope:mp_dw_mate
 						}
+						add_to_variable_list = {
+							name = mp_dp_partners
+							target = scope:mp_dw_mate
+						}
 						change_variable = {
 							name = mp_dp_weight
 							add = { value = "scope:mp_dw_mate.country_slot_weight" }
@@ -562,6 +577,10 @@ mp_limits_calculate_diplo_weights = {
 			}
 			save_temporary_scope_as = mp_dw_mate
 			scope:mp_dw_p = {
+				add_to_variable_list = {
+					name = mp_gp_partners
+					target = scope:mp_dw_mate
+				}
 				change_variable = {
 					name = mp_gp_weight
 					add = { value = "scope:mp_dw_mate.country_slot_weight" }
