@@ -29,6 +29,13 @@
 			add_legitimacy = legitimacy_extreme_penalty
 
 			union ?= {
+				every_international_organization_member = {
+					limit = { NOT = { this = scope:actor } }
+					add_truce_with = {
+						target = scope:actor
+						mutual = yes
+					}
+				}
 				remove_country_from_international_organization = scope:actor
 			}
 
