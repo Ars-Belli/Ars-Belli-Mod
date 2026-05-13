@@ -1,0 +1,387 @@
+﻿rise_of_timur = {
+	monthly_spawn_chance = monthly_spawn_chance_unique
+	hint_tag = hint_rise_of_timur
+	can_start = {
+		has_enabled_situation_trigger = { type = rise_of_timur }
+		country_exists = c:TIM
+		has_global_variable = timur_character
+		global_var:timur_character = { is_alive = yes }
+	}	
+	can_end = {
+		rise_of_timur_end_conditions = yes
+	}	
+	visible = {
+		OR = {
+			tag = TIM
+			is_neighbor_of = c:TIM
+			is_subject_of = c:TIM
+			is_enemy_of = c:TIM
+			is_rival_of = c:TIM
+			capital ?= {
+				OR = {
+					sub_continent = sub_continent:central_asia
+					sub_continent = sub_continent:middle_east
+					sub_continent = sub_continent:south_asia
+				}
+			}
+		}
+	}
+	on_start = {
+		set_variable = {
+			name = timur_battle_kill_counter
+			value = 0
+		}
+		set_variable = {
+			name = timur_total_kill_counter
+			value = 0
+		}
+		set_variable = {
+			name = rise_of_the_timur_event_cooldown
+			value = 0
+		}
+		set_variable = {
+			name = rise_of_the_timur_unique_event_cooldown
+			value = 0
+		}
+		every_country = {
+			limit = {
+				NOT = { tag = TIM }
+				OR = {
+					is_neighbor_of = c:TIM
+					is_subject_of = c:TIM
+					is_enemy_of = c:TIM
+					is_rival_of = c:TIM
+					capital.sub_continent = sub_continent:central_asia
+					capital.sub_continent = sub_continent:middle_east
+					capital.sub_continent = sub_continent:south_asia
+				}
+			}		
+			trigger_event_non_silently = rise_of_timur.2
+		}
+		c:TIM = {
+			add_country_modifier = { modifier = rise_of_timur_impact years = -1 mode = add }
+			trigger_event_non_silently = rise_of_timur.1
+		}
+	}
+	on_monthly = {
+		change_variable = { name = rise_of_the_timur_event_cooldown add = 1 }
+		change_variable = { name = rise_of_the_timur_unique_event_cooldown add = 1 }
+		if = {
+			limit = { var:rise_of_the_timur_event_cooldown > 10 }
+			set_variable = { name = rise_of_the_timur_event_cooldown value = 1 } 
+			random_list =  {
+				# Declare War on a much weaker neighbor for free
+				20 = {
+					trigger = {
+						c:TIM ?= {
+							has_ruler = yes
+							months_since_war > 12
+							at_war = no
+							has_ruler = yes
+							any_neighbor_country = {
+								NOT = { has_truce_with = c:TIM }
+								NOT = { has_target_casus_belli_on_us = c:TIM }
+								NOT = { is_allied_with = { target = c:TIM } }
+								NOT = { is_subject_of = c:TIM }
+								is_rebel_country = no
+								can_declare_war_on = c:TIM
+							}
+						}
+					}
+					c:TIM ?= {
+						trigger_event_non_silently = rise_of_timur.100
+					}
+				}
+				# Reduce AE / War Exhaustion 
+				20 = {
+					trigger = {
+						c:TIM ?= {
+							has_ruler = yes
+							OR = {
+								war_exhaustion >= war_exhaustion_mild_penalty
+								has_countries_with_timed_antagonism = yes
+							}
+						}
+					}
+					c:TIM ?= {
+						trigger_event_non_silently = rise_of_timur.101
+					}
+				}
+				# Influx of more manpower
+				20 = {
+					trigger = {
+						c:TIM ?= {
+							has_ruler = yes
+							war_exhaustion < HIGH_WAR_EXHAUSTION
+							manpower_percentage < 1
+							monthly_manpower > 0
+						}
+					}
+					c:TIM ?= {
+						trigger_event_non_silently = rise_of_timur.102
+					}
+				}
+				# Nothing
+				20 = {
+				}
+			}
+		}
+		if = {
+			limit = { var:rise_of_the_timur_unique_event_cooldown > 20 }
+			set_variable = { name = rise_of_the_timur_unique_event_cooldown value = 1 } 
+			c:TIM ?= {
+				if = {
+					limit = {
+						can_fire_situation_event = {
+							situation = root
+							event = rot_had_glh_alliance
+						}
+						can_fire_situation_event = {
+							situation = root
+							event = rot_had_glh_alliance_break
+						}
+						country_exists = c:GLH
+						has_ruler = yes
+						military_strength < c:GLH.military_strength
+						NOT = { is_allied_with = { target = c:GLH } }
+					}
+					trigger_event_non_silently = rise_of_timur.1000
+				}
+				else_if = {
+					limit = {
+						has_fired_situation_event = {
+							situation = root
+							event = rot_had_glh_alliance
+						}
+						can_fire_situation_event = {
+							situation = root
+							event = rot_had_glh_alliance_break
+						}
+						has_ruler = yes
+						country_exists = c:GLH
+						is_allied_with = { target = c:GLH }
+						military_strength > c:GLH.military_strength
+					}
+					trigger_event_non_silently = rise_of_timur.1010
+				}
+				else_if = {
+					limit = {
+						can_fire_situation_event = {
+							situation = root
+							event = rot_claim_turkoman
+						}
+						region:anatolia_region = {
+							any_location_in_region = {
+								owner ?= {
+									OR = {
+										tag = TIM
+										is_subject_of = c:TIM
+									}
+								}
+							}
+						}
+					}
+					trigger_event_non_silently = rise_of_timur.1020
+				}
+				else_if = {
+					limit = {
+						can_fire_situation_event = {
+							situation = root
+							event = rot_prepare_conquest_of_china
+						}
+						country_exists = c:CHI
+						is_neighbor_of = c:CHI
+						OR = {
+							is_situation_active = situation:red_turban_rebellions
+							c:CHI = { has_variable = rtr_is_new_china }
+						}
+					}
+					trigger_event_non_silently = rise_of_timur.12
+				}
+				if = {
+					limit = {
+						can_fire_situation_event = {
+							situation = root
+							event = rot_right_to_conquer
+						}
+					}
+					trigger_event_non_silently = rise_of_timur.13
+				}
+				if = {
+					limit = {
+						can_fire_situation_event = {
+							situation = root
+							event = rot_prepare_conquest_of_persia
+						}
+						country_exists = c:TIM
+						region:persia_region = {
+							any_location_in_region = { owner ?= c:TIM }
+						}
+					}
+					trigger_event_non_silently = rise_of_timur.14
+				}
+				if = {
+					limit = {
+						can_fire_situation_event = {
+							situation = root
+							event = rot_prepare_conquest_of_anatolia
+						}
+						country_exists = c:TIM
+						region:persia_region = {
+							any_location_in_region = {
+								owner ?= c:TIM
+								percent >= 0.7
+							}
+						}
+						any_neighbor_country = {
+							capital = {
+								region = region:anatolia_region
+							}
+						}
+					}
+					trigger_event_non_silently = rise_of_timur.15
+				}
+				else_if = {
+					limit = {
+						has_fired_situation_event = {
+							situation = root
+							event = rot_claim_turkoman
+						}
+						can_fire_situation_event = {
+							situation = root
+							event = rot_tim_in_anatolia
+						}
+						any_neighbor_country = {
+							OR = {
+								AND = {
+									situation:rise_of_the_ottomans = {
+										situation_is_active = yes
+										has_variable = strongest_beylik_variable
+										var:strongest_beylik_variable = PREV
+									}
+								}
+								has_variable = rise_of_the_ottomans_winner_variable
+							}
+						}
+					}
+					c:TIM ?= { trigger_event_non_silently = rise_of_timur.1030 }
+				}
+			}
+		}
+	}
+	on_ended = {
+		remove_variable = rot_conquest_ambition
+		c:TIM ?= { 
+			remove_country_modifier = rise_of_timur_impact
+			if = {
+				limit = { has_timurids_stagnate = yes }
+				trigger_event_non_silently = rise_of_timur.7
+			}
+		}
+		every_country = {
+			limit = {
+				this != c:TIM
+				OR = {
+					is_neighbor_of = c:TIM
+					is_subject_of = c:TIM
+					is_enemy_of = c:TIM
+					is_rival_of = c:TIM
+					capital.sub_continent = sub_continent:central_asia
+					capital.sub_continent = sub_continent:middle_east
+					capital.sub_continent = sub_continent:south_asia
+				}
+			}
+			trigger_event_silently = rise_of_timur.8
+		}
+		remove_global_variable = timur_character
+		c:TIM ?= {
+			every_owned_location = {
+				limit = { has_location_modifier = rot_timurs_core_region }
+				remove_location_modifier = rot_timurs_core_region
+			}
+		}
+	}
+	tooltip = {
+		if = {
+			limit = { owner = c:TIM }
+			custom_tooltip = ROT_TIMURIDS
+		}
+		else_if = {
+			limit = { owner ?= { is_allied_with = { target = c:TIM } }}
+			custom_tooltip = ROT_TIMURS_ALLIES
+		}
+		else_if = {
+			limit = { owner ?= { is_subject_of = c:TIM }}
+			custom_tooltip = ROT_TIMURS_SUBJECTS
+		}
+		else_if = {
+			limit = { owner ?= { is_at_war_with = c:TIM } }
+			custom_tooltip = ROT_CURRENTLY_INVADED
+		}
+		else_if = {
+			limit = { owner ?= { has_target_casus_belli_on_us = c:TIM } }
+			custom_tooltip = ROT_FUTURE_INVASION_TARGET
+		}
+	}
+	map_color = {
+		if = {
+			limit = { owner ?= c:TIM }
+			value = map_TIM
+		}
+		else_if = {
+			limit = {
+				OR = {
+					owner ?= { is_allied_with = { target = c:TIM } }
+					owner ?= { is_subject_of = c:TIM }
+				}
+			}
+			value = blue
+		}
+		else_if = {
+			limit = { owner ?= { is_at_war_with = c:TIM } }
+			value = map_serbian
+		}
+		else_if = {
+			limit = { owner ?= { has_target_casus_belli_on_us = c:TIM } }
+			value = orange
+		}
+		else = {
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+	secondary_map_color = {
+		if = {
+			limit = {
+				scope:target = { has_variable = rot_conquest_ambition }
+				region = scope:target.var:rot_conquest_ambition
+			}
+			value = purple
+		}
+	}
+	
+	legend_key = { 
+		desc = "TIM" #TIMMY!
+		color = map_TIM
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "game_concept_ally" #Until loc fix
+		color = blue
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "game_concept_rival_enemy"
+		color = map_serbian
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "game_concept_casus_belli"
+		color = orange
+		require_color_on_map = yes
+	}
+
+	legend_key = {
+		desc = "ROT_CONQUEST_AMBITION"
+		color = purple
+	}
+}

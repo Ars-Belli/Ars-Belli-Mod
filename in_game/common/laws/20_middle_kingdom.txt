@@ -1,0 +1,2252 @@
+﻿civil_registration = {
+	custom_tags = { forbids_no_policy }
+	type = international_organization
+	requires_vote = no
+	law_category = socioeconomic
+	potential = {
+		international_organization_type = international_organization_type:middle_kingdom
+	}
+	allow = {
+		has_variable = celestial_authority
+		var:celestial_authority > celestial_authority_very_strong_bonus
+		leader_country ?= { government_power >= 25 }
+		leader_country ?= {
+			gold >= {
+				value = this.monthly_income_trade_and_tax
+				multiply = {
+					value = 6
+					add = {
+						value = 1
+						multiply = {
+							value = international_organization:middle_kingdom.total_members
+							divide = 10
+						}
+					}
+				}
+				max = 100000
+			}
+		}
+	}
+	locked = {
+	}
+
+	delegated_civil_registration_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						} 
+						min = -100000 
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			monthly_legitimacy = 0.1
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			loyalty_to_overlord = 10
+			payment_to_overlord_modifier = -0.1
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			loyalty_to_overlord = 5
+			payment_to_overlord_modifier = -0.05
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+
+	centralized_civil_registration_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			global_distance_from_capital_speed_propagation = 0.1
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			loyalty_to_overlord = -10
+			global_monthly_control_decline = -0.002
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			loyalty_to_overlord = -5
+			global_monthly_control_decline = -0.001
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+}
+
+tax_base_system = {
+	custom_tags = { forbids_no_policy }
+	type = international_organization
+	requires_vote = no
+	law_category = socioeconomic
+	potential = {
+		international_organization_type = international_organization_type:middle_kingdom
+		current_age = age_4_reformation
+	}
+	allow = {
+		has_variable = celestial_authority
+		var:celestial_authority > celestial_authority_very_strong_bonus
+		leader_country ?= { government_power >= 25 }
+		leader_country ?= {
+			has_reform = government_reform:single_whip_law
+			gold >= {
+				value = this.monthly_income_trade_and_tax
+				multiply = {
+					value = 6
+					add = {
+						value = 1
+						multiply = {
+							value = international_organization:middle_kingdom.total_members
+							divide = 10
+						}
+					}
+				}
+				max = 100000
+			}
+		}
+		leader_country.capital.market ?= {
+			NOT = { is_import_banned = goods:silver }
+		}
+	}
+	locked = {
+	}
+	rice_based_tax = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			selling_efficiency = small_trade_efficiency_bonus
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			global_monthly_food_modifier = 0.2
+			tax_income_efficiency = small_tax_income_efficiency_bonus
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			global_monthly_food_modifier = 0.1
+			tax_income_efficiency = tiny_tax_income_efficiency_bonus
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	single_whip_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			allow_tribute_in_silver = yes
+			country_cabinet_efficiency = 0.05
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			global_silver_output_modifier = 0.2
+			loyalty_to_overlord = 10
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			global_silver_output_modifier = 0.1
+			loyalty_to_overlord = 5
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+}
+
+provincial_governorship = {
+	custom_tags = { forbids_no_policy }
+	type = international_organization
+	requires_vote = no
+	law_category = administrative
+	potential = {
+		international_organization_type = international_organization_type:middle_kingdom
+	}
+	allow = {
+		has_variable = celestial_authority
+		var:celestial_authority > celestial_authority_very_strong_bonus
+		leader_country ?= { government_power >= 25 }
+		leader_country ?= {
+			gold >= {
+				value = this.monthly_income_trade_and_tax
+				multiply = {
+					value = 6
+					add = {
+						value = 1
+						multiply = {
+							value = international_organization:middle_kingdom.total_members
+							divide = 10
+						}
+					}
+				}
+				max = 100000
+			}
+		}
+	}
+	locked = {
+	}
+	curtailed_governors_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			court_spending_cost_modifier = -0.05
+			diplomatic_spending_cost = -0.01
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			country_cabinet_efficiency = 0.1
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			country_cabinet_efficiency = 0.05
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	established_provincial_governors = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			monthly_rebel_growth = -0.001
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			monthly_legitimacy = 0.1
+			loyalty_to_overlord = 5
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			monthly_legitimacy = 0.05
+			loyalty_to_overlord = 2
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	zongdu_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			global_distance_from_capital_speed_propagation = 0.1
+			scale = {
+				add = {
+					desc = zongdu_policy_scaling
+					value = produced_in_country:silver
+					divide = 200
+					max = 1
+					add = 1
+				}
+			}
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			global_monthly_prosperity = 0.001
+			loyalty_to_overlord = 10
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			global_monthly_prosperity = 0.0005
+			loyalty_to_overlord = 5
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	introduce_gaituguiliu_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+					custom_tooltip = unlock_gaituguiliu_tt
+				}
+			}
+		}
+		on_activate = {
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					custom_tooltip = unlock_gaituguiliu_tt
+				}
+			}
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			monthly_towards_sinicized = societal_value_monthly_move
+			loyalty_to_overlord = 10
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			monthly_towards_sinicized = societal_value_minor_monthly_move
+			loyalty_to_overlord = 5
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	lifan_yuan_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		potential = {
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					culture = { has_culture_group = culture_group:jurchen_group }
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			global_integration_speed_modifier = 0.20
+			diplomatic_reputation = diplomatic_reputation_weak_bonus
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			improve_relation_impact = 0.2
+			nobles_estate_target_satisfaction = small_permanent_target_satisfaction
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			improve_relation_impact = 0.1
+			nobles_estate_target_satisfaction = tiny_permanent_target_satisfaction
+		}
+	}
+}
+
+cefeng_tizhi = {
+	custom_tags = { forbids_no_policy }
+	type = international_organization
+	requires_vote = no
+	law_category = socioeconomic
+	potential = {
+		international_organization_type = international_organization_type:middle_kingdom
+	}
+	allow = {
+		has_variable = celestial_authority
+		var:celestial_authority > celestial_authority_very_strong_bonus
+		leader_country ?= { government_power >= 25 }
+		leader_country ?= {
+			gold >= {
+				value = this.monthly_income_trade_and_tax
+				multiply = {
+					value = 6
+					add = {
+						value = 1
+						multiply = {
+							value = international_organization:middle_kingdom.total_members
+							divide = 10
+						}
+					}
+				}
+				max = 100000
+			}
+		}
+		
+	}
+	locked = {
+	}
+	free_cefeng_tizhi_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			monthly_prestige = 0.1
+		}
+		country_modifier = {
+			#Celestial Governor Benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			loyalty_to_overlord = 10
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			loyalty_to_overlord = 5
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	codified_cefeng_tizhi_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			subject_loyalty = 10
+			may_convert_vassals_to_celestial_governors = yes
+		}
+		country_modifier = {
+			#Celestial Governor Benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			payment_to_overlord_modifier = 0.1
+			monthly_legitimacy = 0.1
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			payment_to_overlord_modifier = 0.05
+			monthly_legitimacy = 0.05
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+}
+
+keju_examination = {
+	custom_tags = { forbids_no_policy }
+	type = international_organization
+	requires_vote = no
+	law_category = socioeconomic
+	potential = {
+		international_organization_type = international_organization_type:middle_kingdom
+	}
+	allow = {
+		has_variable = celestial_authority
+		var:celestial_authority > celestial_authority_very_strong_bonus
+		leader_country ?= { government_power >= 25 }
+		leader_country ?= {
+			gold >= {
+				value = this.monthly_income_trade_and_tax
+				multiply = {
+					value = 6
+					add = {
+						value = 1
+						multiply = {
+							value = international_organization:middle_kingdom.total_members
+							divide = 10
+						}
+					}
+				}
+				max = 100000
+			}
+		}
+	}
+	locked = {
+	}
+	new_keju_formats_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		on_activate = {
+			international_organization:middle_kingdom = {
+				custom_tooltip = new_keju_formats_policy.tt
+			}
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			global_max_literacy = 5
+			loyalty_to_overlord = 10
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			global_max_literacy = 3
+			loyalty_to_overlord = 5
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	focus_on_classics = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			monthly_legitimacy = 0.1
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			research_speed_modifier = 0.1
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			research_speed_modifier = 0.05
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	direct_appointment = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		on_activate = {
+			custom_tooltip = direct_appointment.tt
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			monthly_prestige = 0.1
+			hire_advisor_cost_modifier = -0.25
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			stability_investment = small_stability_investment
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			stability_investment = tiny_stability_investment
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	military_examination = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		potential = {
+			international_organization_has_unlocked_policy_trigger = {
+				type = military_examination
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			government_size = 1
+			monthly_towards_quality = societal_value_minor_monthly_move
+			monthly_army_tradition = 0.05
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			monthly_army_tradition = 0.05
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			monthly_army_tradition = 0.02
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+}
+
+outwards_view = {
+	custom_tags = { forbids_no_policy }
+	type = international_organization
+	requires_vote = no
+	law_category = socioeconomic
+	potential = {
+		international_organization_type = international_organization_type:middle_kingdom
+	}
+	allow = {
+		has_variable = celestial_authority
+		var:celestial_authority > celestial_authority_very_strong_bonus
+		leader_country ?= { government_power >= 25 }
+		leader_country ?= {
+			gold >= {
+				value = this.monthly_income_trade_and_tax
+				multiply = {
+					value = 6
+					add = {
+						value = 1
+						multiply = {
+							value = international_organization:middle_kingdom.total_members
+							divide = 10
+						}
+					}
+				}
+				max = 100000
+			}
+		}
+	}
+	locked = {
+	}
+	allow_trade = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			selling_efficiency = small_trade_efficiency_bonus
+			sea_cost_on_distance_from_capital_when_maritime = -0.5
+		}
+		country_modifier = {
+		 	#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			global_merchant_capacity_modifier = 0.1
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			global_merchant_capacity_modifier = 0.05
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	haijin_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			global_maritime_presence_modifier = 0.2
+			import_efficiency = large_trade_efficiency_penalty
+			trade_isolation = yes
+			monthly_towards_inward =  societal_value_monthly_move
+			monthly_towards_mercantilism = societal_value_monthly_move
+		}
+		country_modifier = {
+		 	#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			global_maritime_presence_modifier = 0.2
+			monthly_towards_inward = societal_value_minor_monthly_move
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			global_maritime_presence_modifier = 0.1
+			monthly_towards_inward = societal_value_tiny_monthly_move
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+}
+
+tianxia = {
+	custom_tags = { forbids_no_policy }
+	type = international_organization
+	requires_vote = no
+	law_category = administrative
+	potential = {
+		international_organization_type = international_organization_type:middle_kingdom
+	}
+	allow = {
+		has_variable = celestial_authority
+		var:celestial_authority > celestial_authority_very_strong_bonus
+		leader_country ?= { government_power >= 25 }
+		leader_country ?= {
+			gold >= {
+				value = this.monthly_income_trade_and_tax
+				multiply = {
+					value = 6
+					add = {
+						value = 1
+						multiply = {
+							value = international_organization:middle_kingdom.total_members
+							divide = 10
+						}
+					}
+				}
+				max = 100000
+			}
+		}
+	}
+	expand_the_tianxia_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		on_activate = {
+			international_organization:middle_kingdom = {
+				custom_tooltip = {
+					text = chi_have_extra_celestial_governor_tt
+				}
+			}
+		}
+		on_deactivate = {
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			change_policy_cost_modifier = -0.2
+			loyalty_to_overlord = 10
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			change_policy_cost_modifier = -0.1
+			loyalty_to_overlord = 5
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	restrict_the_tianxia_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			country_cabinet_efficiency = 0.2
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			payment_to_overlord_modifier = -0.1
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			payment_to_overlord_modifier = -0.05
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+}
+
+jakun_gusa = {
+	custom_tags = { forbids_no_policy }
+	type = international_organization
+	requires_vote = no
+	law_category = military
+	potential = {
+		international_organization_type = international_organization_type:middle_kingdom
+		OR = {
+			current_age = age_4_reformation
+			current_age = age_5_absolutism 
+			current_age = age_6_revolutions
+		}
+	}
+	allow = {
+		has_variable = celestial_authority
+		var:celestial_authority > celestial_authority_very_strong_bonus
+		leader_country ?= { government_power >= 25 }
+		leader_country ?= {
+			gold >= {
+				value = this.monthly_income_trade_and_tax
+				multiply = {
+					value = 6
+					add = {
+						value = 1
+						multiply = {
+							value = international_organization:middle_kingdom.total_members
+							divide = 10
+						}
+					}
+				}
+				max = 100000
+			}
+			culture = { has_culture_group = culture_group:jurchen_group }
+			has_advance = the_eight_banners
+		}
+	}
+	locked = {
+	}
+	revise_the_jakun_gusa_policy = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			num_of_banner_cavalry = 6
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			army_heavy_cavalry_maintenance_cost_modifier = -0.2
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			army_light_cavalry_maintenance_cost_modifier = -0.1
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+	chinese_jakun_gusa = {
+		years = 2
+		on_pay_price = {
+			change_celestial_authority = { value = celestial_authority_very_strong_penalty }
+			international_organization:middle_kingdom = {
+				leader_country ?= {
+					add_government_power = government_power_ultimate_penalty 
+					add_gold = {
+						value = this.monthly_income_trade_and_tax
+						multiply = {
+							value = -6
+							add = {
+								value = -1
+								multiply = {
+									value = international_organization:middle_kingdom.total_members
+									divide = 10
+								}
+							}
+						}
+						min = -100000  
+					}
+				}
+			}
+		}
+		country_modifier = {
+			#Emperor benefits
+			potential_trigger = {
+				is_leader_of_international_organization = international_organization:middle_kingdom 
+			}
+			monthly_towards_sinicized = societal_value_monthly_move
+			global_manpower_modifier = 0.05
+		}
+		country_modifier = {
+			#Celestial Governor benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					country_has_special_status = {
+						type = special_status:celestial_governor
+						country = root
+					}
+				}
+			}
+			loyalty_to_overlord = 10
+		}
+		country_modifier = {
+			#Tributary benefits
+			potential_trigger = {
+				international_organization:middle_kingdom = {
+					NOT = {
+						country_has_special_status = {
+							type = special_status:celestial_governor
+							country = root
+						}
+					}
+				}
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+			loyalty_to_overlord = 5
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { scope:recipient = { international_organization_has_leader = yes } }
+				#opinion of the leader country
+				add = {
+					desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+					value = "opinion(scope:recipient.leader_country)"
+				}
+				#diplomatic rep of the leader country
+				add = {
+					desc = "IO_LEADER_DIP_REP"
+					value = scope:recipient.leader_country.modifier:diplomatic_reputation
+				}
+			}
+			else = {
+				add = {
+					desc = "VOTE_BASE_VALUE"
+					value = 20
+				}
+			}
+		}
+	}
+}
+
+six_ministries = { #Container for the strengthen_ministry action select_trigger
+	potential = {
+		always = no
+	}
+	ministry_of_rites = {
+		on_activate = {
+			custom_tooltip = countries_more_likely_to_accept_invite_to_sect_tt
+		}
+		country_modifier = { #Change if the actual modifier is changed
+			stability_investment = small_stability_investment
+			global_pop_conversion_speed_modifier = 0.1
+		}
+	}
+	ministry_of_personnel = {
+		on_activate = {
+			if = {
+				limit = { is_leader_of_international_organization = international_organization:middle_kingdom }
+				custom_tooltip = better_exams_results_tt
+			}
+		}
+		country_modifier = { #Change if the actual modifier is changed
+			government_size = 1
+			country_cabinet_efficiency = 0.2
+		}
+
+	}
+	ministry_of_revenue = {
+		on_activate = {
+			if = {
+				limit = { is_leader_of_international_organization = international_organization:middle_kingdom }
+				custom_tooltip = better_census_results_tt
+			}
+		}
+		country_modifier = { #Change if the actual modifier is changed
+			minting_income_factor = 0.1
+			minting_inflation_threshold = 0.01
+			global_estate_max_tax = 0.1
+		}
+	}
+	ministry_of_war = {
+		on_activate = {
+			if = {
+				limit = { is_leader_of_international_organization = international_organization:middle_kingdom }
+				custom_tooltip = better_reinforce_fortification_results_tt
+			}
+		}
+		country_modifier = { #Change if the actual modifier is changed
+			army_maintenance_efficiency = 0.2
+			fort_maintenance_cost = -0.1
+			army_logistics_distance_modifier = 0.1
+		}
+	}
+	ministry_of_justice = {
+		on_activate = {
+			if = {
+				limit = { is_leader_of_international_organization = international_organization:middle_kingdom }
+				custom_tooltip = better_warning_results_tt
+			}
+		}
+		country_modifier = { #Change if the actual modifier is changed
+			monthly_rebel_growth = -0.0005
+			pop_join_rebel_threshold = -0.05
+			pop_leave_rebels_threshold = -0.05
+		}
+	}
+	ministry_of_works = {
+		on_activate = {
+			if = {
+				limit = { is_leader_of_international_organization = international_organization:middle_kingdom }
+				custom_tooltip = better_infrastructure_works_results_tt
+			}
+		}
+		country_modifier = { #Change if the actual modifier is changed
+			build_gravel_road_cost_modifier = -0.1
+			build_paved_road_cost_modifier = -0.1
+			build_modern_road_cost_modifier = -0.1
+			build_railroad_cost_modifier = -0.1
+			global_build_buildings_cost = -0.1
+		}
+	}
+}
+
+#########
+#Decrees#
+#########
+
+middle_kingdom_decrees = {
+	potential = {
+		always = no
+	}
+
+	expand_palace_bureaucracy_decree = {
+		country_modifier = { #Change if the actual modifier is changed
+			country_cabinet_efficiency = 0.15
+			scale = {
+				value = 1
+				add = {
+					desc = middle_kingdom_members
+					value = {
+						add = international_organization:middle_kingdom.total_members
+						divide = 100
+					}
+				}
+				add = {
+					desc = MODIFIER_TYPE_NAME_country_cabinet_efficiency
+					value = modifier:country_cabinet_efficiency
+					divide = 2
+				}
+			}
+		}
+	}
+	conduct_population_census_decree = {
+		country_modifier = { #Change if the actual modifier is changed
+			tax_income_efficiency = large_tax_income_efficiency_bonus
+			global_monthly_control = 0.001
+			scale = {
+				value = 1
+				add = {
+					desc = middle_kingdom_members
+					value = {
+						add = international_organization:middle_kingdom.total_members
+						divide = 100
+					}
+				}
+				add = {
+					desc = MODIFIER_TYPE_NAME_country_cabinet_efficiency
+					value = modifier:country_cabinet_efficiency
+					divide = 2
+				}
+				if = {
+					limit = {
+						has_country_modifier = strengthened_ministry_of_revenue
+					}
+					add = {
+						desc = STATIC_MODIFIER_NAME_strengthened_ministry_of_revenue
+						value = 0.5
+					}
+				}
+			}
+		}
+	}
+	increase_tariff_control_decree = {
+		country_modifier = { #Change if the actual modifier is changed
+			selling_efficiency = small_trade_efficiency_bonus
+			scale = {
+				value = 1
+				add = {
+					desc = middle_kingdom_members
+					value = {
+						add = international_organization:middle_kingdom.total_members
+						divide = 100
+					}
+				}
+				add = {
+					desc = MODIFIER_TYPE_NAME_country_cabinet_efficiency
+					value = modifier:country_cabinet_efficiency
+					divide = 2
+				}
+			}
+		}
+	}
+	issue_great_warnings_decree = {
+		country_modifier = { #Change if the actual modifier is changed
+			revoke_privilege_cost_modifier = -0.1
+			global_estate_target_satisfaction = medium_permanent_target_satisfaction
+			scale = {
+				value = 1
+				add = {
+					desc = middle_kingdom_members
+					value = {
+						add = international_organization:middle_kingdom.total_members
+						divide = 100
+					}
+				}
+				add = {
+					desc = MODIFIER_TYPE_NAME_country_cabinet_efficiency
+					value = modifier:country_cabinet_efficiency
+					divide = 2
+				}
+				if = {
+					limit = {
+						has_country_modifier = strengthened_ministry_of_justice
+					}
+					add = {
+						desc = STATIC_MODIFIER_NAME_strengthened_ministry_of_justice
+						value = 0.1
+					}
+				}
+			}
+		}
+	}
+	commence_infrastructure_works_decree = {
+		country_modifier = { #Change if the actual modifier is changed
+			global_road_building_time = -0.05
+			build_gravel_road_cost_modifier = -0.15
+			build_paved_road_cost_modifier = -0.15
+			build_modern_road_cost_modifier = -0.15
+			scale = {
+				value = 1
+				add = {
+					value = {
+						desc = middle_kingdom_members
+						add = international_organization:middle_kingdom.total_members
+						divide = 100
+					}
+				}
+				add = {
+					desc = MODIFIER_TYPE_NAME_country_cabinet_efficiency
+					value = modifier:country_cabinet_efficiency
+					divide = 2
+				}
+				if = {
+					limit = {
+						has_country_modifier = strengthened_ministry_of_works
+					}
+					add = {
+						desc = STATIC_MODIFIER_NAME_strengthened_ministry_of_works
+						value = 0.1
+					}
+				}
+			}
+		}
+	}
+	reinforce_fortifications_decree = {
+		country_modifier = { #Change if the actual modifier is changed
+			global_fort_build_buildings_cost = -0.1
+			scale = {
+				value = 1
+				add = {
+					value = {
+						desc = middle_kingdom_members
+						add = international_organization:middle_kingdom.total_members
+						divide = 100
+					}
+				}
+				add = {
+					desc = MODIFIER_TYPE_NAME_country_cabinet_efficiency
+					value = modifier:country_cabinet_efficiency
+					divide = 2
+				}
+				if = {
+					limit = {
+						has_country_modifier = strengthened_ministry_of_war
+					}
+					add = {
+						desc = STATIC_MODIFIER_NAME_strengthened_ministry_of_war
+						value = 0.1
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,139 @@
+﻿lordship_of_ireland_rule_law = {
+	type = international_organization
+	law_category = administrative
+	potential = { international_organization_type = international_organization_type:lordship_of_ireland }
+	allow = {
+		international_organization:lordship_of_ireland.leader_country = {
+			religion = religion:catholic
+		}
+	}
+	lordship_of_ireland_rule_laudabiliter_policy = {
+		on_activate = { custom_tooltip = lordship_of_ireland_rule_laudabiliter_policy_tt }
+		wants_this_policy_bias = {
+			if = {
+				limit = { 
+					is_leader_of_international_organization = scope:recipient
+				}
+				add = -10
+			}
+		}
+		
+		country_modifier = {
+			monthly_religious_influence = -0.10
+			global_pop_assimilation_speed_modifier = -0.5
+			country_can_use_lordship_of_ireland_cb = yes
+		}
+	}
+	lordship_of_ireland_rule_statutes_of_kilkenny_policy = {
+		allow = {
+			current_age_or_later = { age = age_2_renaissance }
+			NOT = {
+				scope:recipient ?= {
+					leader_country ?= { 
+						culture = { has_culture_group = culture_group:celtic_group } 
+					}
+				}
+			}
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { 
+					is_leader_of_international_organization = scope:recipient
+					exists = scope:actor.culture
+					scope:recipient = {
+						any_international_organization_member ?= {
+							culture ?= {
+								reverse_cultural_view = {
+									target = scope:actor.culture
+									value <= negative 
+								}
+							}
+						}
+					}
+				}
+				add = 100
+			}
+			if = {
+				limit = {
+					culture = { has_culture_group = culture_group:celtic_group }
+				}
+				add = -50
+			}
+			else_if = {
+				limit = {
+					culture = { has_culture_group = culture_group:hibernian_group }
+				}
+				add = -10
+			}
+
+			if = {
+				limit = {
+					ruler ?= {
+						culture = { has_culture_group = culture_group:celtic_group }
+					}
+				}
+				add = -50
+			}
+
+			if = {
+				limit = {
+					consort ?= {
+						culture = { has_culture_group = culture_group:celtic_group }
+					}
+				}
+				add = -10
+			}
+		}
+
+		country_modifier = {
+			country_bans_saffron_shirts = yes
+			global_pop_assimilation_speed_modifier = 0.5
+			country_celtic_marriage_banned = yes
+		}
+	}
+	lordship_of_ireland_rule_ascendancy_policy = {
+		on_activate = { custom_tooltip = lordship_of_ireland_rule_ascendancy_policy_tt }
+		
+		allow = {
+			current_age_or_later = { age = age_4_reformation }
+		}
+		wants_this_policy_bias = {
+			if = {
+				limit = { 
+					is_leader_of_international_organization = scope:recipient
+					scope:recipient = {
+						any_international_organization_member = {
+							religion = {
+								reverse_religious_view = {
+									target = scope:actor.religion
+									value <= negative 
+								}
+							}
+						}
+					}
+				}
+				add = 10
+			}
+			if = {
+				limit = {
+					scope:recipient = {
+						leader_country = {
+							NOR = {
+								root = this
+								religion = root.religion
+							}
+						}
+					}
+				}
+				add = -100
+			}
+		}
+		
+		country_modifier = {
+			tolerance_heretic = -2
+			tolerance_own = 2
+			country_bans_saffron_shirts = yes
+			global_pop_conversion_speed = 0.1
+		}
+	}
+}

@@ -18,6 +18,8 @@
     category = {
         offer = CATEGORY_FRIENDLY_ACTIONS
         cancellation = CATEGORY_HOSTILE_ACTIONS
+        request = CATEGORY_FRIENDLY_ACTIONS
+        break = CATEGORY_HOSTILE_ACTIONS
     }
 
     relation_type_for_ai = friendly
@@ -42,7 +44,10 @@
     institution_spread_to_second = monthly_institution_spread_mild
 
 	offer_enabled = {
-        alliance_can_exist = yes
+        alliance_can_exist = {
+            first = scope:actor
+            second = scope:recipient
+        }
 	}
 
 	request_visible = { always = no }
@@ -55,7 +60,12 @@
     }
 
     will_expire_trigger = {
-        alliance_can_exist = no
+        not = {
+            alliance_can_exist = {
+                first = scope:first
+                second = scope:second
+            }
+        }
     }
 
 	offer_declined_effect = {
@@ -118,6 +128,12 @@
                 modifier = opinion_broke_alliance
             }
         }
+        scope:recipient = {
+            add_trust = {
+                target = scope:actor
+                value = -15
+            }
+        }
     }
 
     should_ai_offer_trigger = {
@@ -135,30 +151,30 @@
         #downgrade to guarantee
         if = {
             limit = {
-                scope:actor = {
+                scope:first = {
                     modifier:allowed_guarantee = yes
-                    country_rank_level > scope:recipient.country_rank_level
+                    country_rank_level > scope:second.country_rank_level
                 }
             }
-            scope:actor = {
+            scope:first = {
                 create_relation = {
-                    first = scope:actor
-                    second = scope:recipient
+                    first = scope:first
+                    second = scope:second
                     type = relation_type:guarantee
                 }
             }
         }
         else_if = {
             limit = {
-                scope:recipient = {
+                scope:second = {
                     modifier:allowed_guarantee = yes
-                    country_rank_level > scope:actor.country_rank_level
+                    country_rank_level > scope:first.country_rank_level
                 }
             }
-            scope:actor = {
+            scope:first = {
                 create_relation = {
-                    first = scope:recipient
-                    second = scope:actor
+                    first = scope:second
+                    second = scope:first
                     type = relation_type:guarantee
                 }
             }
@@ -169,7 +185,6 @@
         actor_is_rival = -100
         actor_overlord_is_rival = -100
         base = -40
-        #not_10_trust = -100
         trust_in_actor = 1
         positive_opinion = 0.3
         negative_opinion = -1
@@ -276,6 +291,13 @@
             }
             max = 0
             multiply = 100
+        }
+
+        add = {
+            desc = "COMMON_RIVALS"
+            value = "scope:recipient.num_of_common_rivals(scope:actor)"
+            max = 3
+            multiply = 5
         }
     }
 
@@ -399,6 +421,13 @@
                 desc = "ACTOR_IS_IN_DIFFERENT_WARS"
                 value = 100
             }
+        }
+
+        add = {
+            desc = "COMMON_RIVALS"
+            value = "scope:recipient.num_of_common_rivals(scope:actor)"
+            max = 3
+            multiply = 5
         }
     }
 }	

@@ -1,0 +1,280 @@
+﻿rtr_rein_in_rebellion = {
+	cost = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = 80
+		}
+	}
+
+	potential = {
+		scope:war = {
+			is_no_cb_war = no
+			OR = {
+				casus_belli ?= casus_belli:cb_red_turban_rebellions_rein_in_rebels
+				casus_belli ?= casus_belli:cb_red_turban_rebellions
+			}
+		}
+		scope:winner = {
+			tag = CHI
+		}
+		scope:loser = {
+			modifier:can_create_red_turban_rebellions_cb = yes
+		}
+	}
+	allow = {
+	}
+
+	effect = {
+		scope:loser = {
+			rtr_change_allegiance_points = {
+				value = 200
+			}
+			if = {
+				limit = { is_member_of_international_organization = international_organization:red_turban_rebels }
+				international_organization:red_turban_rebels = {
+					remove_country_from_international_organization = scope:loser
+				}
+			}
+			custom_tooltip = rtr_rein_in_rebellion_tt
+		}
+	}
+
+	ai_desire = {
+		value = 1000
+	}
+}
+
+rtr_demand_occupied_territories = {
+	cost = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = 80
+		}
+	}
+
+	base_antagonism = {
+		value = {
+			value = 1
+			scope:loser = {
+				every_owned_location = {
+					limit = { controller = scope:winner }
+					add = location_tax_base
+					divide = 10
+				}
+			}
+		}
+	}
+	antagonism_type = antagonism_peace_rtr_demand_all_occupied_territories
+	potential = {
+		scope:war = {
+			is_no_cb_war = no
+			OR = {
+				casus_belli ?= casus_belli:cb_red_turban_rebellions_rein_in_rebels
+				casus_belli ?= casus_belli:cb_red_turban_rebellions
+			}
+		}
+		scope:winner = {
+			country_type = location
+			modifier:can_create_red_turban_rebellions_cb = yes
+		}
+		scope:loser = {
+			country_type = location
+			tag = CHI
+		}
+	}
+	allow = {
+		trigger_if = {
+			limit = { scope:winner.num_locations >= scope:loser.num_locations }	#So we only scope in the country which has less locations to deal with for performance reasons
+			scope:loser = {
+				any_owned_location = {
+					controller = scope:winner
+				}
+			}
+		}
+		trigger_else = {
+			scope:winner = {
+				any_controlled_location = {
+					owner = scope:loser
+				}
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:winner
+				exists = scope:loser
+			}
+			scope:winner = {
+				custom_tooltip = {
+					text = rtr_demand_occupied_territories_tt
+					every_controlled_location = {
+						limit = {
+							owner = scope:loser
+						}
+						change_location_owner = scope:winner
+						if = {
+							limit = { # When editing, also adjust in _hardcoded on_actions.txt
+								this = location:dadu
+								scope:winner = {
+									culture = {
+										has_culture_group = culture_group:chinese_group
+										NOT = { has_culture_group = culture_group:mongolian_group }
+									}
+								}
+								scope:loser = {
+									OR = {
+										tag = CHI 
+										tag = YUA
+									}
+									culture = { has_culture_group = culture_group:mongolian_group }
+								}
+							}
+							scope:winner = {
+								trigger_event_non_silently = flavor_chi.32
+							}
+						}
+					}
+				}
+			}
+		}
+		else = { custom_tooltip = rtr_demand_occupied_territories_no_winner_loser_tt }
+	}
+
+	ai_desire = {
+		value = 1000
+	}
+}
+
+rtr_demand_all_chinese_territories = {
+	cost = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = 80
+		}
+	}
+
+	base_antagonism = {
+		value = {
+			value = 1
+			scope:loser = {
+				every_owned_location = {
+					add = location_tax_base
+					divide = 10
+				}
+				every_subject_or_below = {
+					every_owned_location = {
+						add = location_tax_base
+						divide = 10
+					}
+				}
+			}
+		}
+	}
+	antagonism_type = antagonism_peace_rtr_demand_all_chinese_territories
+
+	potential = {
+		scope:war = {
+			is_no_cb_war = no
+			OR = {
+				casus_belli ?= casus_belli:cb_red_turban_rebellions_rein_in_rebels
+				casus_belli ?= casus_belli:cb_red_turban_rebellions
+			}
+		}
+		scope:winner = {
+			country_type = location
+			modifier:can_create_red_turban_rebellions_cb = yes
+		}
+		scope:loser = {
+			country_type = location
+			tag = CHI
+		}
+	}
+	allow = {
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:winner
+				exists = scope:loser
+			}
+			scope:winner = {
+				custom_tooltip = {
+					text = rtr_demand_all_chinese_territories_tt
+					scope:loser = {
+						every_owned_location = {
+							change_location_owner = scope:winner
+							if = {
+								limit = { # When editing, also adjust in _hardcoded on_actions.txt
+									this = location:dadu
+									scope:winner = {
+										culture = {
+											has_culture_group = culture_group:chinese_group
+											NOT = { has_culture_group = culture_group:mongolian_group }
+										}
+									}
+									scope:loser = {
+										OR = {
+											tag = CHI
+											tag = YUA
+										}
+										culture = { has_culture_group = culture_group:mongolian_group }
+									}
+								}
+								scope:winner = {
+									trigger_event_non_silently = flavor_chi.32
+								}
+							}
+						}
+						every_subject_or_below = {
+							every_owned_location = {
+								change_location_owner = scope:winner
+							}
+						}
+					}
+				}
+			}
+		}
+		else = { custom_tooltip = rtr_demand_occupied_territories_no_winner_loser_tt }
+	}
+
+	ai_desire = {
+		value = 1000
+	}
+}
+
+rtr_demand_complete_annexation = {
+	cost = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = 80
+		}
+	}
+
+	potential = {
+		scope:war = {
+			is_no_cb_war = no
+			casus_belli ?= casus_belli:cb_red_turban_rebellions_against_other_rebels
+		}
+		scope:winner = {
+			modifier:can_create_red_turban_rebellions_cb = yes
+		}
+		scope:loser = {
+			modifier:can_create_red_turban_rebellions_cb = yes
+		}
+	}
+	allow = {
+	}
+
+	effect = {
+		scope:winner = {
+			annex_country = { country = scope:loser }
+		}
+	}
+
+	ai_desire = {
+		value = 1000
+	}
+}

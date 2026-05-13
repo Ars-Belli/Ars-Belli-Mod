@@ -1,0 +1,1030 @@
+organization_geodiplomatic_theme = {
+	blockoverride "organization_overview_tab_visible" {}
+	blockoverride "organization_panel_overview_visible" {
+		visible = "[InternationalOrganizationsView.Vars.NotExistOrHasValue( 'organizations', 'overview' )]"
+	}
+	blockoverride "organization_members_tab_down" {
+		down = "[InternationalOrganizationsView.Vars.HasValue( 'organizations', 'members' )]"
+	}
+	blockoverride "organization_panel_members_visible" {
+		visible = "[InternationalOrganizationsView.Vars.HasValue( 'organizations', 'members' )]"
+	}
+
+	blockoverride "organization_overview_list_bg" {
+		margin = {10 0}
+		spacing = 10
+	}
+	blockoverride "organization_overview_filtered_list" {
+		margin_top = 5
+		filtered_sorted_list = {
+			datacontext = "[InternationalOrganizationsView.GetMembersSortSearch]"
+			blockoverride "scroll_list_is_empty" {
+				visible = "[IsDataModelEmpty(InternationalOrganizationsView.GetMemberItems)]"
+			}
+			blockoverride "scroll_list_is_empty_position" {
+				position = { 0 300 }
+			}
+			blockoverride "scroll_list_is_empty_text" {
+				text = "MEMBERS_SCROLL_LIST_EMPTY"
+			}
+			blockoverride "scroll_list_layout" {
+				vbox = {
+					block "organization_overview_list_bg" {
+						using = layoutpolicy_expanding
+						using = bg_secondary_inner_alt
+						margin_bottom = 20
+					}
+					card_common = {
+						margin = { 10 0 }
+						blockoverride "header_size" {
+							size = {-1 45}
+						}
+						blockoverride "common_header_icon_texture" {
+							texture = "gfx/interface/icons/modifier_types/union_integration_level.dds"
+						}
+						blockoverride "common_header_text" {
+							text = "union_integration_level_tooltip"
+						}
+						blockoverride "common_bottom_content" {
+							text_multi = {
+								layoutpolicy_horizontal = expanding
+								maximumsize = {500 250}
+								autoresize = yes
+								raw_text = "union_mechanic_tooltip"
+							}
+						}
+					}
+					card_io_payments = {}
+					flowcontainer = {
+						direction = vertical
+						spacing = 14
+						margin_bottom = 14
+						using = bg_paper_card_situations
+						using = bg_cabinet_card_frame
+						
+						widget = {
+							using = bg_scroll_card_header
+							size = { 500 40 }
+							spacing = 4
+							margin = {10 0}
+							expand = {}
+							flowcontainer = {
+								margin_top  = 2
+								parentanchor = center
+								icon = {
+									size = { 25 25 }
+									block "card_header_icon" {
+										texture = "[InternationalOrganization.GetIcon]"
+									}
+									texture_density = 2
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.5
+									}
+								}
+								text_single = {
+									text = "MAIN_ACTIONS"
+								}
+							}
+						}
+
+						action_button_diamond = {
+							parentanchor = hcenter
+							size = { 470 30 }
+							title = "place_relative_on_throne"
+							actor = "[InternationalOrganizationsView.GetPlayer]"
+							left_action = {
+								action_name = "place_relative_on_throne"
+								action_direction = "offer"
+								parameter = {
+									parameter_name = "international_organization"
+									parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
+								}
+							}
+							tooltipwidget = {
+								using = io_place_relative_on_throne_button_tooltip
+							}
+							text = "place_relative_on_throne"
+							visible = "[Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)]"
+						}
+						visible = "[Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)]"
+					}
+
+					vbox = {
+
+						layoutpolicy_horizontal = expanding
+						datamodel = "[InternationalOrganizationsView.GetMemberItems]"
+						item = {
+							estates_summary = {
+								visible = "[And(Not(IsDataModelEmpty(MemberTypeItem.GetCountries)), MemberTypeItem.IsAllMembers)]"
+								blockoverride "summary_datamodel" {
+									datamodel = "[MemberTypeItem.GetCountries]"
+								}
+								blockoverride "header_content" {
+									
+									tagtooltip_enabled = yes
+									tooltipwidget = {
+										ContextualTooltipType = {
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "[MemberTypeItem.GetIcon]"
+												}
+											}
+											blockoverride "title_text" {
+												text = "[MemberTypeItem.GetName]"
+											}
+											blockoverride "concept_link" {
+												text = "[international_organization|e]"
+											}
+											blockoverride "tooltip_content" {
+												TooltipTextBlock = {
+													blockoverride "text" {
+														text = "INTERNATIONAL_ORGANIZATION_TT_MEMBER"
+													}
+												}
+											}
+										}
+									}
+									
+									vbox = {
+										autoresize = yes
+										layoutpolicy_horizontal = expanding
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+
+											icon = {
+												size = { 25 25 }
+												texture = "[MemberTypeItem.GetIcon]"
+												texture_density = 2
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.5
+												}
+											}
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												raw_text = "[MemberTypeItem.GetMembersAmount] [MemberTypeItem.GetName]"
+											}
+										}
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											autoresize = no
+											visible = "[InternationalOrganizationsView.HasSpecialStatusCountry('senior_partner')]"
+											text = "IO_SENIOR_MEMBER"
+										}
+									}
+
+									# seize seniority
+									header_action_button_left = {
+										size = { 60 60 }
+										blockoverride "button_icon_stretch_sprite" {}
+										blockoverride "header_button_frame_inner" {visible = no}
+										blockoverride "header_button_icon_size" { size = { 60 60 } }
+										blockoverride "header_button_text_layout" {}
+										blockoverride "icon_texture" {
+											texture = "[GetSpecialStatusIconFromKey('senior_partner')]"
+										}
+										blockoverride "icon_overlay" {}
+										title = "INT_SENIOR_PARTNER_TITLE"
+										actor = "[InternationalOrganizationsView.GetPlayer]"
+										parameter = {
+											parameter_name = "recipient"
+											parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization.MakeScope.GetVariable('union_senior_partner').GetCountry]"
+										}
+										left_click_and_hold_action = {
+											action_name = "take_over_seniority"
+											action_direction = "request"
+										}
+										tooltipwidget = {
+											ContextualTooltipType = {
+												blockoverride "title_icon" {
+													icon = {
+														using = tooltip_title_icon_size
+														texture = "[GetSpecialStatusIconFromKey('senior_partner')]"
+													}
+												}
+												blockoverride "title_text" {
+													text = "take_over_seniority"
+												}
+												blockoverride "concept_link" {
+													text = [country_interaction|E]
+												}
+												blockoverride "tooltip_content" {
+													TooltipFlavorTextBlock = {
+														blockoverride "text" {
+															visible = "[Not(StringIsEmpty(UIAction.GetDescription))]"
+															text = "[UIAction.GetDescription]"
+														}
+													}
+													TooltipStringPairList = {
+														visible = "[Not(StringIsEmpty(UIAction.GetEffects))]"
+														textcontext = "[UIAction.GetEffects]"
+													}
+													TooltipRequirementsList = {
+														visible = "[And(Not(UIAction.IsEnabled), Not(StringIsEmpty(UIAction.GetConditions)))]"
+														textcontext = "[UIAction.GetConditions]"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					expand = {}
+				}
+			}
+		}
+	}
+
+	blockoverride "call_organization_parliament_button" {
+		title = "union_call_organization_parliament"
+		left_action = { action_name = "union_call_organization_parliament" }
+	}
+
+	blockoverride "organization_voting_members_card_visible"
+	{
+		visible = no
+	}
+	blockoverride "organization_parliament_scroll_area" {
+		filtered_sorted_list = {
+			datacontext = "[InternationalOrganizationsView.GetMembersSortSearch]"
+			visible = "[InternationalOrganizationsView.GetInternationalOrganization.GetParliament.IsParliamentActive]"
+			blockoverride "scroll_list_is_empty" {
+				visible = "[IsDataModelEmpty(InternationalOrganizationsView.GetMemberItems)]"
+			}
+			blockoverride "scroll_list_is_empty_text" {
+				text = "MEMBERS_SCROLL_LIST_EMPTY"
+			}
+
+			blockoverride "scroll_list_layout" {
+				vbox = {
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						datamodel = "[InternationalOrganizationsView.GetMemberItems]"
+						item = {
+							vbox = {
+								visible = "[And3(
+									Not(IsDataModelEmpty(MemberTypeItem.GetCountries)), 
+									MemberTypeItem.IsAllMembers,
+									Not( EqualTo_string(MemberTypeItem.GetName, ShowSpecialStatusName('senior_partner')) )
+								)]"
+								layoutpolicy_horizontal = expanding
+								spacing = 10
+								using = members_entry
+								blockoverride "card_header_button_header_content" {
+									icon = {
+										size = { 30 30 }
+										block "card_header_button_icon_texture" {
+											texture = "[GetSpecialStatusIconFromKey('junior_partner')]"
+										}
+										texture_density = 2
+										glow = {
+											name = "drop_shadow"
+											glow_radius = 3
+											color = {0.0 0.0 0.0 1.0}
+											alpha = 0.3
+										}
+									}
+									text_single = {
+										using = layoutpolicy_expanding
+										text = "UNION_MEMBERS_TO_ADJUST"
+									}
+								}
+								blockoverride "members_entry_scroll_area_max_size" {
+									maximumsize = { -1 600 }
+								}
+								blockoverride "members_item_content" {
+									hbox = {
+										margin = {0 10}
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											dynamicgridbox = {
+												layoutpolicy_horizontal = expanding
+												flipdirection = yes
+												datamodel_wrap = 1
+												datamodel = "[MemberTypeItem.GetCountries]"
+												item = {
+													widget = {
+														visible = "[And(Not(EqualTo_CFixedPoint(InternationalOrganizationsView.GetInternationalOrganization.GetModifierValue('union_integration_level'), Country.MakeScope.GetVariable('integrated_in_union').GetValue)),Not(Country.HasParticipatedInIOParliament(InternationalOrganizationsView.GetInternationalOrganization)))]"
+														size = { 430 250 }
+														paper_simple_card = {
+															position = { 2 0 }
+															size = { 430 215 }
+															vbox = {
+																maximumsize = {270 180}
+																position = {5 5}
+																spacing = 5
+																margin_bottom = 5
+																margin_top = 2
+																widget = {
+																	size = { 430 60 }
+																	background = {
+																		texture = "gfx/interface/component_tiles/square_tile.dds"
+																		texture_density = 2
+																		margin_bottom = 2
+																		alpha = 0.5
+																		modify_texture = {
+																			using = color_black_texture
+																			blend_mode = multiply
+																		}
+																	}
+																	background = {
+																		texture = "gfx/interface/colors/black.dds"
+																		texture_density = 2
+																		color = {0.68 0.35 0.85 1.0}
+												
+																		modify_texture = {
+																			using = color_grey_texture
+																		}
+																		modify_texture = {
+																			using = overlay_cloth_texture
+																			blend_mode = overlay
+																			alpha = 0.2
+																		}
+												
+																		modify_texture = {
+																			using = header_pattern_estates_crown
+																			blend_mode = overlay
+																		}
+																		modify_texture = {
+																			using = color_black_texture
+																			blend_mode = multiply
+																			alpha = 0.1
+																		}
+																	}
+																	background = {
+																		texture = "gfx/interface/component_tiles/square_tile.dds"
+																		texture_density = 2
+																		alpha = 0.3
+																		modify_texture = {
+																			using = color_black_texture
+																			blend_mode = multiply
+																		}
+																		modify_texture = {
+																			texture = "gfx/interface/component_masks/mask_fade_horizontal_sides.dds"
+																			blend_mode = alphamultiply
+																		}
+																	}
+																	using = bg_estates_frame
+																	blockoverride "bg_estates_frame_margins" {
+																		margin_left = 8
+																		margin_right = 8
+																		margin_top = 7
+																		margin_bottom = 4
+																	}
+																	hbox = {
+																		spacing = 16
+																		maximumsize = {430 28}
+																		position = {10 0}
+																		hbox = {
+																			country_flag_small = {}							
+																			vbox = {
+																				minimumsize = { 78 -1 }
+																				maximumsize = { 78 -1 }
+																				text_single = {
+																					layoutpolicy_horizontal = expanding
+																					maximumsize = { 100 38 }
+																					multiline = yes
+																					text = "[Country.GetNameWithNoTooltip]"
+																				}
+																				text_single = {
+																					layoutpolicy_horizontal = expanding
+																					visible = "[Not(ObjectsEqual(Country.Self, InternationalOrganizationsView.GetPlayer.GetCapital.GetOwner.Self))]"
+																					text = "[Country.GetDiplomacy.GetOpinionOf(InternationalOrganizationsView.GetPlayer)|+=]"
+																					tooltipwidget = {
+																						SimpleContextualStringPairTooltipType = {
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "gfx/interface/icons/flat_icons/foreigncountry/opinion.dds"
+																								}
+																							}
+																							blockoverride "concept_link" {
+																								text = "[opinion|e]"
+																							}
+																							tooltipmeta = {
+																								texture = "gfx/interface/icons/flat_icons/foreigncountry/opinion.dds"
+																								game_concept = "[opinion|E]"
+																							}
+																							lowpriotextcontext = "[Country.GetDiplomacy.GetOpinionDescription(InternationalOrganizationsView.GetPlayer)]"
+																						}
+																					}
+																				}
+																				text_single = {
+																					layoutpolicy_horizontal = expanding
+																					visible = "[ObjectsEqual(Country.Self, InternationalOrganizationsView.GetPlayer.GetCapital.GetOwner.Self)]"
+																					raw_text = "0.00"
+																				}
+																				text_single = {
+																					layoutpolicy_horizontal = expanding
+																					visible = "[Country.HasSpecialStatus(InternationalOrganizationsView.GetInternationalOrganization,'senior_partner')]"
+																					text = "senior_partner"
+																				}
+																				expand = {}
+																			}
+																		}
+																		vbox = {
+																			maximumsize = { 60 -1 }
+																			margin_top = 2
+																			spacing = 5
+																			# THEIR STABILITY
+																			hbox = {
+																				spacing = 3
+																				text_single = {
+																					layoutpolicy_horizontal = expanding
+																					size = { -1 15 }
+																					align = right
+																					minimumsize = { 43 -1 }
+																					raw_text = "[Country.GetCurrencyValue('stability')]"
+																					using = Font_Size_Small
+																				}
+																				piechart = {
+																					size = { 22 22 }
+																					using = piechart_angles
+																					datacontext = "[Country]"
+																					icon = {
+																						texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+																						size = { 97% 97% }
+																						parentanchor = center
+																						color = { 0.45 0.59  0.67 1 }
+																						alpha = 0.3
+																					}
+																					pieslice = {
+																						texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+																						value = "[FixedPointToFloat(Country.GetFixedPointCurrencyValue('stability'))]"
+																						color = { 0.3 0.8 0.3 1 }
+																						alpha = 0.8
+																					}
+																					pieslice = {
+																						texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+																						value = "[Subtract_float('(float)100.0', FixedPointToFloat(Country.GetFixedPointCurrencyValue('stability')))]"
+																						color = { 1 1 1 0 }
+																					}
+																					icon = {
+																						using = icon_stability
+																						size = { 70% 70% }
+																						# using = overlay_color_light_blue
+																						parentanchor = center
+																					}
+																					using = bg_circle_piechart
+																				}
+																				tooltipwidget = {
+																					using = StabilityResourceTooltip
+																					blockoverride "content_datacontext" {
+																						datacontext = "[Country.GetEconomy]"
+																					}
+																					# blockoverride "change_visibility" { visible = no } # FOREIGN_CHANGE_VISIBLE
+																				}
+																			}
+
+																			# THEIR LEGITIMACY
+																			hbox = {
+																				spacing = 3
+																				text_single = {
+																					layoutpolicy_horizontal = expanding
+																					size = { -1 15 }
+																					align = right
+																					minimumsize = { 43 -1 }
+																					raw_text = "[Country.GetCurrencyValue('legitimacy')]"
+													
+																					using = Font_Size_Small
+																				}
+																				piechart = {
+																					size = { 22 22 }
+
+																					using = piechart_angles
+																					datacontext = "[Country]"
+
+																					icon = {
+																						texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+																						size = { 97% 97% }
+																						parentanchor = center
+																						color = { 0.45 0.59  0.67 1 }
+																						alpha = 0.3
+																					}
+
+																					pieslice = {
+																						texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+																						value = "[FixedPointToFloat(Country.GetFixedPointCurrencyValue('legitimacy'))]"
+																						color = { 0.3 0.8 0.3 1 }
+																						alpha = 0.8
+																					}
+
+																					pieslice = {
+																						texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+																						value = "[Subtract_float('(float)100.0', FixedPointToFloat(Country.GetFixedPointCurrencyValue('legitimacy')))]"
+																						color = { 1 1 1 0 }
+																					}
+
+																					icon = {
+																						texture = "[GetLegitimacyIcon(Country.GetGovernment.GetGovernmentType)]"
+																						size = { 70% 70% }
+																						parentanchor = center
+																					}
+																					using = bg_circle_piechart
+																				}
+																				tooltipwidget = {
+																					using = LegitimacyResourceTooltip
+																					blockoverride "content_datacontext" {
+																						datacontext = "[Country.GetEconomy]"
+																					}
+																					# blockoverride "change_visibility" { visible = no } # FOREIGN_CHANGE_VISIBLE
+																				}
+																			}
+																		}
+																	}
+																}
+																dynamicgridbox = {
+																	layoutpolicy_horizontal = expanding
+																	flipdirection = yes
+																	datamodel_wrap = 1
+																	datamodel = "[Country.GetGovernment.GetEstates]"
+																	item = {
+																		widget = {
+																			size = { 430 46 }
+																			visible = "[Or3(EqualTo_string(Estate.GetType.GetNameWithNoTooltip, Localize('nobles_estate')), EqualTo_string(Estate.GetType.GetNameWithNoTooltip, Localize('burghers_estate')), EqualTo_string(Estate.GetType.GetNameWithNoTooltip, Localize('clergy_estate')))]"
+																			hbox = {
+																				using = table_cell_base
+																				spacing = 25
+																				hbox = {
+																					layoutpolicy_horizontal = expanding
+																					tooltipwidget = { using = Estate_tooltip }
+																					icon = {
+																						size = { 24 24 }
+																						texture = "[GetEstateIcon(Estate.GetType)]"
+																					}
+																					text_single = {
+																						layoutpolicy_horizontal = expanding
+																						default_format = "#subtle_name"
+																						text = "[Estate.GetNameWithNoTooltip]"
+																					}
+																				}
+																				action_button_regular  = {
+																					visible = "[EqualTo_string(Estate.GetType.GetNameWithNoTooltip, Localize('nobles_estate'))]"
+																					size = { 200 40 }
+																					text = "union_bribe_nobility"
+																					actor = "[InternationalOrganizationsView.GetPlayer]"
+																					parameter = {
+																						parameter_name = "recipient"
+																						parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
+																					}
+																					parameter = {
+																						parameter_name = "estate"
+																						parameter_value = "[Country.GetGovernment.GetEstateFromKey('nobles_estate')]"
+																					}
+																					parameter = {
+																						parameter_name = "target"
+																						parameter_value = "[Estate.GetCountry]"
+																					}
+																					left_click_and_hold_action = { action_name = "union_bribe" }
+																					enabled = "[UIAction.IsEnabled]"
+																					tooltipwidget = {
+																						ContextualTooltipType = {
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "[InternationalOrganizationsView.GetInternationalOrganization.GetIcon]"
+																								}
+																							}
+																							blockoverride "title_text" {
+																								text = "union_bribe_nobility"
+																							}
+																							blockoverride "concept_link" {
+																								text = [action|E]
+																							}
+																							blockoverride "tooltip_content" {
+																								TooltipBlockList = {
+																									visible = "[StringIsEmpty(UIAction.GetDescription)]"
+																									textcontext = "union_bribe_not_possible"
+																								}
+																								TooltipFlavorTextBlock = {
+																									blockoverride "set_textcontext" {
+																										ontextcontextchanged = "[SetCStringFromTextContext(PdxGuiWidget.AccessSelf)]"
+																										visible = "[Not(StringIsEmpty(UIAction.GetDescription))]"
+																									}
+																									blockoverride "text" {
+																										text = "[UIAction.GetDescription]"
+																										# blockoverride "tooltip_text_block_size" {}
+																									}
+																								}
+																								TooltipRowList = {
+																									visible = "[Not(StringIsEmpty(UIAction.GetEffects))]"
+																									blockoverride "block_title" {
+																										text = "IO_BRIBE_EFFECT"
+																									}
+																									textcontext = "[UIAction.GetEffects]"
+																								}
+																								TooltipRowList = {
+																									visible = "[Not(StringIsEmpty(UIAction.GetConditions))]"
+																									blockoverride "block_title" {
+																										text = "LIST_TITLE_REQUIREMENTS"
+																									}
+																									textcontext = "[UIAction.GetConditions]"
+																								}
+																							}
+																						}
+																					}
+																					default_format = "#High"
+																				}
+																				action_button_regular  = {
+																					visible = "[EqualTo_string(Estate.GetType.GetNameWithNoTooltip, Localize('clergy_estate'))]"
+																					size = { 200 40 }
+																					text = "union_bribe_clergy"
+																					actor = "[InternationalOrganizationsView.GetPlayer]"
+																					parameter = {
+																						parameter_name = "recipient"
+																						parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
+																					}
+																					parameter = {
+																						parameter_name = "estate"
+																						parameter_value = "[Country.GetGovernment.GetEstateFromKey('clergy_estate')]"
+																					}
+																					parameter = {
+																						parameter_name = "target"
+																						parameter_value = "[Estate.GetCountry]"
+																					}
+																					left_click_and_hold_action = { action_name = "union_bribe" }
+																					enabled = "[UIAction.IsEnabled]"
+																					tooltipwidget = {
+																						ContextualTooltipType = {
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "[InternationalOrganizationsView.GetInternationalOrganization.GetIcon]"
+																								}
+																							}
+																							blockoverride "title_text" {
+																								text = "union_bribe_clergy"
+																							}
+																							blockoverride "concept_link" {
+																								text = [action|E]
+																							}
+																							blockoverride "tooltip_content" {
+																								TooltipBlockList = {
+																									visible = "[StringIsEmpty(UIAction.GetDescription)]"
+																									textcontext = "union_bribe_not_possible"
+																								}
+																								TooltipFlavorTextBlock = {
+																									blockoverride "set_textcontext" {
+																										ontextcontextchanged = "[SetCStringFromTextContext(PdxGuiWidget.AccessSelf)]"
+																										visible = "[Not(StringIsEmpty(UIAction.GetDescription))]"
+																									}
+																									blockoverride "text" {
+																										text = "[UIAction.GetDescription]"
+																										# blockoverride "tooltip_text_block_size" {}
+																									}
+																								}
+																								TooltipRowList = {
+																									visible = "[Not(StringIsEmpty(UIAction.GetEffects))]"
+																									blockoverride "block_title" {
+																										text = "IO_BRIBE_EFFECT"
+																									}
+																									textcontext = "[UIAction.GetEffects]"
+																								}
+																								TooltipRowList = {
+																									visible = "[Not(StringIsEmpty(UIAction.GetConditions))]"
+																									blockoverride "block_title" {
+																										text = "LIST_TITLE_REQUIREMENTS"
+																									}
+																									textcontext = "[UIAction.GetConditions]"
+																								}
+																							}
+																						}
+																					}
+																					default_format = "#High"
+																				}
+																				action_button_regular  = {
+																					visible = "[EqualTo_string(Estate.GetType.GetNameWithNoTooltip, Localize('burghers_estate'))]"
+																					size = { 200 40 }
+																					text = "union_bribe_burghers"
+																					actor = "[InternationalOrganizationsView.GetPlayer]"
+																					parameter = {
+																						parameter_name = "recipient"
+																						parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
+																					}
+																					parameter = {
+																						parameter_name = "estate"
+																						parameter_value = "[Country.GetGovernment.GetEstateFromKey('burghers_estate')]"
+																					}
+																					parameter = {
+																						parameter_name = "target"
+																						parameter_value = "[Estate.GetCountry]"
+																					}
+																					left_click_and_hold_action = { action_name = "union_bribe" }
+																					enabled = "[UIAction.IsEnabled]"
+																					tooltipwidget = {
+																						ContextualTooltipType = {
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "[InternationalOrganizationsView.GetInternationalOrganization.GetIcon]"
+																								}
+																							}
+																							blockoverride "title_text" {
+																								text = "union_bribe_burghers"
+																							}
+																							blockoverride "concept_link" {
+																								text = [action|E]
+																							}
+																							blockoverride "tooltip_content" {
+																								TooltipBlockList = {
+																									visible = "[StringIsEmpty(UIAction.GetDescription)]"
+																									textcontext = "union_bribe_not_possible"
+																								}
+																								TooltipFlavorTextBlock = {
+																									blockoverride "set_textcontext" {
+																										ontextcontextchanged = "[SetCStringFromTextContext(PdxGuiWidget.AccessSelf)]"
+																										visible = "[Not(StringIsEmpty(UIAction.GetDescription))]"
+																									}
+																									blockoverride "text" {
+																										text = "[UIAction.GetDescription]"
+																										# blockoverride "tooltip_text_block_size" {}
+																									}
+																								}
+																								TooltipRowList = {
+																									visible = "[Not(StringIsEmpty(UIAction.GetEffects))]"
+																									blockoverride "block_title" {
+																										text = "IO_BRIBE_EFFECT"
+																									}
+																									textcontext = "[UIAction.GetEffects]"
+																								}
+																								TooltipRowList = {
+																									visible = "[Not(StringIsEmpty(UIAction.GetConditions))]"
+																									blockoverride "block_title" {
+																										text = "LIST_TITLE_REQUIREMENTS"
+																									}
+																									textcontext = "[UIAction.GetConditions]"
+																								}
+																							}
+																						}
+																					}
+																					default_format = "#High"
+																				}
+																				vbox = {
+																					margin_right = 4
+																					spacing = 3
+																					hbox = {
+																						tooltipwidget = { using = estate_satisfaction_tooltip }
+																						spacing = 3
+																						text_single = {
+																							layoutpolicy_horizontal = expanding
+																							size = { -1 15 }
+																							minimumsize = { 30 15 }
+																							raw_text = "[Estate.GetSatisfaction|0%]"
+															
+																							using = Font_Size_Small
+																						}
+																						piechart = {
+																							size = { 20 20 }
+																							minimumsize = { 20 20 }
+														
+														
+																							using = piechart_angles
+																							using = bg_circle_piechart_big
+														
+																							pieslice = {
+																								texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+																								value = "[FixedPointToFloat(Estate.GetSatisfaction)]"
+																								color = { 1 1 1 1 }
+																							}
+														
+																							pieslice = {
+																								texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+																								value = "[Subtract_float('(float)1.0', FixedPointToFloat(Estate.GetSatisfaction))]"
+																								color = { 1 1 1 1 }
+																							}
+														
+																							hbox = {
+																								icon = {
+																									name = "sad face"
+																									visible = "[LessThanOrEqualTo_CFixedPoint(Estate.GetSatisfaction,'(CFixedPoint)0.25')]"
+														
+																									size = { 10 10 }
+																									texture = "gfx/interface/icons/flat_icons/sad.dds"
+																									texture_density = 2
+																									using = color_red
+																								}
+														
+																								icon = {
+																									name = "neutral face"
+																									visible = "[BetweenInclusiveOfMax_CFixedPoint(Estate.GetSatisfaction,'(CFixedPoint)0.25', '(CFixedPoint)0.5')]"
+														
+																									size = { 10 10 }
+																									texture = "gfx/interface/icons/flat_icons/neutral.dds"
+																									texture_density = 2
+																									using = color_yellow
+																								}
+														
+																								icon = {
+																									name = "happy face"
+																									visible = "[GreaterThan_CFixedPoint(Estate.GetSatisfaction,'(CFixedPoint)0.5')]"
+														
+																									size = { 10 10 }
+																									texture = "gfx/interface/icons/flat_icons/happy.dds"
+																									texture_density = 2
+																									using = color_light_green
+																								}
+																							}
+																						}
+																					}
+																					hbox = {
+																						tooltipwidget = { using = estate_relative_power_tooltip }
+																						spacing = 3
+																						text_single = {
+																							layoutpolicy_horizontal = expanding
+																							size = { -1 15 }
+																							minimumsize = { 30 15 }
+																							raw_text = "[Estate.GetRelativePower|0%]"
+															
+																							using = Font_Size_Small
+																						}
+																						text_single = {
+																							layoutpolicy_horizontal = expanding
+																							size = { 20 20 }
+																							minimumsize = { 20 15 }
+																							raw_text = "@power!"
+															
+																							using = Font_Size_Small
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+																widget = {
+																	size = { 430 30 }
+																	background = {
+																		texture = "gfx/interface/component_tiles/square_tile.dds"
+																		texture_density = 2
+																		margin_bottom = 2
+																		alpha = 0.5
+																		modify_texture = {
+																			using = color_black_texture
+																			blend_mode = multiply
+																		}
+																	}
+																	background = {
+																		texture = "gfx/interface/colors/black.dds"
+																		texture_density = 2
+																		color = {0.68 0.35 0.85 1.0}
+																		modify_texture = {
+																			using = color_grey_texture
+																		}
+																		modify_texture = {
+																			using = overlay_cloth_texture
+																			blend_mode = overlay
+																			alpha = 0.2
+																		}
+																		modify_texture = {
+																			using = header_pattern_estates_crown
+																			blend_mode = overlay
+																		}
+																		modify_texture = {
+																			using = color_black_texture
+																			blend_mode = multiply
+																			alpha = 0.1
+																		}
+																	}
+																	background = {
+																		texture = "gfx/interface/component_tiles/square_tile.dds"
+																		texture_density = 2
+																		alpha = 0.3
+																		modify_texture = {
+																			using = color_black_texture
+																			blend_mode = multiply
+																		}
+																		modify_texture = {
+																			texture = "gfx/interface/component_masks/mask_fade_horizontal_sides.dds"
+																			blend_mode = alphamultiply
+																		}
+																	}
+																	using = bg_estates_frame
+																	blockoverride "bg_estates_frame_margins" {
+																		margin_left = 8
+																		margin_right = 8
+																		margin_top = 7
+																		margin_bottom = 4
+																	}
+																	hbox = {
+																		spacing = 8
+																		maximumsize = {140 28}
+																		position = {10 0}
+																		hbox = {
+																			minimumsize = { 78 -1 }
+																			maximumsize = { 78 -1 }
+																			text_single = {
+																				using = layoutpolicy_expanding
+																				text = "union_member_integration_level_tooltip"
+																			}
+																			expand = {}
+																		}
+																	}
+																}
+																expand = {}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					expand = {}
+				}
+			}
+		}
+	}
+
+	blockoverride "organization_parliament_bottom_text" {
+		text = "UNION_IO_PARLIAMENT_TOOLTIP"
+	}
+
+	blockoverride "organization_laws_tab_text" {
+		text = "UNION_POLICIES"
+	}
+
+	blockoverride "organization_laws_list_custom_top" {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			card_common = {
+				blockoverride "header_decor_templates" {
+					using = bg_card_header_01_diplomacy
+					using = bg_cabinet_card_frame
+				}
+				blockoverride "common_header_icon_texture" {
+					texture = "[GetSpecialStatusIconFromKey('senior_partner')]"
+					texture_density = 2
+					background = {
+						texture = "[GetSpecialStatusIconFromKey('senior_partner')]"
+						texture_density = 2
+						margin = {1 1}
+						modify_texture = {
+							using = color_black_texture
+							blend_mode = multiply
+						}
+					}
+				}
+				blockoverride "common_header_extra_left" {
+					expand = {}
+				}
+				blockoverride "common_header_text_full" {
+					text_single = {
+						align = center
+						text = "UNION_LAWS_TITLE"
+					}
+				}
+				blockoverride "common_bottom_content" {
+					vbox = {
+						spacing = 5
+						text_multi = {
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+							margin = {10 10}
+							maximumsize = {500 250}
+							autoresize = yes
+							block "left_bottom_text" {			
+								text = "UNION_LAWS_DESC"
+							}
+							align = center|nobaseline
+							default_format = "#subtle_name"
+							using = bg_text_mask_container_brown
+						}
+					}
+				}
+			}
+		}
+	}
+
+	blockoverride "scroll_list_is_empty_text_position" {
+		position = { 0 250 }
+	}
+
+	blockoverride "organization_members_tab_visible" {
+		visible = no
+	}
+	widget = {
+		allow_outside = yes
+		alwaystransparent = yes
+		icon = {
+			size = {570 262}
+			alwaystransparent = yes
+			texture = "gfx/interface/component_decoration/ios/union/marriage_union_header.dds"
+			texture_density = 2
+			parentanchor = left|top
+			position = {0 40}
+		}
+	}
+}

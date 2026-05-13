@@ -1,0 +1,412 @@
+﻿fall_of_delhi = {
+	monthly_spawn_chance = monthly_spawn_chance_low
+	hint_tag = hint_fall_of_delhi
+	resolution = "fall_of_delhi_resolution"
+	voters = fall_of_delhi_voters
+	
+	can_start = {
+		country_exists = c:DLH
+		custom_tooltip = {
+			text = has_never_had_situation_before_tt
+			c:DLH = { has_variable = starts_fall_of_delhi_variable }
+		}
+	}
+	
+	can_end = {
+		fall_of_delhi_end_trigger = yes
+	}
+	visible = {
+		OR = {
+			tag = DLH
+			OR = {
+				AND = {
+					exists = capital
+					capital.sub_continent = sub_continent:south_asia
+				}
+				AND = {
+					country_exists = c:DLH
+					OR = {
+						is_neighbor_of = c:DLH
+						is_subject_of = c:DLH
+						is_enemy_of = c:DLH
+						is_rival_of = c:DLH
+					}
+				}
+			}
+		}
+	}
+	
+
+	on_start = {
+		add_to_global_variable_list = { name = fall_of_delhi_voters target = c:DLH }
+		every_country = {
+			limit = {
+				NOT = { is_at_war_with = c:DLH }
+				NOT = { has_truce_with = c:DLH }
+				AND = {
+					exists = capital
+					capital.sub_continent = sub_continent:south_asia
+				}
+				NOT = { tag = DLH }
+				OR = {
+					is_subject_of = c:DLH
+					is_subject = no
+				}
+			}
+			add_to_global_variable_list = { name = fall_of_delhi_voters target = this }
+			trigger_event_non_silently = fall_of_delhi.2 
+		}
+		c:DLH = {
+			#var for any bribes or favours given
+			set_variable = {
+				name = fall_of_delhi_vote_weight
+				value = 0
+			}
+			trigger_event_non_silently = fall_of_delhi.3
+		}
+		c:DLH = {
+			ordered_known_country = {  
+				limit = {
+					capital.sub_continent = sub_continent:south_asia
+					NOR = {
+						is_allied_with = { target = c:DLH }
+						is_subject = yes
+						is_during_bankruptcy = yes
+					}
+				}
+				order_by = country_total_army_levy_size  
+				max = 1
+				check_range_bounds = no 
+				capital = {
+					root = {
+						set_variable = {
+							name = strongest_claimant_capital
+							value = prev
+						}
+					}
+				}
+				add_country_modifier = {
+					modifier = dlh_situation_modifier
+					months = -1
+					mode = replace
+				}
+				add_to_global_variable_list = { name = fall_of_delhi_possible_votes target = c:DLH } 
+				add_to_global_variable_list = { name = fall_of_delhi_possible_votes target = this } 
+
+				#var for any bribes or favours given
+				set_variable = {
+					name = fall_of_delhi_vote_weight
+					value = 0
+				}
+
+				#this is the opposing country
+				propose_resolution = {
+					resolution = resolution:fall_of_delhi_resolution
+					actor = this
+					recipient = situation:fall_of_delhi
+					vote = this
+				}
+
+				#Delhi will obviously side with himself
+				situation:fall_of_delhi = {
+					set_vote = {
+						voter = c:DLH
+						resolution = resolution:fall_of_delhi_resolution
+						vote = c:DLH
+					}
+				}
+			}
+		}
+	}
+
+	on_monthly = {
+		var:strongest_claimant_capital.owner ?= {
+			if = { 
+				limit = { 
+					NOT = { has_country_modifier = dlh_situation_modifier }
+				}
+				add_country_modifier = {
+					modifier = dlh_situation_modifier
+					months = -1
+					mode = replace
+				}
+			}
+		}
+		random_list = {
+			70 = { }
+			1 = { 
+				c:DLH = { trigger_event_non_silently = fall_of_delhi.8 }
+			}
+			1 = {
+				var:strongest_claimant_capital.owner ?= {
+					trigger_event_non_silently = fall_of_delhi.9
+				}
+			}
+			1 = { 
+				c:DLH = { trigger_event_non_silently = fall_of_delhi.13 }
+			}
+			1 = { 
+				c:DLH = { trigger_event_non_silently = fall_of_delhi.14 }
+			}
+			1 = { 
+				c:DLH = { trigger_event_non_silently = fall_of_delhi.16 }
+			}
+		}
+
+		random_list = {
+			2 = { 
+				random_in_global_list = {
+					variable = fall_of_delhi_voters
+					limit = {
+						OR = {
+							own_entire_province = province_definition:puadh_province
+							own_entire_province = province_definition:delhi_province
+							own_entire_province = province_definition:upper_doab_province
+							own_entire_province = province_definition:central_doab_province
+							own_entire_province = province_definition:lower_doab_province
+							own_entire_province = province_definition:braj_province
+						}
+					}
+					trigger_event_non_silently = fall_of_delhi.17 
+				}			
+			}
+			1 = { 
+				c:DLH = { trigger_event_non_silently = fall_of_delhi.19 }
+			}
+			25 = {
+				random_in_global_list = {
+					variable = fall_of_delhi_voters
+					limit = {
+						country_has_estate = estate_type:dhimmi_estate
+						capital ?= {
+							market ?= { is_traded_in_market = goods:slaves_goods }
+						}
+						has_slavery = yes
+						NOT = { 
+							has_unlocked_estate_privilege_trigger = { type = habshi_advisors_privilege } 
+						}
+					}
+					trigger_event_non_silently = fall_of_delhi.20 
+				}	
+			}
+			5 = {
+				random_in_global_list = {
+					variable = fall_of_delhi_voters
+					limit = { has_estate_privilege = estate_privilege:habshi_advisors_privilege }
+					trigger_event_non_silently = fall_of_delhi.21 
+				}
+			}
+			1 = { 
+				c:DLH = { trigger_event_non_silently = fall_of_delhi.22 }
+			}
+			95 = {}
+		}
+	}
+
+
+	on_ended = {
+		c:DLH ?= {
+			if = {
+				limit = { has_country_modifier = dlh_outside_interference_modifier }
+				remove_country_modifier = dlh_outside_interference_modifier
+			}
+		}
+		if = {
+			limit = {
+				NOT = { country_exists = c:DLH }
+			}
+			every_country = {
+				limit = {
+					has_variable = delhi_claimants_variable
+				}
+				trigger_event_non_silently = fall_of_delhi.4 
+			}
+		}
+		else_if = {
+			limit = {
+				c:DLH = { has_variable = dlh_surrendered_territories_var }
+			}
+			c:DLH = { trigger_event_non_silently = fall_of_delhi.5 }
+		}
+		else_if = {
+			limit = {
+				c:DLH = {
+					any_active_disaster = { disaster_type = disaster_type:dissolution_of_delhi }
+				}
+			}
+			c:DLH = { trigger_event_non_silently = fall_of_delhi.5 }
+		}
+		else = {
+			c:DLH = { trigger_event_non_silently = fall_of_delhi.6 }
+		}
+		c:DLH = { 
+			remove_variable = starts_fall_of_delhi_variable 
+			remove_variable = dlh_countdown_disaster_variable
+		}
+		random_country = {
+			limit = { has_country_modifier = dlh_situation_modifier } 
+			remove_country_modifier = dlh_situation_modifier
+			set_variable = { name = strongest_contender_var value = yes months = 3 }
+		}
+	}
+
+	tooltip = {
+		if = { #Loyal Subject of Delhi
+			limit = {
+				has_owner = yes
+				owner ?= {
+					is_subject_of = c:DLH
+					liberty_desire <= 50
+				}
+				situation:fall_of_delhi = {
+					"active_resolution(resolution:fall_of_delhi_resolution)" = {
+						"vote_in_active_resolution(root.owner)" ?= c:DLH
+					}
+				}
+			}
+			custom_tooltip = "LOYAL_SUBJECT_OF_DELHI"
+		}
+		else_if = { #Disloyal Subject of Delhi
+			limit = {
+				has_owner = yes
+				owner ?= {
+					is_subject_of = c:DLH
+					liberty_desire > 50
+				}
+				situation:fall_of_delhi = {
+					"active_resolution(resolution:fall_of_delhi_resolution)" = {
+						"vote_in_active_resolution(root.owner)" ?= resolution_proposer
+					}
+				}
+			}
+			custom_tooltip = "DISLOYAL_SUBJECT_OF_DELHI"
+		}
+		else_if = { #Ally of Delhi
+			limit = {
+				has_owner = yes
+				owner ?= {
+					is_allied_with = { target = c:DLH }
+				}
+			}
+			custom_tooltip = "ALLY_OF_DELHI"
+		}
+		else_if = { #Rival or Enemy of Delhi
+			limit = {
+				owner ?= { 	
+					OR = {
+						is_at_war_with = c:DLH
+						is_rival_of = c:DLH
+						is_enemy_of = c:DLH
+					}
+				}
+			}
+			custom_tooltip = "RIVAL_ENEMY_OF_DELHI"
+		}
+		else_if = { #Delhi
+			limit = {
+				owner ?= { tag = DLH }
+			}
+			custom_tooltip = "TERRITORY_OF_DELHI"
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				owner = c:DLH
+			}
+			value = map_delhi
+		}
+		else_if = {
+			limit = {	
+				has_owner = yes
+				OR = {
+					owner ?= {is_allied_with = { target = c:DLH }}
+					situation:fall_of_delhi = {
+						"active_resolution(resolution:fall_of_delhi_resolution)" = {
+							"vote_in_active_resolution(root.owner)" ?= c:DLH
+						}
+					}
+				}
+			}
+			value = delhi_subject_loyal_color
+		}
+		else_if = {
+			limit = {	
+				owner ?= { 
+					OR = {
+						is_at_war_with = c:DLH
+						is_rival_of = c:DLH
+						is_enemy_of = c:DLH
+					}
+				}
+			}
+			value = delhi_enemy_or_rival_color
+		}
+		else_if = {
+			limit = {	
+				owner ?= { 
+					AND = { 
+						is_subject_of = c:DLH 
+						liberty_desire > 50
+					}
+				}
+			}
+			value = delhi_subject_disloyal_color
+		}
+		else_if = {
+			limit = {	
+				has_owner = yes
+				situation:fall_of_delhi = {
+					"active_resolution(resolution:fall_of_delhi_resolution)" = {
+						"vote_in_active_resolution(root.owner)" ?= resolution_proposer
+					}
+				}
+			}
+			value = delhi_claimant_color
+		}
+		else_if = {
+			limit = {	
+				owner ?= { 
+					has_variable = delhi_provincial_sultanate_variable
+				}
+			}
+			value = delhi_provincial_sultanate_color
+		}
+		else = {
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+	
+	legend_key = { 
+		desc = "DLH"
+		color = map_delhi
+		require_color_on_map = yes # Don't show key if this color is not on the map.
+	}
+	legend_key = { 
+		desc = "[loyal_subject|e]"
+		color = delhi_subject_loyal_color
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "[rival_enemy|e]"
+		color = delhi_enemy_or_rival_color
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "[disloyal_subject|e]"
+		color = delhi_subject_disloyal_color
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "delhi_claimant_opinion"
+		color = delhi_claimant_color
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "indian_sultanate_reform"
+		color = delhi_provincial_sultanate_color
+		require_color_on_map = yes
+	}
+}

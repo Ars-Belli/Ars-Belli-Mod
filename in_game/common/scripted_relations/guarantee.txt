@@ -73,17 +73,20 @@
 
     will_expire_trigger = {
         OR = {
-            scope:actor = {
-                is_rival_of = scope:recipient
+            scope:first = {
+                is_rival_of = scope:second
             }
-            scope:actor = {
+            scope:first = {
                 modifier:allowed_guarantee = no
             }
-            scope:actor = {
-                country_rank_level < scope:recipient.country_rank_level
+            scope:first = {
+                country_rank_level < scope:second.country_rank_level
             }
-            scope:recipient = {
-                is_rival_of = scope:actor
+            scope:second = {
+                is_rival_of = scope:first
+            }
+            scope:second = {
+                is_great_power = yes
             }
         }
     }
@@ -103,15 +106,15 @@
     expire_effect = {
         if = {
             limit = {
-                scope:actor = {
-                    country_rank_level = scope:recipient.country_rank_level
+                scope:first = {
+                    country_rank_level = scope:second.country_rank_level
                 }
             }
-            scope:actor = {
+            scope:first = {
                 #upgrade to an alliance
                 create_relation = {
-                    first = scope:actor
-                    second = scope:recipient
+                    first = scope:first
+                    second = scope:second
                     type = relation_type:alliance
                 }
             }
@@ -160,6 +163,13 @@
                     }
                 }
             }
+        }
+
+        add = {
+            desc = "COMMON_RIVALS"
+            value = "scope:recipient.num_of_common_rivals(scope:actor)"
+            max = 3
+            multiply = 5
         }
     }
 }	
