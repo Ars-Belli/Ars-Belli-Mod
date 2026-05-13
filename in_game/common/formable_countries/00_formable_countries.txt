@@ -139,7 +139,7 @@ GBR_f = {
 	rule = historical
 	
 	potential = {
-		any_primary_or_accepted_or_tolerated_culture = { has_culture_group = culture_group:british_group }
+		culture ?= { has_culture_group = culture_group:british_group }
 	}
 
 	allow = {
@@ -570,7 +570,7 @@ SPA_f = {
 	rule = historical
 	
 	potential = {
-		culture = { has_culture_group = culture_group:iberian_group }
+		culture ?= { has_culture_group = culture_group:iberian_group }
 		religion.group = religion_group:christian
 	}
 
@@ -1835,11 +1835,17 @@ ROM_BYZ_f = {
 		italy_region
 	}
 	form_effect = {
-		if = { 
+		if = {
 			limit = { NOT = { capital = location:rome } }
 			move_capital_event_effect = {
 				from = root.capital
 				to = location:rome
+			}
+		}
+		province_definition:marittima_province = {
+			every_ownable_location_in_province_definition = {
+				limit = { owner = root }
+				change_integration_level = integrated
 			}
 		}
 		if = {
@@ -2334,6 +2340,7 @@ BYZ_f = {
 	rule = historical
 	potential = {
 		culture = { has_culture_group = culture_group:greek_group }
+		NOT = { has_or_had_tag = TRE }
 	}
 	allow = {
 		religion = religion:orthodox
@@ -2357,6 +2364,47 @@ BYZ_f = {
 					capital = location:constantinople
 					capital = location:rome
 				} 
+			}
+			set_capital = location:constantinople
+		}
+		if = {
+			limit = { country_rank_level < 4 }
+			set_country_rank_effect = { rank = country_rank:rank_empire }
+		}
+	}
+}
+
+BYZ_trebizond_f = {
+	level = 4
+	required_locations_fraction = 0.15
+	rule = historical
+	potential = {
+		has_or_had_tag = TRE
+		culture = { has_culture_group = culture_group:greek_group }
+	}
+	allow = {
+		religion = religion:orthodox
+		owns = location:constantinople
+		NOT = { country_exists = c:BYZ }
+	}
+
+	name = BYZ
+	flag = BYZ
+	adjective = BYZ_ADJ
+	tag = BYZ
+	color = map_BYZ
+
+	regions = {
+		balkan_region
+		anatolia_region
+	}
+	form_effect = {
+		if = {
+			limit = {
+				NOR = {
+					capital = location:constantinople
+					capital = location:rome
+				}
 			}
 			set_capital = location:constantinople
 		}
