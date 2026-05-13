@@ -449,8 +449,8 @@ mp_limits_rank_classification = {
 # `total_player_*` / `current_player_*` script_values just read back.
 #
 # Dedup rules (matching the mod's diplo-limit design):
-#   - DP weight: defensive-league members PLUS personal-union members, each counted once
-#   - AP weight: alliance partners NOT already counted in DP
+#   - AP weight: alliance partners (each counted once, takes priority)
+#   - DP weight: defensive-league + personal-union members NOT already counted in AP
 #   - GP weight: countries this country is guaranteeing (no dedup)
 mp_limits_calculate_diplo_weights = {
 	every_country = {
@@ -467,7 +467,29 @@ mp_limits_calculate_diplo_weights = {
 		set_variable = { name = mp_gp_weight value = 0 }
 		clear_variable_list = mp_dp_mates_buf
 
-		# 1. Defensive League members
+		# 1. Alliance partners (alliance > defensive league / PU for dedup)
+		every_country = {
+			limit = {
+				has_mutual_scripted_relation = {
+					type = relation_type:alliance
+					target = scope:mp_dw_p
+				}
+				NOT = { this = scope:mp_dw_p }
+			}
+			save_temporary_scope_as = mp_dw_mate
+			scope:mp_dw_p = {
+				add_to_variable_list = {
+					name = mp_dp_mates_buf
+					target = scope:mp_dw_mate
+				}
+				change_variable = {
+					name = mp_ap_weight
+					add = { value = "scope:mp_dw_mate.country_slot_weight" }
+				}
+			}
+		}
+
+		# 2. Defensive League members (dedup against alliances)
 		every_international_organizations_member_of = {
 			limit = {
 				international_organization_type = international_organization_type:defensive_league
@@ -498,7 +520,7 @@ mp_limits_calculate_diplo_weights = {
 			}
 		}
 
-		# 2. Personal Union members (dedup against defensive league)
+		# 3. Personal Union members (dedup against alliances + defensive league)
 		every_international_organizations_member_of = {
 			limit = {
 				international_organization_type = international_organization_type:union
@@ -524,36 +546,6 @@ mp_limits_calculate_diplo_weights = {
 							name = mp_dp_weight
 							add = { value = "scope:mp_dw_mate.country_slot_weight" }
 						}
-					}
-				}
-			}
-		}
-
-		# 3. Alliance partners (dedup against DP — they count under DP, not AP)
-		every_country = {
-			limit = {
-				has_mutual_scripted_relation = {
-					type = relation_type:alliance
-					target = scope:mp_dw_p
-				}
-				NOT = { this = scope:mp_dw_p }
-			}
-			save_temporary_scope_as = mp_dw_mate
-			if = {
-				limit = {
-					scope:mp_dw_p = {
-						NOT = {
-							is_target_in_variable_list = {
-								name = mp_dp_mates_buf
-								target = scope:mp_dw_mate
-							}
-						}
-					}
-				}
-				scope:mp_dw_p = {
-					change_variable = {
-						name = mp_ap_weight
-						add = { value = "scope:mp_dw_mate.country_slot_weight" }
 					}
 				}
 			}
