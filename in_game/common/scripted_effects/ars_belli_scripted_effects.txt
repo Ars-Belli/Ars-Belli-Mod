@@ -44,10 +44,31 @@ mp_limits_calculate_scores_and_avg = {
 		set_variable = { name = mp_vassal_pop_score value = country_vassal_pop_score }
 		set_variable = { name = mp_military_score value = country_military_score }
 
-		# Calculate and store power score
+		# Projected (instant) power score — what the smoothed score is tending toward.
 		set_variable = {
-			name = mp_power_score
+			name = mp_power_score_projected
 			value = country_power_score
+		}
+
+		# Smoothed displayed score: new = (old * 11 + projected) / 12, tends toward
+		# projected over ~12 months. Snap to projected if unset or 0 (fresh game,
+		# AI ↔ player flip, etc.) so it doesn't take a year to initialize.
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = mp_power_score }
+					var:mp_power_score = 0
+				}
+			}
+			set_variable = {
+				name = mp_power_score
+				value = var:mp_power_score_projected
+			}
+		}
+		else = {
+			change_variable = { name = mp_power_score multiply = 11 }
+			change_variable = { name = mp_power_score add = var:mp_power_score_projected }
+			change_variable = { name = mp_power_score divide = 12 }
 		}
 
 		# Sum for average
@@ -93,6 +114,7 @@ mp_limits_initialize_ranks_and_cleanup = {
 			remove_variable = mp_is_normal
 			remove_variable = mp_rank_count
 			remove_variable = mp_power_score
+			remove_variable = mp_power_score_projected
 			remove_variable = mp_pop_score
 			remove_variable = mp_eco_score
 			remove_variable = mp_manpower_score
