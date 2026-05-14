@@ -98,7 +98,7 @@ $g.DrawString("ARS BELLI", $titleFont, $shadow, $titleRectS, $fmt)
 $g.DrawString("ARS BELLI", $titleFont, $goldText, $titleRect, $fmt)
 
 $subRect = New-Object System.Drawing.RectangleF(0, 416, $size, 34)
-$g.DrawString("MULTIPLAYER WARFARE MOD", $subFont, $subText, $subRect, $fmt)
+$g.DrawString("MULTIPLAYER MOD", $subFont, $subText, $subRect, $fmt)
 
 # --- Decorative gold frame ---
 $framePen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(255, 170, 132, 52), [single]4)
