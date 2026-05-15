@@ -15,8 +15,46 @@
     relation_type_for_ai = friendly
     show_break_alert = yes
 
+	# Inlined alliance_can_exist minus the `opinion >= 0` checks on both sides —
+	# vision sharing is intentionally available regardless of mutual opinion.
 	offer_enabled = {
-        alliance_can_exist = yes
+		scope:actor = {
+			not = { has_blocked_treaties = scope:recipient }
+			not = { is_subject_of = scope:recipient }
+			not = { is_rival_of = scope:recipient }
+			modifier:allowed_alliance = yes
+			NOT = {
+				is_member_of_international_organization_of_type = {
+					type = coalition
+					target = scope:recipient
+				}
+			}
+			NOT = { in_union_with = scope:recipient }
+			is_rebel_country = no
+		}
+		scope:recipient = {
+			not = { has_blocked_treaties = scope:actor }
+			not = { is_subject_of = scope:actor }
+			not = { is_rival_of = scope:actor }
+			modifier:allowed_alliance = yes
+			NOT = {
+				is_member_of_international_organization_of_type = {
+					type = coalition
+					target = scope:actor
+				}
+			}
+			is_rebel_country = no
+		}
+		can_create_subject_alliance = {
+			actor = scope:actor
+			recipient = scope:recipient
+		}
+		NOT = {
+			AND = {
+				scope:actor = { is_hegemon = yes }
+				scope:recipient = { is_hegemon = yes }
+			}
+		}
 	}
 
 	request_visible = { always = no }
