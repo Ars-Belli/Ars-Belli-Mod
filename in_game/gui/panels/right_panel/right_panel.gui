@@ -265,7 +265,7 @@ types RightPanelTypes
 
 					button_regular = {
 						text = "AB_TIER_PANEL_TOGGLE"
-						onclick = "[GetScriptedGui('mp_limits_toggle_tier_panel').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						onclick = "[GetVariableSystem.Toggle('mp_tier_panel_open')]"
 						size = { 110 22 }
 						parentanchor = right
 					}
@@ -281,7 +281,7 @@ types RightPanelTypes
 					size = { 380 620 }
 					allow_outside = yes
 					alwaystransparent = no
-					visible = "[GetGlobalVariable('mp_tier_panel_open').IsSet]"
+					visible = "[GetVariableSystem.Exists('mp_tier_panel_open')]"
 
 					using = bg_paper_card
 					using = bg_cabinet_card_frame
@@ -306,7 +306,7 @@ types RightPanelTypes
 
 							button_regular = {
 								text = "AB_TIER_PANEL_CLOSE"
-								onclick = "[GetScriptedGui('mp_limits_close_tier_panel').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								onclick = "[GetVariableSystem.Toggle('mp_tier_panel_open')]"
 								size = { 80 26 }
 							}
 						}
