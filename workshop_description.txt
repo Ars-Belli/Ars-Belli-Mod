@@ -2,7 +2,7 @@
 
 [i]A gameplay-focused mod for Europa Universalis V, built primarily for multiplayer sessions.[/i]
 
-Ars Belli adds a custom power-ranking system, diplomatic web limits, and an extensive military/diplomacy rebalance. Supports game version 1.2.*.
+Ars Belli adds a custom power-ranking system, diplomatic alliance limits, and an extensive military/diplomacy rebalance. Supports game version 1.2.*.
 Server link: https://discord.gg/ZxbBhu9W
 
 [hr][/hr]
@@ -10,6 +10,7 @@ Server link: https://discord.gg/ZxbBhu9W
 [h2]Pops & Setup[/h2]
 [list]
 [*]Rebalanced the starting setup for the Hundred Years War (more French vassals, Independent Burgundy and flanders, better Scotland, adjusted borders and castles), Spain (Castille nerf), Bohemia, Eastern Europe (Kyiv and Moscow boost), Mamluks.
+[*]Remade India and China setup for multiplayer balance.
 [*]Pop adjustments across Asia: Timurid, Delhi, Khmer, Ayutthaya, Ming (Middle Kingdom), and the Lordship of Pale.
 [/list]
 
@@ -20,7 +21,7 @@ Server link: https://discord.gg/ZxbBhu9W
 [*]The score is smoothed over a 12-month target so rankings don't swing wildly month to month; tooltips show the projected score.
 [*]Click the country rank label in the top bar to open a tier-list panel listing every country in each rank with flag, name, and power score.
 [*]The foreign country diplomacy panel shows the viewed country's MP rank, power score, and diplomatic point usage/limits.
-[*]The number of Great Powers and Major Powers is set by game rules at game start.
+[*]The number of Great Powers and Major Powers, the number of Alliance Points and Defensive Points are set by game rules adjustable mid-game.
 [/list]
 
 [h2]Diplomatic Limits[/h2]
@@ -29,17 +30,16 @@ Server link: https://discord.gg/ZxbBhu9W
 [*]A country that is in both an alliance and a defensive league with you counts only once — defensive points take priority.
 [*]Personal unions count as defensive, but don't double-count if the partner is already in a defensive league with you.
 [*]Only Great Powers and Majors get Guarantee Points; everyone else gets 0.
-[*]Mutable alert when you are over the alliance limit, plus UI overflow fixes for the points displays.
+[*]Alert when you are over the alliance limit, enabled/muted from the tier list UI.
 [/list]
 
 [h2]Diplomacy Changes[/h2]
 [list]
-[*][b]Two-step Guarantees:[/b] a GP/Major uses "Propose Guarantee" and the recipient must Accept or Reject before it activates. The old one-click "Offer Guarantee" is hidden. Rejecting just clears the offer — no opinion penalty.
+[*][b]Two-step Guarantees:[/b] a GP/Major uses "Propose Guarantee" and the recipient must Accept or Reject before it activates.
 [*][b]Break Others' Guarantee:[/b] forcibly remove a guarantee placed on you. Requires peace and creates a truce on use.
-[*]The guarantee relation no longer grants +50 opinion.
 [*][b]Worsen Opinion:[/b] new action that worsens YOUR opinion of another country by -100, decaying over 10 years.
-[*][b]Pay for Access:[/b] new "Pay for X" actions (military access, fleet basing, trade access, food access, fondaco rights) with a gold slider to sweeten the offer. AI acceptance scales with the gold offered.
-[*]"Pay for Military Access" and "Pay for Fleet Basing Rights" auto-accept unless the AI is your rival (rivalry overrides any gold offer). The other three still need enough gold to convince the AI.
+[*][b]New "Pay for" actions:[/b] military access, fleet basing, trade access, food access, fondaco rights with a gold slider to sweeten the offer. AI acceptance scales with the gold offered.
+[*][b]Unconditional Surrender[/b] added new unconditional surrender action from Gekkarino's Grand EU5 Rebalance and Complete Overhaul Mod.
 [/list]
 
 [h2]Personal Unions[/h2]
@@ -49,12 +49,12 @@ Server link: https://discord.gg/ZxbBhu9W
 
 [h2]War & Military Rebalancing[/h2]
 [list]
-[*][b]Ticking warscore[/b] capped at 36 (down from 50), since occupations now give double warscore.
+[*][b]Ticking warscore[/b] capped at 36 (up from 25 in vanilla).
 [/list]
 
 [h3]Fort Rebalancing[/h3]
 [list]
-[*][b]Fort limit:[/b] base limit of 5. Fort techs give a flat +3; locations give +0.05 each. Country rank, city count, and nobility power no longer grant fort limit.
+[*][b]Fort limit rebalance:[/b] signifiantly lowered fort limit to make wars less static, base limit of 5. Fort techs give a flat +3; locations give +0.05 each. Country rank, city count, and nobility power no longer grant fort limit.
 [*][b]Defensiveness:[/b] gives half as much % fort limit (25%). No longer gives a combat speed bonus or an army movement speed penalty — instead grants a scaling -10% siege ability.
 [*][b]Offensiveness:[/b] gives half (or less) as much defensiveness penalty (~20%). No longer grants army movement speed — instead grants a scaling 25% logistics distance, +20% assault ability, and +20% siege ability.
 [*]Being over your fort limit gives -1% fort defense per percentage point over, capped at -50%.
