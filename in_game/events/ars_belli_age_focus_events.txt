@@ -1,0 +1,63 @@
+﻿namespace = ars_belli_age_focus
+
+# Second age-start event presented alongside the vanilla adm/dip/mil event.
+# Each option stamps a country variable so triggers/effects elsewhere can
+# branch on the chosen focus, e.g.:
+#   var:ars_belli_age_focus = flag:expansion
+ars_belli_age_focus.1 = {
+	type = age_event
+
+	title = ars_belli_age_focus.1.title
+	desc = ars_belli_age_focus.1.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = ages
+	}
+
+	immediate = {
+		# Clear any prior age's choice so the var only ever reflects the
+		# focus picked for the current age.
+		remove_variable = ars_belli_age_focus
+	}
+
+	option = {
+		name = ars_belli_age_focus.1.a   # Expansion
+		set_variable = {
+			name = ars_belli_age_focus
+			value = flag:expansion
+		}
+		# TODO: hook your modifier here, e.g.
+		# add_country_modifier = { name = ars_belli_focus_expansion duration = -1 }
+
+		ai_will_select = {
+			value = 100
+		}
+	}
+
+	option = {
+		name = ars_belli_age_focus.1.b   # Commerce
+		set_variable = {
+			name = ars_belli_age_focus
+			value = flag:commerce
+		}
+		# TODO: add_country_modifier = { name = ars_belli_focus_commerce duration = -1 }
+
+		ai_will_select = {
+			value = 100
+		}
+	}
+
+	option = {
+		name = ars_belli_age_focus.1.c   # Warfare
+		set_variable = {
+			name = ars_belli_age_focus
+			value = flag:warfare
+		}
+		# TODO: add_country_modifier = { name = ars_belli_focus_warfare duration = -1 }
+
+		ai_will_select = {
+			value = 100
+		}
+	}
+}

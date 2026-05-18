@@ -1,0 +1,50 @@
+﻿# Advances gated by the second age focus chosen in ars_belli_age_focus.1.
+# Pattern:
+#   - No "for = adm|dip|mil" (that field hooks the engine's preference slot;
+#     we're using a script-side gate instead).
+#   - allow = { has_variable = ars_belli_age_focus var:ars_belli_age_focus = flag:<focus> }
+#     blocks the advance until the focus is picked. The has_variable guard
+#     prevents "var = flag:X" from spuriously matching pre-event countries.
+#   - Replicate per age by changing "age = age_X_*" and the modifiers below.
+############################
+# age_2_renaissance — Expansion / Commerce / Warfare focus picks
+############################
+
+ars_belli_expansion_settlement_drive = {
+	age = age_2_renaissance
+	icon = scholasticism
+
+	allow = {
+		has_variable = ars_belli_age_focus
+		var:ars_belli_age_focus = flag:expansion
+	}
+
+	# Placeholder modifier — replace with the intended payoff.
+	global_settler_growth = 5
+}
+
+ars_belli_commerce_merchant_charters = {
+	age = age_2_renaissance
+	icon = court_accounting
+
+	allow = {
+		has_variable = ars_belli_age_focus
+		var:ars_belli_age_focus = flag:commerce
+	}
+
+	# Placeholder modifier — replace with the intended payoff.
+	global_trade_goods_size_modifier = 0.05
+}
+
+ars_belli_warfare_drilled_levies = {
+	age = age_2_renaissance
+	icon = regimental_system
+
+	allow = {
+		has_variable = ars_belli_age_focus
+		var:ars_belli_age_focus = flag:warfare
+	}
+
+	# Placeholder modifier — replace with the intended payoff.
+	land_morale = 0.05
+}
