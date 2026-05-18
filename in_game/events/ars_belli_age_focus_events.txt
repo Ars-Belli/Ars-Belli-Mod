@@ -1,9 +1,9 @@
 ﻿namespace = ars_belli_age_focus
 
-# Second age-start event presented alongside the vanilla adm/dip/mil event.
-# Each option stamps a country variable so triggers/effects elsewhere can
-# branch on the chosen focus, e.g.:
-#   var:ars_belli_age_focus = flag:expansion
+# Second age-start focus selection — fires alongside vanilla ages_of_eu.1.
+# Player picks 2 of 3 focuses across two chained events.
+# Each pick sets a country flag (ars_belli_focus_expansion / _commerce / _warfare).
+# Advances elsewhere gate on those flags directly (has_country_flag).
 ars_belli_age_focus.1 = {
 	type = age_event
 
@@ -16,48 +16,71 @@ ars_belli_age_focus.1 = {
 	}
 
 	immediate = {
-		# Clear any prior age's choice so the var only ever reflects the
-		# focus picked for the current age.
-		remove_variable = ars_belli_age_focus
+		# Reset any prior age's picks so the player gets a clean 2-of-3 each age.
+		clr_country_flag = ars_belli_focus_expansion
+		clr_country_flag = ars_belli_focus_commerce
+		clr_country_flag = ars_belli_focus_warfare
 	}
 
 	option = {
 		name = ars_belli_age_focus.1.a   # Expansion
-		set_variable = {
-			name = ars_belli_age_focus
-			value = flag:expansion
-		}
-		# TODO: hook your modifier here, e.g.
-		# add_country_modifier = { name = ars_belli_focus_expansion duration = -1 }
+		set_country_flag = ars_belli_focus_expansion
+		trigger_event_non_silently = { id = ars_belli_age_focus.2 }
 
-		ai_will_select = {
-			value = 100
-		}
+		ai_will_select = { value = 100 }
 	}
 
 	option = {
 		name = ars_belli_age_focus.1.b   # Commerce
-		set_variable = {
-			name = ars_belli_age_focus
-			value = flag:commerce
-		}
-		# TODO: add_country_modifier = { name = ars_belli_focus_commerce duration = -1 }
+		set_country_flag = ars_belli_focus_commerce
+		trigger_event_non_silently = { id = ars_belli_age_focus.2 }
 
-		ai_will_select = {
-			value = 100
-		}
+		ai_will_select = { value = 100 }
 	}
 
 	option = {
 		name = ars_belli_age_focus.1.c   # Warfare
-		set_variable = {
-			name = ars_belli_age_focus
-			value = flag:warfare
-		}
-		# TODO: add_country_modifier = { name = ars_belli_focus_warfare duration = -1 }
+		set_country_flag = ars_belli_focus_warfare
+		trigger_event_non_silently = { id = ars_belli_age_focus.2 }
 
-		ai_will_select = {
-			value = 100
-		}
+		ai_will_select = { value = 100 }
+	}
+}
+
+# Follow-up event — the second of the two picks. The option matching the
+# already-picked focus is hidden via per-option trigger.
+ars_belli_age_focus.2 = {
+	type = age_event
+
+	title = ars_belli_age_focus.2.title
+	desc = ars_belli_age_focus.2.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = ages
+	}
+
+	option = {
+		name = ars_belli_age_focus.1.a   # Expansion
+		trigger = { NOT = { has_country_flag = ars_belli_focus_expansion } }
+		set_country_flag = ars_belli_focus_expansion
+
+		ai_will_select = { value = 100 }
+	}
+
+	option = {
+		name = ars_belli_age_focus.1.b   # Commerce
+		trigger = { NOT = { has_country_flag = ars_belli_focus_commerce } }
+		set_country_flag = ars_belli_focus_commerce
+
+		ai_will_select = { value = 100 }
+	}
+
+	option = {
+		name = ars_belli_age_focus.1.c   # Warfare
+		trigger = { NOT = { has_country_flag = ars_belli_focus_warfare } }
+		set_country_flag = ars_belli_focus_warfare
+
+		ai_will_select = { value = 100 }
 	}
 }

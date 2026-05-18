@@ -1,10 +1,13 @@
-﻿# Advances gated by the second age focus chosen in ars_belli_age_focus.1.
+﻿# Advances gated by the second-set age focuses chosen in ars_belli_age_focus.1/.2.
+# Player picks 2 of 3 focuses, each setting a country flag:
+#   ars_belli_focus_expansion / ars_belli_focus_commerce / ars_belli_focus_warfare
+#
 # Pattern:
 #   - No "for = adm|dip|mil" (that field hooks the engine's preference slot;
-#     we're using a script-side gate instead).
-#   - allow = { has_variable = ars_belli_age_focus var:ars_belli_age_focus = flag:<focus> }
-#     blocks the advance until the focus is picked. The has_variable guard
-#     prevents "var = flag:X" from spuriously matching pre-event countries.
+#     we use a script-side gate instead).
+#   - allow = { has_country_flag = ars_belli_focus_<focus> } blocks the advance
+#     until the matching flag is set. An advance unlocks if EITHER of the two
+#     picks matches its flag, which is the intended 2-of-3 behavior.
 #   - Replicate per age by changing "age = age_X_*" and the modifiers below.
 ############################
 # age_2_renaissance — Expansion / Commerce / Warfare focus picks
@@ -15,8 +18,7 @@ ars_belli_expansion_settlement_drive = {
 	icon = scholasticism
 
 	allow = {
-		has_variable = ars_belli_age_focus
-		var:ars_belli_age_focus = flag:expansion
+		has_country_flag = ars_belli_focus_expansion
 	}
 
 	# Placeholder modifier — replace with the intended payoff.
@@ -28,8 +30,7 @@ ars_belli_commerce_merchant_charters = {
 	icon = court_accounting
 
 	allow = {
-		has_variable = ars_belli_age_focus
-		var:ars_belli_age_focus = flag:commerce
+		has_country_flag = ars_belli_focus_commerce
 	}
 
 	# Placeholder modifier — replace with the intended payoff.
@@ -41,8 +42,7 @@ ars_belli_warfare_drilled_levies = {
 	icon = regimental_system
 
 	allow = {
-		has_variable = ars_belli_age_focus
-		var:ars_belli_age_focus = flag:warfare
+		has_country_flag = ars_belli_focus_warfare
 	}
 
 	# Placeholder modifier — replace with the intended payoff.
