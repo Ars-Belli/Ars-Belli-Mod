@@ -13,34 +13,40 @@
 	}
 
 	allow = {
-		scope:actor = {
-			not = { has_blocked_treaties = scope:recipient }
-			has_limited_diplomacy = no
-			not = { is_rival_of = scope:recipient }
-			not = { is_subject_of = scope:recipient }
-			not = {
-				has_diplomacy_with = {
-					type = giving_defensive_support
-					country = scope:recipient
+		# Both `potential` and `allow` are evaluated during AI consideration with
+		# scope:recipient sometimes unset; guard the recipient-dependent checks
+		# so they only run once we have a real pair.
+		trigger_if = {
+			limit = { exists = scope:recipient }
+			scope:actor = {
+				not = { has_blocked_treaties = scope:recipient }
+				has_limited_diplomacy = no
+				not = { is_rival_of = scope:recipient }
+				not = { is_subject_of = scope:recipient }
+				not = {
+					has_diplomacy_with = {
+						type = giving_defensive_support
+						country = scope:recipient
+					}
 				}
-			}
-			not = {
-				giving_scripted_relation = {
-					type = relation_type:guarantee
-					target = scope:recipient
+				not = {
+					giving_scripted_relation = {
+						type = relation_type:guarantee
+						target = scope:recipient
+					}
 				}
+				country_tax_base > scope:recipient.country_tax_base
+				expected_army_size > scope:recipient.expected_army_size
 			}
-			country_tax_base > scope:recipient.country_tax_base
-			expected_army_size > scope:recipient.expected_army_size
-		}
-		scope:recipient = {
-			not = { has_blocked_treaties = scope:actor }
-			has_limited_diplomacy = no
-			not = { is_rival_of = scope:actor }
-			OR = {
-				is_mp_normal = yes
-				is_mp_small = yes
-				is_mp_minor = yes
+			scope:recipient = {
+				not = { has_blocked_treaties = scope:actor }
+				has_limited_diplomacy = no
+				not = { is_rival_of = scope:actor }
+				OR = {
+					is_mp_normal = yes
+					is_mp_small = yes
+					is_mp_minor = yes
+				}
 			}
 		}
 	}
@@ -104,18 +110,25 @@
 	}
 
 	accept = {
-		add = {
-			desc = "DIPLOREASON_OPINION"
-			value = "scope:recipient.opinion(scope:actor)"
-			divide = 5
-		}
+		# Guard against AI pre-evaluation calls where one of the scopes is unset.
 		if = {
 			limit = {
-				scope:actor = { is_rival_of = scope:recipient }
+				exists = scope:actor
+				exists = scope:recipient
 			}
-			subtract = {
-				desc = "game_concept_rival"
-				value = 200
+			add = {
+				desc = "DIPLOREASON_OPINION"
+				value = "scope:recipient.opinion(scope:actor)"
+				divide = 5
+			}
+			if = {
+				limit = {
+					scope:actor = { is_rival_of = scope:recipient }
+				}
+				subtract = {
+					desc = "game_concept_rival"
+					value = 200
+				}
 			}
 		}
 	}

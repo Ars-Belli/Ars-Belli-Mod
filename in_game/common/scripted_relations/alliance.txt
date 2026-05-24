@@ -197,99 +197,108 @@
         threatening_rivals = 20
     }
     wants_to_give = {
+        # Guard the entire body against AI pre-evaluation passes where one
+        # of the scopes is unset. When scopes are null, this block contributes
+        # 0 to wants_to_give, which is the safe default.
         if = {
-            #Actor needs to be close and relativly big
             limit = {
-                scope:recipient = {
-                    border_distance_to = {
-                        country = scope:actor
-                        value < 150
-                    }
-                    relative_strength = {
-                        target = scope:actor
-                        value < 0.60
+                exists = scope:actor
+                exists = scope:recipient
+            }
+            if = {
+                #Actor needs to be close and relativly big
+                limit = {
+                    scope:recipient = {
+                        border_distance_to = {
+                            country = scope:actor
+                            value < 150
+                        }
+                        relative_strength = {
+                            target = scope:actor
+                            value < 0.60
+                        }
                     }
                 }
+                add = {
+                    desc = "NEEDS_ALLIES_AGAINST_STRONG_RIVALS_AND_NEIGHBOURS"
+                    # Check if the country needs allies at all
+                    value = scope:recipient.country_needs_allies_value
+                    max = 25
+                    min = 0
+                }
             }
-            add = {
-                desc = "NEEDS_ALLIES_AGAINST_STRONG_RIVALS_AND_NEIGHBOURS"
-                # Check if the country needs allies at all
-                value = scope:recipient.country_needs_allies_value
-                max = 25
-                min = 0
-            }
-        }
-        scope:actor = {
-            add = {
-                desc = "COALITION_GRADE_ANTAGONISM_TOWARDS_THEM"
-                value = {
-                    every_country_with_coalition_grade_antagonism_against_us = {
-                        limit = {
-                            not = { is_subject_or_below_of = scope:actor }
-                        }
-                        subtract = {
-                            value = country_strength
-                        }
-                    }
-                    if = {
-                        limit = {
-                            NOT = {
-                                country_strength <= 0 
+            scope:actor = {
+                add = {
+                    desc = "COALITION_GRADE_ANTAGONISM_TOWARDS_THEM"
+                    value = {
+                        every_country_with_coalition_grade_antagonism_against_us = {
+                            limit = {
+                                not = { is_subject_or_below_of = scope:actor }
+                            }
+                            subtract = {
+                                value = country_strength
                             }
                         }
-                        divide = country_strength
-                    } 
-                    multiply = 10
-                }
-            }
-        }
-        if = {
-            limit = {
-                scope:actor = {
-                    any_current_war = {
-                        NOT = {
-                            is_on_same_side = {
-                                country = scope:actor
-                                target = scope:recipient
+                        if = {
+                            limit = {
+                                NOT = {
+                                    country_strength <= 0
+                                }
                             }
+                            divide = country_strength
                         }
+                        multiply = 10
                     }
                 }
             }
-            add = {
-                desc = "ACTOR_IS_IN_DIFFERENT_WARS"
-                value = -100
-            }
-        }
-
-        if = {
-            limit = {
-                "scope:recipient.opinion(scope:actor)" < 150
-                "scope:recipient.conquer_desire(scope:actor)" > 20
-                scope:recipient = {
-                    is_neighbor_of = scope:actor
-                }
-            }
-            add = {
-                desc = "RECIPIENTS_DESIRES_ACTORS_LOCATIONS"
-                value = "scope:recipient.conquer_desire(scope:actor)"
-                multiply = -1
-            }
-        }
-
-        add = {
-            desc = "RECIPIENT_WOULD_NEED_TO_PAY_FOR_DIPLOMACY"
-            value = scope:recipient.diplomatic_capacity_without_maintenance
-            subtract = scope:recipient.used_diplomatic_capacity
-            subtract = "scope:recipient.diplomatic_capacity_of_new_relation(scope:actor|scope:scripted_relation_type)"
             if = {
                 limit = {
-                    NOT = { scope:recipient.diplomatic_capacity_without_maintenance <= 0 }
+                    scope:actor = {
+                        any_current_war = {
+                            NOT = {
+                                is_on_same_side = {
+                                    country = scope:actor
+                                    target = scope:recipient
+                                }
+                            }
+                        }
+                    }
                 }
-                divide = scope:recipient.diplomatic_capacity_without_maintenance
+                add = {
+                    desc = "ACTOR_IS_IN_DIFFERENT_WARS"
+                    value = -100
+                }
             }
-            max = 0
-            multiply = 100
+
+            if = {
+                limit = {
+                    "scope:recipient.opinion(scope:actor)" < 150
+                    "scope:recipient.conquer_desire(scope:actor)" > 20
+                    scope:recipient = {
+                        is_neighbor_of = scope:actor
+                    }
+                }
+                add = {
+                    desc = "RECIPIENTS_DESIRES_ACTORS_LOCATIONS"
+                    value = "scope:recipient.conquer_desire(scope:actor)"
+                    multiply = -1
+                }
+            }
+
+            add = {
+                desc = "RECIPIENT_WOULD_NEED_TO_PAY_FOR_DIPLOMACY"
+                value = scope:recipient.diplomatic_capacity_without_maintenance
+                subtract = scope:recipient.used_diplomatic_capacity
+                subtract = "scope:recipient.diplomatic_capacity_of_new_relation(scope:actor|scope:scripted_relation_type)"
+                if = {
+                    limit = {
+                        NOT = { scope:recipient.diplomatic_capacity_without_maintenance <= 0 }
+                    }
+                    divide = scope:recipient.diplomatic_capacity_without_maintenance
+                }
+                max = 0
+                multiply = 100
+            }
         }
     }
 
