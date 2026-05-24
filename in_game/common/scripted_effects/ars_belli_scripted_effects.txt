@@ -380,6 +380,30 @@ mp_limits_assign_category_markers = {
 	}
 }
 
+# Pop up a warning event the first time the player crosses their fort limit,
+# but only if they've opted in via the tier list panel (default: off).
+# Re-arms when they drop back under. No penalty modifier — vanilla already
+# applies one via the over_fort_limit auto_modifier.
+mp_limits_apply_fort_limit_alert = {
+	if = {
+		limit = {
+			is_human = yes
+			used_fort_limit_percentage > 1.0
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = mp_was_over_fort_limit }
+				has_variable = mp_fort_alert_enabled
+			}
+			trigger_event_non_silently = ars_belli_mp_limits.2
+		}
+		set_variable = { name = mp_was_over_fort_limit value = 1 }
+	}
+	else = {
+		remove_variable = mp_was_over_fort_limit
+	}
+}
+
 mp_limits_apply_alliance_limit_penalty = {
 	if = {
 		limit = {

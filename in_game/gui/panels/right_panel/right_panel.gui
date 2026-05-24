@@ -325,6 +325,20 @@ types RightPanelTypes
 							}
 						}
 
+						# Per-country toggle for the fort-limit popup warning.
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							datacontext = "[GetPlayer]"
+
+							button_regular = {
+								text = "[Country.Custom('mp_fort_alert_toggle_label')]"
+								tooltip = "AB_FORT_ALERT_TOGGLE_TOOLTIP"
+								onclick = "[GetScriptedGui('mp_limits_toggle_fort_alert').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								size = { -1 26 }
+								layoutpolicy_horizontal = expanding
+							}
+						}
+
 						# Scrollable list of tier sections
 						scrollarea = {
 							layoutpolicy_horizontal = expanding
