@@ -1,0 +1,35 @@
+# Strip the cb_deus_vult unlock from both advances that grant it. The engine
+# UI ("We need to have researched Deus Vult or Expansion of Sokoto to use
+# Religious War Casus Belli") gates the CB on the presence of any advance
+# that has `unlock_casus_belli = cb_deus_vult`, regardless of whether the
+# CB was unlocked through scripted effects. With both advances stripped of
+# this unlock, cb_deus_vult is available to everyone of a different religion
+# group (matching its create_visible / declare_enabled trigger).
+#
+# Replaces:
+#   advances/4_choices_adm.txt  -> deus_vult
+#   advances/country_SKO.txt    -> sko_fulani_expansion
+
+REPLACE:deus_vult = {
+	age = age_2_renaissance
+	icon = teu_crusader_discipline
+	for = adm
+
+	requires = church_attendance_duty
+	ai_weight = { add = 160 }
+
+	# unlock_casus_belli = cb_deus_vult  # removed - cb_deus_vult is now available to all
+}
+
+REPLACE:sko_fulani_expansion = {
+	age = age_3_discovery
+	icon = independence_from_mali
+	potential = {
+		has_or_had_tag = SKO
+	}
+
+	# unlock_casus_belli = cb_deus_vult  # removed - cb_deus_vult is now available to all
+	global_pop_conversion_speed_modifier = 0.1
+
+	requires = gov_reform_discovery_a
+}
