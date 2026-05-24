@@ -491,7 +491,7 @@ mp_limits_rank_classification = {
 # Dedup rules (matching the mod's diplo-limit design):
 #   - AP weight: alliance partners (each counted once, takes priority)
 #   - DP weight: defensive-league + personal-union members NOT already counted in AP
-#   - GP weight: countries this country is guaranteeing (no dedup)
+#   - GR count : countries this country is guaranteeing (1 per relation, no rank weighting)
 mp_limits_calculate_diplo_weights = {
 	every_country = {
 		limit = {
@@ -606,7 +606,9 @@ mp_limits_calculate_diplo_weights = {
 			}
 		}
 
-		# 4. Guarantees (this country guarantees them)
+		# 4. Guarantees (this country guarantees them).
+		# Counted as 1 per relation regardless of guaranteed country's rank
+		# (these are "Guarantee Relations" in the UI, not weighted points).
 		every_country = {
 			limit = {
 				receiving_scripted_relation = {
@@ -623,7 +625,7 @@ mp_limits_calculate_diplo_weights = {
 				}
 				change_variable = {
 					name = mp_gp_weight
-					add = { value = "scope:mp_dw_mate.country_slot_weight" }
+					add = 1
 				}
 			}
 		}
