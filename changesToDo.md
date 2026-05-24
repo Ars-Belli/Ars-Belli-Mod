@@ -1,10 +1,8 @@
 For now:
-- religious war cb: make it allowed for everyone by default, make it better (neutral warscore cost? instead of +70%)
-- add mutable alert for over the fort limit
-- increase fort over limit penalty from 100% to 200% fort defesiveness
-- option to remove head of cabinet?
-- fix PU alliance bug where being in personal union with 1 player and many AI's counts the AI's as players
 
 Not for now:
 - ?half manpower numbers, half levy numbers
 - ?make different unit types usable in every age
+- buff supply depos from 250 food to 1000
+- buff logistic units' food storage, from 2x for the first units to 5x for the last units in age of revolution (2x, 2.5x, 3x, 3.5x, 4.5x, 5x)
+- location modifier for proximit modifer the lower the control is
