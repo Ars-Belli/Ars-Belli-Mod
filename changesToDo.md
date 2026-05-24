@@ -1,8 +1,10 @@
-- reduce taxbase from province warscore cost -> 25% taxbase of what it is, increase control impact on warscore over ages, increase control impact from warscore (20,40,60,80,100,100)
-- religious war cb default, make it better
+For now:
+- religious war cb: make it allowed for everyone by default, make it better (neutral warscore cost? instead of +70%)
 - add mutable alert for over the fort limit
-- increase fort over limit penalty
+- increase fort over limit penalty from 100% to 200% fort defesiveness
 - option to remove head of cabinet?
-- ?half manpower numbers, half levy numbers
+- fix PU alliance bug where being in personal union with 1 player and many AI's counts the AI's as players
 
+Not for now:
+- ?half manpower numbers, half levy numbers
 - ?make different unit types usable in every age
