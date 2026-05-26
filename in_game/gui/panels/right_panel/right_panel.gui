@@ -50,6 +50,7 @@ types RightPanelTypes
 					direction = vertical
 					spacing = 5
 					parentanchor = vcenter
+					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
 
 					# text_single = {
 					#	text = "[GetPlayer.Custom('mp_calc_counter_display')]"
@@ -250,6 +251,7 @@ types RightPanelTypes
 					direction = vertical
 					spacing = 2
 					parentanchor = right
+					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
 
 					datacontext = "[GetPlayer]"
 					tooltip = "MP_RANK_TOOLTIP"
@@ -281,7 +283,7 @@ types RightPanelTypes
 					size = { 380 620 }
 					allow_outside = yes
 					alwaystransparent = no
-					visible = "[GetVariableSystem.Exists('mp_tier_panel_open')]"
+					visible = "[And(GetGlobalVariable('mp_mechanics_enabled').IsSet, GetVariableSystem.Exists('mp_tier_panel_open'))]"
 
 					using = bg_paper_card
 					using = bg_cabinet_card_frame

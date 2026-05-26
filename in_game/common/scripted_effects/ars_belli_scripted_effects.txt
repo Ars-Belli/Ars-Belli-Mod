@@ -183,10 +183,13 @@ mp_limits_game_start_effect = {
 	}
 
 	# on game start initialize all countries and ranks, including AI
-	mp_limits_once_per_month_calculations = yes
+	if = {
+		limit = { has_global_variable = mp_mechanics_enabled }
+		mp_limits_once_per_month_calculations = yes
 
-	every_country = {
-		mp_limits_rank_classification = yes
+		every_country = {
+			mp_limits_rank_classification = yes
+		}
 	}
 
 	if = {
@@ -213,23 +216,14 @@ mp_limits_monthly_calculation = {
 		}
 		set_global_variable = mp_limits_calculation_done
 
-		# Initialize rules globally
+		# Initialize rules globally (must run even when mechanics disabled so the toggle var stays current)
 		mp_limits_rules_initialization = yes
 
-		mp_limits_once_per_month_calculations = yes
-
-		# Increment calculation counter
-		# if = {
-		# 	limit = { not = { has_global_variable = mp_limits_calc_counter } }
-		# 	set_global_variable = {
-		# 		name = mp_limits_calc_counter
-		# 		value = 0
-		# 	}
-		# }
-		# change_global_variable = {
-		# 	name = mp_limits_calc_counter
-		# 	add = 1
-		# }
+		# Master gate: skip the heavy per-country work when MP mechanics are turned off.
+		if = {
+			limit = { has_global_variable = mp_mechanics_enabled }
+			mp_limits_once_per_month_calculations = yes
+		}
 	}
 }
 

@@ -1,4 +1,13 @@
 ﻿mp_limits_rules_initialization = {
+    # GUI uses IsSet to gate the displays, so set the var only when enabled.
+    if = {
+        limit = { has_game_rule = mp_mechanics_enabled }
+        set_global_variable = { name = mp_mechanics_enabled value = 1 }
+    }
+    else = {
+        remove_global_variable = mp_mechanics_enabled
+    }
+
     set_global_variable = {
         name = mp_gp_limit
         value = 6
