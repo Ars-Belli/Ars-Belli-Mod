@@ -604,45 +604,89 @@ mp_limits_calculate_diplo_weights = {
 			}
 		}
 
-		# 2. Defensive League members (dedup against alliances)
+		# 2. Personal Union members
+		# Runs before Defensive League so an offensive-policy union can preempt DL→DP categorization.
+		# - Union with one of the offense policies (assured/automatic/possible) → AP weight
+		# - Otherwise → DP weight (vanilla behavior)
 		every_international_organizations_member_of = {
 			limit = {
-				international_organization_type = international_organization_type:defensive_league
+				international_organization_type = international_organization_type:union
 			}
-			every_international_organization_member = {
-				limit = { NOT = { this = scope:mp_dw_p } }
-				save_temporary_scope_as = mp_dw_mate
-				scope:mp_dw_p = {
-					if = {
-						limit = {
-							NOT = {
-								is_target_in_variable_list = {
-									name = mp_dp_mates_buf
-									target = scope:mp_dw_mate
+			if = {
+				limit = {
+					OR = {
+						international_organization_has_policy = policy:union_assured_offense_policy
+						international_organization_has_policy = policy:union_automatic_offense_policy
+						international_organization_has_policy = policy:union_possible_offense_policy
+					}
+				}
+				# Offensive union → AP (dedup against alliance/colonial AP partners only)
+				every_international_organization_member = {
+					limit = { NOT = { this = scope:mp_dw_p } }
+					save_temporary_scope_as = mp_dw_mate
+					scope:mp_dw_p = {
+						if = {
+							limit = {
+								NOT = {
+									is_target_in_variable_list = {
+										name = mp_ap_partners
+										target = scope:mp_dw_mate
+									}
 								}
 							}
+							add_to_variable_list = {
+								name = mp_dp_mates_buf
+								target = scope:mp_dw_mate
+							}
+							add_to_variable_list = {
+								name = mp_ap_partners
+								target = scope:mp_dw_mate
+							}
+							change_variable = {
+								name = mp_ap_weight
+								add = { value = "scope:mp_dw_mate.country_slot_weight" }
+							}
 						}
-						add_to_variable_list = {
-							name = mp_dp_mates_buf
-							target = scope:mp_dw_mate
-						}
-						add_to_variable_list = {
-							name = mp_dp_partners
-							target = scope:mp_dw_mate
-						}
-						change_variable = {
-							name = mp_dp_weight
-							add = { value = "scope:mp_dw_mate.country_slot_weight" }
+					}
+				}
+			}
+			else = {
+				# Defensive union → DP (dedup against alliance/colonial via mp_dp_mates_buf)
+				every_international_organization_member = {
+					limit = { NOT = { this = scope:mp_dw_p } }
+					save_temporary_scope_as = mp_dw_mate
+					scope:mp_dw_p = {
+						if = {
+							limit = {
+								NOT = {
+									is_target_in_variable_list = {
+										name = mp_dp_mates_buf
+										target = scope:mp_dw_mate
+									}
+								}
+							}
+							add_to_variable_list = {
+								name = mp_dp_mates_buf
+								target = scope:mp_dw_mate
+							}
+							add_to_variable_list = {
+								name = mp_dp_partners
+								target = scope:mp_dw_mate
+							}
+							change_variable = {
+								name = mp_dp_weight
+								add = { value = "scope:mp_dw_mate.country_slot_weight" }
+							}
 						}
 					}
 				}
 			}
 		}
 
-		# 3. Personal Union members (dedup against alliances + defensive league)
+		# 3. Defensive League members (dedup against alliances + colonial + unions counted above)
 		every_international_organizations_member_of = {
 			limit = {
-				international_organization_type = international_organization_type:union
+				international_organization_type = international_organization_type:defensive_league
 			}
 			every_international_organization_member = {
 				limit = { NOT = { this = scope:mp_dw_p } }
