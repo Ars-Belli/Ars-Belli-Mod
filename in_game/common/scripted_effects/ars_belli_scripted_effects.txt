@@ -536,6 +536,74 @@ mp_limits_calculate_diplo_weights = {
 			}
 		}
 
+		# 1b. Colonial-nation overlord/subject relationship counts as AP for both sides.
+		# In players_only mode AI slot_weight is 0, so AI partners are tracked but cost nothing.
+
+		# As overlord: my colonial-nation subjects
+		every_subject = {
+			limit = {
+				is_subject_type = colonial_nation
+				NOT = { this = scope:mp_dw_p }
+			}
+			save_temporary_scope_as = mp_dw_mate
+			scope:mp_dw_p = {
+				if = {
+					limit = {
+						NOT = {
+							is_target_in_variable_list = {
+								name = mp_ap_partners
+								target = scope:mp_dw_mate
+							}
+						}
+					}
+					add_to_variable_list = {
+						name = mp_dp_mates_buf
+						target = scope:mp_dw_mate
+					}
+					add_to_variable_list = {
+						name = mp_ap_partners
+						target = scope:mp_dw_mate
+					}
+					change_variable = {
+						name = mp_ap_weight
+						add = { value = "scope:mp_dw_mate.country_slot_weight" }
+					}
+				}
+			}
+		}
+
+		# As subject: I'm a colonial nation, my overlord counts toward my AP
+		if = {
+			limit = { is_subject_type = colonial_nation }
+			overlord ?= {
+				save_temporary_scope_as = mp_dw_mate
+				scope:mp_dw_p = {
+					if = {
+						limit = {
+							NOT = {
+								is_target_in_variable_list = {
+									name = mp_ap_partners
+									target = scope:mp_dw_mate
+								}
+							}
+						}
+						add_to_variable_list = {
+							name = mp_dp_mates_buf
+							target = scope:mp_dw_mate
+						}
+						add_to_variable_list = {
+							name = mp_ap_partners
+							target = scope:mp_dw_mate
+						}
+						change_variable = {
+							name = mp_ap_weight
+							add = { value = "scope:mp_dw_mate.country_slot_weight" }
+						}
+					}
+				}
+			}
+		}
+
 		# 2. Defensive League members (dedup against alliances)
 		every_international_organizations_member_of = {
 			limit = {
