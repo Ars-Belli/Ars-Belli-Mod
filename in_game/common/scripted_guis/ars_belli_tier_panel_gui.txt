@@ -14,17 +14,17 @@ mp_limits_toggle_alliance_alert = {
 	}
 }
 
-# Per-country toggle for the "over fort limit" popup warning. Same opt-in
-# pattern as the alliance alert above. Default state is muted.
+# Per-country toggle for the "over fort limit" popup warning.
+# Default state: ON (variable absent). Setting mp_fort_alert_muted mutes it.
 mp_limits_toggle_fort_alert = {
 	effect = {
 		root = {
 			if = {
-				limit = { has_variable = mp_fort_alert_enabled }
-				remove_variable = mp_fort_alert_enabled
+				limit = { has_variable = mp_fort_alert_muted }
+				remove_variable = mp_fort_alert_muted
 			}
 			else = {
-				set_variable = { name = mp_fort_alert_enabled value = 1 }
+				set_variable = { name = mp_fort_alert_muted value = 1 }
 			}
 		}
 	}

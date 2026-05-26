@@ -374,16 +374,16 @@ mp_limits_assign_category_markers = {
 	}
 }
 
-# Pop up a warning event EVERY month the player is over their fort limit,
-# but only if they've opted in via the tier list panel (default: off).
-# No penalty modifier — vanilla already applies one via the over_fort_limit
-# auto_modifier.
+# Pop up a warning event EVERY month the player is over their fort limit.
+# Default: ON — fires unless the player has muted it via the tier list panel
+# (which sets mp_fort_alert_muted on the country). No penalty modifier;
+# vanilla already applies one via the over_fort_limit auto_modifier.
 mp_limits_apply_fort_limit_alert = {
 	if = {
 		limit = {
 			is_human = yes
 			used_fort_limit_percentage > 1.0
-			has_variable = mp_fort_alert_enabled
+			not = { has_variable = mp_fort_alert_muted }
 		}
 		trigger_event_non_silently = ars_belli_mp_limits.2
 	}
