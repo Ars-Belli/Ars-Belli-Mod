@@ -17,6 +17,7 @@ Offensiveness grants a scaling 25% Logistics Distance instead
 Offensiveness grants 20% assault ability
 Offensiveness grants 20% siege ability
 over fort limit gives -2% fort defense for every percentage point over limit, capped at -100%
+new opt-in popup alert when over the fort limit (monthly check); toggle button in the tier panel, default OFF
 
 # Crusades:
 
@@ -31,6 +32,7 @@ junior partners (and any member of a federal union) get a "Force Break Union" bu
 
 new "Pay for X" diplomatic actions (military access, fleet basing, trade access, food access, fondaco rights) with a gold slider so the player can sweeten the offer; AI acceptance scales with offered gold
 "Pay for Military Access" and "Pay for Fleet Basing Rights" auto-accept unless the AI is a rival (rivalry overrides any gold offered); the other three still require enough gold to convince the AI
+the "Pay for X" country pickers are now filtered to countries within diplomatic range
 Fleet Basing Rights and Alliance no longer cause institution spread between the parties (to prevent abuse via spammable instant access actions)
 
 # Guarantees:
@@ -50,6 +52,9 @@ vision sharing no longer requires non-negative opinion on either side; otherwise
 
 coalition CB (superiority_coalition): attacker conquer/subjugate cost 0.75, defender 1.25 (vanilla 1/1)
 take-down hegemon CB (take_capital_imperial): attacker and defender conquer/subjugate cost 0.60 (vanilla 0.25/0.25 — both sides were heavily discounted)
+Deus Vult crusade CB is now available to every Catholic country from game start (no longer gated behind the Deus Vult or Expansion of Sokoto advance)
+religious-war wargoals (Heretic, Religious Conquer Province) now use neutral 1.0 attacker/defender conquer + subjugate cost (vanilla was +75% / +20% loaded)
+location warscore: tax-base contribution reduced to 20% of vanilla; lack-of-control impact on warscore bumped to 0.2 from age 1 onward (so unoccupied land is worth less, occupied land more)
 
 # Economy:
 
@@ -58,7 +63,7 @@ Manden Kurufa reform (Mali traditions) is removable
 
 # Power Ranking & Diplo Limits:
 
-new "Ars Belli: Multiplayer Mechanics" game rule (above Diplo Limits Targets, default OFF) gates the entire MP ranking system: the monthly score calculation, AP/DP/GR limits, the top-bar AP/DP/GR display, the rank label + tier-list panel, and the foreign-country MP rank/limits display. Other Ars Belli features keep working unaffected.
+new "Ars Belli: Multiplayer Mechanics" game rule (above Diplo Limits Targets, default ON) gates the entire MP ranking system: the monthly score calculation, AP/DP/GR limits, the top-bar AP/DP/GR display, the rank label + tier-list panel, and the foreign-country MP rank/limits display. Turn off to play with Ars Belli's other features (forts, peace, unions, etc.) but vanilla diplomacy.
 click the country rank label in the top bar to open a tier-list panel listing every country in each rank (GP / Major / Normal / Small / Minor) with flag, name, and power score
 the foreign country diplomacy panel now shows the viewed country's MP rank, power score, and AP/DP/GP usage and limits
 a country in both an alliance and a defensive league with you counts only once (defensive points win); personal unions count as defensive but don't double-count if already in a defensive league
@@ -66,10 +71,24 @@ colonial-nation overlord ↔ colonial-nation relationships now count as Alliance
 personal unions with an offensive policy active (Possible / Automatic / Assured Offense) now consume Alliance Points instead of Defensive Points on both sides; defensive unions still cost DP as before
 only GPs and Majors get guarantee points; everyone else gets 0
 mutable alert when over the alliance limit
+hegemons can now ally each other (the alliance_can_exist override no longer blocks them)
+tier-list panel and rank label toggle are now per-player in MP (one player opening the panel no longer opens it for every connected player)
 over-alliance-limit penalty now also includes -90% trade income (selling efficiency) and -90% research speed, on top of the existing -90% tax income, -40% land morale, and war-declaration block
 alliance-limit penalty is now OFF by default; the setting now sits next to "Multiplayer Diplo Limits Targets" in the rule list
 UI overflow fixes for the own/foreign points display
 power score now includes a trade-income component (monthly trade income / 200) alongside the existing tax/pop/military components
+
+# Supply & Logistics:
+
+supply depot capacity per-advance bumped 100x (25 -> 2500); base capacity 50 -> 5000
+transport ship food storage buffed to match logistic units age-for-age
+logistic unit food storage buffed 2x to 5x by age
+"Deposit Food" button on an army now deposits 50% of the army's food fraction (vanilla 25%); supply depots themselves now stash a 50% share for armies (vanilla 10%)
+"Perform Army Logistics" objective tooltip flags it as banned (the objective doesn't work in the current build)
+
+# Characters & Cabinet:
+
+new "Dismiss Head of Cabinet" character interaction: returns your current Head to a regular cabinet seat for 5 government power
 
 # Pops & Setup:
 
@@ -77,3 +96,5 @@ updated for game 1.2
 pop adjustments across Asia: Timurid, Delhi, Khmer, Ayutthaya, Ming (middle kingdom), and the Lordship of Pale
 
 # Patch Compatibility:
+
+updated for game 1.2.4
