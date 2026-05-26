@@ -1,0 +1,42 @@
+# Bump army_auxiliary food_storage_per_strength 2000 -> 5000 (2.5x vanilla).
+# All age tiers (camp_followers -> logistics_corps) inherit this through the
+# army_auxiliary category, so per-unit overrides are not needed.
+# Displayed food storage per unit (food_storage_per_strength * max_strength):
+#   age 1 (max_strength 0.05): 250
+#   age 2 (max_strength 0.10): 500
+#   age 3 (max_strength 0.15): 750
+#   age 4 (max_strength 0.20): 1000
+#   age 5 (max_strength 0.25): 1250
+#   age 6 (max_strength 0.30): 1500
+
+REPLACE:army_auxiliary = {
+	is_army = yes
+
+	auxiliary = yes
+
+	movement_speed = 2.0
+	build_time = standard_aux_recruitment_time
+
+	max_strength = 0
+
+	supply_weight = 0.2
+
+	food_storage_per_strength = 5000
+	food_consumption_per_strength = 0.2
+
+	damage_taken = 1.25
+
+	frontage = 1
+	initiative = 1
+	combat_speed = 0.1
+	flanking_ability = 1.0
+	secure_flanks_defense = 0
+
+	maintenance_demand = auxuliary_maintenance
+	construction_demand = auxuliary_construction
+
+	startup_amount = 1
+	ai_weight = 0.25
+
+	exclude_from_combined_arms = yes
+}
