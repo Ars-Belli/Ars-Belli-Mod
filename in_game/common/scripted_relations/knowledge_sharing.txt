@@ -1,0 +1,20 @@
+# Ars Belli: knowledge_sharing is fully disabled. The vanilla relation
+# applied severe institution_spread to the recipient and could be set up
+# between any two friendly players, making it a major MP exploit vector.
+# The relation type is kept (preserves save-game compatibility) but all
+# UI entry points are hidden and the institution_spread payload is removed.
+knowledge_sharing = {
+	type = subject
+	category = {
+		offer = CATEGORY_SUBJECT_ACTIONS
+		request = CATEGORY_SUBJECT_ACTIONS
+		cancellation = CATEGORY_SUBJECT_ACTIONS
+		break = CATEGORY_SUBJECT_ACTIONS
+	}
+	relation_type = oneway
+	break_on_war = yes
+
+	visible = { always = no }
+	offer_visible = { always = no }
+	request_visible = { always = no }
+}
