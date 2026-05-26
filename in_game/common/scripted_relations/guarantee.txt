@@ -81,29 +81,30 @@
         }
     }
 
+    # Auto-evaluated by the engine; only scope:first (guarantor) and scope:second (guaranteed) are bound here, not actor/recipient.
     will_expire_trigger = {
         OR = {
-            scope:actor = {
-                is_rival_of = scope:recipient
+            scope:first = {
+                is_rival_of = scope:second
             }
-            scope:actor = {
+            scope:first = {
                 modifier:allowed_guarantee = no
             }
-            scope:actor = {
+            scope:first = {
                 OR = {
                     is_mp_normal = yes
                     is_mp_small = yes
                     is_mp_minor = yes
                 }
             }
-            scope:recipient = {
+            scope:second = {
                 OR = {
                     is_mp_gp = yes
                     is_mp_major = yes
                 }
             }
-            scope:recipient = {
-                is_rival_of = scope:actor
+            scope:second = {
+                is_rival_of = scope:first
             }
         }
     }
@@ -120,18 +121,19 @@
         }
     }
 
+    # Auto-fired on expiry; same scope rules as will_expire_trigger — use first/second.
     expire_effect = {
         if = {
             limit = {
-                scope:actor = {
-                    country_rank_level = scope:recipient.country_rank_level
+                scope:first = {
+                    country_rank_level = scope:second.country_rank_level
                 }
             }
-            scope:actor = {
+            scope:first = {
                 #upgrade to an alliance
                 create_relation = {
-                    first = scope:actor
-                    second = scope:recipient
+                    first = scope:first
+                    second = scope:second
                     type = relation_type:alliance
                 }
             }
