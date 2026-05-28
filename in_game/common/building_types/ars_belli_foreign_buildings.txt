@@ -34,24 +34,10 @@ REPLACE:trade_office = {
 		is_port = yes
 		market = { in_trade_range_of = scope:actor }
 
-		custom_tooltip = {
-			text = ars_belli_trade_office_competition_tt
-			OR = {
-				# Upgrading a trade office we already own here is always allowed.
-				any_foreign_buildings_in_location = {
-					building_type = building_type:trade_office
-					owner = scope:actor
-				}
-				# Otherwise a slot must be free: fewer offices than the configured limit
-				# (game rule ab_trade_office_limit, 2-20) currently in this Location.
-				NOT = {
-					any_foreign_buildings_in_location = {
-						count >= ab_trade_office_limit_value
-						building_type = building_type:trade_office
-					}
-				}
-			}
-		}
+		# FOUNDATION TEST: read the cached count set by the monthly pulse. If this
+		# blocks in a Location that has a trade office (var set to 99), then location
+		# variables are readable here and the cached-counter design is viable.
+		NOT = { var:ab_to_count >= 1 }
 	}
 
 
@@ -67,7 +53,7 @@ REPLACE:trade_office = {
 
 
 	modifier = {
-		merchant_capacity_from_building = 0.3
+		merchant_capacity_from_building = 0.6 # vanilla 0.3 TODO change it back
 		building_owner_maritime_presence = 0.05
 		merchant_power_from_building = 0.2
 	}

@@ -1,6 +1,7 @@
 ﻿# Number of trade office buildings currently in this Location (one instance per
 # owning country, so this equals the number of distinct owners). Location scope.
 ab_trade_office_count_here = {
+	value = 0
 	every_foreign_buildings_in_location = {
 		limit = { building_type = building_type:trade_office }
 		add = 1
@@ -8,17 +9,26 @@ ab_trade_office_count_here = {
 }
 
 # The configured per-Location trade office limit, as a guaranteed number.
-# The raw global_var is unset while EU5 validates building triggers at load time
-# (before on_game_start), where reading it yields type 'none' and breaks count >=.
-# Fall back to the default (10) so the value is always numeric. Any scope.
+# Read straight from the game rule via has_game_rule so it never depends on the
+# rules-init effect having set a global var (that init can be skipped on a loaded
+# save). has_game_rule is a bool trigger, so it is also safe at load-time building
+# validation (returns false -> falls back to the default below). Any scope.
 ab_trade_office_limit_value = {
-	if = {
-		limit = { has_global_variable = ab_trade_office_limit }
-		value = global_var:ab_trade_office_limit
-	}
-	else = {
-		value = 10
-	}
+	value = 10
+	if =      { limit = { has_game_rule = trade_offices_2 }  value = 2 }
+	else_if = { limit = { has_game_rule = trade_offices_3 }  value = 3 }
+	else_if = { limit = { has_game_rule = trade_offices_4 }  value = 4 }
+	else_if = { limit = { has_game_rule = trade_offices_5 }  value = 5 }
+	else_if = { limit = { has_game_rule = trade_offices_6 }  value = 6 }
+	else_if = { limit = { has_game_rule = trade_offices_7 }  value = 7 }
+	else_if = { limit = { has_game_rule = trade_offices_8 }  value = 8 }
+	else_if = { limit = { has_game_rule = trade_offices_9 }  value = 9 }
+	else_if = { limit = { has_game_rule = trade_offices_10 } value = 10 }
+	else_if = { limit = { has_game_rule = trade_offices_12 } value = 12 }
+	else_if = { limit = { has_game_rule = trade_offices_14 } value = 14 }
+	else_if = { limit = { has_game_rule = trade_offices_16 } value = 16 }
+	else_if = { limit = { has_game_rule = trade_offices_18 } value = 18 }
+	else_if = { limit = { has_game_rule = trade_offices_20 } value = 20 }
 }
 
 # How many excess trade offices to prune in this Location: count - limit. Location scope.
