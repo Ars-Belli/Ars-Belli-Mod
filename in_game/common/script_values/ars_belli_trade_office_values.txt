@@ -7,10 +7,24 @@ ab_trade_office_count_here = {
 	}
 }
 
+# The configured per-Location trade office limit, as a guaranteed number.
+# The raw global_var is unset while EU5 validates building triggers at load time
+# (before on_game_start), where reading it yields type 'none' and breaks count >=.
+# Fall back to the default (10) so the value is always numeric. Any scope.
+ab_trade_office_limit_value = {
+	if = {
+		limit = { has_global_variable = ab_trade_office_limit }
+		value = global_var:ab_trade_office_limit
+	}
+	else = {
+		value = 10
+	}
+}
+
 # How many excess trade offices to prune in this Location: count - limit. Location scope.
 ab_trade_office_excess_here = {
 	value = ab_trade_office_count_here
-	subtract = global_var:ab_trade_office_limit
+	subtract = ab_trade_office_limit_value
 	min = 0
 }
 
