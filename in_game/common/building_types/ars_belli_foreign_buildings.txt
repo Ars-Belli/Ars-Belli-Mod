@@ -1,6 +1,6 @@
 ﻿# Ars Belli: trade offices are a contested, shared resource per Location.
 # A Location allows at most ab_trade_office_limit trade offices across ALL countries
-# (game rule, 2-10; players compete for the limited slots). A country that already
+# (game rule, 2-20; players compete for the limited slots). A country that already
 # owns a trade office here can still upgrade its levels normally; only NEW offices
 # are blocked once the slots are taken. The yearly pulse prunes any excess offices,
 # removing the owners with the lowest market merchant power first.
@@ -43,7 +43,7 @@ REPLACE:trade_office = {
 					owner = scope:actor
 				}
 				# Otherwise a slot must be free: fewer offices than the configured limit
-				# (game rule ab_trade_office_limit, 2-10) currently in this Location.
+				# (game rule ab_trade_office_limit, 2-20) currently in this Location.
 				NOT = {
 					any_foreign_buildings_in_location = {
 						count >= global_var:ab_trade_office_limit
