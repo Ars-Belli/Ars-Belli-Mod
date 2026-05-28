@@ -1,12 +1,37 @@
 ﻿monthly_country_pulse = {
 	on_actions = {
 		mp_limits_monthly_pulse
+		ab_grant_deus_vult_self
 	}
 }
 
 on_game_start = {
 	on_actions = {
 		mp_limits_game_start
+		ab_grant_deus_vult_all
+	}
+}
+
+# Religious War CB (cb_deus_vult) is hardcoded to require the deus_vult /
+# sko_fulani_expansion advance, so stripping the advance's unlock isn't enough.
+# Instead, grant the deus_vult advance (which keeps its vanilla unlock_casus_belli)
+# to every country, so all of them can use Religious War from game start. The
+# monthly per-country pulse catches nations formed after game start.
+ab_grant_deus_vult_all = {
+	effect = {
+		every_country = {
+			limit = { NOT = { has_advance = deus_vult } }
+			research_advance = advance_type:deus_vult
+		}
+	}
+}
+
+ab_grant_deus_vult_self = {
+	effect = {
+		if = {
+			limit = { NOT = { has_advance = deus_vult } }
+			research_advance = advance_type:deus_vult
+		}
 	}
 }
 
