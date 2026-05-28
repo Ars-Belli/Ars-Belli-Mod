@@ -1,0 +1,25 @@
+﻿# Yearly enforcement of the per-Location trade office cap (game rule ab_trade_office_limit).
+# Runs in country scope (yearly_country_pulse). Each Location is owned by exactly one
+# country, so iterating every owner's locations visits every Location once per year.
+ab_trade_office_yearly_cleanup = {
+	every_owned_location = {
+		limit = {
+			any_foreign_buildings_in_location = {
+				count > global_var:ab_trade_office_limit
+				building_type = building_type:trade_office
+			}
+		}
+		ab_trade_office_prune_location = yes
+	}
+}
+
+# Location scope. Destroys the excess trade offices, removing the owners with the
+# lowest merchant power in this Location's market first (highest "weakness" first).
+ab_trade_office_prune_location = {
+	ordered_foreign_buildings_in_location = {
+		limit = { building_type = building_type:trade_office }
+		order_by = ab_office_owner_market_weakness
+		max = ab_trade_office_excess_here
+		location = { destroy_building = prev }
+	}
+}

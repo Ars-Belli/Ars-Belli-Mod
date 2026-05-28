@@ -270,4 +270,16 @@
         limit = { has_game_rule = penalty_disabled }
         set_global_variable = { name = mp_alliance_limit_penalty_enabled value = 0 }
     }
+
+    # Max trade offices allowed per Location, shared across all countries. Default 2.
+    set_global_variable = { name = ab_trade_office_limit value = 2 }
+    if =      { limit = { has_game_rule = trade_offices_2 }  set_global_variable = { name = ab_trade_office_limit value = 2 } }
+    else_if = { limit = { has_game_rule = trade_offices_3 }  set_global_variable = { name = ab_trade_office_limit value = 3 } }
+    else_if = { limit = { has_game_rule = trade_offices_4 }  set_global_variable = { name = ab_trade_office_limit value = 4 } }
+    else_if = { limit = { has_game_rule = trade_offices_5 }  set_global_variable = { name = ab_trade_office_limit value = 5 } }
+    else_if = { limit = { has_game_rule = trade_offices_6 }  set_global_variable = { name = ab_trade_office_limit value = 6 } }
+    else_if = { limit = { has_game_rule = trade_offices_7 }  set_global_variable = { name = ab_trade_office_limit value = 7 } }
+    else_if = { limit = { has_game_rule = trade_offices_8 }  set_global_variable = { name = ab_trade_office_limit value = 8 } }
+    else_if = { limit = { has_game_rule = trade_offices_9 }  set_global_variable = { name = ab_trade_office_limit value = 9 } }
+    else_if = { limit = { has_game_rule = trade_offices_10 } set_global_variable = { name = ab_trade_office_limit value = 10 } }
 }

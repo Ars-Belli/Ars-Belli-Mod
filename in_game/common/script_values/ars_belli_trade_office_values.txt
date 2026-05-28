@@ -1,0 +1,30 @@
+﻿# Number of trade office buildings currently in this Location (one instance per
+# owning country, so this equals the number of distinct owners). Location scope.
+ab_trade_office_count_here = {
+	every_foreign_buildings_in_location = {
+		limit = { building_type = building_type:trade_office }
+		add = 1
+	}
+}
+
+# How many excess trade offices to prune in this Location: count - limit. Location scope.
+ab_trade_office_excess_here = {
+	value = ab_trade_office_count_here
+	subtract = global_var:ab_trade_office_limit
+	min = 0
+}
+
+# Ordering key for pruning: higher value = weaker owner = removed first.
+# Negated owner merchant power in this office's market. Building scope.
+ab_office_owner_market_weakness = {
+	value = 0
+	if = {
+		limit = {
+			exists = owner
+			location = { exists = market }
+		}
+		location.market = {
+			subtract = "merchant_power_in_market(prev.owner)"
+		}
+	}
+}
