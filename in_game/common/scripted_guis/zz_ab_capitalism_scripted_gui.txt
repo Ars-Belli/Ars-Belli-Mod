@@ -1,0 +1,23 @@
+# TEMPORARY — CAPITALISM PHASE 1 SPIKE. DELETE AFTER VALIDATION.
+# Forgive an obligation from its IO panel. scope = international_organization,
+# so root = the obligation IO. Setting ab_months_left = -1 triggers the IO's
+# auto_disband_trigger. ai_is_valid defaults to false, so the AI can't use it.
+ab_forgive_obligation = {
+	scope = international_organization
+
+	is_shown = {
+		international_organization_type = international_organization_type:ab_obligation
+	}
+
+	is_valid = {
+		international_organization_type = international_organization_type:ab_obligation
+		var:ab_months_left >= 0
+	}
+
+	effect = {
+		set_variable = { name = ab_months_left value = -1 }
+	}
+
+	confirm_title = ab_forgive_confirm_title
+	confirm_text = ab_forgive_confirm_text
+}

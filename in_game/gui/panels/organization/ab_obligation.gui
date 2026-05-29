@@ -1,0 +1,39 @@
+# TEMPORARY — CAPITALISM PHASE 1 SPIKE. DELETE AFTER VALIDATION.
+# Panel for the ab_obligation IO type. Engine maps IO type -> <type>.gui by name.
+# Uses the shared organization_war_theme (same as jihad.gui) and only overrides
+# the blocks we need: hide irrelevant tabs, show months-left / gold-left, and add
+# a leader-only Forgive button that calls the ab_forgive_obligation scripted_gui.
+organization_war_theme = {
+
+	blockoverride "organization_holy_sites_tab_visible" { visible = no }
+	blockoverride "searchbar_visible" { visible = no }
+
+	# Months remaining + gold-still-to-pay, shown in the overview.
+	blockoverride "organization_overview_list_custom_bottom" {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			margin_top = 15
+			spacing = 6
+			text_single = {
+				text = "ab_obligation_months_left_row"
+				default_format = "#yellow_titles"
+			}
+			text_single = {
+				text = "ab_obligation_gold_left_row"
+			}
+		}
+		expand = {}
+	}
+
+	# Forgive button — only the creditor (IO leader) sees it.
+	blockoverride "organization_main_actions_extra_visible" { visible = yes }
+	blockoverride "organization_main_actions_extra" {
+		button_regular = {
+			size = { 470 30 }
+			text = "ab_obligation_forgive_button"
+			tooltip = "ab_obligation_forgive_tooltip"
+			visible = "[InternationalOrganizationsView.GetInternationalOrganization.IsIOLeaderCountry(GetPlayer)]"
+			onclick = "[GetScriptedGui('ab_forgive_obligation').Execute(GuiScope.SetRoot(InternationalOrganizationsView.GetInternationalOrganization.MakeScope).End)]"
+		}
+	}
+}

@@ -1,0 +1,108 @@
+# =====================================================================
+# TEMPORARY — CAPITALISM PHASE 1 SPIKE. DELETE THIS FILE AFTER VALIDATION.
+# Validates the MINI-IO obligation model (chosen for budget-tab visibility):
+# each obligation is one instance of the `ab_obligation` IO type, paid via
+# international_organization_payments so it shows on the budget IOS line.
+# =====================================================================
+
+# CREATE: actor (creditor) sets up an obligation where the recipient (debtor)
+# pays the actor `monthly` gold for `months` months. Creditor becomes the IO
+# leader/payee; debtor is added as the non-leader member/payer.
+ab_spike_create_obligation = {
+	type = diplomacy
+	category = CATEGORY_ECONOMY_ACTIONS
+
+	ai_tick = never
+	potential = {}
+	allow = {}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "choose_country"
+		column = { data = name }
+		visible = {
+			within_diplomatic_range = scope:actor
+			NOT = { this = scope:actor }
+		}
+	}
+
+	# monthly sum
+	select_trigger = {
+		looking_for_a = value
+		target_flag = target_value
+		name = "ab_spike_select_monthly"
+		min = 1
+		max = 100
+		step = 1
+		default = 10
+		ai_override_value = 0
+	}
+
+	# duration in months
+	select_trigger = {
+		looking_for_a = value
+		target_flag = target_months
+		name = "ab_spike_select_months"
+		min = 1
+		max = 120
+		step = 1
+		default = 12
+		ai_override_value = 0
+	}
+
+	effect = {
+		scope:actor = {
+			create_international_organization = {
+				type = international_organization_type:ab_obligation
+				hidden_effect = {
+					# root = the new IO here; prev = scope:actor (the creditor)
+					add_country_to_international_organization = prev
+					set_leader_country = prev
+					add_country_to_international_organization = scope:recipient
+					set_variable = { name = ab_monthly value = scope:target_value }
+					set_variable = { name = ab_months_left value = scope:target_months }
+				}
+			}
+		}
+		log = "AB_SPIKE: created obligation IO (creditor=leader/payee, debtor=member/payer)"
+	}
+
+	ai_will_do = { add = -1000 }
+	diplo_chance = { base = 1000 }
+}
+
+# FORGIVE: actor (creditor) disbands the obligation IO owed by the recipient.
+ab_spike_forgive_obligation = {
+	type = diplomacy
+	category = CATEGORY_ECONOMY_ACTIONS
+
+	ai_tick = never
+	potential = {}
+	allow = {}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "choose_country"
+		column = { data = name }
+		visible = {}
+	}
+
+	effect = {
+		# Find the obligation IO that contains both us and the debtor, then set its
+		# months_left to 0 so auto_disband_trigger removes it (no destroy_* needed).
+		every_international_organization = {
+			limit = {
+				international_organization_type = international_organization_type:ab_obligation
+				any_international_organization_member = { this = scope:actor }
+				any_international_organization_member = { this = scope:recipient }
+			}
+			set_variable = { name = ab_months_left value = -1 }
+		}
+		log = "AB_SPIKE: forgave obligation (set months_left=-1 -> auto_disband)"
+	}
+
+	ai_will_do = { add = -1000 }
+	diplo_chance = { base = 1000 }
+}

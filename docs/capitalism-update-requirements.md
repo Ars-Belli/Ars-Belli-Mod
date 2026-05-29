@@ -40,9 +40,37 @@ war-based enforcement mechanism.
 ## 3. Phase 1 — Obligation Market
 
 An **obligation** is a directed promise: a **debtor** country pays a **creditor** (a country, or
-in Phase 2 a venture) a fixed **monthly sum** between a **start date** and an **end date**.
+in Phase 2 a venture) a fixed **monthly sum** for a number of months.
 
-`total = monthly_sum × months(start → end)` — displayed in tooltips. **Guard `months <= 0`.**
+`total = monthly_sum × months_remaining` — displayed in tooltips. **Guard `months <= 0`.**
+
+### 3.0 Storage & transfer model (decided)
+Mechanisms evaluated and **rejected**:
+- **Native loans** — only service *interest* monthly, not a fixed principal-per-month; can't
+  represent "pay sum X every month."
+- **`scripted_relation` `gold_to_first`** (budget-visible via the Diplomacy line) — the amount is
+  a script value with no per-relation storage, so it can't carry an arbitrary per-obligation sum
+  when a country has multiple obligations.
+- **Raw `add_gold` monthly tick** — works and is fully flexible, but is **not** attributed to any
+  budget-tab line, so obligations are hard to track. (Economic Support is budget-visible but is
+  hardcoded in the engine with no script hooks.)
+
+**Chosen: each obligation is one instance of a custom international organization** (`ab_obligation`,
+non-`unique` so many coexist), paid via **`international_organization_payments`** — which **is**
+budget-visible (the "International Organizations" line) and unifies with Phase 2 ventures.
+- **Creditor = IO leader = payee; debtor = non-leader member = payer.** No lump sum; payments
+  start the following month.
+- Per-obligation data lives as **variables on the IO instance** (`var:ab_monthly`,
+  `var:ab_months_left`). This solves the multiplicity / no-map problem: each obligation carries
+  its own amount on its own IO.
+- The payment amount = `price (1 gold) × price_multiplier (var:ab_monthly)`; `price_multiplier`
+  runs with the IO as root so it reads the instance variable.
+- Expiry uses the IO type's **`monthly_effect`** (root = IO): decrement `ab_months_left`, and
+  `destroy_international_organization` at 0 — no global on_action, no date math.
+- **Forgive** = disband the IO; **sell** = `set_leader_country` to the new creditor;
+  **reconfigure** = change `var:ab_monthly` / `var:ab_months_left`.
+- IO instances must not consume diplomatic capacity (`diplomatic_capacity_cost = 0`) and stay off
+  the diplomatic map / generic create UI.
 
 ### 3.1 Actions
 All actions are player-only (`ai_tick = never`, `ai_will_do = -1000`), cost **no diplomats**, and
@@ -130,6 +158,10 @@ share count`. Guards: zero total shares, empty shareholder list, zero treasury.
 - Whether a debtor who cannot pay is **auto-defaulted** or the payment is simply skipped.
 - Whether Phase 1 ships with a **read-only obligations GUI panel** or all UI is deferred to
   Phase 2.
-- The exact **storage primitive** for per-pair obligation records — `scripted_relation` carrying
-  numeric fields (preferred) vs. bounded numbered per-debtor variables. To be settled by an
-  in-game spike before the rest of Phase 1 is built.
+- The **slot cap N** (max simultaneous obligations a single country can owe). Pick after the
+  spike confirms per-slot cost is acceptable.
+
+> **Spike status:** a temporary harness (`zz_ab_capitalism_*` files) validates the custom
+> single-slot model in-game — create obligation, observe monthly debtor→creditor transfer,
+> forgive, expiry — and confirms `monthly_country_pulse` additivity with the existing
+> `mp_limits` registration. Delete the `zz_*` files once validated.

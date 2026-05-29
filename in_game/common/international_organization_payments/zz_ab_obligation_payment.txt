@@ -1,0 +1,46 @@
+# TEMPORARY — CAPITALISM PHASE 1 SPIKE. DELETE AFTER VALIDATION.
+# Budget-visible monthly transfer for one obligation IO:
+#   payer  = the single non-leader member (the debtor)
+#   payee  = the leader country (the creditor)
+#   amount = price (1) * price_multiplier (var:ab_monthly on the IO) = ab_monthly
+# Shows on the "International Organizations" budget line for both sides.
+ab_obligation_payment = {
+	get_payer_list = {
+		every_international_organization_member = {
+			limit = {
+				NOT = { is_leader_of_international_organization = root }
+			}
+			add_to_local_variable_list = {
+				name = payers
+				target = this
+			}
+		}
+	}
+	get_payee_list = {
+		leader_country ?= {
+			add_to_local_variable_list = {
+				name = payees
+				target = this
+			}
+		}
+	}
+
+	price = ab_obligation_price
+	uses_maintenance = no
+	# pin the payment slider at 100% so the (AI) debtor can't ramp its
+	# contribution down toward the default floor (0.5) over time.
+	min_slider_value = 1
+
+	# root = the international organization, so this reads the per-obligation sum.
+	price_multiplier = {
+		add = var:ab_monthly
+	}
+
+	# single payer / single payee: equal weights.
+	proportion_for_payer = {
+		add = 1
+	}
+	proportion_for_payee = {
+		add = 1
+	}
+}
