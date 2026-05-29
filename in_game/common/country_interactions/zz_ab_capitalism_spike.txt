@@ -62,6 +62,9 @@ ab_spike_create_obligation = {
 					add_country_to_international_organization = scope:recipient
 					set_variable = { name = ab_monthly value = scope:target_value }
 					set_variable = { name = ab_months_left value = scope:target_months }
+					# explicit party refs for the obligations list UI
+					set_variable = { name = ab_creditor value = prev }
+					set_variable = { name = ab_debtor value = scope:recipient }
 				}
 			}
 		}

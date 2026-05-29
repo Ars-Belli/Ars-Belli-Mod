@@ -21,3 +21,76 @@ ab_forgive_obligation = {
 	confirm_title = ab_forgive_confirm_title
 	confirm_text = ab_forgive_confirm_text
 }
+
+# Rebuild the global registry of all obligation IOs, for the obligations list panel.
+# Called from the panel's open button (root = player, but the work is global).
+ab_refresh_obligation_list = {
+	scope = country
+	is_shown = { always = yes }
+	is_valid = { always = yes }
+	effect = {
+		clear_global_variable_list = ab_obligation_registry
+		every_international_organization = {
+			limit = { international_organization_type = international_organization_type:ab_obligation }
+			add_to_global_variable_list = { name = ab_obligation_registry target = this }
+		}
+	}
+}
+
+# Buy an obligation off the market for its remaining total (monthly * months_left).
+# root = the buyer (player); scope:obligation = the obligation IO (passed from GUI).
+# The buyer pays the current creditor and becomes the new creditor (IO leader/payee).
+ab_buy_obligation = {
+	scope = country
+	saved_scopes = { obligation }
+
+	is_shown = {
+		exists = scope:obligation
+		scope:obligation = { international_organization_type = international_organization_type:ab_obligation }
+	}
+
+	is_valid = {
+		exists = scope:obligation
+		# buyer must not already be in this obligation (neither creditor nor debtor)
+		NOT = {
+			scope:obligation = {
+				any_international_organization_member = { this = root }
+			}
+		}
+		# buyer can afford the remaining total
+		root = {
+			gold >= {
+				value = scope:obligation.var:ab_monthly
+				multiply = scope:obligation.var:ab_months_left
+			}
+		}
+	}
+
+	effect = {
+		set_local_variable = { name = ab_price value = scope:obligation.var:ab_monthly }
+		change_local_variable = { name = ab_price multiply = scope:obligation.var:ab_months_left }
+
+		# pay the current creditor (current IO leader) the front sum
+		scope:obligation.leader_country ?= {
+			save_scope_as = old_creditor
+			add_gold = local_var:ab_price
+		}
+		root = {
+			add_gold = { value = local_var:ab_price multiply = -1 }
+		}
+
+		# transfer ownership: buyer joins, becomes leader/creditor; old creditor leaves
+		scope:obligation = {
+			add_country_to_international_organization = root
+			set_leader_country = root
+			set_variable = { name = ab_creditor value = root }
+			if = {
+				limit = { exists = scope:old_creditor }
+				remove_country_from_international_organization = scope:old_creditor
+			}
+		}
+	}
+
+	confirm_title = ab_buy_confirm_title
+	confirm_text = ab_buy_confirm_text
+}
