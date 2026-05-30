@@ -22,21 +22,6 @@ ab_forgive_obligation = {
 	confirm_text = ab_forgive_confirm_text
 }
 
-# Rebuild the global registry of all obligation IOs, for the obligations list panel.
-# Called from the panel's open button (root = player, but the work is global).
-ab_refresh_obligation_list = {
-	scope = country
-	is_shown = { always = yes }
-	is_valid = { always = yes }
-	effect = {
-		clear_global_variable_list = ab_obligation_registry
-		every_international_organization = {
-			limit = { international_organization_type = international_organization_type:ab_obligation }
-			add_to_global_variable_list = { name = ab_obligation_registry target = this }
-		}
-	}
-}
-
 # Buy an obligation off the market for its remaining total (monthly * months_left).
 # root = the buyer (player); scope:obligation = the obligation IO (passed from GUI).
 # The buyer pays the current creditor and becomes the new creditor (IO leader/payee).

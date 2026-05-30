@@ -348,7 +348,7 @@ types RightPanelTypes
 							button_regular = {
 								text = "AB_OBLIGATIONS_OPEN_BUTTON"
 								tooltip = "AB_OBLIGATIONS_OPEN_TOOLTIP"
-								onclick = "[GetScriptedGui('ab_refresh_obligation_list').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)][GetVariableSystem.Toggle('ab_obligation_panel_open')]"
+								onclick = "[GetVariableSystem.Toggle('ab_obligation_panel_open')]"
 								size = { -1 26 }
 								layoutpolicy_horizontal = expanding
 							}
@@ -658,7 +658,7 @@ types RightPanelTypes
 				widget = {
 					parentanchor = top|right
 					widgetanchor = top|right
-					position = { -810 200 }
+					position = { -420 200 }
 					size = { 380 620 }
 					allow_outside = yes
 					alwaystransparent = no
@@ -706,39 +706,26 @@ types RightPanelTypes
 									layoutpolicy_horizontal = expanding
 									spacing = 6
 
+									# Engine-managed datamodel (no script list -> no mutation crashes).
+									# Shows the player's own IOs; each row is hidden unless it's an obligation.
 									dynamicgridbox = {
 										layoutpolicy_horizontal = expanding
 										flipdirection = yes
 										datamodel_wrap = 1
-										datamodel = "[GetGlobalList('ab_obligation_registry')]"
+										datamodel = "[GetPlayer.GetDiplomacy.GetInternationalOrganizations]"
+										# Each row is a button that opens the obligation's own IO panel
+										# (which already shows months/gold remaining + Forgive). Uses ONLY the
+										# accessors vanilla uses on these datamodel items (GetType, Self,
+										# OpenInternationalOrganizationView) -- inline per-item GetVariable /
+										# GetLeaderCountry proved fragile across multiple rows.
 										item = {
-											vbox = {
-												datacontext = "[Scope.GetInternationalOrganization]"
+											button_regular = {
+												visible = "[EqualTo_string(InternationalOrganization.GetType.GetNameKey, 'ab_obligation')]"
 												layoutpolicy_horizontal = expanding
-												spacing = 2
-												margin = { 6 6 }
-												using = bg_paper_card
-
-												text_single = {
-													text = "AB_OBLIGATION_ROW_PARTIES"
-													align = left|nobaseline
-													layoutpolicy_horizontal = expanding
-													using = Font_Size_Small
-												}
-												text_single = {
-													text = "AB_OBLIGATION_ROW_TERMS"
-													align = left|nobaseline
-													layoutpolicy_horizontal = expanding
-													using = Font_Size_Small
-												}
-												button_regular = {
-													text = "AB_OBLIGATION_BUY_BUTTON"
-													tooltip = "AB_OBLIGATION_BUY_TOOLTIP"
-													size = { -1 24 }
-													layoutpolicy_horizontal = expanding
-													visible = "[Not(Player.IsMemberOfInternationalOrganization(InternationalOrganization.Self))]"
-													onclick = "[GetScriptedGui('ab_buy_obligation').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).AddScope('obligation', InternationalOrganization.MakeScope).End)]"
-												}
+												size = { -1 28 }
+												text = "AB_OBLIGATION_ROW_OPEN"
+												tooltip = "AB_OBLIGATION_ROW_OPEN_TT"
+												onclick = "[OpenInternationalOrganizationView(InternationalOrganization.Self)]"
 											}
 										}
 									}

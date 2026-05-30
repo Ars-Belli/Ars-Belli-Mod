@@ -27,7 +27,9 @@ ab_obligation = {
 	invite_visible_trigger = { always = no }
 	join_visible_trigger = { always = no }
 	can_join_trigger = { always = yes }
-	can_leave_trigger = { always = yes }
+	# Members CANNOT leave on their own — a debtor must not be able to walk away
+	# from the debt. Obligations end only via Forgive (creditor) or expiry.
+	can_leave_trigger = { always = no }
 	can_lead_trigger = { always = yes }
 
 	payments_implemented = {
