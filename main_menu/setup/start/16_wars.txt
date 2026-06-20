@@ -384,7 +384,7 @@ war_manager = {
 	}
 	
 	truce = { #mamluk and levant
-		#levant
+		#levant & arabia
 		attacker = QUD
 		attacker = ALP
 		attacker = LEB
@@ -395,8 +395,22 @@ war_manager = {
 		attacker = CIL
 		attacker = CYP
 		attacker = KNI
+		attacker = MEC
+		attacker = BNL
 
 		defender = MAM
+		#either use end_date or start_date = <date> with months = <int>. Can skip months to use NDefines::NDiplomacy::TRUCE_YEARS instead
+		start_date = 1337.1.1
+		months = 100
+	}
+
+	truce = { #yemen and northern neighbours
+		#arabia
+		attacker = MDA
+		attacker = MEC
+		attacker = BNL
+
+		defender = YEM
 		#either use end_date or start_date = <date> with months = <int>. Can skip months to use NDefines::NDiplomacy::TRUCE_YEARS instead
 		start_date = 1337.1.1
 		months = 100
@@ -433,11 +447,12 @@ war_manager = {
 		months = 100
 	}
 
-	truce = { #bohemia silesia,meissen
+	truce = { #Bohemia vs Meissen & Palatinate (Silesia commented out)
 		#silesia
 		attacker = BOH
 
         #silesia
+		defender = PAL
 		defender = MEI
 		#defender = ZAG
 		#defender = GLO
@@ -460,6 +475,31 @@ war_manager = {
 		#either use end_date or start_date = <date> with months = <int>. Can skip months to use NDefines::NDiplomacy::TRUCE_YEARS instead
 		start_date = 1337.1.1
 		months = 100
+	}
+
+	truce = { #Polish-Lithuanian truce - necessary so Lithuania is not left out to be the one target everyone can attack
+		#Lithuania and Vassals
+		attacker = LIT
+		attacker = NRK
+		attacker = PNK
+		attacker = SSK
+		attacker = TUV
+		attacker = POK
+		attacker = DRU
+		attacker = VBK
+		attacker = TPS
+		attacker = RZH
+		#Poland and Vassals
+		defender = POL
+		defender = INO
+		defender = SDZ
+		defender = LCZ
+		defender = PLK
+		defender = RAW
+		defender = CZK
+		#either use end_date or start_date = <date> with months = <int>. Can skip months to use NDefines::NDiplomacy::TRUCE_YEARS instead
+		start_date = 1333.3.2
+		months = 120
 	}
 	
 	truce = { #Polish-Teutonic War of 1326-1332
@@ -600,6 +640,31 @@ war_manager = {
 		months = 60
 	}
 	
+	truce = { #Hungarian truce with Balkans (Serbia+Bulgaria viability adjustment)
+		#Hungary
+		attacker = HUN
+		
+		defender = BOS
+		defender = SER
+		defender = BUL
+		defender = WAL
+		
+		#either use end_date or start_date = <date> with months = <int>. Can skip months to use NDefines::NDiplomacy::TRUCE_YEARS instead
+		start_date = 1337.1.1
+		months = 100
+	}
+	
+	truce = { #Naples-Albania
+		#Hungary
+		attacker = NAP
+		
+		defender = ALB
+		
+		#either use end_date or start_date = <date> with months = <int>. Can skip months to use NDefines::NDiplomacy::TRUCE_YEARS instead
+		start_date = 1337.1.1
+		months = 100
+	}
+	
 	truce = { # English Backing of Balliol
 		defender = SCO
 		defender = SBL # Balliol is here to prevent England from attacking them if they win the Civil war
@@ -618,6 +683,35 @@ war_manager = {
 	truce = { # Portuguese-Castilian War of 1336-1337 # Established a bit on advance from the historical date (December 1337) due to gameplay reasons
 		defender = CAS
 		attacker = POR
+		start_date = 1337.1.1
+		months = 60
+	}
+
+	truce = { #Chen-Minors
+		attacker = CHE
+		
+		defender = XAN
+		defender = SHW
+		
+		start_date = 1337.1.1
+		months = 60
+	}
+
+	truce = { #Wu-Shaoxing
+		attacker = WUU
+		
+		defender = SHX
+		
+		start_date = 1337.1.1
+		months = 60
+	}
+	
+	truce = { #Dongguan-Minors
+		attacker = CDN
+		
+		defender = YAJ
+		defender = LXI
+		
 		start_date = 1337.1.1
 		months = 60
 	}
