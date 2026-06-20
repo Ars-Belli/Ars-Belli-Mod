@@ -19,7 +19,7 @@ international_organization_manager = {
 		LUN BRU GBH HDH GOS SCB HOY NIE DPH VRD RTB OLD ZAG JAW LGC OEL OPL TES BYM RCB MVA AGC WER MBZ MFK BCH STG ZUR SYZ LCA URI OBW LCU SIT BRN SLT NEU BAS LSA KYB TRN ANS PAD
 		EIC WEI NUR WBG RIE MSB UFF ROT DNB MEM KMP ULM KNZ OET SWH HBR BDE WDB RVA BIB UBL HHB FBG OFB WLD PRZ BRD ACC LDB GOR FCB ALL ZEE CAM STV HTR HPL NWG SWD 
 		SCI ZIE BRZ NMS STZ NMD WRC GLO NYS OPV SIZ PDK BMS BLB HSP BSK MSO WGO BHL GLN AOS RBG FLK NSI RDL NID MDS LDA TGG GRY VEL PSZ SFC CFC MUR HAG MUL LIC WDE NSH NSS 
-		BLM DIS EVS FUR GRK HAC JEV SAW SAB THD WIE ELL HEH HLF HOH KIR NEL TUB KTZ NSW LEU PST SEL ARS RET FLA BUR FRZ }
+		BLM DIS EVS FUR GRK HAC JEV SAW SAB THD WIE ELL HEH HLF HOH KIR NEL TUB KTZ NSW LEU PST SEL ARS RET FLA BUR FRZ GLR }
 		leader = UBV
 		regions = { south_german_region }
 		areas = { 
@@ -72,20 +72,28 @@ international_organization_manager = {
 		}
 		emperor = { UBV }
 		elector = { 
-				# The 4 secular
-				BOH	#Bohemia
-				SWB # Saxony-Wittenberg
+				# The 4 secular + 2 additional
+				BOH	# Bohemia
+				MEI # NEW - Meissen		#swapped out - SWB # Saxony-Wittenberg
 				BRA # Brandenburg
 				PAL # Palatinate
+				HES # NEW - Hesse
+				WUR # NEW - Wurttemberg
 		}
 		archbishop_elector = {
-				# The 3 bishops
+				# The 3 bishops + 2 additional
 				TRI	# Trier
 				KOL # Cologne
 				MAI # Mainz
+				MUN # NEW - Munster
+				MAG # NEW - Magdeburg
 		}
 		free_city = {
 			AAC BRM FRN GOS HAM KNZ MEM NUR REG ROT RVA ULM SYE LUB DTM AGC KMP WTZ WRM BRN BSC ZUR LDA SFC CFC MUL
+			#Added
+			GLR BLL CHN RTB HSP
+			#Reinstated
+			TUL SLT WEI WDB SWH OFB NHS BIB MLH
 			#Should be but can't because they only have "rural settlements"
 			# MLH BIB NHS OFB SWH WDB WEI SLT TUL
 		}
@@ -98,12 +106,12 @@ international_organization_manager = {
 		}
 		imperial_prince = {
 			HAB LBV GRF TNT CLI ORT WUR HES LOR SLM CEV MTB BNT CRR FLO MFA MSP
-			PIE PRA SAL SAV PTG HOL BRB LUX LIE CHN LIM NAM LOO VBG HRN CJK DAU ORA VLN
+			PIE PRA SAL SAV PTG HOL BRB LUX LIE LIM NAM LOO VBG HRN CJK DAU ORA VLN
 			FRT BXN HSA LBB THU BRG SAA STE HNB PLN GLA SOR SPB RUP SWR WRN MKL GSW WOL LAU BBG ANH BNB MFE QUB 
 			WMA SWZ PRO SHS ERF ZIG HNA BUD DIE ERB ZWE LNN SPO SYN DUN JUL GEL ZUT GMK WTG MRS KLE ANB LPP GLN
-			RVB TCK OSW LUN BRU GBH SCB HOY NIE DPH RTB OLD ZAG JAW LGC OEL OPL TES BYM RCB MVA WER MBZ MFK
+			RVB TCK OSW LUN BRU GBH SCB HOY NIE DPH OLD ZAG JAW LGC OEL OPL TES BYM RCB MVA WER MBZ MFK
 			KYB TRN ANS RIE MSB UFF DNB OET HBR BDE HHB FBG BSK AOS
-			PRZ BRD LDB GOR FCB ALL ZEE HTR HPL NWG SWD SCI ZIE BRZ NMS STZ NMD WRC GLO NYS OPV SIZ PDK HSP WGO BHL
+			PRZ BRD LDB GOR FCB ALL ZEE HTR HPL NWG SWD SCI ZIE BRZ NMS STZ NMD WRC GLO NYS OPV SIZ PDK WGO BHL
 			RBG FLK NSI RDL NID MDS TGG GRY VEL PSZ LIC WDE MSO NSH NSS BLM DIS EVS FUR GRK HAC JEV SAW SAB THD WIE
 			ELL HEH HLF HOH KIR NEL TUB LEU SEL ARS RET FLA BUR FRZ
 		}
@@ -733,6 +741,15 @@ international_organization_manager = {
 #		creation_date = 1337.1.1
 #		members = { AFR SDQ }
 #	}
+
+	#################################################################
+	# 					Defensive League							#
+	#################################################################
+	add_international_organization = { #Dorben Oord
+		type = defensive_league
+		creation_date = 1337.1.1
+		members = { CRS TRH KHD BAT }
+	}
 	
 	#################################################################
 	# 					Jurchen Confederations						#
