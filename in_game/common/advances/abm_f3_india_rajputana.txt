@@ -1,0 +1,112 @@
+############################
+# Rajputana Kingdom
+# North-Western India: Sindh, Punjab, Rajputana
+# Concept: Bulwark of the East India, an Islamic frontier and the heart of Muslim India.
+############################
+
+# Concept:
+# Tag: RJP
+
+
+############################
+# age_3_discovery (1437-1537)
+############################
+
+rjp_cavalry_raids = {
+    age = age_3_discovery
+    requires = military_drill
+    potential = {
+        has_or_had_tag = RJP
+    }
+
+    army_movement_speed = 0.10
+    supply_limit_modifier = 0.10
+}
+
+rjp_sultanate_expansion = {
+    age = age_3_discovery
+    requires = rjp_cavalry_raids
+    potential = {
+        has_or_had_tag = RJP
+    }
+
+    aggressive_expansion_impact = -0.10
+    global_integration_speed_modifier = 0.15
+}
+
+############################
+# age_4_reformation (1537-1637)
+############################
+
+rjp_siege_mastery = {
+    age = age_4_reformation
+    requires = engineer_corps
+    potential = {
+        has_or_had_tag = RJP
+    }
+
+    fort_assault_bonus = 0.15
+    siege_ability = 0.10
+}
+
+rjp_military_administration = {
+    age = age_4_reformation
+    requires = rjp_siege_mastery
+    potential = {
+        has_or_had_tag = RJP
+    }
+
+    war_exhaustion = -0.05
+    vassal_income = 0.20
+}
+
+############################
+# age_5_absolutism (1637-1737)
+############################
+
+rjp_deccan_dominance = {
+    age = age_5_absolutism
+    requires = grand_army
+    potential = {
+        has_or_had_tag = RJP
+    }
+
+    diplomatic_range_modifier = 0.20
+}
+
+rjp_imperial_ambitions = {
+    age = age_5_absolutism
+    requires = rjp_deccan_dominance
+    potential = {
+        has_or_had_tag = RJP
+    }
+
+    army_tradition_from_battles = 0.25
+    mercenary_cost = -0.10
+}
+
+############################
+# age_6_revolutions (1737-1837)
+############################
+
+rjp_last_stand = {
+    age = age_6_revolutions
+    requires = improved_logistics
+    potential = {
+        has_or_had_tag = RJP
+    }
+
+    army_movement_speed = 0.15
+}
+
+rjp_consolidation_of_power = {
+    age = age_6_revolutions
+    requires = rjp_last_stand
+    potential = {
+        has_or_had_tag = RJP
+    }
+    
+    subject_loyalty = 0.10
+    estate_target_satisfaction = 0.05
+}
+
