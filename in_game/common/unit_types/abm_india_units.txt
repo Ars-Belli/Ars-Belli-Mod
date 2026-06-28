@@ -1,0 +1,88 @@
+a_footmen = {
+	default = yes
+	copy_from = a_age_1_traditions_heavy_infantry
+	strength_damage_taken = -0.05
+	
+	
+	country_potential = { 
+		government_type != government_type:steppe_horde
+	}
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.1
+	}
+	
+	upgrades_to = a_men_at_arms
+
+	
+	maintenance_demand =  early_heavy_infantry_maintenance
+	construction_demand = early_heavy_infantry_construction
+	
+	gfx_tags = { medium_tag }
+	
+
+}
+
+abm_dmb_early_mopla = {
+	copy_from = a_age_2_renaissance_heavy_infantry
+	is_special = yes
+	upgrades_to = abm_dmb_mopla 
+
+    movement_speed = 0.25
+    combat_speed = 0.25
+    initiative = 0.50
+
+	buildable = yes
+	country_potential = {
+		OR = {
+            region = region:deccan_region
+            culture = { has_culture_group = culture_group:indian_group }
+		}
+	}
+
+	location_potential = {
+        is_coastal = yes
+        has_building = building:dock
+    }
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.3
+	}
+
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
+
+abm_dmb_mopla = {
+	copy_from = a_age_3_discovery_heavy_infantry
+	is_special = yes
+	upgrades_to = abm_dmb_elite_mopla 
+
+    movement_speed = 0.25
+    combat_speed = 0.25
+    initiative = 0.50
+
+	buildable = yes
+	country_potential = {
+		OR = {
+            region = region:deccan_region
+            culture = { has_culture_group = culture_group:indian_group }
+		}
+	}
+
+	location_potential = {
+        is_coastal = yes
+        has_building = building:dock
+    }
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.3
+	}
+
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
