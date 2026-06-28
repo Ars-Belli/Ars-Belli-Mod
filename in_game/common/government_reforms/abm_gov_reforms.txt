@@ -58,13 +58,17 @@ abm_bazaar_republic = {
 	years = 2
 }
 
-abm_hasshashun_order = {
+abm_hasshashun_branch = {
 	major = no
 	unique = yes
 	age = age_1_traditions
 	potential = {
 		religion = shia
 		government = theocracy
+		OR = {
+			has_or_had_tag = SND
+			has_or_had_tag = AHM
+		}
 		societal_value:spiritualist_vs_humanist > 50
 	}
 	country_modifier = {
