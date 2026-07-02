@@ -1,0 +1,81 @@
+﻿############################
+# age_1_traditions
+############################
+REPLACE:flexible_loyalty = {
+	age = age_1_traditions
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	mercenary_maintenance_efficiency = 0.10
+	hire_mercenary_premium_cost_modifier  = -0.10
+
+	requires = feudalism_advance
+}
+
+REPLACE:ruthenia_commoner_education = {
+	age = age_3_discovery
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	global_peasants_max_literacy = 10
+	global_soldiers_max_literacy = 10
+	global_laborers_max_literacy = 10
+
+
+	requires = study_institutions_advance
+}
+
+
+abm_ukr_ruthenian_szlachta = {
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = UKR
+	}
+	#global_nobles_city_desired_pop_scaled = 0.05
+	#global_nobles_rural_desired_pop_scaled	= 0.025
+	global_nobles_city_desired_pop = 0.05
+	global_nobles_rural_desired_pop	= 0.025
+	requires = renaissance_court
+}
+
+abm_ukr_granary_of_europe = {
+	#icon = ukrainian_farmlands
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = UKR
+	}
+	global_monthly_food_modifier = 0.20
+	global_wheat_output_modifier = 0.20
+
+	requires = power_projection_advance_2
+}
+
+abm_ukr_ukrainian_baroque = {
+	age = age_5_absolutism
+	potential = {
+		has_or_had_tag = UKR
+	}
+	cultural_influence_modifier = 0.25
+	skill_of_new_artists = 0.1
+	num_possible_artists = 1
+
+	requires = construction_speed_absolutism
+}
+
+abm_ukr_collegium = {
+	age = age_5_absolutism
+	potential = {
+		has_or_had_tag = UKR
+	}
+	unlock_building = orthodox_colegium
+	
+	requires = abm_ukr_ukrainian_baroque
+}

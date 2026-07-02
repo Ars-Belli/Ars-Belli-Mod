@@ -1,0 +1,48 @@
+﻿############################
+# age_1_traditions
+############################
+abm_zaz_cossack_raiding = {
+	age = age_1
+	potential = {
+		has_or_had_tag = UKR
+	}
+	icon = merchants_and_trade
+	slave_raid_efficiency = 0.25
+	amount_looted_modifier = 0.50
+	privateer_efficiency = 0.25
+	allow_privateers_slave_raid = yes
+	can_hire_privateers = yes
+
+	requires = 11
+}
+
+abm_zaz_steppe_horde_tactics = {
+	age = age_1
+	potential = {
+		OR = {
+			has_or_had_tag = ZAZ
+		}
+	}
+	icon = military_tactics_advance
+
+	army_initiative = 0.25
+	army_light_cavalry_power = 0.15
+	#possible_frontage_modifier = 0.10
+	
+	requires = 111
+}
+
+abm_zaz_hetmanate_government = {
+	age = age_3
+	potential = {
+		OR = {
+			has_or_had_tag = UKR
+			culture = culture:ukrainian_culture
+		}
+	}
+	icon = laws
+	monthly_legitimacy = 0.15
+	leader_military_skill = 1
+	
+	requires = global_nobles_max_literacy_advance
+}
