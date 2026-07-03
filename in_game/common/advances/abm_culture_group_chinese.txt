@@ -79,7 +79,7 @@ abm_south_china_yuehai_culture_2 = {
         }
     }
 
-    monthly_development = 0.01
+    monthly_development = 0.0005
 
     requires = study_institutions_advance
 }
@@ -96,14 +96,14 @@ abm_south_china_yao_culture_1 = {
         }
     }
 
-    clergy_estate_max_tax = 0.05
+    clergy_estate_target_satisfaction = small_permanent_target_satisfaction
 
     requires = standardized_coins
 }
 
 abm_south_china_yao_culture_2 = {
     age = age_4_reformation
-    icon = genoese_banking_traditions
+    icon = efficient_mining
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -113,7 +113,7 @@ abm_south_china_yao_culture_2 = {
         }
     }
 
-    development_cost = -0.05
+    global_lumber_output_modifier = 0.10
 
     requires = trade_envoys
 }
@@ -132,7 +132,7 @@ abm_south_china_zhuang_culture_1 = {
 
     nobles_estate_max_tax = 0.05
 
-    requires = guilds
+    requires = feudalism_advance
 }
 
 abm_south_china_zhuang_culture_2 = {
@@ -147,14 +147,14 @@ abm_south_china_zhuang_culture_2 = {
         }
     }
 
-    trade_route_value = 0.05
+    trade_route_value = 0.10
 
     requires = study_institutions_advance
 }
 
 abm_south_china_leizhou_culture_1 = {
     age = age_2_renaissance
-    icon = zmw_merchant_taxes
+    icon = ira_improved_silk_road
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -164,14 +164,14 @@ abm_south_china_leizhou_culture_1 = {
         }
     }
 
-    peasants_estate_max_tax = 0.05
+    trade_range_modifier = 0.20
 
-    requires = standardized_coins
+    requires = more_merchants_age_of_trad
 }
 
 abm_south_china_leizhou_culture_2 = {
     age = age_4_reformation
-    icon = construction_speed_reformation
+    icon = hol_sailors
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -181,14 +181,14 @@ abm_south_china_leizhou_culture_2 = {
         }
     }
 
-    building_construction_time = -0.05
+    global_sailors_modifier = 0.075
 
     requires = trade_envoys
 }
 
 abm_south_china_yi_culture_1 = {
     age = age_1_traditions
-    icon = zmw_merchant_taxes
+    icon = glorious_arms
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -198,14 +198,14 @@ abm_south_china_yi_culture_1 = {
         }
     }
 
-    global_estate_max_tax = 0.05
+    global_soldiers_desired_pop = 0.05
 
     requires = guilds
 }
 
 abm_south_china_yi_culture_2 = {
     age = age_3_discovery
-    icon = construction_speed_renaissance
+    icon = colonies
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -215,7 +215,7 @@ abm_south_china_yi_culture_2 = {
         }
     }
 
-    global_construction_speed = 0.05
+    global_monthly_food_modifier = 0.10
 
     requires = study_institutions_advance
 }
@@ -234,7 +234,7 @@ abm_west_china_shu_culture_1 = {
         }
     }
 
-    burghers_estate_target_satisfaction = 0.05
+    peasants_estate_target_satisfaction = 0.05
 
     requires = standardized_coins
 }
@@ -253,12 +253,12 @@ abm_west_china_shu_culture_2 = {
 
     global_max_rgo_size_modifier = 0.05
 
-    requires = trade_envoys
+    requires = rgo_size_advance_reformation
 }
 
 abm_west_china_qin_culture_1 = {
     age = age_1_traditions
-    icon = cultural_acceptance_advance
+    icon = church_councils
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -268,9 +268,9 @@ abm_west_china_qin_culture_1 = {
         }
     }
 
-    nobles_estate_satisfaction_recovery = 0.001
+    monthly_devotion = 0.10
 
-    requires = guilds
+    requires = organized_religion
 }
 
 abm_west_china_qin_culture_2 = {
@@ -285,13 +285,30 @@ abm_west_china_qin_culture_2 = {
         }
     }
 
-    global_max_rgo_size_modifier_in_rural = 0.05
+    global_max_rgo_size_modifier_in_rural = 0.10
 
-    requires = study_institutions_advance
+    requires = rural_rgo_disc_advance
 }
 
 abm_west_china_jin_culture_1 = {
     age = age_2_renaissance
+    icon = glorious_arms
+
+    potential = {
+        culture = { has_culture_group = culture_group:chinese_group }
+        OR = {
+            culture = culture:jin_culture
+            has_accepted_culture = culture:jin_culture
+        }
+    }
+
+    global_manpower_modifier = 0.05
+
+    requires = standardized_coins
+}
+
+abm_west_china_jin_culture_2 = {
+    age = age_4_reformation
     icon = church_councils
 
     potential = {
@@ -302,24 +319,7 @@ abm_west_china_jin_culture_1 = {
         }
     }
 
-    clergy_estate_satisfaction_recovery = 0.001
-
-    requires = standardized_coins
-}
-
-abm_west_china_jin_culture_2 = {
-    age = age_4_reformation
-    icon = efficient_mining
-
-    potential = {
-        culture = { has_culture_group = culture_group:chinese_group }
-        OR = {
-            culture = culture:jin_culture
-            has_accepted_culture = culture:jin_culture
-        }
-    }
-
-    global_max_rgo_size_modifier_in_non_rural = 0.05
+    global_clergy_desired_pop = 0.01
 
     requires = trade_envoys
 }
@@ -336,14 +336,14 @@ abm_west_china_liang_culture_1 = {
         }
     }
 
-    peasants_estate_satisfaction_recovery = 0.001
+    global_peasants_max_literacy = 5
 
     requires = guilds
 }
 
 abm_west_china_liang_culture_2 = {
     age = age_3_discovery
-    icon = monuments_to_greatness
+    icon = glorious_arms
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -353,7 +353,7 @@ abm_west_china_liang_culture_2 = {
         }
     }
 
-    global_monthly_development = 0.001
+    global_fort_limit_modifier = 0.10
 
     requires = study_institutions_advance
 }
@@ -372,7 +372,7 @@ abm_east_china_chu_culture_1 = {
         }
     }
 
-    global_peasants_estate_power = 0.05
+    monthly_legitimacy = 0.10
 
     requires = standardized_coins
 }
@@ -391,7 +391,7 @@ abm_east_china_chu_culture_2 = {
 
     global_trade_through_owned_territory_efficiency = 0.1
 
-    requires = trade_envoys
+    requires = trade_through_owned_disc_advance
 }
 
 abm_east_china_xinxiang_culture_1 = {
@@ -406,9 +406,9 @@ abm_east_china_xinxiang_culture_1 = {
         }
     }
 
-    burghers_estate_agenda_impact = 0.05
+    global_trades_per_burgher = 0.10
 
-    requires = guilds
+    requires = more_merchants_age_of_trad
 }
 
 abm_east_china_xinxiang_culture_2 = {
@@ -423,7 +423,7 @@ abm_east_china_xinxiang_culture_2 = {
         }
     }
 
-    global_merchant_capacity_modifier = 0.05
+    selling_efficiency = small_trade_efficiency_bonus
 
     requires = study_institutions_advance
 }
@@ -440,7 +440,7 @@ abm_east_china_gan_culture_1 = {
         }
     }
 
-    nobles_estate_agenda_impact = 0.05
+    nobles_estate_target_satisfaction = small_permanent_target_satisfaction
 
     requires = standardized_coins
 }
@@ -457,14 +457,14 @@ abm_east_china_gan_culture_2 = {
         }
     }
 
-    merchant_maintenance_efficiency = 0.06
+    merchant_maintenance_efficiency = 0.10
 
-    requires = trade_envoys
+    requires = global_trade_advance
 }
 
 abm_east_china_kejia_culture_1 = {
     age = age_1_traditions
-    icon = church_councils
+    icon = efficient_mining
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -474,9 +474,9 @@ abm_east_china_kejia_culture_1 = {
         }
     }
 
-    global_clergy_desired_pop = 0.01
+    global_max_rgo_size_modifier_in_non_rural = 0.10
 
-    requires = guilds
+    requires = rural_rgo_traditions
 }
 
 abm_east_china_kejia_culture_2 = {
@@ -491,7 +491,7 @@ abm_east_china_kejia_culture_2 = {
         }
     }
 
-    global_merchant_power = 0.05
+    global_merchant_power = 0.10
 
     requires = study_institutions_advance
 }
@@ -510,12 +510,12 @@ abm_east_china_fuzhou_culture_1 = {
 
     global_burghers_city_desired_pop = 0.05
 
-    requires = standardized_coins
+    requires = guilds
 }
 
 abm_east_china_fuzhou_culture_2 = {
     age = age_4_reformation
-    icon = ira_improved_silk_road
+    icon = genoese_banking_traditions
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -525,9 +525,9 @@ abm_east_china_fuzhou_culture_2 = {
         }
     }
 
-    trade_range_modifier = 0.1
+    global_merchant_capacity_modifier = 0.10
 
-    requires = trade_envoys
+    requires = more_merchants_age_of_trad
 }
 
 abm_east_china_tiazhou_culture_1 = {
@@ -544,7 +544,7 @@ abm_east_china_tiazhou_culture_1 = {
 
     global_clergy_city_desired_pop = 0.05
 
-    requires = guilds
+    requires = organized_religion
 }
 
 abm_east_china_tiazhou_culture_2 = {
@@ -559,14 +559,14 @@ abm_east_china_tiazhou_culture_2 = {
         }
     }
 
-    global_road_building_time = -0.1
+    global_road_building_time = -0.10
 
     requires = study_institutions_advance
 }
 
 abm_east_china_wu_culture_1 = {
     age = age_2_renaissance
-    icon = colonies
+    icon = zmw_merchant_taxes
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -576,14 +576,14 @@ abm_east_china_wu_culture_1 = {
         }
     }
 
-    rural_migration_attraction = 0.1
+    burghers_estate_agenda_impact = 0.05
 
     requires = standardized_coins
 }
 
 abm_east_china_wu_culture_2 = {
     age = age_4_reformation
-    icon = construction_speed_discovery
+    icon = laws
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -593,14 +593,14 @@ abm_east_china_wu_culture_2 = {
         }
     }
 
-    town_upgrade_cost_modifier = -0.05
+    monthly_republican_tradition = 0.10
 
     requires = trade_envoys
 }
 
 abm_east_china_tujia_culture_1 = {
     age = age_1_traditions
-    icon = colonies
+    icon = zmw_merchant_taxes
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -610,14 +610,14 @@ abm_east_china_tujia_culture_1 = {
         }
     }
 
-    non_rural_migration_attraction = 0.1
+    peasants_estate_max_tax = 0.05
 
     requires = guilds
 }
 
 abm_east_china_tujia_culture_2 = {
     age = age_3_discovery
-    icon = construction_speed_discovery
+    icon = rudimentary_coastal_ship_repair
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -627,9 +627,9 @@ abm_east_china_tujia_culture_2 = {
         }
     }
 
-    city_upgrade_cost_modifier = -0.05
+    city_upgrade_cost_modifier = -0.10
 
-    requires = study_institutions_advance
+    requires = renaissance_city_rights
 }
 
 abm_east_china_jianghuai_culture_1 = {
@@ -646,12 +646,12 @@ abm_east_china_jianghuai_culture_1 = {
 
     global_clergy_max_literacy = 5
 
-    requires = standardized_coins
+    requires = global_clergy_max_literacy_advance
 }
 
 abm_east_china_jianghuai_culture_2 = {
     age = age_4_reformation
-    icon = construction_speed_reformation
+    icon = rudimentary_coastal_ship_repair
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -661,9 +661,9 @@ abm_east_china_jianghuai_culture_2 = {
         }
     }
 
-    megalopolis_upgrade_cost_modifier = -0.05
+    global_food_output_modifier = 0.10
 
-    requires = trade_envoys
+    requires = renaissance_city_rights
 }
 
 # North China Advances
@@ -687,7 +687,7 @@ abm_north_china_zhongyuan_culture_1 = {
 
 abm_north_china_zhongyuan_culture_2 = {
     age = age_3_discovery
-    icon = construction_speed_renaissance
+    icon = efficient_mining
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -716,12 +716,12 @@ abm_north_china_jiaodong_culture_1 = {
 
     global_nobles_max_literacy = 5
 
-    requires = standardized_coins
+    requires = global_nobles_max_literacy_advance
 }
 
 abm_north_china_jiaodong_culture_2 = {
     age = age_4_reformation
-    icon = construction_speed_discovery
+    icon = monuments_to_greatness
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -731,7 +731,7 @@ abm_north_china_jiaodong_culture_2 = {
         }
     }
 
-    global_urban_build_buildings_efficiency = 0.05
+    global_life_expectancy = 3
 
     requires = trade_envoys
 }
@@ -748,14 +748,14 @@ abm_north_china_yan_culture_1 = {
         }
     }
 
-    legislative_efficiency = 0.05
+    monthly_horde_unity = 0.05
 
     requires = guilds
 }
 
 abm_north_china_yan_culture_2 = {
     age = age_3_discovery
-    icon = construction_speed_reformation
+    icon = road_building
 
     potential = {
         culture = { has_culture_group = culture_group:chinese_group }
@@ -765,7 +765,7 @@ abm_north_china_yan_culture_2 = {
         }
     }
 
-    global_rural_build_buildings_efficiency = 0.05
+    global_distance_from_capital_speed_propagation = 0.10
 
     requires = study_institutions_advance
 }
@@ -782,9 +782,9 @@ abm_north_china_jilu_culture_1 = {
         }
     }
 
-    country_cabinet_efficiency = 0.05
+    country_cabinet_efficiency = 0.10
 
-    requires = standardized_coins
+    requires = meritocracy_advance
 }
 
 abm_north_china_jilu_culture_2 = {
