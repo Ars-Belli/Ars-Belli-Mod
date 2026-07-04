@@ -1,0 +1,496 @@
+### Red Turban Legacy - South China Tags
+
+# LEZ, CDN, MNE, LNG
+# Structure per tag: 1x age_1, 2x age_2, 2x age_3, 2x age_4, 1x age_5
+# Constraint: exactly one modifier per advance, and no modifier key repeats.
+
+########################################
+# LEZ (Leizhou) - coastal militia/trade
+########################################
+
+abm_lez_diplomatic_corps = {
+	age = age_1_traditions
+	icon = red_sea_trade
+
+	potential = {
+		OR = {
+			has_or_had_tag = LEZ
+			has_or_had_tag = ABSCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = guilds
+
+	annexation_speed_modifier = 0.15
+}
+
+abm_lez_salt_convoys = {
+	age = age_2_renaissance
+	icon = ira_improved_silk_road
+
+	potential = {
+		has_or_had_tag = LEZ
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = standardized_coins
+
+	trade_range_modifier = 0.15
+}
+
+abm_lez_dockyard_musters = {
+	age = age_2_renaissance
+	icon = hol_sailors
+
+	potential = {
+		OR = {
+			has_or_had_tag = LEZ
+			has_or_had_tag = ABSCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = rudimentary_coastal_ship_repair
+
+	global_sailors_modifier = 0.10
+}
+
+abm_lez_delta_patrols = {
+	age = age_3_discovery
+	icon = maritime_advance_age_4
+
+	potential = {
+		OR = {
+			has_or_had_tag = LEZ
+			has_or_had_tag = ABSCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = global_trade_routes_advance
+
+	naval_morale_modifier = 0.10
+}
+
+abm_lez_customs_network = {
+	age = age_3_discovery
+	icon = merchant_power_from_maritime_reformation_advance
+
+	potential = {
+		has_or_had_tag = LEZ
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = maritime_advance_age_3
+
+	global_trade_center_power = 0.10
+}
+
+abm_lez_maritime_brokers = {
+	age = age_4_reformation
+	icon = trade_envoys
+
+	potential = {
+		has_or_had_tag = LEZ
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = trade_envoys
+
+	import_efficiency = medium_trade_efficiency_bonus
+}
+
+abm_lez_sea_lanes_command = {
+	age = age_4_reformation
+	icon = development_of_maritime_law
+
+	potential = {
+		has_or_had_tag = LEZ
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = development_of_maritime_law
+
+	global_maritime_presence_modifier = 0.10
+}
+
+abm_lez_strait_supremacy = {
+	age = age_5_absolutism
+	icon = sturdy_privateers
+
+	potential = {
+		has_or_had_tag = LEZ
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = abm_lez_sea_lanes_command
+
+	own_coast_naval_combat_bonus = 0.10
+}
+
+########################################
+# CDN (Dongguan) - workshops/commerce
+########################################
+
+abm_cdn_guild_ledgers = {
+	age = age_1_traditions
+	icon = court_accounting
+
+	potential = {
+		has_or_had_tag = CDN
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = guilds
+
+	global_urban_build_buildings_efficiency = 0.10
+}
+
+abm_cdn_market_registers = {
+	age = age_2_renaissance
+	icon = court_accounting
+
+	potential = {
+		has_or_had_tag = CDN
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = standardized_coins
+
+	court_spending_efficiency = 0.10
+}
+
+abm_cdn_mint_houses = {
+	age = age_2_renaissance
+	icon = genoese_banking_traditions
+
+	potential = {
+		has_or_had_tag = CDN
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = counting_house_advance
+
+	minting_income_factor = 0.10
+}
+
+abm_cdn_delta_exchange = {
+	age = age_3_discovery
+	icon = merchant_power_from_maritime_reformation_advance
+
+	potential = {
+		has_or_had_tag = CDN
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = global_trade_advance
+
+	global_merchant_power = 0.10
+}
+
+abm_cdn_port_monopolies = {
+	age = age_3_discovery
+	icon = chartered_companies
+
+	potential = {
+		has_or_had_tag = CDN
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = chartered_companies
+
+	foreign_export_from_market_efficiency = 0.10
+}
+
+abm_cdn_internal_trade_routes = {
+	age = age_4_reformation
+	icon = global_trade_routes_advance
+
+	potential = {
+		has_or_had_tag = CDN
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = global_trade_routes_advance
+
+	global_trade_through_owned_territory_efficiency = 0.10
+}
+
+abm_cdn_bureau_reorganization = {
+	age = age_4_reformation
+	icon = smooth_administration
+
+	potential = {
+		has_or_had_tag = CDN
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = early_modern_administation
+
+	legislative_efficiency = 0.10
+}
+
+abm_cdn_workshop_state = {
+	age = age_5_absolutism
+	icon = urbanization
+
+	potential = {
+		has_or_had_tag = CDN
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = urbanization
+
+	global_production_efficiency = 0.10
+}
+
+########################################
+# MNE (Yao/Mien) - upland mobilization
+########################################
+
+abm_mne_hill_oaths = {
+	age = age_1_traditions
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			has_or_had_tag = MNE
+			has_or_had_tag = ABSCP
+		}
+        culture = { has_culture_group = culture_group:chinese_group }
+
+	}
+	requires = feudalism_advance
+
+	movement_speed_if_no_road = 0.10
+}
+
+abm_mne_clan_musters = {
+	age = age_2_renaissance
+	icon = drill_army_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = MNE
+			has_or_had_tag = ABSCP
+		}
+		OR = {
+			culture = { has_culture_group = culture_group:chinese_group }
+			culture = culture:yao_china_culture
+		}
+	}
+	requires = drill_army_advance
+
+	army_light_infantry_power = 0.10
+}
+
+abm_mne_valley_granaries = {
+	age = age_2_renaissance
+	icon = rgo_size_advance_renaissance
+
+	potential = {
+		has_or_had_tag = MNE
+		OR = {
+			culture = { has_culture_group = culture_group:chinese_group }
+			culture = culture:yao_china_culture
+		}
+	}
+	requires = rgo_size_advance_renaissance
+
+	global_supply_limit_modifier = 0.10
+}
+
+abm_mne_mountain_warfare = {
+	age = age_3_discovery
+	icon = recruitment_improvements_discovery
+
+	potential = {
+		has_or_had_tag = MNE
+		OR = {
+			culture = { has_culture_group = culture_group:chinese_group }
+			culture = culture:yao_china_culture
+		}
+	}
+	requires = pike_and_shot_advance
+
+	land_unit_attrition = -0.10
+}
+
+abm_mne_frontier_paths = {
+	age = age_3_discovery
+	icon = diplomatic_training
+
+	potential = {
+		has_or_had_tag = MNE
+		OR = {
+			culture = { has_culture_group = culture_group:chinese_group }
+			culture = culture:yao_china_culture
+		}
+	}
+	requires = diplomatic_range_age_3
+
+	global_distance_from_capital_speed_propagation = 0.10
+}
+
+abm_mne_upland_compacts = {
+	age = age_4_reformation
+	icon = confessional_court
+
+	potential = {
+		OR = {
+			has_or_had_tag = MNE
+			has_or_had_tag = ABSCP
+		}
+		OR = {
+			culture = { has_culture_group = culture_group:chinese_group }
+			culture = culture:yao_china_culture
+		}
+	}
+	requires = confessional_court
+
+	global_max_rural_control = 0.10
+}
+
+abm_mne_fortified_passes = {
+	age = age_4_reformation
+	icon = military_engineering_reformation
+
+	potential = {
+		has_or_had_tag = MNE
+		OR = {
+			culture = { has_culture_group = culture_group:chinese_group }
+			culture = culture:yao_china_culture
+		}
+	}
+	requires = military_engineering_reformation
+
+	fort_maintenance_efficiency = 0.10
+}
+
+abm_mne_bleeding_frontier = {
+	age = age_5_absolutism
+	icon = military_revolution_advance
+
+	potential = {
+		has_or_had_tag = MNE
+		OR = {
+			culture = { has_culture_group = culture_group:chinese_group }
+			culture = culture:yao_china_culture
+		}
+	}
+	requires = military_revolution_advance
+
+	global_hostile_attrition = 1
+}
+
+########################################
+# LNG (Liang) - frontier war-state
+########################################
+
+abm_lng_frontier_hosts = {
+	age = age_1_traditions
+	icon = military_hierarchy
+
+	potential = {
+		has_or_had_tag = LNG
+        culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = unlock_footmen_advance
+
+	global_manpower_modifier = 0.10
+}
+
+abm_lng_quick_levies = {
+	age = age_2_renaissance
+	icon = recruitment_improvements_renaissance
+
+	potential = {
+		has_or_had_tag = LNG
+        culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = recruitment_improvements_renaissance
+
+	regiment_recruit_speed = 0.10
+}
+
+abm_lng_veteran_recovery = {
+	age = age_2_renaissance
+	icon = regimental_system
+
+	potential = {
+		has_or_had_tag = LNG
+        culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = regimental_system
+
+	regiment_reinforcement_speed = 0.10
+}
+
+abm_lng_drilled_infantry = {
+	age = age_3_discovery
+	icon = pike_and_shot_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = LNG
+			has_or_had_tag = ABSCP
+		}
+        culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = pike_and_shot_advance
+
+	army_heavy_infantry_power = 0.10
+}
+
+abm_lng_siege_mastery = {
+	age = age_3_discovery
+	icon = military_engineering_advance
+
+	potential = {
+		has_or_had_tag = LNG
+        culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = military_engineering_advance
+
+	artillery_bonus_vs_fort = 1
+}
+
+abm_lng_bombard_corps = {
+	age = age_4_reformation
+	icon = artillery_institution_advance
+
+	potential = {
+        OR = {
+			has_or_had_tag = LNG
+			has_or_had_tag = ABSCP
+		}
+        culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = artillery_institution_advance
+
+	army_artillery_power = 0.10
+}
+
+abm_lng_campaign_treasury = {
+	age = age_4_reformation
+	icon = debt_and_loans
+
+	potential = {
+		has_or_had_tag = LNG
+        culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = abm_lng_bombard_corps
+
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
+}
+
+abm_lng_decisive_campaigns = {
+	age = age_5_absolutism
+	icon = war_score_absolutism_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = LNG
+			has_or_had_tag = ABSCP
+		}
+        culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = war_score_absolutism_advance
+
+	global_war_score_efficiency = 0.10
+}
+
+# Leizhou - LEZ  - republic with a mix of defensive and naval quality modifiers, a bit of production bonuses
+
+# Dongguang - CDN - a republic with strong emphasis on trade, naval quantity, and mercenaries
+
+# Yao - MNE - a monarchy with levies
+
+# Liang - LNG - theocracy
+
+# South China Protectorate - ABSCP
