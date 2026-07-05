@@ -13,7 +13,11 @@ abm_yua_prefectural_academies = {
 	icon = library_advance
 
 	potential = {
-		has_or_had_tag = YUA
+		OR = {
+			has_or_had_tag = YUA
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = cultural_traditions_law_advance
 
@@ -200,7 +204,11 @@ abm_cmo_admiralty_merit_office = {
 	icon = global_trade_routes_advance
 
 	potential = {
-		has_or_had_tag = CMO
+		OR = {
+			has_or_had_tag = CMO
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = national_sovereignty
 
@@ -235,7 +243,7 @@ abm_anx_mobile_column_doctrine = {
 	}
 	requires = medieval_military
 
-	army_movement_speed = 0.05
+	military_tactics = 0.10
 }
 
 abm_anx_pike_border_regiments = {
@@ -243,7 +251,11 @@ abm_anx_pike_border_regiments = {
 	icon = pike_and_shot_advance
 
 	potential = {
-		has_or_had_tag = ANX
+		OR = {
+			has_or_had_tag = ANX
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = pike_square
 
@@ -262,7 +274,7 @@ abm_anx_southern_campaign_staff = {
 	}
 	requires = supply_lines
 
-	global_war_score_efficiency = 0.1
+	land_unit_attrition = -0.20
 }
 
 abm_anx_frontier_garrison_grids = {
@@ -274,7 +286,7 @@ abm_anx_frontier_garrison_grids = {
 	}
 	requires = recruitment_improvements_reformation
 
-	land_unit_attrition = -0.20
+	global_prosperity_decay = -0.01
 }
 
 abm_anx_military_parades = {
@@ -289,7 +301,7 @@ abm_anx_military_parades = {
 	}
 	requires = regiment_reinforcement_speed_reformation
 
-	monthly_army_tradition = 0.05
+	monthly_army_tradition = 0.10
 }
 
 abm_anx_red_cannon_offices = {
@@ -301,7 +313,8 @@ abm_anx_red_cannon_offices = {
 	}
 	requires = unlock_chambered_cannon_advance
 
-	army_heavy_cavalry_power = 0.1
+	assault_ability = 0.1
+	artillery_bonus_vs_fort = 1
 }
 
 abm_anx_green_standard_banners = {
@@ -313,7 +326,7 @@ abm_anx_green_standard_banners = {
 	}
 	requires = increase_control_area_advance
 
-	army_light_infantry_reinforce_cost_modifier = -0.1
+	minting_income_factor = 0.10
 }
 
 ########################################
@@ -329,43 +342,25 @@ abm_sai_taihang_fortresses = {
 	}
 	requires = feudalism_advance
 
-	fort_limit_modifier = 0.10
+	fort_limit_modifier = 0.20
+	global_hostile_attrition = 1
 }
 
-abm_sai_gunpowder_engines = {
-	age = age_2_renaissance
-	icon = artillery_institution_advance
-
-	potential = {
-		has_or_had_tag = SAI
-	}
-	requires = gun_smith_advance
-
-	global_firearms_output_modifier = 0.2
-}
 
 abm_sai_border_defense_council = {
 	age = age_2_renaissance
 	icon = glorious_arms
 
 	potential = {
-		has_or_had_tag = SAI
+		OR = {
+			has_or_had_tag = SAI
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = pike_square
 
-	army_heavy_infantry_power = 0.1
-}
-
-abm_sai_auxiliary_corps = {
-	age = age_3_discovery
-	icon = regimental_system
-
-	potential = {
-		has_or_had_tag = SAI
-	}
-	requires = regiment_reinforcement_speed_discovery
-
-	army_heavy_infantry_reinforce_cost_modifier = -0.1
+	army_heavy_cavalry_power = 0.10
 }
 
 abm_sai_tusi_hostage_registers = {
@@ -389,19 +384,8 @@ abm_sai_nine_pass_garrisons = {
 	}
 	requires = recruitment_improvements_reformation
 
-	global_garrison_size_modifier = 0.2
-}
-
-abm_sai_korean_style_gunnery = {
-	age = age_4_reformation
-	icon = artillery_institution_advance
-
-	potential = {
-		has_or_had_tag = SAI
-	}
-	requires = supply_depot_advance_age_4_reformation
-
-	land_morale = 0.20
+	discipline = 0.025
+	army_initiative = 0.10
 }
 
 abm_sai_campaign_chancellery = {
@@ -413,7 +397,7 @@ abm_sai_campaign_chancellery = {
 	}
 	requires = power_projection_advance_5
 
-	military_tactics = 0.10
+	tax_income_efficiency = large_tax_income_efficiency_bonus
 }
 
 ########################################
@@ -429,7 +413,8 @@ abm_kha_horse_lords = {
 	}
 	requires = horse_riding_advance
 
-	army_light_cavalry_reinforce_cost_modifier = -0.33
+	army_light_cavalry_power = 0.10
+	army_heavy_cavalry_power = 0.10
 }
 
 abm_kha_remount_logistics = {
@@ -441,7 +426,7 @@ abm_kha_remount_logistics = {
 	}
 	requires = yams_of_the_great_khan
 
-	army_light_cavalry_maintenance_cost_modifier = -0.33
+	army_reinforce_efficiency = 0.10
 }
 
 abm_kha_no_grass_campaigns = {
@@ -465,19 +450,21 @@ abm_kha_horde_loot_banners = {
 	}
 	requires = rgo_logistics_discovery
 
-	amount_looted_modifier = 0.5
+	slave_raid_efficiency = 0.20
+	amount_looted_modifier = 1
 }
 
-abm_kha_trampling_wings = {
+abm_kha_caravan_wing_ordinances = {
 	age = age_3_discovery
-	icon = pike_and_shot_advance
+	icon = merchants_and_trade
 
 	potential = {
 		has_or_had_tag = KHA
 	}
-	requires = supply_lines
+	requires = merchants_and_trade
 
-	army_light_cavalry_power = 0.1
+	selling_efficiency = small_trade_efficiency_bonus
+	export_efficiency = small_trade_efficiency_bonus
 }
 
 abm_kha_silk_road_watchers = {
@@ -497,11 +484,16 @@ abm_kha_steppe_reinforcement_chain = {
 	icon = regimental_system
 
 	potential = {
-		has_or_had_tag = KHA
+		OR = {
+			has_or_had_tag = KHA
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = leader_recruit_cost_advance
 
-	army_reinforce_efficiency = 0.10
+	discipline = 0.025
+	land_morale_modifier = 0.05
 }
 
 abm_kha_magnanimous_khanate = {
@@ -517,19 +509,25 @@ abm_kha_magnanimous_khanate = {
 }
 
 ########################################
-# SHD (Shandong) - mixed profile
+# SHD (Shandong) - mercenaries
 ########################################
 
-abm_shd_artisan_poetry_societies = {
+abm_shd_mercenary_contract_societies = {
 	age = age_1_traditions
-	icon = laws
+	icon = debt_and_loans
 
 	potential = {
-		has_or_had_tag = SHD
+		OR = {
+			has_or_had_tag = SHD
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = cultural_traditions_law_advance
+	
+	requires = guilds
 
-	num_possible_artists = 1
+	hire_mercenary_premium_cost_modifier  = -0.10
+	mercenary_maintenance_efficiency = 0.10
 }
 
 abm_shd_metal_type_printing = {
@@ -565,7 +563,7 @@ abm_shd_prefecture_grand_code = {
 	}
 	requires = regulate_court_procedures
 
-	country_cabinet_efficiency = 0.1
+	global_mercenaries_modifier = 0.25
 }
 
 abm_shd_hyanyak_compendia = {
@@ -585,11 +583,15 @@ abm_shd_hopae_registry = {
 	icon = laws
 
 	potential = {
-		has_or_had_tag = SHD
+		OR = {
+			has_or_had_tag = SHD
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = imperial_ambitions
 
-	pop_join_rebel_threshold = -0.05
+	global_pop_assimilation_speed_modifier = 0.20
 }
 
 abm_shd_frontier_gunnery = {
@@ -617,7 +619,7 @@ abm_shd_daedong_revenue_reform = {
 }
 
 ########################################
-# AYG (Anyang) - mixed profile
+# AYG (Anyang) - noble elective monarchy, levy-heavy
 ########################################
 
 abm_ayg_confucian_influences = {
@@ -629,19 +631,19 @@ abm_ayg_confucian_influences = {
 	}
 	requires = legalism_advance
 
-	monthly_legitimacy = 0.1
+	stability_cost_efficiency = 0.20
 }
 
 abm_ayg_lijia_tallies = {
 	age = age_2_renaissance
-	icon = road_building
+	icon = regimental_system
 
 	potential = {
 		has_or_had_tag = AYG
 	}
 	requires = drill_army_advance
 
-	global_distance_from_capital_speed_propagation = 0.1
+	levy_combat_efficiency_modifier = 0.20
 }
 
 abm_ayg_weisuo_reserves = {
@@ -651,9 +653,9 @@ abm_ayg_weisuo_reserves = {
 	potential = {
 		has_or_had_tag = AYG
 	}
-	requires = trade_range_advance_age_2
+	requires = unlock_peasant_levy_advance
 
-	global_manpower_modifier = 0.1
+	nobles_estate_levy_size = 0.75
 }
 
 abm_ayg_imperial_censorate = {
@@ -661,28 +663,33 @@ abm_ayg_imperial_censorate = {
 	icon = smooth_administration
 
 	potential = {
-		has_or_had_tag = AYG
+		OR = {
+			has_or_had_tag = AYG
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = government_size_discovery
 
-	global_crown_estate_power = 0.1
+	court_spending_efficiency = 0.20
 }
 
-abm_ayg_salt_monopoly = {
+abm_ayg_levy_supply_monopoly = {
 	age = age_3_discovery
-	icon = debt_and_loans
+	icon = regimental_system
 
 	potential = {
 		has_or_had_tag = AYG
 	}
-	requires = rgo_logistics_discovery
+	requires = regiment_reinforcement_speed_discovery
 
-	global_salt_output_modifier = 0.2
+	levy_maintenance_modifier = -0.10
+	levy_recovery_modifier = 0.10
 }
 
 abm_ayg_secretariat_reconstruction = {
 	age = age_4_reformation
-	icon = library_advance
+	icon = smooth_administration
 
 	potential = {
 		has_or_had_tag = AYG
@@ -692,8 +699,20 @@ abm_ayg_secretariat_reconstruction = {
 	legislative_efficiency = 0.1
 }
 
-abm_ayg_red_cannon_bureau = {
+abm_ayg_courtly_patronage = {
 	age = age_4_reformation
+	icon = cultural_acceptance_advance
+
+	potential = {
+		has_or_had_tag = AYG
+	}
+	requires = power_projection_advance_3
+
+	monthly_prestige = 0.10
+}
+
+abm_ayg_late_artillery_bureau = {
+	age = age_5_absolutism
 	icon = artillery_institution_advance
 
 	potential = {
@@ -701,19 +720,7 @@ abm_ayg_red_cannon_bureau = {
 	}
 	requires = unlock_chambered_cannon_advance
 
-	siege_ability = 0.1
-}
-
-abm_ayg_porcelain_patronage = {
-	age = age_5_absolutism
-	icon = cultural_acceptance_advance
-
-	potential = {
-		has_or_had_tag = AYG
-	}
-	requires = national_sovereignty
-
-	monthly_prestige = 0.1
+	army_artillery_power = 0.10
 }
 
 ########################################
@@ -729,7 +736,8 @@ abm_cso_baihua_script = {
 	}
 	requires = cultural_traditions_law_advance
 
-	global_max_literacy = 5
+	global_urban_build_buildings_efficiency = 0.10
+	global_masonry_output_modifier = 0.20
 }
 
 abm_cso_zhaju_theatres = {
@@ -741,7 +749,7 @@ abm_cso_zhaju_theatres = {
 	}
 	requires = cultural_traditions_law_advance
 
-	cultural_influence_modifier = 0.1
+	monthly_war_exhaustion = -0.02
 }
 
 abm_cso_tributary_bureau = {
@@ -753,7 +761,8 @@ abm_cso_tributary_bureau = {
 	}
 	requires = diplomatic_range_age_1
 
-	government_reform_slots = 1
+	global_migration_speed_modifier = 0.10
+	global pop_promotion_speed_modifier = 0.10
 }
 
 abm_cso_tea_trade_companies = {
@@ -765,7 +774,8 @@ abm_cso_tea_trade_companies = {
 	}
 	requires = merchant_power_from_maritime_discovery_advance
 
-	global_tea_output_modifier = 0.2
+	global_integration_speed_modifier = 0.10
+	global_annexation_cost_modifier = -0.10
 }
 
 abm_cso_auxiliary_musters = {
@@ -773,11 +783,15 @@ abm_cso_auxiliary_musters = {
 	icon = regimental_system
 
 	potential = {
-		has_or_had_tag = CSO
+		OR = {
+			has_or_had_tag = CSO
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = regiment_reinforcement_speed_discovery
 
-	army_auxiliary_build_cost_modifier = -0.2
+	possible_frontage_modifier = 0.10
 }
 
 abm_cso_silver_coinage = {
@@ -789,7 +803,7 @@ abm_cso_silver_coinage = {
 	}
 	requires = bole_smelting
 
-	global_silver_output_modifier = 0.15
+	global_manpower_modifier = 0.20
 }
 
 abm_cso_wall_garrison_circuit = {
@@ -801,7 +815,7 @@ abm_cso_wall_garrison_circuit = {
 	}
 	requires = recruitment_improvements_reformation
 
-	global_defensive = 0.20
+	experience_decay = -0.01
 }
 
 abm_cso_porcelain_commission = {
@@ -813,5 +827,6 @@ abm_cso_porcelain_commission = {
 	}
 	requires = national_sovereignty
 
-	global_porcelain_output_modifier = 0.1
+	global_lacquerware_output_modifier = 0.20
+	global_pottery_output_modifier = 0.20
 }
