@@ -13,11 +13,9 @@ abm_lez_diplomatic_corps = {
 	icon = red_sea_trade
 
 	potential = {
-		OR = {
-			has_or_had_tag = LEZ
-		}
+		has_or_had_tag = LEZ
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = guilds
 
 	annexation_speed_modifier = 0.10
@@ -31,7 +29,7 @@ abm_lez_salt_convoys = {
 	potential = {
 		has_or_had_tag = LEZ
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = standardized_coins
 
 	trade_range_modifier = 0.15
@@ -44,9 +42,10 @@ abm_lez_dockyard_musters = {
 	potential = {
 		OR = {
 			has_or_had_tag = LEZ
+			has_or_had_tag = ABSCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = rudimentary_coastal_ship_repair
 
 	global_sailors_modifier = 0.10
@@ -59,9 +58,10 @@ abm_lez_delta_patrols = {
 	potential = {
 		OR = {
 			has_or_had_tag = LEZ
+			has_or_had_tag = ABSCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = global_trade_routes_advance
 
 	naval_morale_modifier = 0.10
@@ -74,7 +74,7 @@ abm_lez_customs_network = {
 	potential = {
 		has_or_had_tag = LEZ
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = maritime_advance_age_3
 
 	global_trade_center_power = 0.10
@@ -87,7 +87,7 @@ abm_lez_maritime_brokers = {
 	potential = {
 		has_or_had_tag = LEZ
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = trade_envoys
 
 	import_efficiency = medium_trade_efficiency_bonus
@@ -98,9 +98,12 @@ abm_lez_sea_lanes_command = {
 	icon = development_of_maritime_law
 
 	potential = {
-		has_or_had_tag = LEZ
+		OR = {
+			has_or_had_tag = LEZ
+			has_or_had_tag = ABSCP
+		}
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = development_of_maritime_law
 
 	global_maritime_presence_modifier = 0.10
@@ -113,7 +116,7 @@ abm_lez_strait_supremacy = {
 	potential = {
 		has_or_had_tag = LEZ
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = abm_lez_sea_lanes_command
 
 	own_coast_naval_combat_bonus = 0.10
@@ -126,7 +129,7 @@ abm_lez_maritime_state_registry = {
 	potential = {
 		has_or_had_tag = LEZ
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = modern_bureaucracy
 
 	global_merchant_capacity_modifier = 0.25
@@ -141,9 +144,12 @@ abm_cdn_guild_ledgers = {
 	icon = court_accounting
 
 	potential = {
-		has_or_had_tag = CDN
+		OR = {
+			has_or_had_tag = CDN
+			has_or_had_tag = ABSCP
+		}
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = guilds
 
 	global_urban_build_buildings_efficiency = 0.10
@@ -157,7 +163,7 @@ abm_cdn_market_registers = {
 	potential = {
 		has_or_had_tag = CDN
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = standardized_coins
 
 	court_spending_efficiency = 0.10
@@ -170,7 +176,7 @@ abm_cdn_mint_houses = {
 	potential = {
 		has_or_had_tag = CDN
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = counting_house_advance
 
 	minting_income_factor = 0.10
@@ -183,7 +189,7 @@ abm_cdn_delta_exchange = {
 	potential = {
 		has_or_had_tag = CDN
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = global_trade_advance
 
 	global_merchant_power = 0.10
@@ -196,7 +202,7 @@ abm_cdn_port_monopolies = {
 	potential = {
 		has_or_had_tag = CDN
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = chartered_companies
 
 	foreign_export_from_market_efficiency = 0.10
@@ -209,7 +215,7 @@ abm_cdn_internal_trade_routes = {
 	potential = {
 		has_or_had_tag = CDN
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = global_trade_routes_advance
 
 	global_trade_through_owned_territory_efficiency = 0.10
@@ -222,7 +228,7 @@ abm_cdn_bureau_reorganization = {
 	potential = {
 		has_or_had_tag = CDN
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = early_modern_administation
 
 	legislative_efficiency = 0.10
@@ -233,9 +239,12 @@ abm_cdn_workshop_state = {
 	icon = urbanization
 
 	potential = {
-		has_or_had_tag = CDN
+		OR = {
+			has_or_had_tag = CDN
+			has_or_had_tag = ABSCP
+		}
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = urbanization
 
 	global_production_efficiency = 0.10
@@ -248,7 +257,7 @@ abm_cdn_commercial_grand_secretariat = {
 	potential = {
 		has_or_had_tag = CDN
 		culture = { has_culture_group = culture_group:chinese_group }
-    }
+	}
 	requires = modern_bureaucracy
 
 	country_cabinet_efficiency = 0.20
@@ -263,11 +272,8 @@ abm_mne_hill_oaths = {
 	icon = glorious_arms
 
 	potential = {
-		OR = {
-			has_or_had_tag = MNE
-		}
-        culture = { has_culture_group = culture_group:chinese_group }
-
+		has_or_had_tag = MNE
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = feudalism_advance
 
@@ -280,13 +286,8 @@ abm_mne_clan_musters = {
 	icon = drill_army_advance
 
 	potential = {
-		OR = {
-			has_or_had_tag = MNE
-		}
-		OR = {
-			culture = { has_culture_group = culture_group:chinese_group }
-			culture = culture:yao_china_culture
-		}
+		has_or_had_tag = MNE
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = drill_army_advance
 
@@ -299,10 +300,7 @@ abm_mne_valley_granaries = {
 
 	potential = {
 		has_or_had_tag = MNE
-		OR = {
-			culture = { has_culture_group = culture_group:chinese_group }
-			culture = culture:yao_china_culture
-		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = rgo_size_advance_renaissance
 
@@ -314,11 +312,11 @@ abm_mne_mountain_warfare = {
 	icon = recruitment_improvements_discovery
 
 	potential = {
-		has_or_had_tag = MNE
 		OR = {
-			culture = { has_culture_group = culture_group:chinese_group }
-			culture = culture:yao_china_culture
+			has_or_had_tag = MNE
+			has_or_had_tag = ABSCP
 		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = pike_and_shot_advance
 
@@ -331,10 +329,7 @@ abm_mne_frontier_paths = {
 
 	potential = {
 		has_or_had_tag = MNE
-		OR = {
-			culture = { has_culture_group = culture_group:chinese_group }
-			culture = culture:yao_china_culture
-		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = diplomatic_range_age_3
 
@@ -346,13 +341,8 @@ abm_mne_upland_compacts = {
 	icon = confessional_court
 
 	potential = {
-		OR = {
-			has_or_had_tag = MNE
-		}
-		OR = {
-			culture = { has_culture_group = culture_group:chinese_group }
-			culture = culture:yao_china_culture
-		}
+		has_or_had_tag = MNE
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = confessional_court
 
@@ -365,12 +355,9 @@ abm_mne_fortified_passes = {
 
 	potential = {
 		has_or_had_tag = MNE
-		OR = {
-			culture = { has_culture_group = culture_group:chinese_group }
-			culture = culture:yao_china_culture
-		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = military_engineering_reformation
+	requires = leader_recruit_cost_advance
 
 	fort_maintenance_efficiency = 0.10
 }
@@ -381,10 +368,7 @@ abm_mne_bleeding_frontier = {
 
 	potential = {
 		has_or_had_tag = MNE
-		OR = {
-			culture = { has_culture_group = culture_group:chinese_group }
-			culture = culture:yao_china_culture
-		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = military_revolution_advance
 
@@ -397,10 +381,7 @@ abm_mne_upland_royal_commission = {
 
 	potential = {
 		has_or_had_tag = MNE
-		OR = {
-			culture = { has_culture_group = culture_group:chinese_group }
-			culture = culture:yao_china_culture
-		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = modern_bureaucracy
 
@@ -417,7 +398,7 @@ abm_lng_frontier_hosts = {
 
 	potential = {
 		has_or_had_tag = LNG
-        culture = { has_culture_group = culture_group:chinese_group }
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = unlock_footmen_advance
 
@@ -431,7 +412,7 @@ abm_lng_quick_levies = {
 
 	potential = {
 		has_or_had_tag = LNG
-        culture = { has_culture_group = culture_group:chinese_group }
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = recruitment_improvements_renaissance
 
@@ -444,7 +425,7 @@ abm_lng_veteran_recovery = {
 
 	potential = {
 		has_or_had_tag = LNG
-        culture = { has_culture_group = culture_group:chinese_group }
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = regimental_system
 
@@ -458,8 +439,9 @@ abm_lng_drilled_infantry = {
 	potential = {
 		OR = {
 			has_or_had_tag = LNG
+			has_or_had_tag = ABSCP
 		}
-        culture = { has_culture_group = culture_group:chinese_group }
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = pike_and_shot_advance
 
@@ -472,9 +454,9 @@ abm_lng_siege_mastery = {
 
 	potential = {
 		has_or_had_tag = LNG
-        culture = { has_culture_group = culture_group:chinese_group }
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = military_engineering_advance
+	requires = supply_lines
 
 	artillery_bonus_vs_fort = 1
 }
@@ -484,10 +466,8 @@ abm_lng_bombard_corps = {
 	icon = artillery_institution_advance
 
 	potential = {
-        OR = {
-			has_or_had_tag = LNG
-		}
-        culture = { has_culture_group = culture_group:chinese_group }
+		has_or_had_tag = LNG
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = artillery_institution_advance
 
@@ -499,8 +479,11 @@ abm_lng_campaign_treasury = {
 	icon = debt_and_loans
 
 	potential = {
-		has_or_had_tag = LNG
-        culture = { has_culture_group = culture_group:chinese_group }
+		OR = {
+			has_or_had_tag = LNG
+			has_or_had_tag = ABSCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = abm_lng_bombard_corps
 
@@ -512,10 +495,8 @@ abm_lng_decisive_campaigns = {
 	icon = war_score_absolutism_advance
 
 	potential = {
-		OR = {
-			has_or_had_tag = LNG
-		}
-        culture = { has_culture_group = culture_group:chinese_group }
+		has_or_had_tag = LNG
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = war_score_absolutism_advance
 
@@ -528,7 +509,7 @@ abm_lng_general_staff_ministry = {
 
 	potential = {
 		has_or_had_tag = LNG
-        culture = { has_culture_group = culture_group:chinese_group }
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = modern_bureaucracy
 
