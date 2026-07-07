@@ -13,11 +13,13 @@ abm_yua_start = {
 	icon = crown_power_advance_renaissance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = YUA
 	}
+	requires = legalism_advance
 
-	global_manpower_modifier = 0.25
-	cavalry_power = 0.20
+	army_light_cavalry_power = 0.20
+	government_size = 1
 }
 
 abm_yua_da_zai_qian_yuan = {
@@ -25,21 +27,25 @@ abm_yua_da_zai_qian_yuan = {
 	icon = glorious_arms
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = YUA
 	}
+	requires = formalized_relations
 
-	core_creation = -0.25
+	global_integration_speed_modifier = 0.20
 }
 
 abm_yua_a_savage_kingdom_holy_and_enchanted = {
 	age = age_2_renaissance
-	icon = glorious_arms
+	icon = laws
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = YUA
 	}
+	requires = construction_speed_renaissance
 
-	land_morale = 0.1
+	stability_cost_efficiency = 0.20
 }
 
 abm_yua_the_three_teachings_and_nine_schools_respected = {
@@ -47,21 +53,25 @@ abm_yua_the_three_teachings_and_nine_schools_respected = {
 	icon = laws
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = YUA
 	}
+	requires = cultural_traditions_law_advance
 
-	technology_cost = -0.1
+	global_monthly_literacy = 0.01
 }
 
 abm_yua_keshik_and_weijun = {
 	age = age_3_discovery
-	icon = regimental_system
+	icon = smooth_administration
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = YUA
 	}
+	requires = government_size_discovery
 
-	shock_damage = 0.1
+	land_morale_modifier = 0.10
 }
 
 abm_yua_a_thousand_miles_as_if_at_home = {
@@ -69,11 +79,12 @@ abm_yua_a_thousand_miles_as_if_at_home = {
 	icon = global_trade_routes_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = YUA
 	}
+	requires = watchers_of_the_silk_road
 
-	movement_speed = 0.15
-	envoy_travel_time = -0.1
+	army_movement_speed = 0.10
 }
 
 abm_yua_sino_mongol_administration = {
@@ -81,10 +92,12 @@ abm_yua_sino_mongol_administration = {
 	icon = smooth_administration
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = YUA
 	}
+	requires = regulate_court_procedures
 
-	administrative_efficiency = 0.05
+	num_local_governors = 1
 }
 
 abm_yua_pax_mongolica = {
@@ -92,10 +105,12 @@ abm_yua_pax_mongolica = {
 	icon = merchants_and_trade
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = YUA
 	}
+	requires = national_sovereignty
 
-	global_trade_goods_size_modifier = 0.1
+	global_production_efficiency = large_production_efficiency_bonus
 }
 
 abm_yua_bonus = {
@@ -103,10 +118,12 @@ abm_yua_bonus = {
 	icon = court_accounting
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = YUA
 	}
+	requires = absolute_rulership
 
-	governing_capacity_modifier = 0.1
+	government_reform_slots = 1
 }
 
 ########################################
@@ -118,6 +135,7 @@ abm_cmo_river_flotilla_guilds = {
 	icon = global_trade_routes_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CMO
 	}
 	requires = guilds
@@ -131,6 +149,7 @@ abm_cmo_communal_land_registers = {
 	icon = court_accounting
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CMO
 	}
 	requires = legalism_advance
@@ -143,6 +162,7 @@ abm_cmo_urban_charter_workshops = {
 	icon = merchants_and_trade
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CMO
 	}
 	requires = construction_speed_renaissance
@@ -155,6 +175,7 @@ abm_cmo_county_workshop_quotas = {
 	icon = efficient_mining
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CMO
 	}
 	requires = efficient_mining
@@ -167,6 +188,7 @@ abm_cmo_river_marine_drills = {
 	icon = regimental_system
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CMO
 	}
 	requires = supply_lines
@@ -180,6 +202,7 @@ abm_cmo_silver_bookkeeping_bureaus = {
 	icon = debt_and_loans
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CMO
 	}
 	requires = bole_smelting
@@ -192,6 +215,7 @@ abm_cmo_prefectural_exam_circuit = {
 	icon = smooth_administration
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CMO
 	}
 	requires = regulate_court_procedures
@@ -206,13 +230,25 @@ abm_cmo_admiralty_merit_office = {
 	potential = {
 		OR = {
 			has_or_had_tag = CMO
-			has_or_had_tag = ABNCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = national_sovereignty
 
 	monthly_navy_tradition = 0.20
+}
+
+abm_cmo_central_audit_secretariat = {
+	age = age_6_revolutions
+	icon = court_accounting
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+		has_or_had_tag = CMO
+	}
+	requires = modern_bureaucracy
+
+	global_max_literacy = 10
 }
 
 ########################################
@@ -224,11 +260,13 @@ abm_anx_siege_engineer_bureaus = {
 	icon = glorious_arms
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = ANX
 	}
 	requires = guilds
 
 	naval_damage_taken = -0.10
+	fort_maintenance_efficiency = -0.10
 }
 
 abm_anx_mobile_column_doctrine = {
@@ -236,6 +274,7 @@ abm_anx_mobile_column_doctrine = {
 	icon = regimental_system
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		OR = {
 			has_or_had_tag = ANX
 			has_or_had_tag = SAI
@@ -253,7 +292,6 @@ abm_anx_pike_border_regiments = {
 	potential = {
 		OR = {
 			has_or_had_tag = ANX
-			has_or_had_tag = ABNCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -267,6 +305,7 @@ abm_anx_southern_campaign_staff = {
 	icon = glorious_arms
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		OR = {
 			has_or_had_tag = ANX
 			has_or_had_tag = SAI
@@ -282,6 +321,7 @@ abm_anx_frontier_garrison_grids = {
 	icon = diplomatic_training
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = ANX
 	}
 	requires = recruitment_improvements_reformation
@@ -294,6 +334,7 @@ abm_anx_military_parades = {
 	icon = church_councils
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		OR = {
 			has_or_had_tag = ANX
 			has_or_had_tag = SAI
@@ -309,6 +350,7 @@ abm_anx_red_cannon_offices = {
 	icon = artillery_institution_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = ANX
 	}
 	requires = unlock_chambered_cannon_advance
@@ -322,11 +364,25 @@ abm_anx_green_standard_banners = {
 	icon = regimental_system
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = ANX
 	}
 	requires = increase_control_area_advance
 
 	minting_income_factor = 0.10
+}
+
+abm_anx_border_command_reforms = {
+	age = age_6_revolutions
+	icon = smooth_administration
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+		has_or_had_tag = ANX
+	}
+	requires = modern_bureaucracy
+
+	army_maintenance_efficiency = 0.10
 }
 
 ########################################
@@ -338,6 +394,7 @@ abm_sai_taihang_fortresses = {
 	icon = diplomatic_training
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SAI
 	}
 	requires = feudalism_advance
@@ -354,7 +411,6 @@ abm_sai_border_defense_council = {
 	potential = {
 		OR = {
 			has_or_had_tag = SAI
-			has_or_had_tag = ABNCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -368,6 +424,7 @@ abm_sai_tusi_hostage_registers = {
 	icon = laws
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SAI
 	}
 	requires = formalized_relations
@@ -380,6 +437,7 @@ abm_sai_nine_pass_garrisons = {
 	icon = diplomatic_training
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SAI
 	}
 	requires = recruitment_improvements_reformation
@@ -393,11 +451,25 @@ abm_sai_campaign_chancellery = {
 	icon = smooth_administration
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SAI
 	}
 	requires = power_projection_advance_5
 
 	tax_income_efficiency = large_tax_income_efficiency_bonus
+}
+
+abm_sai_frontier_general_secretariat = {
+	age = age_6_revolutions
+	icon = court_accounting
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+		has_or_had_tag = SAI
+	}
+	requires = modern_bureaucracy
+
+	num_local_governors = 1
 }
 
 ########################################
@@ -409,6 +481,7 @@ abm_kha_horse_lords = {
 	icon = glorious_arms
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = KHA
 	}
 	requires = horse_riding_advance
@@ -422,6 +495,7 @@ abm_kha_remount_logistics = {
 	icon = regimental_system
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = KHA
 	}
 	requires = yams_of_the_great_khan
@@ -434,6 +508,7 @@ abm_kha_no_grass_campaigns = {
 	icon = diplomatic_training
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = KHA
 	}
 	requires = land_morale_recovery_renaissance_advance
@@ -446,6 +521,7 @@ abm_kha_horde_loot_banners = {
 	icon = debt_and_loans
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = KHA
 	}
 	requires = rgo_logistics_discovery
@@ -459,6 +535,7 @@ abm_kha_caravan_wing_ordinances = {
 	icon = merchants_and_trade
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = KHA
 	}
 	requires = merchants_and_trade
@@ -472,6 +549,7 @@ abm_kha_silk_road_watchers = {
 	icon = global_trade_routes_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = KHA
 	}
 	requires = watchers_of_the_silk_road
@@ -486,7 +564,6 @@ abm_kha_steppe_reinforcement_chain = {
 	potential = {
 		OR = {
 			has_or_had_tag = KHA
-			has_or_had_tag = ABNCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -501,11 +578,25 @@ abm_kha_magnanimous_khanate = {
 	icon = cultural_acceptance_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = KHA
 	}
 	requires = a_magnanimous_empire
 
 	cultures_capacity = 2
+}
+
+abm_kha_steppe_state_relays = {
+	age = age_6_revolutions
+	icon = diplomatic_training
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+		has_or_had_tag = KHA
+	}
+	requires = modern_bureaucracy
+
+	movement_speed_if_no_road = 0.20
 }
 
 ########################################
@@ -519,7 +610,6 @@ abm_shd_mercenary_contract_societies = {
 	potential = {
 		OR = {
 			has_or_had_tag = SHD
-			has_or_had_tag = ABNCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -535,6 +625,7 @@ abm_shd_metal_type_printing = {
 	icon = printing_press_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SHD
 	}
 	requires = construction_speed_renaissance
@@ -547,6 +638,7 @@ abm_shd_port_merchants = {
 	icon = global_trade_routes_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SHD
 	}
 	requires = merchants_and_trade
@@ -559,6 +651,7 @@ abm_shd_prefecture_grand_code = {
 	icon = smooth_administration
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SHD
 	}
 	requires = regulate_court_procedures
@@ -571,6 +664,7 @@ abm_shd_hyanyak_compendia = {
 	icon = efficient_mining
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SHD
 	}
 	requires = merchant_power_from_maritime_discovery_advance
@@ -585,7 +679,6 @@ abm_shd_hopae_registry = {
 	potential = {
 		OR = {
 			has_or_had_tag = SHD
-			has_or_had_tag = ABNCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -599,6 +692,7 @@ abm_shd_frontier_gunnery = {
 	icon = artillery_institution_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SHD
 	}
 	requires = supply_depot_advance_age_4_reformation
@@ -611,11 +705,25 @@ abm_shd_daedong_revenue_reform = {
 	icon = debt_and_loans
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = SHD
 	}
 	requires = absolute_rulership
 
 	tax_income_efficiency = large_tax_income_efficiency_bonus
+}
+
+abm_shd_maritime_fiscal_high_board = {
+	age = age_6_revolutions
+	icon = court_accounting
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+		has_or_had_tag = SHD
+	}
+	requires = modern_bureaucracy
+
+	global_mercenaries_modifier = 0.50
 }
 
 ########################################
@@ -627,11 +735,13 @@ abm_ayg_confucian_influences = {
 	icon = laws
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = AYG
 	}
 	requires = legalism_advance
 
-	stability_cost_efficiency = 0.20
+	stability_cost_efficiency = 0.15
+	cabinet_efficiency = 0.15
 }
 
 abm_ayg_lijia_tallies = {
@@ -639,6 +749,7 @@ abm_ayg_lijia_tallies = {
 	icon = regimental_system
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = AYG
 	}
 	requires = drill_army_advance
@@ -651,6 +762,7 @@ abm_ayg_weisuo_reserves = {
 	icon = regimental_system
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = AYG
 	}
 	requires = unlock_peasant_levy_advance
@@ -665,7 +777,6 @@ abm_ayg_imperial_censorate = {
 	potential = {
 		OR = {
 			has_or_had_tag = AYG
-			has_or_had_tag = ABNCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -679,6 +790,7 @@ abm_ayg_levy_supply_monopoly = {
 	icon = regimental_system
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = AYG
 	}
 	requires = regiment_reinforcement_speed_discovery
@@ -692,11 +804,12 @@ abm_ayg_secretariat_reconstruction = {
 	icon = smooth_administration
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = AYG
 	}
 	requires = power_projection_advance_3
 
-	legislative_efficiency = 0.1
+	legislative_efficiency = 0.10
 }
 
 abm_ayg_courtly_patronage = {
@@ -704,6 +817,7 @@ abm_ayg_courtly_patronage = {
 	icon = cultural_acceptance_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = AYG
 	}
 	requires = power_projection_advance_3
@@ -716,11 +830,25 @@ abm_ayg_late_artillery_bureau = {
 	icon = artillery_institution_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = AYG
 	}
 	requires = unlock_chambered_cannon_advance
 
 	army_artillery_power = 0.10
+}
+
+abm_ayg_state_secretariat = {
+	age = age_6_revolutions
+	icon = smooth_administration
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+		has_or_had_tag = AYG
+	}
+	requires = modern_bureaucracy
+
+	government_reform_slots = 1
 }
 
 ########################################
@@ -732,6 +860,7 @@ abm_cso_baihua_script = {
 	icon = laws
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CSO
 	}
 	requires = cultural_traditions_law_advance
@@ -745,6 +874,7 @@ abm_cso_zhaju_theatres = {
 	icon = printing_press_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CSO
 	}
 	requires = cultural_traditions_law_advance
@@ -757,6 +887,7 @@ abm_cso_tributary_bureau = {
 	icon = smooth_administration
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CSO
 	}
 	requires = diplomatic_range_age_1
@@ -770,6 +901,7 @@ abm_cso_tea_trade_companies = {
 	icon = global_trade_routes_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CSO
 	}
 	requires = merchant_power_from_maritime_discovery_advance
@@ -785,7 +917,6 @@ abm_cso_auxiliary_musters = {
 	potential = {
 		OR = {
 			has_or_had_tag = CSO
-			has_or_had_tag = ABNCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -799,6 +930,7 @@ abm_cso_silver_coinage = {
 	icon = debt_and_loans
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CSO
 	}
 	requires = bole_smelting
@@ -811,6 +943,7 @@ abm_cso_wall_garrison_circuit = {
 	icon = diplomatic_training
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CSO
 	}
 	requires = recruitment_improvements_reformation
@@ -823,10 +956,24 @@ abm_cso_porcelain_commission = {
 	icon = cultural_acceptance_advance
 
 	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
 		has_or_had_tag = CSO
 	}
 	requires = national_sovereignty
 
 	global_lacquerware_output_modifier = 0.20
 	global_pottery_output_modifier = 0.20
+}
+
+abm_cso_grand_transport_office = {
+	age = age_6_revolutions
+	icon = global_trade_routes_advance
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+		has_or_had_tag = CSO
+	}
+	requires = modern_bureaucracy
+
+	global_trade_through_owned_territory_efficiency = 0.20
 }

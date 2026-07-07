@@ -15,13 +15,13 @@ abm_lez_diplomatic_corps = {
 	potential = {
 		OR = {
 			has_or_had_tag = LEZ
-			has_or_had_tag = ABSCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
     }
 	requires = guilds
 
-	annexation_speed_modifier = 0.15
+	annexation_speed_modifier = 0.10
+	monthly_diplomats = 0.10
 }
 
 abm_lez_salt_convoys = {
@@ -44,7 +44,6 @@ abm_lez_dockyard_musters = {
 	potential = {
 		OR = {
 			has_or_had_tag = LEZ
-			has_or_had_tag = ABSCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
     }
@@ -60,7 +59,6 @@ abm_lez_delta_patrols = {
 	potential = {
 		OR = {
 			has_or_had_tag = LEZ
-			has_or_had_tag = ABSCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
     }
@@ -121,6 +119,19 @@ abm_lez_strait_supremacy = {
 	own_coast_naval_combat_bonus = 0.10
 }
 
+abm_lez_maritime_state_registry = {
+	age = age_6_revolutions
+	icon = court_accounting
+
+	potential = {
+		has_or_had_tag = LEZ
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = modern_bureaucracy
+
+	global_merchant_capacity_modifier = 0.25
+}
+
 ########################################
 # CDN (Dongguan) - workshops/commerce
 ########################################
@@ -136,6 +147,7 @@ abm_cdn_guild_ledgers = {
 	requires = guilds
 
 	global_urban_build_buildings_efficiency = 0.10
+	global_production_efficiency = 0.10
 }
 
 abm_cdn_market_registers = {
@@ -229,6 +241,19 @@ abm_cdn_workshop_state = {
 	global_production_efficiency = 0.10
 }
 
+abm_cdn_commercial_grand_secretariat = {
+	age = age_6_revolutions
+	icon = smooth_administration
+
+	potential = {
+		has_or_had_tag = CDN
+		culture = { has_culture_group = culture_group:chinese_group }
+    }
+	requires = modern_bureaucracy
+
+	country_cabinet_efficiency = 0.20
+}
+
 ########################################
 # MNE (Yao/Mien) - upland mobilization
 ########################################
@@ -240,7 +265,6 @@ abm_mne_hill_oaths = {
 	potential = {
 		OR = {
 			has_or_had_tag = MNE
-			has_or_had_tag = ABSCP
 		}
         culture = { has_culture_group = culture_group:chinese_group }
 
@@ -248,6 +272,7 @@ abm_mne_hill_oaths = {
 	requires = feudalism_advance
 
 	movement_speed_if_no_road = 0.10
+	land_unit_attrition = -0.10
 }
 
 abm_mne_clan_musters = {
@@ -257,7 +282,6 @@ abm_mne_clan_musters = {
 	potential = {
 		OR = {
 			has_or_had_tag = MNE
-			has_or_had_tag = ABSCP
 		}
 		OR = {
 			culture = { has_culture_group = culture_group:chinese_group }
@@ -324,7 +348,6 @@ abm_mne_upland_compacts = {
 	potential = {
 		OR = {
 			has_or_had_tag = MNE
-			has_or_had_tag = ABSCP
 		}
 		OR = {
 			culture = { has_culture_group = culture_group:chinese_group }
@@ -368,6 +391,22 @@ abm_mne_bleeding_frontier = {
 	global_hostile_attrition = 1
 }
 
+abm_mne_upland_royal_commission = {
+	age = age_6_revolutions
+	icon = diplomatic_training
+
+	potential = {
+		has_or_had_tag = MNE
+		OR = {
+			culture = { has_culture_group = culture_group:chinese_group }
+			culture = culture:yao_china_culture
+		}
+	}
+	requires = modern_bureaucracy
+
+	global_max_rural_control = 0.10
+}
+
 ########################################
 # LNG (Liang) - frontier war-state
 ########################################
@@ -383,6 +422,7 @@ abm_lng_frontier_hosts = {
 	requires = unlock_footmen_advance
 
 	global_manpower_modifier = 0.10
+	regiment_recruit_speed = 0.10
 }
 
 abm_lng_quick_levies = {
@@ -418,7 +458,6 @@ abm_lng_drilled_infantry = {
 	potential = {
 		OR = {
 			has_or_had_tag = LNG
-			has_or_had_tag = ABSCP
 		}
         culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -447,7 +486,6 @@ abm_lng_bombard_corps = {
 	potential = {
         OR = {
 			has_or_had_tag = LNG
-			has_or_had_tag = ABSCP
 		}
         culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -476,13 +514,25 @@ abm_lng_decisive_campaigns = {
 	potential = {
 		OR = {
 			has_or_had_tag = LNG
-			has_or_had_tag = ABSCP
 		}
         culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = war_score_absolutism_advance
 
 	global_war_score_efficiency = 0.10
+}
+
+abm_lng_general_staff_ministry = {
+	age = age_6_revolutions
+	icon = regimental_system
+
+	potential = {
+		has_or_had_tag = LNG
+        culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = modern_bureaucracy
+
+	army_maintenance_efficiency = 0.10
 }
 
 # Leizhou - LEZ  - republic with a mix of defensive and naval quality modifiers, a bit of production bonuses

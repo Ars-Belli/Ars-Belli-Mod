@@ -16,13 +16,13 @@ abm_cxi_civic_covenant = {
 	potential = {
 		OR = {
 			has_or_had_tag = CXI
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = republican_foundation_law_advance
 
 	monthly_republican_tradition = 0.10
+	cabinet_efficiency = 0.10
 }
 
 abm_cxi_land_and_market_assessors = {
@@ -71,7 +71,6 @@ abm_cxi_mountain_courier_roads = {
 	potential = {
 		OR = {
 			has_or_had_tag = CXI
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -87,7 +86,6 @@ abm_cxi_communal_prosperity_ledger = {
 	potential = {
 		OR = {
 			has_or_had_tag = CXI
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -122,6 +120,19 @@ abm_cxi_emergency_council_mandate = {
 	global_crown_estate_power = 0.30
 }
 
+abm_cxi_republican_state_archives = {
+	age = age_6_revolutions
+	icon = court_accounting
+
+	potential = {
+		has_or_had_tag = CXI
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = modern_bureaucracy
+
+	government_reform_slots = 1
+}
+
 ########################################
 # HNG (Hangzhou) - chinese monarchy
 ########################################
@@ -133,13 +144,13 @@ abm_hng_court_ritual_legitimacy = {
 	potential = {
 		OR = {
 			has_or_had_tag = HNG
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = organized_religion
 
 	monthly_legitimacy = 0.10
+	stability_cost_efficiency = 0.10
 }
 
 abm_hng_grand_secretariat_council = {
@@ -162,7 +173,6 @@ abm_hng_topographic_exam_survey = {
 	potential = {
 		OR = {
 			has_or_had_tag = HNG
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -238,6 +248,19 @@ abm_hng_imperial_gun_foundries = {
 	army_artillery_power = 0.15
 }
 
+abm_hng_grand_censorate_registry = {
+	age = age_6_revolutions
+	icon = smooth_administration
+
+	potential = {
+		has_or_had_tag = HNG
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = modern_bureaucracy
+
+	government_size = 1
+}
+
 ########################################
 # CSI (Li) - theocracy
 ########################################
@@ -249,13 +272,13 @@ abm_csi_canonical_authority = {
 	potential = {
 		OR = {
 			has_or_had_tag = CSI
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = organized_religion
 
 	monthly_devotion = 0.10
+	tolerance_own = 1
 }
 
 abm_csi_war_theology = {
@@ -265,7 +288,6 @@ abm_csi_war_theology = {
 	potential = {
 		OR = {
 			has_or_had_tag = CSI
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -353,6 +375,19 @@ abm_csi_consecrated_realm = {
 	tolerance_own = 2
 }
 
+abm_csi_patriarchal_high_court = {
+	age = age_6_revolutions
+	icon = laws
+
+	potential = {
+		has_or_had_tag = CSI
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = modern_bureaucracy
+
+	global_pop_conversion_speed_modifier = 0.25
+}
+
 ########################################
 # GNS (Gansu) - horde
 ########################################
@@ -404,7 +439,6 @@ abm_gns_hard_marches = {
 	potential = {
 		OR = {
 			has_or_had_tag = GNS
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -446,7 +480,6 @@ abm_gns_hostage_oaths = {
 	potential = {
 		OR = {
 			has_or_had_tag = GNS
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
@@ -462,13 +495,25 @@ abm_gns_steppe_mosaic = {
 	potential = {
 		OR = {
 			has_or_had_tag = GNS
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = a_magnanimous_empire
 
 	cultures_capacity = 2
+}
+
+abm_gns_frontier_horde_chancery = {
+	age = age_6_revolutions
+	icon = laws
+
+	potential = {
+		has_or_had_tag = GNS
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = modern_bureaucracy
+
+	global_integration_speed_modifier = 0.20
 }
 
 ########################################
@@ -482,13 +527,13 @@ abm_big_war_chaplains = {
 	potential = {
 		OR = {
 			has_or_had_tag = BIG
-			has_or_had_tag = ABWCP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = organized_religion
 
 	global_soldiers_desired_pop = 0.01
+	monthly_army_tradition = 0.10
 }
 
 abm_big_iron_phalanxes = {
@@ -496,10 +541,7 @@ abm_big_iron_phalanxes = {
 	icon = pike_and_shot_advance
 
 	potential = {
-		OR = {
-			has_or_had_tag = BIG
-			has_or_had_tag = ABWCP
-		}
+		has_or_had_tag = BIG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = drill_army_advance
@@ -584,4 +626,17 @@ abm_big_final_crusade = {
 	requires = war_score_absolutism_advance
 
 	global_pop_conversion_speed_modifier = 0.20
+}
+
+abm_big_military_synod = {
+	age = age_6_revolutions
+	icon = church_councils
+
+	potential = {
+		has_or_had_tag = BIG
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = modern_bureaucracy
+
+	army_maintenance_efficiency = 0.10
 }
