@@ -93,14 +93,14 @@ administrative,tribes_estate_target_satisfaction,This impacts the estate_satisfa
 administrative,war_no_cb_cost_modifier,This impacts how much it costs to declare a war without a casus_belli.,stability_cost_to_declare_war,Stability Cost To Declare War
 economic,,,can_transfer_vassal_wargoal,Can Transfer Vassal Wargoal
 economic,,,curia_powers_cost,Curia Powers Cost
-economic,,,development_cost_in_primary_culture,Development Cost In Primary Culture
+economic,global_monthly_development,This impacts how much development changes monthly in all locations in a country.,development_cost_in_primary_culture,Development Cost In Primary Culture
+economic,global_monthly_prosperity,This impacts how much prosperity changes monthly in all locations in a country.,development_cost_in_primary_culture,Development Cost In Primary Culture
 economic,,,embargo_efficiency,Embargo Efficiency
 economic,,,embracement_cost,Institution Embracement Cost
 economic,,,enforce_religion_cost,Cost of enforcing religion through war
 economic,,,expand_infrastructure_cost_modifier,Expand Infrastructure Cost Modifier
 economic,,,fabricate_claims_cost,Fabricate Claims Cost
 economic,,,flagship_cost,Flagship Cost
-economic,,,galley_cost,Galley Cost
 economic,,,global_allowed_num_of_buildings,Global Allowed Num Of Buildings
 economic,,,global_foreign_trade_power,Trade Power Abroad
 economic,,,global_naval_barrage_cost,Global Naval Barrage Cost
@@ -109,12 +109,10 @@ economic,,,global_ship_cost,Global Ship Cost
 economic,,,gold_depletion_chance_modifier,Gold Depletion Chance Modifier
 economic,,,great_project_upgrade_cost,Great Project Upgrade Cost
 economic,,,harsh_treatment_cost,Harsh Treatment Cost
-economic,,,heavy_ship_cost,Heavy Ship Cost
 economic,,,institution_spread_from_true_faith,Institution Spread In True Faith Provinces
 economic,,,justify_trade_conflict_cost,Justify Trade Conflict Cost
 economic,,,leader_cost,Leader Cost
 economic,,,liberty_desire_from_subject_development,Liberty Desire from Subjects Development
-economic,,,light_ship_cost,Light Ship Cost
 economic,,,mercantilism_cost,Mercantilism Cost
 economic,,,migration_cost,Migration Cost
 economic,,,missionary_maintenance_cost,Missionary Maintenance Cost
@@ -258,9 +256,9 @@ economic,mountains_proximity_impact,This impacts the proximity cost when going t
 economic,movement_speed_if_no_road,This impacts how fast an army can move between locations where there is not a road.,,
 economic,national_church_power_cost_modifier,This impacts the costs for Church Power actions.,church_power_modifier,Church Power Modifier
 economic,naval_range_modifier,This impacts the naval_range of a country.,naval_maintenance_modifier,Naval Maintenance Modifier
-economic,navy_galley_build_cost_modifier,This impacts how much it costs to recruit a Navy Galley.,,
-economic,navy_heavy_ship_build_cost_modifier,This impacts how much it costs to recruit a Navy Heavy Ship.,,
-economic,navy_light_ship_build_cost_modifier,This impacts how much it costs to recruit a Navy Light Ship.,,
+economic,navy_galley_build_cost_modifier,This impacts how much it costs to recruit a Navy Galley.,galley_cost,Galley Cost
+economic,navy_heavy_ship_build_cost_modifier,This impacts how much it costs to recruit a Navy Heavy Ship.,heavy_ship_cost,Heavy Ship Cost
+economic,navy_light_ship_build_cost_modifier,This impacts how much it costs to recruit a Navy Light Ship.,light_ship_cost,Light Ship Cost
 economic,nobles_estate_allowed_to_build_roads,This allows the Nobles Estate to being construction of roads.,,
 economic,non_rural_migration_attraction,This impacts if pops want migrate to or away from towns_and_cities in a country.,,
 economic,num_local_governors,This determines how many Local Governor a country can build.,,
@@ -302,21 +300,28 @@ economic,train_admiral_cost_modifier,This impacts how much it costs to train a n
 economic,train_general_cost_modifier,This impacts how much it costs to train a new general.,general_cost,General Cost
 economic,work_of_art_sell_value_modifier,This impacts the gold received when selling a work_of_art to another country.,,
 military,,,allow_mercenary_drill,Allow Mercenary Drill
-military,,,artillery_fire,Artillery Fire
+military,army_artillery_power,This impacts the combat ability of Army Artillery regiments.,artillery_fire,Artillery Fire
 military,,,artillery_level_modifier,Artillery Level Modifier
-military,,,artillery_shock,Artillery Shock
-military,,,backrow_artillery_damage,Artillery Damage from Back Row
-military,,,cav_to_inf_ratio,Cavalry to Infantry Ratio
-military,,,cavalry_fire,Cavalry Fire
-military,,,cavalry_flanking,Cavalry Flanking
-military,,,drill_gain_modifier,Drill Gain Modifier
-military,,,fire_damage,Fire Damage
-military,,,fire_damage_received,Fire Damage Received
-military,,,free_leader_pool,Leader(s) without Upkeep
+military,army_artillery_power,This impacts the combat ability of Army Artillery regiments.,artillery_shock,Artillery Shock
+military,army_artillery_power,This impacts the combat ability of Army Artillery regiments.,backrow_artillery_damage,Artillery Damage from Back Row
+military,army_light_cavalry_power,This impacts the combat ability of Army Light Cavalry regiments.,cav_to_inf_ratio,Cavalry to Infantry Ratio
+military,army_heavy_cavalry_power,This impacts the combat ability of Army Heavy Cavalry regiments.,cav_to_inf_ratio,Cavalry to Infantry Ratio
+military,army_light_cavalry_power,This impacts the combat ability of Army Light Cavalry regiments.,cavalry_fire,Cavalry Fire
+military,army_heavy_cavalry_power,This impacts the combat ability of Army Heavy Cavalry regiments.,cavalry_shock,Cavalry Shock
+military,army_light_cavalry_power,This impacts the combat ability of Army Light Cavalry regiments.,cavalry_flanking,Cavalry Flanking
+military,army_heavy_cavalry_power,This impacts the combat ability of Army Heavy Cavalry regiments.,cavalry_flanking,Cavalry Flanking
+military,experience_decay,This modifies the percentage of the current experience of a regiment or ship that decays each month.,drill_gain_modifier,Drill Gain Modifier
+military,army_artillery_power,This impacts the combat ability of Army Artillery regiments.,fire_damage,Fire Damage
+military,army_light_cavalry_power,This impacts the combat ability of Army Light Cavalry regiments.,fire_damage,Fire Damage
+military,army_light_infantry_power,This impacts the combat ability of Army Light Infantry regiments.,fire_damage,Fire Damage
+military,military_tactics,This impacts the military_tactics of a regiment.,fire_damage_received,Fire Damage Received
+military,train_admiral_cost_modifier,This impacts how much it costs to train a new admiral.,free_leader_pool,Leader(s) without Upkeep
+military,train_general_cost_modifier,This impacts how much it costs to train a new general.,free_leader_pool,Leader(s) without Upkeep
 military,,,garrison_damage,Garrison Damage
 military,,,global_naval_engagement_modifier,Global Naval Engagement Modifier
 military,,,global_ship_recruit_speed,Global Ship Recruit Speed
-military,,,infantry_shock,Infantry Shock
+military,army_light_infantry_power,This impacts the combat ability of Army Light Infantry regiments.,infantry_fire,Infantry Fire
+military,army_heavy_infantry_power,This impacts the combat ability of Army Heavy Infantry regiments.,infantry_shock,Infantry Shock
 military,,,land_forcelimit_modifier,Land Forcelimit Modifier
 military,,,leader_land_fire,Leader Land Fire
 military,,,leader_land_manuever,Leader Land Manuever
@@ -341,8 +346,10 @@ military,,,naval_tradition_from_trade,Naval Tradition From Trade
 military,,,sailors_recovery_speed,Sailors Recovery Speed
 military,,,ship_durability,Ship Durability
 military,,,ship_power_propagation,Ship Tradepower Propagation
-military,,,shock_damage,Shock Damage
-military,,,shock_damage_received,Shock Damage Received
+military,army_artillery_power,This impacts the combat ability of Army Artillery regiments.,shock_damage,Shock Damage
+military,army_heavy_cavalry_power,This impacts the combat ability of Army Heavy Cavalry regiments.,shock_damage,Shock Damage
+military,army_heavy_infantry_power,This impacts the combat ability of Army Heavy Infantry regiments.,shock_damage,Shock Damage
+military,military_tactics,This impacts the military_tactics of a regiment.,shock_damage_received,Shock Damage Received
 military,,,siege_blockade_progress,Blockade Impact on Siege
 military,,,sunk_ship_morale_hit_recieved,Sunk Ship Morale Hit Recieved
 military,,,vassal_naval_forcelimit_bonus,Vassal Naval Forcelimit Bonus
@@ -587,7 +594,6 @@ colonial,exploration_mission_speed_modifier,This impacts how much exploration_pr
 colonial,exploration_preparation_time_modifier,This impacts the how long it takes for an exploration to be prepared before it can begin.,,
 colonial,global_migration_speed_modifier,This impacts how quickly pops migrate in all locations of the country.,,
 colonial,may_explore,This allows a country to start explorations.,may_explore,May Explore
-other,,,ae_impact,AE Impact
 other,,,allowed_marine_fraction,Allowed Marine Fraction
 other,,,allowed_samurai_fraction,Allowed Samurai Fraction
 other,,,amount_of_banners,Possible Manchu Banners
