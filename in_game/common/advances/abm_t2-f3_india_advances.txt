@@ -1,11 +1,12 @@
 # Auto-generated India advances from EU4 idea groups for eu5_tag rows with advances < 10.
 # Source: .tools/india_merged.csv + .tools/eu4/ideas/*.txt
+# Naming convention: abm_<tag>_<idea_name>, traditions as abm_<tag>_traditions_(1|2), ambition as abm_<tag>_ambition.
 # Modifiers below are preserved as commented EU4 values.
 
 # ASS_ideas
-abm_ass_ideas_traditions_1 = {
+abm_sma_traditions_1 = {
 	age = age_1_traditions
-	icon = ass_ideas_traditions_1
+	icon = sma_traditions_1
 	potential = {
 		has_or_had_tag = SMA
 	}
@@ -15,21 +16,21 @@ abm_ass_ideas_traditions_1 = {
 	# global_manpower_modifier = 0.10
 }
 
-abm_ass_ideas_traditions_2 = {
+abm_sma_traditions_2 = {
 	age = age_1_traditions
-	icon = ass_ideas_traditions_2
+	icon = sma_traditions_2
 	potential = {
 		has_or_had_tag = SMA
 	}
 
-	requires = abm_ass_ideas_traditions_1
+	requires = abm_sma_traditions_1
 
 	# global_unrest = -1
 }
 
-abm_ass_ideas_buranjis = {
+abm_sma_buranjis = {
 	age = age_2_renaissance
-	icon = ass_ideas_buranjis
+	icon = sma_buranjis
 	potential = {
 		has_or_had_tag = SMA
 	}
@@ -39,70 +40,70 @@ abm_ass_ideas_buranjis = {
 	# heir_chance = 0.5
 }
 
-abm_ass_ideas_wet_rice_cultivation = {
+abm_sma_wet_rice_cultivation = {
 	age = age_2_renaissance
-	icon = ass_ideas_wet_rice_cultivation
+	icon = sma_wet_rice_cultivation
 	potential = {
 		has_or_had_tag = SMA
 	}
 
-	requires = abm_ass_ideas_buranjis
+	requires = abm_sma_buranjis
 
 	# development_cost = -0.1
 }
 
-abm_ass_ideas_river_warfare = {
-	age = age_2_renaissance
-	icon = ass_ideas_river_warfare
-	potential = {
-		has_or_had_tag = SMA
-	}
-
-	requires = abm_ass_ideas_wet_rice_cultivation
-
-	# hostile_attrition = 1
-	# shock_damage_received = -0.1
-}
-
-abm_ass_ideas_reform_paik_system = {
-	age = age_2_renaissance
-	icon = ass_ideas_reform_paik_system
-	potential = {
-		has_or_had_tag = SMA
-	}
-
-	requires = abm_ass_ideas_river_warfare
-
-	# manpower_recovery_speed = 0.15
-}
-
-abm_ass_ideas_process_of_appeal = {
+abm_sma_river_warfare = {
 	age = age_3_discovery
-	icon = ass_ideas_process_of_appeal
+	icon = sma_river_warfare
 	potential = {
 		has_or_had_tag = SMA
 	}
 
 	requires = military_traditions
 
-	# stability_cost_modifier = -0.1
+	# hostile_attrition = 1
+	# shock_damage_received = -0.1
 }
 
-abm_ass_ideas_ahom_land_survey = {
+abm_sma_reform_paik_system = {
 	age = age_3_discovery
-	icon = ass_ideas_ahom_land_survey
+	icon = sma_reform_paik_system
 	potential = {
 		has_or_had_tag = SMA
 	}
 
-	requires = abm_ass_ideas_process_of_appeal
+	requires = abm_sma_river_warfare
+
+	# manpower_recovery_speed = 0.15
+}
+
+abm_sma_process_of_appeal = {
+	age = age_4_reformation
+	icon = sma_process_of_appeal
+	potential = {
+		has_or_had_tag = SMA
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# stability_cost_modifier = -0.1
+}
+
+abm_sma_ahom_land_survey = {
+	age = age_4_reformation
+	icon = sma_ahom_land_survey
+	potential = {
+		has_or_had_tag = SMA
+	}
+
+	requires = abm_sma_process_of_appeal
 
 	# global_tax_modifier = 0.10
 }
 
-abm_ass_ideas_ahom_diplomacy = {
+abm_sma_ahom_diplomacy = {
 	age = age_5_absolutism
-	icon = ass_ideas_ahom_diplomacy
+	icon = sma_ahom_diplomacy
 	potential = {
 		has_or_had_tag = SMA
 	}
@@ -112,22 +113,22 @@ abm_ass_ideas_ahom_diplomacy = {
 	# diplomats = 1
 }
 
-abm_ass_ideas_ambition = {
+abm_sma_ambition = {
 	age = age_6_revolutions
-	icon = ass_ideas_ambition
+	icon = sma_ambition
 	potential = {
 		has_or_had_tag = SMA
 	}
 
-	requires = abm_ass_ideas_ahom_diplomacy
+	requires = abm_sma_ahom_diplomacy
 
 	# diplomatic_reputation = 1
 }
 
 # BHA_ideas
-abm_bha_ideas_traditions_1 = {
+abm_bha_traditions_1 = {
 	age = age_1_traditions
-	icon = bha_ideas_traditions_1
+	icon = bha_traditions_1
 	potential = {
 		has_or_had_tag = BHA
 	}
@@ -137,21 +138,21 @@ abm_bha_ideas_traditions_1 = {
 	# stability_cost_modifier = -0.1
 }
 
-abm_bha_ideas_traditions_2 = {
+abm_bha_traditions_2 = {
 	age = age_1_traditions
-	icon = bha_ideas_traditions_2
+	icon = bha_traditions_2
 	potential = {
 		has_or_had_tag = BHA
 	}
 
-	requires = abm_bha_ideas_traditions_1
+	requires = abm_bha_traditions_1
 
 	# state_maintenance_modifier = -0.15
 }
 
-abm_bha_ideas_bha_modernized_war_elephants = {
+abm_bha_modernized_war_elephants = {
 	age = age_2_renaissance
-	icon = bha_ideas_bha_modernized_war_elephants
+	icon = bha_bha_modernized_war_elephants
 	potential = {
 		has_or_had_tag = BHA
 	}
@@ -161,69 +162,69 @@ abm_bha_ideas_bha_modernized_war_elephants = {
 	# cavalry_power = 0.15
 }
 
-abm_bha_ideas_bha_united_india = {
+abm_bha_united_india = {
 	age = age_2_renaissance
-	icon = bha_ideas_bha_united_india
+	icon = bha_bha_united_india
 	potential = {
 		has_or_had_tag = BHA
 	}
 
-	requires = abm_bha_ideas_bha_modernized_war_elephants
+	requires = abm_bha_modernized_war_elephants
 
 	# num_accepted_cultures = 2
 }
 
-abm_bha_ideas_bha_sanskrit_golden_age = {
-	age = age_2_renaissance
-	icon = bha_ideas_bha_sanskrit_golden_age
-	potential = {
-		has_or_had_tag = BHA
-	}
-
-	requires = abm_bha_ideas_bha_united_india
-
-	# technology_cost = -0.05
-}
-
-abm_bha_ideas_bha_indian_army = {
-	age = age_2_renaissance
-	icon = bha_ideas_bha_indian_army
-	potential = {
-		has_or_had_tag = BHA
-	}
-
-	requires = abm_bha_ideas_bha_sanskrit_golden_age
-
-	# discipline = 0.05
-}
-
-abm_bha_ideas_bha_ganga = {
+abm_bha_sanskrit_golden_age = {
 	age = age_3_discovery
-	icon = bha_ideas_bha_ganga
+	icon = bha_bha_sanskrit_golden_age
 	potential = {
 		has_or_had_tag = BHA
 	}
 
 	requires = military_traditions
 
-	# tolerance_own = 2
+	# technology_cost = -0.05
 }
 
-abm_bha_ideas_bha_brahmin_administration = {
+abm_bha_indian_army = {
 	age = age_3_discovery
-	icon = bha_ideas_bha_brahmin_administration
+	icon = bha_bha_indian_army
 	potential = {
 		has_or_had_tag = BHA
 	}
 
-	requires = abm_bha_ideas_bha_ganga
+	requires = abm_bha_sanskrit_golden_age
+
+	# discipline = 0.05
+}
+
+abm_bha_ganga = {
+	age = age_4_reformation
+	icon = bha_bha_ganga
+	potential = {
+		has_or_had_tag = BHA
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# tolerance_own = 2
+}
+
+abm_bha_brahmin_administration = {
+	age = age_4_reformation
+	icon = bha_bha_brahmin_administration
+	potential = {
+		has_or_had_tag = BHA
+	}
+
+	requires = abm_bha_ganga
 
 	# administrative_efficiency = 0.05
 }
 
-abm_bha_ideas_bha_rocketry = {
+abm_bha_rocketry = {
 	age = age_5_absolutism
-	icon = bha_ideas_bha_rocketry
+	icon = bha_bha_rocketry
 	potential = {
 		has_or_had_tag = BHA
 	}
@@ -233,22 +234,22 @@ abm_bha_ideas_bha_rocketry = {
 	# artillery_power = 0.1
 }
 
-abm_bha_ideas_ambition = {
+abm_bha_ambition = {
 	age = age_6_revolutions
-	icon = bha_ideas_ambition
+	icon = bha_ambition
 	potential = {
 		has_or_had_tag = BHA
 	}
 
-	requires = abm_bha_ideas_bha_rocketry
+	requires = abm_bha_rocketry
 
 	# years_of_nationalism = -5
 }
 
 # BNG_ideas
-abm_bng_ideas_traditions_1 = {
+abm_bna_traditions_1 = {
 	age = age_1_traditions
-	icon = bng_ideas_traditions_1
+	icon = bna_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = BNA
@@ -261,9 +262,9 @@ abm_bng_ideas_traditions_1 = {
 	# infantry_power = 0.1
 }
 
-abm_bng_ideas_traditions_2 = {
+abm_bna_traditions_2 = {
 	age = age_1_traditions
-	icon = bng_ideas_traditions_2
+	icon = bna_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = BNA
@@ -271,14 +272,14 @@ abm_bng_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_bng_ideas_traditions_1
+	requires = abm_bna_traditions_1
 
 	# global_manpower_modifier = 0.15
 }
 
-abm_bng_ideas_bng_combat_piracy = {
+abm_bna_bng_combat_piracy = {
 	age = age_2_renaissance
-	icon = bng_ideas_bng_combat_piracy
+	icon = bna_bng_combat_piracy
 	potential = {
 		OR = {
 			has_or_had_tag = BNA
@@ -291,9 +292,9 @@ abm_bng_ideas_bng_combat_piracy = {
 	# trade_efficiency = 0.1
 }
 
-abm_bng_ideas_bng_habshi_generals = {
+abm_bna_bng_habshi_generals = {
 	age = age_2_renaissance
-	icon = bng_ideas_bng_habshi_generals
+	icon = bna_bng_habshi_generals
 	potential = {
 		OR = {
 			has_or_had_tag = BNA
@@ -301,44 +302,14 @@ abm_bng_ideas_bng_habshi_generals = {
 		}
 	}
 
-	requires = abm_bng_ideas_bng_combat_piracy
+	requires = abm_bna_bng_combat_piracy
 
 	# army_tradition = 0.5
 }
 
-abm_bng_ideas_bng_clearing_the_delta = {
-	age = age_2_renaissance
-	icon = bng_ideas_bng_clearing_the_delta
-	potential = {
-		OR = {
-			has_or_had_tag = BNA
-			has_or_had_tag = BWL
-		}
-	}
-
-	requires = abm_bng_ideas_bng_habshi_generals
-
-	# development_cost = -0.1
-}
-
-abm_bng_ideas_bng_attract_sufis = {
-	age = age_2_renaissance
-	icon = bng_ideas_bng_attract_sufis
-	potential = {
-		OR = {
-			has_or_had_tag = BNA
-			has_or_had_tag = BWL
-		}
-	}
-
-	requires = abm_bng_ideas_bng_clearing_the_delta
-
-	# idea_cost = -0.1
-}
-
-abm_bng_ideas_bng_conquest_of_the_gangetic_plain = {
+abm_bna_bng_clearing_the_delta = {
 	age = age_3_discovery
-	icon = bng_ideas_bng_conquest_of_the_gangetic_plain
+	icon = bna_bng_clearing_the_delta
 	potential = {
 		OR = {
 			has_or_had_tag = BNA
@@ -348,12 +319,12 @@ abm_bng_ideas_bng_conquest_of_the_gangetic_plain = {
 
 	requires = military_traditions
 
-	# leader_land_shock = 1
+	# development_cost = -0.1
 }
 
-abm_bng_ideas_bng_rupees = {
+abm_bna_bng_attract_sufis = {
 	age = age_3_discovery
-	icon = bng_ideas_bng_rupees
+	icon = bna_bng_attract_sufis
 	potential = {
 		OR = {
 			has_or_had_tag = BNA
@@ -361,14 +332,44 @@ abm_bng_ideas_bng_rupees = {
 		}
 	}
 
-	requires = abm_bng_ideas_bng_conquest_of_the_gangetic_plain
+	requires = abm_bna_bng_clearing_the_delta
+
+	# idea_cost = -0.1
+}
+
+abm_bna_bng_conquest_of_the_gangetic_plain = {
+	age = age_4_reformation
+	icon = bna_bng_conquest_of_the_gangetic_plain
+	potential = {
+		OR = {
+			has_or_had_tag = BNA
+			has_or_had_tag = BWL
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# leader_land_shock = 1
+}
+
+abm_bna_bng_rupees = {
+	age = age_4_reformation
+	icon = bna_bng_rupees
+	potential = {
+		OR = {
+			has_or_had_tag = BNA
+			has_or_had_tag = BWL
+		}
+	}
+
+	requires = abm_bna_bng_conquest_of_the_gangetic_plain
 
 	# global_tax_modifier = 0.1
 }
 
-abm_bng_ideas_bng_bengali_industrialization = {
+abm_bna_bng_bengali_industrialization = {
 	age = age_5_absolutism
-	icon = bng_ideas_bng_bengali_industrialization
+	icon = bna_bng_bengali_industrialization
 	potential = {
 		OR = {
 			has_or_had_tag = BNA
@@ -381,9 +382,9 @@ abm_bng_ideas_bng_bengali_industrialization = {
 	# global_trade_goods_size_modifier = 0.1
 }
 
-abm_bng_ideas_ambition = {
+abm_bna_ambition = {
 	age = age_6_revolutions
-	icon = bng_ideas_ambition
+	icon = bna_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = BNA
@@ -391,15 +392,15 @@ abm_bng_ideas_ambition = {
 		}
 	}
 
-	requires = abm_bng_ideas_bng_bengali_industrialization
+	requires = abm_bna_bng_bengali_industrialization
 
 	# backrow_artillery_damage = 0.15
 }
 
 # CEY_ideas
-abm_cey_ideas_traditions_1 = {
+abm_ktn_traditions_1 = {
 	age = age_1_traditions
-	icon = cey_ideas_traditions_1
+	icon = ktn_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = KTN
@@ -414,9 +415,9 @@ abm_cey_ideas_traditions_1 = {
 	# defensiveness = 0.1
 }
 
-abm_cey_ideas_traditions_2 = {
+abm_ktn_traditions_2 = {
 	age = age_1_traditions
-	icon = cey_ideas_traditions_2
+	icon = ktn_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = KTN
@@ -426,14 +427,14 @@ abm_cey_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_cey_ideas_traditions_1
+	requires = abm_ktn_traditions_1
 
 	# trade_efficiency = 0.1
 }
 
-abm_cey_ideas_gabadagam = {
+abm_ktn_gabadagam = {
 	age = age_2_renaissance
-	icon = cey_ideas_gabadagam
+	icon = ktn_gabadagam
 	potential = {
 		OR = {
 			has_or_had_tag = KTN
@@ -448,9 +449,9 @@ abm_cey_ideas_gabadagam = {
 	# global_tax_modifier = 0.10
 }
 
-abm_cey_ideas_sinhalese_sandesas = {
+abm_ktn_sinhalese_sandesas = {
 	age = age_2_renaissance
-	icon = cey_ideas_sinhalese_sandesas
+	icon = ktn_sinhalese_sandesas
 	potential = {
 		OR = {
 			has_or_had_tag = KTN
@@ -460,48 +461,14 @@ abm_cey_ideas_sinhalese_sandesas = {
 		}
 	}
 
-	requires = abm_cey_ideas_gabadagam
+	requires = abm_ktn_gabadagam
 
 	# prestige = 1
 }
 
-abm_cey_ideas_pearl_of_the_indian_ocean = {
-	age = age_2_renaissance
-	icon = cey_ideas_pearl_of_the_indian_ocean
-	potential = {
-		OR = {
-			has_or_had_tag = KTN
-			has_or_had_tag = KYA
-			has_or_had_tag = RDY
-			has_or_had_tag = SKT
-		}
-	}
-
-	requires = abm_cey_ideas_sinhalese_sandesas
-
-	# merchants = 1
-}
-
-abm_cey_ideas_cey_centre_of_learning = {
-	age = age_2_renaissance
-	icon = cey_ideas_cey_centre_of_learning
-	potential = {
-		OR = {
-			has_or_had_tag = KTN
-			has_or_had_tag = KYA
-			has_or_had_tag = RDY
-			has_or_had_tag = SKT
-		}
-	}
-
-	requires = abm_cey_ideas_pearl_of_the_indian_ocean
-
-	# diplomatic_reputation = 1
-}
-
-abm_cey_ideas_cey_cinnamon = {
+abm_ktn_pearl_of_the_indian_ocean = {
 	age = age_3_discovery
-	icon = cey_ideas_cey_cinnamon
+	icon = ktn_pearl_of_the_indian_ocean
 	potential = {
 		OR = {
 			has_or_had_tag = KTN
@@ -513,12 +480,12 @@ abm_cey_ideas_cey_cinnamon = {
 
 	requires = military_traditions
 
-	# global_trade_goods_size_modifier = 0.1
+	# merchants = 1
 }
 
-abm_cey_ideas_cey_growth_of_new_castes = {
+abm_ktn_cey_centre_of_learning = {
 	age = age_3_discovery
-	icon = cey_ideas_cey_growth_of_new_castes
+	icon = ktn_cey_centre_of_learning
 	potential = {
 		OR = {
 			has_or_had_tag = KTN
@@ -528,14 +495,48 @@ abm_cey_ideas_cey_growth_of_new_castes = {
 		}
 	}
 
-	requires = abm_cey_ideas_cey_cinnamon
+	requires = abm_ktn_pearl_of_the_indian_ocean
+
+	# diplomatic_reputation = 1
+}
+
+abm_ktn_cey_cinnamon = {
+	age = age_4_reformation
+	icon = ktn_cey_cinnamon
+	potential = {
+		OR = {
+			has_or_had_tag = KTN
+			has_or_had_tag = KYA
+			has_or_had_tag = RDY
+			has_or_had_tag = SKT
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# global_trade_goods_size_modifier = 0.1
+}
+
+abm_ktn_cey_growth_of_new_castes = {
+	age = age_4_reformation
+	icon = ktn_cey_growth_of_new_castes
+	potential = {
+		OR = {
+			has_or_had_tag = KTN
+			has_or_had_tag = KYA
+			has_or_had_tag = RDY
+			has_or_had_tag = SKT
+		}
+	}
+
+	requires = abm_ktn_cey_cinnamon
 
 	# production_efficiency = 0.1
 }
 
-abm_cey_ideas_sinhalese_guerilla_warfare = {
+abm_ktn_sinhalese_guerilla_warfare = {
 	age = age_5_absolutism
-	icon = cey_ideas_sinhalese_guerilla_warfare
+	icon = ktn_sinhalese_guerilla_warfare
 	potential = {
 		OR = {
 			has_or_had_tag = KTN
@@ -550,9 +551,9 @@ abm_cey_ideas_sinhalese_guerilla_warfare = {
 	# hostile_attrition = 1.0
 }
 
-abm_cey_ideas_ambition = {
+abm_ktn_ambition = {
 	age = age_6_revolutions
-	icon = cey_ideas_ambition
+	icon = ktn_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = KTN
@@ -562,15 +563,15 @@ abm_cey_ideas_ambition = {
 		}
 	}
 
-	requires = abm_cey_ideas_sinhalese_guerilla_warfare
+	requires = abm_ktn_sinhalese_guerilla_warfare
 
 	# global_own_trade_power = 0.1
 }
 
 # DHU_ideas
-abm_dhu_ideas_traditions_1 = {
+abm_dhu_traditions_1 = {
 	age = age_1_traditions
-	icon = dhu_ideas_traditions_1
+	icon = dhu_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = DHU
@@ -583,9 +584,9 @@ abm_dhu_ideas_traditions_1 = {
 	# land_morale = 0.1
 }
 
-abm_dhu_ideas_traditions_2 = {
+abm_dhu_traditions_2 = {
 	age = age_1_traditions
-	icon = dhu_ideas_traditions_2
+	icon = dhu_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = DHU
@@ -593,14 +594,14 @@ abm_dhu_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_dhu_ideas_traditions_1
+	requires = abm_dhu_traditions_1
 
 	# caravan_power = 0.2
 }
 
-abm_dhu_ideas_dhu_improve_amer_fort = {
+abm_dhu_improve_amer_fort = {
 	age = age_2_renaissance
-	icon = dhu_ideas_dhu_improve_amer_fort
+	icon = dhu_dhu_improve_amer_fort
 	potential = {
 		OR = {
 			has_or_had_tag = DHU
@@ -613,9 +614,9 @@ abm_dhu_ideas_dhu_improve_amer_fort = {
 	# defensiveness = 0.2
 }
 
-abm_dhu_ideas_dhu_seek_protection_of_great_powers = {
+abm_dhu_seek_protection_of_great_powers = {
 	age = age_2_renaissance
-	icon = dhu_ideas_dhu_seek_protection_of_great_powers
+	icon = dhu_dhu_seek_protection_of_great_powers
 	potential = {
 		OR = {
 			has_or_had_tag = DHU
@@ -623,44 +624,14 @@ abm_dhu_ideas_dhu_seek_protection_of_great_powers = {
 		}
 	}
 
-	requires = abm_dhu_ideas_dhu_improve_amer_fort
+	requires = abm_dhu_improve_amer_fort
 
 	# diplomatic_reputation = 1
 }
 
-abm_dhu_ideas_dhu_restore_hindu_ceremonies = {
-	age = age_2_renaissance
-	icon = dhu_ideas_dhu_restore_hindu_ceremonies
-	potential = {
-		OR = {
-			has_or_had_tag = DHU
-			has_or_had_tag = HNZ
-		}
-	}
-
-	requires = abm_dhu_ideas_dhu_seek_protection_of_great_powers
-
-	# tolerance_own = 1
-}
-
-abm_dhu_ideas_dhu_foundation_of_jaipur = {
-	age = age_2_renaissance
-	icon = dhu_ideas_dhu_foundation_of_jaipur
-	potential = {
-		OR = {
-			has_or_had_tag = DHU
-			has_or_had_tag = HNZ
-		}
-	}
-
-	requires = abm_dhu_ideas_dhu_restore_hindu_ceremonies
-
-	# development_cost = -0.1
-}
-
-abm_dhu_ideas_dhu_battles_in_foreign_lands = {
+abm_dhu_restore_hindu_ceremonies = {
 	age = age_3_discovery
-	icon = dhu_ideas_dhu_battles_in_foreign_lands
+	icon = dhu_dhu_restore_hindu_ceremonies
 	potential = {
 		OR = {
 			has_or_had_tag = DHU
@@ -670,12 +641,12 @@ abm_dhu_ideas_dhu_battles_in_foreign_lands = {
 
 	requires = military_traditions
 
-	# army_tradition_from_battle = 0.5
+	# tolerance_own = 1
 }
 
-abm_dhu_ideas_dhu_astronomical_education = {
+abm_dhu_foundation_of_jaipur = {
 	age = age_3_discovery
-	icon = dhu_ideas_dhu_astronomical_education
+	icon = dhu_dhu_foundation_of_jaipur
 	potential = {
 		OR = {
 			has_or_had_tag = DHU
@@ -683,14 +654,44 @@ abm_dhu_ideas_dhu_astronomical_education = {
 		}
 	}
 
-	requires = abm_dhu_ideas_dhu_battles_in_foreign_lands
+	requires = abm_dhu_restore_hindu_ceremonies
+
+	# development_cost = -0.1
+}
+
+abm_dhu_battles_in_foreign_lands = {
+	age = age_4_reformation
+	icon = dhu_dhu_battles_in_foreign_lands
+	potential = {
+		OR = {
+			has_or_had_tag = DHU
+			has_or_had_tag = HNZ
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# army_tradition_from_battle = 0.5
+}
+
+abm_dhu_astronomical_education = {
+	age = age_4_reformation
+	icon = dhu_dhu_astronomical_education
+	potential = {
+		OR = {
+			has_or_had_tag = DHU
+			has_or_had_tag = HNZ
+		}
+	}
+
+	requires = abm_dhu_battles_in_foreign_lands
 
 	# technology_cost = -0.05
 }
 
-abm_dhu_ideas_dhu_recruit_from_the_pindari = {
+abm_dhu_recruit_from_the_pindari = {
 	age = age_5_absolutism
-	icon = dhu_ideas_dhu_recruit_from_the_pindari
+	icon = dhu_dhu_recruit_from_the_pindari
 	potential = {
 		OR = {
 			has_or_had_tag = DHU
@@ -703,9 +704,9 @@ abm_dhu_ideas_dhu_recruit_from_the_pindari = {
 	# land_attrition = -0.15
 }
 
-abm_dhu_ideas_ambition = {
+abm_dhu_ambition = {
 	age = age_6_revolutions
-	icon = dhu_ideas_ambition
+	icon = dhu_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = DHU
@@ -713,15 +714,15 @@ abm_dhu_ideas_ambition = {
 		}
 	}
 
-	requires = abm_dhu_ideas_dhu_recruit_from_the_pindari
+	requires = abm_dhu_recruit_from_the_pindari
 
 	# fire_damage = 0.1
 }
 
 # HIN_ideas
-abm_hin_ideas_traditions_1 = {
+abm_ctr_traditions_1 = {
 	age = age_1_traditions
-	icon = hin_ideas_traditions_1
+	icon = ctr_traditions_1
 	potential = {
 		has_or_had_tag = CTR
 	}
@@ -731,21 +732,21 @@ abm_hin_ideas_traditions_1 = {
 	# governing_capacity_modifier = 0.1
 }
 
-abm_hin_ideas_traditions_2 = {
+abm_ctr_traditions_2 = {
 	age = age_1_traditions
-	icon = hin_ideas_traditions_2
+	icon = ctr_traditions_2
 	potential = {
 		has_or_had_tag = CTR
 	}
 
-	requires = abm_hin_ideas_traditions_1
+	requires = abm_ctr_traditions_1
 
 	# global_manpower_modifier = 0.2
 }
 
-abm_hin_ideas_hin_sepahi = {
+abm_ctr_hin_sepahi = {
 	age = age_2_renaissance
-	icon = hin_ideas_hin_sepahi
+	icon = ctr_hin_sepahi
 	potential = {
 		has_or_had_tag = CTR
 	}
@@ -755,38 +756,38 @@ abm_hin_ideas_hin_sepahi = {
 	# infantry_power = 0.15
 }
 
-abm_hin_ideas_hin_persianate_court = {
+abm_ctr_hin_persianate_court = {
 	age = age_2_renaissance
-	icon = hin_ideas_hin_persianate_court
+	icon = ctr_hin_persianate_court
 	potential = {
 		has_or_had_tag = CTR
 	}
 
-	requires = abm_hin_ideas_hin_sepahi
+	requires = abm_ctr_hin_sepahi
 
 	# advisor_cost = -0.1
 }
 
-abm_hin_ideas_hin_indian_empire = {
-	age = age_2_renaissance
-	icon = hin_ideas_hin_indian_empire
+abm_ctr_hin_indian_empire = {
+	age = age_3_discovery
+	icon = ctr_hin_indian_empire
 	potential = {
 		has_or_had_tag = CTR
 	}
 
-	requires = abm_hin_ideas_hin_persianate_court
+	requires = military_traditions
 
 	# years_of_nationalism = -5
 }
 
-abm_hin_ideas_hin_peacock_throne = {
-	age = age_2_renaissance
-	icon = hin_ideas_hin_peacock_throne
+abm_ctr_hin_peacock_throne = {
+	age = age_3_discovery
+	icon = ctr_hin_peacock_throne
 	potential = {
 		has_or_had_tag = CTR
 	}
 
-	requires = abm_hin_ideas_hin_indian_empire
+	requires = abm_ctr_hin_indian_empire
 
 	# legitimacy = 1
 	# devotion = 1
@@ -795,33 +796,33 @@ abm_hin_ideas_hin_peacock_throne = {
 	# horde_unity = 1
 }
 
-abm_hin_ideas_hin_gunpowder_empire = {
-	age = age_3_discovery
-	icon = hin_ideas_hin_gunpowder_empire
+abm_ctr_hin_gunpowder_empire = {
+	age = age_4_reformation
+	icon = ctr_hin_gunpowder_empire
 	potential = {
 		has_or_had_tag = CTR
 	}
 
-	requires = military_traditions
+	requires = supply_depot_advance_age_4_reformation
 
 	# fire_damage = 0.1
 }
 
-abm_hin_ideas_hin_sufism = {
-	age = age_3_discovery
-	icon = hin_ideas_hin_sufism
+abm_ctr_hin_sufism = {
+	age = age_4_reformation
+	icon = ctr_hin_sufism
 	potential = {
 		has_or_had_tag = CTR
 	}
 
-	requires = abm_hin_ideas_hin_gunpowder_empire
+	requires = abm_ctr_hin_gunpowder_empire
 
 	# global_missionary_strength = 0.02
 }
 
-abm_hin_ideas_hin_industrialization = {
+abm_ctr_hin_industrialization = {
 	age = age_5_absolutism
-	icon = hin_ideas_hin_industrialization
+	icon = ctr_hin_industrialization
 	potential = {
 		has_or_had_tag = CTR
 	}
@@ -831,22 +832,22 @@ abm_hin_ideas_hin_industrialization = {
 	# development_cost = -0.1
 }
 
-abm_hin_ideas_ambition = {
+abm_ctr_ambition = {
 	age = age_6_revolutions
-	icon = hin_ideas_ambition
+	icon = ctr_ambition
 	potential = {
 		has_or_had_tag = CTR
 	}
 
-	requires = abm_hin_ideas_hin_industrialization
+	requires = abm_ctr_hin_industrialization
 
 	# discipline = 0.05
 }
 
 # JAJ_ideas
-abm_jaj_ideas_traditions_1 = {
+abm_cab_traditions_1 = {
 	age = age_1_traditions
-	icon = jaj_ideas_traditions_1
+	icon = cab_traditions_1
 	potential = {
 		has_or_had_tag = CAB
 	}
@@ -856,21 +857,21 @@ abm_jaj_ideas_traditions_1 = {
 	# may_perform_slave_raid = yes
 }
 
-abm_jaj_ideas_traditions_2 = {
+abm_cab_traditions_2 = {
 	age = age_1_traditions
-	icon = jaj_ideas_traditions_2
+	icon = cab_traditions_2
 	potential = {
 		has_or_had_tag = CAB
 	}
 
-	requires = abm_jaj_ideas_traditions_1
+	requires = abm_cab_traditions_1
 
 	# light_ship_cost = -0.20
 }
 
-abm_jaj_ideas_goma = {
+abm_cab_goma = {
 	age = age_2_renaissance
-	icon = jaj_ideas_goma
+	icon = cab_goma
 	potential = {
 		has_or_had_tag = CAB
 	}
@@ -880,70 +881,70 @@ abm_jaj_ideas_goma = {
 	# tolerance_heathen = 3
 }
 
-abm_jaj_ideas_siddi_seamanship = {
+abm_cab_siddi_seamanship = {
 	age = age_2_renaissance
-	icon = jaj_ideas_siddi_seamanship
+	icon = cab_siddi_seamanship
 	potential = {
 		has_or_had_tag = CAB
 	}
 
-	requires = abm_jaj_ideas_goma
+	requires = abm_cab_goma
 
 	# navy_tradition = 1
 	# sailor_maintenance_modifer = -0.1
 }
 
-abm_jaj_ideas_fortress_of_janjira = {
-	age = age_2_renaissance
-	icon = jaj_ideas_fortress_of_janjira
-	potential = {
-		has_or_had_tag = CAB
-	}
-
-	requires = abm_jaj_ideas_siddi_seamanship
-
-	# defensiveness = 0.15
-}
-
-abm_jaj_ideas_siddi_diaspora = {
-	age = age_2_renaissance
-	icon = jaj_ideas_siddi_diaspora
-	potential = {
-		has_or_had_tag = CAB
-	}
-
-	requires = abm_jaj_ideas_fortress_of_janjira
-
-	# global_manpower_modifier = 0.1
-}
-
-abm_jaj_ideas_siddi_diplomacy = {
+abm_cab_fortress_of_janjira = {
 	age = age_3_discovery
-	icon = jaj_ideas_siddi_diplomacy
+	icon = cab_fortress_of_janjira
 	potential = {
 		has_or_had_tag = CAB
 	}
 
 	requires = military_traditions
 
-	# diplomats = 1
+	# defensiveness = 0.15
 }
 
-abm_jaj_ideas_siddi_konkani_trade = {
+abm_cab_siddi_diaspora = {
 	age = age_3_discovery
-	icon = jaj_ideas_siddi_konkani_trade
+	icon = cab_siddi_diaspora
 	potential = {
 		has_or_had_tag = CAB
 	}
 
-	requires = abm_jaj_ideas_siddi_diplomacy
+	requires = abm_cab_fortress_of_janjira
+
+	# global_manpower_modifier = 0.1
+}
+
+abm_cab_siddi_diplomacy = {
+	age = age_4_reformation
+	icon = cab_siddi_diplomacy
+	potential = {
+		has_or_had_tag = CAB
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# diplomats = 1
+}
+
+abm_cab_siddi_konkani_trade = {
+	age = age_4_reformation
+	icon = cab_siddi_konkani_trade
+	potential = {
+		has_or_had_tag = CAB
+	}
+
+	requires = abm_cab_siddi_diplomacy
 
 	# trade_efficiency = 0.1
 }
 
-abm_jaj_ideas_siddi_expansion_of_navy = {
+abm_cab_siddi_expansion_of_navy = {
 	age = age_5_absolutism
-	icon = jaj_ideas_siddi_expansion_of_navy
+	icon = cab_siddi_expansion_of_navy
 	potential = {
 		has_or_had_tag = CAB
 	}
@@ -953,22 +954,22 @@ abm_jaj_ideas_siddi_expansion_of_navy = {
 	# naval_maintenance_modifier = -0.10
 }
 
-abm_jaj_ideas_ambition = {
+abm_cab_ambition = {
 	age = age_6_revolutions
-	icon = jaj_ideas_ambition
+	icon = cab_ambition
 	potential = {
 		has_or_had_tag = CAB
 	}
 
-	requires = abm_jaj_ideas_siddi_expansion_of_navy
+	requires = abm_cab_siddi_expansion_of_navy
 
 	# naval_morale = 0.15
 }
 
 # KGR_ideas
-abm_kgr_ideas_traditions_1 = {
+abm_kgr_traditions_1 = {
 	age = age_1_traditions
-	icon = kgr_ideas_traditions_1
+	icon = kgr_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -981,9 +982,9 @@ abm_kgr_ideas_traditions_1 = {
 	# hostile_attrition = 1.0
 }
 
-abm_kgr_ideas_traditions_2 = {
+abm_kgr_traditions_2 = {
 	age = age_1_traditions
-	icon = kgr_ideas_traditions_2
+	icon = kgr_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -991,14 +992,14 @@ abm_kgr_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_kgr_ideas_traditions_1
+	requires = abm_kgr_traditions_1
 
 	# global_tax_modifier = 0.1
 }
 
-abm_kgr_ideas_kgr_katoch_lineage = {
+abm_kgr_katoch_lineage = {
 	age = age_2_renaissance
-	icon = kgr_ideas_kgr_katoch_lineage
+	icon = kgr_kgr_katoch_lineage
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1011,9 +1012,9 @@ abm_kgr_ideas_kgr_katoch_lineage = {
 	# prestige_decay = -0.01
 }
 
-abm_kgr_ideas_kgr_riches_of_the_kangra_valley = {
+abm_kgr_riches_of_the_kangra_valley = {
 	age = age_2_renaissance
-	icon = kgr_ideas_kgr_riches_of_the_kangra_valley
+	icon = kgr_kgr_riches_of_the_kangra_valley
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1021,45 +1022,14 @@ abm_kgr_ideas_kgr_riches_of_the_kangra_valley = {
 		}
 	}
 
-	requires = abm_kgr_ideas_kgr_katoch_lineage
+	requires = abm_kgr_katoch_lineage
 
 	# global_manpower_modifier = 0.1
 }
 
-abm_kgr_ideas_kgr_martial_heritage = {
-	age = age_2_renaissance
-	icon = kgr_ideas_kgr_martial_heritage
-	potential = {
-		OR = {
-			has_or_had_tag = KGR
-			has_or_had_tag = KNK
-		}
-	}
-
-	requires = abm_kgr_ideas_kgr_riches_of_the_kangra_valley
-
-	# land_morale = 0.1
-}
-
-abm_kgr_ideas_kgr_hill_forts = {
-	age = age_2_renaissance
-	icon = kgr_ideas_kgr_hill_forts
-	potential = {
-		OR = {
-			has_or_had_tag = KGR
-			has_or_had_tag = KNK
-		}
-	}
-
-	requires = abm_kgr_ideas_kgr_martial_heritage
-
-	# fort_maintenance_modifier = -0.1
-	# garrison_size = 0.1
-}
-
-abm_kgr_ideas_kgr_strengthen_the_mountain_trade = {
+abm_kgr_martial_heritage = {
 	age = age_3_discovery
-	icon = kgr_ideas_kgr_strengthen_the_mountain_trade
+	icon = kgr_kgr_martial_heritage
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1069,12 +1039,12 @@ abm_kgr_ideas_kgr_strengthen_the_mountain_trade = {
 
 	requires = military_traditions
 
-	# caravan_power = 0.15
+	# land_morale = 0.1
 }
 
-abm_kgr_ideas_kgr_pahari_paintings = {
+abm_kgr_hill_forts = {
 	age = age_3_discovery
-	icon = kgr_ideas_kgr_pahari_paintings
+	icon = kgr_kgr_hill_forts
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1082,14 +1052,45 @@ abm_kgr_ideas_kgr_pahari_paintings = {
 		}
 	}
 
-	requires = abm_kgr_ideas_kgr_strengthen_the_mountain_trade
+	requires = abm_kgr_martial_heritage
+
+	# fort_maintenance_modifier = -0.1
+	# garrison_size = 0.1
+}
+
+abm_kgr_strengthen_the_mountain_trade = {
+	age = age_4_reformation
+	icon = kgr_kgr_strengthen_the_mountain_trade
+	potential = {
+		OR = {
+			has_or_had_tag = KGR
+			has_or_had_tag = KNK
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# caravan_power = 0.15
+}
+
+abm_kgr_pahari_paintings = {
+	age = age_4_reformation
+	icon = kgr_kgr_pahari_paintings
+	potential = {
+		OR = {
+			has_or_had_tag = KGR
+			has_or_had_tag = KNK
+		}
+	}
+
+	requires = abm_kgr_strengthen_the_mountain_trade
 
 	# prestige = 1
 }
 
-abm_kgr_ideas_kgr_tigers_of_the_himalayas = {
+abm_kgr_tigers_of_the_himalayas = {
 	age = age_5_absolutism
-	icon = kgr_ideas_kgr_tigers_of_the_himalayas
+	icon = kgr_kgr_tigers_of_the_himalayas
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1102,9 +1103,9 @@ abm_kgr_ideas_kgr_tigers_of_the_himalayas = {
 	# discipline = 0.05
 }
 
-abm_kgr_ideas_ambition = {
+abm_kgr_ambition = {
 	age = age_6_revolutions
-	icon = kgr_ideas_ambition
+	icon = kgr_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1112,15 +1113,15 @@ abm_kgr_ideas_ambition = {
 		}
 	}
 
-	requires = abm_kgr_ideas_kgr_tigers_of_the_himalayas
+	requires = abm_kgr_tigers_of_the_himalayas
 
 	# global_unrest = -1
 }
 
 # LDK_ideas
-abm_ldk_ideas_traditions_1 = {
+abm_ela_traditions_1 = {
 	age = age_1_traditions
-	icon = ldk_ideas_traditions_1
+	icon = ela_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = ELA
@@ -1133,9 +1134,9 @@ abm_ldk_ideas_traditions_1 = {
 	# tolerance_own = 2
 }
 
-abm_ldk_ideas_traditions_2 = {
+abm_ela_traditions_2 = {
 	age = age_1_traditions
-	icon = ldk_ideas_traditions_2
+	icon = ela_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = ELA
@@ -1143,14 +1144,14 @@ abm_ldk_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_ldk_ideas_traditions_1
+	requires = abm_ela_traditions_1
 
 	# diplomatic_upkeep = 1
 }
 
-abm_ldk_ideas_ldk_two_kingdoms = {
+abm_ela_ldk_two_kingdoms = {
 	age = age_2_renaissance
-	icon = ldk_ideas_ldk_two_kingdoms
+	icon = ela_ldk_two_kingdoms
 	potential = {
 		OR = {
 			has_or_had_tag = ELA
@@ -1163,9 +1164,9 @@ abm_ldk_ideas_ldk_two_kingdoms = {
 	# prestige = 1
 }
 
-abm_ldk_ideas_ldk_fortified_mountain_cities = {
+abm_ela_ldk_fortified_mountain_cities = {
 	age = age_2_renaissance
-	icon = ldk_ideas_ldk_fortified_mountain_cities
+	icon = ela_ldk_fortified_mountain_cities
 	potential = {
 		OR = {
 			has_or_had_tag = ELA
@@ -1173,44 +1174,14 @@ abm_ldk_ideas_ldk_fortified_mountain_cities = {
 		}
 	}
 
-	requires = abm_ldk_ideas_ldk_two_kingdoms
+	requires = abm_ela_ldk_two_kingdoms
 
 	# fort_maintenance_modifier = -0.2
 }
 
-abm_ldk_ideas_ldk_wool_from_the_roof_of_the_world = {
-	age = age_2_renaissance
-	icon = ldk_ideas_ldk_wool_from_the_roof_of_the_world
-	potential = {
-		OR = {
-			has_or_had_tag = ELA
-			has_or_had_tag = LHL
-		}
-	}
-
-	requires = abm_ldk_ideas_ldk_fortified_mountain_cities
-
-	# global_trade_goods_size_modifier = 0.1
-}
-
-abm_ldk_ideas_ldk_great_monasteries = {
-	age = age_2_renaissance
-	icon = ldk_ideas_ldk_great_monasteries
-	potential = {
-		OR = {
-			has_or_had_tag = ELA
-			has_or_had_tag = LHL
-		}
-	}
-
-	requires = abm_ldk_ideas_ldk_wool_from_the_roof_of_the_world
-
-	# build_cost = -0.1
-}
-
-abm_ldk_ideas_ldk_la_dvags_rgyal_rabs = {
+abm_ela_ldk_wool_from_the_roof_of_the_world = {
 	age = age_3_discovery
-	icon = ldk_ideas_ldk_la_dvags_rgyal_rabs
+	icon = ela_ldk_wool_from_the_roof_of_the_world
 	potential = {
 		OR = {
 			has_or_had_tag = ELA
@@ -1220,12 +1191,12 @@ abm_ldk_ideas_ldk_la_dvags_rgyal_rabs = {
 
 	requires = military_traditions
 
-	# stability_cost_modifier = -0.1
+	# global_trade_goods_size_modifier = 0.1
 }
 
-abm_ldk_ideas_ldk_kingdom_united = {
+abm_ela_ldk_great_monasteries = {
 	age = age_3_discovery
-	icon = ldk_ideas_ldk_kingdom_united
+	icon = ela_ldk_great_monasteries
 	potential = {
 		OR = {
 			has_or_had_tag = ELA
@@ -1233,7 +1204,37 @@ abm_ldk_ideas_ldk_kingdom_united = {
 		}
 	}
 
-	requires = abm_ldk_ideas_ldk_la_dvags_rgyal_rabs
+	requires = abm_ela_ldk_wool_from_the_roof_of_the_world
+
+	# build_cost = -0.1
+}
+
+abm_ela_ldk_la_dvags_rgyal_rabs = {
+	age = age_4_reformation
+	icon = ela_ldk_la_dvags_rgyal_rabs
+	potential = {
+		OR = {
+			has_or_had_tag = ELA
+			has_or_had_tag = LHL
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# stability_cost_modifier = -0.1
+}
+
+abm_ela_ldk_kingdom_united = {
+	age = age_4_reformation
+	icon = ela_ldk_kingdom_united
+	potential = {
+		OR = {
+			has_or_had_tag = ELA
+			has_or_had_tag = LHL
+		}
+	}
+
+	requires = abm_ela_ldk_la_dvags_rgyal_rabs
 
 	# legitimacy = 1
 	# devotion = 1
@@ -1242,9 +1243,9 @@ abm_ldk_ideas_ldk_kingdom_united = {
 	# horde_unity = 1
 }
 
-abm_ldk_ideas_ldk_far_away_traders = {
+abm_ela_ldk_far_away_traders = {
 	age = age_5_absolutism
-	icon = ldk_ideas_ldk_far_away_traders
+	icon = ela_ldk_far_away_traders
 	potential = {
 		OR = {
 			has_or_had_tag = ELA
@@ -1257,9 +1258,9 @@ abm_ldk_ideas_ldk_far_away_traders = {
 	# trade_efficiency = 0.1
 }
 
-abm_ldk_ideas_ambition = {
+abm_ela_ambition = {
 	age = age_6_revolutions
-	icon = ldk_ideas_ambition
+	icon = ela_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = ELA
@@ -1267,15 +1268,15 @@ abm_ldk_ideas_ambition = {
 		}
 	}
 
-	requires = abm_ldk_ideas_ldk_far_away_traders
+	requires = abm_ela_ldk_far_away_traders
 
 	# defensiveness = 0.2
 }
 
 # MAR_ideas
-abm_mar_ideas_traditions_1 = {
+abm_gwa_traditions_1 = {
 	age = age_1_traditions
-	icon = mar_ideas_traditions_1
+	icon = gwa_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = GWA
@@ -1289,9 +1290,9 @@ abm_mar_ideas_traditions_1 = {
 	# manpower_recovery_speed = 0.15
 }
 
-abm_mar_ideas_traditions_2 = {
+abm_gwa_traditions_2 = {
 	age = age_1_traditions
-	icon = mar_ideas_traditions_2
+	icon = gwa_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = GWA
@@ -1300,14 +1301,14 @@ abm_mar_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_mar_ideas_traditions_1
+	requires = abm_gwa_traditions_1
 
 	# global_manpower_modifier = 0.10
 }
 
-abm_mar_ideas_tradition_of_military_service = {
+abm_gwa_tradition_of_military_service = {
 	age = age_2_renaissance
-	icon = mar_ideas_tradition_of_military_service
+	icon = gwa_tradition_of_military_service
 	potential = {
 		OR = {
 			has_or_had_tag = GWA
@@ -1321,9 +1322,9 @@ abm_mar_ideas_tradition_of_military_service = {
 	# cavalry_power = 0.15
 }
 
-abm_mar_ideas_forts_of_maharashtra = {
+abm_gwa_forts_of_maharashtra = {
 	age = age_2_renaissance
-	icon = mar_ideas_forts_of_maharashtra
+	icon = gwa_forts_of_maharashtra
 	potential = {
 		OR = {
 			has_or_had_tag = GWA
@@ -1332,46 +1333,14 @@ abm_mar_ideas_forts_of_maharashtra = {
 		}
 	}
 
-	requires = abm_mar_ideas_tradition_of_military_service
+	requires = abm_gwa_tradition_of_military_service
 
 	# defensiveness = 0.20
 }
 
-abm_mar_ideas_peasant_soldiers = {
-	age = age_2_renaissance
-	icon = mar_ideas_peasant_soldiers
-	potential = {
-		OR = {
-			has_or_had_tag = GWA
-			has_or_had_tag = JLR
-			has_or_had_tag = SMV
-		}
-	}
-
-	requires = abm_mar_ideas_forts_of_maharashtra
-
-	# infantry_cost = -0.2
-}
-
-abm_mar_ideas_office_of_the_peshwa = {
-	age = age_2_renaissance
-	icon = mar_ideas_office_of_the_peshwa
-	potential = {
-		OR = {
-			has_or_had_tag = GWA
-			has_or_had_tag = JLR
-			has_or_had_tag = SMV
-		}
-	}
-
-	requires = abm_mar_ideas_peasant_soldiers
-
-	# core_creation = -0.15
-}
-
-abm_mar_ideas_encourage_ties_with_brahmin_financial_families = {
+abm_gwa_peasant_soldiers = {
 	age = age_3_discovery
-	icon = mar_ideas_encourage_ties_with_brahmin_financial_families
+	icon = gwa_peasant_soldiers
 	potential = {
 		OR = {
 			has_or_had_tag = GWA
@@ -1382,12 +1351,12 @@ abm_mar_ideas_encourage_ties_with_brahmin_financial_families = {
 
 	requires = military_traditions
 
-	# reform_progress_growth = 0.15
+	# infantry_cost = -0.2
 }
 
-abm_mar_ideas_reform_the_bureaucracy = {
+abm_gwa_office_of_the_peshwa = {
 	age = age_3_discovery
-	icon = mar_ideas_reform_the_bureaucracy
+	icon = gwa_office_of_the_peshwa
 	potential = {
 		OR = {
 			has_or_had_tag = GWA
@@ -1396,14 +1365,46 @@ abm_mar_ideas_reform_the_bureaucracy = {
 		}
 	}
 
-	requires = abm_mar_ideas_encourage_ties_with_brahmin_financial_families
+	requires = abm_gwa_peasant_soldiers
+
+	# core_creation = -0.15
+}
+
+abm_gwa_encourage_ties_with_brahmin_financial_families = {
+	age = age_4_reformation
+	icon = gwa_encourage_ties_with_brahmin_financial_families
+	potential = {
+		OR = {
+			has_or_had_tag = GWA
+			has_or_had_tag = JLR
+			has_or_had_tag = SMV
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# reform_progress_growth = 0.15
+}
+
+abm_gwa_reform_the_bureaucracy = {
+	age = age_4_reformation
+	icon = gwa_reform_the_bureaucracy
+	potential = {
+		OR = {
+			has_or_had_tag = GWA
+			has_or_had_tag = JLR
+			has_or_had_tag = SMV
+		}
+	}
+
+	requires = abm_gwa_encourage_ties_with_brahmin_financial_families
 
 	# global_trade_goods_size_modifier = 0.1
 }
 
-abm_mar_ideas_expand_maratha_navy = {
+abm_gwa_expand_maratha_navy = {
 	age = age_5_absolutism
-	icon = mar_ideas_expand_maratha_navy
+	icon = gwa_expand_maratha_navy
 	potential = {
 		OR = {
 			has_or_had_tag = GWA
@@ -1417,9 +1418,9 @@ abm_mar_ideas_expand_maratha_navy = {
 	# global_ship_cost = -0.1
 }
 
-abm_mar_ideas_ambition = {
+abm_gwa_ambition = {
 	age = age_6_revolutions
-	icon = mar_ideas_ambition
+	icon = gwa_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = GWA
@@ -1428,15 +1429,15 @@ abm_mar_ideas_ambition = {
 		}
 	}
 
-	requires = abm_mar_ideas_expand_maratha_navy
+	requires = abm_gwa_expand_maratha_navy
 
 	# stability_cost_modifier = -0.1
 }
 
 # MER_ideas
-abm_mer_ideas_traditions_1 = {
+abm_mew_traditions_1 = {
 	age = age_1_traditions
-	icon = mer_ideas_traditions_1
+	icon = mew_traditions_1
 	potential = {
 		has_or_had_tag = MEW
 	}
@@ -1446,21 +1447,21 @@ abm_mer_ideas_traditions_1 = {
 	# infantry_power = 0.1
 }
 
-abm_mer_ideas_traditions_2 = {
+abm_mew_traditions_2 = {
 	age = age_1_traditions
-	icon = mer_ideas_traditions_2
+	icon = mew_traditions_2
 	potential = {
 		has_or_had_tag = MEW
 	}
 
-	requires = abm_mer_ideas_traditions_1
+	requires = abm_mew_traditions_1
 
 	# infantry_cost = -0.2
 }
 
-abm_mer_ideas_mer_rajput_heartland = {
+abm_mew_mer_rajput_heartland = {
 	age = age_2_renaissance
-	icon = mer_ideas_mer_rajput_heartland
+	icon = mew_mer_rajput_heartland
 	potential = {
 		has_or_had_tag = MEW
 	}
@@ -1470,69 +1471,69 @@ abm_mer_ideas_mer_rajput_heartland = {
 	# army_tradition_decay = -0.01
 }
 
-abm_mer_ideas_mer_victory_tower = {
+abm_mew_mer_victory_tower = {
 	age = age_2_renaissance
-	icon = mer_ideas_mer_victory_tower
+	icon = mew_mer_victory_tower
 	potential = {
 		has_or_had_tag = MEW
 	}
 
-	requires = abm_mer_ideas_mer_rajput_heartland
+	requires = abm_mew_mer_rajput_heartland
 
 	# prestige = 1
 }
 
-abm_mer_ideas_mer_kumbhalgarh = {
-	age = age_2_renaissance
-	icon = mer_ideas_mer_kumbhalgarh
-	potential = {
-		has_or_had_tag = MEW
-	}
-
-	requires = abm_mer_ideas_mer_victory_tower
-
-	# defensiveness = 0.15
-}
-
-abm_mer_ideas_mer_city_of_lakes = {
-	age = age_2_renaissance
-	icon = mer_ideas_mer_city_of_lakes
-	potential = {
-		has_or_had_tag = MEW
-	}
-
-	requires = abm_mer_ideas_mer_kumbhalgarh
-
-	# development_cost = -0.1
-}
-
-abm_mer_ideas_mer_recall_purbias = {
+abm_mew_mer_kumbhalgarh = {
 	age = age_3_discovery
-	icon = mer_ideas_mer_recall_purbias
+	icon = mew_mer_kumbhalgarh
 	potential = {
 		has_or_had_tag = MEW
 	}
 
 	requires = military_traditions
 
-	# global_manpower_modifier = 0.15
+	# defensiveness = 0.15
 }
 
-abm_mer_ideas_mer_firearm_drilling = {
+abm_mew_mer_city_of_lakes = {
 	age = age_3_discovery
-	icon = mer_ideas_mer_firearm_drilling
+	icon = mew_mer_city_of_lakes
 	potential = {
 		has_or_had_tag = MEW
 	}
 
-	requires = abm_mer_ideas_mer_recall_purbias
+	requires = abm_mew_mer_kumbhalgarh
+
+	# development_cost = -0.1
+}
+
+abm_mew_mer_recall_purbias = {
+	age = age_4_reformation
+	icon = mew_mer_recall_purbias
+	potential = {
+		has_or_had_tag = MEW
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# global_manpower_modifier = 0.15
+}
+
+abm_mew_mer_firearm_drilling = {
+	age = age_4_reformation
+	icon = mew_mer_firearm_drilling
+	potential = {
+		has_or_had_tag = MEW
+	}
+
+	requires = abm_mew_mer_recall_purbias
 
 	# fire_damage = 0.1
 }
 
-abm_mer_ideas_mer_reorganized_rajput_regiments = {
+abm_mew_mer_reorganized_rajput_regiments = {
 	age = age_5_absolutism
-	icon = mer_ideas_mer_reorganized_rajput_regiments
+	icon = mew_mer_reorganized_rajput_regiments
 	potential = {
 		has_or_had_tag = MEW
 	}
@@ -1542,22 +1543,22 @@ abm_mer_ideas_mer_reorganized_rajput_regiments = {
 	# discipline = 0.05
 }
 
-abm_mer_ideas_ambition = {
+abm_mew_ambition = {
 	age = age_6_revolutions
-	icon = mer_ideas_ambition
+	icon = mew_ambition
 	potential = {
 		has_or_had_tag = MEW
 	}
 
-	requires = abm_mer_ideas_mer_reorganized_rajput_regiments
+	requires = abm_mew_mer_reorganized_rajput_regiments
 
 	# war_exhaustion = -0.03
 }
 
 # MLB_ideas
-abm_mlb_ideas_traditions_1 = {
+abm_msn_traditions_1 = {
 	age = age_1_traditions
-	icon = mlb_ideas_traditions_1
+	icon = msn_traditions_1
 	potential = {
 		has_or_had_tag = MSN
 	}
@@ -1567,21 +1568,21 @@ abm_mlb_ideas_traditions_1 = {
 	# loot_amount = 0.25
 }
 
-abm_mlb_ideas_traditions_2 = {
+abm_msn_traditions_2 = {
 	age = age_1_traditions
-	icon = mlb_ideas_traditions_2
+	icon = msn_traditions_2
 	potential = {
 		has_or_had_tag = MSN
 	}
 
-	requires = abm_mlb_ideas_traditions_1
+	requires = abm_msn_traditions_1
 
 	# shock_damage_received = -0.1
 }
 
-abm_mlb_ideas_mlb_sanamahism = {
+abm_msn_mlb_sanamahism = {
 	age = age_2_renaissance
-	icon = mlb_ideas_mlb_sanamahism
+	icon = msn_mlb_sanamahism
 	potential = {
 		has_or_had_tag = MSN
 	}
@@ -1591,26 +1592,26 @@ abm_mlb_ideas_mlb_sanamahism = {
 	# global_unrest = -1
 }
 
-abm_mlb_ideas_mlb_martial_traditions = {
+abm_msn_mlb_martial_traditions = {
 	age = age_2_renaissance
-	icon = mlb_ideas_mlb_martial_traditions
+	icon = msn_mlb_martial_traditions
 	potential = {
 		has_or_had_tag = MSN
 	}
 
-	requires = abm_mlb_ideas_mlb_sanamahism
+	requires = abm_msn_mlb_sanamahism
 
 	# land_morale = 0.1
 }
 
-abm_mlb_ideas_mlb_kingdom_of_the_meitei = {
-	age = age_2_renaissance
-	icon = mlb_ideas_mlb_kingdom_of_the_meitei
+abm_msn_mlb_kingdom_of_the_meitei = {
+	age = age_3_discovery
+	icon = msn_mlb_kingdom_of_the_meitei
 	potential = {
 		has_or_had_tag = MSN
 	}
 
-	requires = abm_mlb_ideas_mlb_martial_traditions
+	requires = military_traditions
 
 	# legitimacy = 1
 	# devotion = 1
@@ -1619,45 +1620,45 @@ abm_mlb_ideas_mlb_kingdom_of_the_meitei = {
 	# horde_unity = 1
 }
 
-abm_mlb_ideas_mlb_mayek = {
-	age = age_2_renaissance
-	icon = mlb_ideas_mlb_mayek
+abm_msn_mlb_mayek = {
+	age = age_3_discovery
+	icon = msn_mlb_mayek
 	potential = {
 		has_or_had_tag = MSN
 	}
 
-	requires = abm_mlb_ideas_mlb_kingdom_of_the_meitei
+	requires = abm_msn_mlb_kingdom_of_the_meitei
 
 	# tolerance_own = 2
 }
 
-abm_mlb_ideas_mlb_unite_the_hill_tribes = {
-	age = age_3_discovery
-	icon = mlb_ideas_mlb_unite_the_hill_tribes
+abm_msn_mlb_unite_the_hill_tribes = {
+	age = age_4_reformation
+	icon = msn_mlb_unite_the_hill_tribes
 	potential = {
 		has_or_had_tag = MSN
 	}
 
-	requires = military_traditions
+	requires = supply_depot_advance_age_4_reformation
 
 	# global_manpower_modifier = 0.1
 }
 
-abm_mlb_ideas_mlb_bengali_influence = {
-	age = age_3_discovery
-	icon = mlb_ideas_mlb_bengali_influence
+abm_msn_mlb_bengali_influence = {
+	age = age_4_reformation
+	icon = msn_mlb_bengali_influence
 	potential = {
 		has_or_had_tag = MSN
 	}
 
-	requires = abm_mlb_ideas_mlb_unite_the_hill_tribes
+	requires = abm_msn_mlb_unite_the_hill_tribes
 
 	# diplomatic_upkeep = 1
 }
 
-abm_mlb_ideas_mlb_far_reaching_diplomacy = {
+abm_msn_mlb_far_reaching_diplomacy = {
 	age = age_5_absolutism
-	icon = mlb_ideas_mlb_far_reaching_diplomacy
+	icon = msn_mlb_far_reaching_diplomacy
 	potential = {
 		has_or_had_tag = MSN
 	}
@@ -1667,22 +1668,22 @@ abm_mlb_ideas_mlb_far_reaching_diplomacy = {
 	# diplomatic_reputation = 1
 }
 
-abm_mlb_ideas_ambition = {
+abm_msn_ambition = {
 	age = age_6_revolutions
-	icon = mlb_ideas_ambition
+	icon = msn_ambition
 	potential = {
 		has_or_had_tag = MSN
 	}
 
-	requires = abm_mlb_ideas_mlb_far_reaching_diplomacy
+	requires = abm_msn_mlb_far_reaching_diplomacy
 
 	# defensiveness = 0.15
 }
 
 # NAG_ideas
-abm_nag_ideas_traditions_1 = {
+abm_nag_traditions_1 = {
 	age = age_1_traditions
-	icon = nag_ideas_traditions_1
+	icon = nag_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = NAG
@@ -1695,9 +1696,9 @@ abm_nag_ideas_traditions_1 = {
 	# ae_impact = -0.15
 }
 
-abm_nag_ideas_traditions_2 = {
+abm_nag_traditions_2 = {
 	age = age_1_traditions
-	icon = nag_ideas_traditions_2
+	icon = nag_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = NAG
@@ -1705,14 +1706,14 @@ abm_nag_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_nag_ideas_traditions_1
+	requires = abm_nag_traditions_1
 
 	# land_morale = 0.15
 }
 
-abm_nag_ideas_nag_unite_gonds_and_garjats = {
+abm_nag_unite_gonds_and_garjats = {
 	age = age_2_renaissance
-	icon = nag_ideas_nag_unite_gonds_and_garjats
+	icon = nag_nag_unite_gonds_and_garjats
 	potential = {
 		OR = {
 			has_or_had_tag = NAG
@@ -1725,9 +1726,9 @@ abm_nag_ideas_nag_unite_gonds_and_garjats = {
 	# global_unrest = -2
 }
 
-abm_nag_ideas_nag_harsh_terrain = {
+abm_nag_harsh_terrain = {
 	age = age_2_renaissance
-	icon = nag_ideas_nag_harsh_terrain
+	icon = nag_nag_harsh_terrain
 	potential = {
 		OR = {
 			has_or_had_tag = NAG
@@ -1735,44 +1736,14 @@ abm_nag_ideas_nag_harsh_terrain = {
 		}
 	}
 
-	requires = abm_nag_ideas_nag_unite_gonds_and_garjats
+	requires = abm_nag_unite_gonds_and_garjats
 
 	# leader_land_manuever = 1
 }
 
-abm_nag_ideas_nag_send_for_artisans = {
-	age = age_2_renaissance
-	icon = nag_ideas_nag_send_for_artisans
-	potential = {
-		OR = {
-			has_or_had_tag = NAG
-			has_or_had_tag = NRS
-		}
-	}
-
-	requires = abm_nag_ideas_nag_harsh_terrain
-
-	# build_cost = -0.1
-}
-
-abm_nag_ideas_nag_invite_maratha_warriors = {
-	age = age_2_renaissance
-	icon = nag_ideas_nag_invite_maratha_warriors
-	potential = {
-		OR = {
-			has_or_had_tag = NAG
-			has_or_had_tag = NRS
-		}
-	}
-
-	requires = abm_nag_ideas_nag_send_for_artisans
-
-	# army_tradition = 0.5
-}
-
-abm_nag_ideas_nag_light_cav = {
+abm_nag_send_for_artisans = {
 	age = age_3_discovery
-	icon = nag_ideas_nag_light_cav
+	icon = nag_nag_send_for_artisans
 	potential = {
 		OR = {
 			has_or_had_tag = NAG
@@ -1782,12 +1753,12 @@ abm_nag_ideas_nag_light_cav = {
 
 	requires = military_traditions
 
-	# shock_damage = 0.1
+	# build_cost = -0.1
 }
 
-abm_nag_ideas_nag_cultivating_the_forest = {
+abm_nag_invite_maratha_warriors = {
 	age = age_3_discovery
-	icon = nag_ideas_nag_cultivating_the_forest
+	icon = nag_nag_invite_maratha_warriors
 	potential = {
 		OR = {
 			has_or_had_tag = NAG
@@ -1795,14 +1766,44 @@ abm_nag_ideas_nag_cultivating_the_forest = {
 		}
 	}
 
-	requires = abm_nag_ideas_nag_light_cav
+	requires = abm_nag_send_for_artisans
+
+	# army_tradition = 0.5
+}
+
+abm_nag_light_cav = {
+	age = age_4_reformation
+	icon = nag_nag_light_cav
+	potential = {
+		OR = {
+			has_or_had_tag = NAG
+			has_or_had_tag = NRS
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# shock_damage = 0.1
+}
+
+abm_nag_cultivating_the_forest = {
+	age = age_4_reformation
+	icon = nag_nag_cultivating_the_forest
+	potential = {
+		OR = {
+			has_or_had_tag = NAG
+			has_or_had_tag = NRS
+		}
+	}
+
+	requires = abm_nag_light_cav
 
 	# production_efficiency = 0.1
 }
 
-abm_nag_ideas_nag_no_cb_best_cb = {
+abm_nag_no_cb_best_cb = {
 	age = age_5_absolutism
-	icon = nag_ideas_nag_no_cb_best_cb
+	icon = nag_nag_no_cb_best_cb
 	potential = {
 		OR = {
 			has_or_had_tag = NAG
@@ -1816,9 +1817,9 @@ abm_nag_ideas_nag_no_cb_best_cb = {
 	# unjustified_demands = -0.15
 }
 
-abm_nag_ideas_ambition = {
+abm_nag_ambition = {
 	age = age_6_revolutions
-	icon = nag_ideas_ambition
+	icon = nag_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = NAG
@@ -1826,15 +1827,15 @@ abm_nag_ideas_ambition = {
 		}
 	}
 
-	requires = abm_nag_ideas_nag_no_cb_best_cb
+	requires = abm_nag_no_cb_best_cb
 
 	# overextension_impact_modifier = -0.1
 }
 
 # ORI_ideas
-abm_ori_ideas_traditions_1 = {
+abm_crl_traditions_1 = {
 	age = age_1_traditions
-	icon = ori_ideas_traditions_1
+	icon = crl_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = CRL
@@ -1847,9 +1848,9 @@ abm_ori_ideas_traditions_1 = {
 	# production_efficiency = 0.1
 }
 
-abm_ori_ideas_traditions_2 = {
+abm_crl_traditions_2 = {
 	age = age_1_traditions
-	icon = ori_ideas_traditions_2
+	icon = crl_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = CRL
@@ -1857,14 +1858,14 @@ abm_ori_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_ori_ideas_traditions_1
+	requires = abm_crl_traditions_1
 
 	# shock_damage_received = -0.1
 }
 
-abm_ori_ideas_lord_of_elephants = {
+abm_crl_lord_of_elephants = {
 	age = age_2_renaissance
-	icon = ori_ideas_lord_of_elephants
+	icon = crl_lord_of_elephants
 	potential = {
 		OR = {
 			has_or_had_tag = CRL
@@ -1877,9 +1878,9 @@ abm_ori_ideas_lord_of_elephants = {
 	# infantry_power = 0.1
 }
 
-abm_ori_ideas_servitor_of_jagganath = {
+abm_crl_servitor_of_jagganath = {
 	age = age_2_renaissance
-	icon = ori_ideas_servitor_of_jagganath
+	icon = crl_servitor_of_jagganath
 	potential = {
 		OR = {
 			has_or_had_tag = CRL
@@ -1887,7 +1888,7 @@ abm_ori_ideas_servitor_of_jagganath = {
 		}
 	}
 
-	requires = abm_ori_ideas_lord_of_elephants
+	requires = abm_crl_lord_of_elephants
 
 	# legitimacy = 1
 	# devotion = 1
@@ -1896,39 +1897,9 @@ abm_ori_ideas_servitor_of_jagganath = {
 	# horde_unity = 1
 }
 
-abm_ori_ideas_parikshas = {
-	age = age_2_renaissance
-	icon = ori_ideas_parikshas
-	potential = {
-		OR = {
-			has_or_had_tag = CRL
-			has_or_had_tag = JHI
-		}
-	}
-
-	requires = abm_ori_ideas_servitor_of_jagganath
-
-	# global_tax_modifier = 0.1
-}
-
-abm_ori_ideas_refined_cloth_production = {
-	age = age_2_renaissance
-	icon = ori_ideas_refined_cloth_production
-	potential = {
-		OR = {
-			has_or_had_tag = CRL
-			has_or_had_tag = JHI
-		}
-	}
-
-	requires = abm_ori_ideas_parikshas
-
-	# global_trade_goods_size_modifier = 0.1
-}
-
-abm_ori_ideas_patronize_temple_construction = {
+abm_crl_parikshas = {
 	age = age_3_discovery
-	icon = ori_ideas_patronize_temple_construction
+	icon = crl_parikshas
 	potential = {
 		OR = {
 			has_or_had_tag = CRL
@@ -1938,12 +1909,12 @@ abm_ori_ideas_patronize_temple_construction = {
 
 	requires = military_traditions
 
-	# prestige = 1
+	# global_tax_modifier = 0.1
 }
 
-abm_ori_ideas_encourage_salt_trade = {
+abm_crl_refined_cloth_production = {
 	age = age_3_discovery
-	icon = ori_ideas_encourage_salt_trade
+	icon = crl_refined_cloth_production
 	potential = {
 		OR = {
 			has_or_had_tag = CRL
@@ -1951,14 +1922,44 @@ abm_ori_ideas_encourage_salt_trade = {
 		}
 	}
 
-	requires = abm_ori_ideas_patronize_temple_construction
+	requires = abm_crl_parikshas
+
+	# global_trade_goods_size_modifier = 0.1
+}
+
+abm_crl_patronize_temple_construction = {
+	age = age_4_reformation
+	icon = crl_patronize_temple_construction
+	potential = {
+		OR = {
+			has_or_had_tag = CRL
+			has_or_had_tag = JHI
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# prestige = 1
+}
+
+abm_crl_encourage_salt_trade = {
+	age = age_4_reformation
+	icon = crl_encourage_salt_trade
+	potential = {
+		OR = {
+			has_or_had_tag = CRL
+			has_or_had_tag = JHI
+		}
+	}
+
+	requires = abm_crl_patronize_temple_construction
 
 	# trade_efficiency = 0.1
 }
 
-abm_ori_ideas_heritage_of_the_sadhabas = {
+abm_crl_heritage_of_the_sadhabas = {
 	age = age_5_absolutism
-	icon = ori_ideas_heritage_of_the_sadhabas
+	icon = crl_heritage_of_the_sadhabas
 	potential = {
 		OR = {
 			has_or_had_tag = CRL
@@ -1971,9 +1972,9 @@ abm_ori_ideas_heritage_of_the_sadhabas = {
 	# naval_forcelimit_modifier = 0.25
 }
 
-abm_ori_ideas_ambition = {
+abm_crl_ambition = {
 	age = age_6_revolutions
-	icon = ori_ideas_ambition
+	icon = crl_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = CRL
@@ -1981,15 +1982,15 @@ abm_ori_ideas_ambition = {
 		}
 	}
 
-	requires = abm_ori_ideas_heritage_of_the_sadhabas
+	requires = abm_crl_heritage_of_the_sadhabas
 
 	# trade_steering = 0.20
 }
 
 # RJP_ideas
-abm_rjp_ideas_traditions_1 = {
+abm_rji_traditions_1 = {
 	age = age_1_traditions
-	icon = rjp_ideas_traditions_1
+	icon = rji_traditions_1
 	potential = {
 		has_or_had_tag = RJI
 	}
@@ -1999,21 +2000,21 @@ abm_rjp_ideas_traditions_1 = {
 	# free_mil_policy = 1
 }
 
-abm_rjp_ideas_traditions_2 = {
+abm_rji_traditions_2 = {
 	age = age_1_traditions
-	icon = rjp_ideas_traditions_2
+	icon = rji_traditions_2
 	potential = {
 		has_or_had_tag = RJI
 	}
 
-	requires = abm_rjp_ideas_traditions_1
+	requires = abm_rji_traditions_1
 
 	# land_morale = 0.1
 }
 
-abm_rjp_ideas_rjp_imperial_legacy = {
+abm_rji_rjp_imperial_legacy = {
 	age = age_2_renaissance
-	icon = rjp_ideas_rjp_imperial_legacy
+	icon = rji_rjp_imperial_legacy
 	potential = {
 		has_or_had_tag = RJI
 	}
@@ -2023,70 +2024,70 @@ abm_rjp_ideas_rjp_imperial_legacy = {
 	# core_creation = -0.15
 }
 
-abm_rjp_ideas_rjp_land_of_petty_princes = {
+abm_rji_rjp_land_of_petty_princes = {
 	age = age_2_renaissance
-	icon = rjp_ideas_rjp_land_of_petty_princes
+	icon = rji_rjp_land_of_petty_princes
 	potential = {
 		has_or_had_tag = RJI
 	}
 
-	requires = abm_rjp_ideas_rjp_imperial_legacy
+	requires = abm_rji_rjp_imperial_legacy
 
 	# global_manpower_modifier = 0.15
 }
 
-abm_rjp_ideas_marwari_horses = {
-	age = age_2_renaissance
-	icon = rjp_ideas_marwari_horses
-	potential = {
-		has_or_had_tag = RJI
-	}
-
-	requires = abm_rjp_ideas_rjp_land_of_petty_princes
-
-	# cavalry_power = 0.15
-	# movement_speed = 0.1
-}
-
-abm_rjp_ideas_rjp_purbia_legacy = {
-	age = age_2_renaissance
-	icon = rjp_ideas_rjp_purbia_legacy
-	potential = {
-		has_or_had_tag = RJI
-	}
-
-	requires = abm_rjp_ideas_marwari_horses
-
-	# fire_damage = 0.1
-}
-
-abm_rjp_ideas_rjp_protectors_of_the_dharma = {
+abm_rji_marwari_horses = {
 	age = age_3_discovery
-	icon = rjp_ideas_rjp_protectors_of_the_dharma
+	icon = rji_marwari_horses
 	potential = {
 		has_or_had_tag = RJI
 	}
 
 	requires = military_traditions
 
-	# tolerance_own = 2
+	# cavalry_power = 0.15
+	# movement_speed = 0.1
 }
 
-abm_rjp_ideas_rjp_expanded_artillery_arm = {
+abm_rji_rjp_purbia_legacy = {
 	age = age_3_discovery
-	icon = rjp_ideas_rjp_expanded_artillery_arm
+	icon = rji_rjp_purbia_legacy
 	potential = {
 		has_or_had_tag = RJI
 	}
 
-	requires = abm_rjp_ideas_rjp_protectors_of_the_dharma
+	requires = abm_rji_marwari_horses
+
+	# fire_damage = 0.1
+}
+
+abm_rji_rjp_protectors_of_the_dharma = {
+	age = age_4_reformation
+	icon = rji_rjp_protectors_of_the_dharma
+	potential = {
+		has_or_had_tag = RJI
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# tolerance_own = 2
+}
+
+abm_rji_rjp_expanded_artillery_arm = {
+	age = age_4_reformation
+	icon = rji_rjp_expanded_artillery_arm
+	potential = {
+		has_or_had_tag = RJI
+	}
+
+	requires = abm_rji_rjp_protectors_of_the_dharma
 
 	# artillery_cost = -0.15
 }
 
-abm_rjp_ideas_rjp_monumental_architecture = {
+abm_rji_rjp_monumental_architecture = {
 	age = age_5_absolutism
-	icon = rjp_ideas_rjp_monumental_architecture
+	icon = rji_rjp_monumental_architecture
 	potential = {
 		has_or_had_tag = RJI
 	}
@@ -2100,22 +2101,22 @@ abm_rjp_ideas_rjp_monumental_architecture = {
 	# horde_unity = 1
 }
 
-abm_rjp_ideas_ambition = {
+abm_rji_ambition = {
 	age = age_6_revolutions
-	icon = rjp_ideas_ambition
+	icon = rji_ambition
 	potential = {
 		has_or_had_tag = RJI
 	}
 
-	requires = abm_rjp_ideas_rjp_monumental_architecture
+	requires = abm_rji_rjp_monumental_architecture
 
 	# discipline = 0.05
 }
 
 # SDY_ideas
-abm_sdy_ideas_traditions_1 = {
+abm_dbd_traditions_1 = {
 	age = age_1_traditions
-	icon = sdy_ideas_traditions_1
+	icon = dbd_traditions_1
 	potential = {
 		has_or_had_tag = DBD
 	}
@@ -2125,21 +2126,21 @@ abm_sdy_ideas_traditions_1 = {
 	# caravan_power = 0.2
 }
 
-abm_sdy_ideas_traditions_2 = {
+abm_dbd_traditions_2 = {
 	age = age_1_traditions
-	icon = sdy_ideas_traditions_2
+	icon = dbd_traditions_2
 	potential = {
 		has_or_had_tag = DBD
 	}
 
-	requires = abm_sdy_ideas_traditions_1
+	requires = abm_dbd_traditions_1
 
 	# hostile_attrition = 1.0
 }
 
-abm_sdy_ideas_sdy_land_of_glory = {
+abm_dbd_sdy_land_of_glory = {
 	age = age_2_renaissance
-	icon = sdy_ideas_sdy_land_of_glory
+	icon = dbd_sdy_land_of_glory
 	potential = {
 		has_or_had_tag = DBD
 	}
@@ -2149,69 +2150,69 @@ abm_sdy_ideas_sdy_land_of_glory = {
 	# land_morale = 0.1
 }
 
-abm_sdy_ideas_sdy_crossroad_of_religions = {
+abm_dbd_sdy_crossroad_of_religions = {
 	age = age_2_renaissance
-	icon = sdy_ideas_sdy_crossroad_of_religions
+	icon = dbd_sdy_crossroad_of_religions
 	potential = {
 		has_or_had_tag = DBD
 	}
 
-	requires = abm_sdy_ideas_sdy_land_of_glory
+	requires = abm_dbd_sdy_land_of_glory
 
 	# tolerance_heathen = 2
 }
 
-abm_sdy_ideas_sdy_hills_and_jungles = {
-	age = age_2_renaissance
-	icon = sdy_ideas_sdy_hills_and_jungles
-	potential = {
-		has_or_had_tag = DBD
-	}
-
-	requires = abm_sdy_ideas_sdy_crossroad_of_religions
-
-	# defensiveness = 0.15
-}
-
-abm_sdy_ideas_sdy_temples = {
-	age = age_2_renaissance
-	icon = sdy_ideas_sdy_temples
-	potential = {
-		has_or_had_tag = DBD
-	}
-
-	requires = abm_sdy_ideas_sdy_hills_and_jungles
-
-	# prestige = 1
-}
-
-abm_sdy_ideas_sdy_dihang = {
+abm_dbd_sdy_hills_and_jungles = {
 	age = age_3_discovery
-	icon = sdy_ideas_sdy_dihang
+	icon = dbd_sdy_hills_and_jungles
 	potential = {
 		has_or_had_tag = DBD
 	}
 
 	requires = military_traditions
 
-	# trade_efficiency = 0.1
+	# defensiveness = 0.15
 }
 
-abm_sdy_ideas_sdy_army_reform = {
+abm_dbd_sdy_temples = {
 	age = age_3_discovery
-	icon = sdy_ideas_sdy_army_reform
+	icon = dbd_sdy_temples
 	potential = {
 		has_or_had_tag = DBD
 	}
 
-	requires = abm_sdy_ideas_sdy_dihang
+	requires = abm_dbd_sdy_hills_and_jungles
+
+	# prestige = 1
+}
+
+abm_dbd_sdy_dihang = {
+	age = age_4_reformation
+	icon = dbd_sdy_dihang
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# trade_efficiency = 0.1
+}
+
+abm_dbd_sdy_army_reform = {
+	age = age_4_reformation
+	icon = dbd_sdy_army_reform
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	requires = abm_dbd_sdy_dihang
 
 	# infantry_power = 0.1
 }
 
-abm_sdy_ideas_sdy_black_tea = {
+abm_dbd_sdy_black_tea = {
 	age = age_5_absolutism
-	icon = sdy_ideas_sdy_black_tea
+	icon = dbd_sdy_black_tea
 	potential = {
 		has_or_had_tag = DBD
 	}
@@ -2221,22 +2222,22 @@ abm_sdy_ideas_sdy_black_tea = {
 	# production_efficiency = 0.1
 }
 
-abm_sdy_ideas_ambition = {
+abm_dbd_ambition = {
 	age = age_6_revolutions
-	icon = sdy_ideas_ambition
+	icon = dbd_ambition
 	potential = {
 		has_or_had_tag = DBD
 	}
 
-	requires = abm_sdy_ideas_sdy_black_tea
+	requires = abm_dbd_sdy_black_tea
 
 	# diplomatic_reputation = 1
 }
 
 # SND_ideas
-abm_snd_ideas_traditions_1 = {
+abm_snd_traditions_1 = {
 	age = age_1_traditions
-	icon = snd_ideas_traditions_1
+	icon = snd_traditions_1
 	potential = {
 		has_or_had_tag = SND
 	}
@@ -2246,21 +2247,21 @@ abm_snd_ideas_traditions_1 = {
 	# land_forcelimit_modifier = 0.25
 }
 
-abm_snd_ideas_traditions_2 = {
+abm_snd_traditions_2 = {
 	age = age_1_traditions
-	icon = snd_ideas_traditions_2
+	icon = snd_traditions_2
 	potential = {
 		has_or_had_tag = SND
 	}
 
-	requires = abm_snd_ideas_traditions_1
+	requires = abm_snd_traditions_1
 
 	# missionaries = 1
 }
 
-abm_snd_ideas_snd_enduring_dynasty = {
+abm_snd_enduring_dynasty = {
 	age = age_2_renaissance
-	icon = snd_ideas_snd_enduring_dynasty
+	icon = snd_snd_enduring_dynasty
 	potential = {
 		has_or_had_tag = SND
 	}
@@ -2274,69 +2275,69 @@ abm_snd_ideas_snd_enduring_dynasty = {
 	# horde_unity = 1
 }
 
-abm_snd_ideas_snd_bab_ul_islam = {
+abm_snd_bab_ul_islam = {
 	age = age_2_renaissance
-	icon = snd_ideas_snd_bab_ul_islam
+	icon = snd_snd_bab_ul_islam
 	potential = {
 		has_or_had_tag = SND
 	}
 
-	requires = abm_snd_ideas_snd_enduring_dynasty
+	requires = abm_snd_enduring_dynasty
 
 	# global_missionary_strength = 0.02
 }
 
-abm_snd_ideas_snd_gujarati_connections = {
-	age = age_2_renaissance
-	icon = snd_ideas_snd_gujarati_connections
-	potential = {
-		has_or_had_tag = SND
-	}
-
-	requires = abm_snd_ideas_snd_bab_ul_islam
-
-	# placed_merchant_power = 5
-}
-
-abm_snd_ideas_snd_makli_necropolis = {
-	age = age_2_renaissance
-	icon = snd_ideas_snd_makli_necropolis
-	potential = {
-		has_or_had_tag = SND
-	}
-
-	requires = abm_snd_ideas_snd_gujarati_connections
-
-	# tolerance_own = 1
-}
-
-abm_snd_ideas_snd_end_judicial_corruption = {
+abm_snd_gujarati_connections = {
 	age = age_3_discovery
-	icon = snd_ideas_snd_end_judicial_corruption
+	icon = snd_snd_gujarati_connections
 	potential = {
 		has_or_had_tag = SND
 	}
 
 	requires = military_traditions
 
-	# yearly_corruption = -0.1
+	# placed_merchant_power = 5
 }
 
-abm_snd_ideas_snd_oversee_rise_of_thatta = {
+abm_snd_makli_necropolis = {
 	age = age_3_discovery
-	icon = snd_ideas_snd_oversee_rise_of_thatta
+	icon = snd_snd_makli_necropolis
 	potential = {
 		has_or_had_tag = SND
 	}
 
-	requires = abm_snd_ideas_snd_end_judicial_corruption
+	requires = abm_snd_gujarati_connections
+
+	# tolerance_own = 1
+}
+
+abm_snd_end_judicial_corruption = {
+	age = age_4_reformation
+	icon = snd_snd_end_judicial_corruption
+	potential = {
+		has_or_had_tag = SND
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# yearly_corruption = -0.1
+}
+
+abm_snd_oversee_rise_of_thatta = {
+	age = age_4_reformation
+	icon = snd_snd_oversee_rise_of_thatta
+	potential = {
+		has_or_had_tag = SND
+	}
+
+	requires = abm_snd_end_judicial_corruption
 
 	# build_cost = -0.1
 }
 
-abm_snd_ideas_snd_recruit_baloch_tribesmen = {
+abm_snd_recruit_baloch_tribesmen = {
 	age = age_5_absolutism
-	icon = snd_ideas_snd_recruit_baloch_tribesmen
+	icon = snd_snd_recruit_baloch_tribesmen
 	potential = {
 		has_or_had_tag = SND
 	}
@@ -2346,22 +2347,22 @@ abm_snd_ideas_snd_recruit_baloch_tribesmen = {
 	# mercenary_discipline = 0.025
 }
 
-abm_snd_ideas_ambition = {
+abm_snd_ambition = {
 	age = age_6_revolutions
-	icon = snd_ideas_ambition
+	icon = snd_ambition
 	potential = {
 		has_or_had_tag = SND
 	}
 
-	requires = abm_snd_ideas_snd_recruit_baloch_tribesmen
+	requires = abm_snd_recruit_baloch_tribesmen
 
 	# global_manpower_modifier = 0.15
 }
 
 # bengali_ideas
-abm_bengali_ideas_traditions_1 = {
+abm_cmn_traditions_1 = {
 	age = age_1_traditions
-	icon = bengali_ideas_traditions_1
+	icon = cmn_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = CMN
@@ -2377,9 +2378,9 @@ abm_bengali_ideas_traditions_1 = {
 	# merchants = 1
 }
 
-abm_bengali_ideas_traditions_2 = {
+abm_cmn_traditions_2 = {
 	age = age_1_traditions
-	icon = bengali_ideas_traditions_2
+	icon = cmn_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = CMN
@@ -2390,14 +2391,14 @@ abm_bengali_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_bengali_ideas_traditions_1
+	requires = abm_cmn_traditions_1
 
 	# infantry_power = 0.1
 }
 
-abm_bengali_ideas_hindu_sufi_syncretism = {
+abm_cmn_hindu_sufi_syncretism = {
 	age = age_2_renaissance
-	icon = bengali_ideas_hindu_sufi_syncretism
+	icon = cmn_hindu_sufi_syncretism
 	potential = {
 		OR = {
 			has_or_had_tag = CMN
@@ -2413,9 +2414,9 @@ abm_bengali_ideas_hindu_sufi_syncretism = {
 	# religious_unity = 0.5
 }
 
-abm_bengali_ideas_ganges_brahmaputra_confluence = {
+abm_cmn_ganges_brahmaputra_confluence = {
 	age = age_2_renaissance
-	icon = bengali_ideas_ganges_brahmaputra_confluence
+	icon = cmn_ganges_brahmaputra_confluence
 	potential = {
 		OR = {
 			has_or_had_tag = CMN
@@ -2426,50 +2427,14 @@ abm_bengali_ideas_ganges_brahmaputra_confluence = {
 		}
 	}
 
-	requires = abm_bengali_ideas_hindu_sufi_syncretism
+	requires = abm_cmn_hindu_sufi_syncretism
 
 	# trade_efficiency = 0.1
 }
 
-abm_bengali_ideas_rice_fields = {
-	age = age_2_renaissance
-	icon = bengali_ideas_rice_fields
-	potential = {
-		OR = {
-			has_or_had_tag = CMN
-			has_or_had_tag = JWR
-			has_or_had_tag = KSW
-			has_or_had_tag = NRP
-			has_or_had_tag = SHR
-		}
-	}
-
-	requires = abm_bengali_ideas_ganges_brahmaputra_confluence
-
-	# global_manpower_modifier = 0.2
-}
-
-abm_bengali_ideas_mustard_oil_ilish_mach = {
-	age = age_2_renaissance
-	icon = bengali_ideas_mustard_oil_ilish_mach
-	potential = {
-		OR = {
-			has_or_had_tag = CMN
-			has_or_had_tag = JWR
-			has_or_had_tag = KSW
-			has_or_had_tag = NRP
-			has_or_had_tag = SHR
-		}
-	}
-
-	requires = abm_bengali_ideas_rice_fields
-
-	# war_exhaustion_cost = -0.10
-}
-
-abm_bengali_ideas_jute_production = {
+abm_cmn_rice_fields = {
 	age = age_3_discovery
-	icon = bengali_ideas_jute_production
+	icon = cmn_rice_fields
 	potential = {
 		OR = {
 			has_or_had_tag = CMN
@@ -2482,12 +2447,12 @@ abm_bengali_ideas_jute_production = {
 
 	requires = military_traditions
 
-	# no_eu4_modifier = none
+	# global_manpower_modifier = 0.2
 }
 
-abm_bengali_ideas_opium_fields = {
+abm_cmn_mustard_oil_ilish_mach = {
 	age = age_3_discovery
-	icon = bengali_ideas_opium_fields
+	icon = cmn_mustard_oil_ilish_mach
 	potential = {
 		OR = {
 			has_or_had_tag = CMN
@@ -2498,14 +2463,50 @@ abm_bengali_ideas_opium_fields = {
 		}
 	}
 
-	requires = abm_bengali_ideas_jute_production
+	requires = abm_cmn_rice_fields
+
+	# war_exhaustion_cost = -0.10
+}
+
+abm_cmn_jute_production = {
+	age = age_4_reformation
+	icon = cmn_jute_production
+	potential = {
+		OR = {
+			has_or_had_tag = CMN
+			has_or_had_tag = JWR
+			has_or_had_tag = KSW
+			has_or_had_tag = NRP
+			has_or_had_tag = SHR
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# no_eu4_modifier = none
+}
+
+abm_cmn_opium_fields = {
+	age = age_4_reformation
+	icon = cmn_opium_fields
+	potential = {
+		OR = {
+			has_or_had_tag = CMN
+			has_or_had_tag = JWR
+			has_or_had_tag = KSW
+			has_or_had_tag = NRP
+			has_or_had_tag = SHR
+		}
+	}
+
+	requires = abm_cmn_jute_production
 
 	# global_tax_modifier = 0.1
 }
 
-abm_bengali_ideas_bengali_renaissance = {
+abm_cmn_bengali_renaissance = {
 	age = age_5_absolutism
-	icon = bengali_ideas_bengali_renaissance
+	icon = cmn_bengali_renaissance
 	potential = {
 		OR = {
 			has_or_had_tag = CMN
@@ -2521,9 +2522,9 @@ abm_bengali_ideas_bengali_renaissance = {
 	# global_institution_spread = 0.1
 }
 
-abm_bengali_ideas_ambition = {
+abm_cmn_ambition = {
 	age = age_6_revolutions
-	icon = bengali_ideas_ambition
+	icon = cmn_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = CMN
@@ -2534,15 +2535,15 @@ abm_bengali_ideas_ambition = {
 		}
 	}
 
-	requires = abm_bengali_ideas_bengali_renaissance
+	requires = abm_cmn_bengali_renaissance
 
 	# prestige = 1
 }
 
 # central_indic_ideas
-abm_central_indic_ideas_traditions_1 = {
+abm_bst_traditions_1 = {
 	age = age_1_traditions
-	icon = central_indic_ideas_traditions_1
+	icon = bst_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = BST
@@ -2564,9 +2565,9 @@ abm_central_indic_ideas_traditions_1 = {
 	# land_morale = 0.1
 }
 
-abm_central_indic_ideas_traditions_2 = {
+abm_bst_traditions_2 = {
 	age = age_1_traditions
-	icon = central_indic_ideas_traditions_2
+	icon = bst_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = BST
@@ -2583,14 +2584,14 @@ abm_central_indic_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_central_indic_ideas_traditions_1
+	requires = abm_bst_traditions_1
 
 	# global_manpower_modifier = 0.15
 }
 
-abm_central_indic_ideas_securing_defenses_central_indic = {
+abm_bst_securing_defenses_central_indic = {
 	age = age_2_renaissance
-	icon = central_indic_ideas_securing_defenses_central_indic
+	icon = bst_securing_defenses_central_indic
 	potential = {
 		OR = {
 			has_or_had_tag = BST
@@ -2612,9 +2613,9 @@ abm_central_indic_ideas_securing_defenses_central_indic = {
 	# defensiveness = 0.15
 }
 
-abm_central_indic_ideas_tribal_religion_central_indic = {
+abm_bst_tribal_religion_central_indic = {
 	age = age_2_renaissance
-	icon = central_indic_ideas_tribal_religion_central_indic
+	icon = bst_tribal_religion_central_indic
 	potential = {
 		OR = {
 			has_or_had_tag = BST
@@ -2631,63 +2632,15 @@ abm_central_indic_ideas_tribal_religion_central_indic = {
 		}
 	}
 
-	requires = abm_central_indic_ideas_securing_defenses_central_indic
+	requires = abm_bst_securing_defenses_central_indic
 
 	# religious_unity = 0.1
 	# global_unrest = -1
 }
 
-abm_central_indic_ideas_tigers_and_elephants_central_indic = {
-	age = age_2_renaissance
-	icon = central_indic_ideas_tigers_and_elephants_central_indic
-	potential = {
-		OR = {
-			has_or_had_tag = BST
-			has_or_had_tag = CHD
-			has_or_had_tag = DGR
-			has_or_had_tag = DOG
-			has_or_had_tag = DRP
-			has_or_had_tag = GDA
-			has_or_had_tag = GHR
-			has_or_had_tag = RCH
-			has_or_had_tag = RNP
-			has_or_had_tag = RTP
-			has_or_had_tag = STR
-		}
-	}
-
-	requires = abm_central_indic_ideas_tribal_religion_central_indic
-
-	# hostile_attrition = 1.0
-}
-
-abm_central_indic_ideas_flexible_caste_central_indic = {
-	age = age_2_renaissance
-	icon = central_indic_ideas_flexible_caste_central_indic
-	potential = {
-		OR = {
-			has_or_had_tag = BST
-			has_or_had_tag = CHD
-			has_or_had_tag = DGR
-			has_or_had_tag = DOG
-			has_or_had_tag = DRP
-			has_or_had_tag = GDA
-			has_or_had_tag = GHR
-			has_or_had_tag = RCH
-			has_or_had_tag = RNP
-			has_or_had_tag = RTP
-			has_or_had_tag = STR
-		}
-	}
-
-	requires = abm_central_indic_ideas_tigers_and_elephants_central_indic
-
-	# num_accepted_cultures = 1
-}
-
-abm_central_indic_ideas_raiding_the_plains_central_indic = {
+abm_bst_tigers_and_elephants_central_indic = {
 	age = age_3_discovery
-	icon = central_indic_ideas_raiding_the_plains_central_indic
+	icon = bst_tigers_and_elephants_central_indic
 	potential = {
 		OR = {
 			has_or_had_tag = BST
@@ -2706,12 +2659,12 @@ abm_central_indic_ideas_raiding_the_plains_central_indic = {
 
 	requires = military_traditions
 
-	# infantry_power = 0.1
+	# hostile_attrition = 1.0
 }
 
-abm_central_indic_ideas_ancient_roots_central_indic = {
+abm_bst_flexible_caste_central_indic = {
 	age = age_3_discovery
-	icon = central_indic_ideas_ancient_roots_central_indic
+	icon = bst_flexible_caste_central_indic
 	potential = {
 		OR = {
 			has_or_had_tag = BST
@@ -2728,7 +2681,55 @@ abm_central_indic_ideas_ancient_roots_central_indic = {
 		}
 	}
 
-	requires = abm_central_indic_ideas_raiding_the_plains_central_indic
+	requires = abm_bst_tigers_and_elephants_central_indic
+
+	# num_accepted_cultures = 1
+}
+
+abm_bst_raiding_the_plains_central_indic = {
+	age = age_4_reformation
+	icon = bst_raiding_the_plains_central_indic
+	potential = {
+		OR = {
+			has_or_had_tag = BST
+			has_or_had_tag = CHD
+			has_or_had_tag = DGR
+			has_or_had_tag = DOG
+			has_or_had_tag = DRP
+			has_or_had_tag = GDA
+			has_or_had_tag = GHR
+			has_or_had_tag = RCH
+			has_or_had_tag = RNP
+			has_or_had_tag = RTP
+			has_or_had_tag = STR
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# infantry_power = 0.1
+}
+
+abm_bst_ancient_roots_central_indic = {
+	age = age_4_reformation
+	icon = bst_ancient_roots_central_indic
+	potential = {
+		OR = {
+			has_or_had_tag = BST
+			has_or_had_tag = CHD
+			has_or_had_tag = DGR
+			has_or_had_tag = DOG
+			has_or_had_tag = DRP
+			has_or_had_tag = GDA
+			has_or_had_tag = GHR
+			has_or_had_tag = RCH
+			has_or_had_tag = RNP
+			has_or_had_tag = RTP
+			has_or_had_tag = STR
+		}
+	}
+
+	requires = abm_bst_raiding_the_plains_central_indic
 
 	# legitimacy = 1
 	# devotion = 1
@@ -2737,9 +2738,9 @@ abm_central_indic_ideas_ancient_roots_central_indic = {
 	# horde_unity = 1
 }
 
-abm_central_indic_ideas_formalize_relations_with_cheifs_central_indic = {
+abm_bst_formalize_relations_with_cheifs_central_indic = {
 	age = age_5_absolutism
-	icon = central_indic_ideas_formalize_relations_with_cheifs_central_indic
+	icon = bst_formalize_relations_with_cheifs_central_indic
 	potential = {
 		OR = {
 			has_or_had_tag = BST
@@ -2761,9 +2762,9 @@ abm_central_indic_ideas_formalize_relations_with_cheifs_central_indic = {
 	# global_tax_modifier = 0.1
 }
 
-abm_central_indic_ideas_ambition = {
+abm_bst_ambition = {
 	age = age_6_revolutions
-	icon = central_indic_ideas_ambition
+	icon = bst_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = BST
@@ -2780,15 +2781,15 @@ abm_central_indic_ideas_ambition = {
 		}
 	}
 
-	requires = abm_central_indic_ideas_formalize_relations_with_cheifs_central_indic
+	requires = abm_bst_formalize_relations_with_cheifs_central_indic
 
 	# merchants = 1
 }
 
 # deccani_muslim_ideas
-abm_deccani_muslim_ideas_traditions_1 = {
+abm_bsp_traditions_1 = {
 	age = age_1_traditions
-	icon = deccani_muslim_ideas_traditions_1
+	icon = bsp_traditions_1
 	potential = {
 		has_or_had_tag = BSP
 	}
@@ -2798,21 +2799,21 @@ abm_deccani_muslim_ideas_traditions_1 = {
 	# cavalry_power = 0.1
 }
 
-abm_deccani_muslim_ideas_traditions_2 = {
+abm_bsp_traditions_2 = {
 	age = age_1_traditions
-	icon = deccani_muslim_ideas_traditions_2
+	icon = bsp_traditions_2
 	potential = {
 		has_or_had_tag = BSP
 	}
 
-	requires = abm_deccani_muslim_ideas_traditions_1
+	requires = abm_bsp_traditions_1
 
 	# num_accepted_cultures = 1
 }
 
-abm_deccani_muslim_ideas_dec_legacy_of_bahmanis = {
+abm_bsp_dec_legacy_of_bahmanis = {
 	age = age_2_renaissance
-	icon = deccani_muslim_ideas_dec_legacy_of_bahmanis
+	icon = bsp_dec_legacy_of_bahmanis
 	potential = {
 		has_or_had_tag = BSP
 	}
@@ -2826,69 +2827,69 @@ abm_deccani_muslim_ideas_dec_legacy_of_bahmanis = {
 	# horde_unity = 1
 }
 
-abm_deccani_muslim_ideas_dec_deccani_identity = {
+abm_bsp_dec_deccani_identity = {
 	age = age_2_renaissance
-	icon = deccani_muslim_ideas_dec_deccani_identity
+	icon = bsp_dec_deccani_identity
 	potential = {
 		has_or_had_tag = BSP
 	}
 
-	requires = abm_deccani_muslim_ideas_dec_legacy_of_bahmanis
+	requires = abm_bsp_dec_legacy_of_bahmanis
 
 	# idea_cost = -0.10
 }
 
-abm_deccani_muslim_ideas_dec_brahmin_administrators = {
-	age = age_2_renaissance
-	icon = deccani_muslim_ideas_dec_brahmin_administrators
-	potential = {
-		has_or_had_tag = BSP
-	}
-
-	requires = abm_deccani_muslim_ideas_dec_deccani_identity
-
-	# stability_cost_modifier = -0.1
-}
-
-abm_deccani_muslim_ideas_dec_habshis = {
-	age = age_2_renaissance
-	icon = deccani_muslim_ideas_dec_habshis
-	potential = {
-		has_or_had_tag = BSP
-	}
-
-	requires = abm_deccani_muslim_ideas_dec_brahmin_administrators
-
-	# infantry_power = 0.1
-}
-
-abm_deccani_muslim_ideas_dec_bargi_giri = {
+abm_bsp_dec_brahmin_administrators = {
 	age = age_3_discovery
-	icon = deccani_muslim_ideas_dec_bargi_giri
+	icon = bsp_dec_brahmin_administrators
 	potential = {
 		has_or_had_tag = BSP
 	}
 
 	requires = military_traditions
 
-	# cavalry_flanking = 0.5
+	# stability_cost_modifier = -0.1
 }
 
-abm_deccani_muslim_ideas_dec_marathi_cultivators = {
+abm_bsp_dec_habshis = {
 	age = age_3_discovery
-	icon = deccani_muslim_ideas_dec_marathi_cultivators
+	icon = bsp_dec_habshis
 	potential = {
 		has_or_had_tag = BSP
 	}
 
-	requires = abm_deccani_muslim_ideas_dec_bargi_giri
+	requires = abm_bsp_dec_brahmin_administrators
+
+	# infantry_power = 0.1
+}
+
+abm_bsp_dec_bargi_giri = {
+	age = age_4_reformation
+	icon = bsp_dec_bargi_giri
+	potential = {
+		has_or_had_tag = BSP
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# cavalry_flanking = 0.5
+}
+
+abm_bsp_dec_marathi_cultivators = {
+	age = age_4_reformation
+	icon = bsp_dec_marathi_cultivators
+	potential = {
+		has_or_had_tag = BSP
+	}
+
+	requires = abm_bsp_dec_bargi_giri
 
 	# production_efficiency = 0.1
 }
 
-abm_deccani_muslim_ideas_dec_marathi_habshi_state = {
+abm_bsp_dec_marathi_habshi_state = {
 	age = age_5_absolutism
-	icon = deccani_muslim_ideas_dec_marathi_habshi_state
+	icon = bsp_dec_marathi_habshi_state
 	potential = {
 		has_or_had_tag = BSP
 	}
@@ -2898,22 +2899,22 @@ abm_deccani_muslim_ideas_dec_marathi_habshi_state = {
 	# advisor_cost = -0.1
 }
 
-abm_deccani_muslim_ideas_ambition = {
+abm_bsp_ambition = {
 	age = age_6_revolutions
-	icon = deccani_muslim_ideas_ambition
+	icon = bsp_ambition
 	potential = {
 		has_or_had_tag = BSP
 	}
 
-	requires = abm_deccani_muslim_ideas_dec_marathi_habshi_state
+	requires = abm_bsp_dec_marathi_habshi_state
 
 	# global_manpower_modifier = 0.1
 }
 
 # dravidian_ideas
-abm_dravidian_ideas_traditions_1 = {
+abm_gli_traditions_1 = {
 	age = age_1_traditions
-	icon = dravidian_ideas_traditions_1
+	icon = gli_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = GLI
@@ -2930,9 +2931,9 @@ abm_dravidian_ideas_traditions_1 = {
 	# religious_unity = 0.33
 }
 
-abm_dravidian_ideas_traditions_2 = {
+abm_gli_traditions_2 = {
 	age = age_1_traditions
-	icon = dravidian_ideas_traditions_2
+	icon = gli_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = GLI
@@ -2944,14 +2945,14 @@ abm_dravidian_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_dravidian_ideas_traditions_1
+	requires = abm_gli_traditions_1
 
 	# production_efficiency = 0.1
 }
 
-abm_dravidian_ideas_merchants_of_southern_india = {
+abm_gli_merchants_of_southern_india = {
 	age = age_2_renaissance
-	icon = dravidian_ideas_merchants_of_southern_india
+	icon = gli_merchants_of_southern_india
 	potential = {
 		OR = {
 			has_or_had_tag = GLI
@@ -2968,9 +2969,9 @@ abm_dravidian_ideas_merchants_of_southern_india = {
 	# trade_range_modifier = 0.20
 }
 
-abm_dravidian_ideas_water_tanks_and_canals = {
+abm_gli_water_tanks_and_canals = {
 	age = age_2_renaissance
-	icon = dravidian_ideas_water_tanks_and_canals
+	icon = gli_water_tanks_and_canals
 	potential = {
 		OR = {
 			has_or_had_tag = GLI
@@ -2982,52 +2983,14 @@ abm_dravidian_ideas_water_tanks_and_canals = {
 		}
 	}
 
-	requires = abm_dravidian_ideas_merchants_of_southern_india
+	requires = abm_gli_merchants_of_southern_india
 
 	# global_tax_modifier = 0.10
 }
 
-abm_dravidian_ideas_polygar_system = {
-	age = age_2_renaissance
-	icon = dravidian_ideas_polygar_system
-	potential = {
-		OR = {
-			has_or_had_tag = GLI
-			has_or_had_tag = JFN
-			has_or_had_tag = KHR
-			has_or_had_tag = MJU
-			has_or_had_tag = PRT
-			has_or_had_tag = VDK
-		}
-	}
-
-	requires = abm_dravidian_ideas_water_tanks_and_canals
-
-	# global_manpower_modifier = 0.10
-}
-
-abm_dravidian_ideas_south_indian_mercenaries = {
-	age = age_2_renaissance
-	icon = dravidian_ideas_south_indian_mercenaries
-	potential = {
-		OR = {
-			has_or_had_tag = GLI
-			has_or_had_tag = JFN
-			has_or_had_tag = KHR
-			has_or_had_tag = MJU
-			has_or_had_tag = PRT
-			has_or_had_tag = VDK
-		}
-	}
-
-	requires = abm_dravidian_ideas_polygar_system
-
-	# merc_maintenance_modifier = -0.15
-}
-
-abm_dravidian_ideas_patronage_of_temples = {
+abm_gli_polygar_system = {
 	age = age_3_discovery
-	icon = dravidian_ideas_patronage_of_temples
+	icon = gli_polygar_system
 	potential = {
 		OR = {
 			has_or_had_tag = GLI
@@ -3041,16 +3004,12 @@ abm_dravidian_ideas_patronage_of_temples = {
 
 	requires = military_traditions
 
-	# legitimacy = 1
-	# devotion = 1
-	# republican_tradition = 0.3
-	# meritocracy = 1
-	# horde_unity = 1
+	# global_manpower_modifier = 0.10
 }
 
-abm_dravidian_ideas_south_indian_literature = {
+abm_gli_south_indian_mercenaries = {
 	age = age_3_discovery
-	icon = dravidian_ideas_south_indian_literature
+	icon = gli_south_indian_mercenaries
 	potential = {
 		OR = {
 			has_or_had_tag = GLI
@@ -3062,14 +3021,56 @@ abm_dravidian_ideas_south_indian_literature = {
 		}
 	}
 
-	requires = abm_dravidian_ideas_patronage_of_temples
+	requires = abm_gli_polygar_system
+
+	# merc_maintenance_modifier = -0.15
+}
+
+abm_gli_patronage_of_temples = {
+	age = age_4_reformation
+	icon = gli_patronage_of_temples
+	potential = {
+		OR = {
+			has_or_had_tag = GLI
+			has_or_had_tag = JFN
+			has_or_had_tag = KHR
+			has_or_had_tag = MJU
+			has_or_had_tag = PRT
+			has_or_had_tag = VDK
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+}
+
+abm_gli_south_indian_literature = {
+	age = age_4_reformation
+	icon = gli_south_indian_literature
+	potential = {
+		OR = {
+			has_or_had_tag = GLI
+			has_or_had_tag = JFN
+			has_or_had_tag = KHR
+			has_or_had_tag = MJU
+			has_or_had_tag = PRT
+			has_or_had_tag = VDK
+		}
+	}
+
+	requires = abm_gli_patronage_of_temples
 
 	# prestige = 1
 }
 
-abm_dravidian_ideas_merchant_capitalists = {
+abm_gli_merchant_capitalists = {
 	age = age_5_absolutism
-	icon = dravidian_ideas_merchant_capitalists
+	icon = gli_merchant_capitalists
 	potential = {
 		OR = {
 			has_or_had_tag = GLI
@@ -3086,9 +3087,9 @@ abm_dravidian_ideas_merchant_capitalists = {
 	# merchants = 1
 }
 
-abm_dravidian_ideas_ambition = {
+abm_gli_ambition = {
 	age = age_6_revolutions
-	icon = dravidian_ideas_ambition
+	icon = gli_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = GLI
@@ -3100,15 +3101,15 @@ abm_dravidian_ideas_ambition = {
 		}
 	}
 
-	requires = abm_dravidian_ideas_merchant_capitalists
+	requires = abm_gli_merchant_capitalists
 
 	# trade_efficiency = 0.10
 }
 
 # garjati_ideas
-abm_garjati_ideas_traditions_1 = {
+abm_kja_traditions_1 = {
 	age = age_1_traditions
-	icon = garjati_ideas_traditions_1
+	icon = kja_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = KJA
@@ -3125,9 +3126,9 @@ abm_garjati_ideas_traditions_1 = {
 	# global_tax_modifier = 0.1
 }
 
-abm_garjati_ideas_traditions_2 = {
+abm_kja_traditions_2 = {
 	age = age_1_traditions
-	icon = garjati_ideas_traditions_2
+	icon = kja_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = KJA
@@ -3139,14 +3140,14 @@ abm_garjati_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_garjati_ideas_traditions_1
+	requires = abm_kja_traditions_1
 
 	# fort_maintenance_modifier = -0.15
 }
 
-abm_garjati_ideas_securing_defenses_central_indic = {
+abm_kja_securing_defenses_central_indic = {
 	age = age_2_renaissance
-	icon = garjati_ideas_securing_defenses_central_indic
+	icon = kja_securing_defenses_central_indic
 	potential = {
 		OR = {
 			has_or_had_tag = KJA
@@ -3163,9 +3164,9 @@ abm_garjati_ideas_securing_defenses_central_indic = {
 	# no_eu4_modifier = none
 }
 
-abm_garjati_ideas_garjati_ancient_mandalas = {
+abm_kja_garjati_ancient_mandalas = {
 	age = age_2_renaissance
-	icon = garjati_ideas_garjati_ancient_mandalas
+	icon = kja_garjati_ancient_mandalas
 	potential = {
 		OR = {
 			has_or_had_tag = KJA
@@ -3177,7 +3178,7 @@ abm_garjati_ideas_garjati_ancient_mandalas = {
 		}
 	}
 
-	requires = abm_garjati_ideas_securing_defenses_central_indic
+	requires = abm_kja_securing_defenses_central_indic
 
 	# legitimacy = 1
 	# devotion = 1
@@ -3186,47 +3187,9 @@ abm_garjati_ideas_garjati_ancient_mandalas = {
 	# horde_unity = 1
 }
 
-abm_garjati_ideas_garjati_tribal_feudatories = {
-	age = age_2_renaissance
-	icon = garjati_ideas_garjati_tribal_feudatories
-	potential = {
-		OR = {
-			has_or_had_tag = KJA
-			has_or_had_tag = KLH
-			has_or_had_tag = KTL
-			has_or_had_tag = PTN
-			has_or_had_tag = SRG
-			has_or_had_tag = TNK
-		}
-	}
-
-	requires = abm_garjati_ideas_garjati_ancient_mandalas
-
-	# global_manpower_modifier = 0.15
-}
-
-abm_garjati_ideas_garjati_extend_tanks_and_reservoirs = {
-	age = age_2_renaissance
-	icon = garjati_ideas_garjati_extend_tanks_and_reservoirs
-	potential = {
-		OR = {
-			has_or_had_tag = KJA
-			has_or_had_tag = KLH
-			has_or_had_tag = KTL
-			has_or_had_tag = PTN
-			has_or_had_tag = SRG
-			has_or_had_tag = TNK
-		}
-	}
-
-	requires = abm_garjati_ideas_garjati_tribal_feudatories
-
-	# development_cost = -0.1
-}
-
-abm_garjati_ideas_garjati_jungle_warfare = {
+abm_kja_garjati_tribal_feudatories = {
 	age = age_3_discovery
-	icon = garjati_ideas_garjati_jungle_warfare
+	icon = kja_garjati_tribal_feudatories
 	potential = {
 		OR = {
 			has_or_had_tag = KJA
@@ -3240,12 +3203,12 @@ abm_garjati_ideas_garjati_jungle_warfare = {
 
 	requires = military_traditions
 
-	# infantry_power = 0.1
+	# global_manpower_modifier = 0.15
 }
 
-abm_garjati_ideas_garjati_jagannath_cult = {
+abm_kja_garjati_extend_tanks_and_reservoirs = {
 	age = age_3_discovery
-	icon = garjati_ideas_garjati_jagannath_cult
+	icon = kja_garjati_extend_tanks_and_reservoirs
 	potential = {
 		OR = {
 			has_or_had_tag = KJA
@@ -3257,14 +3220,52 @@ abm_garjati_ideas_garjati_jagannath_cult = {
 		}
 	}
 
-	requires = abm_garjati_ideas_garjati_jungle_warfare
+	requires = abm_kja_garjati_tribal_feudatories
+
+	# development_cost = -0.1
+}
+
+abm_kja_garjati_jungle_warfare = {
+	age = age_4_reformation
+	icon = kja_garjati_jungle_warfare
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = KTL
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+			has_or_had_tag = TNK
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# infantry_power = 0.1
+}
+
+abm_kja_garjati_jagannath_cult = {
+	age = age_4_reformation
+	icon = kja_garjati_jagannath_cult
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = KTL
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+			has_or_had_tag = TNK
+		}
+	}
+
+	requires = abm_kja_garjati_jungle_warfare
 
 	# tolerance_own = 2
 }
 
-abm_garjati_ideas_garjati_patronize_economic_growth = {
+abm_kja_garjati_patronize_economic_growth = {
 	age = age_5_absolutism
-	icon = garjati_ideas_garjati_patronize_economic_growth
+	icon = kja_garjati_patronize_economic_growth
 	potential = {
 		OR = {
 			has_or_had_tag = KJA
@@ -3281,9 +3282,9 @@ abm_garjati_ideas_garjati_patronize_economic_growth = {
 	# global_trade_goods_size_modifier = 0.1
 }
 
-abm_garjati_ideas_ambition = {
+abm_kja_ambition = {
 	age = age_6_revolutions
-	icon = garjati_ideas_ambition
+	icon = kja_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = KJA
@@ -3295,15 +3296,15 @@ abm_garjati_ideas_ambition = {
 		}
 	}
 
-	requires = abm_garjati_ideas_garjati_patronize_economic_growth
+	requires = abm_kja_garjati_patronize_economic_growth
 
 	# stability_cost_modifier = -0.1
 }
 
 # gujarati_ideas
-abm_gujarati_ideas_traditions_1 = {
+abm_bgl_traditions_1 = {
 	age = age_1_traditions
-	icon = gujarati_ideas_traditions_1
+	icon = bgl_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = BGL
@@ -3329,9 +3330,9 @@ abm_gujarati_ideas_traditions_1 = {
 	# merchants = 1
 }
 
-abm_gujarati_ideas_traditions_2 = {
+abm_bgl_traditions_2 = {
 	age = age_1_traditions
-	icon = gujarati_ideas_traditions_2
+	icon = bgl_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = BGL
@@ -3352,14 +3353,14 @@ abm_gujarati_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_gujarati_ideas_traditions_1
+	requires = abm_bgl_traditions_1
 
 	# fort_maintenance_modifier = -0.15
 }
 
-abm_gujarati_ideas_guj_kathiawari_horses = {
+abm_bgl_guj_kathiawari_horses = {
 	age = age_2_renaissance
-	icon = gujarati_ideas_guj_kathiawari_horses
+	icon = bgl_guj_kathiawari_horses
 	potential = {
 		OR = {
 			has_or_had_tag = BGL
@@ -3385,9 +3386,9 @@ abm_gujarati_ideas_guj_kathiawari_horses = {
 	# cavalry_power = 0.1
 }
 
-abm_gujarati_ideas_guj_trading_outposts = {
+abm_bgl_guj_trading_outposts = {
 	age = age_2_renaissance
-	icon = gujarati_ideas_guj_trading_outposts
+	icon = bgl_guj_trading_outposts
 	potential = {
 		OR = {
 			has_or_had_tag = BGL
@@ -3408,70 +3409,14 @@ abm_gujarati_ideas_guj_trading_outposts = {
 		}
 	}
 
-	requires = abm_gujarati_ideas_guj_kathiawari_horses
+	requires = abm_bgl_guj_kathiawari_horses
 
 	# global_own_trade_power = 0.1
 }
 
-abm_gujarati_ideas_guj_jain_bankers = {
-	age = age_2_renaissance
-	icon = gujarati_ideas_guj_jain_bankers
-	potential = {
-		OR = {
-			has_or_had_tag = BGL
-			has_or_had_tag = BHD
-			has_or_had_tag = HNV
-			has_or_had_tag = IDR
-			has_or_had_tag = JJK
-			has_or_had_tag = JLW
-			has_or_had_tag = JNG
-			has_or_had_tag = JPO
-			has_or_had_tag = KUT
-			has_or_had_tag = PLA
-			has_or_had_tag = PLT
-			has_or_had_tag = PNC
-			has_or_had_tag = RJR
-			has_or_had_tag = VLD
-			has_or_had_tag = WRG
-		}
-	}
-
-	requires = abm_gujarati_ideas_guj_trading_outposts
-
-	# interest = -1
-}
-
-abm_gujarati_ideas_guj_rajput_dynasties = {
-	age = age_2_renaissance
-	icon = gujarati_ideas_guj_rajput_dynasties
-	potential = {
-		OR = {
-			has_or_had_tag = BGL
-			has_or_had_tag = BHD
-			has_or_had_tag = HNV
-			has_or_had_tag = IDR
-			has_or_had_tag = JJK
-			has_or_had_tag = JLW
-			has_or_had_tag = JNG
-			has_or_had_tag = JPO
-			has_or_had_tag = KUT
-			has_or_had_tag = PLA
-			has_or_had_tag = PLT
-			has_or_had_tag = PNC
-			has_or_had_tag = RJR
-			has_or_had_tag = VLD
-			has_or_had_tag = WRG
-		}
-	}
-
-	requires = abm_gujarati_ideas_guj_jain_bankers
-
-	# diplomatic_reputation = 1
-}
-
-abm_gujarati_ideas_guj_protect_dwarkadhish_temple = {
+abm_bgl_guj_jain_bankers = {
 	age = age_3_discovery
-	icon = gujarati_ideas_guj_protect_dwarkadhish_temple
+	icon = bgl_guj_jain_bankers
 	potential = {
 		OR = {
 			has_or_had_tag = BGL
@@ -3494,12 +3439,12 @@ abm_gujarati_ideas_guj_protect_dwarkadhish_temple = {
 
 	requires = military_traditions
 
-	# tolerance_own = 1
+	# interest = -1
 }
 
-abm_gujarati_ideas_guj_ashapura_mata = {
+abm_bgl_guj_rajput_dynasties = {
 	age = age_3_discovery
-	icon = gujarati_ideas_guj_ashapura_mata
+	icon = bgl_guj_rajput_dynasties
 	potential = {
 		OR = {
 			has_or_had_tag = BGL
@@ -3520,7 +3465,63 @@ abm_gujarati_ideas_guj_ashapura_mata = {
 		}
 	}
 
-	requires = abm_gujarati_ideas_guj_protect_dwarkadhish_temple
+	requires = abm_bgl_guj_jain_bankers
+
+	# diplomatic_reputation = 1
+}
+
+abm_bgl_guj_protect_dwarkadhish_temple = {
+	age = age_4_reformation
+	icon = bgl_guj_protect_dwarkadhish_temple
+	potential = {
+		OR = {
+			has_or_had_tag = BGL
+			has_or_had_tag = BHD
+			has_or_had_tag = HNV
+			has_or_had_tag = IDR
+			has_or_had_tag = JJK
+			has_or_had_tag = JLW
+			has_or_had_tag = JNG
+			has_or_had_tag = JPO
+			has_or_had_tag = KUT
+			has_or_had_tag = PLA
+			has_or_had_tag = PLT
+			has_or_had_tag = PNC
+			has_or_had_tag = RJR
+			has_or_had_tag = VLD
+			has_or_had_tag = WRG
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# tolerance_own = 1
+}
+
+abm_bgl_guj_ashapura_mata = {
+	age = age_4_reformation
+	icon = bgl_guj_ashapura_mata
+	potential = {
+		OR = {
+			has_or_had_tag = BGL
+			has_or_had_tag = BHD
+			has_or_had_tag = HNV
+			has_or_had_tag = IDR
+			has_or_had_tag = JJK
+			has_or_had_tag = JLW
+			has_or_had_tag = JNG
+			has_or_had_tag = JPO
+			has_or_had_tag = KUT
+			has_or_had_tag = PLA
+			has_or_had_tag = PLT
+			has_or_had_tag = PNC
+			has_or_had_tag = RJR
+			has_or_had_tag = VLD
+			has_or_had_tag = WRG
+		}
+	}
+
+	requires = abm_bgl_guj_protect_dwarkadhish_temple
 
 	# legitimacy = 1
 	# devotion = 1
@@ -3529,9 +3530,9 @@ abm_gujarati_ideas_guj_ashapura_mata = {
 	# horde_unity = 1
 }
 
-abm_gujarati_ideas_guj_african_trade = {
+abm_bgl_guj_african_trade = {
 	age = age_5_absolutism
-	icon = gujarati_ideas_guj_african_trade
+	icon = bgl_guj_african_trade
 	potential = {
 		OR = {
 			has_or_had_tag = BGL
@@ -3557,9 +3558,9 @@ abm_gujarati_ideas_guj_african_trade = {
 	# trade_range_modifier = 0.2
 }
 
-abm_gujarati_ideas_ambition = {
+abm_bgl_ambition = {
 	age = age_6_revolutions
-	icon = gujarati_ideas_ambition
+	icon = bgl_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = BGL
@@ -3580,15 +3581,15 @@ abm_gujarati_ideas_ambition = {
 		}
 	}
 
-	requires = abm_gujarati_ideas_guj_african_trade
+	requires = abm_bgl_guj_african_trade
 
 	# trade_efficiency = 0.1
 }
 
 # indian_muslim_ideas
-abm_indian_muslim_ideas_traditions_1 = {
+abm_alu_traditions_1 = {
 	age = age_1_traditions
-	icon = indian_muslim_ideas_traditions_1
+	icon = alu_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = ALU
@@ -3609,9 +3610,9 @@ abm_indian_muslim_ideas_traditions_1 = {
 	# cavalry_cost = -0.1
 }
 
-abm_indian_muslim_ideas_traditions_2 = {
+abm_alu_traditions_2 = {
 	age = age_1_traditions
-	icon = indian_muslim_ideas_traditions_2
+	icon = alu_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = ALU
@@ -3627,14 +3628,14 @@ abm_indian_muslim_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_indian_muslim_ideas_traditions_1
+	requires = abm_alu_traditions_1
 
 	# cavalry_power = 0.1
 }
 
-abm_indian_muslim_ideas_tolerate_idol_worshippers_i = {
+abm_alu_tolerate_idol_worshippers_i = {
 	age = age_2_renaissance
-	icon = indian_muslim_ideas_tolerate_idol_worshippers_i
+	icon = alu_tolerate_idol_worshippers_i
 	potential = {
 		OR = {
 			has_or_had_tag = ALU
@@ -3655,9 +3656,9 @@ abm_indian_muslim_ideas_tolerate_idol_worshippers_i = {
 	# religious_unity = 0.50
 }
 
-abm_indian_muslim_ideas_persian_court = {
+abm_alu_persian_court = {
 	age = age_2_renaissance
-	icon = indian_muslim_ideas_persian_court
+	icon = alu_persian_court
 	potential = {
 		OR = {
 			has_or_had_tag = ALU
@@ -3673,60 +3674,14 @@ abm_indian_muslim_ideas_persian_court = {
 		}
 	}
 
-	requires = abm_indian_muslim_ideas_tolerate_idol_worshippers_i
+	requires = abm_alu_tolerate_idol_worshippers_i
 
 	# global_unrest = -1
 }
 
-abm_indian_muslim_ideas_comphrehensive_land_survey = {
-	age = age_2_renaissance
-	icon = indian_muslim_ideas_comphrehensive_land_survey
-	potential = {
-		OR = {
-			has_or_had_tag = ALU
-			has_or_had_tag = BAD
-			has_or_had_tag = CBH
-			has_or_had_tag = GHL
-			has_or_had_tag = KDU
-			has_or_had_tag = KLI
-			has_or_had_tag = KLU
-			has_or_had_tag = KSH
-			has_or_had_tag = MAU
-			has_or_had_tag = SWT
-		}
-	}
-
-	requires = abm_indian_muslim_ideas_persian_court
-
-	# global_tax_modifier = 0.10
-}
-
-abm_indian_muslim_ideas_counting_the_people = {
-	age = age_2_renaissance
-	icon = indian_muslim_ideas_counting_the_people
-	potential = {
-		OR = {
-			has_or_had_tag = ALU
-			has_or_had_tag = BAD
-			has_or_had_tag = CBH
-			has_or_had_tag = GHL
-			has_or_had_tag = KDU
-			has_or_had_tag = KLI
-			has_or_had_tag = KLU
-			has_or_had_tag = KSH
-			has_or_had_tag = MAU
-			has_or_had_tag = SWT
-		}
-	}
-
-	requires = abm_indian_muslim_ideas_comphrehensive_land_survey
-
-	# global_manpower_modifier = 0.10
-}
-
-abm_indian_muslim_ideas_equality_under_law = {
+abm_alu_comphrehensive_land_survey = {
 	age = age_3_discovery
-	icon = indian_muslim_ideas_equality_under_law
+	icon = alu_comphrehensive_land_survey
 	potential = {
 		OR = {
 			has_or_had_tag = ALU
@@ -3744,12 +3699,12 @@ abm_indian_muslim_ideas_equality_under_law = {
 
 	requires = military_traditions
 
-	# global_trade_power = 0.1
+	# global_tax_modifier = 0.10
 }
 
-abm_indian_muslim_ideas_high_court_culture = {
+abm_alu_counting_the_people = {
 	age = age_3_discovery
-	icon = indian_muslim_ideas_high_court_culture
+	icon = alu_counting_the_people
 	potential = {
 		OR = {
 			has_or_had_tag = ALU
@@ -3765,14 +3720,60 @@ abm_indian_muslim_ideas_high_court_culture = {
 		}
 	}
 
-	requires = abm_indian_muslim_ideas_equality_under_law
+	requires = abm_alu_comphrehensive_land_survey
+
+	# global_manpower_modifier = 0.10
+}
+
+abm_alu_equality_under_law = {
+	age = age_4_reformation
+	icon = alu_equality_under_law
+	potential = {
+		OR = {
+			has_or_had_tag = ALU
+			has_or_had_tag = BAD
+			has_or_had_tag = CBH
+			has_or_had_tag = GHL
+			has_or_had_tag = KDU
+			has_or_had_tag = KLI
+			has_or_had_tag = KLU
+			has_or_had_tag = KSH
+			has_or_had_tag = MAU
+			has_or_had_tag = SWT
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# global_trade_power = 0.1
+}
+
+abm_alu_high_court_culture = {
+	age = age_4_reformation
+	icon = alu_high_court_culture
+	potential = {
+		OR = {
+			has_or_had_tag = ALU
+			has_or_had_tag = BAD
+			has_or_had_tag = CBH
+			has_or_had_tag = GHL
+			has_or_had_tag = KDU
+			has_or_had_tag = KLI
+			has_or_had_tag = KLU
+			has_or_had_tag = KSH
+			has_or_had_tag = MAU
+			has_or_had_tag = SWT
+		}
+	}
+
+	requires = abm_alu_equality_under_law
 
 	# prestige = 1
 }
 
-abm_indian_muslim_ideas_sultanate_bureaucracy = {
+abm_alu_sultanate_bureaucracy = {
 	age = age_5_absolutism
-	icon = indian_muslim_ideas_sultanate_bureaucracy
+	icon = alu_sultanate_bureaucracy
 	potential = {
 		OR = {
 			has_or_had_tag = ALU
@@ -3793,9 +3794,9 @@ abm_indian_muslim_ideas_sultanate_bureaucracy = {
 	# stability_cost_modifier = -0.1
 }
 
-abm_indian_muslim_ideas_ambition = {
+abm_alu_ambition = {
 	age = age_6_revolutions
-	icon = indian_muslim_ideas_ambition
+	icon = alu_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = ALU
@@ -3811,15 +3812,15 @@ abm_indian_muslim_ideas_ambition = {
 		}
 	}
 
-	requires = abm_indian_muslim_ideas_sultanate_bureaucracy
+	requires = abm_alu_sultanate_bureaucracy
 
 	# infantry_power = 0.1
 }
 
 # malabari_ideas
-abm_malabari_ideas_traditions_1 = {
+abm_klt_traditions_1 = {
 	age = age_1_traditions
-	icon = malabari_ideas_traditions_1
+	icon = klt_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = KLT
@@ -3835,9 +3836,9 @@ abm_malabari_ideas_traditions_1 = {
 	# global_trade_goods_size_modifier = 0.1
 }
 
-abm_malabari_ideas_traditions_2 = {
+abm_klt_traditions_2 = {
 	age = age_1_traditions
-	icon = malabari_ideas_traditions_2
+	icon = klt_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = KLT
@@ -3848,14 +3849,14 @@ abm_malabari_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_malabari_ideas_traditions_1
+	requires = abm_klt_traditions_1
 
 	# merc_maintenance_modifier = -0.15
 }
 
-abm_malabari_ideas_merchants_of_southern_india = {
+abm_klt_merchants_of_southern_india = {
 	age = age_2_renaissance
-	icon = malabari_ideas_merchants_of_southern_india
+	icon = klt_merchants_of_southern_india
 	potential = {
 		OR = {
 			has_or_had_tag = KLT
@@ -3871,9 +3872,9 @@ abm_malabari_ideas_merchants_of_southern_india = {
 	# no_eu4_modifier = none
 }
 
-abm_malabari_ideas_malabari_cultural_melting_pot = {
+abm_klt_malabari_cultural_melting_pot = {
 	age = age_2_renaissance
-	icon = malabari_ideas_malabari_cultural_melting_pot
+	icon = klt_malabari_cultural_melting_pot
 	potential = {
 		OR = {
 			has_or_had_tag = KLT
@@ -3884,50 +3885,14 @@ abm_malabari_ideas_malabari_cultural_melting_pot = {
 		}
 	}
 
-	requires = abm_malabari_ideas_merchants_of_southern_india
+	requires = abm_klt_merchants_of_southern_india
 
 	# advisor_cost = -0.1
 }
 
-abm_malabari_ideas_malabari_kerala_school = {
-	age = age_2_renaissance
-	icon = malabari_ideas_malabari_kerala_school
-	potential = {
-		OR = {
-			has_or_had_tag = KLT
-			has_or_had_tag = MAB
-			has_or_had_tag = PDU
-			has_or_had_tag = VND
-			has_or_had_tag = ZMR
-		}
-	}
-
-	requires = abm_malabari_ideas_malabari_cultural_melting_pot
-
-	# technology_cost = -0.05
-}
-
-abm_malabari_ideas_malabari_trade_factors = {
-	age = age_2_renaissance
-	icon = malabari_ideas_malabari_trade_factors
-	potential = {
-		OR = {
-			has_or_had_tag = KLT
-			has_or_had_tag = MAB
-			has_or_had_tag = PDU
-			has_or_had_tag = VND
-			has_or_had_tag = ZMR
-		}
-	}
-
-	requires = abm_malabari_ideas_malabari_kerala_school
-
-	# merchants = 1
-}
-
-abm_malabari_ideas_malabari_control_inland = {
+abm_klt_malabari_kerala_school = {
 	age = age_3_discovery
-	icon = malabari_ideas_malabari_control_inland
+	icon = klt_malabari_kerala_school
 	potential = {
 		OR = {
 			has_or_had_tag = KLT
@@ -3940,12 +3905,12 @@ abm_malabari_ideas_malabari_control_inland = {
 
 	requires = military_traditions
 
-	# global_prov_trade_power_modifier = 0.15
+	# technology_cost = -0.05
 }
 
-abm_malabari_ideas_malabari_mapilla_sailors = {
+abm_klt_malabari_trade_factors = {
 	age = age_3_discovery
-	icon = malabari_ideas_malabari_mapilla_sailors
+	icon = klt_malabari_trade_factors
 	potential = {
 		OR = {
 			has_or_had_tag = KLT
@@ -3956,14 +3921,50 @@ abm_malabari_ideas_malabari_mapilla_sailors = {
 		}
 	}
 
-	requires = abm_malabari_ideas_malabari_control_inland
+	requires = abm_klt_malabari_kerala_school
+
+	# merchants = 1
+}
+
+abm_klt_malabari_control_inland = {
+	age = age_4_reformation
+	icon = klt_malabari_control_inland
+	potential = {
+		OR = {
+			has_or_had_tag = KLT
+			has_or_had_tag = MAB
+			has_or_had_tag = PDU
+			has_or_had_tag = VND
+			has_or_had_tag = ZMR
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# global_prov_trade_power_modifier = 0.15
+}
+
+abm_klt_malabari_mapilla_sailors = {
+	age = age_4_reformation
+	icon = klt_malabari_mapilla_sailors
+	potential = {
+		OR = {
+			has_or_had_tag = KLT
+			has_or_had_tag = MAB
+			has_or_had_tag = PDU
+			has_or_had_tag = VND
+			has_or_had_tag = ZMR
+		}
+	}
+
+	requires = abm_klt_malabari_control_inland
 
 	# navy_tradition = 1
 }
 
-abm_malabari_ideas_malabari_land_of_elephants = {
+abm_klt_malabari_land_of_elephants = {
 	age = age_5_absolutism
-	icon = malabari_ideas_malabari_land_of_elephants
+	icon = klt_malabari_land_of_elephants
 	potential = {
 		OR = {
 			has_or_had_tag = KLT
@@ -3979,9 +3980,9 @@ abm_malabari_ideas_malabari_land_of_elephants = {
 	# global_unrest = -1
 }
 
-abm_malabari_ideas_ambition = {
+abm_klt_ambition = {
 	age = age_6_revolutions
-	icon = malabari_ideas_ambition
+	icon = klt_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = KLT
@@ -3992,15 +3993,15 @@ abm_malabari_ideas_ambition = {
 		}
 	}
 
-	requires = abm_malabari_ideas_malabari_land_of_elephants
+	requires = abm_klt_malabari_land_of_elephants
 
 	# global_trade_power = 0.1
 }
 
 # nepalese_minor_ideas
-abm_nepalese_minor_ideas_traditions_1 = {
+abm_goa_traditions_1 = {
 	age = age_1_traditions
-	icon = nepalese_minor_ideas_traditions_1
+	icon = goa_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = GOA
@@ -4014,9 +4015,9 @@ abm_nepalese_minor_ideas_traditions_1 = {
 	# land_morale = 0.10
 }
 
-abm_nepalese_minor_ideas_traditions_2 = {
+abm_goa_traditions_2 = {
 	age = age_1_traditions
-	icon = nepalese_minor_ideas_traditions_2
+	icon = goa_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = GOA
@@ -4025,14 +4026,14 @@ abm_nepalese_minor_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_nepalese_minor_ideas_traditions_1
+	requires = abm_goa_traditions_1
 
 	# manpower_recovery_speed = 0.1
 }
 
-abm_nepalese_minor_ideas_nep_construct_temples = {
+abm_goa_nep_construct_temples = {
 	age = age_2_renaissance
-	icon = nepalese_minor_ideas_nep_construct_temples
+	icon = goa_nep_construct_temples
 	potential = {
 		OR = {
 			has_or_had_tag = GOA
@@ -4046,9 +4047,9 @@ abm_nepalese_minor_ideas_nep_construct_temples = {
 	# build_cost = -0.1
 }
 
-abm_nepalese_minor_ideas_nep_kashmiri_traders = {
+abm_goa_nep_kashmiri_traders = {
 	age = age_2_renaissance
-	icon = nepalese_minor_ideas_nep_kashmiri_traders
+	icon = goa_nep_kashmiri_traders
 	potential = {
 		OR = {
 			has_or_had_tag = GOA
@@ -4057,46 +4058,14 @@ abm_nepalese_minor_ideas_nep_kashmiri_traders = {
 		}
 	}
 
-	requires = abm_nepalese_minor_ideas_nep_construct_temples
+	requires = abm_goa_nep_construct_temples
 
 	# merchants = 1
 }
 
-abm_nepalese_minor_ideas_nep_new_festivals = {
-	age = age_2_renaissance
-	icon = nepalese_minor_ideas_nep_new_festivals
-	potential = {
-		OR = {
-			has_or_had_tag = GOA
-			has_or_had_tag = KPL
-			has_or_had_tag = TKU
-		}
-	}
-
-	requires = abm_nepalese_minor_ideas_nep_kashmiri_traders
-
-	# tolerance_own = 1
-}
-
-abm_nepalese_minor_ideas_nep_kavindra = {
-	age = age_2_renaissance
-	icon = nepalese_minor_ideas_nep_kavindra
-	potential = {
-		OR = {
-			has_or_had_tag = GOA
-			has_or_had_tag = KPL
-			has_or_had_tag = TKU
-		}
-	}
-
-	requires = abm_nepalese_minor_ideas_nep_new_festivals
-
-	# prestige = 1
-}
-
-abm_nepalese_minor_ideas_nep_seize_mountain_passes = {
+abm_goa_nep_new_festivals = {
 	age = age_3_discovery
-	icon = nepalese_minor_ideas_nep_seize_mountain_passes
+	icon = goa_nep_new_festivals
 	potential = {
 		OR = {
 			has_or_had_tag = GOA
@@ -4107,12 +4076,12 @@ abm_nepalese_minor_ideas_nep_seize_mountain_passes = {
 
 	requires = military_traditions
 
-	# defensiveness = 0.15
+	# tolerance_own = 1
 }
 
-abm_nepalese_minor_ideas_nep_judicial_reforms = {
+abm_goa_nep_kavindra = {
 	age = age_3_discovery
-	icon = nepalese_minor_ideas_nep_judicial_reforms
+	icon = goa_nep_kavindra
 	potential = {
 		OR = {
 			has_or_had_tag = GOA
@@ -4121,14 +4090,46 @@ abm_nepalese_minor_ideas_nep_judicial_reforms = {
 		}
 	}
 
-	requires = abm_nepalese_minor_ideas_nep_seize_mountain_passes
+	requires = abm_goa_nep_new_festivals
+
+	# prestige = 1
+}
+
+abm_goa_nep_seize_mountain_passes = {
+	age = age_4_reformation
+	icon = goa_nep_seize_mountain_passes
+	potential = {
+		OR = {
+			has_or_had_tag = GOA
+			has_or_had_tag = KPL
+			has_or_had_tag = TKU
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# defensiveness = 0.15
+}
+
+abm_goa_nep_judicial_reforms = {
+	age = age_4_reformation
+	icon = goa_nep_judicial_reforms
+	potential = {
+		OR = {
+			has_or_had_tag = GOA
+			has_or_had_tag = KPL
+			has_or_had_tag = TKU
+		}
+	}
+
+	requires = abm_goa_nep_seize_mountain_passes
 
 	# stability_cost_modifier = -0.1
 }
 
-abm_nepalese_minor_ideas_nep_end_division_of_domains = {
+abm_goa_nep_end_division_of_domains = {
 	age = age_5_absolutism
-	icon = nepalese_minor_ideas_nep_end_division_of_domains
+	icon = goa_nep_end_division_of_domains
 	potential = {
 		OR = {
 			has_or_had_tag = GOA
@@ -4142,9 +4143,9 @@ abm_nepalese_minor_ideas_nep_end_division_of_domains = {
 	# global_autonomy = -0.05
 }
 
-abm_nepalese_minor_ideas_ambition = {
+abm_goa_ambition = {
 	age = age_6_revolutions
-	icon = nepalese_minor_ideas_ambition
+	icon = goa_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = GOA
@@ -4153,15 +4154,15 @@ abm_nepalese_minor_ideas_ambition = {
 		}
 	}
 
-	requires = abm_nepalese_minor_ideas_nep_end_division_of_domains
+	requires = abm_goa_nep_end_division_of_domains
 
 	# infantry_power = 0.1
 }
 
 # rajput_ideas
-abm_rajput_ideas_traditions_1 = {
+abm_drw_traditions_1 = {
 	age = age_1_traditions
-	icon = rajput_ideas_traditions_1
+	icon = drw_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = DRW
@@ -4177,9 +4178,9 @@ abm_rajput_ideas_traditions_1 = {
 	# diplomatic_reputation = 1
 }
 
-abm_rajput_ideas_traditions_2 = {
+abm_drw_traditions_2 = {
 	age = age_1_traditions
-	icon = rajput_ideas_traditions_2
+	icon = drw_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = DRW
@@ -4190,14 +4191,14 @@ abm_rajput_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_rajput_ideas_traditions_1
+	requires = abm_drw_traditions_1
 
 	# manpower_recovery_speed = 0.1
 }
 
-abm_rajput_ideas_clan_loyalties = {
+abm_drw_clan_loyalties = {
 	age = age_2_renaissance
-	icon = rajput_ideas_clan_loyalties
+	icon = drw_clan_loyalties
 	potential = {
 		OR = {
 			has_or_had_tag = DRW
@@ -4213,9 +4214,9 @@ abm_rajput_ideas_clan_loyalties = {
 	# global_manpower_modifier = 0.15
 }
 
-abm_rajput_ideas_fortifying_rajputana = {
+abm_drw_fortifying_rajputana = {
 	age = age_2_renaissance
-	icon = rajput_ideas_fortifying_rajputana
+	icon = drw_fortifying_rajputana
 	potential = {
 		OR = {
 			has_or_had_tag = DRW
@@ -4226,50 +4227,14 @@ abm_rajput_ideas_fortifying_rajputana = {
 		}
 	}
 
-	requires = abm_rajput_ideas_clan_loyalties
+	requires = abm_drw_clan_loyalties
 
 	# defensiveness = 0.15
 }
 
-abm_rajput_ideas_marwari_horses = {
-	age = age_2_renaissance
-	icon = rajput_ideas_marwari_horses
-	potential = {
-		OR = {
-			has_or_had_tag = DRW
-			has_or_had_tag = HAD
-			has_or_had_tag = JSL
-			has_or_had_tag = MRW
-			has_or_had_tag = PNA
-		}
-	}
-
-	requires = abm_rajput_ideas_fortifying_rajputana
-
-	# no_eu4_modifier = none
-}
-
-abm_rajput_ideas_rajput_resistance = {
-	age = age_2_renaissance
-	icon = rajput_ideas_rajput_resistance
-	potential = {
-		OR = {
-			has_or_had_tag = DRW
-			has_or_had_tag = HAD
-			has_or_had_tag = JSL
-			has_or_had_tag = MRW
-			has_or_had_tag = PNA
-		}
-	}
-
-	requires = abm_rajput_ideas_marwari_horses
-
-	# war_exhaustion = -0.03
-}
-
-abm_rajput_ideas_rajput_painting_school = {
+abm_drw_marwari_horses = {
 	age = age_3_discovery
-	icon = rajput_ideas_rajput_painting_school
+	icon = drw_marwari_horses
 	potential = {
 		OR = {
 			has_or_had_tag = DRW
@@ -4282,12 +4247,12 @@ abm_rajput_ideas_rajput_painting_school = {
 
 	requires = military_traditions
 
-	# prestige = 1
+	# no_eu4_modifier = none
 }
 
-abm_rajput_ideas_rajput_martial_ethos = {
+abm_drw_rajput_resistance = {
 	age = age_3_discovery
-	icon = rajput_ideas_rajput_martial_ethos
+	icon = drw_rajput_resistance
 	potential = {
 		OR = {
 			has_or_had_tag = DRW
@@ -4298,14 +4263,50 @@ abm_rajput_ideas_rajput_martial_ethos = {
 		}
 	}
 
-	requires = abm_rajput_ideas_rajput_painting_school
+	requires = abm_drw_marwari_horses
+
+	# war_exhaustion = -0.03
+}
+
+abm_drw_rajput_painting_school = {
+	age = age_4_reformation
+	icon = drw_rajput_painting_school
+	potential = {
+		OR = {
+			has_or_had_tag = DRW
+			has_or_had_tag = HAD
+			has_or_had_tag = JSL
+			has_or_had_tag = MRW
+			has_or_had_tag = PNA
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# prestige = 1
+}
+
+abm_drw_rajput_martial_ethos = {
+	age = age_4_reformation
+	icon = drw_rajput_martial_ethos
+	potential = {
+		OR = {
+			has_or_had_tag = DRW
+			has_or_had_tag = HAD
+			has_or_had_tag = JSL
+			has_or_had_tag = MRW
+			has_or_had_tag = PNA
+		}
+	}
+
+	requires = abm_drw_rajput_painting_school
 
 	# leader_land_fire = 1
 }
 
-abm_rajput_ideas_marwari_trading_houses = {
+abm_drw_marwari_trading_houses = {
 	age = age_5_absolutism
-	icon = rajput_ideas_marwari_trading_houses
+	icon = drw_marwari_trading_houses
 	potential = {
 		OR = {
 			has_or_had_tag = DRW
@@ -4321,9 +4322,9 @@ abm_rajput_ideas_marwari_trading_houses = {
 	# trade_efficiency = 0.10
 }
 
-abm_rajput_ideas_ambition = {
+abm_drw_ambition = {
 	age = age_6_revolutions
-	icon = rajput_ideas_ambition
+	icon = drw_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = DRW
@@ -4334,15 +4335,15 @@ abm_rajput_ideas_ambition = {
 		}
 	}
 
-	requires = abm_rajput_ideas_marwari_trading_houses
+	requires = abm_drw_marwari_trading_houses
 
 	# discipline = 0.05
 }
 
 # telugu_ideas
-abm_telugu_ideas_traditions_1 = {
+abm_bgr_traditions_1 = {
 	age = age_1_traditions
-	icon = telugu_ideas_traditions_1
+	icon = bgr_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = BGR
@@ -4355,9 +4356,9 @@ abm_telugu_ideas_traditions_1 = {
 	# defensiveness = 0.2
 }
 
-abm_telugu_ideas_traditions_2 = {
+abm_bgr_traditions_2 = {
 	age = age_1_traditions
-	icon = telugu_ideas_traditions_2
+	icon = bgr_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = BGR
@@ -4365,14 +4366,14 @@ abm_telugu_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_telugu_ideas_traditions_1
+	requires = abm_bgr_traditions_1
 
 	# merc_maintenance_modifier = -0.15
 }
 
-abm_telugu_ideas_yor_patronize_telugu_literature = {
+abm_bgr_yor_patronize_telugu_literature = {
 	age = age_2_renaissance
-	icon = telugu_ideas_yor_patronize_telugu_literature
+	icon = bgr_yor_patronize_telugu_literature
 	potential = {
 		OR = {
 			has_or_had_tag = BGR
@@ -4385,9 +4386,9 @@ abm_telugu_ideas_yor_patronize_telugu_literature = {
 	# prestige = 1
 }
 
-abm_telugu_ideas_yor_telugu_warrior_aristocrats = {
+abm_bgr_yor_telugu_warrior_aristocrats = {
 	age = age_2_renaissance
-	icon = telugu_ideas_yor_telugu_warrior_aristocrats
+	icon = bgr_yor_telugu_warrior_aristocrats
 	potential = {
 		OR = {
 			has_or_had_tag = BGR
@@ -4395,44 +4396,14 @@ abm_telugu_ideas_yor_telugu_warrior_aristocrats = {
 		}
 	}
 
-	requires = abm_telugu_ideas_yor_patronize_telugu_literature
+	requires = abm_bgr_yor_patronize_telugu_literature
 
 	# army_tradition = 0.5
 }
 
-abm_telugu_ideas_yor_kakatiya_legacy = {
-	age = age_2_renaissance
-	icon = telugu_ideas_yor_kakatiya_legacy
-	potential = {
-		OR = {
-			has_or_had_tag = BGR
-			has_or_had_tag = YDR
-		}
-	}
-
-	requires = abm_telugu_ideas_yor_telugu_warrior_aristocrats
-
-	# global_tax_modifier = 0.1
-}
-
-abm_telugu_ideas_yor_great_forts_of_the_east = {
-	age = age_2_renaissance
-	icon = telugu_ideas_yor_great_forts_of_the_east
-	potential = {
-		OR = {
-			has_or_had_tag = BGR
-			has_or_had_tag = YDR
-		}
-	}
-
-	requires = abm_telugu_ideas_yor_kakatiya_legacy
-
-	# fort_maintenance_modifier = -0.15
-}
-
-abm_telugu_ideas_yor_legend_of_prataparudra = {
+abm_bgr_yor_kakatiya_legacy = {
 	age = age_3_discovery
-	icon = telugu_ideas_yor_legend_of_prataparudra
+	icon = bgr_yor_kakatiya_legacy
 	potential = {
 		OR = {
 			has_or_had_tag = BGR
@@ -4442,16 +4413,12 @@ abm_telugu_ideas_yor_legend_of_prataparudra = {
 
 	requires = military_traditions
 
-	# legitimacy = 1
-	# devotion = 1
-	# republican_tradition = 0.3
-	# meritocracy = 1
-	# horde_unity = 1
+	# global_tax_modifier = 0.1
 }
 
-abm_telugu_ideas_yor_diamond_mines_of_kollur = {
+abm_bgr_yor_great_forts_of_the_east = {
 	age = age_3_discovery
-	icon = telugu_ideas_yor_diamond_mines_of_kollur
+	icon = bgr_yor_great_forts_of_the_east
 	potential = {
 		OR = {
 			has_or_had_tag = BGR
@@ -4459,14 +4426,48 @@ abm_telugu_ideas_yor_diamond_mines_of_kollur = {
 		}
 	}
 
-	requires = abm_telugu_ideas_yor_legend_of_prataparudra
+	requires = abm_bgr_yor_kakatiya_legacy
+
+	# fort_maintenance_modifier = -0.15
+}
+
+abm_bgr_yor_legend_of_prataparudra = {
+	age = age_4_reformation
+	icon = bgr_yor_legend_of_prataparudra
+	potential = {
+		OR = {
+			has_or_had_tag = BGR
+			has_or_had_tag = YDR
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+}
+
+abm_bgr_yor_diamond_mines_of_kollur = {
+	age = age_4_reformation
+	icon = bgr_yor_diamond_mines_of_kollur
+	potential = {
+		OR = {
+			has_or_had_tag = BGR
+			has_or_had_tag = YDR
+		}
+	}
+
+	requires = abm_bgr_yor_legend_of_prataparudra
 
 	# production_efficiency = 0.1
 }
 
-abm_telugu_ideas_yor_encourage_coromandel_trade = {
+abm_bgr_yor_encourage_coromandel_trade = {
 	age = age_5_absolutism
-	icon = telugu_ideas_yor_encourage_coromandel_trade
+	icon = bgr_yor_encourage_coromandel_trade
 	potential = {
 		OR = {
 			has_or_had_tag = BGR
@@ -4479,9 +4480,9 @@ abm_telugu_ideas_yor_encourage_coromandel_trade = {
 	# global_own_trade_power = 0.1
 }
 
-abm_telugu_ideas_ambition = {
+abm_bgr_ambition = {
 	age = age_6_revolutions
-	icon = telugu_ideas_ambition
+	icon = bgr_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = BGR
@@ -4489,15 +4490,15 @@ abm_telugu_ideas_ambition = {
 		}
 	}
 
-	requires = abm_telugu_ideas_yor_encourage_coromandel_trade
+	requires = abm_bgr_yor_encourage_coromandel_trade
 
 	# global_manpower_modifier = 0.1
 }
 
 # vindhyan_ideas
-abm_vindhyan_ideas_traditions_1 = {
+abm_bgk_traditions_1 = {
 	age = age_1_traditions
-	icon = vindhyan_ideas_traditions_1
+	icon = bgk_traditions_1
 	potential = {
 		OR = {
 			has_or_had_tag = BGK
@@ -4510,9 +4511,9 @@ abm_vindhyan_ideas_traditions_1 = {
 	# num_accepted_cultures = 1
 }
 
-abm_vindhyan_ideas_traditions_2 = {
+abm_bgk_traditions_2 = {
 	age = age_1_traditions
-	icon = vindhyan_ideas_traditions_2
+	icon = bgk_traditions_2
 	potential = {
 		OR = {
 			has_or_had_tag = BGK
@@ -4520,14 +4521,14 @@ abm_vindhyan_ideas_traditions_2 = {
 		}
 	}
 
-	requires = abm_vindhyan_ideas_traditions_1
+	requires = abm_bgk_traditions_1
 
 	# fort_maintenance_modifier = -0.2
 }
 
-abm_vindhyan_ideas_bundelkhandi_rajput_connections = {
+abm_bgk_bundelkhandi_rajput_connections = {
 	age = age_2_renaissance
-	icon = vindhyan_ideas_bundelkhandi_rajput_connections
+	icon = bgk_bundelkhandi_rajput_connections
 	potential = {
 		OR = {
 			has_or_had_tag = BGK
@@ -4540,9 +4541,9 @@ abm_vindhyan_ideas_bundelkhandi_rajput_connections = {
 	# diplomatic_reputation = 1
 }
 
-abm_vindhyan_ideas_forts_of_bundelkhand = {
+abm_bgk_forts_of_bundelkhand = {
 	age = age_2_renaissance
-	icon = vindhyan_ideas_forts_of_bundelkhand
+	icon = bgk_forts_of_bundelkhand
 	potential = {
 		OR = {
 			has_or_had_tag = BGK
@@ -4550,44 +4551,14 @@ abm_vindhyan_ideas_forts_of_bundelkhand = {
 		}
 	}
 
-	requires = abm_vindhyan_ideas_bundelkhandi_rajput_connections
+	requires = abm_bgk_bundelkhandi_rajput_connections
 
 	# defensiveness = 0.15
 }
 
-abm_vindhyan_ideas_bundelkhandi_sacred_land = {
-	age = age_2_renaissance
-	icon = vindhyan_ideas_bundelkhandi_sacred_land
-	potential = {
-		OR = {
-			has_or_had_tag = BGK
-			has_or_had_tag = BND
-		}
-	}
-
-	requires = abm_vindhyan_ideas_forts_of_bundelkhand
-
-	# tolerance_own = 1
-}
-
-abm_vindhyan_ideas_bundeli_kalam = {
-	age = age_2_renaissance
-	icon = vindhyan_ideas_bundeli_kalam
-	potential = {
-		OR = {
-			has_or_had_tag = BGK
-			has_or_had_tag = BND
-		}
-	}
-
-	requires = abm_vindhyan_ideas_bundelkhandi_sacred_land
-
-	# prestige = 1
-}
-
-abm_vindhyan_ideas_untamed_bundelkhand = {
+abm_bgk_bundelkhandi_sacred_land = {
 	age = age_3_discovery
-	icon = vindhyan_ideas_untamed_bundelkhand
+	icon = bgk_bundelkhandi_sacred_land
 	potential = {
 		OR = {
 			has_or_had_tag = BGK
@@ -4597,12 +4568,12 @@ abm_vindhyan_ideas_untamed_bundelkhand = {
 
 	requires = military_traditions
 
-	# hostile_attrition = 1
+	# tolerance_own = 1
 }
 
-abm_vindhyan_ideas_bundelkhandi_diamonds = {
+abm_bgk_bundeli_kalam = {
 	age = age_3_discovery
-	icon = vindhyan_ideas_bundelkhandi_diamonds
+	icon = bgk_bundeli_kalam
 	potential = {
 		OR = {
 			has_or_had_tag = BGK
@@ -4610,14 +4581,44 @@ abm_vindhyan_ideas_bundelkhandi_diamonds = {
 		}
 	}
 
-	requires = abm_vindhyan_ideas_untamed_bundelkhand
+	requires = abm_bgk_bundelkhandi_sacred_land
+
+	# prestige = 1
+}
+
+abm_bgk_untamed_bundelkhand = {
+	age = age_4_reformation
+	icon = bgk_untamed_bundelkhand
+	potential = {
+		OR = {
+			has_or_had_tag = BGK
+			has_or_had_tag = BND
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# hostile_attrition = 1
+}
+
+abm_bgk_bundelkhandi_diamonds = {
+	age = age_4_reformation
+	icon = bgk_bundelkhandi_diamonds
+	potential = {
+		OR = {
+			has_or_had_tag = BGK
+			has_or_had_tag = BND
+		}
+	}
+
+	requires = abm_bgk_untamed_bundelkhand
 
 	# trade_efficiency = 0.1
 }
 
-abm_vindhyan_ideas_candella_legacy = {
+abm_bgk_candella_legacy = {
 	age = age_5_absolutism
-	icon = vindhyan_ideas_candella_legacy
+	icon = bgk_candella_legacy
 	potential = {
 		OR = {
 			has_or_had_tag = BGK
@@ -4634,9 +4635,9 @@ abm_vindhyan_ideas_candella_legacy = {
 	# horde_unity = 1
 }
 
-abm_vindhyan_ideas_ambition = {
+abm_bgk_ambition = {
 	age = age_6_revolutions
-	icon = vindhyan_ideas_ambition
+	icon = bgk_ambition
 	potential = {
 		OR = {
 			has_or_had_tag = BGK
@@ -4644,7 +4645,7 @@ abm_vindhyan_ideas_ambition = {
 		}
 	}
 
-	requires = abm_vindhyan_ideas_candella_legacy
+	requires = abm_bgk_candella_legacy
 
 	# cavalry_power = 0.10
 }
