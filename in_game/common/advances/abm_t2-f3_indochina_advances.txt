@@ -1547,3 +1547,116 @@ abm_mlc_ideas_ambition = {
 
     # merchants = 1
 }
+
+# Malayan Sultanate
+# malayan_ideas
+abm_malayan_idea_traditions_1 = {
+    age = age_1_traditions
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = coastal_trade_routes_advance
+
+    # trade_steering = 0.1
+}
+
+abm_malayan_idea_traditions_2 = {
+    age = age_1_traditions
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = ship_building_advance
+
+    # global_ship_cost = -0.1
+}
+
+abm_malayan_indian_ocean_trade = {
+    age = age_2_renaissance
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = abm_malayan_idea_traditions_1
+
+    # merchants = 1
+}
+
+abm_malayan_sufi_legacy = {
+    age = age_2_renaissance
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = abm_malayan_indian_ocean_trade
+
+    # tolerance_heathen = 2
+}
+
+abm_malayan_mal_spice_islands = {
+    age = age_3_discovery
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = abm_malayan_sufi_legacy
+
+    # production_efficiency = 0.1
+}
+
+abm_malayan_classical_malay = {
+    age = age_3_discovery
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = abm_malayan_mal_spice_islands
+
+    # idea_cost = -0.05
+}
+
+abm_malayan_trading_fleets = {
+    age = age_4_reformation
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = abm_malayan_classical_malay
+
+    # naval_maintenance_modifier = -0.2
+    # sailor_maintenance_modifer = -0.1
+}
+
+abm_malayan_heirs_of_pasai = {
+    age = age_4_reformation
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = abm_malayan_trading_fleets
+
+    # prestige = 1
+}
+
+abm_malayan_settle_the_islands = {
+    age = age_4_reformation
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = abm_malayan_heirs_of_pasai
+
+    # global_colonial_growth = 20
+}
+
+abm_malayan_idea_ambition = {
+    age = age_6_revolutions
+    potential = {
+        has_or_had_tag = KED
+    }
+
+    requires = imperial_ambitions
+
+    # naval_tradition_from_battle = 0.5
+}
