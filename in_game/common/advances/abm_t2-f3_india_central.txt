@@ -645,3 +645,179 @@ abm_vindhyan_ideas_ambition = {
 
 	# cavalry_power = 0.10
 }
+
+
+# Garjat - revisit
+abm_garjati_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = kja_traditions_1
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = feudalism_advance
+
+	# global_tax_modifier = 0.1
+}
+
+abm_garjati_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = kja_traditions_2
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = abm_garjati_ideas_tradition_1
+
+	# fort_maintenance_modifier = -0.15
+}
+
+abm_securing_defenses_central_indic = {
+	age = age_2_renaissance
+	icon = kja_securing_defenses_central_indic
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = renaissance_thought
+
+	# no_eu4_modifier = none
+}
+
+abm_garjati_ancient_mandalas = {
+	age = age_2_renaissance
+	icon = kja_garjati_ancient_mandalas
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = abm_securing_defenses_central_indic
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+}
+
+abm_garjati_tribal_feudatories = {
+	age = age_3_discovery
+	icon = kja_garjati_tribal_feudatories
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = military_traditions
+
+	# global_manpower_modifier = 0.15
+}
+
+abm_garjati_extend_tanks_and_reservoirs = {
+	age = age_3_discovery
+	icon = kja_garjati_extend_tanks_and_reservoirs
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = abm_garjati_tribal_feudatories
+
+	# development_cost = -0.1
+}
+
+abm_garjati_jungle_warfare = {
+	age = age_4_reformation
+	icon = kja_garjati_jungle_warfare
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# infantry_power = 0.1
+}
+
+abm_garjati_jagannath_cult = {
+	age = age_4_reformation
+	icon = kja_garjati_jagannath_cult
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = abm_garjati_jungle_warfare
+
+	# tolerance_own = 2
+}
+
+abm_garjati_patronize_economic_growth = {
+	age = age_5_absolutism
+	icon = kja_garjati_patronize_economic_growth
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = absolutist_court
+
+	# global_trade_goods_size_modifier = 0.1
+}
+
+abm_garjati_ideas_ambition = {
+	age = age_6_revolutions
+	icon = kja_ambition
+	potential = {
+		OR = {
+			has_or_had_tag = KJA
+			has_or_had_tag = KLH
+			has_or_had_tag = PTN
+			has_or_had_tag = SRG
+		}
+	}
+
+	requires = abm_garjati_patronize_economic_growth
+
+	# stability_cost_modifier = -0.1
+}
