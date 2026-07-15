@@ -6,7 +6,7 @@
 # FORMABLES
 
 # NAG_ideas
-# Nagar (NAG), Narsinghpur (NRS)
+# Nagar (NAG)
 abm_nag_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = nag_traditions_1
@@ -17,6 +17,7 @@ abm_nag_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# ae_impact = -0.15
+	antagonism_received_modifier = -0.15
 }
 
 abm_nag_ideas_tradition_2 = {
@@ -29,6 +30,7 @@ abm_nag_ideas_tradition_2 = {
 	requires = abm_nag_ideas_tradition_1
 
 	# land_morale = 0.15
+	land_morale = 0.10
 }
 
 abm_nag_unite_gonds_and_garjats = {
@@ -41,6 +43,7 @@ abm_nag_unite_gonds_and_garjats = {
 	requires = renaissance_thought
 
 	# global_unrest = -2
+	pop_join_rebel_threshold = -0.05
 }
 
 abm_nag_harsh_terrain = {
@@ -53,6 +56,7 @@ abm_nag_harsh_terrain = {
 	requires = abm_nag_unite_gonds_and_garjats
 
 	# leader_land_manuever = 1
+	army_movement_speed = 0.1
 }
 
 abm_nag_send_for_artisans = {
@@ -65,6 +69,7 @@ abm_nag_send_for_artisans = {
 	requires = military_traditions
 
 	# build_cost = -0.1
+	global_build_buildings_efficiency = 0.10
 }
 
 abm_nag_invite_maratha_warriors = {
@@ -77,6 +82,7 @@ abm_nag_invite_maratha_warriors = {
 	requires = abm_nag_send_for_artisans
 
 	# army_tradition = 0.5
+	monthly_army_tradition = 0.05
 }
 
 abm_nag_light_cav = {
@@ -89,6 +95,7 @@ abm_nag_light_cav = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# shock_damage = 0.1
+	army_light_cavalry_power = 0.10
 }
 
 abm_nag_cultivating_the_forest = {
@@ -101,6 +108,7 @@ abm_nag_cultivating_the_forest = {
 	requires = abm_nag_light_cav
 
 	# production_efficiency = 0.1
+	global_production_efficiency = medium_production_efficiency_bonus
 }
 
 abm_nag_no_cb_best_cb = {
@@ -114,6 +122,8 @@ abm_nag_no_cb_best_cb = {
 
 	# stability_cost_to_declare_war = -1
 	# unjustified_demands = -0.15
+	declaring_war_cost_modifier = -0.10
+	global_war_score_efficiency = 0.15
 }
 
 abm_nag_ideas_ambition = {
@@ -126,6 +136,7 @@ abm_nag_ideas_ambition = {
 	requires = abm_nag_no_cb_best_cb
 
 	# overextension_impact_modifier = -0.1
+	stability_cost_efficiency = 0.1
 }
 
 
@@ -142,6 +153,7 @@ abm_mlw_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# infantry_power = 0.1
+	army_light_infantry_power = 0.10
 }
 
 abm_mlw_ideas_tradition_2 = {
@@ -154,6 +166,7 @@ abm_mlw_ideas_tradition_2 = {
 	requires = abm_mlw_ideas_tradition_1
 
 	# infantry_cost = -0.1
+	army_light_infantry_reinforce_cost_modifier = -0.10
 }
 
 abm_mlw_rajputs_of_malwa = {
@@ -166,6 +179,7 @@ abm_mlw_rajputs_of_malwa = {
 	requires = renaissance_thought
 
 	# global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.10
 }
 
 abm_mlw_nimatnama = {
@@ -179,6 +193,8 @@ abm_mlw_nimatnama = {
 
 	# religious_unity = 0.25
 	# prestige = 0.5
+	tolerance_heathen = 1
+	monthly_prestige = 0.05
 }
 
 abm_mlw_surat_delhi_route = {
@@ -191,6 +207,7 @@ abm_mlw_surat_delhi_route = {
 	requires = military_traditions
 
 	# trade_efficiency = 0.1
+	trade_land_efficiency = medium_trade_land_efficiency_bonus
 }
 
 abm_mlw_fortified_strongholds = {
@@ -203,6 +220,7 @@ abm_mlw_fortified_strongholds = {
 	requires = abm_mlw_surat_delhi_route
 
 	# defensiveness = 0.2
+	fort_limit_modifier = 0.20
 }
 
 abm_mlw_black_soil = {
@@ -215,6 +233,7 @@ abm_mlw_black_soil = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
 }
 
 abm_mlw_reliance_on_jain_bankers = {
@@ -227,6 +246,7 @@ abm_mlw_reliance_on_jain_bankers = {
 	requires = abm_mlw_black_soil
 
 	# inflation_reduction = 0.1
+	monthly_inflation = -0.001
 }
 
 abm_mlw_malwa_opium = {
@@ -239,6 +259,8 @@ abm_mlw_malwa_opium = {
 	requires = absolutist_court
 
 	# global_prov_trade_power_modifier = 0.10
+	global_trade_through_owned_territory_efficiency = 0.10
+
 }
 
 abm_mlw_ideas_ambition = {
@@ -251,6 +273,7 @@ abm_mlw_ideas_ambition = {
 	requires = abm_mlw_malwa_opium
 
 	# num_accepted_cultures = 1
+	cultures_capacity = 1
 }
 
 # central_indic_ideas
@@ -274,6 +297,7 @@ abm_central_indic_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# land_morale = 0.1
+	land_morale_modifier = 0.10
 }
 
 abm_central_indic_ideas_tradition_2 = {
@@ -295,6 +319,7 @@ abm_central_indic_ideas_tradition_2 = {
 	requires = abm_central_indic_ideas_tradition_1
 
 	# global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.10
 }
 
 abm_securing_defenses_central_indic = {
@@ -310,12 +335,18 @@ abm_securing_defenses_central_indic = {
 			has_or_had_tag = NNA
 			has_or_had_tag = SNA
 			has_or_had_tag = WRG
+			# Garjat (KLH, SRG, MSN, RCH)
+			has_or_had_tag = KLH
+			has_or_had_tag = SRG
+			has_or_had_tag = MSN
+			has_or_had_tag = RCH
 		}
 	}
 
 	requires = renaissance_thought
 
 	# defensiveness = 0.15
+	global_defensive = 0.15
 }
 
 abm_tribal_religion_central_indic = {
@@ -338,6 +369,8 @@ abm_tribal_religion_central_indic = {
 
 	# religious_unity = 0.1
 	# global_unrest = -1
+	tolerance_own = 1
+	pop_join_rebel_threshold = -0.05
 }
 
 abm_tigers_and_elephants_central_indic = {
@@ -359,6 +392,7 @@ abm_tigers_and_elephants_central_indic = {
 	requires = military_traditions
 
 	# hostile_attrition = 1.0
+	hostile_attrition = 1
 }
 
 abm_flexible_caste_central_indic = {
@@ -380,6 +414,7 @@ abm_flexible_caste_central_indic = {
 	requires = abm_tigers_and_elephants_central_indic
 
 	# num_accepted_cultures = 1
+	cultures_capacity = 1
 }
 
 abm_raiding_the_plains_central_indic = {
@@ -401,6 +436,7 @@ abm_raiding_the_plains_central_indic = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# infantry_power = 0.1
+	army_heavy_infantry_power = 0.10
 }
 
 abm_ancient_roots_central_indic = {
@@ -426,6 +462,11 @@ abm_ancient_roots_central_indic = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_formalize_relations_with_cheifs_central_indic = {
@@ -447,6 +488,7 @@ abm_formalize_relations_with_cheifs_central_indic = {
 	requires = absolutist_court
 
 	# global_tax_modifier = 0.1
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
 }
 
 abm_central_indic_ideas_ambition = {
@@ -468,6 +510,7 @@ abm_central_indic_ideas_ambition = {
 	requires = abm_formalize_relations_with_cheifs_central_indic
 
 	# merchants = 1
+	global_trades_per_burgher = 0.20
 }
 
 # vindhyan_ideas
@@ -479,13 +522,14 @@ abm_vindhyan_ideas_tradition_1 = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = feudalism_advance
 
 	# num_accepted_cultures = 1
+	cultures_capacity = 1
 }
 
 abm_vindhyan_ideas_tradition_2 = {
@@ -495,13 +539,14 @@ abm_vindhyan_ideas_tradition_2 = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = abm_vindhyan_ideas_tradition_1
 
 	# fort_maintenance_modifier = -0.2
+	fort_limit_modifier = 0.20
 }
 
 abm_bundelkhandi_rajput_connections = {
@@ -511,13 +556,14 @@ abm_bundelkhandi_rajput_connections = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = renaissance_thought
 
 	# diplomatic_reputation = 1
+	diplomatic_reputation = diplomatic_reputation_mild_bonus
 }
 
 abm_forts_of_bundelkhand = {
@@ -527,13 +573,14 @@ abm_forts_of_bundelkhand = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = abm_bundelkhandi_rajput_connections
 
 	# defensiveness = 0.15
+	defensiveness = defensiveness_mild_bonus
 }
 
 abm_bundelkhandi_sacred_land = {
@@ -543,13 +590,14 @@ abm_bundelkhandi_sacred_land = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = military_traditions
 
 	# tolerance_own = 1
+	tolerance_own = 1
 }
 
 abm_bundeli_kalam = {
@@ -559,13 +607,14 @@ abm_bundeli_kalam = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = abm_bundelkhandi_sacred_land
 
 	# prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_untamed_bundelkhand = {
@@ -575,13 +624,14 @@ abm_untamed_bundelkhand = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = supply_depot_advance_age_4_reformation
 
 	# hostile_attrition = 1
+	hostile_attrition = 1
 }
 
 abm_bundelkhandi_diamonds = {
@@ -591,13 +641,15 @@ abm_bundelkhandi_diamonds = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = abm_untamed_bundelkhand
 
 	# trade_efficiency = 0.1
+	export_efficiency = small_trade_efficiency_bonus
+	selling_efficiency = small_trade_efficiency_bonus
 }
 
 abm_candella_legacy = {
@@ -607,8 +659,8 @@ abm_candella_legacy = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = absolutist_court
@@ -618,6 +670,11 @@ abm_candella_legacy = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_vindhyan_ideas_ambition = {
@@ -627,13 +684,14 @@ abm_vindhyan_ideas_ambition = {
 		OR = {
 			has_or_had_tag = BGK
 			has_or_had_tag = BND
-            has_or_had_tag = JJK
-					}
+			has_or_had_tag = JJK
+		}
 	}
 
 	requires = abm_candella_legacy
 
 	# cavalry_power = 0.10
+	army_heavy_cavalry_power = 0.10
 }
 
 
@@ -653,6 +711,7 @@ abm_garjati_ideas_tradition_1 = {
 	requires = feudalism_advance`
 
 	# global_tax_modifier = 0.1
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
 }
 
 abm_garjati_ideas_tradition_2 = {
@@ -670,23 +729,7 @@ abm_garjati_ideas_tradition_2 = {
 	requires = abm_garjati_ideas_tradition_1
 
 	# fort_maintenance_modifier = -0.15
-}
-
-abm_securing_defenses_central_indic = {
-	age = age_2_renaissance
-	icon = kja_securing_defenses_central_indic
-	potential = {
-		OR = {
-			has_or_had_tag = KLH
-			has_or_had_tag = SRG
-			has_or_had_tag = MSN
-			has_or_had_tag = RCH
-		}
-	}
-
-	requires = renaissance_thought
-
-	# no_eu4_modifier = none
+	fort_maintenance_efficiency = 0.15
 }
 
 abm_garjati_ancient_mandalas = {
@@ -708,6 +751,11 @@ abm_garjati_ancient_mandalas = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_garjati_tribal_feudatories = {
@@ -725,6 +773,7 @@ abm_garjati_tribal_feudatories = {
 	requires = military_traditions
 
 	# global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.10
 }
 
 abm_garjati_extend_tanks_and_reservoirs = {
@@ -742,6 +791,7 @@ abm_garjati_extend_tanks_and_reservoirs = {
 	requires = abm_garjati_tribal_feudatories
 
 	# development_cost = -0.1
+	global_monthly_prosperity = 0.001
 }
 
 abm_garjati_jungle_warfare = {
@@ -759,6 +809,7 @@ abm_garjati_jungle_warfare = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# infantry_power = 0.1
+	light_infantry_power = 0.10
 }
 
 abm_garjati_jagannath_cult = {
@@ -776,6 +827,7 @@ abm_garjati_jagannath_cult = {
 	requires = abm_garjati_jungle_warfare
 
 	# tolerance_own = 2
+	tolerance_own = 2
 }
 
 abm_garjati_patronize_economic_growth = {
@@ -793,6 +845,7 @@ abm_garjati_patronize_economic_growth = {
 	requires = absolutist_court
 
 	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier_in_rural = 0.20
 }
 
 abm_garjati_ideas_ambition = {
@@ -810,4 +863,5 @@ abm_garjati_ideas_ambition = {
 	requires = abm_garjati_patronize_economic_growth
 
 	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.20
 }
