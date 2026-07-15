@@ -12,7 +12,7 @@
 
 
 # CEY_ideas
-# Kuttanad (KTN), Kottayam (KYA), Reddy (RDY), Suket (SKT), Kotte (CEY), Kandy (KND)
+# Ceylon (CEY)
 abm_cey_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = ktn_traditions_1
@@ -23,6 +23,7 @@ abm_cey_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# defensiveness = 0.1
+	global_defensive = 0.10
 }
 
 abm_cey_ideas_tradition_2 = {
@@ -35,6 +36,7 @@ abm_cey_ideas_tradition_2 = {
 	requires = abm_cey_ideas_tradition_1
 
 	# trade_efficiency = 0.1
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
 }
 
 abm_gabadagam = {
@@ -47,6 +49,7 @@ abm_gabadagam = {
 	requires = renaissance_thought
 
 	# global_tax_modifier = 0.10
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
 }
 
 abm_sinhalese_sandesas = {
@@ -59,6 +62,7 @@ abm_sinhalese_sandesas = {
 	requires = abm_gabadagam
 
 	# prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_pearl_of_the_indian_ocean = {
@@ -71,6 +75,7 @@ abm_pearl_of_the_indian_ocean = {
 	requires = military_traditions
 
 	# merchants = 1
+	global_merchant_power = 0.20
 }
 
 abm_cey_centre_of_learning = {
@@ -83,6 +88,7 @@ abm_cey_centre_of_learning = {
 	requires = abm_pearl_of_the_indian_ocean
 
 	# diplomatic_reputation = 1
+	monthly_diplomats = 0.10
 }
 
 abm_cey_cinnamon = {
@@ -95,6 +101,7 @@ abm_cey_cinnamon = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_trade_goods_size_modifier = 0.1
+	global_pepper_output_modifier = 0.20
 }
 
 abm_cey_growth_of_new_castes = {
@@ -107,6 +114,7 @@ abm_cey_growth_of_new_castes = {
 	requires = abm_cey_cinnamon
 
 	# production_efficiency = 0.1
+	global_production_efficiency = large_production_efficiency_bonus
 }
 
 abm_sinhalese_guerilla_warfare = {
@@ -119,6 +127,7 @@ abm_sinhalese_guerilla_warfare = {
 	requires = absolutist_court
 
 	# hostile_attrition = 1.0
+	hostile_attrition = 1
 }
 
 abm_cey_ideas_ambition = {
@@ -131,6 +140,7 @@ abm_cey_ideas_ambition = {
 	requires = abm_sinhalese_guerilla_warfare
 
 	# global_own_trade_power = 0.1
+	global_trade_center_power = 0.10
 }
 
 # malabari_ideas
@@ -158,6 +168,7 @@ abm_malabari_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
 }
 
 abm_malabari_ideas_tradition_2 = {
@@ -183,6 +194,7 @@ abm_malabari_ideas_tradition_2 = {
 	requires = abm_malabari_ideas_tradition_1
 
 	# merc_maintenance_modifier = -0.15
+	mercenary_maintenance_efficiency = 0.15
 }
 
 abm_merchants_of_southern_india = {
@@ -202,12 +214,19 @@ abm_merchants_of_southern_india = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
+			# Mabar
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
 		}
 	}
 
 	requires = renaissance_thought
 
 	# no_eu4_modifier = none
+	trade_range_modifier = 0.20
 }
 
 abm_malabari_cultural_melting_pot = {
@@ -233,6 +252,7 @@ abm_malabari_cultural_melting_pot = {
 	requires = abm_merchants_of_southern_india
 
 	# advisor_cost = -0.1
+	court_spending_efficiency = 0.10
 }
 
 abm_malabari_kerala_school = {
@@ -258,6 +278,7 @@ abm_malabari_kerala_school = {
 	requires = military_traditions
 
 	# technology_cost = -0.05
+	research_speed_modifier = 0.05
 }
 
 abm_malabari_trade_factors = {
@@ -283,6 +304,7 @@ abm_malabari_trade_factors = {
 	requires = abm_malabari_kerala_school
 
 	# merchants = 1
+	global_merchant_power = 0.20
 }
 
 abm_malabari_control_inland = {
@@ -308,6 +330,7 @@ abm_malabari_control_inland = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_prov_trade_power_modifier = 0.15
+	global_trade_through_owned_territory_efficiency = 0.15
 }
 
 abm_malabari_mapilla_sailors = {
@@ -333,6 +356,7 @@ abm_malabari_mapilla_sailors = {
 	requires = abm_malabari_control_inland
 
 	# navy_tradition = 1
+	monthly_navy_tradition = 0.1
 }
 
 abm_malabari_land_of_elephants = {
@@ -358,6 +382,7 @@ abm_malabari_land_of_elephants = {
 	requires = absolutist_court
 
 	# global_unrest = -1
+	pop_join_rebel_threshold = -0.05
 }
 
 abm_malabari_ideas_ambition = {
@@ -383,6 +408,7 @@ abm_malabari_ideas_ambition = {
 	requires = abm_malabari_land_of_elephants
 
 	# global_trade_power = 0.1
+	global_trade_center_power = 0.10
 }
 
 abm_dravidian_ideas_tradition_1 = {
@@ -400,6 +426,7 @@ abm_dravidian_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# religious_unity = 0.33
+	tolerance_own = 2
 }
 
 abm_dravidian_ideas_tradition_2 = {
@@ -417,6 +444,7 @@ abm_dravidian_ideas_tradition_2 = {
 	requires = abm_dravidian_ideas_tradition_1
 
 	# production_efficiency = 0.1
+	global_production_efficiency = large_production_efficiency_bonus
 }
 
 abm_merchants_of_southern_india = {
@@ -435,6 +463,7 @@ abm_merchants_of_southern_india = {
 	requires = renaissance_thought
 
 	# trade_range_modifier = 0.20
+	trade_range_modifier = 0.20
 }
 
 abm_water_tanks_and_canals = {
@@ -452,6 +481,7 @@ abm_water_tanks_and_canals = {
 	requires = abm_merchants_of_southern_india
 
 	# global_tax_modifier = 0.10
+	global_estate_max_tax = 0.05
 }
 
 abm_polygar_system = {
@@ -469,6 +499,7 @@ abm_polygar_system = {
 	requires = military_traditions
 
 	# global_manpower_modifier = 0.10
+	global_manpower_modifier = 0.10
 }
 
 abm_south_indian_mercenaries = {
@@ -486,6 +517,7 @@ abm_south_indian_mercenaries = {
 	requires = abm_polygar_system
 
 	# merc_maintenance_modifier = -0.15
+	mercenary_maintenance_efficiency = 0.15
 }
 
 abm_patronage_of_temples = {
@@ -507,6 +539,11 @@ abm_patronage_of_temples = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_south_indian_literature = {
@@ -524,6 +561,7 @@ abm_south_indian_literature = {
 	requires = abm_patronage_of_temples
 
 	# prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_merchant_capitalists = {
@@ -541,6 +579,7 @@ abm_merchant_capitalists = {
 	requires = absolutist_court
 
 	# merchants = 1
+	global_merchant_power = 0.20
 }
 
 abm_dravidian_ideas_ambition = {
@@ -558,6 +597,7 @@ abm_dravidian_ideas_ambition = {
 	requires = abm_merchant_capitalists
 
 	# trade_efficiency = 0.10
+	trade_efficiency = 0.10
 }
 
 # MYS_ideas
@@ -572,6 +612,7 @@ abm_mys_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# land_morale = 0.1
+	land_morale_modifier = 0.10
 }
 
 abm_mys_ideas_tradition_2 = {
@@ -584,6 +625,8 @@ abm_mys_ideas_tradition_2 = {
 	requires = abm_mys_ideas_tradition_1
 
 	# leader_cost = -0.10
+	train_general_cost_modifier = -0.10
+	train_admiral_cost_modifier = -0.10
 }
 
 abm_mys_unification_of_mysore = {
@@ -596,6 +639,7 @@ abm_mys_unification_of_mysore = {
 	requires = renaissance_thought
 
 	# core_creation = -0.1
+	global_integration_speed_modifier = 0.10
 }
 
 abm_mys_patronize_kannada_literature = {
@@ -612,6 +656,11 @@ abm_mys_patronize_kannada_literature = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_mys_religious_tolerance = {
@@ -624,6 +673,7 @@ abm_mys_religious_tolerance = {
 	requires = military_traditions
 
 	# tolerance_heathen = 2
+	tolerance_heathen = 2
 }
 
 abm_mys_reform_silk_industry = {
@@ -636,6 +686,7 @@ abm_mys_reform_silk_industry = {
 	requires = abm_mys_religious_tolerance
 
 	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier_in_non_rural = 0.20
 }
 
 abm_mys_rockets = {
@@ -648,6 +699,8 @@ abm_mys_rockets = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# fire_damage = 0.1
+	army_light_infantry_power = 0.10
+	army_light_cavalry_power = 0.10
 }
 
 abm_mys_reform_mysorean_army = {
@@ -660,6 +713,7 @@ abm_mys_reform_mysorean_army = {
 	requires = abm_mys_rockets
 
 	# free_mil_policy = 1
+	government_reform_slots = 1
 }
 
 abm_mys_dynamic_diplomacy = {
@@ -672,6 +726,7 @@ abm_mys_dynamic_diplomacy = {
 	requires = absolutist_court
 
 	# diplomatic_reputation = 1
+	diplomatic_reputation = diplomatic_reputation_weak_bonus
 }
 
 abm_mys_ideas_ambition = {
@@ -684,6 +739,7 @@ abm_mys_ideas_ambition = {
 	requires = abm_mys_dynamic_diplomacy
 
 	# discipline = 0.05
+	discipline = 0.05
 }
 
 # BAH_ideas
@@ -698,6 +754,7 @@ abm_bah_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# cavalry_power = 0.1
+	army_heavy_cavalry_power = 0.10
 }
 
 abm_bah_ideas_tradition_2 = {
@@ -710,6 +767,7 @@ abm_bah_ideas_tradition_2 = {
 	requires = abm_bah_ideas_tradition_1
 
 	# army_tradition = 0.5
+	monthly_army_tradition = 0.05
 }
 
 abm_gharbians = {
@@ -722,6 +780,7 @@ abm_gharbians = {
 	requires = renaissance_thought
 
 	# manpower_recovery_speed = 0.1
+	global_manpower_modifier = 0.10
 }
 
 abm_legacy_of_gisu_daraz = {
@@ -735,6 +794,8 @@ abm_legacy_of_gisu_daraz = {
 
 	# religious_unity = 0.25
 	# prestige = 0.5
+	tolerance_own = 1
+	monthly_prestige = 0.05
 }
 
 abm_dakani_language = {
@@ -747,6 +808,7 @@ abm_dakani_language = {
 	requires = military_traditions
 
 	# num_accepted_cultures = 1
+	culture_capacity = 1
 }
 
 abm_karimis = {
@@ -759,6 +821,7 @@ abm_karimis = {
 	requires = abm_dakani_language
 
 	# trade_efficiency = 0.1
+	trade_efficiency = 0.10
 }
 
 abm_takht_e_firoza = {
@@ -771,6 +834,7 @@ abm_takht_e_firoza = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# diplomatic_reputation = 1
+	diplomatic_reputation = diplomatic_reputation_weak_bonus
 }
 
 abm_bahmani_primogeniture = {
@@ -787,6 +851,11 @@ abm_bahmani_primogeniture = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_madrasa_of_mahmud_gawan = {
@@ -799,6 +868,7 @@ abm_madrasa_of_mahmud_gawan = {
 	requires = absolutist_court
 
 	# idea_cost = -0.1
+	government_size = 1
 }
 
 abm_bah_ideas_ambition = {
@@ -811,6 +881,7 @@ abm_bah_ideas_ambition = {
 	requires = abm_madrasa_of_mahmud_gawan
 
 	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
 }
 
 # deccani_muslim_ideas
@@ -828,6 +899,7 @@ abm_deccani_muslim_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# cavalry_power = 0.1
+	army_light_cavalry_power = 0.10
 }
 
 abm_deccani_muslim_ideas_tradition_2 = {
@@ -843,6 +915,7 @@ abm_deccani_muslim_ideas_tradition_2 = {
 	requires = abm_deccani_muslim_ideas_tradition_1
 
 	# num_accepted_cultures = 1
+	cultures_capacity_modifier = 0.20
 }
 
 abm_dec_legacy_of_bahmanis = {
@@ -862,6 +935,11 @@ abm_dec_legacy_of_bahmanis = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_dec_deccani_identity = {
@@ -877,6 +955,7 @@ abm_dec_deccani_identity = {
 	requires = abm_dec_legacy_of_bahmanis
 
 	# idea_cost = -0.10
+	country_cabinet_efficiency = 0.10
 }
 
 abm_dec_brahmin_administrators = {
@@ -892,6 +971,7 @@ abm_dec_brahmin_administrators = {
 	requires = military_traditions
 
 	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
 }
 
 abm_dec_habshis = {
@@ -907,6 +987,7 @@ abm_dec_habshis = {
 	requires = abm_dec_brahmin_administrators
 
 	# infantry_power = 0.1
+	army_heavy_infantry_power = 0.10
 }
 
 abm_dec_bargi_giri = {
@@ -922,6 +1003,7 @@ abm_dec_bargi_giri = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# cavalry_flanking = 0.5
+	army_light_cavalry_power = 0.10
 }
 
 abm_dec_marathi_cultivators = {
@@ -937,6 +1019,7 @@ abm_dec_marathi_cultivators = {
 	requires = abm_dec_bargi_giri
 
 	# production_efficiency = 0.1
+	global_production_efficiency = large_production_efficiency_bonus
 }
 
 abm_dec_marathi_habshi_state = {
@@ -951,7 +1034,8 @@ abm_dec_marathi_habshi_state = {
 
 	requires = absolutist_court
 
-	# advisor_cost = -0.1
+	# advisor_cost = -0.1fcabin
+	government_size = 1
 }
 
 abm_deccani_muslim_ideas_ambition = {
@@ -967,6 +1051,7 @@ abm_deccani_muslim_ideas_ambition = {
 	requires = abm_dec_marathi_habshi_state
 
 	# global_manpower_modifier = 0.1
+	global_manpower_modifier = 0.10
 }
 
 
@@ -982,6 +1067,7 @@ abm_jaj_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# may_perform_slave_raid = yes
+	allow_privateers_slave_raid = yes
 }
 
 abm_jaj_ideas_tradition_2 = {
@@ -994,6 +1080,7 @@ abm_jaj_ideas_tradition_2 = {
 	requires = abm_jaj_ideas_tradition_1
 
 	# light_ship_cost = -0.20
+	navy_light_ship_build_cost_modifier = -0.20
 }
 
 abm_goma = {
@@ -1006,6 +1093,7 @@ abm_goma = {
 	requires = renaissance_thought
 
 	# tolerance_heathen = 3
+	tolerance_heathen = 3
 }
 
 abm_siddi_seamanship = {
@@ -1019,6 +1107,8 @@ abm_siddi_seamanship = {
 
 	# navy_tradition = 1
 	# sailor_maintenance_modifer = -0.1
+	monthly_navy_tradition = 0.1
+	global_sailors_modifier = 0.1
 }
 
 abm_fortress_of_janjira = {
@@ -1031,6 +1121,7 @@ abm_fortress_of_janjira = {
 	requires = military_traditions
 
 	# defensiveness = 0.15
+	global_defensive = 0.15
 }
 
 abm_siddi_diaspora = {
@@ -1043,6 +1134,7 @@ abm_siddi_diaspora = {
 	requires = abm_fortress_of_janjira
 
 	# global_manpower_modifier = 0.1
+	global_manpower_modifier = 0.10
 }
 
 abm_siddi_diplomacy = {
@@ -1055,6 +1147,7 @@ abm_siddi_diplomacy = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# diplomats = 1
+	monthly_diplomats = 0.10
 }
 
 abm_siddi_konkani_trade = {
@@ -1067,6 +1160,7 @@ abm_siddi_konkani_trade = {
 	requires = abm_siddi_diplomacy
 
 	# trade_efficiency = 0.1
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
 }
 
 abm_siddi_expansion_of_navy = {
@@ -1079,6 +1173,7 @@ abm_siddi_expansion_of_navy = {
 	requires = absolutist_court
 
 	# naval_maintenance_modifier = -0.10
+	navy_maintenance_efficiency = 0.1
 }
 
 abm_jaj_ideas_ambition = {
@@ -1091,5 +1186,6 @@ abm_jaj_ideas_ambition = {
 	requires = abm_siddi_expansion_of_navy
 
 	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
 }
 
