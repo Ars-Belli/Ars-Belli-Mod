@@ -14,50 +14,60 @@
 #   10 or more generated ABM advances.
 #
 # EU4 idea-set structure:
-# - Every processed EU4 idea set has:
-#   - 2 traditions from `start`
+# - Every processed EU4 idea set contains:
+#   - 2 traditions in `start`
 #   - 7 regular ideas
-#   - 1 ambition / bonus from `bonus`
+#   - 1 ambition / bonus in `bonus`
 # - Generate 10 advances per normal idea set:
 #   - Age 1: tradition 1 and tradition 2
-#   - Age 2: idea 1 and idea 2
-#   - Age 3: idea 3 and idea 4
-#   - Age 4: idea 5 and idea 6
-#   - Age 5: idea 7
+#   - Age 2: regular idea 1 and regular idea 2
+#   - Age 3: regular idea 3 and regular idea 4
+#   - Age 4: regular idea 5 and regular idea 6
+#   - Age 5: regular idea 7
 #   - Age 6: ambition / bonus
 #
 # Age values:
-# - Traditions: `age = age_1_traditions`
-# - Ideas 1 and 2: `age = age_2_renaissance`
-# - Ideas 3 and 4: `age = age_3_discovery`
-# - Ideas 5 and 6: `age = age_4_reformation`
-# - Idea 7: `age = age_5_absolutism`
-# - Ambition: `age = age_6_revolutions`
+# - Traditions:
+#   `age = age_1_traditions`
+# - Regular ideas 1 and 2:
+#   `age = age_2_renaissance`
+# - Regular ideas 3 and 4:
+#   `age = age_3_discovery`
+# - Regular ideas 5 and 6:
+#   `age = age_4_reformation`
+# - Regular idea 7:
+#   `age = age_5_absolutism`
+# - Ambition:
+#   `age = age_6_revolutions`
 #
 # Naming conventions:
-# - Tradition 1: `abm_<idea_set>_tradition_1`
-# - Tradition 2: `abm_<idea_set>_tradition_2`
-# - Normal regular idea: `abm_<idea_name>`
-# - Ambition: `abm_<idea_set>_ambition`
+# - Tradition 1:
+#   `abm_<idea_set>_tradition_1`
+# - Tradition 2:
+#   `abm_<idea_set>_tradition_2`
+# - Normal regular idea:
+#   `abm_<idea_name>`
+# - Ambition:
+#   `abm_<idea_set>_ambition`
 #
-# Example:
-# - `sumatran_ideas` tradition 1:
+# Example naming:
+# - First Sumatran tradition:
 #   `abm_sumatran_ideas_tradition_1`
-# - `reliance_on_trade`:
+# - Sumatran idea `reliance_on_trade`:
 #   `abm_reliance_on_trade`
-# - `sumatran_ideas` ambition:
+# - Sumatran ambition:
 #   `abm_sumatran_ideas_ambition`
 #
 # Potential block rules:
-# - Every advance must have a `potential` block.
+# - Every advance must include a `potential` block.
 # - Use `has_or_had_tag` for every tag.
-# - If exactly one tag uses the advance, do not use an `OR` block:
+# - If exactly one tag uses an advance, do not use an `OR` block:
 #
 #   potential = {
 #       has_or_had_tag = <TAG>
 #   }
 #
-# - If two or more tags use the advance, use one `OR` block:
+# - If two or more tags use an advance, place all tags in a single `OR` block:
 #
 #   potential = {
 #       OR = {
@@ -67,71 +77,113 @@
 #   }
 #
 # Requirements:
-# - Every advance must include one `requires = <advance_key>` entry.
+# - Every advance must include exactly one `requires = <advance_key>` entry.
 # - `requires` is a single advance key, never a list.
-# - Use an existing advance key when an appropriate prerequisite is known.
-# - Select prerequisites based on the advance's primary theme where possible.
-# - Do not require that advances form a linear chain within the EU4 idea set.
-# - Do not use display names in `requires`.
-# - If an appropriate prerequisite is unknown, use a descriptive placeholder:
+# - Never use display names in `requires`.
+# - Select an existing prerequisite advance that best matches the primary theme
+#   of the generated advance, when one is known.
+# - Advances do not need to form a linear prerequisite chain within their
+#   original EU4 idea set.
+# - If no suitable existing prerequisite is known, use a descriptive placeholder:
 #
 #   requires = TODO_<theme>_requirement
 #
 # - Examples:
-#   - `TODO_trade_efficiency_requirement`
-#   - `TODO_naval_morale_requirement`
-#   - `TODO_missionary_strength_requirement`
-#   - `TODO_fortifications_requirement`
+#   `requires = TODO_trade_efficiency_requirement`
+#   `requires = TODO_naval_morale_requirement`
+#   `requires = TODO_missionary_strength_requirement`
+#   `requires = TODO_fortifications_requirement`
+#   `requires = TODO_diplomatic_reputation_requirement`
+#
+# Icons:
+# - Every generated advance must include an `icon` key.
+# - Select an existing project icon key that best matches the advance's primary
+#   theme, source idea name, or most important modifier.
+# - Prefer existing project icon keys; do not invent new icon keys unless the
+#   project explicitly supports creating them.
+# - If no suitable existing icon can be identified, use a descriptive placeholder:
+#
+#   icon = TODO_<theme>_icon
+#
+# - Suggested placeholder themes:
+#   - Trade, merchants, trade power, trade efficiency, trade steering:
+#     `icon = TODO_trade_icon`
+#   - Ships, sailors, naval morale, naval force limit, ship cost:
+#     `icon = TODO_naval_icon`
+#   - Land morale, infantry, manpower, warfare, attrition:
+#     `icon = TODO_military_icon`
+#   - Missionaries, religious conversion, tolerance:
+#     `icon = TODO_religion_icon`
+#   - Technology, institutions, advisors, idea cost, scholarship:
+#     `icon = TODO_scholarship_icon`
+#   - Prestige, legitimacy, stability, authority, government:
+#     `icon = TODO_government_icon`
+#   - Production, tax, trade goods, construction, development:
+#     `icon = TODO_economy_icon`
+#   - Diplomacy, diplomats, reputation, relations:
+#     `icon = TODO_diplomacy_icon`
+#   - Colonization, settlers, colonial growth:
+#     `icon = TODO_colonization_icon`
+#   - Forts, defensiveness, defensive structures:
+#     `icon = TODO_fortification_icon`
+# - Traditions may use their own advance key as the icon only when the icon
+#   already exists in the project:
+#
+#   icon = abm_<idea_set>_tradition_1
 #
 # Modifier preservation:
 # - Preserve every original EU4 modifier as a comment directly inside the
 #   generated advance.
-# - Preserve modifier keys and values exactly as written in the source.
-# - Preserve source spelling errors exactly, including keys such as:
+# - Preserve modifier keys and values exactly as written in the EU4 source.
+# - Do not remove, merge, reinterpret, round, correct, or silently discard
+#   EU4 modifiers.
+# - Preserve source spelling errors exactly, including modifier keys such as:
 #   - `sailor_maintenance_modifer`
 #   - `leader_naval_manuever`
 #   - `sunk_ship_morale_hit_recieved`
-# - Do not remove, merge, reinterpret, round, correct, or silently discard
-#   EU4 modifiers.
 #
 # Tradition conversion:
-# - The two modifiers in an EU4 `start` block become two separate advances:
-#   - The first modifier becomes tradition 1.
-#   - The second modifier becomes tradition 2.
+# - The two modifiers in the EU4 idea set's `start` block become two separate
+#   Age 1 tradition advances.
+# - The first modifier becomes tradition 1.
+# - The second modifier becomes tradition 2.
 #
 # Ambition conversion:
-# - The modifier or modifiers in the EU4 `bonus` block become one ambition
-#   advance for Age 6.
+# - The modifier or modifiers in the EU4 idea set's `bonus` block become one
+#   Age 6 ambition advance.
 #
-# Duplicate regular-idea rules:
+# Explicitly shared regular ideas:
 # - Do not automatically treat identical idea names as shared advances.
-# - An identical idea key is shared only when the EU4 source explicitly says so,
-#   for example:
+# - A regular idea is shared only when the EU4 source explicitly identifies it
+#   as shared, for example:
 #
 #   settle_the_islands = { # same as malay ideas
 #       global_colonial_growth = 20
 #   }
 #
-# - Explicitly shared ideas produce one common advance using:
+# - An explicitly shared idea produces one shared advance:
 #
 #   abm_<idea_name>
 #
-# - Merge the tags of every explicitly shared occurrence into that advance's
-#   `potential` block.
-# - If the shared source modifiers are identical, preserve them only once.
-# - If a shared idea appears at different positions in different idea sets and
-#   therefore has conflicting ages or requirements, use placeholders:
+# - Merge all tags from every explicitly shared occurrence into the shared
+#   advance's `potential` block.
+# - If the source modifier blocks are identical, preserve the modifier comments
+#   only once in the shared advance.
+# - Use one icon that matches the shared advance's common effect or theme.
+# - If the shared advance occurs at different positions in different idea sets,
+#   and therefore has conflicting ages or prerequisites, use placeholders:
 #
 #   age = TODO_shared_<idea_name>_age
 #   requires = TODO_shared_<idea_name>_requirement
 #
-# - Do not generate duplicate definitions of an explicitly shared advance.
+# - Generate the shared advance only once.
 #
-# Conflicting duplicate-name rules:
+# Conflicting duplicate regular-idea names:
 # - If the same EU4 idea key appears in multiple idea sets without an explicit
-#   shared-idea annotation, treat the occurrences as separate advances.
-# - This is especially required when their modifiers differ.
-# - Namespace each conflicting advance by its source idea set:
+#   shared-idea annotation, treat each occurrence as a separate advance.
+# - This is required even if the names are identical, especially when modifiers
+#   differ.
+# - Namespace each conflicting advance using its source idea set:
 #
 #   abm_<idea_set>_<idea_name>
 #
@@ -147,29 +199,29 @@
 #       technology_cost = -0.10
 #   }
 #
-#   # Generated keys:
+#   # Generated advances:
 #   abm_sumatran_ideas_porch_of_mecca
 #   abm_atj_ideas_porch_of_mecca
 #
-# Output format:
-# - Add a comment header with the idea-set display name.
-# - Add a comment listing every applicable tag.
-# - Use Paradox script formatting and project indentation.
-# - Follow the existing file convention regarding `icon`.
-# - If icons are required but no suitable icon is known, use:
+# - Each namespaced conflicting advance receives only the tags, age, icon,
+#   requirement, and modifier comments belonging to its own source idea set.
 #
-#   icon = TODO_<theme>_icon
+# Output formatting:
+# - Add a comment header containing the idea-set display name.
+# - Add a comment listing all tags applicable to that idea set or advance.
+# - Follow the project's established Paradox script indentation and formatting.
+# - Do not generate duplicate advance keys.
+# - The exception is conflicting duplicate EU4 idea names, which must be
+#   namespace-qualified as described above.
 #
-# - Do not generate duplicate advance keys unless they are intentionally
-#   namespaced conflicting versions of the same EU4 idea name.
-#
-# Standard structure:
+# Standard output structure:
 #
 # # <Idea Set Display Name>
 # # <TAG_1> <TAG_2>
 #
 # <advance_key> = {
 #     age = <age_key>
+#     icon = <existing_icon_key_or_TODO_placeholder>
 #     potential = {
 #         OR = {
 #             has_or_had_tag = <TAG_1>
@@ -180,6 +232,37 @@
 #     requires = <prerequisite_advance>
 #
 #     # <original_eu4_modifier> = <original_value>
+# }
+#
+# Single-tag example:
+#
+# abm_example_advance = {
+#     age = age_2_renaissance
+#     icon = TODO_trade_icon
+#     potential = {
+#         has_or_had_tag = EXM
+#     }
+#
+#     requires = TODO_trade_requirement
+#
+#     # trade_efficiency = 0.10
+# }
+#
+# Multi-tag example:
+#
+# abm_example_advance = {
+#     age = age_2_renaissance
+#     icon = TODO_trade_icon
+#     potential = {
+#         OR = {
+#             has_or_had_tag = EXM
+#             has_or_had_tag = EX2
+#         }
+#     }
+#
+#     requires = TODO_trade_requirement
+#
+#     # trade_efficiency = 0.10
 # }
 
 
