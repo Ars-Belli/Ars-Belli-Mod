@@ -1,10 +1,18 @@
-﻿REPLACE:BNG_f = {
+﻿# India - Bengal
+
+REPLACE:BNG_f = {
 	level = 3
 	required_locations_fraction = 0.70
 	rule = historical
 	
+	potential = {
+		culture = { has_culture_group = culture_group:indian_group }
+		capital = { region = region:bengal_region }
+	}
+
 	allow = {
-		culture = culture:bengali
+		culture = { has_culture_group = culture_group:indian_group }
+		capital = { region = region:bengal_region }
 	}
 
 
@@ -20,16 +28,59 @@
 	}
 }
 
+# India - Western
+
+REPLACE:GUJ_f = {
+	level = 3
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		OR = {
+			culture = culture:gujarati
+			culture = culture:konkani
+		}
+	}
+
+	allow = {
+		OR = {
+			religion.group = religion_group:muslim
+			religion.group = religion_group:dharmic
+		}
+		OR = {
+			culture = culture:gujarati
+			culture = culture:konkani
+		}
+	}
+	
+	name = GUJ
+	flag = GUJ
+	adjective = GUJ_ADJ
+	tag = GUJ
+	color = map_GUJ
+
+	areas = {
+		gujarat_area
+		saurashtra_area
+		konkan_area
+	}
+	form_effect = {
+	}
+}
+
 REPLACE:RJP_f = {
 	level = 3
 	required_locations_fraction = 0.8
 	rule = historical
 
 	potential = {
-		culture.language = language:rajasthani_language
+		culture = { has_culture_group = culture_group:indian_group }
+		capital = { region = region:western_india_region }
 	}
 
 	allow = {
+		culture = { has_culture_group = culture_group:indian_group }
+		capital = { region = region:western_india_region }
 	}
 	
 	name = RJP
@@ -45,27 +96,153 @@ REPLACE:RJP_f = {
 	}
 }
 
+# INDIA - Hindustan
+
+REPLACE:NPL_f = {
+	level = 3
+	required_locations_fraction = 0.90
+	rule = historical
+	potential = {
+		original_capital ?= { area = area:nepal_area }
+	}
+	allow = {
+		culture = { has_culture_group = culture_group:nepali_group }
+		original_capital ?= { area = area:nepal_area }
+	}
+	name = NPL
+	flag = NPL
+	adjective = NPL_ADJ
+	tag = NPL
+	color = map_nepal
+	areas = {
+		nepal_area
+	}
+	form_effect = {
+	}
+}
+
+REPLACE:PUN_f = {
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		OR = {
+			religion.group = religion_group:muslim
+			religion.group = religion_group:dharmic
+		}
+		capital = { region = region:hindustan_region }
+	}
+
+	allow = {
+		religion.group = religion_group:dharmic
+		capital = { region = region:hindustan_region }
+		culture = { has_culture_group = culture_group:indian_group }
+	}
+	
+	name = PUN
+	flag = PUN
+	adjective = PUN_ADJ
+	tag = PUN
+	color = map_PUN
+
+	region = {
+		hindustan_region
+	}
+	form_effect = {
+	}
+}
+
+REPLACE:MUG_f = {
+	level = 4
+	required_locations_fraction = 0.8
+	rule = historical
+	
+	potential = {
+
+	}
+
+	allow = {
+
+		religion.group = religion_group:muslim
+		OR = {
+			culture = { has_culture_group = culture_group:iranian_group }
+			culture = { has_culture_group = culture_group:turkic_group }
+			culture = { has_culture_group = culture_group:indian_group }
+			culture.language = language:afghani_language
+		}
+		owns = location:delhi
+		owns = location:agra
+		owns = location:lahore
+	}
+	
+	name = MUG
+	flag = MUG
+	adjective = MUG_ADJ
+	tag = MUG
+	color = map_MUG
+	regions = {
+		hindustan_region
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 4 }
+			set_country_rank_effect = { rank = country_rank:rank_empire }
+		}
+	}
+}
+
+ABSND_f = {
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		OR = {
+			religion.group = religion_group:muslim
+			religion.group = religion_group:dharmic
+		}
+		capital = { region = region:hindustan_region }
+	}
+
+	allow = {
+		religion.group = religion_group:muslim
+		capital = { region = region:hindustan_region }
+		culture = { has_culture_group = culture_group:indian_group }
+	}
+	
+	name = ABSND
+	flag = ABSND
+	adjective = ABSND_ADJ
+	tag = ABSND
+	color = map_ABSND
+
+	region = {
+		hindustan_region
+	}
+	form_effect = {
+	}
+}
+
+# India - Deccan
+
 REPLACE:DEC_f = {
 	level = 3
 	required_locations_fraction = 0.65
 	rule = historical
 
 	potential = {
-		any_primary_or_accepted_or_tolerated_culture = {
-			OR = {
-				language = language:marathi_language
-				language = language:kannada_language
-				language = language:telugu_language
-			}
+		OR = {
+			religion.group = religion_group:muslim
+			religion.group = religion_group:dharmic
 		}
+		capital = { region = region:deccan_region }
 	}
 
 	allow = {
-		OR = {
-			culture.language = language:marathi_language
-			culture.language = language:kannada_language
-			culture.language = language:telugu_language
-		}
+		religion.group = religion_group:muslim
+		capital = { region = region:deccan_region }
+		culture = { has_culture_group = culture_group:indian_group }
 	}
 	
 	name = DEC
@@ -75,46 +252,77 @@ REPLACE:DEC_f = {
 	color = map_DEC
 
 	regions = {
-		hindustan_region
+		deccan_region
 	}
 	form_effect = {
 	}
 }
 
-DOA_f = {
+MHR_f = {
 	level = 3
-	required_locations_fraction = 0.70
+	required_locations_fraction = 0.5
+	rule = historical
 
 	potential = {
-		any_primary_or_accepted_or_tolerated_culture = {
-			OR = {
-				language = language:marathi_language
-				language = language:kannada_language
-				language = language:telugu_language
-			}
+		OR = {
+			religion.group = religion_group:muslim
+			religion.group = religion_group:dharmic
 		}
+		capital = { region = region:deccan_region }
+	}
+
+	allow = {
+		religion.group = religion_group:dharmic
+		capital = { region = region:deccan_region }
+		culture = { has_culture_group = culture_group:indian_group }
+	}
+	
+	name = MHR
+	flag = MHR
+	adjective = MHR_ADJ
+	tag = MHR
+	color = map_MHR
+
+	regions = {
+		deccan_region
+	}
+	form_effect = {
+	}
+}
+
+# India - Central
+
+ABNAG_f = {
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		OR = {
+			religion.group = religion_group:dharmic
+			religion.group = religion_group:muslim
+		}
+		capital = { region = region:central_india_region }
+		
 	}
 
 	allow = {
 		OR = {
-			culture.language = language:marathi_language
-			culture.language = language:kannada_language
-			culture.language = language:telugu_language
+			religion.group = religion_group:dharmic
+			religion.group = religion_group:muslim
 		}
+		capital = { region = region:central_india_region }
+		culture = { has_culture_group = culture_group:indian_group }
 	}
 	
-	name = DOA
-	flag = DOA
-	adjective = DOA_ADJ
-	tag = DOA
-	color = map_DOA
+	name = ABNAG
+	flag = ABNAG
+	adjective = ABNAG_ADJ
+	tag = ABNAG
+	color = map_ABNAG
 
-	areas = {
-		andhara_area
-		karnakassala_area
-		telingana_area
-		maharashtra_area
-		konkan_area
+	regions = {
+		central_india_region
 	}
 	form_effect = {
 	}
