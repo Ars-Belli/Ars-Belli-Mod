@@ -143,46 +143,174 @@ abm_cey_ideas_ambition = {
 	global_trade_center_power = 0.10
 }
 
-telugu_ideas = { #Telugu Ideas
-	start = {
-		defensiveness = 0.2
-		merc_maintenance_modifier = -0.15
-	}
+# Telugu Ideas
+# YDR KPL RDY
+abm_telugu_ideas_tradition_1 = {
+    age = age_1_traditions
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
 
-	bonus = {
-		global_manpower_modifier = 0.1
-	}
-	
-	trigger = {
-		primary_culture = telegu
-	}
-	free = yes
-	
-	yor_patronize_telugu_literature = {
-		prestige = 1
-	}
-	yor_telugu_warrior_aristocrats = {
-		army_tradition = 0.5
-	}
-	yor_kakatiya_legacy = {
-		global_tax_modifier = 0.1
-	}
-	yor_great_forts_of_the_east = {
-		fort_maintenance_modifier = -0.15
-	}
-	yor_legend_of_prataparudra = {
-		legitimacy = 1
-		devotion = 1
-		republican_tradition = 0.3
-		meritocracy = 1
-		horde_unity = 1
-	}
-	yor_diamond_mines_of_kollur = {
-		production_efficiency = 0.1
-	}
-	yor_encourage_coromandel_trade = {
-		global_own_trade_power = 0.1
-	}
+    requires = feudalism_advance
+
+    # defensiveness = 0.2
+    global_defensive = 0.20
+}
+
+abm_telugu_ideas_tradition_2 = {
+    age = age_1_traditions
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
+
+    requires = abm_telugu_ideas_tradition_1
+
+    # merc_maintenance_modifier = -0.15
+    mercenary_maintenance_cost = -0.15
+}
+
+abm_yor_patronize_telugu_literature = {
+    age = age_2_renaissance
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
+
+    requires = renaissance_thought
+
+    # prestige = 1
+    monthly_prestige = 0.10
+}
+
+abm_yor_telugu_warrior_aristocrats = {
+    age = age_2_renaissance
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
+
+    requires = yor_patronize_telugu_literature
+
+    # army_tradition = 0.5
+    monthly_army_tradition = 0.05
+}
+
+abm_yor_kakatiya_legacy = {
+    age = age_3_discovery
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
+
+    requires = military_traditions
+
+    # global_tax_modifier = 0.1
+    tax_income_efficiency = 0.10
+}
+
+abm_yor_great_forts_of_the_east = {
+    age = age_3_discovery
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
+
+    requires = yor_kakatiya_legacy
+
+    # fort_maintenance_modifier = -0.15
+    fort_maintenance_cost = -0.15
+}
+
+abm_yor_legend_of_prataparudra = {
+    age = age_4_reformation
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
+
+    requires = supply_depot_advance_age_4_reformation
+
+    # legitimacy = 1
+    # devotion = 1
+    # republican_tradition = 0.3
+    # meritocracy = 1
+    # horde_unity = 1
+    monthly_legitimacy = 0.10
+    monthly_republican_tradition = 0.10
+    monthly_devotion = 0.10
+    monthly_horde_unity = 0.10
+    monthly_tribal_cohesion = 0.10
+}
+
+abm_yor_diamond_mines_of_kollur = {
+    age = age_4_reformation
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
+
+    requires = yor_legend_of_prataparudra
+
+    # production_efficiency = 0.1
+    global_production_efficiency = 0.10
+}
+
+abm_yor_encourage_coromandel_trade = {
+    age = age_5_absolutism
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
+
+    requires = absolutist_court
+
+    # global_own_trade_power = 0.1
+    global_trade_center_power = 0.10
+}
+
+abm_telugu_ideas_ambition = {
+    age = age_6_revolutions
+    potential = {
+        OR = {
+            has_or_had_tag = YDR
+            has_or_had_tag = KPL
+            has_or_had_tag = RDY
+        }
+    }
+
+    requires = yor_encourage_coromandel_trade
+
+    # global_manpower_modifier = 0.1
+    global_manpower_modifier = 0.10
 }
 
 # malabari_ideas
