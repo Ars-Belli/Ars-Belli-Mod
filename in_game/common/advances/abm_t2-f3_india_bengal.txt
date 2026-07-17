@@ -154,8 +154,6 @@ abm_bengali_ideas_tradition_1 = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -175,8 +173,6 @@ abm_bengali_ideas_tradition_2 = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -196,8 +192,6 @@ abm_hindu_sufi_syncretism = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -217,8 +211,6 @@ abm_ganges_brahmaputra_confluence = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -239,8 +231,6 @@ abm_rice_fields = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -260,8 +250,6 @@ abm_mustard_oil_ilish_mach = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -281,8 +269,6 @@ abm_jute_production = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -301,8 +287,6 @@ abm_opium_fields = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -322,8 +306,6 @@ abm_bengali_renaissance = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -343,8 +325,6 @@ abm_bengali_ideas_ambition = {
             has_or_had_tag = BHP
             has_or_had_tag = SGN
             has_or_had_tag = TRF
-            has_or_had_tag = PPA
-            has_or_had_tag = JAN
             has_or_had_tag = GAU
         }
     }
@@ -1028,42 +1008,173 @@ abm_ori_ideas_ambition = {
     import_efficiency = tiny_trade_efficiency_bonus
 }
 
-TPR_ideas = {
-	start = {
-		infantry_power = 0.1
-		hostile_attrition = 1
-	}
-	bonus = {
-		global_trade_goods_size_modifier = 0.1
-	}
-	trigger = {
-		tag = TPR
-	}
-	free = yes
-	
-	tpr_rajmala = {
-		legitimacy = 1
-		devotion = 1
-		republican_tradition = 0.3
-		meritocracy = 1
-		horde_unity = 1
-	}
-	tpr_adaptive_administration = {
-		global_tax_modifier = 0.1
-	}
-	tpr_religious_syncretism = {
-		tolerance_heathen = 2
-	}
-	tpr_extended_army_control = {
-		land_forcelimit_modifier = 0.25
-	}
-	tpr_appointment_of_missips = {
-		state_maintenance_modifier = -0.15
-	}
-	jute_production = {
-		production_efficiency = 0.1 #also used by Bengali Ideas
-	}
-	tpr_strenghten_local_defences = {
-		defensiveness = 0.2
-	}
+# TPR Ideas
+# TPR
+abm_tpr_ideas_tradition_1 = {
+    age = age_1_traditions
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = feudalism_advance
+
+    # infantry_power = 0.1
+    army_heavy_infantry_power = 0.10
+}
+
+abm_tpr_ideas_tradition_2 = {
+    age = age_1_traditions
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = abm_tpr_ideas_tradition_1
+
+    # hostile_attrition = 1
+    global_hostile_attrition = 1
+}
+
+tpr_rajmala = {
+    age = age_2_renaissance
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = renaissance_thought
+
+    # legitimacy = 1
+    # devotion = 1
+    # republican_tradition = 0.3
+    # meritocracy = 1
+    # horde_unity = 1
+    monthly_legitimacy = 0.10
+    monthly_republican_tradition = 0.10
+    monthly_devotion = 0.10
+    monthly_horde_unity = 0.10
+    monthly_tribal_cohesion = 0.10
+}
+
+tpr_adaptive_administration = {
+    age = age_2_renaissance
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = tpr_rajmala
+
+    # global_tax_modifier = 0.1
+    tax_income_efficiency = 0.10
+}
+
+tpr_religious_syncretism = {
+    age = age_3_discovery
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = military_traditions
+
+    # tolerance_heathen = 2
+    tolerance_heathen = 2
+}
+
+tpr_extended_army_control = {
+    age = age_3_discovery
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = tpr_religious_syncretism
+
+    # land_forcelimit_modifier = 0.25
+    global_levy_size_modifier = 0.25
+}
+
+tpr_appointment_of_missips = {
+    age = age_4_reformation
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = supply_depot_advance_age_4_reformation
+
+    # state_maintenance_modifier = -0.15
+    state_maintenance_cost = -0.15
+}
+
+jute_production = {
+    age = age_4_reformation
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = tpr_appointment_of_missips
+
+    # production_efficiency = 0.1
+    # also used by Bengali Ideas
+    global_production_efficiency = 0.10
+}
+
+tpr_strenghten_local_defences = {
+    age = age_5_absolutism
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = absolutist_court
+
+    # defensiveness = 0.2
+    global_defensive = 0.20
+}
+
+abm_tpr_ideas_ambition = {
+    age = age_6_revolutions
+    potential = {
+        OR ={
+            has_or_had_tag = PPA
+            has_or_had_tag = JAN
+            has_or_had_tag = MGY
+        }
+    }
+
+    requires = tpr_strenghten_local_defences
+
+    # global_trade_goods_size_modifier = 0.1
+    global_max_rgo_size_modifier = 0.10
 }
