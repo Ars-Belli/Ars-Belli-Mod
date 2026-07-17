@@ -1178,3 +1178,165 @@ abm_tpr_ideas_ambition = {
     # global_trade_goods_size_modifier = 0.1
     global_max_rgo_size_modifier = 0.10
 }
+
+# TRT Ideas
+# TWI TRF ZOO
+abm_trt_ideas_tradition_1 = {
+    age = age_1_traditions
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = feudalism_advance
+
+    # global_tax_modifier = 0.10
+    tax_income_efficiency = 0.10
+}
+
+abm_trt_ideas_tradition_2 = {
+    age = age_1_traditions
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = abm_trt_ideas_tradition_1
+
+    # tolerance_own = 2
+    tolerance_own = 2
+}
+
+trt_scholars_and_poets = {
+    age = age_2_renaissance
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = renaissance_thought
+
+    # advisor_cost = -0.1
+    hire_advisor_cost_modifier = -0.10
+}
+
+trt_gateway_to_india = {
+    age = age_2_renaissance
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = trt_scholars_and_poets
+
+    # trade_efficiency = 0.1
+    trade_income = 0.10
+}
+
+trt_brahmin_kings = {
+    age = age_3_discovery
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = military_traditions
+
+    # prestige = 1
+    monthly_prestige = 0.10
+}
+
+trt_purbias = {
+    age = age_3_discovery
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = trt_brahmin_kings
+
+    # fire_damage = 0.1
+    army_fire_damage = 0.10
+}
+
+trt_river_landscape = {
+    age = age_4_reformation
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = supply_depot_advance_age_4_reformation
+
+    # hostile_attrition = 1.0
+    global_hostile_attrition = 1
+}
+
+trt_tirhuta = {
+    age = age_4_reformation
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = trt_river_landscape
+
+    # stability_cost_modifier = -0.1
+    stability_cost_efficiency = 0.10
+}
+
+trt_indigo = {
+    age = age_5_absolutism
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = absolutist_court
+
+    # global_trade_goods_size_modifier = 0.1
+    global_max_rgo_size_modifier = 0.10
+}
+
+abm_trt_ideas_ambition = {
+    age = age_6_revolutions
+    potential = {
+        OR = {
+            has_or_had_tag = TWI
+            has_or_had_tag = TRF
+            has_or_had_tag = ZOO
+        }
+    }
+
+    requires = trt_indigo
+
+    # diplomatic_reputation = 1
+    diplomatic_reputation = diplomatic_reputation_weak_bonus
+}
