@@ -4,7 +4,151 @@
 # Modifiers below are preserved as commented EU4 values.
 
 # FORMABLES
+# Deccan (DEC)
 
+abm_dravidian_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = gli_traditions_1
+	potential = {
+		has_or_had_tag = MHR
+	}
+
+	requires = feudalism_advance
+
+	# religious_unity = 0.33
+	tolerance_own = 2
+}
+
+abm_dravidian_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = gli_traditions_2
+	potential = {
+		has_or_had_tag = MHR
+	}
+
+	requires = abm_dravidian_ideas_tradition_1
+
+	# production_efficiency = 0.1
+	global_production_efficiency = large_production_efficiency_bonus
+}
+
+abm_merchants_of_southern_india = {
+	age = age_2_renaissance
+	icon = gli_merchants_of_southern_india
+	potential = {
+		OR = {
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
+		}
+	}
+
+	requires = renaissance_thought
+
+	# trade_range_modifier = 0.20
+	trade_range_modifier = 0.20
+}
+
+abm_water_tanks_and_canals = {
+	age = age_2_renaissance
+	icon = gli_water_tanks_and_canals
+	potential = {
+		has_or_had_tag = MHR
+	}
+
+	requires = abm_merchants_of_southern_india
+
+	# global_tax_modifier = 0.10
+	global_estate_max_tax = 0.05
+}
+
+abm_polygar_system = {
+	age = age_3_discovery
+	icon = gli_polygar_system
+	potential = {
+		has_or_had_tag = MHR
+	}
+
+	requires = military_traditions
+
+	# global_manpower_modifier = 0.10
+	global_manpower_modifier = 0.10
+}
+
+abm_south_indian_mercenaries = {
+	age = age_3_discovery
+	icon = gli_south_indian_mercenaries
+	potential = {
+		has_or_had_tag = MHR
+	}
+
+	requires = abm_polygar_system
+
+	# merc_maintenance_modifier = -0.15
+	mercenary_maintenance_efficiency = 0.15
+}
+
+abm_patronage_of_temples = {
+	age = age_4_reformation
+	icon = gli_patronage_of_temples
+	potential = {
+		has_or_had_tag = MHR
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
+}
+
+abm_south_indian_literature = {
+	age = age_4_reformation
+	icon = gli_south_indian_literature
+	potential = {
+		has_or_had_tag = MHR
+	}
+
+	requires = abm_patronage_of_temples
+
+	# prestige = 1
+	monthly_prestige = 0.10
+}
+
+abm_merchant_capitalists = {
+	age = age_5_absolutism
+	icon = gli_merchant_capitalists
+	potential = {
+		has_or_had_tag = MHR
+	}
+
+	requires = absolutist_court
+
+	# merchants = 1
+	global_merchant_power = 0.20
+}
+
+abm_dravidian_ideas_ambition = {
+	age = age_6_revolutions
+	icon = gli_ambition
+	potential = {
+		has_or_had_tag = MHR
+	}
+
+	requires = abm_merchant_capitalists
+
+	# trade_efficiency = 0.10
+	trade_efficiency = 0.10
+}
 
 
 
@@ -333,6 +477,12 @@ abm_malabari_ideas_tradition_1 = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
+			# Mabar
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
 		}
 	}
 
@@ -359,6 +509,12 @@ abm_malabari_ideas_tradition_2 = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
+			# Mabar
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
 		}
 	}
 
@@ -417,6 +573,12 @@ abm_malabari_cultural_melting_pot = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
+			# Mabar
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
 		}
 	}
 
@@ -443,6 +605,12 @@ abm_malabari_kerala_school = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
+			# Mabar
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
 		}
 	}
 
@@ -469,6 +637,12 @@ abm_malabari_trade_factors = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
+			# Mabar
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
 		}
 	}
 
@@ -495,6 +669,12 @@ abm_malabari_control_inland = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
+			# Mabar
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
 		}
 	}
 
@@ -521,6 +701,12 @@ abm_malabari_mapilla_sailors = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
+			# Mabar
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
 		}
 	}
 
@@ -547,6 +733,12 @@ abm_malabari_land_of_elephants = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
+			# Mabar
+			has_or_had_tag = MAB
+			has_or_had_tag = TNK
+			has_or_had_tag = SMV
+			has_or_had_tag = JFN
+			has_or_had_tag = VND
 		}
 	}
 
@@ -573,56 +765,7 @@ abm_malabari_ideas_ambition = {
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
 			has_or_had_tag = PDK
-		}
-	}
-
-	requires = abm_malabari_land_of_elephants
-
-	# global_trade_power = 0.1
-	global_trade_center_power = 0.10
-}
-
-abm_dravidian_ideas_tradition_1 = {
-	age = age_1_traditions
-	icon = gli_traditions_1
-	potential = {
-		OR = {
-			has_or_had_tag = MAB
-			has_or_had_tag = TNK
-			has_or_had_tag = SMV
-			has_or_had_tag = JFN
-		}
-	}
-
-	requires = feudalism_advance
-
-	# religious_unity = 0.33
-	tolerance_own = 2
-}
-
-abm_dravidian_ideas_tradition_2 = {
-	age = age_1_traditions
-	icon = gli_traditions_2
-	potential = {
-		OR = {
-			has_or_had_tag = MAB
-			has_or_had_tag = TNK
-			has_or_had_tag = SMV
-			has_or_had_tag = JFN
-		}
-	}
-
-	requires = abm_dravidian_ideas_tradition_1
-
-	# production_efficiency = 0.1
-	global_production_efficiency = large_production_efficiency_bonus
-}
-
-abm_merchants_of_southern_india = {
-	age = age_2_renaissance
-	icon = gli_merchants_of_southern_india
-	potential = {
-		OR = {
+			# Mabar
 			has_or_had_tag = MAB
 			has_or_had_tag = TNK
 			has_or_had_tag = SMV
@@ -631,144 +774,10 @@ abm_merchants_of_southern_india = {
 		}
 	}
 
-	requires = renaissance_thought
+	requires = abm_malabari_land_of_elephants
 
-	# trade_range_modifier = 0.20
-	trade_range_modifier = 0.20
-}
-
-abm_water_tanks_and_canals = {
-	age = age_2_renaissance
-	icon = gli_water_tanks_and_canals
-	potential = {
-		OR = {
-			has_or_had_tag = MAB
-			has_or_had_tag = TNK
-			has_or_had_tag = SMV
-			has_or_had_tag = JFN
-		}
-	}
-
-	requires = abm_merchants_of_southern_india
-
-	# global_tax_modifier = 0.10
-	global_estate_max_tax = 0.05
-}
-
-abm_polygar_system = {
-	age = age_3_discovery
-	icon = gli_polygar_system
-	potential = {
-		OR = {
-			has_or_had_tag = MAB
-			has_or_had_tag = TNK
-			has_or_had_tag = SMV
-			has_or_had_tag = JFN
-		}
-	}
-
-	requires = military_traditions
-
-	# global_manpower_modifier = 0.10
-	global_manpower_modifier = 0.10
-}
-
-abm_south_indian_mercenaries = {
-	age = age_3_discovery
-	icon = gli_south_indian_mercenaries
-	potential = {
-		OR = {
-			has_or_had_tag = MAB
-			has_or_had_tag = TNK
-			has_or_had_tag = SMV
-			has_or_had_tag = JFN
-		}
-	}
-
-	requires = abm_polygar_system
-
-	# merc_maintenance_modifier = -0.15
-	mercenary_maintenance_efficiency = 0.15
-}
-
-abm_patronage_of_temples = {
-	age = age_4_reformation
-	icon = gli_patronage_of_temples
-	potential = {
-		OR = {
-			has_or_had_tag = MAB
-			has_or_had_tag = TNK
-			has_or_had_tag = SMV
-			has_or_had_tag = JFN
-		}
-	}
-
-	requires = supply_depot_advance_age_4_reformation
-
-	# legitimacy = 1
-	# devotion = 1
-	# republican_tradition = 0.3
-	# meritocracy = 1
-	# horde_unity = 1
-	monthly_legitimacy = 0.10
-	monthly_republican_tradition = 0.10
-	monthly_devotion = 0.10
-	monthly_horde_unity = 0.10
-	monthly_tribal_cohesion = 0.10
-}
-
-abm_south_indian_literature = {
-	age = age_4_reformation
-	icon = gli_south_indian_literature
-	potential = {
-		OR = {
-			has_or_had_tag = MAB
-			has_or_had_tag = TNK
-			has_or_had_tag = SMV
-			has_or_had_tag = JFN
-		}
-	}
-
-	requires = abm_patronage_of_temples
-
-	# prestige = 1
-	monthly_prestige = 0.10
-}
-
-abm_merchant_capitalists = {
-	age = age_5_absolutism
-	icon = gli_merchant_capitalists
-	potential = {
-		OR = {
-			has_or_had_tag = MAB
-			has_or_had_tag = TNK
-			has_or_had_tag = SMV
-			has_or_had_tag = JFN
-		}
-	}
-
-	requires = absolutist_court
-
-	# merchants = 1
-	global_merchant_power = 0.20
-}
-
-abm_dravidian_ideas_ambition = {
-	age = age_6_revolutions
-	icon = gli_ambition
-	potential = {
-		OR = {
-			has_or_had_tag = MAB
-			has_or_had_tag = TNK
-			has_or_had_tag = SMV
-			has_or_had_tag = JFN
-		}
-	}
-
-	requires = abm_merchant_capitalists
-
-	# trade_efficiency = 0.10
-	trade_efficiency = 0.10
+	# global_trade_power = 0.1
+	global_trade_center_power = 0.10
 }
 
 # MYS_ideas
