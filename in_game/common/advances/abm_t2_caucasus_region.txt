@@ -698,3 +698,135 @@ abm_caucasus_ideas_ambition = {
     # global_tax_modifier = 0.10
     tax_income_efficiency = 0.10
 }
+
+# Shivan Ideas - SRV
+abm_srv_ideas_tradition_1 = {
+    age = age_1_traditions
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = feudalism_advance
+
+    # leader_land_shock = 1
+    army_initiative = 0.10
+}
+
+abm_srv_ideas_tradition_2 = {
+    age = age_1_traditions
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = abm_srv_ideas_tradition_1
+
+    # global_prov_trade_power_modifier = 0.1
+    global_merchant_power = 0.10
+}
+
+srv_khalwati_order = {
+    age = age_2_renaissance
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = renaissance_thought
+
+    # legitimacy = 1
+    # devotion = 1
+    # republican_tradition = 0.3
+    # meritocracy = 1
+    # horde_unity = 1
+    # monthly_piety = -0.001
+    monthly_legitimacy = 0.10
+    monthly_republican_tradition = 0.10
+    monthly_devotion = 0.10
+    monthly_horde_unity = 0.10
+    monthly_tribal_cohesion = 0.10
+}
+
+srv_fortresses_of_shirvan = {
+    age = age_2_renaissance
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = srv_khalwati_order
+
+    # defensiveness = 0.2
+    global_defensive = 0.20
+}
+
+srv_tribesmen_of_the_caucasus = {
+    age = age_3_discovery
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = military_traditions
+
+    # cavalry_power = 0.15
+    army_light_cavalry_power = 0.15
+}
+
+srv_persianate_patronage = {
+    age = age_3_discovery
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = srv_tribesmen_of_the_caucasus
+
+    # same_culture_advisor_cost = -0.2
+    hire_advisor_cost_modifier = -0.20
+}
+
+srv_caspian_trade = {
+    age = age_4_reformation
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = supply_depot_advance_age_4_reformation
+
+    # caravan_power = 0.2
+    global_trade_center_power = 0.10
+}
+
+srv_shirvani_architecture = {
+    age = age_4_reformation
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = srv_caspian_trade
+
+    # build_cost = -0.1
+    # prestige = 1
+    global_build_buildings_cost = -0.10
+    monthly_prestige = 0.10
+}
+
+srv_merchants_of_baku = {
+    age = age_5_absolutism
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = absolutist_court
+
+    # merchants = 1
+    global_merchant_power = 0.20
+}
+
+abm_srv_ideas_ambition = {
+    age = age_6_revolutions
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = srv_merchants_of_baku
+
+    # global_trade_goods_size_modifier = 0.1
+    global_max_rgo_size_modifier = 0.10
+}
