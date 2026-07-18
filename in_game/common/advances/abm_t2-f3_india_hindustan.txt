@@ -137,6 +137,128 @@ abm_npl_ideas_ambition = {
     discipline = 0.05
 }
 
+# MUG Ideas
+# MUG
+abm_mug_ideas_tradition_1 = {
+    age = age_1_traditions
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = feudalism_advance
+
+    # core_creation = -0.25
+    global_integration_speed_modifier = 0.25
+}
+
+abm_mug_ideas_tradition_2 = {
+    age = age_1_traditions
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = abm_mug_ideas_tradition_1
+
+    # cavalry_power = 0.20
+    army_heavy_cavalry_power = 0.20
+}
+
+mansabdari_system = {
+    age = age_2_renaissance
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = renaissance_thought
+
+    # discipline = 0.05
+    discipline = 0.05
+}
+
+control_of_the_ulema = {
+    age = age_2_renaissance
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = mansabdari_system
+
+    # global_unrest = -1
+    pop_join_rebel_threshold = -0.05
+}
+
+mughal_ibadat_khana = {
+    age = age_3_discovery
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = military_traditions
+
+    # idea_cost = -0.1
+    research_speed_modifier = 0.10
+}
+
+an_indian_padshah = {
+    age = age_3_discovery
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = mughal_ibadat_khana
+
+    # free_mil_policy = 1
+    government_reforms = 1
+}
+
+zabt_system = {
+    age = age_4_reformation
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = supply_depot_advance_age_4_reformation
+
+    # global_tax_modifier = 0.15
+    tax_income_efficiency = 0.05
+}
+
+mughal_architecture = {
+    age = age_4_reformation
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = zabt_system
+
+    # prestige = 1
+    # great_project_upgrade_time = -0.1
+    monthly_prestige = 0.10
+}
+
+fatawa_e_alamgiri = {
+    age = age_5_absolutism
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = absolutist_court
+
+    # stability_cost_modifier = -0.10
+    stability_cost_efficiency = 0.10
+}
+
+abm_mug_ideas_ambition = {
+    age = age_6_revolutions
+    potential = {
+        has_or_had_tag = MUG
+    }
+
+    requires = fatawa_e_alamgiri
+
+    # technology_cost = -0.05
+    research_speed_modifier = 0.05
+}
 
 # PUN_ideas
 # Punjab (PUN)
@@ -274,14 +396,13 @@ abm_pun_ideas_ambition = {
 }
 
 # BHA_ideas
-# Bharat (BHA)
+# Bharatstan (BHA)
 abm_bha_ideas_tradition_1 = {
     age = age_1_traditions
     icon = bha_traditions_1
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
@@ -297,7 +418,6 @@ abm_bha_ideas_tradition_2 = {
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
@@ -313,7 +433,6 @@ abm_bha_modernized_war_elephants = {
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
@@ -329,7 +448,6 @@ abm_bha_united_india = {
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
@@ -345,7 +463,6 @@ abm_bha_sanskrit_golden_age = {
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
@@ -361,7 +478,6 @@ abm_bha_indian_army = {
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
@@ -377,7 +493,6 @@ abm_bha_ganga = {
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
@@ -393,7 +508,6 @@ abm_bha_brahmin_administration = {
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
@@ -410,7 +524,6 @@ abm_bha_rocketry = {
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
@@ -426,7 +539,6 @@ abm_bha_ideas_ambition = {
     potential = {
         OR = {
             has_or_had_tag = ABSND
-            has_or_had_tag = MUG
         }
     }
 
