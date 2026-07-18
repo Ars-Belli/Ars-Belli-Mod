@@ -90,7 +90,41 @@ REPLACE:RJP_f = {
 	color = map_RJP
 
 	regions = {
-		wesetern_india_region
+		western_india_region
+	}
+	form_effect = {
+	}
+}
+
+# Rajastan - Muslim version of Raj
+ABRJS_f = {
+	level = 3
+	required_locations_fraction = 0.8
+	rule = historical
+
+	potential = {
+		OR = {
+			religion.group = religion_group:muslim
+			religion.group = religion_group:dharmic
+		}
+		culture = { has_culture_group = culture_group:indian_group }
+		capital = { region = region:western_india_region }
+	}
+
+	allow = {
+		religion.group = religion_group:muslim
+		culture = { has_culture_group = culture_group:indian_group }
+		capital = { region = region:western_india_region }
+	}
+	
+	name = ABRJS
+	flag = ABRJS
+	adjective = ABRJS_ADJ
+	tag = ABRJS
+	color = map_ABRJS
+
+	regions = {
+		western_india_region
 	}
 	form_effect = {
 	}
