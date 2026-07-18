@@ -6,12 +6,14 @@ REPLACE:arm_legacy_of_hayk = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
 					has_or_had_tag = ARM
                     has_or_had_tag = CIL
+					has_or_had_tag = CIR
 				}
+				has_accepted_culture = culture:armenian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
 			}
 			culture = culture:armenian_culture
 		}
@@ -28,12 +30,13 @@ REPLACE:arm_mount_ararat = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
 					has_or_had_tag = ARM
                     has_or_had_tag = CIL
+					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
 			}
 			culture = culture:armenian_culture
 		}
@@ -51,11 +54,14 @@ REPLACE:cir_mercenary_employment = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+                    has_or_had_tag = CIL
 					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:armenian_culture
 			}
             culture = culture:circassian_culture
         }
@@ -69,12 +75,14 @@ REPLACE:cir_mercenary_employment = {
 REPLACE:geo_legacy_of_saint_george = {
 	age = age_1_traditions
 	potential = {
-        culture = { has_culture_group = culture_group:caucasian_group }
-        OR = {
-            has_or_had_tag = GEO
-            has_or_had_tag = ARM
-            has_or_had_tag = CIL
-        }
+		OR = {
+			has_or_had_tag = GEO
+			has_or_had_tag = ARM
+			has_or_had_tag = CIL
+			has_or_had_tag = CIR
+		}
+		culture = { has_culture_group = culture_group:caucasian_group }
+		has_accepted_culture = culture:georgian_culture
 	}
 
 	requires = scholasticism
@@ -87,6 +95,29 @@ REPLACE:geo_legacy_of_saint_george = {
 # age_2_renaissance (1337-1437)
 ############################
 
+REPLACE:geo_georgian_isolation = {
+	age = age_2_renaissance
+	potential = {
+        OR = {
+			AND = {
+				OR = {
+					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:georgian_culture
+			}
+            culture = culture:georgian_culture
+        }
+	}
+
+	requires = renaissance_court
+
+	improve_relation_impact = 0.20
+}
+
 REPLACE:arm_apostolic_church = {
 	age = age_2_renaissance
 	icon = life_among_infidels
@@ -97,8 +128,11 @@ REPLACE:arm_apostolic_church = {
 				OR = {
 					has_or_had_tag = GEO
 					has_or_had_tag = ARM
-                    has_or_had_tag = CIL
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:armenian_culture
 			}
 			culture = culture:armenian_culture
 		}
@@ -114,12 +148,14 @@ REPLACE:arm_land_reclamation = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
 					has_or_had_tag = ARM
-                    has_or_had_tag = CIL
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:armenian_culture
 			}
 			culture = culture:armenian_culture
 		}
@@ -135,11 +171,14 @@ REPLACE:cir_city_and_fortress = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
 					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:circassian_culture
 			}
             culture = culture:circassian_culture
         }
@@ -157,17 +196,21 @@ REPLACE:cir_horsemen_of_the_steppe = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
 					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:circassian_culture
 			}
             culture = culture:circassian_culture
         }
 	}
 	icon = merchants_and_trade
 	army_light_cavalry_power = 0.10
+	army_light_cavalry_build_cost_modifier = -0.10
 
 	requires = recruitment_improvements_renaissance
 }
@@ -175,11 +218,18 @@ REPLACE:cir_horsemen_of_the_steppe = {
 REPLACE:geo_georgian_principalities = {
 	age = age_2_renaissance
 	potential = {
-        culture = { has_culture_group = culture_group:caucasian_group }
         OR = {
-            has_or_had_tag = GEO
-            has_or_had_tag = ARM
-            has_or_had_tag = CIL
+			AND = {
+				OR = {
+					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:georgian_culture
+			}
+            culture = culture:georgian_culture
         }
 	}
 
@@ -193,16 +243,18 @@ REPLACE:sme_atabegs_of_samtskhe = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
-					has_or_had_tag = SME
 					has_or_had_tag = ARM
 					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+					has_or_had_tag = SME
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:georgian_culture
 			}
-			culture = culture:georgian_culture
-		}
+            culture = culture:georgian_culture
+        }
 	}
 
 	requires = global_nobles_max_literacy_advance
@@ -217,16 +269,18 @@ REPLACE:sme_proactive_diplomacy = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
-					has_or_had_tag = SME
 					has_or_had_tag = ARM
 					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+					has_or_had_tag = SME
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:georgian_culture
 			}
-			culture = culture:georgian_culture
-		}
+            culture = culture:georgian_culture
+        }
 	}
 
 	requires = sme_atabegs_of_samtskhe
@@ -238,17 +292,43 @@ REPLACE:sme_proactive_diplomacy = {
 # age_3_discovery (1437-1537)
 ############################
 
+geo_restoration_of_fortresses_and_churches = {
+	age = age_3_discovery
+	potential = {
+        OR = {
+			AND = {
+				OR = {
+					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+					has_or_had_tag = SME
+				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:georgian_culture
+			}
+            culture = culture:georgian_culture
+        }
+	}
+
+	requires = lumber_improvements_discovery
+
+	global_build_buildings_efficiency = 0.20
+}
+
 REPLACE:arm_melikdom_organization = {
 	age = age_3_discovery
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
 					has_or_had_tag = ARM
-                    has_or_had_tag = CIL
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:armenian_culture
 			}
 			culture = culture:armenian_culture
 		}
@@ -264,17 +344,20 @@ cir_grand_prince_of_circassia = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
 					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:circassian_culture
 			}
-			culture = culture:circassian_culture
-		}
+            culture = culture:circassian_culture
+        }
 	}
 	icon = supply_depot_advance_age_3_discovery
-	land_morale_modifier = 0.1
+	land_morale_modifier = 0.10
 	ai_weight = { add = 10 }
 
 	requires = paved_road_advance
@@ -285,20 +368,47 @@ REPLACE:cir_multireligious_society = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
 					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:circassian_culture
 			}
-			culture = culture:circassian_culture
-		}
+            culture = culture:circassian_culture
+        }
 	}
 	icon = merchants_and_trade
-	tolerance_heretic = 0.5
-	tolerance_heathen = 0.5
+	tolerance_heretic = 1
+	tolerance_heathen = 1
 
 	requires = regulate_court_procedures
+}
+
+REPLACE:sme_fortresses_of_samtskhe = {
+	icon = arm_highland_fortresses
+	age = age_3_discovery
+	potential = {
+        OR = {
+			AND = {
+				OR = {
+					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:georgian_culture
+			}
+            culture = culture:georgian_culture
+        }
+	}
+
+	requires = correct_box_advance_discovery
+
+	fort_limit_modifier = 0.20
 }
 
 ############################
@@ -310,12 +420,14 @@ REPLACE:arm_mountain_armies = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
 					has_or_had_tag = ARM
-                    has_or_had_tag = CIL
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:armenian_culture
 			}
 			culture = culture:armenian_culture
 		}
@@ -331,12 +443,14 @@ REPLACE:arm_nakharar_titles = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
 					has_or_had_tag = ARM
-                    has_or_had_tag = CIL
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:armenian_culture
 			}
 			culture = culture:armenian_culture
 		}
@@ -344,7 +458,7 @@ REPLACE:arm_nakharar_titles = {
 
 	requires = artists_advance_reformations
 
-	monthly_army_tradition = 0.1
+	monthly_army_tradition = 0.10
 }
 
 REPLACE:sme_protect_trade_routes = {
@@ -352,19 +466,70 @@ REPLACE:sme_protect_trade_routes = {
 	potential = {
         OR = {
 			AND = {
-				culture = { has_culture_group = culture_group:caucasian_group }
 				OR = {
 					has_or_had_tag = GEO
-					has_or_had_tag = SME
 					has_or_had_tag = ARM
 					has_or_had_tag = CIL
+					has_or_had_tag = CIR
 				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:georgian_culture
 			}
-			culture = culture:georgian_culture
-		}
+            culture = culture:georgian_culture
+        }
 	}
 
 	requires = global_trade_routes_advance
 
 	trade_land_efficiency = large_trade_land_efficiency_bonus
+}
+
+REPLACE:geo_sadrosho_districts = {
+	age = age_4_reformation
+	potential = {
+        OR = {
+			AND = {
+				OR = {
+					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+					has_or_had_tag = SME
+				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:georgian_culture
+			}
+            culture = culture:georgian_culture
+        }
+	}
+
+	requires = leader_recruit_cost_advance
+
+	army_reinforce_efficiency = 0.10
+}
+
+############################
+# age_6_revolutions
+############################
+REPLACE:geo_georgian_unification = {
+	age = age_6_revolutions
+	potential = {
+        OR = {
+			AND = {
+				OR = {
+					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:georgian_culture
+			}
+            culture = culture:georgian_culture
+        }
+	}
+
+	requires = siege_ability_revolutions
+
+	army_heavy_infantry_build_cost_modifier = -0.20
 }
