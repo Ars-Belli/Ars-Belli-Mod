@@ -77,3 +77,33 @@ abm_lez_hainan_pirates = {
 
 	years = 2
 }
+
+abm_meritocratic_republic_china = {
+	major = yes
+	government = republic
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+        capital = { sub_continent = sub_continent:east_asia }
+	}
+
+	# locked = {
+	# 	always = yes
+	# }
+
+	country_modifier = {
+		global_merchant_capacity_modifier = 0.30
+		trade_income = 0.10
+		global_foreign_build_buildings_efficiency = 0.50
+
+		merchant_maintenance_efficiency = 0.25
+        selling_efficiency = large_trade_efficiency_bonus
+        import_efficiency = large_trade_efficiency_bonus
+	}
+
+	on_activate = {
+		change_heir_selection = heir_selection:oligarchic_elective
+	}
+
+	years = 2
+}
