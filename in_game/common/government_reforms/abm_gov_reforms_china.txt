@@ -1,0 +1,47 @@
+# China-East
+
+# Fang - labourers boost
+
+abm_wuu_people_granary_circuit_reform = {
+	major = no
+	unique = yes
+	age = age_3_discovery
+	potential = {
+		has_advance = abm_wuu_people_granary_circuit
+	}
+	country_modifier = {
+		global_laborers_city_desired_pop_scaled = 0.01
+		global_laborers_rural_desired_pop_scaled = 0.01
+		global_laborers_city_desired_pop = 0.050
+		global_laborers_rural_desired_pop = 0.100
+
+	}
+	years = 2
+}
+
+
+# Wu - Noble Admiralty
+abm_cfn_noble_board_regime = {
+	major = yes
+	unique = yes
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = CFN
+        num_of_ports > 0
+	}
+    allow = {
+		NOR = { 
+            has_reform = government_reform:military_regime_reform
+            has_reform = government_reform:admiralty_regime_reform 
+        }
+	}
+	country_modifier = {
+        trade_income = 0.10
+        global_merchant_capacity_modifier = 0.25
+        global_foreign_build_buildings_efficiency = 0.50
+        allow_privateers_slave_raid = yes
+        can_hire_privateers = yes
+        auto_slave_raid = yes
+	}
+	years = 2
+}

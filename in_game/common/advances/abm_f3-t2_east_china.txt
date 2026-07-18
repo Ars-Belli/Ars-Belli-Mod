@@ -141,31 +141,28 @@ abm_cgu_grand_canal_state_office = {
 	government_size = 1
 }
 
-########################################
-# WUU (Wu) - pirate republic and aggressive sea commerce
-########################################
 
-abm_wuu_sea_lord_consortium = {
+
+abm_cfn_sea_lord_consortium = {
 	age = age_1_traditions
 	icon = privateers_advance
 
 	potential = {
-		has_or_had_tag = WUU
+		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = merchants_and_trade
 
-	allow_privateers_slave_raid = yes
-	can_hire_privateers = yes
-	auto_slave_raid = yes
+	export_efficiency = medium_trade_efficiency_bonus
+	import_efficiency = medium_trade_efficiency_bonus
 }
 
-abm_wuu_raiding_convoy_syndicates = {
+abm_cfn_raiding_convoy_syndicates = {
 	age = age_2_renaissance
 	icon = privateers_advance
 
 	potential = {
-		has_or_had_tag = WUU
+		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = ship_building_techniques_discovery
@@ -173,12 +170,12 @@ abm_wuu_raiding_convoy_syndicates = {
 	naval_range_modifier = 0.20
 }
 
-abm_wuu_maritime_prize_shares = {
+abm_cfn_maritime_prize_shares = {
 	age = age_2_renaissance
 	icon = naval_traditions_advance
 
 	potential = {
-		has_or_had_tag = WUU
+		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = privateers
@@ -187,12 +184,12 @@ abm_wuu_maritime_prize_shares = {
 	naval_damage_done = 0.10
 }
 
-abm_wuu_hidden_harbor_networks = {
+abm_cfn_hidden_harbor_networks = {
 	age = age_3_discovery
 	icon = privateers_advance
 
 	potential = {
-		has_or_had_tag = WUU
+		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = trade_envoys
@@ -200,28 +197,28 @@ abm_wuu_hidden_harbor_networks = {
 	global_maritime_presence_modifier = 0.20
 }
 
-abm_wuu_blue_water_pilot_books = {
+abm_cfn_blue_water_pilot_books = {
 	age = age_3_discovery
 	icon = global_trade_routes_advance
 
 	potential = {
 		OR = {
-			has_or_had_tag = WUU
+			has_or_had_tag = CFN
 			has_or_had_tag = ABECP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = merchant_power_from_maritime_discovery_advance
 
-	naval_range_modifier = 0.20
+	army_disembark_speed = 0.35
 }
 
-abm_wuu_crown_letters_of_prize = {
+abm_cfn_crown_letters_of_prize = {
 	age = age_4_reformation
 	icon = privateers_advance
 
 	potential = {
-		has_or_had_tag = WUU
+		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = imperial_ambitions
@@ -229,12 +226,12 @@ abm_wuu_crown_letters_of_prize = {
 	naval_damage_taken = -0.10
 }
 
-abm_wuu_privateer_office = {
+abm_cfn_privateer_office = {
 	age = age_4_reformation
 	icon = court_accounting
 
 	potential = {
-		has_or_had_tag = WUU
+		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = power_projection_advance_3
@@ -242,12 +239,12 @@ abm_wuu_privateer_office = {
 	global_sailors_modifier = 0.10
 }
 
-abm_wuu_blockade_admiralty = {
+abm_cfn_blockade_admiralty = {
 	age = age_5_absolutism
 	icon = naval_traditions_advance
 
 	potential = {
-		has_or_had_tag = WUU
+		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = absolute_rulership
@@ -255,29 +252,31 @@ abm_wuu_blockade_admiralty = {
 	blockade_efficiency = 0.20
 }
 
-abm_wuu_oceanic_prize_ministry = {
+abm_cfn_oceanic_prize_ministry = {
 	age = age_6_revolutions
 	icon = privateers_advance
 
 	potential = {
-		has_or_had_tag = WUU
+		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = modern_bureaucracy
 
-	army_disembark_speed = 0.35
+	naval_range_modifier = 0.20
 }
 
+
+
 ########################################
-# CFN (Fang) - agrarian republic
+# Wu (WUU) - agrarian republic
 ########################################
 
-abm_cfn_village_confederation_charter = {
+abm_wuu_village_confederation_charter = {
 	age = age_1_traditions
 	icon = laws
 
 	potential = {
-		has_or_had_tag = CFN
+		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = guilds
@@ -288,13 +287,13 @@ abm_cfn_village_confederation_charter = {
 	global_nobles_estate_power = -0.10
 }
 
-abm_cfn_local_landholder_pacts = {
+abm_wuu_local_landholder_pacts = {
 	age = age_2_renaissance
 	icon = smooth_administration
 
 	potential = {
 		OR = {
-			has_or_had_tag = CFN
+			has_or_had_tag = WUU
 			has_or_had_tag = ABECP
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
@@ -304,12 +303,12 @@ abm_cfn_local_landholder_pacts = {
 	global_estate_target_satisfaction = 0.05
 }
 
-abm_cfn_terrace_restoration_bureaus = {
+abm_wuu_terrace_restoration_bureaus = {
 	age = age_2_renaissance
 	icon = road_building
 
 	potential = {
-		has_or_had_tag = CFN
+		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = legalism_advance
@@ -317,26 +316,25 @@ abm_cfn_terrace_restoration_bureaus = {
 	global_max_rgo_size_modifier_in_non_rural = 0.50
 }
 
-abm_cfn_people_granary_circuit = {
+abm_wuu_people_granary_circuit = {
 	age = age_3_discovery
 	icon = court_accounting
 
 	potential = {
-		has_or_had_tag = CFN
+		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = global_trade_advance
 
-	global_labourers_city_desired_pop = 0.500
-	global_labourers_rural_desired_pop = 0.200
+	unlock_government_reform = abm_wuu_people_granary_circuit_reform
 }
 
-abm_cfn_field_census_commission = {
+abm_wuu_field_census_commission = {
 	age = age_3_discovery
 	icon = efficient_mining
 
 	potential = {
-		has_or_had_tag = CFN
+		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = rgo_logistics_discovery
@@ -347,12 +345,12 @@ abm_cfn_field_census_commission = {
 	global_iron_output_modifier = 0.10
 }
 
-abm_cfn_famine_and_plague_offices = {
+abm_wuu_famine_and_plague_offices = {
 	age = age_4_reformation
 	icon = church_councils
 
 	potential = {
-		has_or_had_tag = CFN
+		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = imperial_ambitions
@@ -361,12 +359,12 @@ abm_cfn_famine_and_plague_offices = {
 	global_disease_resistance = 0.10
 }
 
-abm_cfn_township_ledger_bureau = {
+abm_wuu_township_ledger_bureau = {
 	age = age_4_reformation
 	icon = court_accounting
 
 	potential = {
-		has_or_had_tag = CFN
+		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = power_projection_advance_3
@@ -374,12 +372,12 @@ abm_cfn_township_ledger_bureau = {
 	global_monthly_prosperity = 0.001
 }
 
-abm_cfn_peasant_mobility_charter = {
+abm_wuu_peasant_mobility_charter = {
 	age = age_5_absolutism
 	icon = cultural_acceptance_advance
 
 	potential = {
-		has_or_had_tag = CFN
+		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = absolute_rulership
@@ -388,12 +386,12 @@ abm_cfn_peasant_mobility_charter = {
 	non_rural_migration_attraction = 0.10
 }
 
-abm_cfn_granary_high_commission = {
+abm_wuu_granary_high_commission = {
 	age = age_6_revolutions
 	icon = court_accounting
 
 	potential = {
-		has_or_had_tag = CFN
+		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = modern_bureaucracy
