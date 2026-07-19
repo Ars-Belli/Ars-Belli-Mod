@@ -49,12 +49,13 @@ abm_cfn_noble_board_regime = {
 	years = 2
 }
 
-abm_lez_hainan_pirates = {
+abm_china_pirates = {
 	major = yes
 	government = republic
 
 	potential = {
-		has_or_had_tag = LEZ
+		culture = { has_culture_group = culture_group:chinese_group }
+        capital = { sub_continent = sub_continent:east_asia }
 	}
 
 	locked = {
@@ -78,7 +79,7 @@ abm_lez_hainan_pirates = {
 	years = 2
 }
 
-abm_meritocratic_republic_china = {
+abm_china_meritocratic_republic = {
 	major = yes
 	government = republic
 
@@ -99,6 +100,39 @@ abm_meritocratic_republic_china = {
 		merchant_maintenance_efficiency = 0.25
         selling_efficiency = large_trade_efficiency_bonus
         import_efficiency = large_trade_efficiency_bonus
+	}
+
+	on_activate = {
+		change_heir_selection = heir_selection:oligarchic_elective
+	}
+
+	years = 2
+}
+
+abm_china_buddhist_order = {
+	age = age_1_traditions
+	major = yes
+	government = theocracy
+
+	potential = {
+		religion.group = religion_group:buddhist
+        original_capital = { sub_continent = sub_continent:east_asia }
+	}
+
+	# locked = {
+	# 	always = yes
+	# }
+
+	country_modifier = {
+		clergy_estate_allowed_leading_military = yes
+		clergy_estate_blocked_from_leading_military = no
+		clergy_estate_levy_size = 0.35
+		army_light_infantry_power = 0.10
+		damage_done_versus_heathens_modifier = 0.10
+		unlock_building = cawa_barracks
+
+		monthly_towards_defensive = societal_value_monthly_move
+		monthly_towards_quality = societal_value_monthly_move
 	}
 
 	on_activate = {
