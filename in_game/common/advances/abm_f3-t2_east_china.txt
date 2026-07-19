@@ -52,7 +52,7 @@ abm_cgu_prefectural_grain_ledgers = {
 	}
 	requires = regulate_court_procedures
 
-	global_monthly_control = 0.003
+	global_monthly_control = 0.002
 }
 
 abm_cgu_court_of_noble_envoys = {
@@ -79,10 +79,10 @@ abm_cgu_jiangnan_canal_markets = {
 	}
 	requires = trade_envoys
 
-	global_nobles_city_desired_pop = 0.020
-	global_nobles_rural_desired_pop = 0.005
-	global_soldiers_city_desired_pop = 0.250
-	global_soldiers_rural_desired_pop = 0.100
+	global_nobles_city_desired_pop_scaled = 0.005
+	global_nobles_rural_desired_pop_scaled = 0.001
+	global_soldiers_city_desired_pop_scaled = 0.050
+	global_soldiers_rural_desired_pop_scaled = 0.025
 }
 
 abm_cgu_transit_levy_charters = {
@@ -141,7 +141,7 @@ abm_cgu_grand_canal_state_office = {
 	government_size = 1
 }
 
-
+# Fang - Pirates
 
 abm_cfn_sea_lord_consortium = {
 	age = age_1_traditions
@@ -427,7 +427,7 @@ abm_cnp_hill_town_privileges = {
 	}
 	requires = legalism_advance
 
-	non_rural_migration_attraction = 0.15
+	non_rural_migration_attraction = 0.20
 }
 
 abm_cnp_settlement_promotion = {
@@ -456,7 +456,7 @@ abm_cnp_irrigation_works = {
 	}
 	requires = rgo_logistics_discovery
 
-	global_construction_speed = 0.10
+	global_build_buildings_efficiency = 0.20
 }
 
 abm_cnp_mountain_post_roads = {
@@ -469,7 +469,7 @@ abm_cnp_mountain_post_roads = {
 	}
 	requires = paved_road_advance
 
-	global_road_building_time = -0.10
+	global_road_building_time = -0.25
 }
 
 abm_cnp_ridgeway_engineering = {
@@ -482,7 +482,7 @@ abm_cnp_ridgeway_engineering = {
 	}
 	requires = imperial_ambitions
 
-	build_paved_road_cost_modifier = -0.10
+	road_cost_on_distance_from_capital = -2
 }
 
 abm_cnp_emergency_relays = {
@@ -495,7 +495,8 @@ abm_cnp_emergency_relays = {
 	}
 	requires = trade_envoys
 
-	movement_speed_if_no_road = 0.10
+	army_movement_speed = 0.10
+	morale_recovery_in_friendly = 0.10
 }
 
 abm_cnp_non_rural_market_policy = {
@@ -508,7 +509,7 @@ abm_cnp_non_rural_market_policy = {
 	}
 	requires = national_sovereignty
 
-	global_max_rgo_size_modifier_in_non_rural = 0.10
+	global_max_rgo_size_modifier_in_non_rural = 0.25
 }
 
 abm_cnp_frontier_roads_bureau = {
@@ -807,7 +808,7 @@ abm_chu_gold_silver_assay_board = {
 	}
 	requires = counting_house_advance
 
-	global_goods_gold_output_modifier = 0.10
+	global_goods_gold_output_modifier = 0.15
 	global_silver_output_modifier = 0.15
 }
 
@@ -821,7 +822,7 @@ abm_chu_imperial_jewelry_monopoly = {
 	}
 	requires = merchant_power_from_maritime_discovery_advance
 
-	global_jewelry_output_modifier = 0.10
+	global_jewelry_output_modifier = 0.15
 }
 
 abm_chu_iron_and_coal_foundries = {
@@ -834,8 +835,8 @@ abm_chu_iron_and_coal_foundries = {
 	}
 	requires = bole_smelting
 
-	global_iron_output_modifier = 0.15
-	global_coal_output_modifier = 0.15
+	global_iron_output_modifier = 0.20
+	global_coal_output_modifier = 0.20
 }
 
 abm_chu_campaign_pay_chancery = {
@@ -848,7 +849,7 @@ abm_chu_campaign_pay_chancery = {
 	}
 	requires = supply_lines
 
-	army_maintenance_efficiency = 0.10
+	army_maintenance_efficiency = 0.20
 }
 
 abm_chu_treasury_stabilization_edicts = {
@@ -891,7 +892,7 @@ abm_chu_frontier_logistics_commands = {
 	}
 	requires = national_sovereignty
 
-	possible_frontage_modifier = 0.10
+	possible_frontage_modifier = 0.20
 }
 
 abm_chu_metropolitan_mint_bureaus = {

@@ -27,24 +27,24 @@ abm_cfn_noble_board_regime = {
 	age = age_1_traditions
 	potential = {
 		has_or_had_tag = CFN
-        num_of_ports > 0
+		num_of_ports > 0
 	}
 	locked = {
 		always = yes
 	}
-    allow = {
+	allow = {
 		NOR = { 
-            has_reform = government_reform:military_regime_reform
-            has_reform = government_reform:admiralty_regime_reform 
-        }
+			has_reform = government_reform:military_regime_reform
+			has_reform = government_reform:admiralty_regime_reform 
+		}
 	}
 	country_modifier = {
-        trade_income = 0.10
-        global_merchant_capacity_modifier = 0.25
-        global_foreign_build_buildings_efficiency = 0.50
-        allow_privateers_slave_raid = yes
-        can_hire_privateers = yes
-        auto_slave_raid = yes
+		trade_income = 0.10
+		global_merchant_capacity_modifier = 0.25
+		global_foreign_build_buildings_efficiency = 0.50
+		allow_privateers_slave_raid = yes
+		can_hire_privateers = yes
+		auto_slave_raid = yes
 	}
 	years = 2
 }
@@ -55,7 +55,7 @@ abm_china_pirates = {
 
 	potential = {
 		culture = { has_culture_group = culture_group:chinese_group }
-        capital = { sub_continent = sub_continent:east_asia }
+		capital = { sub_continent = sub_continent:east_asia }
 	}
 
 	locked = {
@@ -64,11 +64,11 @@ abm_china_pirates = {
 
 	country_modifier = {
 		can_hire_privateers = yes
-        allow_privateers_slave_raid = yes
-        auto_slave_raid = yes
+		allow_privateers_slave_raid = yes
+		auto_slave_raid = yes
 		monthly_towards_naval = societal_value_large_monthly_move
 		navy_maintenance_efficiency = 0.20
-        global_sailors_modifier = 0.10
+		global_sailors_modifier = 0.10
 		court_language_is_common_language_importance_modifier = 15
 	}
 
@@ -85,7 +85,7 @@ abm_china_meritocratic_republic = {
 
 	potential = {
 		culture = { has_culture_group = culture_group:chinese_group }
-        capital = { sub_continent = sub_continent:east_asia }
+		capital = { sub_continent = sub_continent:east_asia }
 	}
 
 	# locked = {
@@ -98,8 +98,8 @@ abm_china_meritocratic_republic = {
 		global_foreign_build_buildings_efficiency = 0.50
 
 		merchant_maintenance_efficiency = 0.25
-        selling_efficiency = large_trade_efficiency_bonus
-        import_efficiency = large_trade_efficiency_bonus
+		selling_efficiency = large_trade_efficiency_bonus
+		import_efficiency = large_trade_efficiency_bonus
 	}
 
 	on_activate = {
@@ -116,7 +116,7 @@ abm_china_buddhist_order = {
 
 	potential = {
 		religion.group = religion_group:buddhist
-        original_capital = { sub_continent = sub_continent:east_asia }
+		original_capital = { sub_continent = sub_continent:east_asia }
 	}
 
 	# locked = {
@@ -140,4 +140,32 @@ abm_china_buddhist_order = {
 	}
 
 	years = 2
+}
+
+abm_china_ahimsa_code = {
+	icon = "GFX_reform_icon_ahimsa"  # Replace with an actual icon or create one
+	age = age_traditions
+
+	# For China / East Asia Buddhist flavor
+	potential = {
+		religion.group = religion_group:buddhist
+		original_capital = { sub_continent = sub_continent:east_asia }
+		OR = {
+			government_type = government_type:republic
+			government_type = government_type:theocracy
+		}
+	}
+
+	country_modifier = {
+		can_declare_war = no
+		global_monthly_development = 0.002
+		global_monthly_prosperity = 0.002
+		blocked_from_declaring_war = yes
+	}
+
+	years = 2
+
+	allow = {
+	}
+
 }
