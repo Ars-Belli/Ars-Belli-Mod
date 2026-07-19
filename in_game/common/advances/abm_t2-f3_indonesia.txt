@@ -64,16 +64,16 @@
 # - If exactly one tag uses an advance, do not use an `OR` block:
 #
 #   potential = {
-#       has_or_had_tag = <TAG>
+#	   has_or_had_tag = <TAG>
 #   }
 #
 # - If two or more tags use an advance, place all tags in a single `OR` block:
 #
 #   potential = {
-#       OR = {
-#           has_or_had_tag = <TAG_1>
-#           has_or_had_tag = <TAG_2>
-#       }
+#	   OR = {
+#		   has_or_had_tag = <TAG_1>
+#		   has_or_had_tag = <TAG_2>
+#	   }
 #   }
 #
 # Requirements:
@@ -107,25 +107,25 @@
 #
 # - Suggested placeholder themes:
 #   - Trade, merchants, trade power, trade efficiency, trade steering:
-#     `icon = TODO_trade_icon`
+#	 `icon = TODO_trade_icon`
 #   - Ships, sailors, naval morale, naval force limit, ship cost:
-#     `icon = TODO_naval_icon`
+#	 `icon = TODO_naval_icon`
 #   - Land morale, infantry, manpower, warfare, attrition:
-#     `icon = TODO_military_icon`
+#	 `icon = TODO_military_icon`
 #   - Missionaries, religious conversion, tolerance:
-#     `icon = TODO_religion_icon`
+#	 `icon = TODO_religion_icon`
 #   - Technology, institutions, advisors, idea cost, scholarship:
-#     `icon = TODO_scholarship_icon`
+#	 `icon = TODO_scholarship_icon`
 #   - Prestige, legitimacy, stability, authority, government:
-#     `icon = TODO_government_icon`
+#	 `icon = TODO_government_icon`
 #   - Production, tax, trade goods, construction, development:
-#     `icon = TODO_economy_icon`
+#	 `icon = TODO_economy_icon`
 #   - Diplomacy, diplomats, reputation, relations:
-#     `icon = TODO_diplomacy_icon`
+#	 `icon = TODO_diplomacy_icon`
 #   - Colonization, settlers, colonial growth:
-#     `icon = TODO_colonization_icon`
+#	 `icon = TODO_colonization_icon`
 #   - Forts, defensiveness, defensive structures:
-#     `icon = TODO_fortification_icon`
+#	 `icon = TODO_fortification_icon`
 # - Traditions may use their own advance key as the icon only when the icon
 #   already exists in the project:
 #
@@ -158,7 +158,7 @@
 #   as shared, for example:
 #
 #   settle_the_islands = { # same as malay ideas
-#       global_colonial_growth = 20
+#	   global_colonial_growth = 20
 #   }
 #
 # - An explicitly shared idea produces one shared advance:
@@ -191,12 +191,12 @@
 #
 #   # Sumatran version:
 #   porch_of_mecca = {
-#       global_missionary_strength = 0.02
+#	   global_missionary_strength = 0.02
 #   }
 #
 #   # Aceh version:
 #   porch_of_mecca = {
-#       technology_cost = -0.10
+#	   technology_cost = -0.10
 #   }
 #
 #   # Generated advances:
@@ -220,1036 +220,1036 @@
 # # <TAG_1> <TAG_2>
 #
 # <advance_key> = {
-#     age = <age_key>
-#     icon = <existing_icon_key_or_TODO_placeholder>
-#     potential = {
-#         OR = {
-#             has_or_had_tag = <TAG_1>
-#             has_or_had_tag = <TAG_2>
-#         }
-#     }
+#	 age = <age_key>
+#	 icon = <existing_icon_key_or_TODO_placeholder>
+#	 potential = {
+#		 OR = {
+#			 has_or_had_tag = <TAG_1>
+#			 has_or_had_tag = <TAG_2>
+#		 }
+#	 }
 #
-#     requires = <prerequisite_advance>
+#	 requires = <prerequisite_advance>
 #
-#     # <original_eu4_modifier> = <original_value>
+#	 # <original_eu4_modifier> = <original_value>
 # }
 #
 # Single-tag example:
 #
 # abm_example_advance = {
-#     age = age_2_renaissance
-#     icon = TODO_trade_icon
-#     potential = {
-#         has_or_had_tag = EXM
-#     }
+#	 age = age_2_renaissance
+#	 icon = TODO_trade_icon
+#	 potential = {
+#		 has_or_had_tag = EXM
+#	 }
 #
-#     requires = TODO_trade_requirement
+#	 requires = TODO_trade_requirement
 #
-#     # trade_efficiency = 0.10
+#	 # trade_efficiency = 0.10
 # }
 #
 # Multi-tag example:
 #
 # abm_example_advance = {
-#     age = age_2_renaissance
-#     icon = TODO_trade_icon
-#     potential = {
-#         OR = {
-#             has_or_had_tag = EXM
-#             has_or_had_tag = EX2
-#         }
-#     }
+#	 age = age_2_renaissance
+#	 icon = TODO_trade_icon
+#	 potential = {
+#		 OR = {
+#			 has_or_had_tag = EXM
+#			 has_or_had_tag = EX2
+#		 }
+#	 }
 #
-#     requires = TODO_trade_requirement
+#	 requires = TODO_trade_requirement
 #
-#     # trade_efficiency = 0.10
+#	 # trade_efficiency = 0.10
 # }
 
 
 # Sumatran Ideas
 # JMB INR PNI ARU BUS
 abm_sumatran_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # production_efficiency = 0.10
-    global_production_efficiency = 0.10
+	# production_efficiency = 0.10
+	global_production_efficiency = 0.10
 }
 
 abm_sumatran_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = abm_sumatran_ideas_tradition_1
+	requires = abm_sumatran_ideas_tradition_1
 
-    # trade_range_modifier = 0.15
-    trade_range_modifier = 0.15
+	# trade_range_modifier = 0.15
+	trade_range_modifier = 0.15
 }
 
 abm_reliance_on_trade = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # trade_efficiency = 0.10
-    trade_income = 0.10
+	# trade_efficiency = 0.10
+	trade_income = 0.10
 }
 
 abm_sumatran_ideas_porch_of_mecca = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = abm_reliance_on_trade
+	requires = abm_reliance_on_trade
 
-    # global_missionary_strength = 0.02
-    global_pop_conversion_speed_modifier = 0.20
+	# global_missionary_strength = 0.02
+	global_pop_conversion_speed_modifier = 0.20
 }
 
 abm_spice_pirates = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # light_ship_power = 0.10
-    # privateer_efficiency = 0.15
-    navy_light_ship_power = 0.10
-    global_merchant_power = 0.10
+	# light_ship_power = 0.10
+	# privateer_efficiency = 0.15
+	navy_light_ship_power = 0.10
+	global_merchant_power = 0.10
 }
 
 abm_center_of_scholarship = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = abm_spice_pirates
+	requires = abm_spice_pirates
 
-    # advisor_cost = -0.15
-    hire_advisor_cost_modifier = -0.15
+	# advisor_cost = -0.15
+	hire_advisor_cost_modifier = -0.15
 }
 
 abm_merchants_of_the_indian_ocean = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # merchants = 1
-    global_merchant_power = 0.20
+	# merchants = 1
+	global_merchant_power = 0.20
 }
 
 abm_legacy_of_srivijaya = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = abm_merchants_of_the_indian_ocean
+	requires = abm_merchants_of_the_indian_ocean
 
-    # prestige = 1
-    monthly_prestige = 0.10
+	# prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_rule_of_the_sea = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # naval_forcelimit_modifier = 0.25
-    expected_navy_size_modifier = 0.25
+	# naval_forcelimit_modifier = 0.25
+	expected_navy_size_modifier = 0.25
 }
 
 abm_sumatran_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = JMB
-            has_or_had_tag = INR
-            has_or_had_tag = PNI
-            has_or_had_tag = ARU
-            has_or_had_tag = BUS
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
 
-    requires = abm_rule_of_the_sea
+	requires = abm_rule_of_the_sea
 
-    # defensiveness = 0.20
-    global_defensive = 0.20
+	# defensiveness = 0.20
+	global_defensive = 0.20
 }
 
 
 # Pasai and Aceh Ideas
 # PSA ACH
 abm_atj_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_ship_cost = -0.1
-    navy_light_ship_build_cost_modifier = -0.10
-    navy_galley_build_cost_modifier = -0.10
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
 }
 
 abm_atj_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
 
-    requires = abm_atj_ideas_tradition_1
+	requires = abm_atj_ideas_tradition_1
 
-    # global_missionary_strength = 0.02
-    global_pop_conversion_speed_modifier = 0.20
+	# global_missionary_strength = 0.02
+	global_pop_conversion_speed_modifier = 0.20
 }
 
 abm_export_economy = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # global_trade_power = 0.1
-    global_merchant_power = 0.10
+	# global_trade_power = 0.1
+	global_merchant_power = 0.10
 }
 
 abm_islamise_sumatra = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
 
-    requires = abm_export_economy
+	requires = abm_export_economy
 
-    # missionary_maintenance_cost = -0.25
-    global_pop_conversion_speed_modifier = 0.10
+	# missionary_maintenance_cost = -0.25
+	global_pop_conversion_speed_modifier = 0.10
 }
 
 abm_rise_of_aceh = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # province_warscore_cost = -0.1
-    global_war_score_efficiency = 0.10
+	# province_warscore_cost = -0.1
+	global_war_score_efficiency = 0.10
 }
 
 abm_military_adventures = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
 
-    requires = abm_rise_of_aceh
+	requires = abm_rise_of_aceh
 
-    # naval_morale = 0.15
-    naval_morale_modifier = 0.15
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
 }
 
 abm_atj_ideas_porch_of_mecca = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # technology_cost = -0.10
-    research_speed_modifier = 0.10
+	# technology_cost = -0.10
+	research_speed_modifier = 0.10
 }
 
 abm_acehnese_moneylending = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
 
-    requires = abm_atj_ideas_porch_of_mecca
+	requires = abm_atj_ideas_porch_of_mecca
 
-    # interest = -1
-    bank_interest = -0.01
+	# interest = -1
+	bank_interest = -0.01
 }
 
 abm_settle_the_islands = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-            has_or_had_tag = BEI
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+			has_or_had_tag = BEI
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # global_colonial_growth = 20
-    colonial_migration_size = 20
+	# global_colonial_growth = 20
+	colonial_migration_size = 20
 }
 
 abm_atj_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = PSA
-            has_or_had_tag = ACH
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
 
-    requires = abm_settle_the_islands
+	requires = abm_settle_the_islands
 
-    # production_efficiency = 0.1
-    global_production_efficiency = 0.10
+	# production_efficiency = 0.1
+	global_production_efficiency = 0.10
 }
 
 
 # Siguntur Ideas
 # SGT
 abm_pgr_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # defensiveness = 0.1
-    global_defensive = 0.10
+	# defensiveness = 0.1
+	global_defensive = 0.10
 }
 
 abm_pgr_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = abm_pgr_ideas_tradition_1
+	requires = abm_pgr_ideas_tradition_1
 
-    # tolerance_heathen = 2
-    tolerance_heathen = 2
+	# tolerance_heathen = 2
+	tolerance_heathen = 2
 }
 
 abm_pgr_tantric_legacy = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # global_missionary_strength = 0.02
-    global_pop_conversion_speed_modifier = 0.20
+	# global_missionary_strength = 0.02
+	global_pop_conversion_speed_modifier = 0.20
 }
 
 abm_pgr_gold_trade = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = abm_pgr_tantric_legacy
+	requires = abm_pgr_tantric_legacy
 
-    # global_trade_power = 0.1
-    global_merchant_power = 0.10
+	# global_trade_power = 0.1
+	global_merchant_power = 0.10
 }
 
 abm_pgr_istano_basa = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # legitimacy = 1
-    # devotion = 1
-    # republican_tradition = 0.3
-    # meritocracy = 1
-    # horde_unity = 1
-    monthly_legitimacy = 0.10
-    monthly_republican_tradition = 0.10
-    monthly_devotion = 0.10
-    monthly_horde_unity = 0.10
-    monthly_tribal_cohesion = 0.10
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_pgr_rajo_tigo_selo = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = abm_pgr_istano_basa
+	requires = abm_pgr_istano_basa
 
-    # global_unrest = -1
-    pop_join_rebel_threshold = -0.05
+	# global_unrest = -1
+	pop_join_rebel_threshold = -0.05
 }
 
 abm_pgr_high_education = {
-    age = age_4_reformation
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # global_institution_spread = 0.1
-    global_institution_growth_modifier = 0.10
+	# global_institution_spread = 0.1
+	global_institution_growth_modifier = 0.10
 }
 
 abm_pgr_rumah_gadang = {
-    age = age_4_reformation
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = abm_pgr_high_education
+	requires = abm_pgr_high_education
 
-    # prestige = 1
-    monthly_prestige = 0.10
+	# prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_pgr_matrilinear_culture = {
-    age = age_5_absolutism
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_5_absolutism
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # stability_cost_modifier = -0.1
-    stability_cost_efficiency = 0.10
+	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
 }
 
 abm_pgr_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        has_or_had_tag = SGT
-    }
+	age = age_6_revolutions
+	potential = {
+		has_or_had_tag = SGT
+	}
 
-    requires = abm_pgr_matrilinear_culture
+	requires = abm_pgr_matrilinear_culture
 
-    # trade_efficiency = 0.1
-    trade_income = 0.10
+	# trade_efficiency = 0.1
+	trade_income = 0.10
 }
 
 
 # Palembang Ideas
 # PLB
 abm_plb_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_trade_power = 0.15
-    global_merchant_power = 0.15
+	# global_trade_power = 0.15
+	global_merchant_power = 0.15
 }
 
 abm_plb_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = abm_plb_ideas_tradition_1
+	requires = abm_plb_ideas_tradition_1
 
-    # global_ship_cost = -0.1
-    navy_light_ship_build_cost_modifier = -0.10
-    navy_galley_build_cost_modifier = -0.10
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
 }
 
 abm_plb_ancient_scriptures = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # prestige = 1
-    monthly_prestige = 0.10
+	# prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_plb_pirate_ancestry = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = abm_plb_ancient_scriptures
+	requires = abm_plb_ancient_scriptures
 
-    # rebel_support_efficiency = 0.25
-    spy_network_construction = 0.10
+	# rebel_support_efficiency = 0.25
+	spy_network_construction = 0.10
 }
 
 abm_plb_controlling_the_strait = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # embargo_efficiency = 0.05
-    # privateer_efficiency = 0.4
-    global_trade_center_power = 0.10
-    global_merchant_power = 0.20
+	# embargo_efficiency = 0.05
+	# privateer_efficiency = 0.4
+	global_trade_center_power = 0.10
+	global_merchant_power = 0.20
 }
 
 abm_plb_center_of_the_dynasty = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = abm_plb_controlling_the_strait
+	requires = abm_plb_controlling_the_strait
 
-    # improve_relation_modifier = 0.1
-    # fabricate_claims_cost = -0.25
-    improve_relation_impact = 0.10
-    casus_belli_creation_speed_modifier = 0.25
+	# improve_relation_modifier = 0.1
+	# fabricate_claims_cost = -0.25
+	improve_relation_impact = 0.10
+	casus_belli_creation_speed_modifier = 0.25
 }
 
 abm_plb_trading_hub = {
-    age = age_4_reformation
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # global_ship_trade_power = 0.2
-    global_merchant_power = 0.20
+	# global_ship_trade_power = 0.2
+	global_merchant_power = 0.20
 }
 
 abm_plb_through_the_monsoon = {
-    age = age_4_reformation
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = abm_plb_trading_hub
+	requires = abm_plb_trading_hub
 
-    # recover_navy_morale_speed = 0.25
-    naval_morale_recovery = 0.25
+	# recover_navy_morale_speed = 0.25
+	naval_morale_recovery = 0.25
 }
 
 abm_plb_learned_scholars = {
-    age = age_5_absolutism
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_5_absolutism
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # technology_cost = -0.1
-    research_speed_modifier = 0.10
+	# technology_cost = -0.1
+	research_speed_modifier = 0.10
 }
 
 abm_plb_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        has_or_had_tag = PLB
-    }
+	age = age_6_revolutions
+	potential = {
+		has_or_had_tag = PLB
+	}
 
-    requires = abm_plb_learned_scholars
+	requires = abm_plb_learned_scholars
 
-    # ship_durability = 0.1
-    naval_morale_modifier = 0.10
+	# ship_durability = 0.1
+	naval_morale_modifier = 0.10
 }
 
 
 # Sundanese Ideas
 # SUN MTM DEM PJN
 abm_sun_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # tolerance_heretic = 1
-    tolerance_heretic = 1
+	# tolerance_heretic = 1
+	tolerance_heretic = 1
 }
 
 abm_sun_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = abm_sun_ideas_tradition_1
+	requires = abm_sun_ideas_tradition_1
 
-    # manpower_recovery_speed = 0.2
-    regiment_reinforcement_speed = 0.20
+	# manpower_recovery_speed = 0.2
+	regiment_reinforcement_speed = 0.20
 }
 
 abm_candi_shrines = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # tolerance_own = 1
-    tolerance_own = 1
+	# tolerance_own = 1
+	tolerance_own = 1
 }
 
 abm_sunda_galuh = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = abm_candi_shrines
+	requires = abm_candi_shrines
 
-    # global_unrest = -1
-    pop_join_rebel_threshold = -0.05
+	# global_unrest = -1
+	pop_join_rebel_threshold = -0.05
 }
 
 abm_defensive_moats = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # defensiveness = 0.2
-    global_defensive = 0.20
+	# defensiveness = 0.2
+	global_defensive = 0.20
 }
 
 abm_wooden_architecture = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = abm_defensive_moats
+	requires = abm_defensive_moats
 
-    # build_cost = -0.1
-    global_build_buildings_cost = -0.10
+	# build_cost = -0.1
+	global_build_buildings_cost = -0.10
 }
 
 abm_pan_asian_trade = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # merchants = 1
-    # trade_steering = 0.10
-    global_merchant_power = 0.20
-    global_trade_center_power = 0.10
+	# merchants = 1
+	# trade_steering = 0.10
+	global_merchant_power = 0.20
+	global_trade_center_power = 0.10
 }
 
 abm_seren_taun = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = abm_pan_asian_trade
+	requires = abm_pan_asian_trade
 
-    # global_tax_modifier = 0.1
-    tax_income_efficiency = 0.10
+	# global_tax_modifier = 0.1
+	tax_income_efficiency = 0.10
 }
 
 abm_bi_yearly_harvest = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # global_trade_goods_size_modifier = 0.10
-    global_max_rgo_size_modifier = 0.10
+	# global_trade_goods_size_modifier = 0.10
+	global_max_rgo_size_modifier = 0.10
 }
 
 abm_sun_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = SUN
-            has_or_had_tag = MTM
-            has_or_had_tag = DEM
-            has_or_had_tag = PJN
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
 
-    requires = abm_bi_yearly_harvest
+	requires = abm_bi_yearly_harvest
 
-    # land_morale = 0.20
-    land_morale_modifier = 0.20
+	# land_morale = 0.20
+	land_morale_modifier = 0.20
 }
 
 
 # Balinese Ideas
 # BLI SLP TLW NGL DOM BIM LRT WHL
 abm_bli_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_trade_goods_size_modifier = 0.1
-    global_max_rgo_size_modifier = 0.10
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
 }
 
 abm_bli_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = abm_bli_ideas_tradition_1
+	requires = abm_bli_ideas_tradition_1
 
-    # light_ship_cost = -0.20
-    navy_light_ship_build_cost_modifier = -0.20
+	# light_ship_cost = -0.20
+	navy_light_ship_build_cost_modifier = -0.20
 }
 
 abm_bli_island_settlers = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # global_colonial_growth = 20
-    colonial_migration_size = 20
+	# global_colonial_growth = 20
+	colonial_migration_size = 20
 }
 
 abm_javanese_culture = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = abm_bli_island_settlers
+	requires = abm_bli_island_settlers
 
-    # technology_cost = -0.05
-    research_speed_modifier = 0.05
+	# technology_cost = -0.05
+	research_speed_modifier = 0.05
 }
 
 abm_aristocratic_refugees = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # prestige = 1
-    monthly_prestige = 0.10
+	# prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_staunch_hindus = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = abm_aristocratic_refugees
+	requires = abm_aristocratic_refugees
 
-    # tolerance_own = 2
-    tolerance_own = 2
+	# tolerance_own = 2
+	tolerance_own = 2
 }
 
 abm_conquerer_dalems = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # land_morale = 0.15
-    land_morale_modifier = 0.15
+	# land_morale = 0.15
+	land_morale_modifier = 0.15
 }
 
 abm_hindu_reformation = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = abm_conquerer_dalems
+	requires = abm_conquerer_dalems
 
-    # global_missionary_strength = 0.02
-    global_pop_conversion_speed_modifier = 0.20
+	# global_missionary_strength = 0.02
+	global_pop_conversion_speed_modifier = 0.20
 }
 
 abm_rivals_to_slaves = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # manpower_recovery_speed = 0.10
-    regiment_reinforcement_speed = 0.10
+	# manpower_recovery_speed = 0.10
+	regiment_reinforcement_speed = 0.10
 }
 
 abm_bli_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = BLI
-            has_or_had_tag = SLP
-            has_or_had_tag = TLW
-            has_or_had_tag = NGL
-            has_or_had_tag = DOM
-            has_or_had_tag = BIM
-            has_or_had_tag = LRT
-            has_or_had_tag = WHL
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
 
-    requires = abm_rivals_to_slaves
+	requires = abm_rivals_to_slaves
 
-    # ae_impact = -0.15
-    aggressiveness_modifier = -0.15
+	# ae_impact = -0.15
+	aggressiveness_modifier = -0.15
 }
 
 
@@ -1257,1662 +1257,1662 @@ abm_bli_ideas_ambition = {
 # BEI# Bruneian Ideas
 # BEI
 abm_bei_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = BEI
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = BEI
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # land_morale = 0.1
-    land_morale_modifier = 0.10
+	# land_morale = 0.1
+	land_morale_modifier = 0.10
 }
 
 abm_bei_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = BEI
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = BEI
+	}
 
-    requires = abm_bei_ideas_tradition_1
+	requires = abm_bei_ideas_tradition_1
 
-    # global_ship_cost = -0.1
-    navy_light_ship_build_cost_modifier = -0.10
-    navy_galley_build_cost_modifier = -0.10
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
 }
 
 abm_bei_galleys = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = BEI
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = BEI
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # galley_power = 0.2
-    navy_galley_power = 0.20
+	# galley_power = 0.2
+	navy_galley_power = 0.20
 }
 
 abm_bei_sea_nomads = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = BEI
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = BEI
+	}
 
-    requires = abm_bei_galleys
+	requires = abm_bei_galleys
 
-    # global_sailors_modifier = 0.2
-    global_sailors_modifier = 0.20
+	# global_sailors_modifier = 0.2
+	global_sailors_modifier = 0.20
 }
 
 abm_bei_diplomacy = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = BEI
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = BEI
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # diplomatic_reputation = 1
-    diplomatic_reputation = diplomatic_reputation_weak_bonus
+	# diplomatic_reputation = 1
+	diplomatic_reputation = diplomatic_reputation_weak_bonus
 }
 
 abm_bei_vassals = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = BEI
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = BEI
+	}
 
-    requires = abm_bei_diplomacy
+	requires = abm_bei_diplomacy
 
-    # reduced_liberty_desire = 10
-    loyalty_to_overlord = 10
+	# reduced_liberty_desire = 10
+	loyalty_to_overlord = 10
 }
 
 abm_bei_naval_prowess = {
-    age = age_4_reformation
-    potential = {
-        has_or_had_tag = BEI
-    }
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = BEI
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # naval_morale = 0.15
-    naval_morale_modifier = 0.15
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
 }
 
 abm_bei_trade = {
-    age = age_5_absolutism
-    potential = {
-        has_or_had_tag = BEI
-    }
+	age = age_5_absolutism
+	potential = {
+		has_or_had_tag = BEI
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # trade_efficiency = 0.1
-    trade_income = 0.10
+	# trade_efficiency = 0.1
+	trade_income = 0.10
 }
 
 abm_bei_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        has_or_had_tag = BEI
-    }
+	age = age_6_revolutions
+	potential = {
+		has_or_had_tag = BEI
+	}
 
-    requires = abm_bei_trade
+	requires = abm_bei_trade
 
-    # ship_durability = 0.1
-    naval_morale_modifier = 0.10
+	# ship_durability = 0.1
+	naval_morale_modifier = 0.10
 }
 
 
 # Bornean Ideas
 # MNU SBG TJP SMB KRP NSR MRP KKG TDG
 abm_kut_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_prov_trade_power_modifier = 0.1
-    global_merchant_power = 0.10
+	# global_prov_trade_power_modifier = 0.1
+	global_merchant_power = 0.10
 }
 
 abm_kut_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = abm_kut_ideas_tradition_1
+	requires = abm_kut_ideas_tradition_1
 
-    # trade_steering = 0.2
-    global_trade_center_power = 0.20
+	# trade_steering = 0.2
+	global_trade_center_power = 0.20
 }
 
 abm_kut_earliest_indic_state = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # trade_efficiency = 0.1
-    trade_income = 0.10
+	# trade_efficiency = 0.1
+	trade_income = 0.10
 }
 
 abm_kut_muslim_trading_communities = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = abm_kut_earliest_indic_state
+	requires = abm_kut_earliest_indic_state
 
-    # tolerance_heathen = 2
-    tolerance_heathen = 2
+	# tolerance_heathen = 2
+	tolerance_heathen = 2
 }
 
 abm_kut_riches_of_borneo = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # global_trade_goods_size_modifier = 0.1
-    global_max_rgo_size_modifier = 0.10
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
 }
 
 abm_kut_anti_piracy_measures = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = abm_kut_riches_of_borneo
+	requires = abm_kut_riches_of_borneo
 
-    # defensiveness = 0.1
-    global_defensive = 0.10
+	# defensiveness = 0.1
+	global_defensive = 0.10
 }
 
 abm_kut_encourage_immigration = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # global_manpower_modifier = 0.15
-    global_manpower_modifier = 0.10
+	# global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.15
 }
 
 abm_kut_consolidation_of_kutai = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = abm_kut_encourage_immigration
+	requires = abm_kut_encourage_immigration
 
-    # global_tax_modifier = 0.1
-    tax_income_efficiency = 0.10
+	# global_tax_modifier = 0.1
+	tax_income_efficiency = 0.10
 }
 
 abm_kut_subdue_the_inlands = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # global_unrest = -1
-    pop_join_rebel_threshold = -0.05
+	# global_unrest = -1
+	pop_join_rebel_threshold = -0.05
 }
 
 abm_kut_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = MNU
-            has_or_had_tag = SBG
-            has_or_had_tag = TJP
-            has_or_had_tag = SMB
-            has_or_had_tag = KRP
-            has_or_had_tag = NSR
-            has_or_had_tag = MRP
-            has_or_had_tag = KKG
-            has_or_had_tag = TDG
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
 
-    requires = abm_kut_subdue_the_inlands
+	requires = abm_kut_subdue_the_inlands
 
-    # global_own_trade_power = 0.2
-    global_trade_center_power = 0.20
+	# global_own_trade_power = 0.2
+	global_trade_center_power = 0.20
 }
 
 
 # Sulawesi Ideas
 # LUW BOW BLN GRT PJT PKR
 abm_sulawesi_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # naval_forcelimit_modifier = 0.25
-    expected_navy_size_modifier = 0.25
+	# naval_forcelimit_modifier = 0.25
+	expected_navy_size_modifier = 0.25
 }
 
 abm_sulawesi_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = abm_sulawesi_ideas_tradition_1
+	requires = abm_sulawesi_ideas_tradition_1
 
-    # sailor_maintenance_modifer = -0.1
-    navy_maintenance_efficiency = 0.10
+	# sailor_maintenance_modifer = -0.1
+	navy_maintenance_efficiency = 0.10
 }
 
 abm_sulawesi_intra_asian_trade = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # trade_steering = 0.1
-    global_trade_center_power = 0.10
+	# trade_steering = 0.1
+	global_trade_center_power = 0.10
 }
 
 abm_sulawesi_bajau = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = abm_sulawesi_intra_asian_trade
+	requires = abm_sulawesi_intra_asian_trade
 
-    # navy_tradition_decay = -0.01
-    navy_tradition_decay = -0.01
+	# navy_tradition_decay = -0.01
+	navy_tradition_decay = -0.01
 }
 
 abm_sulawesi_prau = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # light_ship_cost = -0.2
-    navy_light_ship_build_cost_modifier = -0.20
+	# light_ship_cost = -0.2
+	navy_light_ship_build_cost_modifier = -0.20
 }
 
 abm_sulawesi_unification = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = abm_sulawesi_prau
+	requires = abm_sulawesi_prau
 
-    # global_tax_modifier = 0.1
-    tax_income_efficiency = 0.10
+	# global_tax_modifier = 0.1
+	tax_income_efficiency = 0.10
 }
 
 abm_sulawesi_learning_from_outsiders = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # global_institution_spread = 0.1
-    global_institution_growth_modifier = 0.10
+	# global_institution_spread = 0.1
+	global_institution_growth_modifier = 0.10
 }
 
 abm_sulawesi_entrepot = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = abm_sulawesi_learning_from_outsiders
+	requires = abm_sulawesi_learning_from_outsiders
 
-    # global_trade_power = 0.1
-    global_merchant_power = 0.10
+	# global_trade_power = 0.1
+	global_merchant_power = 0.10
 }
 
 abm_sulawesi_assymetrical_warfare = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # hostile_attrition = 1
-    global_hostile_attrition = 1
+	# hostile_attrition = 1
+	global_hostile_attrition = 1
 }
 
 abm_sulawesi_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = LUW
-            has_or_had_tag = BOW
-            has_or_had_tag = BLN
-            has_or_had_tag = GRT
-            has_or_had_tag = PJT
-            has_or_had_tag = PKR
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
 
-    requires = abm_sulawesi_assymetrical_warfare
+	requires = abm_sulawesi_assymetrical_warfare
 
-    # trade_efficiency = 0.1
-    trade_income = 0.10
+	# trade_efficiency = 0.1
+	trade_income = 0.10
 }
 
 
 # Moluccan Ideas
 # JLO MOO LOL BAC TER TID
 abm_moluccan_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_trade_goods_size_modifier = 0.1
-    global_max_rgo_size_modifier = 0.10
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
 }
 
 abm_moluccan_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = abm_moluccan_ideas_tradition_1
+	requires = abm_moluccan_ideas_tradition_1
 
-    # production_efficiency = 0.1
-    global_production_efficiency = 0.10
+	# production_efficiency = 0.1
+	global_production_efficiency = 0.10
 }
 
 abm_moluccan_spice_islands = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # trade_efficiency = 0.1
-    trade_income = 0.10
+	# trade_efficiency = 0.1
+	trade_income = 0.10
 }
 
 abm_moluccan_cultural_heritage = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = abm_moluccan_spice_islands
+	requires = abm_moluccan_spice_islands
 
-    # legitimacy = 1
-    # devotion = 1
-    # republican_tradition = 0.3
-    # meritocracy = 1
-    # horde_unity = 1
-    monthly_legitimacy = 0.10
-    monthly_republican_tradition = 0.10
-    monthly_devotion = 0.10
-    monthly_horde_unity = 0.10
-    monthly_tribal_cohesion = 0.10
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_moluccan_agents_of_trade = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # merchants = 1
-    global_merchant_power = 0.20
+	# merchants = 1
+	global_merchant_power = 0.20
 }
 
 abm_moluccan_four_kingdoms = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = abm_moluccan_agents_of_trade
+	requires = abm_moluccan_agents_of_trade
 
-    # global_unrest = -2
-    pop_join_rebel_threshold = -0.10
+	# global_unrest = -2
+	pop_join_rebel_threshold = -0.10
 }
 
 abm_moluccan_dominance_over_the_outer_islands = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # global_colonial_growth = 20
-    colonial_migration_size = 20
+	# global_colonial_growth = 20
+	colonial_migration_size = 20
 }
 
 abm_moluccan_ally_papuan_raiders = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = abm_moluccan_dominance_over_the_outer_islands
+	requires = abm_moluccan_dominance_over_the_outer_islands
 
-    # light_ship_power = 0.15
-    navy_light_ship_power = 0.15
+	# light_ship_power = 0.15
+	navy_light_ship_power = 0.15
 }
 
 abm_moluccan_pragmatic_diplomacy = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # diplomats = 1
-    max_diplomats = 1
+	# diplomats = 1
+	max_diplomats = 1
 }
 
 abm_moluccan_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = JLO
-            has_or_had_tag = MOO
-            has_or_had_tag = LOL
-            has_or_had_tag = BAC
-            has_or_had_tag = TER
-            has_or_had_tag = TID
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
 
-    requires = abm_moluccan_pragmatic_diplomacy
+	requires = abm_moluccan_pragmatic_diplomacy
 
-    # sailor_maintenance_modifer = -0.1
-    navy_maintenance_efficiency = 0.10
+	# sailor_maintenance_modifer = -0.1
+	navy_maintenance_efficiency = 0.10
 }
 
 
 # Luzon Ideas
 # ILC PGS TDO MYI IBL
 abm_luzon_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_trade_goods_size_modifier = 0.1
-    global_max_rgo_size_modifier = 0.10
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
 }
 
 abm_luzon_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = abm_luzon_ideas_tradition_1
+	requires = abm_luzon_ideas_tradition_1
 
-    # navy_tradition = 1
-    monthly_monthly_navy_tradition = 0.1
+	# navy_tradition = 1
+	monthly_monthly_navy_tradition = 0.1
 }
 
 abm_luzon_barangay = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # naval_maintenance_modifier = -0.2
-    # sailor_maintenance_modifer = -0.1
-    navy_maintenance_efficiency = 0.20
-    global_sailors_modifier = 0.10
+	# naval_maintenance_modifier = -0.2
+	# sailor_maintenance_modifer = -0.1
+	navy_maintenance_efficiency = 0.20
+	global_sailors_modifier = 0.10
 }
 
 abm_luzon_conquest_of_paradise = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = abm_luzon_barangay
+	requires = abm_luzon_barangay
 
-    # hostile_attrition = 1
-    global_hostile_attrition = 1
+	# hostile_attrition = 1
+	global_hostile_attrition = 1
 }
 
 abm_luzon_sino_philippine_trade = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # global_ship_trade_power = 0.1
-    global_merchant_power = 0.10
+	# global_ship_trade_power = 0.1
+	global_merchant_power = 0.10
 }
 
 abm_luzon_tagalog_syncretism = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = abm_luzon_sino_philippine_trade
+	requires = abm_luzon_sino_philippine_trade
 
-    # tolerance_heathen = 2
-    tolerance_heathen = 2
+	# tolerance_heathen = 2
+	tolerance_heathen = 2
 }
 
 abm_luzon_sailors = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # navy_tradition_decay = -0.01
-    navy_tradition_decay = -0.01
+	# navy_tradition_decay = -0.01
+	navy_tradition_decay = -0.01
 }
 
 abm_luzon_a_safe_haven = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = abm_luzon_sailors
+	requires = abm_luzon_sailors
 
-    # advisor_cost = -0.1
-    hire_advisor_cost_modifier = -0.10
+	# advisor_cost = -0.1
+	hire_advisor_cost_modifier = -0.10
 }
 
 abm_luzon_expand_the_sugar_production = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # production_efficiency = 0.1
-    global_production_efficiency = 0.10
+	# production_efficiency = 0.1
+	global_production_efficiency = 0.10
 }
 
 abm_luzon_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = ILC
-            has_or_had_tag = PGS
-            has_or_had_tag = TDO
-            has_or_had_tag = MYI
-            has_or_had_tag = IBL
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
 
-    requires = abm_luzon_expand_the_sugar_production
+	requires = abm_luzon_expand_the_sugar_production
 
-    # naval_morale = 0.2
-    naval_morale_modifier = 0.20
+	# naval_morale = 0.2
+	naval_morale_modifier = 0.20
 }
 
 
 # Madyas Ideas
 # MAS
 abm_mas_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # leader_naval_manuever = 1
-    navy_movement_speed = 0.10
+	# leader_naval_manuever = 1
+	navy_movement_speed = 0.10
 }
 
 abm_mas_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = abm_mas_ideas_tradition_1
+	requires = abm_mas_ideas_tradition_1
 
-    # sailor_maintenance_modifer = -0.1
-    navy_maintenance_efficiency = 0.10
+	# sailor_maintenance_modifer = -0.1
+	navy_maintenance_efficiency = 0.10
 }
 
 abm_mas_hinalliwood = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # idea_cost = -0.1
-    research_speed_modifier = 0.10
+	# idea_cost = -0.1
+	research_speed_modifier = 0.10
 }
 
 abm_mas_legacy_of_panai = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = abm_mas_hinalliwood
+	requires = abm_mas_hinalliwood
 
-    # naval_morale = 0.15
-    naval_morale_modifier = 0.15
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
 }
 
 abm_mas_riches_of_the_visayas = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # development_cost = -0.1
-    global_monthly_prosperity = 0.001
+	# development_cost = -0.1
+	global_monthly_prosperity = 0.001
 }
 
 abm_mas_masters_of_maritime_warfare = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = abm_mas_riches_of_the_visayas
+	requires = abm_mas_riches_of_the_visayas
 
-    # leader_naval_shock = 1
-    train_admiral_ability = 2
+	# leader_naval_shock = 1
+	train_admiral_ability = 2
 }
 
 abm_mas_articles_of_the_confederation = {
-    age = age_4_reformation
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # prestige = 1
-    monthly_prestige = 0.10
+	# prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_mas_kinaduatan = {
-    age = age_4_reformation
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = abm_mas_articles_of_the_confederation
+	requires = abm_mas_articles_of_the_confederation
 
-    # stability_cost_modifier = -0.1
-    stability_cost_efficiency = 0.10
+	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
 }
 
 abm_mas_expand_the_shipbuilding_sector = {
-    age = age_5_absolutism
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_5_absolutism
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # ship_durability = 0.05
-    naval_damage_taken = -0.05
+	# ship_durability = 0.05
+	naval_damage_taken = -0.05
 }
 
 abm_mas_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        has_or_had_tag = MAS
-    }
+	age = age_6_revolutions
+	potential = {
+		has_or_had_tag = MAS
+	}
 
-    requires = abm_mas_expand_the_shipbuilding_sector
+	requires = abm_mas_expand_the_shipbuilding_sector
 
-    # leader_naval_fire = 1
-    heavy_ship_power = 0.10
+	# leader_naval_fire = 1
+	heavy_ship_power = 0.10
 }
 
 # Cebuano Ideas
 # CEB BOL
 abm_ceb_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # naval_morale = 0.15
-    naval_morale_modifier = 0.15
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
 }
 
 abm_ceb_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = abm_ceb_ideas_tradition_1
+	requires = abm_ceb_ideas_tradition_1
 
-    # light_ship_cost = -0.2
-    navy_light_ship_build_cost_modifier = -0.20
+	# light_ship_cost = -0.2
+	navy_light_ship_build_cost_modifier = -0.20
 }
 
 abm_ceb_rajah_humabon = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # prestige = 1
-    monthly_prestige = 0.10
+	# prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_ceb_lapu_lapu = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = abm_ceb_rajah_humabon
+	requires = abm_ceb_rajah_humabon
 
-    # land_morale = 0.1
-    land_morale_modifier = 0.10
+	# land_morale = 0.1
+	land_morale_modifier = 0.10
 }
 
 abm_ceb_visayan_warriors = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # infantry_power = 0.1
-    army_heavy_infantry_power = 0.10
+	# infantry_power = 0.1
+	army_heavy_infantry_power = 0.10
 }
 
 abm_ceb_trade_networks = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = abm_ceb_visayan_warriors
+	requires = abm_ceb_visayan_warriors
 
-    # trade_efficiency = 0.1
-    trade_income = 0.10
+	# trade_efficiency = 0.1
+	trade_income = 0.10
 }
 
 abm_ceb_island_hopping = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # global_colonial_growth = 15
-    colonial_migration_size = 15
+	# global_colonial_growth = 15
+	colonial_migration_size = 15
 }
 
 abm_ceb_cebuano_culture = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = abm_ceb_island_hopping
+	requires = abm_ceb_island_hopping
 
-    # stability_cost_modifier = -0.1
-    stability_cost_efficiency = 0.10
+	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
 }
 
 abm_ceb_expand_the_fleet = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # naval_forcelimit_modifier = 0.25
-    expected_navy_size_modifier = 0.25
+	# naval_forcelimit_modifier = 0.25
+	expected_navy_size_modifier = 0.25
 }
 
 abm_ceb_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = CEB
-            has_or_had_tag = BOL
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
 
-    requires = abm_ceb_expand_the_fleet
+	requires = abm_ceb_expand_the_fleet
 
-    # discipline = 0.05
-    discipline = 0.05
+	# discipline = 0.05
+	discipline = 0.05
 }
 
 
 # Mindanao Ideas
 # SML LNO MGD KIM
 abm_mindanao_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_ship_cost = -0.1
-    navy_light_ship_build_cost_modifier = -0.10
-    navy_galley_build_cost_modifier = -0.10
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
 }
 
 abm_mindanao_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = abm_mindanao_ideas_tradition_1
+	requires = abm_mindanao_ideas_tradition_1
 
-    # tolerance_heathen = 2
-    tolerance_heathen = 2
+	# tolerance_heathen = 2
+	tolerance_heathen = 2
 }
 
 abm_mindanao_sultanate = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # legitimacy = 1
-    # devotion = 1
-    # republican_tradition = 0.3
-    # meritocracy = 1
-    # horde_unity = 1
-    monthly_legitimacy = 0.10
-    monthly_republican_tradition = 0.10
-    monthly_devotion = 0.10
-    monthly_horde_unity = 0.10
-    monthly_tribal_cohesion = 0.10
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_mindanao_maranao_lake = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = abm_mindanao_sultanate
+	requires = abm_mindanao_sultanate
 
-    # global_trade_goods_size_modifier = 0.1
-    global_max_rgo_size_modifier = 0.10
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
 }
 
 abm_mindanao_warriors = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # infantry_power = 0.1
-    army_heavy_infantry_power = 0.10
+	# infantry_power = 0.1
+	army_heavy_infantry_power = 0.10
 }
 
 abm_mindanao_piracy = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = abm_mindanao_warriors
+	requires = abm_mindanao_warriors
 
-    # light_ship_power = 0.15
-    navy_light_ship_power = 0.15
+	# light_ship_power = 0.15
+	navy_light_ship_power = 0.15
 }
 
 abm_mindanao_trade_routes = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # trade_efficiency = 0.1
-    trade_income = 0.10
+	# trade_efficiency = 0.1
+	trade_income = 0.10
 }
 
 abm_mindanao_resistance = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = abm_mindanao_trade_routes
+	requires = abm_mindanao_trade_routes
 
-    # hostile_attrition = 1
-    global_hostile_attrition = 1
+	# hostile_attrition = 1
+	global_hostile_attrition = 1
 }
 
 abm_mindanao_consolidation = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # global_unrest = -1
-    pop_join_rebel_threshold = -0.05
+	# global_unrest = -1
+	pop_join_rebel_threshold = -0.05
 }
 
 abm_mindanao_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = SML
-            has_or_had_tag = LNO
-            has_or_had_tag = MGD
-            has_or_had_tag = KIM
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
 
-    requires = abm_mindanao_consolidation
+	requires = abm_mindanao_consolidation
 
-    # land_morale = 0.15
-    land_morale_modifier = 0.15
+	# land_morale = 0.15
+	land_morale_modifier = 0.15
 }
 
 
 # Butuan Ideas
 # BTU
 abm_btu_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_trade_power = 0.1
-    global_merchant_power = 0.10
+	# global_trade_power = 0.1
+	global_merchant_power = 0.10
 }
 
 abm_btu_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = abm_btu_ideas_tradition_1
+	requires = abm_btu_ideas_tradition_1
 
-    # navy_tradition = 1
-    monthly_monthly_navy_tradition = 0.1
+	# navy_tradition = 1
+	monthly_monthly_navy_tradition = 0.1
 }
 
 abm_btu_butuan_trade_connections = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # merchants = 1
-    global_merchant_power = 0.20
+	# merchants = 1
+	global_merchant_power = 0.20
 }
 
 abm_btu_gold_of_butuan = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = abm_btu_butuan_trade_connections
+	requires = abm_btu_butuan_trade_connections
 
-    # production_efficiency = 0.1
-    global_production_efficiency = 0.10
+	# production_efficiency = 0.1
+	global_production_efficiency = 0.10
 }
 
 abm_btu_laguna_copperplate = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # technology_cost = -0.05
-    research_speed_modifier = 0.05
+	# technology_cost = -0.05
+	research_speed_modifier = 0.05
 }
 
 abm_btu_rajahnate = {
-    age = age_3_discovery
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = abm_btu_laguna_copperplate
+	requires = abm_btu_laguna_copperplate
 
-    # legitimacy = 1
-    # devotion = 1
-    # republican_tradition = 0.3
-    # meritocracy = 1
-    # horde_unity = 1
-    monthly_legitimacy = 0.10
-    monthly_republican_tradition = 0.10
-    monthly_devotion = 0.10
-    monthly_horde_unity = 0.10
-    monthly_tribal_cohesion = 0.10
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_btu_visayan_allies = {
-    age = age_4_reformation
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # global_manpower_modifier = 0.15
-    global_manpower_modifier = 0.10
+	# global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.15
 }
 
 abm_btu_mindanao_sea_trade = {
-    age = age_4_reformation
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = abm_btu_visayan_allies
+	requires = abm_btu_visayan_allies
 
-    # trade_steering = 0.1
-    global_trade_center_power = 0.10
+	# trade_steering = 0.1
+	global_trade_center_power = 0.10
 }
 
 abm_btu_fortify_the_coast = {
-    age = age_5_absolutism
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_5_absolutism
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # defensiveness = 0.15
-    global_defensive = 0.15
+	# defensiveness = 0.15
+	global_defensive = 0.15
 }
 
 abm_btu_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        has_or_had_tag = BTU
-    }
+	age = age_6_revolutions
+	potential = {
+		has_or_had_tag = BTU
+	}
 
-    requires = abm_btu_fortify_the_coast
+	requires = abm_btu_fortify_the_coast
 
-    # naval_morale = 0.15
-    naval_morale_modifier = 0.15
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
 }
 
 
 # Sulu Ideas
 # SUL KML
 abm_sulu_ideas_tradition_1 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_ship_cost = -0.1
-    navy_light_ship_build_cost_modifier = -0.10
-    navy_galley_build_cost_modifier = -0.10
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
 }
 
 abm_sulu_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = abm_sulu_ideas_tradition_1
+	requires = abm_sulu_ideas_tradition_1
 
-    # trade_range_modifier = 0.2
-    trade_range_modifier = 0.20
+	# trade_range_modifier = 0.2
+	trade_range_modifier = 0.20
 }
 
 abm_sulu_sultanate = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    # legitimacy = 1
-    # devotion = 1
-    # republican_tradition = 0.3
-    # meritocracy = 1
-    # horde_unity = 1
-    monthly_legitimacy = 0.10
-    monthly_republican_tradition = 0.10
-    monthly_devotion = 0.10
-    monthly_horde_unity = 0.10
-    monthly_tribal_cohesion = 0.10
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_sulu_sea_raiders = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = abm_sulu_sultanate
+	requires = abm_sulu_sultanate
 
-    # light_ship_power = 0.15
-    navy_light_ship_power = 0.15
+	# light_ship_power = 0.15
+	navy_light_ship_power = 0.15
 }
 
 abm_sulu_slave_trade = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = military_traditions
+	requires = military_traditions
 
-    # global_trade_goods_size_modifier = 0.1
-    global_max_rgo_size_modifier = 0.10
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
 }
 
 abm_sulu_pearls = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = abm_sulu_slave_trade
+	requires = abm_sulu_slave_trade
 
-    # production_efficiency = 0.1
-    global_production_efficiency = 0.10
+	# production_efficiency = 0.1
+	global_production_efficiency = 0.10
 }
 
 abm_sulu_island_network = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = supply_depot_advance_age_4_reformation
+	requires = supply_depot_advance_age_4_reformation
 
-    # merchants = 1
-    global_merchant_power = 0.20
+	# merchants = 1
+	global_merchant_power = 0.20
 }
 
 abm_sulu_naval_dominance = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = abm_sulu_island_network
+	requires = abm_sulu_island_network
 
-    # naval_morale = 0.15
-    naval_morale_modifier = 0.15
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
 }
 
 abm_sulu_consolidation = {
-    age = age_5_absolutism
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = absolutist_court
+	requires = absolutist_court
 
-    # global_unrest = -1
-    pop_join_rebel_threshold = -0.05
+	# global_unrest = -1
+	pop_join_rebel_threshold = -0.05
 }
 
 abm_sulu_ideas_ambition = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            has_or_had_tag = SUL
-            has_or_had_tag = KML
-        }
-    }
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
 
-    requires = abm_sulu_consolidation
+	requires = abm_sulu_consolidation
 
-    # naval_forcelimit_modifier = 0.33
-    expected_navy_size_modifier = 0.33
+	# naval_forcelimit_modifier = 0.33
+	expected_navy_size_modifier = 0.33
 }
