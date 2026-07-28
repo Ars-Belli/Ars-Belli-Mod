@@ -1,6 +1,6 @@
 ﻿REPLACE:CHI_f = {
 	level = 4
-	required_locations_fraction = 0.7
+	required_locations_fraction = 0.75
 	rule = historical
 
 	potential = {
@@ -31,6 +31,16 @@ ABSCP_f = {
 		}
 	}
 
+	allow = {
+		has_culture_group = culture_group:chinese_group
+		capital = { region = region:south_china_region }
+		OR = {
+			original_capital.region = region:north_china_region
+			original_capital.region = region:east_china_region
+			original_capital.region = region:west_china_region
+			original_capital.region = region:south_china_region
+		}
+	}
 	tag = ABSCP
 	ars_belli_formable_countries
 	regions = {
@@ -49,6 +59,17 @@ ABWCP_f = {
 	potential = {
 		culture = {
 			has_culture_group = culture_group:chinese_group
+		}
+	}
+
+	allow = {
+		has_culture_group = culture_group:chinese_group
+		capital = { region = region:west_china_region }
+		OR = {
+			original_capital.region = region:north_china_region
+			original_capital.region = region:east_china_region
+			original_capital.region = region:west_china_region
+			original_capital.region = region:south_china_region
 		}
 	}
 
@@ -73,6 +94,17 @@ ABNCP_f = {
 		}
 	}
 
+	allow = {
+		has_culture_group = culture_group:chinese_group
+		capital = { region = region:north_china_region }
+		OR = {
+			original_capital.region = region:north_china_region
+			original_capital.region = region:east_china_region
+			original_capital.region = region:west_china_region
+			original_capital.region = region:south_china_region
+		}
+	}
+
 	tag = ABNCP
 	ars_belli_formable_countries
 	regions = {
@@ -91,6 +123,17 @@ ABECP_f = {
 	potential = {
 		culture = {
 			has_culture_group = culture_group:chinese_group
+		}
+	}
+
+	allow = {
+		has_culture_group = culture_group:chinese_group
+		capital = { region = region:east_china_region }
+		OR = {
+			original_capital.region = region:north_china_region
+			original_capital.region = region:east_china_region
+			original_capital.region = region:west_china_region
+			original_capital.region = region:south_china_region
 		}
 	}
 
