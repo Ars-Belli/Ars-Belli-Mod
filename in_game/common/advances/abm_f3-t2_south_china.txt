@@ -8,7 +8,7 @@
 # LEZ (Leizhou) - coastal militia/trade
 ########################################
 
-abm_lez_diplomatic_corps = {
+abm_lez_china_tradition_1 = {
 	age = age_1_traditions
 	icon = red_sea_trade
 
@@ -19,6 +19,18 @@ abm_lez_diplomatic_corps = {
 	requires = guilds
 
 	annexation_speed_modifier = 0.10
+}
+
+abm_lez_china_tradition_2 = {
+	age = age_1_traditions
+	icon = red_sea_trade
+
+	potential = {
+		has_or_had_tag = LEZ
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = guilds
+
 	monthly_diplomats = 0.10
 }
 
@@ -122,7 +134,7 @@ abm_lez_strait_supremacy = {
 	own_coast_naval_combat_bonus = 0.10
 }
 
-abm_lez_maritime_state_registry = {
+abm_lez_china_ambition = {
 	age = age_6_revolutions
 	icon = court_accounting
 
@@ -139,7 +151,7 @@ abm_lez_maritime_state_registry = {
 # CDN (Dongguan) - workshops/commerce
 ########################################
 
-abm_cdn_guild_ledgers = {
+abm_cdn_china_tradition_1 = {
 	age = age_1_traditions
 	icon = court_accounting
 
@@ -153,6 +165,21 @@ abm_cdn_guild_ledgers = {
 	requires = guilds
 
 	global_urban_build_buildings_efficiency = 0.10
+}
+
+abm_cdn_china_tradition_2 = {
+	age = age_1_traditions
+	icon = court_accounting
+
+	potential = {
+		OR = {
+			has_or_had_tag = CDN
+			has_or_had_tag = ABSCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = guilds
+
 	global_production_efficiency = 0.10
 }
 
@@ -250,7 +277,7 @@ abm_cdn_workshop_state = {
 	global_production_efficiency = 0.10
 }
 
-abm_cdn_commercial_grand_secretariat = {
+abm_cdn_china_ambition = {
 	age = age_6_revolutions
 	icon = smooth_administration
 
@@ -267,7 +294,7 @@ abm_cdn_commercial_grand_secretariat = {
 # MNE (Yao/Mien) - upland mobilization
 ########################################
 
-abm_mne_hill_oaths = {
+abm_mne_china_tradition_1 = {
 	age = age_1_traditions
 	icon = glorious_arms
 
@@ -278,6 +305,18 @@ abm_mne_hill_oaths = {
 	requires = feudalism_advance
 
 	movement_speed_if_no_road = 0.10
+}
+
+abm_mne_china_tradition_2 = {
+	age = age_1_traditions
+	icon = glorious_arms
+
+	potential = {
+		has_or_had_tag = MNE
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = feudalism_advance
+
 	land_unit_attrition = -0.10
 }
 
@@ -375,7 +414,7 @@ abm_mne_bleeding_frontier = {
 	global_hostile_attrition = 1
 }
 
-abm_mne_upland_royal_commission = {
+abm_mne_china_ambition = {
 	age = age_6_revolutions
 	icon = diplomatic_training
 
@@ -392,7 +431,7 @@ abm_mne_upland_royal_commission = {
 # LNG (Liang) - frontier war-state
 ########################################
 
-abm_lng_frontier_hosts = {
+abm_lng_china_tradition_1 = {
 	age = age_1_traditions
 	icon = military_hierarchy
 
@@ -403,6 +442,18 @@ abm_lng_frontier_hosts = {
 	requires = unlock_footmen_advance
 
 	global_manpower_modifier = 0.10
+}
+
+abm_lng_china_tradition_2 = {
+	age = age_1_traditions
+	icon = military_hierarchy
+
+	potential = {
+		has_or_had_tag = LNG
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = unlock_footmen_advance
+
 	regiment_recruit_speed = 0.10
 }
 
@@ -503,7 +554,7 @@ abm_lng_decisive_campaigns = {
 	global_war_score_efficiency = 0.10
 }
 
-abm_lng_general_staff_ministry = {
+abm_lng_china_ambition = {
 	age = age_6_revolutions
 	icon = regimental_system
 

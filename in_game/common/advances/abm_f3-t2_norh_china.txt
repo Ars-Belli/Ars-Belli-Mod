@@ -8,7 +8,7 @@
 # YUA (Yuan) - strong economy and governance
 ########################################
 
-abm_yua_start = {
+abm_yua_china_tradition_1 = {
 	age = age_1_traditions
 	icon = crown_power_advance_renaissance
 
@@ -19,6 +19,18 @@ abm_yua_start = {
 	requires = legalism_advance
 
 	army_light_cavalry_power = 0.20
+}
+
+abm_yua_china_tradition_2 = {
+	age = age_1_traditions
+	icon = crown_power_advance_renaissance
+
+	potential = {
+		has_or_had_tag = YUA
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = legalism_advance
+
 	government_size = 1
 }
 
@@ -116,7 +128,7 @@ abm_yua_pax_mongolica = {
 	global_production_efficiency = large_production_efficiency_bonus
 }
 
-abm_yua_bonus = {
+abm_yua_china_ambition = {
 	age = age_6_revolutions
 	icon = court_accounting
 
@@ -133,7 +145,7 @@ abm_yua_bonus = {
 # CMO (Mao) - strong economy and governance
 ########################################
 
-abm_cmo_river_flotilla_guilds = {
+abm_cmo_china_tradition_1 = {
 	age = age_1_traditions
 	icon = global_trade_routes_advance
 
@@ -144,6 +156,18 @@ abm_cmo_river_flotilla_guilds = {
 	requires = guilds
 
 	navy_galley_build_cost_modifier = -0.20
+}
+
+abm_cmo_china_tradition_2 = {
+	age = age_1_traditions
+	icon = global_trade_routes_advance
+
+	potential = {
+		has_or_had_tag = CMO
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = guilds
+
 	navy_galley_maintenance_cost_modifier = -0.20
 }
 
@@ -242,7 +266,7 @@ abm_cmo_admiralty_merit_office = {
 	monthly_navy_tradition = 0.10
 }
 
-abm_cmo_central_audit_secretariat = {
+abm_cmo_china_ambition = {
 	age = age_6_revolutions
 	icon = court_accounting
 
@@ -259,7 +283,7 @@ abm_cmo_central_audit_secretariat = {
 # ANX (Anxi) - military emphasis
 ########################################
 
-abm_anx_siege_engineer_bureaus = {
+abm_anx_china_tradition_1 = {
 	age = age_1_traditions
 	icon = glorious_arms
 
@@ -270,6 +294,18 @@ abm_anx_siege_engineer_bureaus = {
 	requires = guilds
 
 	naval_damage_taken = -0.10
+}
+
+abm_anx_china_tradition_2 = {
+	age = age_1_traditions
+	icon = glorious_arms
+
+	potential = {
+		has_or_had_tag = ANX
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = guilds
+
 	fort_maintenance_efficiency = -0.10
 }
 
@@ -377,7 +413,7 @@ abm_anx_green_standard_banners = {
 	minting_income_factor = 0.10
 }
 
-abm_anx_border_command_reforms = {
+abm_anx_china_ambition = {
 	age = age_6_revolutions
 	icon = smooth_administration
 
@@ -394,7 +430,7 @@ abm_anx_border_command_reforms = {
 # SAI (Shanxi) - military emphasis
 ########################################
 
-abm_sai_taihang_fortresses = {
+abm_sai_china_tradition_1 = {
 	age = age_1_traditions
 	icon = diplomatic_training
 
@@ -408,6 +444,21 @@ abm_sai_taihang_fortresses = {
 	requires = feudalism_advance
 
 	fort_limit_modifier = 0.20
+}
+
+abm_sai_china_tradition_2 = {
+	age = age_1_traditions
+	icon = diplomatic_training
+
+	potential = {
+		OR = {
+			has_or_had_tag = SAI
+			has_or_had_tag = ABNCP
+		}
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = feudalism_advance
+
 	global_hostile_attrition = 1
 }
 
@@ -464,7 +515,7 @@ abm_sai_campaign_chancellery = {
 	tax_income_efficiency = large_tax_income_efficiency_bonus
 }
 
-abm_sai_frontier_general_secretariat = {
+abm_sai_china_ambition = {
 	age = age_6_revolutions
 	icon = court_accounting
 
@@ -481,7 +532,7 @@ abm_sai_frontier_general_secretariat = {
 # KHA (Kharchin) - cavalry and horde warfare
 ########################################
 
-abm_kha_horse_lords = {
+abm_kha_china_tradition_1 = {
 	age = age_1_traditions
 	icon = glorious_arms
 
@@ -492,6 +543,18 @@ abm_kha_horse_lords = {
 	requires = horse_riding_advance
 
 	army_light_cavalry_power = 0.10
+}
+
+abm_kha_china_tradition_2 = {
+	age = age_1_traditions
+	icon = glorious_arms
+
+	potential = {
+		has_or_had_tag = KHA
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = horse_riding_advance
+
 	army_heavy_cavalry_power = 0.10
 }
 
@@ -592,7 +655,7 @@ abm_kha_magnanimous_khanate = {
 	cultures_capacity = 2
 }
 
-abm_kha_steppe_state_relays = {
+abm_kha_china_ambition = {
 	age = age_6_revolutions
 	icon = diplomatic_training
 
@@ -609,7 +672,7 @@ abm_kha_steppe_state_relays = {
 # SHD (Shandong) - mercenaries
 ########################################
 
-abm_shd_mercenary_contract_societies = {
+abm_shd_china_tradition_1 = {
 	age = age_1_traditions
 	icon = debt_and_loans
 
@@ -621,6 +684,19 @@ abm_shd_mercenary_contract_societies = {
 	requires = guilds
 
 	hire_mercenary_premium_cost_modifier  = -0.10
+}
+
+abm_shd_china_tradition_2 = {
+	age = age_1_traditions
+	icon = debt_and_loans
+
+	potential = {
+		has_or_had_tag = SHD
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+
+	requires = guilds
+
 	mercenary_maintenance_efficiency = 0.10
 }
 
@@ -718,7 +794,7 @@ abm_shd_daedong_revenue_reform = {
 	tax_income_efficiency = large_tax_income_efficiency_bonus
 }
 
-abm_shd_maritime_fiscal_high_board = {
+abm_shd_china_ambition = {
 	age = age_6_revolutions
 	icon = court_accounting
 
@@ -735,7 +811,7 @@ abm_shd_maritime_fiscal_high_board = {
 # AYG (Anyang) - noble elective monarchy, levy-heavy
 ########################################
 
-abm_ayg_confucian_influences = {
+abm_ayg_china_tradition_1 = {
 	age = age_1_traditions
 	icon = laws
 
@@ -746,6 +822,18 @@ abm_ayg_confucian_influences = {
 	requires = legalism_advance
 
 	stability_cost_efficiency = 0.15
+}
+
+abm_ayg_china_tradition_2 = {
+	age = age_1_traditions
+	icon = laws
+
+	potential = {
+		has_or_had_tag = AYG
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = legalism_advance
+
 	cabinet_efficiency = 0.15
 }
 
@@ -844,7 +932,7 @@ abm_ayg_late_artillery_bureau = {
 	army_artillery_power = 0.10
 }
 
-abm_ayg_state_secretariat = {
+abm_ayg_china_ambition = {
 	age = age_6_revolutions
 	icon = smooth_administration
 
@@ -861,7 +949,7 @@ abm_ayg_state_secretariat = {
 # CSO (Song) - mixed profile
 ########################################
 
-abm_cso_baihua_script = {
+abm_cso_china_tradition_1 = {
 	age = age_1_traditions
 	icon = laws
 
@@ -872,6 +960,18 @@ abm_cso_baihua_script = {
 	requires = cultural_traditions_law_advance
 
 	global_urban_build_buildings_efficiency = 0.10
+}
+
+abm_cso_china_tradition_2 = {
+	age = age_1_traditions
+	icon = laws
+
+	potential = {
+		has_or_had_tag = CSO
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = cultural_traditions_law_advance
+
 	global_masonry_output_modifier = 0.20
 }
 
@@ -969,7 +1069,7 @@ abm_cso_porcelain_commission = {
 	global_pottery_output_modifier = 0.20
 }
 
-abm_cso_grand_transport_office = {
+abm_cso_china_ambition = {
 	age = age_6_revolutions
 	icon = global_trade_routes_advance
 
