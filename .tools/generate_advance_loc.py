@@ -7,7 +7,20 @@ from pathlib import Path
 BASE = Path("/home/zp/Games/Modding/Ars-Belli-Mod")
 ADVANCE_DIR = BASE / "in_game/common/advances"
 EU4_LOC_DIR = BASE / ".tools/eu4/localisation"
-OUTPUT = BASE / "main_menu/localization/english/abm_advances_india_indochina_indonesia_l_english.yml"
+OUTPUTS = {
+    "india": BASE / "main_menu/localization/english/abm_advances_india_l_english.yml",
+    "indochina": BASE / "main_menu/localization/english/abm_advances_indochina_l_english.yml",
+    "indonesia": BASE / "main_menu/localization/english/abm_advances_indonesia_l_english.yml",
+}
+
+def get_region(filename):
+    if "india_" in filename:
+        return "india"
+    if "indochina" in filename:
+        return "indochina"
+    if "indonesia" in filename:
+        return "indonesia"
+    return "other"
 
 # ---------------------------------------------------------------------------
 # 1. Parse all EU4 localizations
@@ -165,39 +178,49 @@ def resolve(adv_key, set_tag):
     return key_to_display(idea_part), ""
 
 # ---------------------------------------------------------------------------
-# 4. Generate output
+# 4. Group advances by region and generate output
 # ---------------------------------------------------------------------------
-lines = ["l_english:"]
-matched = 0
-fallback = 0
-
+region_advances = {}
 for filename, adv_key, set_tag in advances:
-    name, desc = resolve(adv_key, set_tag)
+    region = get_region(filename)
+    region_advances.setdefault(region, []).append((filename, adv_key, set_tag))
 
-    # Detect if this is a fallback
-    is_fb = (name is not None and desc == "" and not any(
-        k in adv_key.lower() for k in ["tradition", "ambition"]
-    )) or name == key_to_display(adv_key) or name == key_to_display(adv_key[4:])
+total_matched = 0
+total_fallback = 0
 
-    if is_fb:
-        fallback += 1
-    else:
-        matched += 1
+for region, adv_list in sorted(region_advances.items()):
+    if region not in OUTPUTS:
+        continue
 
-    display_name = name.replace('"', "'") if name else key_to_display(adv_key)
-    display_desc = desc.replace('"', "'") if desc else display_name
+    lines = ["l_english:"]
+    matched = 0
+    fallback = 0
 
-    lines.append(f" {adv_key}: \"{display_name}\"")
-    if desc:
+    for filename, adv_key, set_tag in adv_list:
+        name, desc = resolve(adv_key, set_tag)
+
+        is_fb = (name is not None and desc == "" and not any(
+            k in adv_key.lower() for k in ["tradition", "ambition"]
+        )) or name == key_to_display(adv_key) or name == key_to_display(adv_key[4:])
+
+        if is_fb:
+            fallback += 1
+        else:
+            matched += 1
+
+        display_name = name.replace('"', "'") if name else key_to_display(adv_key)
+        display_desc = desc.replace('"', "'") if desc else display_name
+
+        lines.append(f" {adv_key}: \"{display_name}\"")
         lines.append(f" {adv_key}_desc: \"{display_desc}\"")
-    else:
-        lines.append(f" {adv_key}_desc: \"{display_name}\"")
-    lines.append("")
+        lines.append("")
 
-print(f"\nMatched (EU4): {matched}, Fallback (generated): {fallback}")
+    outpath = OUTPUTS[region]
+    with open(outpath, "w", encoding="utf-8-sig", newline="\r\n") as f:
+        f.write("\n".join(lines))
 
-with open(OUTPUT, "w", encoding="utf-8-sig", newline="\r\n") as f:
-    f.write("\n".join(lines))
+    total_matched += matched
+    total_fallback += fallback
+    print(f"  {region}: {matched} matched, {fallback} fallback → {outpath.name}")
 
-print(f"Wrote {OUTPUT}")
-print(f"Total lines: {len(lines)}")
+print(f"\nTotal: {total_matched} matched, {total_fallback} fallback across {len(OUTPUTS)} files")
