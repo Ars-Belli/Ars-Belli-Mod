@@ -79,3 +79,132 @@ abm_ukr_collegium = {
 	
 	requires = abm_ukr_ukrainian_baroque
 }
+
+
+############################
+# age_1_traditions (UKR tag advances)
+############################
+abm_ukr_tradition_1 = {
+	age = age_1_traditions
+	icon = regimental_system
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = feudalism_advance
+	# EU4: manpower_recovery_speed = 0.2
+	levy_recovery_modifier = 0.20
+}
+
+abm_ukr_tradition_2 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = feudalism_advance
+	# EU4: morale_damage_received = -0.1
+	land_morale_modifier = 0.10
+}
+
+############################
+# age_2_renaissance
+############################
+abm_ukr_mother_of_russian_cities = {
+	age = age_2_renaissance
+	icon = crown_power_advance
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = renaissance_court
+	# EU4: prestige = 1, legitimacy = 1
+	monthly_prestige = 0.10
+	monthly_legitimacy = 0.05
+}
+
+abm_ukr_international_influences = {
+	age = age_2_renaissance
+	icon = cultural_acceptance_advance
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = cultural_acceptance_advance
+	# EU4: num_accepted_cultures = 2, promote_culture_cost = -0.25
+	cultures_capacity = 2
+	add_accepted_culture_cost_modifier = -0.25
+}
+
+############################
+# age_3_discovery
+############################
+abm_ukr_zaporizhian_cossacks = {
+	age = age_3_discovery
+	icon = cavalry_warfare
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = drill_army_advance
+	# EU4: cavalry_power = 0.15
+	army_light_cavalry_power = 0.15
+}
+
+abm_ukr_east_and_west = {
+	age = age_3_discovery
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = merchants_and_trade
+	# EU4: global_trade_power = 0.1
+	global_merchant_power = 0.10
+}
+
+############################
+# age_4_reformation
+############################
+abm_ukr_legacy_of_ancient_rus = {
+	age = age_4_reformation
+	icon = legalism_advance
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = regulate_court_procedures
+	# EU4: stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
+}
+
+abm_ukr_reuniting_rus = {
+	age = age_4_reformation
+	icon = national_sovereignty
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = medieval_administration
+	# EU4: core_creation = -0.1, years_of_nationalism = -5
+	global_annexation_cost_modifier = -0.10
+	global_integration_speed_modifier = 0.10
+}
+
+############################
+# age_5_absolutism
+############################
+abm_ukr_birth_of_russian_orthodoxy = {
+	age = age_5_absolutism
+	icon = servants_of_god
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = religious_unification
+	# EU4: tolerance_own = 2
+	tolerance_own = 2
+}
+
+abm_ukr_ambition = {
+	age = age_5_absolutism
+	icon = army_professionalism
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = military_revolution_advance
+	# EU4: discipline = 0.05
+	discipline = 0.05
+}
