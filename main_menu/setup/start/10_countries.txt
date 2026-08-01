@@ -31055,6 +31055,7 @@ countries = {
 	}
 
 	GNS = { #Gansu
+		type = army
 		own_control_core = {
 			yangguan anding_suzhou dangcheng kuyu_shazhou guazhou shazhou #Shazhou
 			jinta suzhou_gansu chijin gaotai #Suzhou
@@ -31066,8 +31067,10 @@ countries = {
 			huizhou_gongchang dingxi #Gongchang
 		}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 		government = {
-			type = monarchy
+			type = steppe_horde
+			heir_selection = tribal_oldest_male
 			ruler = random
 
 			reforms = {
@@ -31219,8 +31222,9 @@ countries = {
 		}
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 		government = {
-			type = monarchy
+			type = theocracy
 			ruler = random
 			land_vs_naval = -100
 			centralization_vs_decentralization = 60
@@ -31228,6 +31232,7 @@ countries = {
 
 			reforms = {
 				agricultural_cultivation
+				abm_china_buddhist_order
 			}
 			privilege = {
 				#Nobles
@@ -31263,6 +31268,7 @@ countries = {
 		}
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 		government = {
 			type = monarchy
 			ruler = random
@@ -31312,6 +31318,7 @@ countries = {
 		}
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 		government = {
 			type = monarchy
 			ruler = random
@@ -31474,6 +31481,7 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
 			type = monarchy
@@ -31561,12 +31569,16 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = theocracy
 			ruler = random
 			centralization_vs_decentralization = 60
 			land_vs_naval = -80
+			reforms = {
+				abm_china_buddhist_order
+			}
 		}
 		court_language = northern_mandarin_dialect
 		liturgical_language = classical_chinese_language
@@ -32129,9 +32141,6 @@ countries = {
 
 	HNN = {	#NEW - Hainan
 		own_control_core = {
-			shuihui chengmai lingao #Qiongzhou
-			changhua yande ganen yilun #Nanningjun
-			lingshui ningyuan_wananjun limushan #Wan'anjun
 		}
 
 		our_cores_conquered_by_others = {}
@@ -32158,8 +32167,6 @@ countries = {
 
 	WCG = {	#NEW - Wenchang
 		own_control_core = {
-			wenchang qiongshan dingan lehui #Qiongzhou
-			wanan_wananjun #Wan'anjun
 		}
 
 		our_cores_conquered_by_others = {}
@@ -32336,6 +32343,9 @@ countries = {
 			haikang qingdao zhanchuan suixi xuwen #Leizhou
 			shilong shicheng wuchuan_huazhou #Huazhou
 			maoming baoning #Gaozhou
+			shuihui chengmai lingao wenchang qiongshan dingan lehui #Qiongzhou
+			changhua yande ganen yilun #Nanningjun
+			lingshui ningyuan_wananjun limushan wanan_wananjun#Wan'anjun
 		}
 
 		own_control_integrated = {
@@ -32344,10 +32354,11 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
 			type = republic
-			heir_selection = oligarchic_elective
+			heir_selection = pirate_elective
 			ruler = random
 
 			laws = {
@@ -32355,7 +32366,7 @@ countries = {
 				heir_religion_law = heir_same_religion
 			}
 			reforms = {
-				merchant_republic
+				abm_china_pirates
 			}
 
 			privilege = {
@@ -32442,6 +32453,7 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
 			type = republic
@@ -32895,6 +32907,7 @@ countries = {
 		}
 
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
 			ruler = random
@@ -32994,6 +33007,7 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
 			type = monarchy
@@ -33032,6 +33046,7 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
 			type = monarchy
@@ -33111,6 +33126,7 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
 			type = monarchy
@@ -33141,14 +33157,15 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = republic
 			ruler = random
 		}
 		court_language = wu_language
 		liturgical_language = classical_chinese_language
-		country_rank = rank_kingdom
+		country_rank = rank_duchy
 		capital = wuxian
 		tolerated_cultures = { shu_culture }
 	}
@@ -33172,9 +33189,10 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = theocracy
 			ruler = random
 		}
 		court_language = southern_mandarin_dialect
@@ -33207,9 +33225,10 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = theocracy
 			ruler = random
 		}
 
@@ -33268,12 +33287,14 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = republic
 			ruler = random
 			reforms = {
 				agricultural_cultivation
+				peasant_republic_reform
 			}
 			privilege = {
 				#Nobility
@@ -33372,9 +33393,10 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = republic
 			ruler = random
 			centralization_vs_decentralization = 70
 			aristocracy_vs_plutocracy = -30
@@ -33425,15 +33447,17 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = republic
 			ruler = random
 			land_vs_naval = 100
 			individualism_vs_communalism = 50
 			belligerent_vs_conciliatory = 50
 			reforms = {
-				harbor_administration			
+				abm_china_pirates
+				# harbor_administration	
 			}
 			privilege = {
 				#Nobles
@@ -33475,10 +33499,15 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = republic
 			ruler = random
+			reforms = {
+				agricultural_cultivation
+				abm_china_meritocratic_republic
+			}
 		}
 
 		accepted_cultures = {
@@ -33507,9 +33536,10 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = republic
 			ruler = random
 			aristocracy_vs_plutocracy = -60
 			spiritualist_vs_humanist = -50
@@ -33531,6 +33561,10 @@ countries = {
 				peasants_autonomous_villages
 				#Tribes
 				tribes_tribal_registry
+			}
+			reforms = {
+				agricultural_cultivation
+				abm_china_meritocratic_republic
 			}
 		}
 		
@@ -33569,10 +33603,15 @@ countries = {
 		our_cores_conquered_by_others = {}
 
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = republic
 			ruler = random
+			reforms = {
+				agricultural_cultivation
+				abm_china_meritocratic_republic
+			}
 		}
 
 		accepted_cultures = {
@@ -33617,10 +33656,14 @@ countries = {
 
 		our_cores_conquered_by_others = {}
 		include = "chinese_monarchy"
+		country_rank = rank_duchy
 
 		government = {
-			type = monarchy
+			type = theocracy
 			ruler = random
+			reforms = {
+				abm_china_buddhist_order
+			}
 		}
 		court_language = southern_mandarin_dialect
 		liturgical_language = classical_chinese_language
@@ -34320,10 +34363,12 @@ countries = {
 
 		capital = kunming
 		include = "far_east_asia_monarchy_no_coast"
+		country_rank = rank_duchy
 
 		include = "expl_china"
 
 		government = {
+			type = theocracy
 			ruler = random
 
 			centralization_vs_decentralization = 60
@@ -52910,6 +52955,7 @@ countries = {
 
 		starting_technology_level = 3
 		include = "expl_east_mongols"
+		country_rank = rank_duchy
 		include = "eurasian_horde_no_muslim_no_protected_faith"
 		include = "expl_manchurian_tribe"
 
