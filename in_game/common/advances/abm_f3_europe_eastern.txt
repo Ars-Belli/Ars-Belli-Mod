@@ -35,87 +35,84 @@ REPLACE:ruthenia_commoner_education = {
 
 
 ############################
-# age_1_traditions (UKR tag advances)
+# Ruthenia/Ukraine (UKR)
 ############################
 abm_ukr_tradition_1 = {
-	age = age_1_traditions
+	age = age_3_discovery
 	icon = regimental_system
 	potential = {
 		has_or_had_tag = UKR
 	}
 	requires = feudalism_advance
+
 	# EU4: manpower_recovery_speed = 0.2
-	levy_recovery_modifier = 0.20
+	possible_frontage_modifier = 0.10
 }
 
 abm_ukr_tradition_2 = {
-	age = age_1_traditions
+	age = age_3_discovery
 	icon = glorious_arms
 	potential = {
 		has_or_had_tag = UKR
 	}
 	requires = feudalism_advance
+
 	# EU4: morale_damage_received = -0.1
 	land_morale_modifier = 0.10
 }
 
-############################
-# age_2_renaissance
-############################
 abm_ukr_mother_of_russian_cities = {
-	age = age_2_renaissance
+	age = age_3_discovery
 	icon = crown_power_advance
 	potential = {
 		has_or_had_tag = UKR
 	}
 	requires = renaissance_court
+
 	# EU4: prestige = 1, legitimacy = 1
 	monthly_prestige = 0.10
-	monthly_legitimacy = 0.05
+	monthly_legitimacy = 0.10
 }
 
 abm_ukr_international_influences = {
-	age = age_2_renaissance
+	age = age_4_reformation
 	icon = cultural_acceptance_advance
 	potential = {
 		has_or_had_tag = UKR
 	}
 	requires = cultural_acceptance_advance
+
 	# EU4: num_accepted_cultures = 2, promote_culture_cost = -0.25
 	cultures_capacity = 2
 	add_accepted_culture_cost_modifier = -0.25
 }
 
-############################
-# age_3_discovery
-############################
 abm_ukr_zaporizhian_cossacks = {
-	age = age_3_discovery
+	age = age_4_reformation
 	icon = cavalry_warfare
 	potential = {
 		has_or_had_tag = UKR
 	}
 	requires = drill_army_advance
+
 	# EU4: cavalry_power = 0.15
-	army_light_cavalry_power = 0.15
+	army_light_infantry_power = 0.15
 }
 
 abm_ukr_east_and_west = {
-	age = age_3_discovery
+	age = age_4_reformation
 	icon = merchants_and_trade
 	potential = {
 		has_or_had_tag = UKR
 	}
 	requires = merchants_and_trade
+
 	# EU4: global_trade_power = 0.1
-	global_merchant_power = 0.10
+	global_merchant_power = 0.20
 }
 
-############################
-# age_4_reformation
-############################
 abm_ukr_legacy_of_ancient_rus = {
-	age = age_4_reformation
+	age = age_5_absolutism
 	icon = legalism_advance
 	potential = {
 		has_or_had_tag = UKR
@@ -126,7 +123,7 @@ abm_ukr_legacy_of_ancient_rus = {
 }
 
 abm_ukr_reuniting_rus = {
-	age = age_4_reformation
+	age = age_5_absolutism
 	icon = national_sovereignty
 	potential = {
 		has_or_had_tag = UKR
@@ -137,11 +134,8 @@ abm_ukr_reuniting_rus = {
 	global_integration_speed_modifier = 0.10
 }
 
-############################
-# age_5_absolutism
-############################
 abm_ukr_birth_of_russian_orthodoxy = {
-	age = age_5_absolutism
+	age = age_6_revolutions
 	icon = servants_of_god
 	potential = {
 		has_or_had_tag = UKR
@@ -152,7 +146,7 @@ abm_ukr_birth_of_russian_orthodoxy = {
 }
 
 abm_ukr_ambition = {
-	age = age_5_absolutism
+	age = age_6_revolutions
 	icon = army_professionalism
 	potential = {
 		has_or_had_tag = UKR
@@ -173,10 +167,10 @@ abm_kie_tradition_1 = {
 	potential = {
 		has_or_had_tag = KIE
 	}
-	# EU4: global_unrest = -1
 	requires = feudalism_advance
-
-	global_rebel_suppression_efficiency = 0.1
+	
+	# EU4: global_unrest = -1
+	global_levy_size_modifier = 0.1
 }
 
 abm_kie_tradition_2 = {
@@ -188,7 +182,7 @@ abm_kie_tradition_2 = {
 	# EU4: global_heretic_missionary_strength = 0.01
 	requires = organized_religion
 
-	global_pop_conversion_speed_modifier = 0.01
+	global_pop_conversion_speed_modifier = 0.20
 }
 
 abm_kie_mother_of_all_cities = {
@@ -200,7 +194,8 @@ abm_kie_mother_of_all_cities = {
 	# EU4: prestige = 1
 	requires = renaissance_court
 
-	monthly_prestige = 0.1
+	monthly_prestige = 0.10
+	monthly_legitimacy = 0.10
 }
 
 abm_kie_heritage_of_rus = {
@@ -212,7 +207,7 @@ abm_kie_heritage_of_rus = {
 	# EU4: diplomatic_reputation = 1
 	requires = formalized_relations
 
-	diplomatic_reputation = 1
+	diplomatic_reputation = diplomatic_reputation_mild_bonus
 }
 
 abm_kie_fending_off_the_invaders = {
@@ -225,6 +220,7 @@ abm_kie_fending_off_the_invaders = {
 	requires = fort_limit_3_advance
 
 	global_defensive = 0.15
+	fort_limit_modifier = 0.15
 }
 
 abm_kie_chernozem_land = {
@@ -236,7 +232,8 @@ abm_kie_chernozem_land = {
 	# EU4: production_efficiency = 0.1
 	requires = rgo_logistics_discovery
 
-	global_production_efficiency = 0.1
+	global_wheat_output_modifier = 0.25
+	global_monthly_food_modifier = 0.25
 }
 
 abm_kie_center_of_orthodox_church = {
@@ -248,7 +245,7 @@ abm_kie_center_of_orthodox_church = {
 	# EU4: global_missionary_strength = 0.01, tolerance_own = 1
 	requires = religious_unification
 
-	global_pop_conversion_speed_modifier = 0.01
+	global_monthly_prosperity = 0.001
 	tolerance_own = 1
 }
 
@@ -261,7 +258,8 @@ abm_kie_support_local_traders = {
 	# EU4: merchants = 1
 	requires = merchants_and_trade
 
-	global_merchant_capacity_modifier = 1
+	global_trade_through_owned_territory_efficiency = 0.20
+	trade_land_efficiency = medium_trade_land_efficiency_bonus
 }
 
 abm_kie_centralized_rule = {
@@ -273,7 +271,7 @@ abm_kie_centralized_rule = {
 	# EU4: global_tax_modifier = 0.1
 	requires = early_modern_administation
 
-	tax_income_efficiency = 0.1
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
 }
 
 abm_kie_ambition = {
@@ -285,7 +283,7 @@ abm_kie_ambition = {
 	# EU4: land_morale = 0.1
 	requires = military_revolution_advance
 
-	land_morale_modifier = 0.1
+	land_morale_modifier = 0.15
 }
 
 #############################
@@ -300,7 +298,8 @@ abm_zaz_tradition_1 = {
 	}
 	# EU4: loot_amount = 0.25
 	requires = feudalism_advance
-	amount_looted_modifier = 0.25
+
+	army_light_cavalry_power = 0.20
 }
 
 abm_zaz_tradition_2 = {
@@ -311,7 +310,8 @@ abm_zaz_tradition_2 = {
 	}
 	# EU4: manpower_recovery_speed = 0.1
 	requires = feudalism_advance
-	levy_recovery_modifier = 0.10
+	
+	regiment_reinforcement_speed = 0.10
 }
 
 abm_zaz_fort_builders = {
@@ -322,8 +322,8 @@ abm_zaz_fort_builders = {
 	}
 	# EU4: development_cost = -0.1
 	requires = renaissance_urbanisation
-	town_upgrade_cost_modifier = -0.10
-	city_upgrade_cost_modifier = -0.10
+	
+	global_monthly_development = 0.001
 }
 
 abm_zaz_hetmanate = {
@@ -334,7 +334,8 @@ abm_zaz_hetmanate = {
 	}
 	# EU4: global_unrest = -1
 	requires = regulate_court_procedures
-	global_rebel_suppression_efficiency = 0.10
+
+	monthly_republican_tradition = 0.10
 }
 
 abm_zaz_steppe_riders = {
@@ -345,7 +346,9 @@ abm_zaz_steppe_riders = {
 	}
 	# EU4: land_attrition = -0.15
 	requires = supply_lines
-	land_unit_attrition = -0.15
+
+	correct_box_chance = 0.10
+	combat_speed_modifier = 0.10
 }
 
 abm_zaz_cossack_hit_and_run = {
@@ -356,6 +359,7 @@ abm_zaz_cossack_hit_and_run = {
 	}
 	# EU4: leader_land_manuever = 1
 	requires = horse_riding_advance
+	
 	army_initiative = 0.10
 }
 
@@ -367,7 +371,9 @@ abm_zaz_classy_diplomacy = {
 	}
 	# EU4: power_projection_from_insults = 1
 	requires = formalized_relations
-	diplomatic_reputation = 0.5
+	
+	monthly_diplomats = 0.10
+	max_diplomats = 1
 }
 
 abm_zaz_zaporzhian_tolerance = {
@@ -378,7 +384,8 @@ abm_zaz_zaporzhian_tolerance = {
 	}
 	# EU4: religious_unity = 0.25
 	requires = religious_unification
-	tolerance_own = 1
+	
+	tolerance_own = 2
 }
 
 abm_zaz_army_first = {
@@ -389,11 +396,12 @@ abm_zaz_army_first = {
 	}
 	# EU4: cavalry_cost = -0.1, infantry_cost = -0.1
 	requires = military_revolution_advance
+	
 	army_maintenance_efficiency = 0.10
 }
 
 abm_zaz_ambition = {
-	age = age_5_absolutism
+	age = age_6_revolitions
 	icon = regimental_system
 	potential = {
 		has_or_had_tag = ZAZ
@@ -414,10 +422,12 @@ abm_cri_tradition_1 = {
 	potential = {
 		has_or_had_tag = CRI
 	}
-	# EU4: ae_impact = -0.1
 	requires = feudalism_advance
 
-	aggressiveness_modifier = -0.1
+	icon = cultural_acceptance_advance
+	
+	# EU4: ae_impact = -0.1
+	cultures_capacity = 1
 }
 
 abm_cri_tradition_2 = {
@@ -426,47 +436,47 @@ abm_cri_tradition_2 = {
 	potential = {
 		has_or_had_tag = CRI
 	}
+	requires = horse_riding_advance
+
 	# EU4: leader_land_manuever = 1
-	requires = horse_riding_advance
-
-	army_initiative = 0.1
+	army_initiative = 0.10
 }
 
-abm_cri_genghisid_legacy = {
-	age = age_2_renaissance
-	icon = cavalry_warfare
-	potential = {
-		has_or_had_tag = CRI
-	}
-	# EU4: cavalry_power = 0.2
-	requires = horse_riding_advance
+# abm_cri_genghisid_legacy = {
+# 	age = age_2_renaissance
+# 	icon = cavalry_warfare
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# EU4: cavalry_power = 0.2
+# 	requires = horse_riding_advance
 
-	army_light_cavalry_power = 0.2
-}
+# 	army_light_cavalry_power = 0.2
+# }
 
-abm_cri_slavers = {
-	age = age_2_renaissance
-	icon = privateers
-	potential = {
-		has_or_had_tag = CRI
-	}
-	# EU4: global_own_trade_power = 0.15
-	requires = privateers
+# abm_cri_slavers = {
+# 	age = age_2_renaissance
+# 	icon = privateers
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# EU4: global_own_trade_power = 0.15
+# 	requires = privateers
 
-	global_merchant_power = 0.15
-}
+# 	global_merchant_power = 0.15
+# }
 
-abm_cri_ruthenian_raids = {
-	age = age_3_discovery
-	icon = mercenary_advance
-	potential = {
-		has_or_had_tag = CRI
-	}
-	# EU4: loot_amount = 0.25
-	requires = recruitment_improvements_renaissance
+# abm_cri_ruthenian_raids = {
+# 	age = age_3_discovery
+# 	icon = mercenary_advance
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# EU4: loot_amount = 0.25
+# 	requires = recruitment_improvements_renaissance
 
-	amount_looted_modifier = 0.25
-}
+# 	amount_looted_modifier = 0.25
+# }
 
 abm_cri_despoilers = {
 	age = age_3_discovery
@@ -474,23 +484,23 @@ abm_cri_despoilers = {
 	potential = {
 		has_or_had_tag = CRI
 	}
-	# EU4: leader_land_shock = 1
 	requires = drill_army_advance
 
-	land_morale_modifier = 0.1
+	# EU4: leader_land_shock = 1
+	land_morale_modifier = 0.10
 }
 
-abm_cri_free_cattle_grazing = {
-	age = age_4_reformation
-	icon = efficient_mining
-	potential = {
-		has_or_had_tag = CRI
-	}
-	# EU4: production_efficiency = 0.1
-	requires = rgo_logistics_discovery
+# abm_cri_free_cattle_grazing = {
+# 	age = age_4_reformation
+# 	icon = efficient_mining
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# EU4: production_efficiency = 0.1
+# 	requires = rgo_logistics_discovery
 
-	global_production_efficiency = 0.1
-}
+# 	global_production_efficiency = 0.1
+# }
 
 abm_cri_settle_the_steppes = {
 	age = age_4_reformation
@@ -498,24 +508,24 @@ abm_cri_settle_the_steppes = {
 	potential = {
 		has_or_had_tag = CRI
 	}
-	# EU4: build_cost = -0.1, manpower_recovery_speed = 0.1
 	requires = renaissance_urbanisation
 
+	# EU4: build_cost = -0.1, manpower_recovery_speed = 0.1
 	global_build_buildings_efficiency = 0.1
-	levy_recovery_modifier = 0.1
+	army_maintenance_efficiency = 0.10
 }
 
-abm_cri_allow_nogai_protectorates = {
-	age = age_5_absolutism
-	icon = regimental_system
-	potential = {
-		has_or_had_tag = CRI
-	}
-	# EU4: global_manpower_modifier = 0.25
-	requires = military_revolution_advance
+# abm_cri_allow_nogai_protectorates = {
+# 	age = age_5_absolutism
+# 	icon = regimental_system
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# EU4: global_manpower_modifier = 0.25
+# 	requires = military_revolution_advance
 
-	global_manpower_modifier = 0.25
-}
+# 	global_manpower_modifier = 0.10
+# }
 
 abm_cri_ambition = {
 	age = age_5_absolutism
@@ -523,10 +533,10 @@ abm_cri_ambition = {
 	potential = {
 		has_or_had_tag = CRI
 	}
-	# EU4: core_creation = -0.25
 	requires = imperial_ambitions
 
-	global_annexation_cost_modifier = -0.25
+	# EU4: core_creation = -0.25
+	global_integration_speed_modifier = 0.25
 }
 
 
@@ -541,7 +551,7 @@ abm_atr_tradition_1 = {
 	}
 	requires = feudalism_advance
 	# EU4: ae_impact = -0.10
-	aggressiveness_modifier = -0.10
+	cultures_capacity_modifier = 0.25
 }
 
 abm_atr_tradition_2 = {
@@ -551,8 +561,9 @@ abm_atr_tradition_2 = {
 		has_or_had_tag = ATR
 	}
 	requires = feudalism_advance
+	
 	# EU4: years_of_nationalism = -5
-	global_integration_speed_modifier = 0.10
+	global_integration_speed_modifier = 0.20
 }
 
 abm_atr_traditions_of_the_great_khan = {
@@ -562,6 +573,7 @@ abm_atr_traditions_of_the_great_khan = {
 		has_or_had_tag = ATR
 	}
 	requires = horse_riding_advance
+	
 	# EU4: cavalry_power = 0.20
 	army_light_cavalry_power = 0.20
 }
@@ -573,8 +585,9 @@ abm_atr_horse_supplies = {
 		has_or_had_tag = ATR
 	}
 	requires = supply_lines
+	
 	# EU4: land_maintenance_modifier = -0.05
-	army_maintenance_efficiency = 0.05
+	army_maintenance_efficiency = 0.10
 }
 
 abm_atr_steppe_leaders = {
@@ -584,6 +597,7 @@ abm_atr_steppe_leaders = {
 		has_or_had_tag = ATR
 	}
 	requires = drill_army_advance
+	
 	# EU4: leader_land_shock = 1
 	land_morale_modifier = 0.10
 }
@@ -595,6 +609,7 @@ abm_atr_life_of_steppe_warrior = {
 		has_or_had_tag = ATR
 	}
 	requires = supply_lines
+
 	# EU4: land_attrition = -0.20
 	land_unit_attrition = -0.20
 }
@@ -606,6 +621,7 @@ abm_atr_tradition_of_conquest = {
 		has_or_had_tag = ATR
 	}
 	requires = imperial_ambitions
+	
 	# EU4: core_creation = -0.25
 	global_annexation_cost_modifier = -0.25
 }
@@ -617,8 +633,9 @@ abm_atr_logistics_of_khan = {
 		has_or_had_tag = ATR
 	}
 	requires = regiment_reinforcement_speed_reformation
+	
 	# EU4: manpower_recovery_speed = 0.20
-	levy_recovery_modifier = 0.20
+	army_maintenance_efficiency = 0.10
 }
 
 abm_atr_glory_of_conquest = {
@@ -628,8 +645,9 @@ abm_atr_glory_of_conquest = {
 		has_or_had_tag = ATR
 	}
 	requires = military_revolution_advance
+	
 	# EU4: global_manpower_modifier = 0.25
-	global_manpower_modifier = 0.25
+	global_manpower_modifier = 0.10
 }
 
 abm_atr_ambition = {
@@ -639,6 +657,7 @@ abm_atr_ambition = {
 		has_or_had_tag = ATR
 	}
 	requires = regulate_court_procedures
+	
 	# EU4: stability_cost_modifier = -0.10
 	stability_cost_efficiency = 0.10
 }
