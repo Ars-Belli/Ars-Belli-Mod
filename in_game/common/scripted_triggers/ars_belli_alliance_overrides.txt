@@ -1,5 +1,6 @@
 REPLACE:alliance_can_exist = {
 	$first$ = {
+		opinion = { target = $second$ value >= 0 }
 		not = { has_blocked_treaties = $second$ }
 		not = { is_subject_of = $second$ }
 		not = { is_rival_of = $second$ }
@@ -16,6 +17,7 @@ REPLACE:alliance_can_exist = {
 		is_rebel_country = no
 	}
 	$second$ = {
+		opinion = { target = $first$ value >= 0 }
 		not = { has_blocked_treaties = $first$ }
 		not = { is_subject_of = $first$ }
 		not = { is_rival_of = $first$ }
