@@ -61,3 +61,101 @@ ars_belli_over_fort_limit_over_50 = {
 	# capped at -100%
 	global_defensive = -1.0
 }
+
+REPLACE:high_purity = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_purity = yes }
+	}
+	limit = {
+		purity > 75
+	}
+	scales_with = {
+		value = purity
+		subtract = 75
+		multiply = 0.04
+	}
+
+	monthly_honor = 0.25
+}
+
+REPLACE:low_purity = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_purity = yes }
+	}
+	limit = {
+		purity < 25
+	}
+	scales_with = {
+		value = purity
+		multiply = -0.04
+		add = 1
+	}
+
+	monthly_honor = -0.25
+	army_initiative = 0.2
+
+	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	peasants_estate_target_satisfaction = huge_permanent_target_satisfaction
+}
+
+ars_belli_base_purity = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_purity = yes }
+	}
+
+
+
+	monthly_purity = 0.25
+}
+
+REPLACE:high_honor = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_honor = yes }
+	}
+	limit = {
+		honor > 75
+	}
+	scales_with = {
+		value = honor
+		subtract = 75
+		multiply = 0.04
+	}
+
+	monthly_purity = 0.25
+}
+
+REPLACE:low_honor = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_honor = yes }
+	}
+	limit = {
+		honor < 25
+	}
+	scales_with = {
+		value = honor
+		multiply = -0.04
+		add = 1
+	}
+
+	monthly_purity = -0.25
+
+	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	peasants_estate_target_satisfaction = huge_permanent_target_satisfaction
+}
+
+ars_belli_base_honor = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_honor = yes }
+	}
+	monthly_honor = 0.25
+}
