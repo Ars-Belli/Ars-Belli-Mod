@@ -1,0 +1,435 @@
+﻿#####ArsBelliMod#####
+
+#Japan#
+
+a_abm_early_samurai_cavalry = {
+	copy_from = a_age_2_renaissance_heavy_cavalry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.20
+	morale_damage_taken = -0.3
+	initiative = 1
+
+	combat = { 
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { spear_tag heavy_tag }
+}
+
+a_abm_early_warrior_monks = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.15
+	morale_damage_taken = -0.3
+
+	combat = { 
+		hills = 0.1
+		mountains = 0.1
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { archer_tag medium_tag }
+}
+
+a_abm_early_samurai_retainers = {
+	copy_from = a_age_2_renaissance_heavy_infantry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.15
+	morale_damage_taken = -0.20
+	initiative = 1
+
+	combat = { 
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { sword_tag heavy_tag }
+}
+
+a_abm_early_bow_ashigaru = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.10
+	morale_damage_taken = -0.10
+
+	combat = { 
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { archer_tag light_tag }
+}
+
+a_abm_early_yari_ashigaru = {
+	copy_from = a_age_2_renaissance_heavy_infantry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.10
+	morale_damage_taken = -0.10
+
+	combat = { 
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { spear_tag medium_tag }
+}
+
+#####ArsBelliMod#####
+
+a_longbowmen = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	upgrades_to = a_late_longbowmen
+	
+	initiative = 2
+	strength_damage_done = 0.10
+	
+	buildable = no
+	levy = yes
+
+	maintenance_demand =  archer_infantry_maintenance
+	construction_demand = archer_infantry_construction
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.01
+	}
+
+	location_potential = {
+		unit_longbowmen_location_trigger = yes
+	}
+
+	gfx_tags = { longbow_tag archer_tag light_tag }
+}
+
+a_reformed_gallowglass = {
+	copy_from = a_age_2_renaissance_heavy_infantry
+
+	is_special = yes
+
+	upgrades_to = a_late_gallowglass
+	
+	strength_damage_taken = -0.05
+	morale_damage_taken = -0.10	
+	initiative = 2
+
+	location_potential = {
+		dominant_culture = culture:norse_gael
+	}
+	
+	buildable = no
+	levy = yes
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.01
+	}
+
+	gfx_tags = { gallowglass_tag medium_tag }
+}
+
+a_wagenburg = {
+	copy_from = a_age_2_renaissance_heavy_infantry
+	is_special = yes
+	upgrades_to = a_halberdiers
+	buildable = yes
+
+	limit = wagenburg_unit_limit
+	
+	strength_damage_taken = -0.1
+	morale_damage_taken = -0.1
+	secure_flanks_defense = 0.025
+}
+
+a_genoese_crossbowmen = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	upgrades_to = a_early_arquebusiers
+
+	build_time_modifier = 0.5
+	initiative = 2
+
+	morale_damage_done = 0.1
+	strength_damage_done = -0.1
+	
+	buildable = yes
+
+	maintenance_demand =  archer_infantry_maintenance
+	construction_demand = archer_infantry_construction
+
+	#root = location. Checks location_potential first so don't need that scripting in
+
+	location_potential = {
+		unit_genoese_crossbowmen_location_trigger = yes
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.01
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.1
+	}
+
+	gfx_tags = { crossbow_tag pavise_tag medium_tag }
+}
+
+
+a_late_almogavars = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+
+	build_time_modifier = 0.5
+	combat_speed = 0.05
+	morale_damage_done = 0.2
+	
+	
+	buildable = no
+	levy = yes
+
+	#root = location. Checks location_potential first so don't need that scripting in
+
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.01
+	}
+
+	location_potential = {
+		unit_almogavars_location_trigger = yes
+	}
+
+	gfx_tags = { spear_tag light_tag }
+}
+
+a_late_crusader_knights_base = {
+	is_special = yes
+	copy_from = a_age_2_renaissance_heavy_infantry
+	
+	buildable = no
+	
+	strength_damage_taken = -0.05
+	morale_damage_taken = -0.05
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+
+
+}
+
+a_late_crusader_knights = {
+	copy_from = a_late_crusader_knights_base
+	is_special = yes
+	upgrades_to = a_halberdiers
+	
+
+	buildable = yes
+
+	country_potential = {
+		OR = {
+			modifier:allow_military_order_units = yes
+			culture = { has_culture_group = culture_group:iberian_group }
+		}
+	}
+
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
+
+a_late_crusader_knights_levy = {
+	copy_from = a_late_crusader_knights_base
+	is_special = yes
+	
+	buildable = no
+	levy = yes
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
+
+a_hwacha = {
+	copy_from = a_age_2_renaissance_artillery
+	is_special = yes
+	upgrades_to = a_falconet
+
+	strength_damage_done = 0.2
+	movement_speed = -0.25
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.005
+	}
+}
+
+a_mamluk_unit_renaissance = {
+	is_special = yes
+	upgrades_to = a_halberdiers
+	copy_from = a_age_2_renaissance_heavy_infantry
+
+	morale_damage_done = 0.1
+	gfx_tags = { heavy_tag }
+
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+}
+
+a_mamluk_horsemen_renaissance = {
+	is_special = yes
+	upgrades_to = a_lancers
+	copy_from = a_age_2_renaissance_heavy_cavalry
+
+	morale_damage_done = 0.1
+
+	buildable = yes
+
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+
+	gfx_tags = { heavy_tag }
+}
+
+a_serbian_hussars = {
+	copy_from = a_age_2_renaissance_light_cavalry
+	is_special = yes
+	upgrades_to = a_light_lancers
+	
+	buildable = yes
+	
+	initiative = 3
+	morale_damage_done = 0.05
+
+	gfx_tags = { medium_tag }
+}
+
+a_muslim_riders_vijay = {
+	copy_from = a_age_2_renaissance_heavy_cavalry
+	is_special = yes
+	upgrades_to = a_lancers
+
+	morale_damage_done = 0.1
+	morale_damage_taken = -0.2
+	
+	buildable = yes
+	
+	country_potential = {
+		has_unlocked_unit_trigger = { type = a_muslim_riders_vijay }
+	}
+
+	location_potential = {
+		OR = {
+			dominant_religion ?= religion:sunni
+			dominant_religion ?= religion:shia
+			dominant_religion ?= religion:ibadi
+		}
+	}
+
+	gfx_tags = { spear_tag medium_tag }
+}
+
+a_late_karambit_warrior = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	upgrades_to = a_early_arquebusiers
+
+	
+	initiative = 2
+	combat_speed = 3
+	
+	buildable = yes
+
+	gfx_tags = { medium_tag }
+}
