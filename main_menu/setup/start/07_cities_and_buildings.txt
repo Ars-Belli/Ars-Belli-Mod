@@ -33,6 +33,7 @@ locations={
 	# britain
 	london = { rank = city			town_setup = british_town_port}
 	edinburgh = { rank = town 		town_setup = british_town_port}
+	dumfries = { rank = town 		town_setup = british_town_port} #NEW
 	york = { rank = town 			town_setup = british_town}
 	bristol = { rank = town 		town_setup = british_town_port}
 	coventry = { rank = town 		town_setup = british_town}
@@ -4764,6 +4765,9 @@ building_manager = {
 	castle = { tag = ANG level = 1 location = angouleme }
 	castle = { tag = PER level = 1 location = perigueux }
 	castle = { tag = AQN level = 1 location = bordeaux }
+	sergeantry = { tag = AQN level = 1 location = bordeaux } #without this he will build it during war and pull soldiers from the castle...
+	castle = { tag = AQN level = 1 location = montendre } #NEW
+	castle = { tag = AQN level = 1 location = mimizan } #NEW
 	castle = { tag = BRR level = 1 location = tarbes }
 	castle = { tag = NRB level = 1 location = narbonne }
 	castle = { tag = MLL level = 1 location = montpellier }
@@ -4823,6 +4827,7 @@ building_manager = {
 	stockade 		= { tag = ENG level = 1 location = truro } # St Michael's Mount
 	nobility_fortifications 		= { tag = ENG level = 1 location = loughborough } # Belvoir Castle
 
+	castle 		= { tag = MOY level = 1 location = inverness }
 	castle 		= { tag = SCO level = 1 location = strathearn }
 	castle 		= { tag = SCO level = 1 location = glasgow }
 	castle 		= { tag = SCO level = 1 location = selkirk }
@@ -4833,6 +4838,18 @@ building_manager = {
 	stockade 	= { tag = SBL level = 1 location = dumfries } # caerlaverock Castle
 	stockade 	= { tag = SBL level = 1 location = perth }
 	stockade 	= { tag = SBL level = 1 location = kirkcudbright } # Buittle Castle
+
+	sergeantry = { tag = SCO level = 1 location = glasgow }
+	royal_court = { tag = SCO level = 1 location = glasgow }
+	royal_garden = { tag = SCO level = 1 location = glasgow }
+	library = { tag = SCO level = 1 location = glasgow }
+	chancery = { tag = SCO level = 1 location = glasgow }
+
+	sergeantry = { tag = MOY level = 1 location = inverness }
+	royal_court = { tag = MOY level = 1 location = inverness }
+	royal_garden = { tag = MOY level = 1 location = inverness }
+	library = { tag = MOY level = 1 location = inverness }
+	chancery = { tag = MOY level = 1 location = inverness }
 
 	#NEW - Lowlands castles & buildings
 	castle = { tag = FLA level = 1 location = ghent } #Gravensteen
@@ -6078,12 +6095,15 @@ building_manager = {
 	royal_court = { tag = AKT level = 1 location = akita }
 	royal_garden = { tag = AKT level = 1 location = akita }
 	confucian_school = { tag = AKT level = 1 location = akita }
+#	castle = { tag = AKT level = 1 location = kamiura }
 	
 	sergeantry = { tag = NBU level = 1 location = hienuki }
 	royal_court = { tag = NBU level = 1 location = hienuki }
 	royal_garden = { tag = NBU level = 1 location = hienuki }
 	confucian_school = { tag = NBU level = 1 location = hienuki }
+	castle = { tag = NBU level = 1 location = waga }
 	
+
 	sergeantry = { tag = SBA level = 1 location = miyagi }
 	royal_court = { tag = SBA level = 1 location = miyagi }
 	royal_garden = { tag = SBA level = 1 location = miyagi }
@@ -6113,6 +6133,7 @@ building_manager = {
 	royal_court = { tag = UES level = 1 location = koshi }
 	royal_garden = { tag = UES level = 1 location = koshi }
 	confucian_school = { tag = UES level = 1 location = koshi }
+	castle = { tag = UES level = 1 location = kitauonuma }
 	
 	sergeantry = { tag = HNM level = 1 location = sawata }
 	royal_court = { tag = HNM level = 1 location = sawata }
@@ -6124,6 +6145,11 @@ building_manager = {
 	royal_court = { tag = UTN level = 1 location = kawachi }
 	royal_garden = { tag = UTN level = 1 location = kawachi }
 	confucian_school = { tag = UTN level = 1 location = kawachi }
+#	bridge_infrastructure = { tag = UTN level = 1 location = shioya }
+#	bridge_infrastructure = { tag = UTN level = 1 location = kawachi }
+#	bridge_infrastructure = { tag = UTN level = 1 location = haga }
+#	bridge_infrastructure = { tag = UTN level = 1 location = nitta }
+#	bridge_infrastructure = { tag = UTN level = 1 location = seta }
 	
 	sergeantry = { tag = STK level = 1 location = ibaraki }
 	royal_court = { tag = STK level = 1 location = ibaraki }
@@ -6149,6 +6175,10 @@ building_manager = {
 	royal_court = { tag = TKD level = 1 location = koma_kai }
 	royal_garden = { tag = TKD level = 1 location = koma_kai }
 	confucian_school = { tag = TKD level = 1 location = koma_kai }
+#	bridge_infrastructure = { tag = TKD level = 1 location = saku }
+#	bridge_infrastructure = { tag = TKD level = 1 location = chiisagata }
+#	bridge_infrastructure = { tag = TKD level = 1 location = sarashina }
+#	bridge_infrastructure = { tag = TKD level = 1 location = minochi }
 	
 	sergeantry = { tag = IMG level = 1 location = kitou }
 	royal_court = { tag = IMG level = 1 location = kitou }
@@ -6161,15 +6191,15 @@ building_manager = {
 	confucian_school = { tag = TGW level = 1 location = hekikai }
 	
 	#Honshu - Middle
-	wharf = { tag = AKJ level = 1 location = fugeshi }
-	wharf = { tag = AKJ level = 1 location = nei }
+	wharf = { tag = HTK level = 1 location = fugeshi }
+	wharf = { tag = HTK level = 1 location = nei }
 	wharf = { tag = ISK level = 1 location = kaga }
 	wharf = { tag = ISK level = 1 location = sakai_echizen }
 	wharf = { tag = ISK level = 1 location = tsuruga }
 #	wharf = { tag = OSA level = 1 location = kawabe }
-	wharf = { TAG = ASK level = 1 location = osaka }
-	wharf = { tag = HTK level = 1 location = izumi }
-	wharf = { tag = HTK level = 1 location = kaisou }
+	wharf = { tag = ASK level = 1 location = osaka }
+	wharf = { tag = HSK level = 1 location = izumi }
+	wharf = { tag = HSK level = 1 location = kaisou }
 	wharf = { tag = KTB level = 1 location = taki }
 	
 	sergeantry = { tag = ODA level = 1 location = niwa }
@@ -6177,12 +6207,11 @@ building_manager = {
 	royal_garden = { tag = ODA level = 1 location = niwa }
 	confucian_school = { tag = ODA level = 1 location = niwa }
 	
-	sergeantry = { tag = AKJ level = 1 location = nei }
-	royal_court = { tag = AKJ level = 1 location = nei }
-	royal_garden = { tag = AKJ level = 1 location = nei }
-	confucian_school = { tag = AKJ level = 1 location = nei }
+	sergeantry = { tag = HTK level = 1 location = nei }
+	royal_court = { tag = HTK level = 1 location = nei }
+	royal_garden = { tag = HTK level = 1 location = nei }
+	confucian_school = { tag = HTK level = 1 location = nei }
 	
-	castle = { tag = ISK level = 1 location = imadate }
 	hospital = { tag = ISK level = 1 location = sakai_echizen }
 	confucian_school = { tag = ISK level = 1 location = sakai_echizen }
 	scriptorium = { tag = ISK level = 5 location = sakai_echizen }
@@ -6190,25 +6219,30 @@ building_manager = {
 	royal_court = { tag = ISK level = 1 location = sakai_echizen }
 	royal_garden = { tag = ISK level = 1 location = sakai_echizen }
 	confucian_school = { tag = ISK level = 1 location = sakai_echizen }
+	castle = { tag = ISK level = 1 location = imadate }
+	stockade = { tag = ISK level = 1 location = yosa }
 	
 	sergeantry = { tag = KTB level = 1 location = taki }
 	royal_court = { tag = KTB level = 1 location = taki }
 	royal_garden = { tag = KTB level = 1 location = taki }
 	confucian_school = { tag = KTB level = 1 location = taki }
+	stockade = { tag = KTB level = 1 location = watarai }
 	
-	sergeantry = { tag = HTK level = 1 location = kaisou }
-	royal_court = { tag = HTK level = 1 location = kaisou }
-	royal_garden = { tag = HTK level = 1 location = kaisou }
-	confucian_school = { tag = HTK level = 1 location = kaisou }
+	sergeantry = { tag = HSK level = 1 location = kaisou }
+	royal_court = { tag = HSK level = 1 location = kaisou }
+	royal_garden = { tag = HSK level = 1 location = kaisou }
+	confucian_school = { tag = HSK level = 1 location = kaisou }
+	stockade = { tag = HSK level = 1 location = yoshino }
 	
-	city_walls = { TAG = ASK level = 1 location = osaka }
-	market_warehouse = { TAG = ASK level = 3 location = osaka }
-	jewelry_guild = { TAG = ASK level = 4 location = osaka }
-	fiber_crops_farm = { TAG = ASK level = 7 location = kaisou }
+	city_walls = { tag = ASK level = 1 location = osaka }
+	market_warehouse = { tag = ASK level = 3 location = osaka }
+	jewelry_guild = { tag = ASK level = 4 location = osaka }
+	fiber_crops_farm = { tag = ASK level = 7 location = kaisou }
 	
-	sergeantry = { TAG = ASK level = 1 location = kyoto }
-	royal_garden = { TAG = ASK level = 1 location = kyoto }
-	confucian_school = { TAG = ASK level = 1 location = kyoto }
+	sergeantry = { tag = ASK level = 1 location = kyoto }
+	royal_garden = { tag = ASK level = 1 location = kyoto }
+	confucian_school = { tag = ASK level = 1 location = kyoto }
+	city_walls = { tag = ASK level = 1 location = kyoto }
 	
 	#Honshu - West Buildings
 	wharf = { tag = OUC level = 1 location = yoshiki_suou }
@@ -6217,19 +6251,23 @@ building_manager = {
 	wharf = { tag = YMN level = 1 location = kume_houki }
 	wharf = { tag = MRI level = 1 location = aki }
 	wharf = { tag = MRI level = 1 location = asakuchi }
-	wharf = { tag = HSK level = 1 location = akou }
+	wharf = { tag = ITO level = 1 location = akou }
 	wharf = { tag = MYH level = 1 location = akashi }
 	
-	sergeantry = { tag = HSK level = 1 location = akou }
-	royal_court = { tag = HSK level = 1 location = akou }
-	royal_garden = { tag = HSK level = 1 location = akou }
-	confucian_school = { tag = HSK level = 1 location = akou }
+	sergeantry = { tag = ITO level = 1 location = akou }
+	royal_court = { tag = ITO level = 1 location = akou }
+	royal_garden = { tag = ITO level = 1 location = akou }
+	confucian_school = { tag = ITO level = 1 location = akou }
+	castle = { tag = ITO level = 1 location = shikama }
+	stockade = { tag = ITO level = 1 location = joutou }
 	
 	sergeantry = { tag = YMN level = 1 location = kume_houki }
 	royal_court = { tag = YMN level = 1 location = kume_houki }
 	royal_garden = { tag = YMN level = 1 location = kume_houki }
 	confucian_school = { tag = YMN level = 1 location = kume_houki }
-	
+	castle = { tag = YMN level = 1 location = hino }
+	stockade = { tag = YMN level = 1 location = takakusa }
+
 	sergeantry = { tag = MRI level = 1 location = aki }
 	royal_court = { tag = MRI level = 1 location = aki }
 	royal_garden = { tag = MRI level = 1 location = aki }
@@ -6239,6 +6277,7 @@ building_manager = {
 	royal_court = { tag = OUC level = 1 location = yoshiki_suou }
 	royal_garden = { tag = OUC level = 1 location = yoshiki_suou }
 	confucian_school = { tag = OUC level = 1 location = yoshiki_suou }
+	stockade = { tag = OUC level = 1 location = ootsu }
 	
 	#Shikoku Buildings
 	wharf = { tag = CSK level = 1 location = hata }
@@ -6248,7 +6287,8 @@ building_manager = {
 	royal_court = { tag = MYH level = 1 location = awa_shikoku }
 	royal_garden = { tag = MYH level = 1 location = awa_shikoku }
 	confucian_school = { tag = MYH level = 1 location = awa_shikoku }
-	
+	castle = { tag = MYH level = 1 location = awaji }
+
 	sergeantry = { tag = CSK level = 1 location = hata }
 	royal_court = { tag = CSK level = 1 location = hata }
 	royal_garden = { tag = CSK level = 1 location = hata }
@@ -6280,7 +6320,8 @@ building_manager = {
 	royal_court = { tag = KKC level = 1 location = akita_kumamoto }
 	royal_garden = { tag = KKC level = 1 location = akita_kumamoto }
 	confucian_school = { tag = KKC level = 1 location = akita_kumamoto }
-	
+	castle = { tag = KKC level = 1 location = koushi }
+
 	sergeantry = { tag = OTM level = 1 location = ooita }
 	royal_court = { tag = OTM level = 1 location = ooita }
 	royal_garden = { tag = OTM level = 1 location = ooita }
@@ -6290,6 +6331,7 @@ building_manager = {
 	royal_court = { tag = SMZ level = 1 location = satsuma }
 	royal_garden = { tag = SMZ level = 1 location = satsuma }
 	confucian_school = { tag = SMZ level = 1 location = satsuma }
+	castle = { tag = SMZ level = 1 location = koyu }
 	
 	#Ryukyu Buildings
 	dock = { tag = RYU level = 1 location = oozato }

@@ -4499,7 +4499,8 @@ countries = {
 
 	MOY = { # Moray
 		own_control_core = {
-			inverness elgin badenoch lochaber
+			inverness elgin badenoch urquhart #Moray
+			lochaber ardtornish #Argyll
 		}
 		government = {
 			heir_selection = cognatic_primogeniture
@@ -4508,7 +4509,7 @@ countries = {
 		}
 		include = "catholic_monarchy_scottish_earldom"
 		include = "expl_northern_europe"
-		capital = elgin
+		capital = inverness
 		accepted_cultures = { highland }
 		court_language = norman_dialect
 	}
@@ -4604,16 +4605,19 @@ countries = {
 
 	SCO = { # Scotland
 		own_control_core = {
-			glasgow paisley dumbarton aberdeen dunbar banff buchan mar inverurie aberfeldy irvine
-			oban inverary cowal arran selkirk scone ayr lanark linlithgow stirling strathearn
+			glasgow paisley dumbarton aberdeen dunbar banff buchan mar inverurie aberfeldy
+			arran selkirk scone lanark linlithgow stirling strathearn
 			dornoch durness tongue thurso
+			kenmure stranraer ayr irvine #Galloway
+			kintyre oban inverary cowal #Argyll
+			arbroath stonehaven #Angus
 		}
 
 		our_cores_conquered_by_others = {
-			perth kirkcudbright kenmure stranraer
+			perth kirkcudbright 
 			edinburgh roxburgh dumfries
 			cupar dunfermline st_andrews clackmannan berwick
-			arbroath dundee stonehaven forfar
+			dundee forfar
 			#ross
 			dingwall gairloch ullapool
 		}
@@ -4689,11 +4693,13 @@ countries = {
 				burghers_royal_burgh_commissioners
 				#peasants
 				access_to_royal_and_ecclesiastical_courts
+				peasants_allowed_weapons_privilege
 				#tribes
 				tribes_creach
 				tribes_fosterage
 				tribes_manrent
 				tribes_scotland_gaelic_heritage
+				tribes_tribal_levies
 			}
 			laws = {
 				language_of_pleading = language_of_pleading_court
@@ -4702,16 +4708,16 @@ countries = {
 				sco_clan_holdings = inherited_clan_holdings
 			}
 			#Societal Values
-			centralization_vs_decentralization = 60
+			centralization_vs_decentralization = 90
 			traditionalist_vs_innovative = -50
-			spiritualist_vs_humanist = -50
+			spiritualist_vs_humanist = -70
 			aristocracy_vs_plutocracy = -50
-			serfdom_vs_free_subjects = 0
+			serfdom_vs_free_subjects = -50
 			mercantilism_vs_free_trade = -10
 			belligerent_vs_conciliatory = 10
-			quality_vs_quantity = -30
+			quality_vs_quantity = -50
 			offensive_vs_defensive = -20
-			capital_economy_vs_traditional_economy = 90
+			capital_economy_vs_traditional_economy = 100
 			individualism_vs_communalism = -10
 			outward_vs_inward = -20
 
@@ -4727,19 +4733,19 @@ countries = {
 
 		currency_data = {
 			gold = 300
-			stability = 30 # Starting Turnmoil with Balliol
+			stability = 35 # Starting Turnmoil with Balliol
 			prestige = 25
-			government_power = 80
-			war_exhaustion = 1.5 # Starting Turnmoil with Balliol
-			army_tradition = 15
+			government_power = 90
+			war_exhaustion = 0.5 # Starting Turnmoil with Balliol
+			army_tradition = 40
 		}
 	}
 
 	SBL = { # Balliol Pretender
 		own_control_core = {
-			kirkcudbright kenmure stranraer perth edinburgh roxburgh duns dumfries dunfermline st_andrews clackmannan berwick
+			kirkcudbright perth edinburgh roxburgh duns dumfries dunfermline st_andrews clackmannan berwick
 			cupar
-			arbroath dundee stonehaven forfar
+			dundee forfar
 		}
 		our_cores_conquered_by_others = {
 			glasgow paisley dumbarton aberdeen dunbar elgin banff dundee buchan mar inverurie stonehaven aberfeldy irvine dornoch durness tongue
@@ -4826,7 +4832,6 @@ countries = {
 		}
 		own_control_conquered = {
 			# Scotland
-			ardtornish kintyre
 		}
 
 		our_cores_conquered_by_others = {
@@ -4869,7 +4874,7 @@ countries = {
 
 	ROS = { # Ross
 		own_control_core = {
-			dingwall gairloch ullapool urquhart
+			dingwall gairloch ullapool #Ross
 		}
 		own_control_conquered = {
 			# Bishop of the Isles
@@ -4886,7 +4891,7 @@ countries = {
 			}
 		}
 		include = "catholic_monarchy_scottish_earldom"
-		capital = dingwall
+		capital = ullapool
 		accepted_cultures = { scottish }
 	}
 	CLA = {
@@ -17147,11 +17152,24 @@ countries = {
 				name_john = 1
 				name_edward = 3
 			}
+
+			centralization_vs_decentralization = 100
+			spiritualist_vs_humanist = -70
+			aristocracy_vs_plutocracy = -50
+			serfdom_vs_free_subjects = -50
+			offensive_vs_defensive = 100
+			capital_economy_vs_traditional_economy = 100
+			individualism_vs_communalism = 40
+
 		}
 		capital = bordeaux
-		tolerated_cultures = {
-			english
+
+		accepted_cultures = {
 			saintongeais
+		}
+
+		tolerated_cultures = {
+			poitevin
 			basque
 		}
 		country_rank = rank_duchy
@@ -25742,7 +25760,7 @@ countries = {
 		variables = {
 			data = {
 				{
-					flag = "supports_northern_court"
+					flag = "supports_southern_court"
 					data = {
 						type = boolean
 						identity = 1
@@ -25983,7 +26001,7 @@ countries = {
 		variables = {
 			data = {
 				{
-					flag = "supports_northern_court"
+					flag = "supports_southern_court"
 					data = {
 						type = boolean
 						identity = 1
@@ -26158,7 +26176,7 @@ countries = {
 		variables = {
 			data = {
 				{
-					flag = "supports_northern_court"
+					flag = "supports_southern_court"
 					data = {
 						type = boolean
 						identity = 1
@@ -26252,6 +26270,7 @@ countries = {
 		own_control_core = {
 			kesen motoyoshi oshika tome kurihara kami kurokawa miyagi natori #Rikuzen
 			iwai #Rikuchu
+			kitamogami #Uzen
 		}
 
 		capital = shiwa
@@ -26315,7 +26334,7 @@ countries = {
 		variables = {
 			data = {
 				{
-					flag = "supports_northern_court"
+					flag = "supports_southern_court"
 					data = {
 						type = boolean
 						identity = 1
@@ -26331,7 +26350,6 @@ countries = {
 		own_control_core = {
 			taga kuji_kanto naka ibaraki kashima niihari tsukuba #Hitachi
 			katori #Shimosa
-			kikuta #Iwaki
 		}
 
 		capital = ibaraki
@@ -26478,7 +26496,7 @@ countries = {
 	UES = { #Uesugi
 		own_control_core = {
 			iwafune nutari nishikanbara higashikanbara koshi kariwa minamiuonuma kitauonuma higashikubiki nishikubiki #Echigo
-			oonuma minamiaizu #Iwase
+			oonuma minamiaizu kawanuma #Iwase
 			tagawa #Uzen
 		}
 
@@ -27094,7 +27112,7 @@ countries = {
 		variables = {
 			data = {
 				{
-					flag = "supports_northern_court"
+					flag = "supports_southern_court"
 					data = {
 						type = boolean
 						identity = 1
@@ -27443,9 +27461,9 @@ countries = {
 
 	DTE = { #Date
 		own_control_core = {
-			kitamogami minamimogami nishiokitama higashiokitama #Uzen
-			uda_mutsu katta namekata shineha naraha iwaki tamura #Iwaki 
-			date_loc shinobu adachi yama_jap iwase asaka kitaaizu kawanuma #Iwase
+			minamimogami nishiokitama higashiokitama #Uzen
+			uda_mutsu katta namekata shineha naraha iwaki tamura kikuta #Iwaki 
+			date_loc shinobu adachi yama_jap iwase asaka kitaaizu #Iwase
 		}
 
 		capital = adachi
@@ -27628,7 +27646,7 @@ countries = {
 
 	UTN = { #Utsunomiya
 		own_control_core = {
-				tone seta nitta #Kozuke
+				seta nitta tone #Kozuke
 				nasu shioya kawachi haga tsuga ashikaga_loc #Shimotsuke
 				takano shirakawa #Iwaki
 		}
@@ -27801,6 +27819,7 @@ countries = {
 			kasa yosa onyuu #Tango
 			sakai_echizen nakaoono imadate nyuu tsuruga #Echizen
 			kaga nomi #Kaga
+			ikeda #Mino
 		}
 		
 		capital = sakai_echizen
@@ -27820,13 +27839,17 @@ countries = {
 		variables = {
 			data = {
 				{
-					flag = "supports_northern_court"
+					flag = "supports_southern_court"
 					data = {
 						type = boolean
 						identity = 1
 					}
 				}
 			}
+		}
+
+		accepted_cultures = {
+			tougoku_culture
 		}
 
 		country_rank = rank_county
@@ -28325,7 +28348,7 @@ countries = {
 		variables = {
 			data = {
 				{
-					flag = "supports_northern_court"
+					flag = "supports_southern_court"
 					data = {
 						type = boolean
 						identity = 1
@@ -29232,7 +29255,7 @@ countries = {
 		variables = {
 			data = {
 				{
-					flag = "supports_northern_court"
+					flag = "supports_southern_court"
 					data = {
 						type = boolean
 						identity = 1
@@ -29284,7 +29307,7 @@ countries = {
 	ODA = { #Oda
 		own_control_core = {
 			aichi niwa nakajima #Owari
-			ena minokamo toki gujou mugi katagata ikeda fuwa_mino #Mino
+			ena minokamo toki gujou mugi katagata fuwa_mino #Mino
 		}
 
 		capital = niwa
