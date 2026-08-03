@@ -7,10 +7,10 @@ Game root: `/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/ga
 
 ## Advance Files
 All tag-specific China advances are in `in_game/common/advances/abm_f3-t2_*_china.txt`:
-- `_east`: CGU, CFN, WUU, CNP, JNX, CTW, CHU, CHE, MNG (9 tags)
-- `_south`: LEZ, CDN, MNE, LNG (4 tags)
-- `_norh`: YUA, CMO, ANX, SAI, KHA, SHD, AYG, CSO (8 tags)
-- `_west`: CXI, HNG, CSI, GNS, BIG (5 tags)
+- `_east`: CGU, CFN, WUU, CNP, ABJNX, CTW, ABCHU, CHE, MNG (9 tags)
+- `_south`: ABLEZ, CDN, MNE, LNG (4 tags)
+- `_norh`: YUA, CMO, ABANX, ABSAI, ABKHA, ABSHD, ABAYG, CSO (8 tags)
+- `_west`: CXI, ABHNG, CSI, ABGNS, ABBIG (5 tags)
 Total: 26 tags
 
 ## Advance Naming Convention
