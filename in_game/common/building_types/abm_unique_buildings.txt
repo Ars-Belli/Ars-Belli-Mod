@@ -134,3 +134,62 @@ REPLACE:order_commandery = {
 	}
 	graphical_tags = { small_military }
 }
+
+abm_buddhist_monastery_stronghold = {
+	audio_tier = 2
+	is_special = yes
+	is_foreign = no
+	pop_type = clergy
+	
+	max_levels = 1
+	employment_size = clergy_medical_employment
+	
+	category = military_category
+	
+	country_potential = {
+		government_type ?= government_type:theocracy
+		has_reform = government_reform:abm_china_buddhist_order
+	}
+
+	location_potential = {
+		OR = {
+			topography = mountains
+			topography = plateau
+			topography = hills
+		}
+		dominant_culture = { has_culture_group = culture_group:chinese_group }
+		dominant_religion ?= religion:sanjiao
+	}
+	
+	unique_production_methods = {
+		buddhist_monastery_stronghold = {
+			tools = 0.05
+			stone = 0.25
+			books = 0.10
+			category = building_maintenance
+		}
+
+	}
+
+	rural_settlement = yes
+	town = yes
+	city = no
+	megalopolis = no
+
+	
+	build_time = soldier_building
+	
+	always_add_demands = yes
+	
+	modifier = {
+		local_manpower = 0.003
+		local_garrison_size = 0.20
+		local_defensive = 0.20
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	#possible_production_methods = {
+	#	order_commandery_maintenance
+	#}
+	construction_demand = early_soldier_building_construction
+}
