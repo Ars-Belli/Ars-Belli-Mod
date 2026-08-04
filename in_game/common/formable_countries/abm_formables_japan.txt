@@ -1,0 +1,141 @@
+ABWJP_f = {
+	level = 4
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:japanese_group
+		}
+	}
+
+	allow = {
+		is_subject = no
+        culture = {
+            OR = {
+                culture = culture:kyushu_culture
+                culture = culture:saigoku_culture
+            }
+		}
+		capital = { 
+            OR = { 
+            area = area:saikaidou_area 
+            area = area:nankaidou_area
+            area = area:sanyoudou_area
+            area = area:sanindou_area
+            area = area:kinai_area
+            province = province:shima_province
+            province = province:oumi_province
+            province = province:shima_province
+            province = province:echizen_province
+            province = province:kaga_province
+            } 
+        }
+	}
+
+	tag = ABWJP
+
+	areas = {
+		saikaidou_area 
+        nankaidou_area
+        sanyoudou_area
+        sanindou_area
+        kinai_area
+	}
+    provinces = {
+        shima_province
+        oumi_province
+        shima_province
+        echizen_province
+        kaga_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+ABEJP_f = {
+	level = 4
+	required_locations_fraction = 0.65
+	rule = historical
+
+    potential = {
+		culture = {
+			has_culture_group = culture_group:japanese_group
+		}
+	}
+
+	allow = {
+		is_subject = no
+		culture = {
+            OR = {
+                culture = culture:tougoku_culture
+                culture = culture:touhoku_culture
+            }
+		}
+		capital = { 
+            OR = { 
+            area = area:ou_area 
+            area = area:hokurikudou_area
+            area = area:tousandou_area
+            area = area:toukaidou_area
+            } 
+        }
+	}
+
+	tag = ABEJP
+
+	areas = {
+		ou_area 
+        hokurikudou_area
+        tousandou_area
+        toukaidou_area
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+JAP_f = {
+	level = 5
+	required_locations_fraction = 0.65
+	rule = historical
+
+    potential = {
+		culture = {
+			has_culture_group = culture_group:japanese_group
+		}
+	}
+
+	allow = {
+		is_subject = no
+        culture = {
+		has_culture_group = culture_group:japanese_group
+        }
+		capital = { 
+            OR = { 
+            region = region:japan_region
+            } 
+        }
+	}
+
+	tag = JAP
+	regions = {
+		japan_region
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 4 }
+			set_country_rank = country_rank:rank_empire
+		}
+	}
+}

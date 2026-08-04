@@ -1971,7 +1971,9 @@ tkd_takeda_ryu = {
 
 	requires = army_initiative_ren
 
-	army_heavy_cavalry_power = 0.15
+	army_heavy_cavalry_power = 0.10
+	army_heavy_cavalry_reinforce_cost_modifier = -0.05
+	army_heavy_cavalry_maintenance_cost_modifier = -0.05
 }
 
 abm_tkd_dip1_information_network = {
@@ -2366,6 +2368,86 @@ abm_nbu_mil1_hardened_soldiers = {
 ############################
 # age_3_discovery
 ############################
+abm_abwjp1_the_western_army = {
+	icon = akt_ezo_kanrei
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = ABWJP
+	}
+
+	requires = correct_box_advance_discovery
+
+	army_light_infantry_power = 0.05
+	army_heavy_infantry_power = 0.05
+	army_light_infantry_reinforce_cost_modifier = -0.05
+	army_heavy_infantry_reinforce_cost_modifier = -0.05
+}
+
+abm_abejp1_the_eastern_army = {
+	icon = akt_ezo_kanrei
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = ABEJP
+	}
+
+	requires = correct_box_advance_discovery
+
+	army_light_cavalry_power = 0.1
+	army_heavy_cavalry_power = 0.1
+}
+
+abm_abwjp2_western_clans = {
+	icon = akt_ezo_kanrei
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = ABWJP
+	}
+
+	requires = correct_box_advance_discovery
+
+	global_manpower_modifier = 0.05
+	global_sailors_modifier = 0.1
+}
+
+abm_abejp2_eastern_clans = {
+	icon = akt_ezo_kanrei
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = ABEJP
+	}
+
+	requires = correct_box_advance_discovery
+
+	global_manpower_modifier = 0.05
+	levy_recovery_modifier = 0.1
+}
+
+abm_abwjp3_western_traditions = {
+	icon = akt_ezo_kanrei
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = ABWJP
+	}
+
+	requires = study_institutions_advance
+
+	global_maritime_presence_decay = -0.001
+	global_port_build_buildings_efficiency = 0.2
+}
+
+abm_abejp3_eastern_traditions = {
+	icon = akt_ezo_kanrei
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = ABEJP
+	}
+
+	requires = study_institutions_advance
+
+	global_monthly_control_decline = -0.001
+	global_road_building_time = -0.3
+}
+
 abm_ask_eco2_tosen_bugyo = {
 	icon = akt_ezo_kanrei
 	age = age_3_discovery
@@ -3062,7 +3144,7 @@ ues_eastern_power = {
 
 	requires = paved_road_advance
 
-	army_heavy_infantry_reinforce_cost_modifier = -0.25
+	army_heavy_infantry_reinforce_cost_modifier = -0.20 #was -0.25
 }
 
 abm_ues_adm1_denoku_no_ji = {
@@ -3523,6 +3605,130 @@ abm_nbu_eco3_untapped_resources = {
 ############################
 # age_4_reformation
 ############################
+jap_ichiban_yari = {
+	age = age_4_reformation
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = JAP
+	}
+
+	requires = combined_arms_advance_reformation
+
+	land_morale_modifier = 0.05
+	army_tradition_from_battle = 0.25
+	ai_weight = { add = 10 }
+}
+
+jap_ashigaru = {
+	age = age_4_reformation
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = JAP
+	}
+
+	requires = spanish_square
+
+	global_manpower_modifier = 0.05
+	levy_recovery_modifier = 0.1
+}
+
+jap_shinobi = {
+	age = age_4_reformation
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = JAP
+	}
+
+	requires = counter_espionage_action_advance
+
+	spy_network_construction = 0.2
+	casus_belli_creation_speed_modifier = 0.5
+}
+
+abm_abwjp4_western_tactics = {
+	age = age_4_reformation
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = ABWJP
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	combat_speed_modifier = 0.1
+	army_logistics_distance_modifier = 0.1
+	ai_weight = { add = 10 }
+}
+
+abm_abejp4_eastern_tactics = {
+	age = age_4_reformation
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = ABEJP
+	}
+
+	requires = combined_arms_advance_reformation
+
+	combat_speed_modifier = 0.1
+	army_movement_speed = 0.1
+	ai_weight = { add = 10 }
+}
+
+abm_abwjp5_western_ambitions = {
+	age = age_4_reformation
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = ABWJP
+	}
+
+	requires = spanish_square
+
+	land_morale_modifier = 0.05
+	global_levy_size_modifier = 0.1
+	ai_weight = { add = 10 }
+}
+
+abm_abejp5_eastern_ambitions = {
+	age = age_4_reformation
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = ABEJP
+	}
+
+	requires = spanish_square
+
+	land_morale_modifier = 0.05
+	levy_combat_efficiency_modifier = 0.1
+	ai_weight = { add = 10 }
+}
+
+abm_abwjp6_western_weaponry = {
+	age = age_4_reformation
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = ABWJP
+	}
+
+	requires = unlock_pinnace_advance
+
+	naval_damage_done = 0.05
+	navy_maintenance_efficiency = 0.1
+	ai_weight = { add = 10 }
+}
+
+abm_abejp6_eastern_weaponry = {
+	age = age_4_reformation
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = ABEJP
+	}
+
+	requires = unlock_chambered_cannon_advance
+
+	army_artillery_power = 0.05
+	siege_ability = 0.1
+	ai_weight = { add = 10 }
+}
+
 abm_ask_mil4_an_army_of_conquest = {
 	icon = jap_bushido
 	age = age_4_reformation
@@ -4698,7 +4904,85 @@ abm_nbu_mil3_expeditionary_logistics = {
 ############################
 # age_5_absolutism
 ############################
+jap_jokamachi = {
+	age = age_5_absolutism
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = JAP
+	}
+	
+	requires = modern_council_hall_advance
+	
+	city_upgrade_cost_modifier = -0.1
+	town_upgrade_cost_modifier = -0.1
+	megalopolis_upgrade_cost_modifier = -0.1
+}
+
+jap_daiku_construction = {
+	age = age_5_absolutism
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = JAP
+	}
+
+	requires = rgo_size_advance_absolutism
+
+	global_lumber_output_modifier = 0.1
+	global_construction_speed = 0.1
+}
+
+jap_wandering_ronin = {
+	age = age_5_absolutism
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = JAP
+	}
+	
+	requires = pacify_population_advance
+	
+	mercenary_maintenance_efficiency = 0.1
+	hire_mercenary_premium_cost_modifier = -0.1
+}
 
 ############################
 # age_6_revolutions
 ############################
+
+jap_codified_bushido = {
+	age = age_6_revolutions
+	icon = jap_bushido
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = JAP
+	}
+
+	requires = enlightened_court
+
+	prestige_decay = -0.001
+	monthly_war_exhaustion = -0.05
+}
+
+jap_terakoya = {
+	age = age_6_revolutions
+	icon = nanto_rokushuu
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = JAP
+	}
+
+	requires = modern_bureaucracy
+
+	global_max_literacy = 10
+}
+
+jap_reformed_land_holding = {
+	age = age_6_revolutions
+	potential = {
+		culture = { has_culture_group = culture_group:japanese_group }
+		has_or_had_tag = JAP
+	}
+	
+	requires = steel_mill_advance
+	
+	global_max_rgo_size_modifier = 0.2
+}
