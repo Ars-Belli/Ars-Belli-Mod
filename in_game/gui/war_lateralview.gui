@@ -1,0 +1,2565 @@
+types war_types {
+
+	type war_participant_item = vbox {
+		using = layoutpolicy_expanding
+		margin = {0 0}
+		datacontext = "[WarLateralViewParticipant.GetCountry]"
+
+		using = bg_paper_card
+		
+		using = bg_cabinet_card_frame
+
+		hbox = {
+			using = layoutpolicy_expanding
+			margin = { 4 4 }
+			
+			hbox = {
+				using = layoutpolicy_expanding
+				spacing = 6
+				margin = {8 0}
+
+				# War view entry coloring - player / enemy / ally
+				background = {
+					visible = "[Country.IsLocalPlayer]"
+					using = color_society_texture
+					alpha = 0.6
+				}
+				background = {
+					visible = "[And(Not(Country.GetDiplomacy.IsSubject), GetPlayer.IsEnemy(Country.Self))]"
+					using = color_military_texture
+					alpha = 0.6
+				}
+				background = {
+					visible = "[And3(Not(Country.GetDiplomacy.IsSubject), Not(GetPlayer.IsEnemy(Country.Self)), Not(Country.IsLocalPlayer))]"
+					using = color_diplomacy_texture
+					alpha = 0.6
+				}
+
+				# COUNTRY AND PEACE
+				hbox = {
+					using = layoutpolicy_expanding
+					# minimumsize = { 215 -1 }
+					maximumsize = { 225 -1 }
+					spacing = 5
+					# PEACE ACTION
+					widget = {
+						size = { 26 26 }
+						block "war_participant_item_button_visible" {
+							visible = no
+						}
+
+						button_regular_only_icon = {
+							size = { 100% 100% }
+							enabled = "[And3(
+							Or(Not(WarLateralViewParticipant.IsSubjectWithOverlordInWar), WarLateralViewParticipant.IsDisloyalSubject),
+							WarLateralView.TogglePeaceViewEnabled,
+							WarLateralView.IsEnemyOrOverlordValidForPeace(WarLateralViewParticipant.GetCountry))]"
+
+							using = sue_for_peace_action_tooltip
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "PEACETITLE"
+								on_action = "[WarLateralView.ShowPeaceOfferLateralViewForCountry(WarLateralViewParticipant.GetCountry)]"
+								description = "[WarLateralView.IsEnemyOrOverlordValidForPeaceTooltip(WarLateralViewParticipant.GetCountry)]"
+								conditions = "[WarLateralView.TogglePeaceViewTooltip]"
+								enabled = "[And3(Or(Not(WarLateralViewParticipant.IsSubjectWithOverlordInWar), WarLateralViewParticipant.IsDisloyalSubject), WarLateralView.TogglePeaceViewEnabled, WarLateralView.IsEnemyOrOverlordValidForPeace(WarLateralViewParticipant.GetCountry))]"
+							}
+
+							icon = {
+								size = { 60% 60% }
+								parentanchor = center
+								texture = "gfx/interface/icons/peace_treaty/sue_for_peace.dds"
+
+								modify_texture = {
+									using = overlay_window_texture
+									blend_mode = overlay
+									alpha = 0.7
+								}
+						
+								modify_texture = {
+									texture = "gfx/interface/buttons/buttons_texture.dds"
+									texture_density = 2
+									blend_mode = overlay
+									alpha = 0.6
+								}
+							}
+						}
+					}
+
+					hbox = {
+						layoutpolicy_vertical = expanding
+						bookmark_02 = {
+							blockoverride "bookmark_size" {
+								size = { 12 100% }
+							}
+							blockoverride "bookmark_texture" {
+								texture = "gfx/interface/component_tiles/bookmark_02.dds"
+								position = {0 -4}
+							}
+							blockoverride "bookmark_color" {
+								tintcolor = "[WarLateralViewParticipant.GetCountry.GetMapColor]"
+							}
+
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_text" {
+										datacontext = "[WarLateralViewParticipant.GetCountry]"
+										text = "WAR_LOSSES"
+									}
+
+									blockoverride "concept_link" {
+										text = "[war|e]"
+									}
+
+									blockoverride "title_icon" {
+										icon = {
+											texture = "gfx/interface/icons/disasters/_default.dds"
+											using = tooltip_title_icon_size
+										}
+									}
+
+									blockoverride "tooltip_content" {
+										TooltipColumnList = {
+											textcontext = "[WarLateralView.GetWar.GetLossesFor(WarLateralViewParticipant.GetCountry).GetInfo]"
+										}
+									}
+								}
+							}
+						}
+					}
+
+					# COUNTRY FLAG
+					widget = {
+						size = { 42 28 }
+						allow_outside = yes
+						country_flag_small = {
+							size = { 42 29 }
+						}
+					}
+					widget = {
+						visible = "[Or(ObjectsEqual(WarLateralView.GetFriendlyLeader.Self, Country.Self ), ObjectsEqual(WarLateralView.GetEnemyLeader.Self, Country.Self ))]"
+						tagtooltip_enabled = yes
+						tooltip = "[war_leader|e]"
+						size = { 15 15 }
+						using = bg_circle_piechart
+						blockoverride "inside_color" {
+							modify_texture = {
+								using = color_bg_blue_texture
+								blend_mode = multiply
+							}
+						}
+						blockoverride "frame_color" {
+							modify_texture = {
+								using = color_new_gold_texture
+								blend_mode = multiply
+							}
+							modify_texture = {
+								using = color_gold_texture
+								# blend_mode = multiply
+								alpha = 0.5
+							}
+						}
+						icon = {
+							texture = "gfx/interface/icons/flat_icons/declare_war/war_leader.dds"
+							size = { 100% 100% }
+						}
+					}
+
+					# COUNTRY NAME
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						
+						maximumsize = { 107 20 }
+						align = left|nobaseline
+						text = "[Country.GetNameWithNoTooltip]"
+
+						sort_by_highlight = {
+							size = { 105% 105% }
+							name = "name"
+						}
+					}
+					expand = {}
+				}
+
+				# COUNTRY ARMY STRENGTH
+				hbox = {
+					tooltipwidget = { using = ArmyOverview_tooltip }
+					spacing = 5
+					text_single = {
+						autoresize = yes
+						minimumsize = { 150 -1 }
+						maximumsize = { 150 -1 }
+						align = right
+						raw_text = "[Country.GetRaisedAndPotentialLevyStrength] [levies_icon] / [Country.GetRegularArmySize|0L] [regulars_icon] / [Country.GetMercenaryArmySize|0L] [mercenary_icon]"
+						sort_by_highlight = {
+							using = layoutpolicy_expanding
+							name = "manpower"
+						}
+					}
+				}
+
+				divider_flavor_01 = {size = { 12 -1 }}
+
+				hbox = {
+					tooltipwidget = { using = NavyOverview_tooltip }
+					spacing = 5
+					text_single = {
+						autoresize = yes
+						minimumsize = { 80 -1 }
+						maximumsize = { 80 -1 }
+						align = right
+						raw_text = "[Country.GetRaisedAndPotentialNavyLevyStrength|0L] [navy_levies_icon] ([Country.GetRegularNavySize|0L] @naval_regular!)"
+						sort_by_highlight = {
+							size = { 105% 200% }
+							name = "ships"
+						}
+					}
+				}
+
+				divider_flavor_01 = {size = { 12 -1 }}
+
+				# STABILITY
+				widget = {
+					layoutpolicy_vertical = expanding
+					size = { 50 -1 }
+					vbox = {
+						expand = {}
+						spacing = 2
+						datacontext = "[WarLateralViewParticipant.GetCountry]"
+						tooltipwidget = {
+							using = StabilityResourceTooltip
+							blockoverride "content_datacontext" {
+								datacontext = "[WarLateralViewParticipant.GetCountry.GetEconomy]"
+							}
+						}
+	
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							align = center
+							autoresize = no
+							text = "[WarLateralViewParticipant.GetCountry.GetCurrencyValue('stability')|0]"
+						}
+	
+						# Positive Stability
+						progressbar = {
+							visible = "[Not(WarLateralViewParticipant.GetCountry.IsCurrencyValueEqualOrLessThanZero('stability'))]"
+							layoutpolicy_horizontal = expanding
+							size = {-1 5}
+							using = progress_bar_green_alt
+							min = 0
+							max = 100
+							value = "[FixedPointToFloat(WarLateralViewParticipant.GetCountry.GetFixedPointCurrencyValue('stability'))]"
+						}
+
+						# Negative Stability
+						progressbar = {
+							visible = "[WarLateralViewParticipant.GetCountry.IsCurrencyValueEqualOrLessThanZero('stability')]"
+							layoutpolicy_horizontal = expanding
+							size = {-1 5}
+							using = progress_bar_red_alt
+							min = 0
+							max = 100
+							value = "[Multiply_float('(float)-1.0', FixedPointToFloat(WarLateralViewParticipant.GetCountry.GetFixedPointCurrencyValue('stability')))]"
+						}
+
+						expand = {}
+					}
+
+					sort_by_highlight = {
+						size = { 105% 200% }
+						name = "stability"
+					}
+				}
+
+				divider_flavor_01 = {size = { 12 -1 }}
+
+				# WAR ENTHUSIASM
+				widget = {
+					layoutpolicy_vertical = expanding
+					size = { 50 -1 }
+					vbox = {
+						expand = {}
+						spacing = 2
+						tooltipwidget = {
+							using = WarEnthusiasm_tooltip
+						}
+	
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							align = center
+							autoresize = no
+							text = "[WarLateralViewParticipant.GetWarEnthusiasm|0%]"
+						}
+	
+						progressbar = {
+							layoutpolicy_horizontal = expanding
+							size = {-1 5}
+							using = progress_bar_green_alt
+							min = 0
+							max = 1
+							value = "[FixedPointToFloat(WarLateralViewParticipant.GetWarEnthusiasm)]"
+						}
+
+						expand = {}
+					}
+
+					sort_by_highlight = {
+						size = { 105% 200% }
+						name = "enthusiasm"
+					}
+				}
+
+				divider_flavor_01 = {size = { 12 -1 }}
+
+				# WAR EXHAUSTION
+				widget = {
+					layoutpolicy_vertical = expanding
+					size = { 50 -1 }
+					vbox = {
+						expand = {}
+						spacing = 2
+						tooltipwidget = {
+							using = WarExhaustionTooltip
+							blockoverride "change_visibility" {
+								visible = no
+							}
+						}
+	
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							align = center
+							autoresize = no
+							text = "[WarLateralViewParticipant.GetCountry.GetFixedPointCurrencyValue('war_exhaustion')|0]"
+						}
+	
+						progressbar = {
+							layoutpolicy_horizontal = expanding
+							size = {-1 5}
+							using = progress_bar_green_alt
+							min = 0
+							max = "[FixedPointToFloat(WarLateralViewParticipant.GetCountry.GetCurrencyMaxValue('war_exhaustion'))]"
+							value = "[FixedPointToFloat(WarLateralViewParticipant.GetCountry.GetFixedPointCurrencyValue('war_exhaustion'))]"
+						}
+
+						expand = {}
+					}
+
+					sort_by_highlight = {
+						size = { 105% 200% }
+						name = "exhaustion"
+					}
+				}
+
+				divider_flavor_01 = {
+					block "war_participant_blockaded_visible" {
+						visible = "[Not(WarLateralView.AreAttackersLandlocked)]"
+					}
+					size = { 12 -1 }
+				}
+
+				# BLOCKADED
+				widget = {
+					block "war_participant_blockaded_visible" {
+						visible = "[Not(WarLateralView.AreAttackersLandlocked)]"
+					}
+					layoutpolicy_vertical = expanding
+					size = { 50 -1 }
+					vbox = {
+						expand = {}
+						spacing = 2
+						tooltipwidget = {
+							using = WarBlockade_tooltip
+						}
+	
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							align = center
+							autoresize = no
+							text = "[WarLateralViewParticipant.GetCountry.GetBlockadedPercent|0%]"
+						}
+	
+						progressbar = {
+							layoutpolicy_horizontal = expanding
+							size = {-1 5}
+							using = progress_bar_green_alt
+							min = 0
+							max = 1
+							value = "[FixedPointToFloat(WarLateralViewParticipant.GetCountry.GetBlockadedPercent)]"
+						}
+
+						expand = {}
+					}
+
+					sort_by_highlight = {
+						size = { 105% 200% }
+						name = "blockaded"
+					}
+				}
+
+				divider_flavor_01 = {size = { 12 -1 }}
+
+				# PARTICIPATION
+				widget = {
+					layoutpolicy_vertical = expanding
+					size = { 50 -1 }
+					vbox = {
+						expand = {}
+						spacing = 2
+						block "war_participant_item_participation_tooltip" {
+							tooltipwidget = {
+								using = war_attacker_participation_tooltip
+							}
+						}
+	
+						text_single = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 20 }
+							align = center
+							autoresize = no
+							text = "[WarLateralViewParticipant.GetWarParticipation|0%]"
+						}
+	
+						progressbar = {
+							layoutpolicy_horizontal = expanding
+							size = {-1 5}
+							using = progress_bar_green_alt
+							min = 0
+							max = 1
+							value = "[FixedPointToFloat(WarLateralViewParticipant.GetWarParticipation)]"
+						}
+
+						expand = {}
+					}
+
+					sort_by_highlight = {
+						size = { 105% 200% }
+						name = "participation"
+					}
+				}
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					minimumsize = { 45 24 }
+					maximumsize = { 45 24 }
+					spacing = 3
+
+					expand = {}
+					text_single = {
+						visible = "[WarLateralView.HasSubjects(WarLateralViewParticipant.GetCountry)]"
+						text = "[WarLateralView.GetOverlordSubjectCountInWar(WarLateralViewParticipant.GetCountry)]"
+					}
+					
+					widget = {
+						size = { 24 24 }
+						visible = "[WarLateralView.HasSubjects(WarLateralViewParticipant.GetCountry)]"
+						button = {
+							size = { 26 26 }
+							using = header_button_template
+							blockoverride "header_button_template_push_properties"{using = button_tab_toggle_properties_template}
+							blockoverride "header_button_full_content"{}
+							blockoverride "header_button_template_texture"{using = pressed_button_texture_light}
+							tooltipwidget = {
+								BasicFunctionalTooltip = {}
+							}
+
+							action_tooltip = {
+								click_type = left
+								click_mode = single
+								title = "SHOW_SUBJECTS"
+								on_action = "[WarLateralView.ToggleOverlordExpanded(WarLateralViewParticipant.GetCountry)]"
+							}
+
+							action_tooltip = {
+								click_type = right
+								click_mode = single
+								title = "TOGGLE_ALL"
+								on_action = "[WarLateralView.ToggleAllOverlordsExpanded(WarLateralViewParticipant.GetCountry)]"
+							}
+
+							down = "[WarLateralView.IsOverlordExpanded(WarLateralViewParticipant.GetCountry)]"
+
+							icon = {
+								size = {70% 70%}
+								parentanchor = center
+								texture = "gfx/interface/icons/diplomatic_status/vassalized.dds"
+							}
+						}
+					}
+					expand = { visible = "[Not(And(Not(WarLateralViewParticipant.GetCountry.GetDiplomacy.IsSubject), WarLateralView.HasSubjects(WarLateralViewParticipant.GetCountry)))]" }
+				}
+			}
+		}
+	}
+}
+
+lateralview_full = {
+	name = "war_lateralview"
+
+	blockoverride "panel_header" {
+		window_header_alt = {
+			using = bg_main_inner_alt
+			blockoverride "window_header_alt_color_texture"{
+				using = color_default_brown_texture
+			}
+			
+			blockoverride "header_text_object" {
+				hbox = {
+					hbox = {
+						spacing = 5
+						widget = {
+							size = { 25 25 }
+							visible = "[And(WarLateralView.GetWar.GetWarGoal.HasCasusBelli, Not(WarLateralView.GetWar.IsCivilWar))]"
+							tagtooltip_enabled = yes
+							tooltip = "[WarLateralView.GetWar.GetWarGoal.GetCasusBelli.GetName]"
+							icon = {
+								size = { 100% 100% }
+								texture = "[GetCasusBelliIcon(WarLateralView.GetWar.GetWarGoal.GetCasusBelli.Self)]"
+								glow = {
+									name = "drop_shadow"
+									glow_radius = 3
+									color = {0.0 0.0 0.0 1.0}
+									alpha = 0.6
+								}
+							}
+						}
+
+						icon = {
+							visible = "[WarLateralView.GetWar.IsCivilWar]"
+							size = { 25 25 }
+							texture = "[GetConceptTexture('civil_war')]"
+							glow = {
+								name = "drop_shadow"
+								glow_radius = 3
+								color = {0.0 0.0 0.0 1.0}
+								alpha = 0.6
+							}
+						}
+
+						header_title = {
+							text = "[WarLateralView.GetWar.GetNameWithNoTooltip]"
+							maximumsize = { 420 -1 }
+							autoresize = yes
+						}
+					}
+				}
+			}
+		}
+	}
+
+	blockoverride "panel_content" {
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_notabs_alt
+			using = window_main_tabs_margin_alt
+			spacing = 4
+			margin_top = 5
+
+			vbox = {
+				spacing = 7
+				layoutpolicy_horizontal = expanding
+				allow_outside = yes
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					size = { -1 160 }
+
+					hbox = {
+						margin = { -5 1 }
+
+						# ATTACKER FLAG
+						country_flag_big = {
+							datacontext = "[WarLateralView.GetAttackerLeader]"
+							size = { 232 155 }
+						}
+
+						# HEADER CENTER CONTENT
+						vbox = {
+							using = layoutpolicy_expanding
+
+							# MORALE BAR
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								margin_top = 3
+								datacontext = "[WarLateralView.GetWar]"
+								visible = "[Not(WarLateralView.GetWar.IsCivilWar)]"
+								tooltipwidget = {
+									using = WarScore_tooltip
+								}
+
+								progressbar = {
+									visible = "[Not(And(WarLateralView.IsPlayerInWar, Not(WarLateralView.IsPlayerAttacker)))]"
+									layoutpolicy_horizontal = expanding
+									size = {-1 15}
+									using = progress_bar_green_red_alt
+									min = 0
+									max = 200
+									value = "[Add_float('(float)100.0', FixedPointToFloat(WarLateralView.GetWar.GetWarScoreOfCountry(Player.Self)))]"
+									icon = {
+										size = {100% 100%}
+										using = tile_frame_squared_texture
+										using = color_bg_brown
+										modify_texture = {
+											using = overlay_cloth_texture
+											blend_mode = overlay
+											alpha = 0.3
+										}
+									}
+								}
+
+								progressbar = {
+									visible = "[And(WarLateralView.IsPlayerInWar, Not(WarLateralView.IsPlayerAttacker))]"
+									layoutpolicy_horizontal = expanding
+									size = {-1 15}
+									using = progress_bar_green_red_alt
+									mirror = horizontal
+									min = 0
+									max = 200
+									value = "[Add_float('(float)100.0', FixedPointToFloat(WarLateralView.GetWarScore))]"
+									icon = {
+										size = {100% 100%}
+										using = tile_frame_squared_texture
+										using = color_bg_brown
+										modify_texture = {
+											using = overlay_cloth_texture
+											blend_mode = overlay
+											alpha = 0.3
+										}
+									}
+								}
+							}
+
+							# CASUS BELLI & WARGOAL
+							widget = {
+								layoutpolicy_horizontal = expanding
+								size = { -1 40 }
+								visible = "[Not(WarLateralView.GetWar.IsCivilWar)]"
+
+								# HEADER
+								hbox = {
+									spacing = 5
+									margin = {5 0}
+
+									#ATTACKER SIDE
+									hbox = {
+										using = layoutpolicy_expanding
+                  					    layoutstretchfactor_horizontal = 1
+										spacing = 5
+										widget = {
+											tagtooltip_enabled = yes
+											tooltip = "[WarLateralView.GetWar.GetWarGoal.GetName]"
+											size = { 30 30 }
+											icon = {
+												size = { 100% 100% }
+												texture = "[GetWarGoalIcon(WarLateralView.GetWar.GetWarGoal.GetWarGoalType)]"
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.6
+												}
+											}
+										}
+	
+										vbox = {
+											layoutpolicy_horizontal = expanding
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												align = left|nobaseline
+												text = "[war_goal|e]"
+											}
+	
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												fontsize = 12
+												align = left|nobaseline
+												raw_text = "[WarLateralView.GetWar.GetWarGoal.GetName]"
+											}
+										}
+	
+										# ENFORCE ATTACKER PEACE OR INTERVENE IN ATTACKER WAR
+										hbox = {
+											margin_left = 10
+											widget = {
+												size = { 400 40}
+												# Ars Belli: added Player.IsRegionalPower so the set of countries that
+												# can Enforce Peace matches the set that could previously Intervene.
+												visible = "[And(Not(WarLateralView.IsPlayerInWar), Or4(Player.IsGreatPower, Player.IsRegionalPower, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)))]"
+												hbox = {
+													button_wax = {
+														layoutpolicy_horizontal = expanding
+														size = { -1 40 }
+														action_tooltip = {
+															title = "ars_belli_enforce_peace"
+															on_action = "[OpenDiploAction('ars_belli_enforce_peace')]"
+														}
+														tooltipwidget = { BasicFunctionalTooltip = {} }
+														# Ars Belli: gate removed; inherits the widened parent condition above.
+														
+														hbox = {
+														spacing = 5
+														expand = {}
+									
+														icon = {
+															size = {20 20}
+															texture = "gfx/interface/icons/flat_icons/war_view/enforce_peace_button.dds"
+														}
+									
+														text_single = {
+															text = "ars_belli_enforce_peace"
+															align = nobaseline
+															using = Font_Type_Headers
+														}
+									
+														expand = {}
+														}
+													}
+			
+													button_wax = {
+														layoutpolicy_horizontal = expanding
+														size = { -1 40 }
+														action_tooltip = {
+															title = "[WarLateralView.GetInterveneInAttackerWar.GetTooltip]"
+															on_action = "[WarLateralView.GetInterveneInAttackerWar.OnClick]"
+														}
+														tooltipwidget = { BasicFunctionalTooltip = {} }
+														enabled = "[WarLateralView.GetInterveneInAttackerWar.IsEnabled]"
+														visible = no # Ars Belli: Intervene in War removed mod-wide.
+															
+														hbox = {
+															spacing = 5
+															expand = {}
+										
+															icon = {
+																size = {20 20}
+																texture = "gfx/interface/icons/flat_icons/war_view/declare_war_button.dds"
+															}
+										
+															text_single = {
+																text = "[WarLateralView.GetInterveneInAttackerWar.GetTitle]"
+																align = nobaseline
+																using = Font_Type_Headers
+															}
+										
+															expand = {}
+														}
+													}
+												}
+											}
+										}
+	
+										# ATTACKER LEADER TICKING WARSCORE
+										widget = {
+											visible = "[WarLateralView.GetWar.HasWarGoalController]"
+											size = { 30 30 }
+											icon = {
+												size = { 100% 100% }
+												visible = "[ObjectsEqual(WarLateralView.GetWar.GetWarGoalController, WarLateralView.GetAttackerLeader)]"
+												texture = "gfx/interface/icons/text_icons/arrow_bonus_tier_3.dds"
+											}
+											tooltipwidget = {
+												SimpleContextualTooltipType = {
+													blockoverride "title_icon" {
+														icon = {
+															using = tooltip_title_icon_size
+															texture = "[GetConceptTexture('war_score')]"
+														}
+													}
+													blockoverride "concept_link" {
+														text = [war_score|e]
+													}
+													lowpriotextcontext =  "WAR_SCORE_TOOLTIP_ATTACKER"
+												}
+											}
+										}
+									}
+
+
+									expand = {}
+
+									# WARSCORE
+									widget = {
+										size = { 80 30 }
+										datacontext = "[WarLateralView.GetWar]"
+										tooltipmeta = {
+											texture = "gfx/interface/icons/flat_icons/declare_war/wargoal.dds"
+										}
+										tooltipwidget = {
+											using = WarScore_tooltip
+										}
+
+										using = bg_number_container_bckg
+
+										text_single = {
+											visible = "[Not(And(WarLateralView.IsPlayerInWar, Not(WarLateralView.IsPlayerAttacker)))]"
+											text = "[war_score_icon] [WarLateralView.GetWar.GetWarScoreOfCountry(Player.Self)|+=1%/]"
+											maximumsize = { 100 30 }
+											parentanchor = center
+											align = center
+											fontsize = 15
+										}
+
+										text_single = {
+											visible = "[And(WarLateralView.IsPlayerInWar, Not(WarLateralView.IsPlayerAttacker))]"
+											text = "[war_score_icon] [WarLateralView.GetWarScore|+=1%/]"
+											maximumsize = { 100 30 }
+											parentanchor = center
+											align = center
+											fontsize = 15
+										}
+									}
+
+									expand = {}
+
+									#DEFENDER SIDE
+									hbox = {
+										using = layoutpolicy_expanding
+                  					    layoutstretchfactor_horizontal = 1
+
+										# DEFENDER LEADER TICKING WARSCORE
+										widget = {
+											visible = "[WarLateralView.GetWar.HasWarGoalController]"
+											size = { 30 30 }
+											icon = {
+												size = { 100% 100% }
+												visible = "[ObjectsEqual(WarLateralView.GetWar.GetWarGoalController, WarLateralView.GetDefenderLeader)]"
+												texture = "gfx/interface/icons/text_icons/arrow_bonus_tier_3.dds"
+											}
+											tooltipwidget = {
+												SimpleContextualTooltipType = {
+													blockoverride "title_icon" {
+														icon = {
+															using = tooltip_title_icon_size
+															texture = "[GetConceptTexture('war_score')]"
+														}
+													}
+													blockoverride "concept_link" {
+														text = [war_score|e]
+													}
+													lowpriotextcontext =  "WAR_SCORE_TOOLTIP_DEFENDER"
+												}
+											}
+										}
+	
+										# ENFORCE DEFENDER PEACE OR INTERVENE IN DEFENDER WAR
+										hbox = {
+											margin_left = 10
+											widget = {
+												size = { 400 40}
+												# Ars Belli: added Player.IsRegionalPower so the set of countries that
+												# can Enforce Peace matches the set that could previously Intervene.
+												visible = "[And(Not(WarLateralView.IsPlayerInWar), Or4(Player.IsGreatPower, Player.IsRegionalPower, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)))]"
+												hbox = {
+													layoutpolicy_horizontal = expanding
+													
+													button_wax = {
+														layoutpolicy_horizontal = expanding
+														size = { -1 40 }
+														action_tooltip = {
+															title = "ars_belli_enforce_peace"
+															on_action = "[OpenDiploAction('ars_belli_enforce_peace')]"
+														}
+														tooltipwidget = { BasicFunctionalTooltip = {} }
+														# Ars Belli: gate removed; inherits the widened parent condition above.
+															
+														hbox = {
+															spacing = 5
+															expand = {}
+										
+															icon = {
+																size = {20 20}
+																texture = "gfx/interface/icons/flat_icons/war_view/enforce_peace_button.dds"
+															}
+										
+															text_single = {
+																text = "ars_belli_enforce_peace"
+																align = nobaseline
+																using = Font_Type_Headers
+															}
+										
+															expand = {}
+														}
+													}
+	
+													button_wax = {
+														layoutpolicy_horizontal = expanding
+														size = { -1 40 }
+														action_tooltip = {
+															title = "[WarLateralView.GetInterveneInDefenderWar.GetTooltip]"
+															on_action = "[WarLateralView.GetInterveneInDefenderWar.OnClick]"
+														}
+														tooltipwidget = { BasicFunctionalTooltip = {} }
+														enabled = "[WarLateralView.GetInterveneInDefenderWar.IsEnabled]"
+														visible = no # Ars Belli: Intervene in War removed mod-wide.
+															
+														hbox = {
+															spacing = 5
+															expand = {}
+										
+															icon = {
+																size = {20 20}
+																texture = "gfx/interface/icons/flat_icons/war_view/declare_war_button.dds"
+															}
+										
+															text_single = {
+																text = "[WarLateralView.GetInterveneInDefenderWar.GetTitle]"
+																align = nobaseline
+																using = Font_Type_Headers
+															}
+										
+															expand = {}
+														}
+													}
+												}
+											}
+										}
+
+										expand = {}
+									}
+								}
+							}
+
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								spacing = 5
+								# ATTACKER LOSSES
+								widget = {
+									layoutpolicy_horizontal = expanding
+									size = { -1 85 }
+	
+									background = {
+										using = color_black_texture
+										texture_density = 2
+										spriteType = corneredstretched
+										spriteBorder = { 0 0 }
+										alpha = 1
+						
+										modify_texture = {
+											visible = "[Not(And(WarLateralView.IsPlayerInWar, WarLateralView.IsPlayerAttacker))]"
+											using = color_light_red_texture
+											alpha = 1
+										}
+
+										modify_texture = {
+											visible = "[And(WarLateralView.IsPlayerInWar, WarLateralView.IsPlayerAttacker)]"
+											using = color_mid_light_green_texture
+											alpha = 1
+										}
+						
+										modify_texture = {
+											using = overlay_striped_texture
+											blend_mode = overlay
+											alpha = 0.3
+										}
+									}
+									background = {
+										using = text_mask_container_texture
+										alpha = 0.4
+										modify_texture = {
+											using = color_black_texture
+										}
+									}
+	
+									hbox = {
+										spacing = 5
+										margin = {10 10}
+										layoutpolicy_horizontal = expanding
+										
+										using = bg_cabinet_card_frame
+
+										# PIECHART
+										icon_pie_left_alt = {
+											blockoverride "PieSize" { size = { 64 64 } }
+											blockoverride "pie_datamodel" { datamodel = "[WarLateralView.GetAttackerParticipantsSorted]" }
+											blockoverride "SliceValue" { value = "[WarLateralViewParticipant.GetWarParticipation]" }
+											blockoverride "SliceColor" { color = "[WarLateralViewParticipant.GetCountry.GetMapColor]" }
+											blockoverride "SliceTooltip" {
+												tooltipwidget = {
+													using = war_attacker_participation_tooltip
+												}
+											}
+
+											blockoverride "outline_color" {
+												texture = "gfx/interface/buttons/bg_button.dds"
+												texture_density = 2
+								
+												modify_texture = {
+													using = color_bronze_texture
+													blend_mode = multiply
+												}
+											}
+
+											using = bg_circle_piechart
+
+											blockoverride "Icon" {
+												texture = "gfx/interface/icons/flat_icons/war_view/participation.dds"
+
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.5
+												}
+											}
+											blockoverride "Icon_Size" {
+												size = {53% 53%}
+											}
+										}
+
+										vbox = {
+											layoutpolicy_horizontal = expanding
+											spacing = 6
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												size = { -1 20 }
+												autoresize = no
+												align = left|nobaseline
+												fontsize = 18
+												text = "[war_attacker|e]"
+											}
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												size = { -1 20 }
+												autoresize = no
+												align = left|nobaseline
+												fontsize = 14
+												raw_text = "ATTACKER_SIDE_COUNTRIES"
+												tooltipwidget = {
+													using = war_attacker_participation_tooltip
+												}
+											}
+										}
+	
+										hbox = {
+											# POP CASUALTIES
+											hbox = {
+												spacing = 10
+												icon = {
+													size = { 35 35 }
+													texture = "gfx/interface/icons/location_icons/new/population.dds"
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+													icon = {
+														parentanchor = bottom|right
+														size = { 20 20 }
+														texture = "gfx/interface/icons/disasters/_default.dds"
+													}
+												}
+												vbox = {
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetAttackerTotalPopulation]"
+													}
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetAttackerPopLosses]"
+													}
+												}
+												tooltipwidget = {
+													using = WarAttackerPopCassualties_tooltip
+												}
+											}
+											# ARMY STRENGHT
+											hbox = {
+												spacing = 10
+												tooltipwidget = {
+													using = WarAttackerLandStrength_tooltip
+												}
+
+												icon = {
+													size = { 35 35 }
+													texture = "gfx/interface/icons/unit_category/total_strength.dds"
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+													tooltipwidget = {
+														using = WarAttackerLandStrength_tooltip
+													}
+												}
+	
+												vbox = {
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetAttackerLandArmy]"
+													}
+									
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetAttackerLandLosses]"
+														tooltipwidget = {
+															ContextualTooltipType = {
+																blockoverride "title_text" {
+																	text = "CURR_TOT_LOSSES"
+																}
+	
+																blockoverride "title_icon" {
+																	icon = {
+																		texture = "gfx/interface/icons/disasters/_default.dds"
+																		using = tooltip_title_icon_size
+																	}
+																}
+	
+																blockoverride "concept_link" {
+																	text = [total_strength|E]
+																}
+			
+																blockoverride "tooltip_content" {
+																	TooltipScrolledStringPairList = {
+																		blockoverride "block_title" {
+																			text = "CURR_TOT_LOSSES"
+																		}
+																		blockoverride "block_scrollarea" { maximumsize = { -1 150 }}
+																		textcontext = "[WarLateralView.AttackerMenLossesCountryWarDesc]"
+																		blockoverride "empty_list_text"	{
+																			text = "NO_BATTLE_LOSSES"
+																		}
+																	}
+																	TooltipScrolledStringPairList = {
+																		blockoverride "block_title" {
+																			text = "CURR_TOT_BATTLE_LOSSES"
+																		}
+																		blockoverride "block_scrollarea" { maximumsize = { -1 150 }}
+																		textcontext = "[WarLateralView.AttackerBattlesLossesWarDesc]"
+																		blockoverride "empty_list_text"	{
+																			text = "NO_BATTLE_LOSSES"
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+
+											# NAVY STRENGHT
+											hbox = {
+												spacing = 10
+												tooltipwidget = {
+													using = WarAttackerNavalStrength_tooltip
+												}
+												icon = {
+													size = { 35 35 }
+													texture = "gfx/interface/icons/flat_icons/war_view/navy_unit.dds"
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+												}
+
+												vbox = {
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetAttackerNavalArmy]"
+													}
+
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetAttackerNavalLosses]"
+														
+														tooltipwidget = {
+															ContextualTooltipType = {
+																blockoverride "title_text" {
+																	text = "CURR_TOT_LOSSES"
+																}
+
+																blockoverride "title_icon" {
+																	icon = {
+																		texture = "gfx/interface/icons/disasters/_default.dds"
+																		using = tooltip_title_icon_size
+																	}
+																}
+
+																blockoverride "concept_link" {
+																	text = [total_strength|E]
+																}
+			
+																blockoverride "tooltip_content" {
+																	TooltipScrolledStringPairList = {
+																		blockoverride "block_title" {
+																			text = "CURR_TOT_LOSSES"
+																		}
+																		blockoverride "block_scrollarea" { maximumsize = { -1 150 }}
+																		textcontext = "[WarLateralView.AttackerNavalLossesCountryWarDesc]"
+																		blockoverride "empty_list_text"	{
+																			text = "NO_BATTLE_LOSSES"
+																		}
+																	}
+																	TooltipScrolledStringPairList = {
+																		blockoverride "block_title" {
+																			text = "CURR_TOT_BATTLE_LOSSES"
+																		}
+																		blockoverride "block_scrollarea" { maximumsize = { -1 150 }}
+																		textcontext = "[WarLateralView.AttackerNavalBattlesLossesWarDesc]"
+																		blockoverride "empty_list_text"	{
+																			text = "NO_BATTLE_LOSSES"
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+
+											# LAND WON BATTLES
+											hbox = {
+												spacing = 10
+												tooltipwidget = {
+													using = WarPastCombats_tooltip
+													blockoverride "title_text" {
+														text = "WAR_OVERVIEW_LAND_BATTLES_WON"
+													}
+													blockoverride "title_icon" {
+														icon = {
+															size = { 50 50 }
+															texture = "[GetConceptTexture('combat')]"
+														
+															modify_texture = {
+																using = overlay_window_texture
+																blend_mode = overlay
+																alpha = 0.7
+															}		
+														}
+													}
+													blockoverride "war_past_combats_tooltip_context"{
+														textcontext = "[WarLateralView.GetLandAttackerBattlesWonInfo]"
+													}
+												}
+
+												icon = {
+													size = { 35 35 }
+													texture = "[GetConceptTexture('combat')]"
+													
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+												}
+
+												text_single = {
+													size = { 40 20 }
+													autoresize = no
+													align = left|nobaseline
+													text = "[WarLateralView.GetNumberLandAttackerBattlesWon]"
+													
+												}
+											}
+
+											# NAVY WON BATTLES
+											hbox = {
+												spacing = 10
+												tooltipwidget = {
+													using = WarPastCombats_tooltip
+													blockoverride "title_text" {
+														text = "WAR_OVERVIEW_NAVAL_BATTLES_WON"
+													}
+													blockoverride "title_icon" {
+														icon = {
+															size = { 50 50 }
+															texture = "gfx/interface/icons/outliner/categories/battles2.dds"
+														
+															modify_texture = {
+																using = overlay_window_texture
+																blend_mode = overlay
+																alpha = 0.7
+															}		
+														}
+													}
+													blockoverride "war_past_combats_tooltip_context"{
+														textcontext = "[WarLateralView.GetNavalAttackerBattlesWonInfo]"
+													}
+												}
+
+												icon = {
+													size = { 35 35 }
+													texture = "gfx/interface/icons/outliner/categories/battles2.dds"
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+												}
+
+												text_single = {
+													size = { 40 20 }
+													autoresize = no
+													align = left|nobaseline
+													text = "[WarLateralView.GetNumberNavalAttackerBattlesWon]"
+												}
+											}
+										}
+									}
+								}
+
+								vbox = {
+									widget = {
+										size = { 30 30 }
+										visible = "[WarLateralView.IsWhitePeaceVisible]"
+										using = white_peace_tooltip
+										using = bg_number_container_bckg
+										icon = {
+											parentanchor = center
+											size = {23 23}
+											texture = "gfx/interface/icons/alerts_icons/alert_they_can_white_peace.dds"
+										}
+									}
+									
+									widget = {
+										size = { 30 30 }
+										visible = "[WarLateralView.IsEnforcePeaceVisible]"
+										using = enforce_peace_tooltip
+										using = bg_number_container_bckg
+										icon = {
+											parentanchor = center
+											size = {23 23}
+											texture = "gfx/interface/icons/alerts_icons/wargoal_accepted.dds"
+										}
+									}
+
+									button_wax = {
+										size = { 70 50 }
+										visible = "[And(WarLateralView.IsPlayerInWar, Not(WarLateralView.GetWar.IsCivilWar))]"
+
+										using = sue_for_peace_action_tooltip
+
+										action_tooltip = {
+											title = "PEACETITLE"
+											click_type = left
+											click_mode = single
+											conditions = "[WarLateralView.TogglePeaceViewTooltip]"
+											enabled = "[WarLateralView.TogglePeaceViewEnabled]"
+											on_action = "[WarLateralView.ShowPeaceOfferLateralView]"
+										}
+				
+										enabled = "[WarLateralView.TogglePeaceViewEnabled]"
+										icon = {
+											parentanchor = center
+											size = {23 23}
+											texture = "gfx/interface/icons/flat_icons/war_view/offer_peace_button.dds"
+				
+											background = {
+												texture = "gfx/interface/icons/flat_icons/war_view/offer_peace_button.dds"
+												texture_density = 2
+												margin = {1 1}
+												margin_top = 0
+												alpha = 0.5
+												modify_texture = {
+													using = color_black_texture
+													blend_mode = multiply
+												}
+											}
+										}
+									}
+	
+									widget = {
+										size = { 90 50 }
+										tagtooltip_enabled = yes
+										tooltip = "[civil_war|e]"
+										visible = "[WarLateralView.GetWar.IsCivilWar]"
+										background = {
+											using = color_black_texture
+											texture_density = 2
+											spriteType = corneredstretched
+											spriteBorder = { 0 0 }
+											alpha = 1
+							
+											modify_texture = {
+												using = color_light_red_texture
+												alpha = 1
+											}
+							
+											modify_texture = {
+												using = overlay_striped_texture
+												blend_mode = overlay
+												alpha = 0.3
+											}
+										}
+										background = {
+											using = text_mask_container_texture
+											alpha = 0.4
+											modify_texture = {
+												using = color_black_texture
+											}
+										}
+										widget = {
+											size = { 100% 100% }
+											using = bg_cabinet_card_frame
+											icon = {
+												parentanchor = center
+												size = {23 23}
+												texture = "[GetConceptTexture('civil_war')]"
+											}
+										}
+									}
+								}
+
+
+								# DEFENDER LOSSES
+								widget = {
+									layoutpolicy_horizontal = expanding
+									size = { -1 85 }
+
+									background = {
+										using = color_black_texture
+										texture_density = 2
+										spriteType = corneredstretched
+										spriteBorder = { 0 0 }
+										alpha = 1
+						
+										modify_texture = {
+											visible = "[Not(And(WarLateralView.IsPlayerInWar, Not(WarLateralView.IsPlayerAttacker)))]"
+											using = color_light_red_texture
+											alpha = 1
+										}
+
+										modify_texture = {
+											visible = "[And(WarLateralView.IsPlayerInWar, Not(WarLateralView.IsPlayerAttacker))]"
+											using = color_mid_light_green_texture
+											alpha = 1
+										}
+						
+										modify_texture = {
+											using = overlay_striped_texture
+											blend_mode = overlay
+											alpha = 0.3
+										}
+									}
+
+									background = {
+										using = text_mask_container_texture
+										alpha = 0.4
+										modify_texture = {
+											using = color_black_texture
+										}
+									}
+
+									hbox = {
+										spacing = 10
+										margin = {7 10}
+										margin_left = 10
+										layoutpolicy_horizontal = expanding
+
+										using = bg_cabinet_card_frame
+
+										hbox = {
+											# NAVY LOST BATTLES
+											hbox = {
+												spacing = 10
+												tooltipwidget = {
+													using = WarPastCombats_tooltip
+													blockoverride "title_text" {
+														text = "WAR_OVERVIEW_NAVAL_BATTLES_WON"
+													}
+													blockoverride "title_icon" {
+														icon = {
+															size = { 50 50 }
+															texture = "gfx/interface/icons/outliner/categories/battles2.dds"
+														
+															modify_texture = {
+																using = overlay_window_texture
+																blend_mode = overlay
+																alpha = 0.7
+															}
+														}
+													}
+													blockoverride "war_past_combats_tooltip_context"{
+														textcontext = "[WarLateralView.GetNavalAttackerBattlesLostInfo]"
+													}
+												}
+
+												icon = {
+													size = { 35 35 }
+													texture = "gfx/interface/icons/outliner/categories/battles2.dds"
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+												}
+
+												text_single = {
+													size = { 40 20 }
+													autoresize = no
+													align = left|nobaseline
+													text = "[WarLateralView.GetNumberNavalAttackerBattlesLost]"
+												}
+											}
+
+											# LAND WON BATTLES
+											hbox = {
+												spacing = 10
+												tooltipwidget = {
+													using = WarPastCombats_tooltip
+													blockoverride "title_text" {
+														text = "WAR_OVERVIEW_LAND_BATTLES_WON"
+													}
+													blockoverride "title_icon" {
+														icon = {
+															size = { 50 50 }
+															texture = "[GetConceptTexture('combat')]"
+														
+															modify_texture = {
+																using = overlay_window_texture
+																blend_mode = overlay
+																alpha = 0.7
+															}		
+														}
+													}
+													blockoverride "war_past_combats_tooltip_context"{
+														textcontext = "[WarLateralView.GetLandAttackerBattlesLostInfo]"
+													}
+												}
+
+												icon = {
+													size = { 35 35 }
+													texture = "[GetConceptTexture('combat')]"
+													
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+												}
+
+												text_single = {
+													size = { 40 20 }
+													autoresize = no
+													align = left|nobaseline
+													text = "[WarLateralView.GetNumberLandAttackerBattlesLost]"
+													
+												}
+											}
+
+											# NAVY STRENGHT
+											hbox = {
+												spacing = 10
+												tooltipwidget = {
+													using = WarDefenderNavalStrength_tooltip
+												}
+												icon = {
+													size = { 35 35 }
+													texture = "gfx/interface/icons/flat_icons/war_view/navy_unit.dds"
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+												}
+
+												vbox = {
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetDefenderNavalArmy]"
+													}
+
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetDefenderNavalLosses]"
+														
+														tooltipwidget = {
+															ContextualTooltipType = {
+																blockoverride "title_text" {
+																	text = "CURR_TOT_LOSSES"
+																}
+	
+																blockoverride "title_icon" {
+																	icon = {
+																		texture = "gfx/interface/icons/disasters/_default.dds"
+																		using = tooltip_title_icon_size
+																	}
+																}
+	
+																blockoverride "concept_link" {
+																	text = [total_strength|E]
+																}
+			
+																blockoverride "tooltip_content" {
+																	TooltipScrolledStringPairList = {
+																		blockoverride "block_title" {
+																			text = "CURR_TOT_LOSSES"
+																		}
+																		blockoverride "block_scrollarea" { maximumsize = { -1 150 }}
+																		textcontext = "[WarLateralView.DefenderNavalLossesCountryWarDesc]"
+																		blockoverride "empty_list_text"	{
+																			text = "NO_BATTLE_LOSSES"
+																		}
+																	}
+																	TooltipScrolledStringPairList = {
+																		blockoverride "block_title" {
+																			text = "CURR_TOT_BATTLE_LOSSES"
+																		}
+																		blockoverride "block_scrollarea" { maximumsize = { -1 150 }}
+																		textcontext = "[WarLateralView.DefenderNavalBattlesLossesWarDesc]"
+																		blockoverride "empty_list_text"	{
+																			text = "NO_BATTLE_LOSSES"
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+											
+											# ARMY STRENGHT
+											hbox = {
+												spacing = 10
+												tooltipwidget = {
+													using = WarDefenderLandStrength_tooltip
+												}
+
+												icon = {
+													size = { 35 35 }
+													texture = "gfx/interface/icons/unit_category/total_strength.dds"
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+												}
+
+												vbox = {
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetDefenderLandArmy]"
+													}
+									
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetDefenderLandLosses]"
+														tooltipwidget = {
+															ContextualTooltipType = {
+																blockoverride "title_text" {
+																	text = "CURR_TOT_LOSSES"
+																}
+
+																blockoverride "title_icon" {
+																	icon = {
+																		texture = "gfx/interface/icons/disasters/_default.dds"
+																		using = tooltip_title_icon_size
+																	}
+																}
+
+																blockoverride "concept_link" {
+																	text = [total_strength|E]
+																}
+			
+																blockoverride "tooltip_content" {
+																	TooltipScrolledStringPairList = {
+																		blockoverride "block_title" {
+																			text = "CURR_TOT_LOSSES"
+																		}
+																		blockoverride "block_scrollarea" { maximumsize = { -1 150 }}
+																		textcontext = "[WarLateralView.DefenderMenLossesCountryWarDesc]"
+																		blockoverride "empty_list_text"	{
+																			text = "NO_BATTLE_LOSSES"
+																		}
+																	}
+																	TooltipScrolledStringPairList = {
+																		blockoverride "block_title" {
+																			text = "CURR_TOT_BATTLE_LOSSES"
+																		}
+																		blockoverride "block_scrollarea" { maximumsize = { -1 150 }}
+																		textcontext = "[WarLateralView.DefenderBattlesLossesWarDesc]"
+																		blockoverride "empty_list_text"	{
+																			text = "NO_BATTLE_LOSSES"
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+											
+											# POP CASUALTIES
+											hbox = {
+												spacing = 10
+												icon = {
+													size = { 35 35 }
+													texture = "gfx/interface/icons/location_icons/new/population.dds"
+													glow = {
+														name = "drop_shadow"
+														glow_radius = 3
+														color = {0.0 0.0 0.0 1.0}
+														alpha = 0.6
+													}
+													icon = {
+														parentanchor = bottom|right
+														size = { 20 20 }
+														texture = "gfx/interface/icons/disasters/_default.dds"
+													}
+												}
+												vbox = {
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetDefenderTotalPopulation]"
+													}
+													text_single = {
+														size = { 60 20 }
+														autoresize = no
+														align = left|nobaseline
+														text = "[WarLateralView.GetDefenderPopLosses]"
+													}
+												}
+												tooltipwidget = {
+													using = WarDefenderPopCassualties_tooltip
+												}
+											}
+										}
+
+										vbox = {
+											layoutpolicy_horizontal = expanding
+											spacing = 6
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												size = { -1 20 }
+												autoresize = no
+												fontsize = 18
+												align = right|nobaseline
+												text = "[war_defender|e]"
+											}
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												size = { -1 20 }
+												autoresize = no
+												align = right|nobaseline
+												fontsize = 14
+												raw_text = "DEFENDER_SIDE_COUNTRIES"
+												tooltipwidget = {
+													using = war_defender_participation_tooltip
+												}
+											}
+										}
+
+										# PIECHART
+										icon_pie_left_alt = {
+											blockoverride "PieSize" { size = { 64 64 } }
+											blockoverride "pie_datamodel" { datamodel = "[WarLateralView.GetDefenderParticipantsSorted]" }
+											blockoverride "SliceValue" { value = "[WarLateralViewParticipant.GetWarParticipation]" }
+											blockoverride "SliceColor" { color = "[WarLateralViewParticipant.GetCountry.GetMapColor]" }
+											blockoverride "SliceTooltip" {
+												tooltipwidget = {
+													using = war_defender_participation_tooltip
+												}
+											}
+
+											blockoverride "outline_color" {
+												texture = "gfx/interface/buttons/bg_button.dds"
+												texture_density = 2
+								
+												modify_texture = {
+													using = color_bronze_texture
+													blend_mode = multiply
+												}
+											}
+
+											using = bg_circle_piechart
+
+											blockoverride "Icon" {
+												texture = "gfx/interface/icons/flat_icons/war_view/participation.dds"
+
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.5
+												}
+											}
+											blockoverride "Icon_Size" {
+												size = {53% 53%}
+											}
+										}
+									}
+								}
+							}
+						}
+						
+						# DEFENDER FLAG
+						country_flag_big = {
+							datacontext = "[WarLateralView.GetDefenderLeader]"
+							size = { 232 155 }
+						}
+					}
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+
+				margin_bottom = 8
+
+				###WAR CONDITIONS
+				vbox = {
+					using = layoutpolicy_expanding
+
+					visible = "[WarLateralView.Vars.NotExistOrHasValue( 'war', 'stats' )]"
+					
+					# PARTICIPANTS
+					hbox = {
+						using = layoutpolicy_expanding
+						spacing = 50
+						margin_top = 12
+
+						# ATTACKER PARTICIPANTS
+						vbox = {
+							using = layoutpolicy_expanding
+							# using = bg_paper_card
+							
+
+							hbox = {
+								using = layoutpolicy_expanding
+								# using = bg_cabinet_card_frame
+								# margin = {5 5}
+								
+								vbox = {
+									using = layoutpolicy_expanding
+									margin_bottom = 5
+
+									# PARTICIPANTS
+									filtered_sorted_list = {
+										datacontext = "[WarLateralView.GetAttackerParticipantsFlattenedSortSearch]"
+
+										blockoverride "scroll_list_is_empty" {
+											visible = "[IsDataModelEmpty(WarLateralView.GetAttackerParticipantsFlattened)]"
+										}
+
+										blockoverride "scroll_list_is_empty_text" {
+											text = "WAR_SCROLL_LIST_EMPTY"
+										}
+
+										blockoverride "sort_buttons_filtered_list" {
+											sort_by_key_button = {
+												name = "name"
+												layoutpolicy_vertical = expanding
+												size = { 250 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "manpower"
+												layoutpolicy_vertical = expanding
+												size = { 110 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "ships"
+												layoutpolicy_vertical = expanding
+												size = { 105 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "stability"
+												layoutpolicy_vertical = expanding
+												size = { 80 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "enthusiasm"
+												layoutpolicy_vertical = expanding
+												size = { 74 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "exhaustion"
+												layoutpolicy_vertical = expanding
+												size = { 75 -1 }
+											}
+
+											sort_by_key_button = {
+												visible = "[Not(WarLateralView.AreAttackersLandlocked)]"
+												name = "blockaded"
+												layoutpolicy_vertical = expanding
+												size = { 76 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "participation"
+												layoutpolicy_vertical = expanding
+												size = { 72 -1 }
+											}
+											expand = {}
+
+											# sort_by_key_button = {
+											# 	name = "warscore"
+											# 	using = layoutpolicy_expanding
+											# }
+										}
+
+										blockoverride "scroll_list_layout" {
+											fixedgridbox = {
+												addrow = 56
+												addcolumn = 100%
+												datamodel = "[WarLateralView.GetAttackerParticipantsFlattened]"
+												item = {
+													widget = {
+														size = { 100% 56 }
+														maximumsize = { -1 56 }
+														scissor = yes
+														hbox = {
+															spacing = 2
+															margin = { 2 0 }
+															widget = {
+																size = { 24 56 }
+																visible = "[WarLateralViewParticipant.IsSubjectWithOverlordInWar]"
+															}
+
+															widget = {
+																size = { -1 56 }
+																maximumsize = { -1 56 }
+																layoutpolicy_horizontal = expanding
+																scissor = yes
+																widget = {
+																	size = { 100% 50 }
+																	maximumsize = { -1 50 }
+																	parentanchor = left|vcenter
+																	war_participant_item = {
+																		blockoverride "war_participant_item_button_visible"{
+																			visible = "[And3( Not(IsObserving), WarLateralView.IsPlayerInWar, Not(WarLateralView.AreFriendlyParticipantsAttacking))]"
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+
+							expand = {}
+						}
+
+						# DEFENDER PARTICIPANTS
+						vbox = {
+							using = layoutpolicy_expanding
+
+							hbox = {
+								using = layoutpolicy_expanding
+								# using = bg_light_paper_card
+
+								vbox = {
+									using = layoutpolicy_expanding
+									margin_bottom = 5
+
+									# PARTICIPANTS
+									filtered_sorted_list = {
+										datacontext = "[WarLateralView.GetDefenderParticipantsFlattenedSortSearch]"
+					
+										blockoverride "scroll_list_is_empty" {
+											visible = "[IsDataModelEmpty(WarLateralView.GetDefenderParticipantsFlattened)]"
+										}
+					
+										blockoverride "scroll_list_is_empty_text" {
+											text = "WAR_SCROLL_LIST_EMPTY"
+										}
+					
+										blockoverride "sort_buttons_filtered_list" {
+											sort_by_key_button = {
+												name = "name"
+												layoutpolicy_vertical = expanding
+												size = { 250 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "manpower"
+												layoutpolicy_vertical = expanding
+												size = { 110 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "ships"
+												layoutpolicy_vertical = expanding
+												size = { 105 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "stability"
+												layoutpolicy_vertical = expanding
+												size = { 80 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "enthusiasm"
+												layoutpolicy_vertical = expanding
+												size = { 74 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "exhaustion"
+												layoutpolicy_vertical = expanding
+												size = { 75 -1 }
+											}
+
+											sort_by_key_button = {
+												visible = "[Not(WarLateralView.AreDefendersLandlocked)]"
+												name = "blockaded"
+												layoutpolicy_vertical = expanding
+												size = { 76 -1 }
+											}
+
+											sort_by_key_button = {
+												name = "participation"
+												layoutpolicy_vertical = expanding
+												size = { 72 -1 }
+											}
+											expand = {}
+
+											# sort_by_key_button = {
+											# 	name = "warscore"
+											# 	using = layoutpolicy_expanding
+											# }
+										}
+					
+										blockoverride "scroll_list_layout" {
+											fixedgridbox = {
+												addrow = 56
+												addcolumn = 100%
+												datamodel = "[WarLateralView.GetDefenderParticipantsFlattened]"
+												item = {
+													widget = {
+														size = { 100% 56 }
+														maximumsize = { -1 56 }
+														scissor = yes
+														hbox = {
+															spacing = 2
+															margin = { 2 0 }
+															widget = {
+																size = { 24 56 }
+																visible = "[WarLateralViewParticipant.IsSubjectWithOverlordInWar]"
+															}
+															widget = {
+																size = { -1 56 }
+																maximumsize = { -1 56 }
+																layoutpolicy_horizontal = expanding
+																scissor = yes
+																widget = {
+																	size = { 100% 50 }
+																	maximumsize = { -1 50 }
+																	parentanchor = left|vcenter
+																	war_participant_item = {
+																		blockoverride "war_participant_item_button_visible"{
+																			visible = "[And3( Not(IsObserving), WarLateralView.IsPlayerInWar, WarLateralView.AreFriendlyParticipantsAttacking)]"
+																		}
+																		blockoverride "war_participant_blockaded_visible"{
+																			visible = "[Not(WarLateralView.AreDefendersLandlocked)]"
+																		}
+																		blockoverride "war_participant_item_participation_tooltip" {
+																			tooltipwidget = {
+																				using = war_defender_participation_tooltip
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+
+							expand = {}
+						}
+					}
+
+					# SURRENDER
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin = {10 0}
+						
+						action_button = {
+							using = button_wax_texture
+							using = button_common_template
+							layoutpolicy_horizontal = expanding
+
+							title = "surrender_civil_war"
+							actor = "[Player]"
+							parameter = {
+								parameter_name = "recipient"
+								parameter_value = "[WarLateralView.GetEnemyLeader]"
+							}
+		
+							left_click_and_hold_action = {
+								action_name = "surrender_civil_war"
+							}
+
+							tooltipwidget = { using = action_tooltip_pop_out }
+		
+							hbox = {
+								spacing = 5
+								expand = {}
+
+								icon = {
+									size = {23 23}
+									texture = "gfx/interface/icons/flat_icons/war_view/offer_peace_button.dds"
+
+									background = {
+										texture = "gfx/interface/icons/flat_icons/war_view/offer_peace_button.dds"
+										texture_density = 2
+										margin = {1 1}
+										margin_top = 0
+										alpha = 0.5
+										modify_texture = {
+											using = color_black_texture
+											blend_mode = multiply
+										}
+									}
+								}
+
+								text_single = {
+									text = "surrender_civil_war"
+									align = nobaseline
+									using = Font_Type_Headers
+								}
+
+								expand = {}
+							}
+						}
+					}
+
+					# DEMAND PEACE TREATY
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						margin = {10 0}
+
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							visible = "[Not(WarLateralView.GetWar.IsCivilWar)]"
+
+							#Defender Surrender
+							button_wax = {
+								layoutpolicy_horizontal = expanding
+								size = { -1 50 }
+								visible = "[WarLateralView.IsDefenderUnconditionalSurrenderVisible]"
+								enabled = "[WarLateralView.GetDefenderUnconditionalSurrender.IsEnabled]"
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									title = "[WarLateralView.GetDefenderUnconditionalSurrender.GetTitle]"
+									on_action = "[WarLateralView.GetDefenderUnconditionalSurrender.OnClick]"
+									visible = "[WarLateralView.IsDefenderUnconditionalSurrenderVisible]"
+									enabled = "[WarLateralView.GetDefenderUnconditionalSurrender.IsEnabled]"
+									description = "[WarLateralView.GetDefenderUnconditionalSurrender.GetTooltip]"
+								}		
+								
+								tooltipwidget = { BasicFunctionalTooltip = {} }
+									
+								hbox = {
+									spacing = 5
+									expand = {}
+				
+									text_single = {
+										text = "[WarLateralView.GetDefenderUnconditionalSurrender.GetTitle]"
+										align = nobaseline
+										using = Font_Type_Headers
+									}
+				
+									icon = {
+										size = {20 20}
+										texture = "gfx/interface/icons/flat_icons/war_view/offer_peace_button.dds"
+									}
+				
+									expand = {}
+								}
+							}
+							
+							# ANNEX REVOLT
+							button_wax = {
+								layoutpolicy_horizontal = expanding
+								visible = "[WarLateralView.IsAnnexRevolterVisible]"
+								enabled = "[WarLateralView.CanAnnexRevolter]"
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									title = "[WarLateralView.GetAnnexRevolterTitle]"
+									on_action = "[WarLateralView.SendAnnexRevolter]"
+									enabled = "[WarLateralView.CanAnnexRevolter]"
+									description = "[WarLateralView.CanAnnexRevolterInfo]"
+								}
+
+								tooltipwidget = {
+									ContextualTooltipType = {
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/peace_treaty/offer_peace.dds"
+												
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.3
+												}
+											}
+										}
+								
+										blockoverride "title_text" {
+											text = "OFFER_PEACE"
+										}
+								
+										blockoverride "concept_link" {
+											text = "[peace|e]"
+										}
+										blockoverride "tooltip_content"{
+											TooltipScrolledRowList = {
+												blockoverride "block_scrollarea" { maximumsize = { -1 350 } }
+												textcontext = "[WarLateralView.CanAnnexRevolterDesc]"
+												ontextcontextchanged = "[SetRowListWithTitleFromTextContext(PdxGuiWidget.AccessSelf)]"
+											}
+										}
+									}
+								}
+
+								# blockoverride "wax_color" {
+								# 	using = color_mid_bright_blue
+								# }
+
+								hbox = {
+									spacing = 5
+									expand = {}
+
+									icon = {
+										size = {30 30}
+										texture = "gfx/interface/icons/peace_treaty/sue_for_peace.dds"
+
+										glow = {
+											name = "drop_shadow"
+											glow_radius = 3
+											color = {0.0 0.0 0.0 1.0}
+											alpha = 0.6
+										}
+									}
+
+									text_single = {
+										text = "[WarLateralView.GetAnnexRevolterTitle]"
+										align = nobaseline
+										using = Font_Type_Headers
+									}
+
+									expand = {}
+								}
+							}
+
+							# GRANT INDEPENDENCE
+							button_wax = {
+								layoutpolicy_horizontal = expanding
+								visible = "[WarLateralView.IsGrantIndependenceVisible]"
+								enabled = "[WarLateralView.CanGrantIndependence]"
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									title = "WAR_LATERALVIEW_GRANT_INDEPENDENCE"
+									on_action = "[WarLateralView.SendGrantIndependenceRevolter]"
+									enabled = "[WarLateralView.CanGrantIndependence]"
+									description = "[WarLateralView.CanGrantIndependenceInfo]"
+								}
+
+								tooltipwidget = {
+									ContextualTooltipType = {
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/peace_treaty/offer_peace.dds"
+												
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.3
+												}
+											}
+										}
+								
+										blockoverride "title_text" {
+											text = "OFFER_PEACE"
+										}
+								
+										blockoverride "concept_link" {
+											text = "[peace|e]"
+										}
+										blockoverride "tooltip_content"{
+											TooltipScrolledRowList = {
+												blockoverride "block_scrollarea" { maximumsize = { -1 350 } }
+												textcontext = "[WarLateralView.CanGrantIndependenceDesc]"
+												ontextcontextchanged = "[SetRowListWithTitleFromTextContext(PdxGuiWidget.AccessSelf)]"
+											}				
+										}
+									}
+								}
+								# blockoverride "wax_color" {
+								# 	using = color_mid_bright_blue
+								# }
+
+								hbox = {
+									spacing = 5
+									expand = {}
+
+									icon = {
+										size = {25 25}
+										texture = "gfx/interface/icons/treaty_type/grant_independence.dds"
+
+										glow = {
+											name = "drop_shadow"
+											glow_radius = 3
+											color = {0.0 0.0 0.0 1.0}
+											alpha = 0.6
+										}
+									}
+
+									text_single = {
+										text = "WAR_LATERALVIEW_GRANT_INDEPENDENCE"
+										align = nobaseline
+										using = Font_Type_Headers
+									}
+
+									expand = {}
+								}
+							}
+
+							# REIN IN SUBJECT
+							button_wax = {
+								layoutpolicy_horizontal = expanding
+								visible = "[WarLateralView.IsReinInSubjectVisible]"
+								onclick = "[WarLateralView.ShowPeaceDemandLateralView]"
+
+								tooltipwidget = {
+									ContextualTooltipType = {
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/peace_treaty/offer_peace.dds"
+
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.3
+												}
+											}
+										}
+
+										blockoverride "title_text" {
+											text = "WAR_LATERALVIEW_REIN_IN_SUBJECT"
+										}
+
+										blockoverride "concept_link" {
+											text = "[peace|e]"
+										}
+
+										blockoverride "tooltip_content" {
+											TooltipScrolledRowList = {
+												blockoverride "block_scrollarea" { maximumsize = { -1 350 } }
+												textcontext = "[WarLateralView.GetReinInSubjectTooltip]"
+												ontextcontextchanged = "[SetRowListWithTitleFromTextContext(PdxGuiWidget.AccessSelf)]"
+											}
+										}
+									}
+								}
+
+								hbox = {
+									spacing = 5
+									expand = {}
+
+									icon = {
+										size = {25 25}
+										texture = "gfx/interface/icons/peace_treaty/offer_peace.dds"
+
+										glow = {
+											name = "drop_shadow"
+											glow_radius = 3
+											color = {0.0 0.0 0.0 1.0}
+											alpha = 0.6
+										}
+									}
+
+									text_single = {
+										text = "WAR_LATERALVIEW_REIN_IN_SUBJECT"
+										align = nobaseline
+										using = Font_Type_Headers
+									}
+
+									expand = {}
+								}
+							}
+
+							#Attacker Surrender
+							button_wax = {
+								layoutpolicy_horizontal = expanding
+								size = { -1 50 }
+								visible = "[WarLateralView.IsAttackerUnconditionalSurrenderVisible]"
+								enabled = "[WarLateralView.GetAttackerUnconditionalSurrender.IsEnabled]"
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									title = "[WarLateralView.GetAttackerUnconditionalSurrender.GetTitle]"
+									on_action = "[WarLateralView.GetAttackerUnconditionalSurrender.OnClick]"
+									visible = "[WarLateralView.IsAttackerUnconditionalSurrenderVisible]"
+									enabled = "[WarLateralView.GetAttackerUnconditionalSurrender.IsEnabled]"
+									description = "[WarLateralView.GetAttackerUnconditionalSurrender.GetTooltip]"
+								}		
+								
+								tooltipwidget = { BasicFunctionalTooltip = {} }
+									
+								hbox = {
+									spacing = 5
+									expand = {}
+				
+									text_single = {
+										text = "[WarLateralView.GetAttackerUnconditionalSurrender.GetTitle]"
+										align = nobaseline
+										using = Font_Type_Headers
+									}
+				
+									icon = {
+										size = {20 20}
+										texture = "gfx/interface/icons/flat_icons/war_view/offer_peace_button.dds"
+									}
+				
+									expand = {}
+								}
+							}
+						}
+					}
+
+					expand = {}
+				}
+			}
+		}
+	}
+}
+
+template white_peace_tooltip {	
+	tooltipwidget = {
+		ContextualTooltipType = {
+			blockoverride "title_icon" {
+				icon = {
+					using = tooltip_title_icon_size
+					texture = "gfx/interface/icons/alerts_icons/alert_they_can_white_peace.dds"
+				}
+			}
+		
+			blockoverride "title_text" {										
+				text = "WHITE_PEACE"
+			}
+								
+			blockoverride "concept_link" {
+				text = [white_peace|E]
+			}
+		
+			blockoverride "tooltip_content" {
+				TooltipTextBlock = {
+					blockoverride "text" {
+						text = "[WarLateralView.WhitePeaceDesc]"
+					}
+				}
+			}
+		}
+	}
+}
+
+template enforce_peace_tooltip {	
+	tooltipwidget = {
+		ContextualTooltipType = {
+			blockoverride "title_icon" {
+				icon = {
+					using = tooltip_title_icon_size
+					texture = "gfx/interface/icons/alerts_icons/wargoal_accepted.dds"
+				}
+			}
+		
+			blockoverride "title_text" {										
+				text = "ENFORCE_PEACE"
+			}
+								
+			blockoverride "concept_link" {
+				text = [peace|E]
+			}
+		
+			blockoverride "tooltip_content" {
+				TooltipTextBlock = {
+					blockoverride "text" {
+						text = "[WarLateralView.EnforcePeaceDesc]"
+					}
+				}
+			}
+		}
+	}
+}
+
+template sue_for_peace_action_tooltip {	
+	tooltipwidget = {
+		ContextualTooltipType = {
+			blockoverride "title_icon_texture" {
+				texture = "gfx/interface/icons/flat_icons/war_view/offer_peace_button.dds"
+			}
+		
+			blockoverride "title_text" {										
+				text = "PEACETITLE"
+			}
+								
+			blockoverride "concept_link" {
+				text = [peace|E]
+			}
+		
+			blockoverride "tooltip_content" {
+				TooltipTextBlock = {
+					visible = "[And(WarLateralView.TogglePeaceViewEnabled, Not(StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)))]"
+					blockoverride "text" {
+						text = "[WarLateralView.TogglePeaceViewTooltip]"
+					}
+				}
+				TooltipRequirementsList = {					
+					visible = "[Not(StringIsEmpty(StringToConditionListOnlyPassedAndNeutralIfNot(And(WarLateralView.TogglePeaceViewEnabled, StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)), WarLateralView.TogglePeaceViewTooltip).GetOutput))]"
+					textcontext = "[StringToConditionListOnlyPassedAndNeutralIfNot(And(WarLateralView.TogglePeaceViewEnabled, StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)), WarLateralView.TogglePeaceViewTooltip).GetOutput]"
+				}
+			}
+		}
+	}
+}

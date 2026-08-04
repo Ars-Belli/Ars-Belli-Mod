@@ -1,0 +1,103 @@
+﻿namespace = ars_belli_enforce_peace
+
+# Step 2 of the Enforce Peace chain. The defender has already agreed to a white peace;
+# this asks the attacker. Fired from common/country_interactions/ars_belli_enforce_peace.txt
+#
+# root                        = attacker leader (this country)
+# scope:ars_belli_ep_enforcer = the country that demanded peace
+# scope:ars_belli_ep_defender = the defending war leader, who already said yes
+# scope:ars_belli_ep_war      = the war in question
+ars_belli_enforce_peace.1 = {
+	type = country_event
+	title = ars_belli_enforce_peace.1.title
+	desc = ars_belli_enforce_peace.1.desc
+	outcome = neutral
+
+	# Accept the white peace.
+	option = {
+		name = ars_belli_enforce_peace.1.a
+		white_peace = scope:ars_belli_ep_war
+
+		scope:ars_belli_ep_enforcer = {
+			trigger_event_silently = ars_belli_enforce_peace.2
+		}
+
+		ai_chance = {
+			factor = 2
+			# A free exit looks far better when the war is going badly.
+			modifier = {
+				factor = 3
+				war_score_in_war_whole_side = {
+					war = scope:ars_belli_ep_war
+					value < 0
+				}
+			}
+			modifier = {
+				factor = -1
+				war_score_in_war_whole_side = {
+					war = scope:ars_belli_ep_war
+					value > 25
+				}
+			}
+		}
+	}
+
+	# Refuse, and take the enforcer into the war against us.
+	option = {
+		name = ars_belli_enforce_peace.1.b
+
+		add_prestige = prestige_weak_penalty
+
+		scope:ars_belli_ep_enforcer = {
+			join_war_with = {
+				war = scope:ars_belli_ep_war
+				target = scope:ars_belli_ep_defender
+				call_in_subjects = yes
+				notify_opposing_side = yes
+			}
+			trigger_event_silently = ars_belli_enforce_peace.3
+		}
+
+		ai_chance = {
+			factor = 2
+			modifier = {
+				factor = -1
+				war_score_in_war_whole_side = {
+					war = scope:ars_belli_ep_war
+					value < -25
+				}
+			}
+			modifier = {
+				factor = 3
+				war_score_in_war_whole_side = {
+					war = scope:ars_belli_ep_war
+					value > 25
+				}
+			}
+		}
+	}
+}
+
+# Notification to the enforcer: the attacker took the white peace.
+ars_belli_enforce_peace.2 = {
+	type = country_event
+	title = ars_belli_enforce_peace.2.title
+	desc = ars_belli_enforce_peace.2.desc
+	outcome = positive
+
+	option = {
+		name = ars_belli_enforce_peace.2.a
+	}
+}
+
+# Notification to the enforcer: the attacker refused, so we are now in the war.
+ars_belli_enforce_peace.3 = {
+	type = country_event
+	title = ars_belli_enforce_peace.3.title
+	desc = ars_belli_enforce_peace.3.desc
+	outcome = negative
+
+	option = {
+		name = ars_belli_enforce_peace.3.a
+	}
+}
