@@ -1,0 +1,248 @@
+﻿#
+# #Action to demand subjugation for both Yuan and the rebels
+# rtr_demand_annexation = {
+# 	type = diplomacy
+# 	category = CATEGORY_HOSTILE_ACTIONS
+#
+# 	ai_tick = monthly
+# 	ai_tick_frequency = 6
+# 	automation_tick = never
+# 	automation_tick_frequency = 12
+#
+# 	block_when_at_war = yes
+#
+# 	cooldown = {
+# 		type = rtr_demand_annexation
+# 		years = 3
+# 	}
+#
+# 	price = price:rtr_demand_annexation_price
+#
+# 	potential = {
+# 		is_situation_active = situation:red_turban_rebellions
+# 		scope:actor = {
+# 			OR = {
+# 				is_member_of_international_organization = international_organization:red_turban_rebels
+# 				modifier:can_create_red_turban_rebellions_cb = yes
+# 				tag = CHI
+# 			}
+# 		}
+# 	}
+#
+# 	allow = {
+# 		scope:actor = {
+# 			OR = {
+# 				tag = CHI
+# 				AND = {
+# 					modifier:can_create_red_turban_rebellions_cb = yes
+# 					is_subject = no
+# 				}
+# 			}
+# 		}
+# 	}
+#
+# 	select_trigger = {
+# 		looking_for_a = country
+# 		target_flag = recipient
+# 		name = "rtr_demand_annexation_select_title"
+# 		none_available_msg_key = "rtr_demand_annexation_no_countries"
+# 		allow_self = no
+# 		column = {
+# 			data = name
+# 		}
+# 		column = {
+# 			data = population
+# 		}
+# 		visible = {
+# 			capital ?= {
+# 				is_discovered_by = scope:actor
+# 				OR = {
+# 					region = region:east_china_region
+# 					region = region:north_china_region
+# 					region = region:south_china_region
+# 					region = region:west_china_region
+# 				}
+# 			}
+# 			NOT = { country_type = pop }
+# 			within_diplomatic_range = scope:actor
+# 			NOT = { is_at_war_with = scope:actor }
+# 			NOT = { is_fighting_war_together_with = scope:actor }
+# 			NOT = { is_subject_of = scope:actor }
+# 			NOT = { ruler ?= scope:actor.ruler }
+# 		}
+# 		enabled = {
+# 			trigger_if = {
+# 				limit = {
+# 					scope:actor = { tag = CHI }
+# 				}
+# 				NOT = {
+# 					scope:actor = {
+# 						has_casus_belli_of_type_on = {
+# 							type = casus_belli:cb_red_turban_rebellions_rein_in_rebels
+# 							target = root
+# 						}
+# 					}
+# 				}
+# 			}
+# 			trigger_else = {
+# 				NOT = {
+# 					scope:actor = {
+# 						has_casus_belli_of_type_on = {
+# 							type = casus_belli:cb_red_turban_rebellions_against_other_rebels
+# 							target = root
+# 						}
+# 					}
+# 				}
+# 			}
+# 		}
+# 	}
+#
+# 	effect = {
+# 		scope:actor = {
+# 			if = {
+# 				limit = { exists = scope:recipient }
+# 					annex_country = {
+# 						country = scope:recipient
+# 						reason = Diplomatic
+# 						transfer = yes
+# 					}
+# 			}
+# 			else = {
+# 				custom_tooltip = rtr_demand_annexation_tt
+# 			}
+# 			if = {
+# 				limit = { modifier:allow_righteousness = yes }
+# 				add_righteousness = righteousness_weak_penalty
+# 			}
+# 		}
+# 	}
+# 	reject_effect = {
+# 		scope:actor = {
+# 			if = {
+# 				limit = { tag = CHI }
+# 				add_casus_belli = {
+# 					target = scope:recipient
+# 					type = casus_belli:cb_red_turban_rebellions_rein_in_rebels
+# 				}
+# 			}
+# 			else = {
+# 				add_casus_belli = {
+# 					target = scope:recipient
+# 					type = casus_belli:cb_red_turban_rebellions_against_other_rebels
+# 				}
+# 			}
+# 		}
+# 	}
+#
+# 	ai_will_do = {	#AI will do this more likely if the number of opposers is too high
+# 		add = 200
+# 		if = {	#Neutral, will not declare wars really
+# 			limit = {
+# 				scope:actor ?= {
+# 					has_variable = rtr_yuan_allegiance
+# 				}
+# 				scope:actor.var:rtr_yuan_allegiance > 0
+# 				scope:actor.var:rtr_yuan_allegiance < 50
+# 			}
+# 			subtract = 150
+# 		}
+# 		if = {
+# 			limit = { exists = scope:recipient }
+# 			if = {	#Loyalists should usually not attack each other
+# 				limit = {
+# 					scope:actor ?= {
+# 						has_variable = rtr_yuan_allegiance
+# 						var:rtr_yuan_allegiance >= 50
+# 					}
+# 					scope:recipient = {
+# 						has_variable = rtr_yuan_allegiance
+# 						var:rtr_yuan_allegiance >= 50
+# 					}
+# 				}
+# 				subtract = 200
+# 			}
+# 			add = {	# opinion of the recipient country
+# 				value = "scope:actor.opinion(scope:recipient)"
+# 				divide = -5
+# 			}
+# 			add = {	# gp score difference  (capped)
+# 				value = "scope:actor.country_economical_base"
+# 				subtract = "scope:recipient.country_economical_base"
+# 				multiply = 1
+# 				min = -200
+# 				max = 200
+# 			}
+# 			if = {	#Alliance
+# 				limit = { scope:recipient = { is_allied_with = { target = scope:actor } } }
+# 				subtract = 100
+# 			}
+# 			if = {	#Truce
+# 				limit = { scope:recipient = { has_truce_with = scope:actor } }
+# 				subtract = 100
+# 			}
+# 			if = {	#Out of reach
+# 				limit = { scope:recipient = { NOT = { is_neighbor_of = scope:actor } } }
+# 				subtract = 1000
+# 			}
+# 		}
+# 	}
+#
+# 	accept = {	#Kinda inverted logic from above
+# 		add = {
+# 			desc = "DIPLOREASON_BASE"
+# 			value = -200
+# 		}
+# 		if = {	#Neutral, will not declare wars really
+# 			limit = {
+# 				scope:actor ?= {
+# 					has_variable = rtr_yuan_allegiance
+# 				}
+# 				scope:actor.var:rtr_yuan_allegiance > 0
+# 				scope:actor.var:rtr_yuan_allegiance < 50
+# 			}
+# 			add = {
+# 				desc = "RTR_NEUTRALS_TITLE"
+# 				value = 150
+# 			}
+# 		}
+# 		if = {
+# 			limit = { exists = scope:recipient }
+# 			if = {	#Loyalists should usually not attack each other
+# 				limit = {
+# 					scope:actor ?= {
+# 						has_variable = rtr_yuan_allegiance
+# 						var:rtr_yuan_allegiance >= 50
+# 					}
+# 					scope:recipient = {
+# 						has_variable = rtr_yuan_allegiance
+# 						var:rtr_yuan_allegiance >= 50
+# 					}
+# 				}
+# 				add = {
+# 					desc = "RTR_LOYALISTS_TITLE"
+# 					value = 200
+# 				}
+# 			}
+# 			subtract = {	# opinion of the recipient country
+# 				desc = "game_concept_opinion"
+# 				value = "scope:actor.opinion(scope:recipient)"
+# 				divide = -5
+# 			}
+# 			add = {	# gp score difference  (capped)
+# 				desc = "DIPLOREASON_ECONOMICAL_BASE_DIFFERENCE"
+# 				value = "scope:actor.country_economical_base"
+# 				subtract = "scope:recipient.country_economical_base"
+# 				multiply = 1
+# 				min = -200
+# 				max = 200
+# 			}
+# 			if = {	#Alliance
+# 				limit = { scope:recipient = { is_allied_with = { target = scope:actor } } }
+# 				add = {
+# 					desc = "HAS_ALLIANCE"
+# 					value = 100
+# 				}
+# 			}
+# 		}
+# 	}
+# }
