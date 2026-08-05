@@ -741,6 +741,10 @@ mp_limits_calculate_diplo_weights = {
 		# existing rules in total_player_alliance_weight, so nothing extra is needed
 		# for that here. Deduped against everything above, so a partner who is already
 		# an ally or defensive-league mate does not get charged twice.
+		#
+		# Flat 1 per relation, NOT country_slot_weight - the cost does not scale with
+		# the other party's rank the way an alliance or defensive pact does. Same
+		# treatment as guarantees in block 4 above.
 		every_country = {
 			limit = {
 				OR = {
@@ -776,7 +780,7 @@ mp_limits_calculate_diplo_weights = {
 					}
 					change_variable = {
 						name = mp_dp_weight
-						add = { value = "scope:mp_dw_mate.country_slot_weight" }
+						add = 1
 					}
 				}
 			}
