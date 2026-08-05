@@ -46,6 +46,13 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - Cooldown loc key convention is `<cooldown_type>_cooldown` (e.g. `worsen_opinion_cd_cooldown`).
 - Files: `in_game\common\country_interactions\worsen_opinion.txt`, `in_game\common\biases\ars_belli_opinion.txt`, loc in `main_menu\localization\english\00_mp_limits_l_english.yml`
 
+### 2d. Sabotage Fort
+- Covert action (`CATEGORY_COVERT_ACTIONS`, modelled on vanilla `sabotage_reputation`) costing **50 spy network**.
+- Two select stages: country, then one of that country's locations with `has_fort = yes` (`source = recipient` + `source_flags = only_actual_locations`, same as vanilla `seize_location_from_subject`).
+- Effect: `every_pop { limit = pop_type:soldiers; change_pop_type = pop_type:peasants }` in the target location. Forts declare `pop_type = soldiers`, so this leaves the fort unstaffed until the location promotes new soldiers on its own — temporary by design.
+- `ai_tick = never` (every vanilla country_interaction with a location select stage is player-only). No cooldown; spy network regen is the limiter.
+- Files: `in_game\common\country_interactions\ars_belli_sabotage_fort.txt`, cost in `in_game\common\diplomatic_costs\ars_belli_diplo_costs.txt`, loc `in_game\localization\english\ars_belli_sabotage_fort_l_english.yml`.
+
 ### 3. War & Military Rebalancing
 - **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
 - **Unconditional Surrender:** Removed (base game now has one). Previously in `in_game\common\country_interactions\unconditional_surrender.txt`.

@@ -1,0 +1,104 @@
+﻿# ARS BELLI: covert action that strips a location's forts of the pops that man them.
+#
+# Every fort building sets pop_type = soldiers (see vanilla building_types/forts.txt and
+# coastal_forts.txt), so the fort in a location is staffed by the soldier pops living
+# there. Turning every soldier pop in the target location into peasants leaves the fort
+# with nobody to work it until the location promotes pops back into soldiers on its own,
+# which is what makes this a temporary sabotage rather than a permanent demolition.
+#
+# Deliberately no cooldown: the 50 spy_network cost is the gate, and spy network regrows
+# slowly enough that repeat use on the same country is already self-limiting.
+
+ars_belli_sabotage_fort = {
+	type = diplomacy
+	category = CATEGORY_COVERT_ACTIONS
+
+	diplomatic_cost = ars_belli_sabotage_fort_cost
+
+	block_when_at_war = no
+
+	# Player-only. Every vanilla country_interaction that picks a location this way
+	# (transfer_occupation, give_location_to_subject, seize_location_from_subject) does the
+	# same - the AI has no sensible way to drive a location selection stage.
+	ai_tick = never
+	ai_will_do = {
+		add = -1000
+	}
+
+	potential = {
+		scope:actor = {
+			has_limited_diplomacy = no
+		}
+	}
+
+	allow = {
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "ars_belli_sabotage_fort_select_country"
+		none_available_msg_key = "ars_belli_sabotage_fort_no_countries"
+		column = {
+			data = name
+		}
+		visible = {
+			this != scope:actor
+			within_diplomatic_range = scope:actor
+		}
+		enabled = {
+			custom_tooltip = {
+				text = ars_belli_sabotage_fort_needs_a_fort_tt
+				any_owned_location = {
+					has_fort = yes
+				}
+			}
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = location
+		source = recipient
+		source_flags = only_actual_locations
+		target_flag = target
+		name = "ars_belli_sabotage_fort_select_location"
+		none_available_msg_key = "ars_belli_sabotage_fort_no_locations"
+		column = {
+			data = name
+		}
+		column = {
+			data = population
+		}
+		visible = {
+			owner = scope:recipient
+			has_fort = yes
+		}
+		enabled = {
+			custom_tooltip = {
+				text = ars_belli_sabotage_fort_needs_soldiers_tt
+				any_pop = {
+					pop_type = pop_type:soldiers
+				}
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:target
+			}
+			scope:target = {
+				every_pop = {
+					limit = {
+						pop_type = pop_type:soldiers
+					}
+					change_pop_type = pop_type:peasants
+				}
+			}
+		}
+		else = {
+			custom_tooltip = ars_belli_sabotage_fort_tt
+		}
+	}
+}
