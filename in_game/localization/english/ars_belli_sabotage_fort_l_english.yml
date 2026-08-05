@@ -16,3 +16,32 @@
 
  ars_belli_sabotage_fort_effect_text: "[SCOPE.sCountry('actor').GetName] sabotages the [fort|e] in [SCOPE.sLocation('target').GetName]"
  ars_belli_sabotage_fort_effect_text_past: "[SCOPE.sCountry('actor').GetName] sabotaged the [fort|e] in [SCOPE.sLocation('target').GetName]"
+
+ # ---------------------------------------------------------------------------
+ # Notification messages. Country interactions raise these automatically unless
+ # the action sets show_message / show_message_to_target = no, which this one
+ # deliberately does not - the victim is meant to find out, and to be told which
+ # location it was, so they can garrison or rebuild. Key set mirrors vanilla
+ # move_subject_capital, the closest vanilla action with a location target.
+ # ---------------------------------------------------------------------------
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_SETUP: "When we sabotage the fort of another country."
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_HEADER: "$MESSENGER$"
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_TITLE: "[SCOPE.sCountry('recipient').GetAdjective] Fort Sabotaged!"
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_EFFECTS: "Our agents have emptied the [fort|e] in [SCOPE.sLocation('target').GetName] of the [ShowPopTypeName('soldiers')] who manned it."
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_FLAVOR: "Walls without men on them are only stone."
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_LOG: "We did $ACTION$"
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_BTN1: "OK"
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_BTN2: "OK"
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_BTN3: "$common_string_go_to$"
+ WE_PERFORM_ars_belli_sabotage_fort_ACTION_MAP: ""
+
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_SETUP: "When one of our forts is sabotaged."
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_HEADER: "$MESSENGER$"
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_TITLE: "Our Fort Has Been Sabotaged!"
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_EFFECTS: "[SCOPE.sCountry('actor').GetAdjective] agents have emptied the [fort|e] in [SCOPE.sLocation('target').GetName] of the [ShowPopTypeName('soldiers')] who manned it. It will stand unmanned until the [location|e] raises new soldiers of its own."
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_FLAVOR: "The walls still stand, but there is nobody left on them."
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_LOG: "[SCOPE.sCountry('actor').GetAdjective] did $ACTION$"
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_BTN1: "OK"
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_BTN2: "OK"
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_BTN3: "$common_string_go_to$"
+ ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_MAP: ""
