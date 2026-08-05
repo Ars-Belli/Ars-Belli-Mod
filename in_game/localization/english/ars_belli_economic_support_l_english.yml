@@ -1,20 +1,28 @@
 ﻿l_english:
  ars_belli_economic_support_relation: "Economic Support"
- ars_belli_economic_support_relation_desc: "A wealthier [country|e] sends a share of its monthly income to another. Both parties spend a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as the arrangement stands."
+ ars_belli_economic_support_relation_desc: "A wealthier [country|e] sends an agreed sum of [gold_i] to another every month. Both parties spend a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as the arrangement stands."
 
- offer_ars_belli_economic_support: "Send $ars_belli_economic_support_relation$"
- offer_ars_belli_economic_support_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
- offer_ars_belli_economic_support_cta: "Send $ars_belli_economic_support_relation$ to [TARGET_COUNTRY.GetName]."
- offer_ars_belli_economic_support_desc: "We will send [TARGET_COUNTRY.GetName] a tenth of our monthly income. It costs us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e], and costs them the same."
- offer_ars_belli_economic_support_cta_to_unknown: "Send $ars_belli_economic_support_relation$ to a [country|e]."
- offer_ars_belli_economic_support_desc_to_unknown: "We will send them a tenth of our monthly income. It costs us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e], and costs them the same."
- offer_ars_belli_economic_support_happened_title: "$ars_belli_economic_support_relation$ agreed!"
- offer_ars_belli_economic_support_happened_desc: "[TARGET_COUNTRY.GetName] have accepted our support. Gold will flow to them each month until either of us ends the arrangement."
- offer_ars_belli_economic_support_proposal_question: "Send $ars_belli_economic_support_relation$ to [TARGET_COUNTRY.GetName]?\n$INFO$"
- offer_ars_belli_economic_support_incoming_proposal_title: "$ars_belli_economic_support_relation$ Offered"
- offer_ars_belli_economic_support_incoming_proposal_question: "[COUNTRY.GetName] have offered to send us $ars_belli_economic_support_relation$. Accepting will cost us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as it lasts. Do we wish to accept?"
- offer_ars_belli_economic_support_declined_title: "$ars_belli_economic_support_relation$ Declined"
- offer_ars_belli_economic_support_declined_desc: "[TARGET_COUNTRY.GetName] have turned down our offer of support."
+ # The interaction that starts the relation - this is what players click.
+ ars_belli_send_economic_support: "Send $ars_belli_economic_support_relation$"
+ ars_belli_send_economic_support_desc: "Send a country a sum of [gold_i] every month. It costs us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e], and costs them the same."
+ CATEGORY_ECONOMY_ACTIONS_ars_belli_send_economic_support: "Send $ars_belli_economic_support_relation$"
+ ars_belli_send_economic_support_act: "Offer $ars_belli_economic_support_relation$"
+ INCOMING_OFFER_ars_belli_send_economic_support: "$ACTOR$ have offered to send us $ars_belli_economic_support_relation$. Accepting will cost us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as it lasts. Do we wish to accept?\n\n$INFO$"
+ PROPOSE_ars_belli_send_economic_support: "Offer $ars_belli_economic_support_relation$ to $RECIPIENT$?\n$INFO$."
+ ars_belli_send_economic_support_effect_text: "[SCOPE.sCountry('actor').GetName] begins sending $ars_belli_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ ars_belli_send_economic_support_effect_text_past: "[SCOPE.sCountry('actor').GetName] began sending $ars_belli_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ ars_belli_send_economic_support_reject_effect_text: "$generic_reject_demand_effect_string$"
+ ars_belli_send_economic_support_reject_effect_text_past: "$generic_reject_demand_effect_string_past$"
+
+ # Auto-generated relation keys the engine asks for (see game.log on load).
+ ars_belli_economic_support_effect_text: "[SCOPE.sCountry('actor').GetName] sends $ars_belli_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ ars_belli_economic_support_effect_text_past: "[SCOPE.sCountry('actor').GetName] sent $ars_belli_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ diplomatic_status_giving_ars_belli_economic_support_name: "Sending $ars_belli_economic_support_relation$"
+ diplomatic_status_giving_ars_belli_economic_support_tooltip: "We are sending them [gold_i] every month."
+ giving_ars_belli_economic_support_list_who_tt: "We are sending $ars_belli_economic_support_relation$ to:"
+ diplomatic_status_receiving_ars_belli_economic_support_name: "Receiving $ars_belli_economic_support_relation$"
+ diplomatic_status_receiving_ars_belli_economic_support_tooltip: "They are sending us [gold_i] every month."
+ receiving_ars_belli_economic_support_list_who_tt: "We are receiving $ars_belli_economic_support_relation$ from:"
 
  cancellation_ars_belli_economic_support: "Cancel $ars_belli_economic_support_relation$"
  cancellation_ars_belli_economic_support_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
@@ -25,6 +33,8 @@
  break_ars_belli_economic_support_cta: "Stop accepting $ars_belli_economic_support_relation$ from [TARGET_COUNTRY.GetName]."
  break_ars_belli_economic_support_desc: "We will refuse further gold, freeing the #H Defensive Point#! and the monthly [diplomats|e] it costs us."
 
+ ars_belli_economic_support_select_amount: "Gold sent each month"
+ ars_belli_economic_support_one_patron_tt: "They must not already be receiving $ars_belli_economic_support_relation$ from another [country|e]"
  ars_belli_economic_support_points_tt: "We must not be over our #H Defensive Point#! limit"
  ars_belli_economic_support_recipient_points_tt: "They must not be over their #H Defensive Point#! limit"
 

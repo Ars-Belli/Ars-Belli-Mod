@@ -1,8 +1,33 @@
-﻿# Monthly gold sent by the supporter. scope:first is the giver, scope:second the receiver.
-# Tunable: this is the whole size of the mechanic.
-ars_belli_economic_support_amount = {
-	value = scope:first.monthly_income_total
-	multiply = 0.1
+﻿# --- tune here -------------------------------------------------------------
+# What the amount slider starts at, as a share of the sender's monthly income.
+ars_belli_economic_support_default_share = {
+	value = 0.1
+}
+# Hard ceiling on the monthly transfer, whatever the sender dials in.
+ars_belli_economic_support_max_per_month = {
+	value = 25
+}
+# ---------------------------------------------------------------------------
+
+# Slider default and the AI's choice when it offers. scope:actor is the sender.
+ars_belli_economic_support_default_amount = {
+	value = scope:actor.monthly_income_total
+	multiply = ars_belli_economic_support_default_share
 	min = 0
-	max = 25
+	max = ars_belli_economic_support_max_per_month
+}
+
+# The monthly transfer. scope:first is the giver, scope:second the receiver.
+# The agreed figure is stored on the receiver by the relation's offer_effect; the
+# has_variable guard keeps this at 0 if the relation ever exists without one.
+ars_belli_economic_support_amount = {
+	value = 0
+	if = {
+		limit = {
+			scope:second = { has_variable = ab_ecosupport_amount }
+		}
+		value = scope:second.var:ab_ecosupport_amount
+	}
+	min = 0
+	max = ars_belli_economic_support_max_per_month
 }
