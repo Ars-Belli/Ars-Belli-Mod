@@ -687,9 +687,9 @@ lateralview_full = {
 											margin_left = 10
 											widget = {
 												size = { 400 40}
-												# Ars Belli: added Player.IsRegionalPower so the set of countries that
-												# can Enforce Peace matches the set that could previously Intervene.
-												visible = "[And(Not(WarLateralView.IsPlayerInWar), Or4(Player.IsGreatPower, Player.IsRegionalPower, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)))]"
+												# Ars Belli: always shown. The eligibility gate lives on the button below as
+												# "enabled", so an ineligible player sees it greyed with a reason.
+												visible = yes
 												hbox = {
 													button_wax = {
 														layoutpolicy_horizontal = expanding
@@ -698,8 +698,10 @@ lateralview_full = {
 															title = "ars_belli_enforce_peace"
 															on_action = "[OpenDiploAction('ars_belli_enforce_peace')]"
 														}
-														tooltipwidget = { BasicFunctionalTooltip = {} }
-														# Ars Belli: gate removed; inherits the widened parent condition above.
+														using = ars_belli_enforce_peace_tooltip
+														# Ars Belli: greyed out rather than hidden when the player is ineligible,
+														# so the tooltip above can explain which requirement is unmet.
+														enabled = "[And(Not(WarLateralView.IsPlayerInWar), Or4(Player.MakeScope.GetVariable('mp_is_gp').IsSet, Player.MakeScope.GetVariable('mp_is_major').IsSet, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)))]"
 														
 														hbox = {
 														spacing = 5
@@ -851,9 +853,9 @@ lateralview_full = {
 											margin_left = 10
 											widget = {
 												size = { 400 40}
-												# Ars Belli: added Player.IsRegionalPower so the set of countries that
-												# can Enforce Peace matches the set that could previously Intervene.
-												visible = "[And(Not(WarLateralView.IsPlayerInWar), Or4(Player.IsGreatPower, Player.IsRegionalPower, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)))]"
+												# Ars Belli: always shown. The eligibility gate lives on the button below as
+												# "enabled", so an ineligible player sees it greyed with a reason.
+												visible = yes
 												hbox = {
 													layoutpolicy_horizontal = expanding
 													
@@ -864,8 +866,10 @@ lateralview_full = {
 															title = "ars_belli_enforce_peace"
 															on_action = "[OpenDiploAction('ars_belli_enforce_peace')]"
 														}
-														tooltipwidget = { BasicFunctionalTooltip = {} }
-														# Ars Belli: gate removed; inherits the widened parent condition above.
+														using = ars_belli_enforce_peace_tooltip
+														# Ars Belli: greyed out rather than hidden when the player is ineligible,
+														# so the tooltip above can explain which requirement is unmet.
+														enabled = "[And(Not(WarLateralView.IsPlayerInWar), Or4(Player.MakeScope.GetVariable('mp_is_gp').IsSet, Player.MakeScope.GetVariable('mp_is_major').IsSet, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)))]"
 															
 														hbox = {
 															spacing = 5
@@ -2558,6 +2562,45 @@ template sue_for_peace_action_tooltip {
 				TooltipRequirementsList = {					
 					visible = "[Not(StringIsEmpty(StringToConditionListOnlyPassedAndNeutralIfNot(And(WarLateralView.TogglePeaceViewEnabled, StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)), WarLateralView.TogglePeaceViewTooltip).GetOutput))]"
 					textcontext = "[StringToConditionListOnlyPassedAndNeutralIfNot(And(WarLateralView.TogglePeaceViewEnabled, StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)), WarLateralView.TogglePeaceViewTooltip).GetOutput]"
+				}
+			}
+		}
+	}
+}
+
+# Ars Belli: tooltip for the Enforce Peace button. Each requirement resolves to a
+# passed or failed loc line so a player who cannot use the action is told why,
+# rather than the button simply disappearing.
+template ars_belli_enforce_peace_tooltip {
+	tooltipwidget = {
+		ContextualTooltipType = {
+			blockoverride "title_icon_texture" {
+				texture = "gfx/interface/icons/flat_icons/war_view/enforce_peace_button.dds"
+			}
+
+			blockoverride "title_text" {
+				text = "ars_belli_enforce_peace"
+			}
+
+			blockoverride "concept_link" {
+				text = [peace|E]
+			}
+
+			blockoverride "tooltip_content" {
+				TooltipTextBlock = {
+					blockoverride "text" {
+						text = "ars_belli_enforce_peace_desc"
+					}
+				}
+				TooltipTextBlock = {
+					blockoverride "text" {
+						text = "[SelectLocalization(Not(WarLateralView.IsPlayerInWar), 'ars_belli_ep_req_not_participant_met', 'ars_belli_ep_req_not_participant_unmet')]"
+					}
+				}
+				TooltipTextBlock = {
+					blockoverride "text" {
+						text = "[SelectLocalization(Or4(Player.MakeScope.GetVariable('mp_is_gp').IsSet, Player.MakeScope.GetVariable('mp_is_major').IsSet, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)), 'ars_belli_ep_req_standing_met', 'ars_belli_ep_req_standing_unmet')]"
+					}
 				}
 			}
 		}
