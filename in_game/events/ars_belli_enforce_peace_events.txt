@@ -3,34 +3,37 @@
 # Step 2 of the Enforce Peace chain. The defender has already agreed to a white peace;
 # this asks the attacker. Fired from common/country_interactions/ars_belli_enforce_peace.txt
 #
-# root                        = attacker leader (this country)
-# scope:ars_belli_ep_enforcer = the country that demanded peace
-# scope:ars_belli_ep_defender = the defending war leader, who already said yes
-# scope:ars_belli_ep_war      = the war in question
+# The interaction cannot hand scopes over directly - anything saved with save_scope_as in
+# a country_interaction effect comes back as "Undefined event target" here - so it passes
+# the three participants as variables on this country and the immediate block below turns
+# them back into scopes. Those scopes then carry normally into .2 and .3, which are fired
+# from the options, because event-to-event propagation does work.
+#
+# root = attacker leader (this country)
 ars_belli_enforce_peace.1 = {
 	type = country_event
 	title = ars_belli_enforce_peace.1.title
 	desc = ars_belli_enforce_peace.1.desc
 	outcome = neutral
 
-	# The scopes arrive from the interaction and work in effects, but the localisation
-	# context only sees scopes saved in an event's own immediate block. Re-saving them
-	# here under short names is what makes SCOPE.sCountry(...) resolve in the text.
-	# These names then carry on to .2 and .3, which are fired from the options below.
 	immediate = {
-		scope:ars_belli_ep_enforcer = { save_scope_as = ep_enforcer }
-		scope:ars_belli_ep_defender = { save_scope_as = ep_defender }
-		scope:ars_belli_ep_war = { save_scope_as = ep_war }
+		var:ab_ep_enforcer = { save_scope_as = ep_enforcer }
+		var:ab_ep_defender = { save_scope_as = ep_defender }
+		var:ab_ep_war = { save_scope_as = ep_war }
 	}
 
 	# Accept the white peace.
 	option = {
 		name = ars_belli_enforce_peace.1.a
-		white_peace = scope:ars_belli_ep_war
+		white_peace = scope:ep_war
 
-		scope:ars_belli_ep_enforcer = {
+		scope:ep_enforcer = {
 			trigger_event_silently = ars_belli_enforce_peace.2
 		}
+
+		remove_variable = ab_ep_enforcer
+		remove_variable = ab_ep_defender
+		remove_variable = ab_ep_war
 
 		ai_chance = {
 			factor = 2
@@ -38,14 +41,14 @@ ars_belli_enforce_peace.1 = {
 			modifier = {
 				factor = 3
 				war_score_in_war_whole_side = {
-					war = scope:ars_belli_ep_war
+					war = scope:ep_war
 					value < 0
 				}
 			}
 			modifier = {
 				factor = -1
 				war_score_in_war_whole_side = {
-					war = scope:ars_belli_ep_war
+					war = scope:ep_war
 					value > 25
 				}
 			}
@@ -56,29 +59,35 @@ ars_belli_enforce_peace.1 = {
 	option = {
 		name = ars_belli_enforce_peace.1.b
 
-		scope:ars_belli_ep_enforcer = {
+		add_prestige = prestige_weak_penalty
+
+		scope:ep_enforcer = {
 			join_war_with = {
-				war = scope:ars_belli_ep_war
-				target = scope:ars_belli_ep_defender
+				war = scope:ep_war
+				target = scope:ep_defender
 				call_in_subjects = yes
 				notify_opposing_side = yes
 			}
 			trigger_event_silently = ars_belli_enforce_peace.3
 		}
 
+		remove_variable = ab_ep_enforcer
+		remove_variable = ab_ep_defender
+		remove_variable = ab_ep_war
+
 		ai_chance = {
 			factor = 2
 			modifier = {
 				factor = -1
 				war_score_in_war_whole_side = {
-					war = scope:ars_belli_ep_war
+					war = scope:ep_war
 					value < -25
 				}
 			}
 			modifier = {
 				factor = 3
 				war_score_in_war_whole_side = {
-					war = scope:ars_belli_ep_war
+					war = scope:ep_war
 					value > 25
 				}
 			}

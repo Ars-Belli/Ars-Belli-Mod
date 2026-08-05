@@ -94,13 +94,24 @@ ars_belli_enforce_peace = {
 	effect = {
 		if = {
 			limit = { exists = scope:target }
-			# These reach the event's EFFECT context fine, but its localisation context
-			# cannot see scopes saved outside an event's own immediate block - so
-			# ars_belli_enforce_peace.1 re-saves them there for the text to use.
-			scope:actor = { save_scope_as = ars_belli_ep_enforcer }
-			scope:recipient = { save_scope_as = ars_belli_ep_defender }
-			scope:target = { save_scope_as = ars_belli_ep_war }
+			# Handed over as variables, not save_scope_as. Scopes saved in a
+			# country_interaction effect do not survive into the triggered event at all -
+			# "Undefined event target" in error.log - because the interaction's scope
+			# container is gone by the time the event resolves. Variables live on the
+			# country, so they always survive; the event turns them back into scopes.
 			scope:target.attacker_leader = {
+				set_variable = {
+					name = ab_ep_enforcer
+					value = scope:actor
+				}
+				set_variable = {
+					name = ab_ep_defender
+					value = scope:recipient
+				}
+				set_variable = {
+					name = ab_ep_war
+					value = scope:target
+				}
 				trigger_event_non_silently = ars_belli_enforce_peace.1
 			}
 		}
