@@ -29,10 +29,13 @@ ars_belli_enforce_peace = {
 	allow = {
 		custom_tooltip = {
 			text = ars_belli_enforce_peace_standing_tt
+			# Mod ranks, not vanilla ones: Ars Belli assigns Great / Major Power from
+			# mp_power_score (see scripted_triggers/mp_limits_triggers.txt), which is a
+			# different set of countries from vanilla's is_great_power / is_regional_power.
 			scope:actor = {
 				OR = {
-					is_great_power = yes
-					is_regional_power = yes
+					is_mp_gp = yes
+					is_mp_major = yes
 					is_rival_of = scope:recipient
 					scope:target ?= {
 						attacker_leader = { is_rival_of = scope:actor }
@@ -153,7 +156,7 @@ ars_belli_enforce_peace = {
 		}
 		if = {
 			limit = {
-				scope:actor = { is_great_power = yes }
+				scope:actor = { is_mp_gp = yes }
 			}
 			add = {
 				desc = "DIPLOREASON_GREAT_POWER"
@@ -163,8 +166,8 @@ ars_belli_enforce_peace = {
 		if = {
 			limit = {
 				exists = scope:target
-				scope:target.attacker_leader = { is_great_power = yes }
-				scope:actor = { is_great_power = no }
+				scope:target.attacker_leader = { is_mp_gp = yes }
+				scope:actor = { NOT = { is_mp_gp = yes } }
 			}
 			subtract = {
 				desc = "DIPLOREASON_MILITARY_STRENGTH"
