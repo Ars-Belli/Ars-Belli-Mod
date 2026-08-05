@@ -361,3 +361,49 @@ ABNAG_f = {
 	form_effect = {
 	}
 }
+
+ABCEY_f = {
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		OR = {
+			religion.group = religion_group:dharmic
+			religion.group = religion_group:muslim
+		}
+		original_capital = {
+			OR = {
+				area = area:sailan_area
+				area = area:maldives_area
+				area = area:tamil_land_area
+				area = area:malabar_area
+			}
+		}
+		
+	}
+
+	allow = {
+		OR = {
+			religion.group = religion_group:dharmic
+			religion.group = religion_group:muslim
+		}
+		capital = { area = area:sailan_area }
+		culture = { has_culture_group = culture_group:indian_group }
+	}
+	
+	name = ABCEY
+	flag = ABCEY
+	adjective = ABCEY_ADJ
+	tag = ABCEY
+	color = map_ABCEY
+
+	areas = {
+		sailan_area
+		maldives_area
+		tamil_land_area
+		malabar_area
+	}
+	form_effect = {
+	}
+}
