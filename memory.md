@@ -47,7 +47,8 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - Files: `in_game\common\country_interactions\worsen_opinion.txt`, `in_game\common\biases\ars_belli_opinion.txt`, loc in `main_menu\localization\english\00_mp_limits_l_english.yml`
 
 ### 2d. Sabotage Fort
-- Covert action (`CATEGORY_COVERT_ACTIONS`, modelled on vanilla `sabotage_reputation`) costing **50 spy network**.
+- Covert action (`CATEGORY_COVERT_ACTIONS`, modelled on vanilla `sabotage_reputation`) costing **50 spy network** plus **gold scaled to the victim's income**.
+- **Gold cost:** `price = price:ars_belli_sabotage_fort_price` in `in_game\common\prices\ars_belli_prices.txt`, using `scaled_recipient_gold = 3` = 3 months of `scope:recipient`'s monthly income (`scaled_recipient_gold`/`scaled_gold` = N months of recipient/actor income; vanilla documents this on `send_gift` in `prices\00_hardcoded.txt`). `min_scale = 25` floor, no `max_scale` on purpose. `payee` left unset so the gold leaves the game instead of paying the victim.
 - Two select stages: country, then one of that country's locations with `has_fort = yes` and `is_capital = no` (`source = recipient` + `source_flags = only_actual_locations`, same as vanilla `seize_location_from_subject`). **Capitals are deliberately not targetable**; the country stage's `enabled` check mirrors the same filter so the tooltip does not offer countries whose only fort is their capital.
 - Effect: `every_pop { limit = pop_type:soldiers; change_pop_type = pop_type:peasants }` in the target location. Forts declare `pop_type = soldiers`, so this leaves the fort unstaffed until the location promotes new soldiers on its own — temporary by design.
 - `ai_tick = never` (every vanilla country_interaction with a location select stage is player-only). No cooldown; spy network regen is the limiter.

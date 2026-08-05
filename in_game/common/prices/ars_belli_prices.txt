@@ -9,3 +9,20 @@ REPLACE:hire_prisoners = {
 REPLACE:destroy_market = {
 	stability = 10
 }
+
+# Bribing a fort's garrison costs what that garrison is worth to its paymaster, so the
+# price rides on the VICTIM's income, not ours: scaled_recipient_gold = N is N months of
+# scope:recipient's monthly income (vanilla documents this on send_gift in
+# prices/00_hardcoded.txt). Sabotaging a rich neighbour's fort is meant to hurt.
+#
+# No payee is set on the interaction, so the gold vanishes rather than landing in the
+# victim's treasury - it is going to the agents doing the work.
+#
+# min_scale is a floor so the action is not near-free against tiny countries. There is
+# deliberately no max_scale: a ceiling would flatten the scaling exactly where it is
+# supposed to bite hardest, against the largest targets. If late-game costs against the
+# biggest countries get silly, add e.g. max_scale = 750 here.
+ars_belli_sabotage_fort_price = {
+	scaled_recipient_gold = 3
+	min_scale = 25
+}
