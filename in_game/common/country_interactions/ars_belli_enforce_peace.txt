@@ -94,6 +94,9 @@ ars_belli_enforce_peace = {
 	effect = {
 		if = {
 			limit = { exists = scope:target }
+			# These reach the event's EFFECT context fine, but its localisation context
+			# cannot see scopes saved outside an event's own immediate block - so
+			# ars_belli_enforce_peace.1 re-saves them there for the text to use.
 			scope:actor = { save_scope_as = ars_belli_ep_enforcer }
 			scope:recipient = { save_scope_as = ars_belli_ep_defender }
 			scope:target = { save_scope_as = ars_belli_ep_war }

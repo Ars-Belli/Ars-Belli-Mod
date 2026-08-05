@@ -13,6 +13,16 @@ ars_belli_enforce_peace.1 = {
 	desc = ars_belli_enforce_peace.1.desc
 	outcome = neutral
 
+	# The scopes arrive from the interaction and work in effects, but the localisation
+	# context only sees scopes saved in an event's own immediate block. Re-saving them
+	# here under short names is what makes SCOPE.sCountry(...) resolve in the text.
+	# These names then carry on to .2 and .3, which are fired from the options below.
+	immediate = {
+		scope:ars_belli_ep_enforcer = { save_scope_as = ep_enforcer }
+		scope:ars_belli_ep_defender = { save_scope_as = ep_defender }
+		scope:ars_belli_ep_war = { save_scope_as = ep_war }
+	}
+
 	# Accept the white peace.
 	option = {
 		name = ars_belli_enforce_peace.1.a
