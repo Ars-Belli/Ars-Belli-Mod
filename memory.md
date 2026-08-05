@@ -48,7 +48,7 @@ The mod implements a custom ranking system that classifies countries into tiers 
 
 ### 2d. Sabotage Fort
 - Covert action (`CATEGORY_COVERT_ACTIONS`, modelled on vanilla `sabotage_reputation`) costing **50 spy network**.
-- Two select stages: country, then one of that country's locations with `has_fort = yes` (`source = recipient` + `source_flags = only_actual_locations`, same as vanilla `seize_location_from_subject`).
+- Two select stages: country, then one of that country's locations with `has_fort = yes` and `is_capital = no` (`source = recipient` + `source_flags = only_actual_locations`, same as vanilla `seize_location_from_subject`). **Capitals are deliberately not targetable**; the country stage's `enabled` check mirrors the same filter so the tooltip does not offer countries whose only fort is their capital.
 - Effect: `every_pop { limit = pop_type:soldiers; change_pop_type = pop_type:peasants }` in the target location. Forts declare `pop_type = soldiers`, so this leaves the fort unstaffed until the location promotes new soldiers on its own — temporary by design.
 - `ai_tick = never` (every vanilla country_interaction with a location select stage is player-only). No cooldown; spy network regen is the limiter.
 - **Victim is notified.** `show_message` / `show_message_to_target` left at default, so the engine raises `ACTION_ars_belli_sabotage_fort_PERFORMED_ON_US_*` on the fort owner naming the actor and the location. Those message keys (plus the `WE_PERFORM_*` set) must be present in the loc file or the popup renders raw key names — country_interaction messages are auto-generated from the action name, there is no message_types file to register.

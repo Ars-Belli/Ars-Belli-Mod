@@ -56,6 +56,7 @@ ars_belli_sabotage_fort = {
 				text = ars_belli_sabotage_fort_needs_a_fort_tt
 				any_owned_location = {
 					has_fort = yes
+					is_capital = no
 				}
 			}
 		}
@@ -77,6 +78,10 @@ ars_belli_sabotage_fort = {
 		visible = {
 			owner = scope:recipient
 			has_fort = yes
+			# Capitals are off limits. A capital fort is usually the single most
+			# load-bearing one a country has, and losing it to a 50 spy network click
+			# with no warning is not counterplay, it is a decapitation.
+			is_capital = no
 		}
 		enabled = {
 			custom_tooltip = {
