@@ -30,18 +30,9 @@ ars_belli_send_economic_support = {
 				}
 			}
 		}
-		custom_tooltip = {
-			text = ars_belli_economic_support_points_tt
-			scope:actor = {
-				NOT = { is_over_defensive_limit = 1 }
-			}
-		}
-		custom_tooltip = {
-			text = ars_belli_economic_support_recipient_points_tt
-			scope:recipient = {
-				NOT = { is_over_defensive_limit = 1 }
-			}
-		}
+		# No Defensive Point limit check on purpose. The relation still costs a point on
+		# both sides, but going over the limit does not block the arrangement - the
+		# overflow rules in total_player_alliance_weight handle it as normal.
 	}
 
 	select_trigger = {
@@ -104,20 +95,13 @@ ars_belli_send_economic_support = {
 		base = 1000
 	}
 
-	# Free gold, so the AI takes it unless doing so would put it over its own limits.
+	# Free gold, so the AI takes it unless doing so would put it over its Alliance Point
+	# limit. The Defensive Point limit is deliberately not checked here either - it no
+	# longer blocks the action, so it should not sway the AI's answer.
 	accept = {
 		add = {
 			desc = "BASE_VALUE"
 			value = 1000
-		}
-		if = {
-			limit = {
-				scope:recipient = { is_over_defensive_limit = 1 }
-			}
-			subtract = {
-				desc = ars_belli_economic_support_recipient_points_tt
-				value = 5000
-			}
 		}
 		if = {
 			limit = {
