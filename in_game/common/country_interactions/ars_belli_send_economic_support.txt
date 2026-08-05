@@ -62,7 +62,7 @@ ars_belli_send_economic_support = {
 		target_flag = target_value
 		name = "ars_belli_economic_support_select_amount"
 		min = 0
-		max = scope:actor.monthly_income_total
+		max = ars_belli_economic_support_slider_max
 		step = 1
 		default = ars_belli_economic_support_default_amount
 		ai_override_value = ars_belli_economic_support_default_amount
@@ -72,9 +72,17 @@ ars_belli_send_economic_support = {
 		if = {
 			limit = { exists = scope:target_value }
 			scope:recipient = {
+				# Set to 0 then add, rather than assigning scope:target_value straight
+				# in. The selection scope is an object, and assigning it can store the
+				# object rather than the number it stands for; going through
+				# change_variable forces arithmetic, so what lands is always a number.
 				set_variable = {
 					name = ab_ecosupport_amount
-					value = scope:target_value
+					value = 0
+				}
+				change_variable = {
+					name = ab_ecosupport_amount
+					add = scope:target_value
 				}
 			}
 			create_relation = {
