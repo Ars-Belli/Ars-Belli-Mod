@@ -1,8 +1,9 @@
 ﻿# ARS BELLI: replacement for both the engine "Intervene in War" and the engine
 # "Enforce Peace". Intervene is disabled mod-wide (see static_modifiers) because it
 # resolves with no input from the countries at war, which reads as unfair. This action
-# covers every case Intervene used to: great powers, regional powers, and any country
-# at all when one of the war leaders is its rival.
+# covers every case Intervene used to: Ars Belli Great Powers and Major Powers (the
+# mp_power_score ranks, not vanilla's), and any country at all when either leader of
+# the war is its rival.
 #
 # The engine Enforce Peace could not be reused because it is a single accept/decline by
 # one side. The required flow is defender first, attacker second:
@@ -26,23 +27,12 @@ ars_belli_enforce_peace = {
 		}
 	}
 
+	# Deliberately empty. The standing requirement needs to know WHICH war is being
+	# targeted - being rival to the attacker is just as valid as being rival to the
+	# defender - and scope:target is not set while the selection lists are being drawn.
+	# Testing it here greyed out every entry, so it lives on the war select_trigger's
+	# enabled block below, where root is the war and both leaders are reachable.
 	allow = {
-		custom_tooltip = {
-			text = ars_belli_enforce_peace_standing_tt
-			# Mod ranks, not vanilla ones: Ars Belli assigns Great / Major Power from
-			# mp_power_score (see scripted_triggers/mp_limits_triggers.txt), which is a
-			# different set of countries from vanilla's is_great_power / is_regional_power.
-			scope:actor = {
-				OR = {
-					is_mp_gp = yes
-					is_mp_major = yes
-					is_rival_of = scope:recipient
-					scope:target ?= {
-						attacker_leader = { is_rival_of = scope:actor }
-					}
-				}
-			}
-		}
 	}
 
 	select_trigger = {
@@ -81,6 +71,20 @@ ars_belli_enforce_peace = {
 			NOT = {
 				any_war_participant = {
 					this = scope:actor
+				}
+			}
+		}
+		# root is the war here, so both leaders are directly reachable and rivalry with
+		# either one counts. Mod ranks, not vanilla: Ars Belli assigns Great / Major
+		# Power from mp_power_score (see scripted_triggers/mp_limits_triggers.txt).
+		enabled = {
+			custom_tooltip = {
+				text = ars_belli_enforce_peace_standing_tt
+				OR = {
+					scope:actor = { is_mp_gp = yes }
+					scope:actor = { is_mp_major = yes }
+					attacker_leader = { is_rival_of = scope:actor }
+					defender_leader = { is_rival_of = scope:actor }
 				}
 			}
 		}
@@ -126,7 +130,7 @@ ars_belli_enforce_peace = {
 		if = {
 			limit = { exists = scope:target }
 			add = {
-				desc = "DIPLOREASON_WAR_SCORE"
+				desc = "DIPLOREASON_LOSING_WAR"
 				value = "scope:recipient.war_score_in_war_whole_side(scope:target)"
 				multiply = -1.5
 			}
@@ -159,7 +163,7 @@ ars_belli_enforce_peace = {
 				scope:actor = { is_mp_gp = yes }
 			}
 			add = {
-				desc = "DIPLOREASON_GREAT_POWER"
+				desc = "ars_belli_ep_reason_standing"
 				value = 20
 			}
 		}
@@ -170,7 +174,7 @@ ars_belli_enforce_peace = {
 				scope:actor = { NOT = { is_mp_gp = yes } }
 			}
 			subtract = {
-				desc = "DIPLOREASON_MILITARY_STRENGTH"
+				desc = "ars_belli_ep_reason_outmatched"
 				value = 100
 			}
 		}
