@@ -17,7 +17,7 @@ abm_npl_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# land_forcelimit_modifier = 0.25
-	army_maintenance_efficiency = 0.20
+	army_maintenance_efficiency = 0.10
 }
 
 abm_npl_ideas_tradition_2 = {
@@ -43,7 +43,7 @@ abm_divya_upadesh = {
 	requires = renaissance_thought
 
 	# diplomatic_reputation = 1
-	diplomatic_reputation = diplomatic_reputation_weak_bonus
+	improve_relation_impact = 0.20
 }
 
 abm_land_of_peaks = {
@@ -69,7 +69,7 @@ abm_valleys_united = {
 	requires = military_traditions
 
 	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.10
 }
 
 abm_rajput_refugees = {
@@ -83,6 +83,7 @@ abm_rajput_refugees = {
 
 	# army_tradition = 0.5
 	monthly_army_tradition = 0.05
+	army_tradition_decay = -0.001
 }
 
 abm_royal_kumari = {
@@ -160,7 +161,7 @@ abm_mug_ideas_tradition_2 = {
 	requires = horse_riding_advance
 
 	# cavalry_power = 0.20
-	army_heavy_cavalry_power = 0.20
+	army_heavy_cavalry_power = 0.10
 }
 
 mansabdari_system = {
@@ -172,7 +173,7 @@ mansabdari_system = {
 	requires = renaissance_thought
 
 	# discipline = 0.05
-	discipline = 0.05
+	military_tactics = 0.10
 }
 
 control_of_the_ulema = {
@@ -196,7 +197,7 @@ mughal_ibadat_khana = {
 	requires = military_traditions
 
 	# idea_cost = -0.1
-	research_speed_modifier = 0.10
+	research_speed_modifier = 0.05
 }
 
 an_indian_padshah = {
@@ -257,7 +258,7 @@ abm_mug_ideas_ambition = {
 	requires = fatawa_e_alamgiri
 
 	# technology_cost = -0.05
-	research_speed_modifier = 0.05
+	power_projection = 10
 }
 
 # PUN_ideas
@@ -325,7 +326,7 @@ abm_punjabi_textile_industry = {
 	requires = military_traditions
 
 	# production_efficiency = 0.15
-	global_production_efficiency = large_production_efficiency_bonus
+	global_production_efficiency = medium_production_efficiency_bonus
 }
 
 abm_foundation_of_the_khalsa = {
@@ -338,7 +339,8 @@ abm_foundation_of_the_khalsa = {
 	requires = feudalism_advance
 
 	# global_manpower_modifier = 0.2
-	global_manpower_modifier = 0.10
+	army_heavy_infantry_maintenance_cost_modifier = -0.10
+	army_artillery_maintenance_cost_modifier = -0.10
 }
 
 abm_gurmukhi_script = {
@@ -391,8 +393,8 @@ abm_pun_ideas_ambition = {
 	requires = horse_riding_advance
 
 	# cavalry_power = 0.1
-	army_heavy_cavalry_power = 0.10
-	army_light_cavalry_power = 0.10
+	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.10
 }
 
 # BHA_ideas
@@ -484,7 +486,7 @@ abm_bha_indian_army = {
 	requires = drill_army_advance
 
 	# discipline = 0.05
-	discipline = 0.05
+	possible_frontage_modifier = 0.10
 }
 
 abm_bha_ganga = {
@@ -591,7 +593,8 @@ abm_nepalese_minor_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# manpower_recovery_speed = 0.1
-	army_reinforce_efficiency = 0.10
+	army_heavy_infantry_maintenance_cost_modifier = -0.10
+	army_light_infantry_maintenance_cost_modifier = -0.10
 }
 
 abm_nep_construct_temples = {
@@ -718,6 +721,7 @@ abm_nep_judicial_reforms = {
 
 	# stability_cost_modifier = -0.1
 	stability_cost_efficiency = 0.10
+	stability_investment = small_stability_investment
 }
 
 abm_nep_end_division_of_domains = {
@@ -759,7 +763,7 @@ abm_nepalese_minor_ideas_ambition = {
 	requires = pike_square
 
 	# infantry_power = 0.1
-	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.20
 }
 
 # HIN_ideas
@@ -801,7 +805,7 @@ abm_hin_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# global_manpower_modifier = 0.2
-	global_manpower_modifier = 0.10
+	global_weaponry_output_modifier = 0.20
 }
 
 abm_hin_sepahi = {
@@ -858,7 +862,8 @@ abm_hin_indian_empire = {
 	requires = military_traditions
 
 	# years_of_nationalism = -5
-	pop_join_rebel_threshold = -0.05
+	pop_join_rebel_threshold = -0.03
+	monthly_religious_rebel_growth = -0.01
 }
 
 abm_hin_peacock_throne = {
@@ -904,7 +909,7 @@ abm_hin_gunpowder_empire = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# fire_damage = 0.1
-	army_light_cavalry_power = 0.10
+	global_firearms_output_modifier = 0.20
 	army_light_infantry_power = 0.10
 }
 
@@ -943,7 +948,7 @@ abm_hin_industrialization = {
 	requires = absolutist_court
 
 	# development_cost = -0.1
-	global_monthly_prosperity = 0.001
+	global_non_rural_monthly_prosperity = 0.002
 }
 
 abm_hin_ideas_ambition = {
@@ -962,7 +967,7 @@ abm_hin_ideas_ambition = {
 	requires = drill_army_advance
 
 	# discipline = 0.05
-	discipline = 0.05
+	military_tactics = 0.15
 }
 
 
@@ -1030,7 +1035,7 @@ abm_tolerate_idol_worshippers_i = {
 	requires = renaissance_thought
 
 	# religious_unity = 0.50
-	tolerance_own = 2
+	tolerance_heathen = 2
 }
 
 abm_persian_court = {
@@ -1072,7 +1077,7 @@ abm_comphrehensive_land_survey = {
 	requires = military_traditions
 
 	# global_tax_modifier = 0.10
-	global_estate_max_tax = 0.05
+	global_estate_max_tax = 0.025
 }
 
 abm_counting_the_people = {
@@ -1093,7 +1098,7 @@ abm_counting_the_people = {
 	requires = feudalism_advance
 
 	# global_manpower_modifier = 0.10
-	global_manpower_modifier = 0.10
+	morale_recovery_in_friendly = 0.05
 }
 
 abm_equality_under_law = {
@@ -1135,7 +1140,7 @@ abm_high_court_culture = {
 	requires = legalism_advance
 
 	# prestige = 1
-	monthly_prestige = 1
+	monthly_prestige = 0.10
 }
 
 abm_sultanate_bureaucracy = {
@@ -1156,7 +1161,7 @@ abm_sultanate_bureaucracy = {
 	requires = absolutist_court
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	stability_cost_efficiency = 0.20
 }
 
 abm_indian_muslim_ideas_ambition = {
@@ -1201,7 +1206,7 @@ abm_ldk_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# tolerance_own = 2
-	tolerance_own = 2
+	global_estate_target_satisfaction = medium_permanent_target_satisfaction
 }
 
 abm_ldk_ideas_tradition_2 = {
@@ -1333,7 +1338,8 @@ abm_ldk_la_dvags_rgyal_rabs = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	stability_decay = -0.00025
+	stability_investment = small_stability_investment
 }
 
 abm_ldk_kingdom_united = {
@@ -1432,7 +1438,7 @@ abm_jnp_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# diplomatic_upkeep = 1
-	diplomatic_upkeep_efficiency = 0.10
+	diplomatic_upkeep_efficiency = 0.20
 
 }
 
@@ -1733,5 +1739,5 @@ abm_kgr_ideas_ambition = {
 	requires = legalism_advance
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	monthly_rebel_growth = -0.0005
 }

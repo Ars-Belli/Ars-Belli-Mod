@@ -69,7 +69,8 @@ abm_waters_of_the_naga = {
     requires = legalism_advance
 
     # global_tax_modifier = 0.1
-    tax_income_efficiency = 0.10
+    burghers_estate_max_tax = 0.10
+    burghers_estate_target_satisfaction = medium_permanent_target_satisfaction
 }
 
 abm_the_white_elephant = {
@@ -105,6 +106,7 @@ abm_elephant_charge = {
     requires = regiment_reinforcement_speed_discovery
 
     # cavalry_flanking = 0.5
+    army_heavy_cavalry_power = 0.10
     army_light_cavalry_power = 0.10
 }
 
@@ -118,6 +120,7 @@ abm_dynastic_spread = {
 
     # diplomatic_upkeep = 1
     diplomatic_capacity = 1
+    diplomatic_spending_cost = -0.005
 }
 
 abm_lna_ideas_ambition = {
@@ -129,7 +132,7 @@ abm_lna_ideas_ambition = {
     requires = government_size_renaissance
 
     # development_cost = -0.1
-    global_monthly_prosperity = 0.001
+    global_monthly_prosperity = 0.002
 }
 
 # LIG_ideas
@@ -142,7 +145,7 @@ abm_lig_ideas_traditions_1 = {
     requires = subjects_advance
 
     # reduced_liberty_desire = 20
-    loyalty_to_overlord = 20
+    global_defensive = 0.20
 }
 
 abm_lig_ideas_traditions_2 = {
@@ -217,7 +220,6 @@ abm_bridge_to_malaya = {
     # hostile_attrition = 1
     # defensiveness = 0.2
     global_hostile_attrition = 1
-    global_defensive = 0.20
 }
 
 abm_spirit_of_rebellion = {
@@ -230,6 +232,7 @@ abm_spirit_of_rebellion = {
 
     # rebel_support_efficiency = 0.5
     spy_network_construction = 0.20
+    counter_espionage = 0.20
 }
 
 abm_trade_protection = {
@@ -279,7 +282,7 @@ abm_ark_ideas_traditions_2 = {
     requires = cultural_acceptance_advance
 
     # num_accepted_cultures = 1
-    cultures_capacity = 1
+    cultures_capacity = 1.5
 }
 
 abm_mrauk_u_dynasty = {
@@ -323,7 +326,7 @@ abm_bengal_bay_trade = {
     requires = coastal_trade_routes_advance
 
     # merchants = 1
-    global_merchant_power = 0.20
+    global_trades_per_burgher = 0.35
 }
 
 abm_magh_and_ferenghi = {
@@ -337,7 +340,7 @@ abm_magh_and_ferenghi = {
     # privateer_efficiency = 0.15
     # sailor_maintenance_modifer = -0.05
     global_merchant_power = 0.10
-    navy_maintenance_efficiency = 0.05
+    navy_maintenance_efficiency = 0.10
 }
 
 abm_buddhist_sultans = {
@@ -350,6 +353,7 @@ abm_buddhist_sultans = {
 
     # diplomatic_reputation = 1
     diplomatic_reputation = diplomatic_reputation_weak_bonus
+    diplomatic_annexation_efficiency = 0.2
 }
 
 abm_muslim_advisers = {
@@ -361,7 +365,9 @@ abm_muslim_advisers = {
     requires = government_size_renaissance
 
     # advisor_cost = -0.1
-    hire_advisor_cost_modifier = -0.10
+    hire_advisor_cost_modifier = -0.25
+    train_admiral_cost_modifier = -0.25
+    train_general_cost_modifier = -0.1
 }
 
 abm_trade_contracts_ark = {
@@ -373,7 +379,7 @@ abm_trade_contracts_ark = {
     requires = coastal_trade_routes_advance
 
     # trade_efficiency = 0.1
-    trade_income = 0.10
+    trade_income = 0.05
 }
 
 abm_ark_ideas_ambition = {
@@ -401,7 +407,7 @@ tau_traditions_1 = {
     requires = faster_levy_recruitment
 
     # leader_land_manuever = 1
-    train_general_ability = 1
+    train_general_ability = 15
 }
 
 tau_traditions_2 = {
@@ -462,6 +468,7 @@ nat_worship = {
 
     # religious_unity = 0.2
     clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
+    clergy_estate_satisfaction_recovery = 0.001
 }
 
 chakravartin = {
@@ -476,7 +483,7 @@ chakravartin = {
     requires = military_traditions
 
     # army_tradition = 0.5
-    monthly_army_tradition = 0.05
+    monthly_army_tradition = 0.10
 }
 
 the_hluttaw = {
@@ -491,7 +498,8 @@ the_hluttaw = {
     requires = state_administration_advance
 
     # global_unrest = -2
-    pop_join_rebel_threshold = -0.10
+    pop_join_rebel_threshold = -0.05
+    monthly_religious_rebel_growth = -0.01
 }
 
 tau_organized_campaigns = {
@@ -506,7 +514,7 @@ tau_organized_campaigns = {
     requires = supply_depot_advance_age_4_reformation
 
     # land_attrition = -0.10
-    land_unit_attrition = -0.10
+    land_unit_attrition = -0.20
 }
 
 bayingyi = {
@@ -521,7 +529,8 @@ bayingyi = {
     requires = pike_square
 
     # infantry_cost = -0.2
-    army_heavy_infantry_build_cost_modifier = -0.20
+    army_heavy_infantry_build_cost_modifier = -0.10
+    army_heavy_infantry_power = 0.20
 }
 
 tau_ambition = {
@@ -536,7 +545,7 @@ tau_ambition = {
     requires = imperial_ambitions
 
     # core_creation = -0.15
-    global_integration_speed_modifier = 0.15
+    possible_frontage_modifier = 0.10
 }
 
 
@@ -550,7 +559,7 @@ abm_peg_ideas_traditions_1 = {
     requires = coastal_trade_routes_advance
 
     # global_prov_trade_power_modifier = 0.10
-    global_merchant_power = 0.10
+    global_trade_through_owned_territory_efficiency = 0.10
 }
 
 abm_peg_ideas_traditions_2 = {
@@ -574,7 +583,7 @@ abm_riches_of_pegu = {
     requires = coastal_trade_routes_advance
 
     # trade_efficiency = 0.1
-    trade_income = 0.10
+    global_production_efficiency = medium_production_efficiency_bonus
 }
 
 abm_martabans = {
@@ -610,7 +619,8 @@ abm_rammanadesa = {
     requires = glorious_arms
 
     # land_morale = 0.1
-    land_morale_modifier = 0.10
+    discipline = 0.025
+    land_morale_modifier = 0.075
 }
 
 abm_dynamic_warfare = {
@@ -622,7 +632,7 @@ abm_dynamic_warfare = {
     requires = military_traditions
 
     # mil_tech_cost_modifier = -0.1
-    research_speed_modifier = 0.10
+    combat_speed_modifier = 0.20
 }
 
 abm_buddhist_traditions = {
@@ -654,7 +664,7 @@ abm_mon_diaspora = {
     requires = diplomatic_reputation_weak_bonus
 
     # diplomatic_reputation = 1
-    diplomatic_reputation = diplomatic_reputation_weak_bonus
+    cultures_capacity_modifier = 0.25
 }
 
 abm_peg_ideas_ambition = {
@@ -666,7 +676,7 @@ abm_peg_ideas_ambition = {
     requires = government_size_renaissance
 
     # development_cost = -0.1
-    global_monthly_prosperity = 0.001
+    global_max_literacy = 10
 }
 
 # laotian_ideas
@@ -684,7 +694,7 @@ abm_lao_ideas_traditions_1 = {
     requires = legalism_advance
 
     # tolerance_own = 2
-    tolerance_own = 2
+    tolerance_own = 3
 }
 
 abm_lao_ideas_traditions_2 = {
@@ -701,7 +711,7 @@ abm_lao_ideas_traditions_2 = {
     requires = legalism_advance
 
     # global_tax_modifier = 0.1
-    tax_income_efficiency = 0.10
+    tax_income_efficiency = medium_tax_income_efficiency_bonus
 }
 
 lao_phra_lak_phra_lam = {
@@ -718,7 +728,8 @@ lao_phra_lak_phra_lam = {
     requires = state_administration_advance
 
     # global_unrest = -1
-    pop_join_rebel_threshold = -0.05
+    pop_join_rebel_threshold = -0.03
+    global_monthly_urban_control = 0.003
 }
 
 lao_nithan_khun_borom = {
@@ -771,7 +782,7 @@ lao_elephant_cavalry = {
     requires = feudalism_advance
 
     # infantry_power = 0.1
-    army_heavy_infantry_power = 0.10
+    army_heavy_cavalry_power = 0.15
 }
 
 lao_southern_silk_road = {
@@ -788,7 +799,7 @@ lao_southern_silk_road = {
     requires = coastal_trade_routes_advance
 
     # trade_efficiency = 0.1
-    trade_income = 0.10
+    global_merchant_capacity_modifier = 0.20
 }
 
 lao_hill_warriors = {
@@ -805,7 +816,7 @@ lao_hill_warriors = {
     requires = supply_depot_advance_age_4_reformation
 
     # fort_maintenance_modifier = -0.1
-    fort_maintenance_cost = -0.10
+    fort_maintenance_efficiency = 0.20
 }
 
 abm_lao_ideas_ambition = {
@@ -822,7 +833,7 @@ abm_lao_ideas_ambition = {
     requires = imperial_ambitions
 
     # land_forcelimit_modifier = 0.2
-    global_levy_size_modifier = 0.20
+    army_reinforce_efficiency = 0.20
 }
 
 
@@ -855,6 +866,7 @@ abm_cha_ideas_traditions_2 = {
 
     # light_ship_power = 0.15
     navy_light_ship_power = 0.15
+    own_coast_naval_combat_bonus = 0.10
 }
 
 abm_my_son_temples = {
@@ -930,6 +942,7 @@ abm_che_man_legacy = {
 
     # improve_relation_modifier = 0.2
     improve_relation_impact = 0.20
+    diplomatic_annexation_efficiency = 0.20
 }
 
 abm_agarwood = {
@@ -944,7 +957,7 @@ abm_agarwood = {
     requires = coastal_trade_routes_advance
 
     # trade_efficiency = 0.1
-    trade_income = 0.10
+    global_lumber_output_modifier = 0.40
 }
 
 abm_resisting_foreign_rule = {
@@ -974,7 +987,7 @@ abm_cha_ideas_ambition = {
     requires = naval_ambitions
 
     # naval_forcelimit_modifier = 0.25
-    expected_navy_size_modifier = 0.25
+    global_sailors_modifier = 0.15
 }
 
 # LXA_ideas - Lan Xang (formable)
@@ -1017,7 +1030,7 @@ abm_lao_ethnic_diversity = {
     requires = cultural_acceptance_advance
 
     # num_accepted_cultures = 1
-    cultures_capacity = 1
+    cultures_capacity = 2
 }
 
 abm_elephant_cavalry = {
@@ -1067,7 +1080,7 @@ abm_flowering_of_culture = {
     requires = legalism_advance
 
     # stability_cost_modifier = -0.1
-    stability_cost_efficiency = 0.10
+    stability_cost_efficiency = 0.20
 }
 
 abm_merchants_of_vientiane = {
@@ -1091,7 +1104,7 @@ abm_renaissance_of_lan_xang = {
     requires = feudalism_advance
 
     # global_institution_spread = 0.1
-    global_institution_growth_modifier = 0.10
+    global_institution_growth_modifier = 0.20
 }
 
 abm_lxa_ideas_ambition = {
@@ -1103,7 +1116,9 @@ abm_lxa_ideas_ambition = {
     requires = imperial_ambitions
 
     # land_forcelimit_modifier = 0.2
-    global_levy_size_modifier = 0.20
+    army_heavy_infantry_maintenance_cost_modifier = -0.10
+    army_light_infantry_maintenance_cost_modifier = -0.10
+    army_artillery_maintenance_cost_modifier = -0.10
 }
 
 
@@ -1186,7 +1201,8 @@ abm_wet_rice = {
     requires = construction_speed_renaissance
 
     # production_efficiency = 0.10
-    global_production_efficiency = 0.10
+    global_pepper_output_modifier = 0.20
+    global_monthly_food_modifier = 0.2
 }
 
 abm_sao_pha = {
@@ -1206,7 +1222,8 @@ abm_sao_pha = {
     requires = legalism_advance
 
     # global_unrest = -1
-    pop_join_rebel_threshold = -0.05
+    pop_join_rebel_threshold = -0.03
+    monthly_religious_rebel_growth = -0.01
 }
 
 abm_control_of_the_gem_trade = {
@@ -1226,7 +1243,8 @@ abm_control_of_the_gem_trade = {
     requires = trade_range_advance_age_2
 
     # global_own_trade_power = 0.1
-    global_trade_center_power = 0.10
+    global_gems_output_modifier = 0.10
+    trade_land_efficiency = medium_trade_land_efficiency_bonus
 }
 
 abm_raiders = {
@@ -1316,7 +1334,7 @@ abm_shan_ideas_ambition = {
     requires = imperial_ambitions
 
     # leader_land_manuever = 2
-    train_general_ability = 2
+    global_pop_food_consumption = -0.10
 }
 
 
@@ -1452,7 +1470,6 @@ abm_suk_ideas_traditions_1 = {
     requires = feudalism_advance
 
     # diplomatic_reputation = 1
-    diplomatic_reputation = diplomatic_reputation_weak_bonus
 }
 
 abm_suk_ideas_traditions_2 = {
@@ -1464,7 +1481,6 @@ abm_suk_ideas_traditions_2 = {
     requires = organized_religion
 
     # tolerance_own = 2
-    tolerance_own = 2
 }
 
 abm_birthplace_of_a_culture = {
@@ -1476,7 +1492,6 @@ abm_birthplace_of_a_culture = {
     requires = legalism_advance
 
     # prestige = 1
-    monthly_prestige = 0.10
 }
 
 abm_akson_thai = {
@@ -1488,7 +1503,6 @@ abm_akson_thai = {
     requires = modern_bureaucracy
 
     # technology_cost = -0.05
-    research_speed_modifier = 0.05
 }
 
 abm_sawankalok_ware = {
@@ -1500,7 +1514,6 @@ abm_sawankalok_ware = {
     requires = global_trade_advance
 
     # trade_efficiency = 0.1
-    trade_income = 0.10
 }
 
 abm_wat_si_sawai = {
@@ -1512,7 +1525,6 @@ abm_wat_si_sawai = {
     requires = organized_religion
 
     # global_missionary_strength = 0.01
-    global_pop_conversion_speed_modifier = 0.10
 }
 
 abm_father_governs_children = {
@@ -1524,7 +1536,6 @@ abm_father_governs_children = {
     requires = legalism_advance
 
     # global_unrest = -1
-    pop_join_rebel_threshold = -0.05
 }
 
 abm_ramkhamhaeng_stele = {
@@ -1540,11 +1551,6 @@ abm_ramkhamhaeng_stele = {
     # republican_tradition = 0.3
     # meritocracy = 1
     # horde_unity = 1
-    monthly_legitimacy = 0.10
-    monthly_republican_tradition = 0.10
-    monthly_devotion = 0.10
-    monthly_horde_unity = 0.10
-    monthly_tribal_cohesion = 0.10
 }
 
 abm_war_elephants = {
@@ -1556,7 +1562,6 @@ abm_war_elephants = {
     requires = horse_riding_advance
 
     # cavalry_power = 0.1
-    army_heavy_cavalry_power = 0.10
 }
 
 abm_suk_ideas_ambition = {
@@ -1568,7 +1573,6 @@ abm_suk_ideas_ambition = {
     requires = imperial_ambitions
 
     # land_forcelimit_modifier = 0.25
-    global_levy_size_modifier = 0.25
 }
 
 
@@ -1582,7 +1586,7 @@ abm_mlc_ideas_traditions_1 = {
     requires = feudalism_advance
 
     # global_trade_power = 0.1
-    global_merchant_power = 0.10
+    sea_cost_on_distance_from_capital_when_maritime = -0.75
 }
 
 abm_mlc_ideas_traditions_2 = {
@@ -1594,7 +1598,7 @@ abm_mlc_ideas_traditions_2 = {
     requires = feudalism_advance
 
     # naval_forcelimit_modifier = 0.33
-    expected_navy_size_modifier = 0.33
+    navy_maintenance_efficiency = 0.15
 }
 
 abm_vassal_princes = {
@@ -1607,8 +1611,8 @@ abm_vassal_princes = {
 
     # reduced_liberty_desire = 10
     # vassal_income = 0.25
-    loyalty_to_overlord = 10
-    subject_pays_vassal_cost_modifier = 0.25
+    subject_loyalty = 5
+    subject_income_modifier = 0.05
 }
 
 abm_maritime_laws = {
@@ -1633,6 +1637,7 @@ abm_new_hegemony = {
 
     # diplomatic_reputation = 1
     diplomatic_reputation = diplomatic_reputation_weak_bonus
+    diplomatic_annexation_efficiency = 0.2
 }
 
 abm_islamic_sultanate = {
@@ -1644,7 +1649,7 @@ abm_islamic_sultanate = {
     requires = organized_religion
 
     # tolerance_own = 1
-    tolerance_own = 1
+    tolerance_own = 2
 }
 
 abm_habor_masters = {
@@ -1670,7 +1675,7 @@ abm_jawi_script = {
     requires = modern_bureaucracy
 
     # idea_cost = -0.1
-    research_speed_modifier = 0.10
+    research_speed_modifier = 0.05
 }
 
 abm_mlc_ideas_ambition = {
@@ -1696,7 +1701,8 @@ abm_malayan_idea_traditions_1 = {
     requires = coastal_trade_routes_advance
 
     # trade_steering = 0.1
-    global_trade_center_power = 0.10
+    export_efficiency = small_trade_efficiency_bonus
+    import_efficiency = tiny_trade_efficiency_bonus
 }
 
 abm_malayan_idea_traditions_2 = {
@@ -1721,7 +1727,8 @@ abm_malayan_indian_ocean_trade = {
     requires = trade_range_advance_age_2
 
     # merchants = 1
-    global_merchant_power = 0.20
+    global_maritime_presence_decay = -0.002
+    global_maritime_presence_modifier = 0.20
 }
 
 abm_malayan_sufi_legacy = {
@@ -1745,7 +1752,9 @@ abm_malayan_mal_spice_islands = {
     requires = construction_speed_renaissance
 
     # production_efficiency = 0.1
-    global_production_efficiency = 0.10
+    global_pepper_output_modifier = 0.10
+    global_incense_output_modifier = 0.10
+    global_cloves_output_modifier = 0.10
 }
 
 abm_malayan_classical_malay = {
@@ -1807,5 +1816,5 @@ abm_malayan_idea_ambition = {
     requires = imperial_ambitions
 
     # naval_tradition_from_battle = 0.5
-    navy_tradition_from_battle = 0.5
+    monthly_navy_tradition = 0.15
 }

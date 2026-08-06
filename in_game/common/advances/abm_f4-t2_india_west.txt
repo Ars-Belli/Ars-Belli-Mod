@@ -29,7 +29,7 @@ abm_rjp_ideas_tradition_2 = {
 	requires = army_professionalism
 
 	# land_morale = 0.1
-	land_morale_modifier = 0.10
+	land_morale_recovery = 0.02
 }
 
 abm_rjp_imperial_legacy = {
@@ -42,7 +42,7 @@ abm_rjp_imperial_legacy = {
 	requires = renaissance_thought
 
 	# core_creation = -0.15
-	global_integration_speed_modifier = 0.15
+	global_integration_speed_modifier = 0.20
 }
 
 abm_rjp_land_of_petty_princes = {
@@ -55,7 +55,7 @@ abm_rjp_land_of_petty_princes = {
 	requires = feudalism_advance
 
 	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.10
 }
 
 abm_marwari_horses = {
@@ -72,7 +72,7 @@ abm_marwari_horses = {
 
 	# cavalry_power = 0.15
 	# movement_speed = 0.1
-	army_heavy_cavalry_power = 0.15
+	army_heavy_cavalry_power = 0.10
 	army_movement_speed = 0.10
 }
 
@@ -86,8 +86,8 @@ abm_rjp_purbia_legacy = {
 	requires = pike_and_shot_advance
 
 	# fire_damage = 0.1
-	army_light_infantry_power = 0.10
-	army_light_cavalry_power = 0.10
+	army_heavy_infantry_maintenance_cost_modifier = -0.1
+	army_light_infantry_maintenance_cost_modifier = -0.1
 }
 
 abm_rjp_protectors_of_the_dharma = {
@@ -113,7 +113,7 @@ abm_rjp_expanded_artillery_arm = {
 	requires = feudalism_advance
 
 	# artillery_cost = -0.15
-	army_artillery_cost_modifier = -0.15
+	army_artillery_cost_modifier = -0.10
 }
 
 abm_rjp_monumental_architecture = {
@@ -147,7 +147,7 @@ abm_rjp_ideas_ambition = {
 	requires = drill_army_advance
 
 	# discipline = 0.05
-	discipline = 0.05
+	global_estate_target_satisfaction = small_permanent_target_satisfaction
 }
 
 
@@ -188,7 +188,7 @@ abm_clan_loyalties = {
 	requires = renaissance_thought
 
 	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.15
+	army_reinforce_efficiency = 0.20
 }
 
 abm_fortifying_rajputana = {
@@ -279,7 +279,7 @@ abm_rajput_ideas_ambition = {
 	requires = drill_army_advance
 
 	# discipline = 0.05
-	discipline = 0.05
+	possible_frontage_modifier = 0.10
 }
 
 # gujarati_ideas - muslim
@@ -321,6 +321,7 @@ abm_guj_kathiawari_horses = {
 
 	# cavalry_power = 0.1
 	army_light_cavalry_power = 0.10
+	army_heavy_cavalry_power = 0.10
 }
 
 abm_guj_trading_outposts = {
@@ -434,7 +435,7 @@ abm_snd_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# land_forcelimit_modifier = 0.25
-	global_levy_size_modifier = 0.25
+	army_initiative = 0.20
 }
 
 abm_snd_ideas_tradition_2 = {
@@ -533,7 +534,7 @@ abm_snd_oversee_rise_of_thatta = {
 	requires = feudalism_advance
 
 	# build_cost = -0.1
-	global_build_buildings_cost = -0.10
+	global_urban_build_buildings_efficiency = 0.2
 }
 
 abm_snd_recruit_baloch_tribesmen = {
@@ -547,6 +548,7 @@ abm_snd_recruit_baloch_tribesmen = {
 
 	# mercenary_discipline = 0.025
 	discipline = 0.025
+	land_morale_modifier = 0.075
 }
 
 abm_snd_ideas_ambition = {
@@ -559,7 +561,7 @@ abm_snd_ideas_ambition = {
 	requires = feudalism_advance
 
 	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.10
 }
 
 # Gujarati Princedoms
@@ -660,7 +662,7 @@ abm_gujarati_lipi = {
 	requires = military_traditions
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	stability_decay = -0.00025
 }
 
 abm_merchant_diaspora = {
@@ -740,7 +742,7 @@ abm_guj_africa = {
 	requires = absolutist_court
 
 	# merchants = 1
-	global_merchant_power = 0.20
+	global_trades_per_burgher = 0.20
 }
 
 abm_guj_ideas_ambition = {
@@ -802,7 +804,7 @@ abm_mer_rajput_heartland = {
 	requires = renaissance_thought
 
 	# army_tradition_decay = -0.01
-	army_tradition_decay = -0.01
+	army_tradition_decay = -0.001
 }
 
 abm_mer_victory_tower = {
@@ -854,7 +856,7 @@ abm_mer_recall_purbias = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.10
 }
 
 abm_mer_firearm_drilling = {
@@ -1032,7 +1034,8 @@ abm_peasant_soldiers = {
 	requires = military_traditions
 
 	# infantry_cost = -0.2
-	army_light_infantry_build_cost_modifier = -0.20
+	army_light_infantry_build_cost_modifier = -0.15
+	army_light_infantry_reinforce_cost_modifier = -0.15
 }
 
 abm_office_of_the_peshwa = {
@@ -1059,7 +1062,7 @@ abm_office_of_the_peshwa = {
 	requires = feudalism_advance
 
 	# core_creation = -0.15
-	global_integration_speed_modifier = 0.15
+	global_integration_speed_modifier = 0.20
 }
 
 abm_encourage_ties_with_brahmin_financial_families = {
@@ -1086,7 +1089,8 @@ abm_encourage_ties_with_brahmin_financial_families = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# reform_progress_growth = 0.15
-	global_bureaucracy_entrenchment_speed_modifier = 0.15
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
+	clergy_estate_satisfaction_recovery = 0.001
 }
 
 abm_reform_the_bureaucracy = {
@@ -1168,7 +1172,7 @@ abm_mar_ideas_ambition = {
 	requires = legalism_advance
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	stability_cost_efficiency = 0.20
 }
 
 # DHU_ideas
@@ -1183,7 +1187,7 @@ abm_dhu_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# land_morale = 0.1
-	land_morale_modifier = 0.10
+	land_morale_modifier = 0.15
 }
 
 abm_dhu_ideas_tradition_2 = {
