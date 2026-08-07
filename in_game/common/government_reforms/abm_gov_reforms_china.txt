@@ -142,6 +142,35 @@ abm_china_buddhist_order = {
 	years = 2
 }
 
+abm_china_ahimsa_crown_commitment = {
+	age = age_traditions
+
+	potential = {
+		OR = {
+			has_or_had_tag = CNP
+			has_or_had_tag = CTW
+		}
+		religion.group = religion_group:buddhist
+		original_capital = { sub_continent = sub_continent:east_asia }
+		government_type = government_type:theocracy
+	}
+
+	locked = {
+		OR = {
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_clergy_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_burghers_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_commoners_commitment
+		}
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+	}
+
+	years = 2
+}
+
 abm_china_ahimsa_code = {
 	icon = "GFX_reform_icon_ahimsa"  # Replace with an actual icon or create one
 	age = age_traditions
@@ -150,9 +179,16 @@ abm_china_ahimsa_code = {
 	potential = {
 		religion.group = religion_group:buddhist
 		original_capital = { sub_continent = sub_continent:east_asia }
+		government_type = government_type:theocracy
+	}
+
+	locked = {
 		OR = {
-			government_type = government_type:republic
-			government_type = government_type:theocracy
+			has_reform = government_reform:abm_china_ahimsa_crown_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_clergy_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_burghers_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_commoners_commitment
 		}
 	}
 
@@ -170,6 +206,11 @@ abm_china_ahimsa_code = {
 			has_or_had_tag = CNP
 			has_or_had_tag = CTW
 		}
+		has_reform = government_reform:abm_china_ahimsa_crown_commitment
+		has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
+		has_estate_privilege = estate_privilege:abm_china_ahimsa_clergy_commitment
+		has_estate_privilege = estate_privilege:abm_china_ahimsa_burghers_commitment
+		has_estate_privilege = estate_privilege:abm_china_ahimsa_commoners_commitment
 	}
 
 }
