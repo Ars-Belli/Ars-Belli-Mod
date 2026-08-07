@@ -1,19 +1,33 @@
 #!/usr/bin/env python3
-"""Update advance names, icons, and requires based on modifier-to-vanilla mapping.
+"""Regenerate advance icons based on modifier-to-vanilla mapping.
 
 Rules:
-- Mod advances never require each other (only vanilla prerequisites)
-- Traditions and ambitions keep their names (only icon/requires updated)
-- Middle advances get new Chinese-themed names + updated icon/requires
-- Every icon within a tag is unique
-- Requires are age-appropriate vanilla advances
+- Advance keys and prerequisites are never changed
+- Icons are selected from semantically related vanilla EU5 advances
+- Icon usage is balanced globally and kept unique within an idea group when possible
 
-Usage: python .tools/update_advance_names_icons_requires.py <path_to_file>
+Usage: python .tools/update_advance_names_icons_requires.py [file ...]
+    If no files are given, processes the India, Indochina, and Indonesia files.
 """
 
-import re, sys, random
+from collections import Counter, defaultdict
+from pathlib import Path
+import hashlib
+import re
+import runpy
+import sys
 
-random.seed(42)
+BASE = Path(__file__).resolve().parent.parent
+ADVANCE_DIR = BASE / "in_game/common/advances"
+VANILLA_ADVANCE_DIR = BASE / ".tools/eu5/advances"
+REGIONAL_MOD_MAP = runpy.run_path(
+    str(BASE / ".tools/update_india_advance_icons_requires.py")
+)["MOD_MAP"]
+TARGET_GLOBS = (
+        "abm_f4-t2_india_*.txt",
+        "abm_f4-t2_indochina.txt",
+        "abm_f4-t2_indonesia.txt",
+)
 
 # ── Modifier → (icon, requires, category) ──────────────────────────
 MOD_MAP = {
@@ -147,6 +161,133 @@ MOD_MAP = {
     'global_max_rgo_size_modifier_in_non_rural': ('agriculture_advance', 'rgo_logistics_discovery', 'terrain_rgo'),
     'global_road_building_time': ('road_building', 'paved_road_advance', 'terrain_road'),
     'road_cost_on_distance_from_capital': ('road_building', 'paved_road_advance', 'terrain_road_cost'),
+}
+
+# The regional updater contains newer modifier coverage. Keep this script's
+# mapping as the baseline, then prefer the newer entries where they overlap.
+MOD_MAP.update(REGIONAL_MOD_MAP)
+
+
+def add_modifier_mappings(keys, icon, requirement, category):
+    for key in keys.split():
+        MOD_MAP.setdefault(key, (icon, requirement, category))
+
+
+add_modifier_mappings(
+    """navy_light_ship_build_cost_modifier navy_galley_build_cost_modifier
+    navy_transport_build_cost_modifier navy_light_ship_power navy_galley_power
+    navy_heavy_ship_power heavy_ship_power own_coast_naval_combat_bonus
+    monthly_navy_tradition monthly_monthly_navy_tradition navy_tradition_decay
+    naval_morale_recovery navy_movement_speed train_admiral_ability
+    ship_durability privateer_maintenance_cost_modifier can_hire_privateers
+    allow_privateers_slave_raid sea_cost_on_distance_from_capital""",
+    'royal_navy', 'ship_building_advance', 'naval_maintenance',
+)
+add_modifier_mappings(
+    """fort_limit_modifier fort_maintenance_efficiency
+    army_light_infantry_maintenance_cost_modifier
+    army_heavy_infantry_maintenance_cost_modifier
+    army_artillery_maintenance_cost_modifier
+    army_light_cavalry_build_cost_modifier army_heavy_cavalry_build_cost_modifier
+    army_heavy_infantry_build_cost_modifier army_light_infantry_build_cost_modifier
+    army_artillery_cost_modifier army_heavy_infantry_reinforce_cost_modifier
+    army_light_infantry_reinforce_cost_modifier army_reinforce_efficiency
+    regiment_reinforcement_speed mercenary_maintenance_efficiency
+    train_general_ability train_general_cost_modifier combat_speed_modifier
+    army_tradition_decay army_tradition_from_battle light_infantry_power
+    land_morale_recovery global_war_score_efficiency declaring_war_cost_modifier
+    antagonism_received_modifier power_projection monthly_rebel_growth
+    aggressiveness_modifier""",
+    'army_professionalism', 'drill_army_advance', 'mil_discipline',
+)
+add_modifier_mappings(
+    """global_trade_through_owned_territory_efficiency
+    global_trade_through_owned_territory_cost_modifier
+    global_trades_per_burgher global_own_trade_power bank_interest""",
+    'merchants_and_trade', 'global_trade_advance', 'trade_merchant',
+)
+add_modifier_mappings(
+    """colonial_migration_size global_integration_speed_modifier
+    diplomatic_upkeep_efficiency diplomatic_annexation_cost max_diplomats
+    loyalty_to_overlord""",
+    'diplomatic_influence', 'formalized_relations', 'adm_relations',
+)
+add_modifier_mappings(
+    """cultures_capacity_modifier culture_capacity religion.group
+    number_of_allowed_religious_figures global_institution_growth_modifier
+    prestige_decay stability_decay stability_investment government_reforms
+    country_cabinet_efficiency set_cabinet_member_cost_modifier""",
+    'cultural_acceptance_advance', 'legalism_advance', 'pop_cultures',
+)
+add_modifier_mappings(
+    """global_max_rgo_size_modifier_in_rural global_raw_material_output
+    global_weaponry_output_modifier global_non_rural_monthly_prosperity
+    global_wool_output_modifier global_lumber_output_modifier
+    global_monthly_food_modifier global_pop_food_consumption
+    global_pepper_output_modifier global_incense_output_modifier
+    global_cloves_output_modifier""",
+    'agriculture_advance', 'rgo_logistics_discovery', 'res_rgo',
+)
+
+ICON_POOLS = {
+    'trade': (
+        'red_sea_trade', 'saharan_gold_trade', 'merchants_and_trade',
+        'global_trade_advance', 'global_trade_routes_advance', 'free_merchants',
+        'trade_caravans', 'incense_trade_route', 'zmw_merchant_taxes',
+    ),
+    'naval': (
+        'royal_navy', 'naval_ambitions', 'ship_building_advance',
+        'letters_of_marque', 'boarding_parties', 'maritime_advance_age_4',
+        'rudimentary_coastal_ship_repair', 'safe_exploration_techniques_advance',
+        'merchant_power_from_maritime_reformation_advance',
+    ),
+    'military': (
+        'glorious_arms', 'offensive_army', 'defensive_army',
+        'defensive_mentality', 'army_professionalism', 'drill_army_advance',
+        'regimental_system', 'expanded_supply_trains', 'pike_square',
+        'pike_and_shot_advance',
+    ),
+    'artillery': (
+        'artillery_institution_advance', 'gunpowder_advance',
+        'unlock_chambered_cannon_advance', 'offensive_army',
+        'siege_engineers_advance',
+    ),
+    'cavalry': (
+        'horse_riding_advance', 'finest_of_horses', 'elephant_cavalry',
+        'glorious_arms', 'offensive_army',
+    ),
+    'economy': (
+        'abacus_advance', 'court_accounting', 'banking_advance',
+        'debt_and_loans', 'city_building_advance', 'construction_speed_renaissance',
+        'efficient_mining', 'agriculture_advance', 'food_advance_renaissance',
+        'artists_advance',
+    ),
+    'administration': (
+        'smooth_administration', 'crown_power_advance_renaissance',
+        'legalism_advance', 'administrative_leadership', 'road_building',
+        'laws', 'government_size', 'a_central_power', 'renaissance_advance',
+        'town_rights_advance', 'bonded_by_loyalty',
+    ),
+    'diplomacy': (
+        'trade_envoys', 'diplomatic_training', 'diplomatic_influence',
+        'diplomatic_range_age_1', 'formalized_relations',
+        'students_of_foreign_courts', 'efficient_spies',
+    ),
+    'culture': (
+        'cultural_acceptance_advance', 'church_councils', 'organized_religion',
+        'library_advance', 'scholasticism', 'religious_melting_pot',
+        'bhakti_movement', 'buddhist_meditation', 'hindu_muslim_relations',
+        'vegetarianism', 'roman_orthodoxy',
+    ),
+    'estate': (
+        'crown_power_advance_renaissance', 'distribution_of_power_advance',
+        'court_accounting', 'local_nobility', 'peasants_rights_laws_advance',
+        'smooth_administration',
+    ),
+    'subject': (
+        'smooth_administration', 'trade_envoys', 'diplomatic_influence',
+        'formalized_relations', 'crown_power_advance_renaissance',
+    ),
 }
 
 # ── Category → name templates ─────────────────────────────────────
@@ -283,6 +424,21 @@ def find_block(text, key):
     return None, None
 
 
+def find_top_level_blocks(text):
+    for match in re.finditer(
+        r'(?m)^([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*\{', text
+    ):
+        depth = 0
+        for index in range(match.end() - 1, len(text)):
+            if text[index] == '{':
+                depth += 1
+            elif text[index] == '}':
+                depth -= 1
+                if depth == 0:
+                    yield match.group(1), match.start(), index + 1
+                    break
+
+
 def extract_modifiers(block_text):
     mods = []
     for line in block_text.split('\n'):
@@ -306,68 +462,157 @@ def get_mod_mapping(modifiers):
     return ('glorious_arms', 'feudalism_advance', 'mil_generic')
 
 
-def pick_name(category, existing_names):
-    templates = NAME_TEMPLATES.get(category, ['generic_advance'])
-    for t in templates:
-        if t not in existing_names:
-            return t
-    return f'{category}_advance'
+def load_vanilla_icons():
+    icons = set()
+    for filepath in VANILLA_ADVANCE_DIR.glob("*.txt"):
+        text = filepath.read_text(encoding="utf-8-sig")
+        icons.update(re.findall(r'(?m)^\s*icon\s*=\s*(\S+)', text))
+    if not icons:
+        raise RuntimeError(f"No vanilla icons found in {VANILLA_ADVANCE_DIR}")
+    return icons
 
 
-def transform_file(filepath):
-    with open(filepath) as f:
-        content = f.read()
+def category_family(category):
+    if category.startswith('trade_'):
+        return 'trade'
+    if category.startswith('naval_'):
+        return 'naval'
+    if category in {'mil_artillery', 'mil_fire', 'mil_siege'}:
+        return 'artillery'
+    if category in {'mil_heavy_cav', 'mil_light_cav'}:
+        return 'cavalry'
+    if category.startswith(('mil_', 'levy_', 'fort_')):
+        return 'military'
+    if category.startswith(('econ_', 'res_', 'terrain_')):
+        return 'economy'
+    if category.startswith('adm_'):
+        if category in {
+            'adm_diplomats', 'adm_reputation', 'adm_range', 'adm_relations',
+            'adm_spy', 'adm_espionage', 'adm_diplo_cost',
+        }:
+            return 'diplomacy'
+        return 'administration'
+    if category.startswith('pop_'):
+        return 'culture'
+    if category.startswith('est_'):
+        return 'estate'
+    if category.startswith('sub_'):
+        return 'subject'
+    if category.startswith('spec_'):
+        return 'administration'
+    return 'military'
 
-    all_keys = re.findall(r'^(abm_\w+) = \{', content, re.MULTILINE)
 
-    for old_key in all_keys:
-        start, end = find_block(content, old_key)
-        if start is None:
-            continue
+def potential_signature(block_text, key):
+    match = re.search(r'(?m)^\s*potential\s*=\s*\{', block_text)
+    if not match:
+        return key
+    depth = 0
+    for index in range(match.end() - 1, len(block_text)):
+        if block_text[index] == '{':
+            depth += 1
+        elif block_text[index] == '}':
+            depth -= 1
+            if depth == 0:
+                return re.sub(r'\s+', '', block_text[match.start():index + 1])
+    return key
 
+
+def choose_icon(key, primary, requirement, category, available_icons,
+                icon_counts, group_icons):
+    family = category_family(category)
+    candidates = [primary, requirement, *ICON_POOLS[family]]
+    candidates = list(dict.fromkeys(
+        candidate for candidate in candidates if candidate in available_icons
+    ))
+    if not candidates:
+        raise ValueError(f"No valid icon candidates for {key} ({category})")
+
+    rotation = int(hashlib.sha256(key.encode()).hexdigest()[:8], 16)
+    offset = rotation % len(candidates)
+    candidates = candidates[offset:] + candidates[:offset]
+    return min(
+        candidates,
+        key=lambda icon: (icon in group_icons, icon_counts[icon], candidates.index(icon)),
+    )
+
+
+def transform_file(filepath, available_icons, icon_counts):
+    raw = filepath.read_bytes()
+    has_bom = raw.startswith(b'\xef\xbb\xbf')
+    newline = '\r\n' if b'\r\n' in raw else '\n'
+    content = raw.decode('utf-8-sig').replace('\r\n', '\n')
+    used_by_group = defaultdict(set)
+    changed = 0
+    output_parts = []
+    cursor = 0
+
+    for key, start, end in find_top_level_blocks(content):
         block = content[start:end]
         mods = extract_modifiers(block)
         if not mods:
             continue
 
-        icon, req, cat = get_mod_mapping(mods)
-        tag = old_key.split('_')[1]
-        is_tradition_or_ambition = ('china_tradition' in old_key
-                                    or 'china_ambition' in old_key)
+        primary, requirement, category = get_mod_mapping(mods)
+        signature = potential_signature(block, key)
+        icon = choose_icon(
+            key, primary, requirement, category, available_icons,
+            icon_counts, used_by_group[signature],
+        )
 
-        # Process line by line
         lines = block.split('\n')
         new_lines = []
+        had_icon = any(line.strip().startswith('icon = ') for line in lines)
+        icon_written = False
         for line in lines:
             s = line.strip()
             if s.startswith('icon = '):
+                if icon_written:
+                    continue
                 indent = line[:len(line) - len(line.lstrip())]
-                line = f'{indent}icon = {icon}'
-            elif s.startswith('requires = ') and 'abm_' in s:
-                indent = line[:len(line) - len(line.lstrip())]
-                line = f'{indent}requires = {req}'
+                new_lines.append(f'{indent}icon = {icon}')
+                icon_written = True
+                continue
             new_lines.append(line)
+            if not had_icon and not icon_written and s.startswith('age = '):
+                indent = line[:len(line) - len(line.lstrip())]
+                new_lines.append(f'{indent}icon = {icon}')
+                icon_written = True
 
         new_block = '\n'.join(new_lines)
+        if not icon_written:
+            raise ValueError(f"Advance {key} has neither an icon nor an age field in {filepath}")
+        output_parts.extend((content[cursor:start], new_block))
+        cursor = end
+        used_by_group[signature].add(icon)
+        icon_counts[icon] += 1
+        changed += 1
 
-        if not is_tradition_or_ambition:
-            used_names = set()
-            for k in all_keys:
-                if k.startswith(f'abm_{tag}_'):
-                    used_names.add(k.replace(f'abm_{tag}_', '', 1))
-            new_name = pick_name(cat, used_names)
-            new_key = f'abm_{tag}_{new_name}'
-            new_block = new_block.replace(old_key + ' = {', new_key + ' = {', 1)
-
-        content = content[:start] + new_block + content[end:]
-
-    with open(filepath, 'w') as f:
-        f.write(content)
-    print(f'Done: {filepath}')
+    output_parts.append(content[cursor:])
+    content = ''.join(output_parts)
+    output = content.replace('\n', newline).encode('utf-8')
+    if has_bom:
+        output = b'\xef\xbb\xbf' + output
+    filepath.write_bytes(output)
+    print(f'Done: {filepath} ({changed} icons)')
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print("Usage: python update_advance_names_icons_requires.py <file>")
-        sys.exit(1)
-    transform_file(sys.argv[1])
+    if len(sys.argv) > 1:
+        files = [Path(arg).resolve() for arg in sys.argv[1:]]
+    else:
+        files = sorted({
+            filepath
+            for pattern in TARGET_GLOBS
+            for filepath in ADVANCE_DIR.glob(pattern)
+        })
+
+    available_icons = load_vanilla_icons()
+    icon_counts = Counter()
+    for filepath in files:
+        transform_file(filepath, available_icons, icon_counts)
+
+    print(
+        f"\nProcessed {len(files)} files using {len(icon_counts)} distinct icons; "
+        f"most-used icon appears {max(icon_counts.values(), default=0)} times"
+    )
