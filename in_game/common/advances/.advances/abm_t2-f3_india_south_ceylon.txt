@@ -1,0 +1,370 @@
+# Tamilakam (formable) - ABTML
+# Dambadeniya (Ceylon) - DBD
+# Maabar (Tamil Nadu) - MAB
+
+
+############################
+# Dambadeniya (Ceylon)
+# Focus on maritime, trade, and economy
+############################
+
+############################
+# age_1_traditions
+############################
+abm_dbd_island_harbor_dues = {
+	age = age_1_traditions
+	icon = ship_building_advance
+	requires = ship_building_advance
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	trade_range_modifier = 0.25
+	global_sailors_modifier = 0.10
+}
+
+############################
+# age_2_renaissance
+############################
+abm_dbd_pepper_trade = {
+	age = age_2_renaissance
+	icon = merchants_and_trade
+	requires = standardized_coins
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	global_pepper_output_modifier = 0.20
+}
+
+abm_dbd_dockyard_ledgering = {
+	age = age_2_renaissance
+	icon = court_accounting
+	requires = merchants_and_trade
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+    own_coast_naval_combat_bonus = 0.1
+	navy_initiative = 0.10
+}
+
+
+############################
+# age_3_discovery
+############################
+abm_dbd_lanka_shipping_houses = {
+	age = age_3_discovery
+	icon = global_trade_routes_advance
+	requires = maritime_advance_age_3
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	global_merchant_capacity_modifier = 0.10
+	merchant_power_from_maritime_modifier = 0.10
+}
+
+abm_dbd_indian_ocean_pilotage = {
+	age = age_3_discovery
+	icon = diplomatic_range_age_1
+	requires = trade_range_advance_age_3
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	sea_cost_on_distance_from_capital_when_maritime = -0.25
+    port_cost_distance_from_capital = -2.5
+}
+
+abm_dbd_steam_harbor_reforms = {
+	age = age_3_discovery
+	icon = smooth_administration
+	requires = abm_dbd_indian_ocean_pilotage
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	num_naval_governors = 1
+}
+
+############################
+# age_4_reformation
+############################
+abm_dbd_cinnamon_customs = {
+	age = age_4_reformation
+	icon = merchants_and_trade
+	requires = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	trade_sea_efficiency = 0.10
+}
+
+abm_dbd_port_granary_network = {
+	age = age_4_reformation
+	icon = court_accounting
+	requires = pop_promotion_speed_age_4
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	global_monthly_food_modifier = 0.10
+	global_build_buildings_cost = -0.10
+}
+
+############################
+# age_5_absolutism
+############################
+
+abm_dbd_colombo_arsenals = {
+	age = age_5_absolutism
+	icon = ship_building_advance
+	requires = naval_morale_advance_5
+	potential = {
+		has_or_had_tag = DBD
+	}
+
+	navy_heavy_ship_build_cost_modifier = -0.10
+	ship_repair_at_sea_to_max_strength = 0.05
+}
+
+
+############################
+# Maabar (Tamil Nadu)
+# Focus on production, defense, attrition, and tall gameplay
+############################
+
+############################
+# age_1_traditions
+############################
+abm_mab_tamil_weavers_guilds = {
+	age = age_1_traditions
+	icon = guilds
+	requires = agriculture_advance
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	global_production_efficiency = medium_production_efficiency_bonus
+    government_size = 1
+}
+
+
+############################
+# age_2_renaissance
+############################
+abm_mab_iron_foundries = {
+	age = age_2_renaissance
+	icon = efficient_mining
+	requires = armory_advance
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	global_iron_output_modifier = 0.15
+	global_tools_output_modifier = 0.15
+}
+
+abm_mab_frontier_stockades = {
+	age = age_2_renaissance
+	icon = bastion_advance
+	requires = construction_speed_renaissance
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	global_defensive = 0.20
+	fort_limit = 0.20
+}
+
+############################
+# age_3_discovery
+############################
+abm_mab_saltpeter_contracts = {
+	age = age_3_discovery
+	icon = efficient_mining
+	requires = rgo_logistics_discovery
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	global_saltpeter_output_modifier = 0.15
+}
+
+abm_mab_nadu_revenue_surveys = {
+	age = age_3_discovery
+	icon = court_accounting
+	requires = pop_promotion_speed_age_3
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	global_monthly_development = 0.001
+}
+
+abm_mab_coastal_war_fleet = {
+	age =  age_3_discovery
+	icon = naval_traditions_advance
+	requires = ???
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	own_coast_naval_combat_bonus = 0.10
+}
+
+############################
+# age_4_reformation
+############################
+abm_mab_hill_fort_lines = {
+	age = age_4_reformation
+	icon = bastion_advance
+	requires = bastion_advance
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	army_heavy_infantry_power = 0.10
+    army_light_infantry_power = 0.10
+}
+
+
+############################
+# age_5_absolutism
+############################
+abm_mab_state_arsenal_contracts = {
+	age = age_5_absolutism
+	icon = regimental_system
+	requires = military_revolution_advance
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	merchant_power_from_maritime_modifier = 0.2
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+}
+
+abm_mab_urban_craft_expansion = {
+	age = age_5_absolutism
+	icon = merchants_and_trade
+	requires = the_constitution
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	global_monthly_control = 0.001
+}
+
+############################
+# age_6_revolutions
+############################
+
+abm_mab_powder_logistics_corps = {
+	age = age_6_revolutions
+	icon = supply_depot_advance_age_4_reformation
+	requires = conscription_center_advance
+	potential = {
+		has_or_had_tag = MAB
+	}
+
+	global_hostile_attrition = 1
+	land_unit_attrition = -0.10
+}
+
+############################
+# Tamilakam (formable. India)
+# Sailan, Tamil Nadu, Malabar, Maldives
+############################
+
+############################
+# age_3_discovery
+############################
+abm_abtml_coromandel_marine_reforms = {
+	age = age_3_discovery
+	icon = naval_traditions_advance
+	requires = trade_range_advance_age_3
+	potential = {
+		has_or_had_tag = ABTML
+	}
+
+	army_light_infantry_power = 0.10
+}
+
+abm_abtml_harbor_registry = {
+	age = age_3_discovery
+	icon = global_trade_routes_advance
+	requires = maritime_advance_age_3
+	potential = {
+		has_or_had_tag = ABTML
+	}
+
+	army_disembark_speed = 0.20
+}
+
+############################
+# age_4_reformation
+############################
+abm_abtml_guild_tax_charters = {
+	age = age_4_reformation
+	icon = debt_and_loans
+	requires = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = ABTML
+	}
+
+	bank_interest = -0.01
+	total_loan_capacity_modifier = 0.25
+}
+
+abm_abtml_blue_water_command = {
+	age = age_4_reformation
+	icon = naval_traditions_advance
+	requires = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = ABTML
+	}
+
+	navy_initiative = 0.25
+}
+
+abm_abtml_pearl_fishery_prosperity = {
+	age = age_4_reformation
+	icon = merchants_and_trade
+	requires = abm_abtml_guild_tax_charters
+	potential = {
+		has_or_had_tag = ABTML
+	}
+
+	global_monthly_prosperity = 0.001
+}
+
+############################
+# age_5_absolutism
+############################
+abm_abtml_imperial_customs_board = {
+	age = age_5_absolutism
+	icon = court_accounting
+	requires = maritime_advance_age_5
+	potential = {
+		has_or_had_tag = ABTML
+	}
+
+	government_reform_slots = 1
+}
+
+
+############################
+# age_6_revolutions
+############################
+abm_abtml_central_works_ministry = {
+	age = age_6_revolutions
+	icon = smooth_administration
+	requires = commerce_center_advance
+	potential = {
+		has_or_had_tag = ABTML
+	}
+
+	monthly_republican_tradition = 0.15
+}

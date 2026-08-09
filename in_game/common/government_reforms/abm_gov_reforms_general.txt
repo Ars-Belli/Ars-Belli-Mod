@@ -1,0 +1,42 @@
+﻿REPLACE:manden_kurufa_reform = {
+	major = yes
+	unique = yes
+	age = age_1_traditions
+	potential = {
+		has_advance = kouroukan_fouga_advance
+	}
+	country_modifier = {
+		cultural_tradition = 0.5
+		monthly_towards_decentralization = societal_value_minor_monthly_move
+		stability_decay = -0.00025
+		global_crown_estate_power = 0.05
+	}
+	years = 2
+}
+
+REPLACE:merchant_republic = {
+	major = yes
+	government = republic
+
+	potential = {
+		OR = {
+			original_capital ?= { sub_continent = sub_continent:western_europe }
+			original_capital ?= { sub_continent = sub_continent:eastern_europe }
+			original_capital ?= { sub_continent = sub_continent:north_africa }
+			original_capital ?= { sub_continent = sub_continent:middle_east }
+		}
+	}
+
+	country_modifier = {
+		global_merchant_capacity_modifier = 0.50
+		trade_income = 0.20
+		global_foreign_build_buildings_efficiency = 1.0
+
+		merchant_maintenance_efficiency = 0.50
+		global_integration_speed_modifier = -0.25
+		court_language_is_market_language_importance_modifier = 15
+
+	}
+
+	years = 2
+}

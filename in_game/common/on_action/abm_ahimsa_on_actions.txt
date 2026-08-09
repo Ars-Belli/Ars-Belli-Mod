@@ -1,0 +1,18 @@
+﻿on_war_declared = {
+	on_actions = {
+		abm_ahimsa_on_war_declared
+	}
+}
+
+abm_ahimsa_on_war_declared = {
+	effect = {
+		scope:actor = {
+			if = {
+				limit = {
+					has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
+				}
+				add_stability = stability_ultimate_penalty
+			}
+		}
+	}
+}

@@ -1,0 +1,216 @@
+# China-East
+
+# Fang - labourers boost
+
+abm_wuu_people_granary_circuit_reform = {
+	major = no
+	unique = yes
+	age = age_3_discovery
+	potential = {
+		has_advance = abm_wuu_people_granary_circuit
+	}
+	country_modifier = {
+		global_laborers_city_desired_pop_scaled = 0.01
+		global_laborers_rural_desired_pop_scaled = 0.01
+		global_laborers_city_desired_pop = 0.050
+		global_laborers_rural_desired_pop = 0.100
+
+	}
+	years = 2
+}
+
+
+# Wu - Noble Admiralty
+abm_cfn_noble_board_regime = {
+	major = yes
+	unique = yes
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = CFN
+		num_of_ports > 0
+	}
+	locked = {
+		always = yes
+	}
+	allow = {
+		NOR = { 
+			has_reform = government_reform:military_regime_reform
+			has_reform = government_reform:admiralty_regime_reform 
+		}
+	}
+	country_modifier = {
+		trade_income = 0.10
+		global_merchant_capacity_modifier = 0.25
+		global_foreign_build_buildings_efficiency = 0.50
+		allow_privateers_slave_raid = yes
+		can_hire_privateers = yes
+		auto_slave_raid = yes
+	}
+	years = 2
+}
+
+abm_china_pirates = {
+	major = yes
+	government = republic
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+		capital = { sub_continent = sub_continent:east_asia }
+	}
+
+	locked = {
+		always = yes
+	}
+
+	country_modifier = {
+		can_hire_privateers = yes
+		allow_privateers_slave_raid = yes
+		auto_slave_raid = yes
+		monthly_towards_naval = societal_value_large_monthly_move
+		navy_maintenance_efficiency = 0.20
+		global_sailors_modifier = 0.10
+		court_language_is_common_language_importance_modifier = 15
+	}
+
+	on_activate = {
+		change_heir_selection = heir_selection:pirate_elective
+	}
+
+	years = 2
+}
+
+abm_china_meritocratic_republic = {
+	major = yes
+	government = republic
+
+	potential = {
+		culture = { has_culture_group = culture_group:chinese_group }
+		capital = { sub_continent = sub_continent:east_asia }
+	}
+
+	# locked = {
+	# 	always = yes
+	# }
+
+	country_modifier = {
+		global_merchant_capacity_modifier = 0.25
+		trade_income = 0.10
+		global_foreign_build_buildings_efficiency = 0.50
+
+		merchant_maintenance_efficiency = 0.25
+		selling_efficiency = medium_trade_efficiency_bonus
+		import_efficiency = small_trade_efficiency_bonus
+	}
+
+	on_activate = {
+		change_heir_selection = heir_selection:oligarchic_elective
+	}
+
+	years = 2
+}
+
+abm_china_buddhist_order = {
+	age = age_1_traditions
+	major = yes
+	government = theocracy
+
+	potential = {
+		religion.group = religion_group:buddhist
+		original_capital = { sub_continent = sub_continent:east_asia }
+	}
+
+	# locked = {
+	# 	always = yes
+	# }
+
+	country_modifier = {
+		clergy_estate_allowed_leading_military = yes
+		clergy_estate_blocked_from_leading_military = no
+		clergy_estate_levy_size = 0.35
+		army_light_infantry_power = 0.10
+		damage_done_versus_heathens_modifier = 0.10
+		unlock_building = abm_buddhist_monastery_stronghold
+
+		monthly_towards_defensive = societal_value_monthly_move
+		monthly_towards_quality = societal_value_monthly_move
+	}
+
+	on_activate = {
+		change_heir_selection = heir_selection:oligarchic_elective
+	}
+
+	years = 2
+}
+
+abm_china_ahimsa_crown_commitment = {
+	age = age_traditions
+
+	potential = {
+		OR = {
+			has_or_had_tag = CNP
+			has_or_had_tag = CTW
+		}
+		religion.group = religion_group:buddhist
+		original_capital = { sub_continent = sub_continent:east_asia }
+		government_type = government_type:theocracy
+	}
+
+	locked = {
+		OR = {
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_clergy_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_burghers_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_commoners_commitment
+		}
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+	}
+
+	years = 2
+}
+
+abm_china_ahimsa_code = {
+	icon = "GFX_reform_icon_ahimsa"  # Replace with an actual icon or create one
+	age = age_traditions
+
+	# For China / East Asia Buddhist flavor
+	potential = {
+		religion.group = religion_group:buddhist
+		original_capital = { sub_continent = sub_continent:east_asia }
+		government_type = government_type:theocracy
+	}
+
+	locked = {
+		OR = {
+			has_reform = government_reform:abm_china_ahimsa_crown_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_clergy_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_burghers_commitment
+			has_estate_privilege = estate_privilege:abm_china_ahimsa_commoners_commitment
+		}
+	}
+
+	country_modifier = {
+		can_declare_war = no
+		global_monthly_development = 0.0025
+		global_monthly_prosperity = 0.0025
+		blocked_from_declaring_war = yes
+	}
+
+	years = 2
+
+	allow = {
+		OR = {
+			has_or_had_tag = CNP
+			has_or_had_tag = CTW
+		}
+		has_reform = government_reform:abm_china_ahimsa_crown_commitment
+		has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
+		has_estate_privilege = estate_privilege:abm_china_ahimsa_clergy_commitment
+		has_estate_privilege = estate_privilege:abm_china_ahimsa_burghers_commitment
+		has_estate_privilege = estate_privilege:abm_china_ahimsa_commoners_commitment
+	}
+
+}
