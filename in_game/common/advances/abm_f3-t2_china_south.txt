@@ -31,7 +31,7 @@ abm_lez_china_tradition_2 = {
 	}
 	requires = construction_speed_renaissance
 
-	global_production_efficiency = medium_production_efficiency_bonus
+	monthly_diplomats = 0.10
 }
 
 abm_lez_distant_market_expedition = {
@@ -318,7 +318,7 @@ abm_mne_china_tradition_2 = {
 	}
 	requires = supply_lines
 
-	land_unit_attrition = -0.10
+	food_consumption_modifier = -0.1
 }
 
 abm_mne_light_infantry_doctrine = {
@@ -326,7 +326,10 @@ abm_mne_light_infantry_doctrine = {
 	icon = glorious_arms
 
 	potential = {
-		has_or_had_tag = MNE
+		OR = {
+			has_or_had_tag = MNE
+			has_or_had_tag = ABSCP
+		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
 	requires = pike_and_shot_advance
