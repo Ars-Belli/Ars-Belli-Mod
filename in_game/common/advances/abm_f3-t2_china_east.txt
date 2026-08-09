@@ -17,46 +17,7 @@
 
 abm_cgu_china_tradition_1 = {
 	age = age_1_traditions
-	icon = arduous_terrain
-
-	potential = {
-		has_or_had_tag = CGU
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = medieval_administration
-
-	court_spending_efficiency = 0.10
-}
-
-abm_cgu_china_tradition_2 = {
-	age = age_1_traditions
-	icon = gunpowder_advance
-
-	potential = {
-		has_or_had_tag = CGU
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = medieval_administration
-
-	nobles_estate_levy_size = 0.25
-}
-
-abm_cgu_merchant_association = {
-	age = age_2_renaissance
-	icon = hun_strengthened_towns
-
-	potential = {
-		has_or_had_tag = CGU
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = construction_speed_renaissance
-
-	global_merchant_capacity_modifier = 0.25
-}
-
-abm_cgu_territorial_control_edict = {
-	age = age_2_renaissance
-	icon = students_of_foreign_courts
+	icon = laws
 
 	potential = {
 		has_or_had_tag = CGU
@@ -64,12 +25,25 @@ abm_cgu_territorial_control_edict = {
 	}
 	requires = regulate_court_procedures
 
-	global_monthly_control = 0.002
+	court_spending_efficiency = 0.10
 }
 
-abm_cgu_diplomatic_corps_expansion = {
-	age = age_3_discovery
-	icon = slave_raiding_wars
+abm_cgu_china_tradition_2 = {
+	age = age_1_traditions
+	icon = peasants_rights_laws_advance
+
+	potential = {
+		has_or_had_tag = CGU
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = feudalism_advance
+
+	nobles_estate_levy_size = 0.25
+}
+
+abm_cgu_trade_guild_charter = {
+	age = age_2_renaissance
+	icon = incense_trade_route
 
 	potential = {
 		has_or_had_tag = CGU
@@ -77,19 +51,45 @@ abm_cgu_diplomatic_corps_expansion = {
 	}
 	requires = global_trade_advance
 
-	monthly_diplomats = 0.10
-	unlock_subject_type = march
+	global_merchant_capacity_modifier = 0.25
 }
 
-abm_cgu_noble_and_military_settlement = {
-	age = age_3_discovery
-	icon = colonial_ambition
+abm_cgu_prefectural_administration = {
+	age = age_2_renaissance
+	icon = a_central_power
 
 	potential = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = trade_envoys
+	requires = legalism_advance
+
+	global_monthly_control = 0.002
+}
+
+abm_cgu_envoy_training_academy = {
+	age = age_3_discovery
+	icon = diplomatic_training
+
+	potential = {
+		has_or_had_tag = CGU
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = colonial_charters
+
+	monthly_diplomats = 0.10
+	unlock_subject_type = march
+}
+
+abm_cgu_gentry_town_residence = {
+	age = age_3_discovery
+	icon = smooth_administration
+
+	potential = {
+		has_or_had_tag = CGU
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = colonial_charters
 
 	global_nobles_city_desired_pop_scaled=0.005
 	global_nobles_rural_desired_pop_scaled=0.001
@@ -97,23 +97,23 @@ abm_cgu_noble_and_military_settlement = {
 	global_soldiers_rural_desired_pop_scaled = 0.010
 }
 
-abm_cgu_military_discipline_code = {
+abm_cgu_army_regulation_reform = {
 	age = age_4_reformation
-	icon = zakah
+	icon = expanded_supply_trains
 
 	potential = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = imperial_ambitions
+	requires = recruitment_improvements_reformation
 
 	discipline = 0.025
 	army_tradition = 0.10
 }
 
-abm_cgu_maximum_taxation_edict = {
+abm_cgu_estate_fiscal_code = {
 	age = age_4_reformation
-	icon = enlightenment_advance
+	icon = crown_power_advance_renaissance
 
 	potential = {
 		OR = {
@@ -122,27 +122,27 @@ abm_cgu_maximum_taxation_edict = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = power_projection_advance_3
+	requires = crown_power_advance_reformation
 
 	global_estate_max_tax = 0.05
 }
 
-abm_cgu_siege_engineer_corps = {
+abm_cgu_siege_warfare_bureau = {
 	age = age_5_absolutism
-	icon = riches_of_asia
+	icon = gunpowder_advance
 
 	potential = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = absolute_rulership
+	requires = manufactories_advance
 
 	artillery_bonus_vs_fort = 1
 }
 
 abm_cgu_china_ambition = {
 	age = age_6_revolutions
-	icon = geo_georgian_script
+	icon = bonded_by_loyalty
 
 	potential = {
 		has_or_had_tag = CGU
@@ -157,33 +157,60 @@ abm_cgu_china_ambition = {
 
 abm_cfn_china_tradition_1 = {
 	age = age_1_traditions
-	icon = religious_toleration
+	icon = free_merchants
 
 	potential = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = merchants_and_trade
+	requires = guilds
 
 	export_efficiency = medium_trade_efficiency_bonus
 }
 
 abm_cfn_china_tradition_2 = {
 	age = age_1_traditions
-	icon = trade_caravans
+	icon = global_trade_routes_advance
 
 	potential = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = merchants_and_trade
+	requires = guilds
 
 	import_efficiency = medium_trade_efficiency_bonus
 }
 
-abm_cfn_ocean_going_fleet = {
+abm_cfn_distant_seas_command = {
 	age = age_2_renaissance
-	icon = independence_from_mali
+	icon = safe_exploration_techniques_advance
+
+	potential = {
+		has_or_had_tag = CFN
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = trade_range_advance_age_2
+
+	naval_range_modifier = 0.20
+}
+
+abm_cfn_war_junk_refit = {
+	age = age_2_renaissance
+	icon = naval_morale_advance_1
+
+	potential = {
+		has_or_had_tag = CFN
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = naval_morale_advance_1
+
+	can_convert_galleys_to_light = yes
+	naval_damage_done = 0.10
+}
+
+abm_cfn_maritime_outpost_chain = {
+	age = age_3_discovery
+	icon = ship_building_advance
 
 	potential = {
 		has_or_had_tag = CFN
@@ -191,39 +218,12 @@ abm_cfn_ocean_going_fleet = {
 	}
 	requires = ship_building_techniques_discovery
 
-	naval_range_modifier = 0.20
-}
-
-abm_cfn_war_junk_refit = {
-	age = age_2_renaissance
-	icon = akt_ezo_kanrei
-
-	potential = {
-		has_or_had_tag = CFN
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = privateers
-
-	can_convert_galleys_to_light = yes
-	naval_damage_done = 0.10
-}
-
-abm_cfn_coastal_haven_network = {
-	age = age_3_discovery
-	icon = imperial_ambitions
-
-	potential = {
-		has_or_had_tag = CFN
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = trade_envoys
-
 	global_maritime_presence_modifier = 0.20
 }
 
 abm_cfn_maritime_supply_chain = {
 	age = age_3_discovery
-	icon = military_modernization
+	icon = expansionism
 
 	potential = {
 		OR = {
@@ -232,53 +232,53 @@ abm_cfn_maritime_supply_chain = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = merchant_power_from_maritime_discovery_advance
+	requires = ship_building_techniques_discovery
 
 	sea_cost_on_distance_from_capital_when_maritime = -1
 }
 
 abm_cfn_armored_warships = {
 	age = age_4_reformation
-	icon = hsa_concept_of_mercantilism
+	icon = letters_of_marque
 
 	potential = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = imperial_ambitions
+	requires = letters_of_marque
 
 	naval_damage_taken = -0.10
 }
 
-abm_cfn_mariner_conscription = {
+abm_cfn_coastal_recruitment = {
 	age = age_4_reformation
-	icon = feudalism_advance
+	icon = nor_bounties_of_the_sea
 
 	potential = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = power_projection_advance_3
+	requires = letters_of_marque
 
 	global_sailors_modifier = 0.10
 }
 
-abm_cfn_blockade_squadron = {
+abm_cfn_coastal_blockade_corps = {
 	age = age_5_absolutism
-	icon = otm_nanban_trade
+	icon = maritime_advance_age_4
 
 	potential = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = absolute_rulership
+	requires = central_bank_advance
 
 	blockade_efficiency = 0.20
 }
 
 abm_cfn_china_ambition = {
 	age = age_6_revolutions
-	icon = kutnohorian_deal
+	icon = drill_army_advance
 
 	potential = {
 		has_or_had_tag = CFN
@@ -286,7 +286,7 @@ abm_cfn_china_ambition = {
 	}
 	requires = modern_bureaucracy
 
-	naval_range_modifier = 0.20
+	army_disembark_speed = 0.35
 }
 
 
@@ -297,7 +297,7 @@ abm_cfn_china_ambition = {
 
 abm_wuu_china_tradition_1 = {
 	age = age_1_traditions
-	icon = llama_michis
+	icon = guilds
 
 	potential = {
 		has_or_had_tag = WUU
@@ -306,26 +306,24 @@ abm_wuu_china_tradition_1 = {
 	requires = guilds
 
 	burghers_estate_max_tax = 0.05
-	global_burghers_estate_power = -0.10
 }
 
 abm_wuu_china_tradition_2 = {
 	age = age_1_traditions
-	icon = merchant_power_from_maritime_reformation_advance
+	icon = peasants_rights_laws_advance
 
 	potential = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = guilds
+	requires = distribution_of_power_advance
 
-	nobles_estate_max_tax = 0.05
 	global_nobles_estate_power = -0.10
 }
 
-abm_wuu_estate_harmony_edict = {
+abm_wuu_realm_satisfaction_code = {
 	age = age_2_renaissance
-	icon = warriors_unity
+	icon = local_nobility
 
 	potential = {
 		OR = {
@@ -334,40 +332,14 @@ abm_wuu_estate_harmony_edict = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = construction_speed_renaissance
+	requires = regulate_court_procedures
 
 	global_estate_target_satisfaction = 0.025
 }
 
 abm_wuu_rgo_expansion_edict = {
 	age = age_2_renaissance
-	icon = genoese_school
-
-	potential = {
-		has_or_had_tag = WUU
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = legalism_advance
-
-	global_max_rgo_size_modifier_in_non_rural = 0.25
-}
-
-abm_wuu_reform_unlock_charter = {
-	age = age_3_discovery
-	icon = nor_shipbuilding
-
-	potential = {
-		has_or_had_tag = WUU
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = global_trade_advance
-
-	unlock_government_reform = abm_wuu_people_granary_circuit_reform
-}
-
-abm_wuu_mineral_extraction_expansion = {
-	age = age_3_discovery
-	icon = pop_promotion_speed_age_4
+	icon = efficient_mining
 
 	potential = {
 		has_or_had_tag = WUU
@@ -375,21 +347,47 @@ abm_wuu_mineral_extraction_expansion = {
 	}
 	requires = rgo_logistics_discovery
 
+	global_max_rgo_size_modifier_in_non_rural = 0.25
+}
+
+abm_wuu_government_innovation_edict = {
+	age = age_3_discovery
+	icon = laws
+
+	potential = {
+		has_or_had_tag = WUU
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = colonial_charters
+
+	unlock_government_reform = abm_wuu_people_granary_circuit_reform
+}
+
+abm_wuu_metal_mining_reform = {
+	age = age_3_discovery
+	icon = agriculture_advance
+
+	potential = {
+		has_or_had_tag = WUU
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = colonial_charters
+
 	global_copper_output_modifier = 0.10
 	global_tin_output_modifier = 0.10
 	global_stone_output_modifier = 0.10
 	global_iron_output_modifier = 0.10
 }
 
-abm_wuu_public_health_ordinance = {
+abm_wuu_plague_prevention_bureau = {
 	age = age_4_reformation
-	icon = incense_trade_route
+	icon = library_advance
 
 	potential = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = imperial_ambitions
+	requires = confessionalism_advance
 
 	global_life_expectancy = 3
 	global_disease_resistance = 0.10
@@ -397,26 +395,26 @@ abm_wuu_public_health_ordinance = {
 
 abm_wuu_prosperity_encouragement = {
 	age = age_4_reformation
-	icon = dan_levy_recruitment
+	icon = hindu_muslim_relations
 
 	potential = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = power_projection_advance_3
+	requires = confessionalism_advance
 
 	global_monthly_prosperity = 0.001
 }
 
-abm_wuu_migration_encouragement = {
+abm_wuu_population_movement_code = {
 	age = age_5_absolutism
-	icon = teu_teutonic_heavy_cavalry
+	icon = religious_melting_pot
 
 	potential = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = absolute_rulership
+	requires = scientific_revolution_advance
 
 	global_migration_speed_modifier = 0.10
 	non_rural_migration_attraction = 0.10
@@ -424,7 +422,7 @@ abm_wuu_migration_encouragement = {
 
 abm_wuu_china_ambition = {
 	age = age_6_revolutions
-	icon = naval_morale_advance_1
+	icon = pike_and_shot_advance
 
 	potential = {
 		has_or_had_tag = WUU
@@ -441,7 +439,7 @@ abm_wuu_china_ambition = {
 
 abm_cnp_china_tradition_1 = {
 	age = age_1_traditions
-	icon = bah_arabian_horses
+	icon = scholasticism
 
 	potential = {
 		has_or_had_tag = CNP
@@ -454,7 +452,7 @@ abm_cnp_china_tradition_1 = {
 
 abm_cnp_china_tradition_2 = {
 	age = age_1_traditions
-	icon = west_african_caravan_stop_advance
+	icon = hindu_muslim_relations
 
 	potential = {
 		has_or_had_tag = CNP
@@ -462,25 +460,25 @@ abm_cnp_china_tradition_2 = {
 	}
 	requires = cultural_traditions_law_advance
 
-	global_pop_assimilation_speed_modifier = 0.20
+	global_pop_assimilation_speed_modifier = 0.10
 }
 
 abm_cnp_urban_attraction_charter = {
 	age = age_2_renaissance
-	icon = local_merchant_preference
+	icon = religious_melting_pot
 
 	potential = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = legalism_advance
+	requires = construction_speed_renaissance
 
 	non_rural_migration_attraction = 0.20
 }
 
 abm_cnp_social_mobility_charter = {
 	age = age_2_renaissance
-	icon = timurid_architecture
+	icon = roman_orthodoxy
 
 	potential = {
 		OR = {
@@ -489,59 +487,59 @@ abm_cnp_social_mobility_charter = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = merchants_and_trade
+	requires = cultural_traditions_law_advance
 
-	global_pop_promotion_speed_modifier = 0.10
+	global_pop_promotion_speed_modifier = 0.20
 }
 
 abm_cnp_construction_efficiency_edict = {
 	age = age_3_discovery
-	icon = hun_curtailed_peasantry
+	icon = agriculture_advance
 
 	potential = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = rgo_logistics_discovery
+	requires = colonial_charters
 
 	global_build_buildings_efficiency = 0.20
 }
 
 abm_cnp_road_construction_corps = {
 	age = age_3_discovery
-	icon = kkc_disinguished_family_in_kyushu
+	icon = debt_and_loans
 
 	potential = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = paved_road_advance
+	requires = colonial_charters
 
 	global_road_building_time = -0.25
 }
 
-abm_cnp_road_cost_reduction = {
+abm_cnp_highway_efficiency_edict = {
 	age = age_4_reformation
-	icon = trampling_horde
+	icon = abacus_advance
 
 	potential = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = imperial_ambitions
+	requires = construction_speed_reformation
 
 	road_cost_on_distance_from_capital = -1
 }
 
 abm_cnp_forced_march_doctrine = {
 	age = age_4_reformation
-	icon = zta_maritime_fiefdoms_of_the_adriatic
+	icon = glorious_arms
 
 	potential = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = trade_envoys
+	requires = recruitment_improvements_reformation
 
 	army_movement_speed = 0.10
 	morale_recovery_in_friendly = 0.10
@@ -549,20 +547,20 @@ abm_cnp_forced_march_doctrine = {
 
 abm_cnp_rgo_expansion_edict = {
 	age = age_5_absolutism
-	icon = army_professionalism
+	icon = banking_advance
 
 	potential = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = national_sovereignty
+	requires = manufactories_advance
 
 	global_max_rgo_size_modifier_in_non_rural = 0.25
 }
 
 abm_cnp_china_ambition = {
 	age = age_6_revolutions
-	icon = saharan_gold_trade
+	icon = defensive_army_attrition
 
 	potential = {
 		has_or_had_tag = CNP
@@ -579,33 +577,33 @@ abm_cnp_china_ambition = {
 
 abm_jnx_china_tradition_1 = {
 	age = age_1_traditions
-	icon = improve_relation_impact_renaissance
+	icon = diplomatic_influence
 
 	potential = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = medieval_administration
+	requires = formalized_relations
 
 	monthly_diplomats = 0.10
 }
 
 abm_jnx_china_tradition_2 = {
 	age = age_1_traditions
-	icon = artists_advance
+	icon = bonded_by_loyalty
 
 	potential = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = medieval_administration
+	requires = legalism_advance
 
 	government_reform_slots = 1
 }
 
-abm_jnx_diplomatic_intelligence_office = {
+abm_jnx_diplomatic_prestige_office = {
 	age = age_2_renaissance
-	icon = merchants_and_trade
+	icon = students_of_foreign_courts
 
 	potential = {
 		has_or_had_tag = ABJNX
@@ -617,36 +615,36 @@ abm_jnx_diplomatic_intelligence_office = {
 	spy_network_construction = 0.20
 }
 
-abm_jnx_diplomatic_relations_and_security = {
+abm_jnx_diplomatic_engagement = {
 	age = age_2_renaissance
-	icon = mol_the_banner_of_the_golden_bull
+	icon = diplomatic_training
 
 	potential = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = legalism_advance
+	requires = formalized_relations
 
 	improve_relation_impact = 0.20
 	counter_espionage = 0.20
 }
 
-abm_jnx_integration_chancery = {
+abm_jnx_realm_unification_board = {
 	age = age_3_discovery
-	icon = land_morale_movement_cost_rev_choice_mil
+	icon = renaissance_advance
 
 	potential = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = trade_envoys
+	requires = colonial_charters
 
 	diplomatic_annexation_efficiency = 0.20
 }
 
-abm_jnx_heavy_troops_reform = {
+abm_jnx_heavy_cavalry_reform = {
 	age = age_3_discovery
-	icon = bng_bengali_trade_fleet
+	icon = elephant_cavalry
 
 	potential = {
 		has_or_had_tag = ABJNX
@@ -660,41 +658,41 @@ abm_jnx_heavy_troops_reform = {
 
 abm_jnx_subject_loyalty_edict = {
 	age = age_4_reformation
-	icon = the_constitution
+	icon = global_trade_advance
 
 	potential = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = imperial_ambitions
+	requires = global_trade_advance
 
 	subject_loyalty = 5
 	subject_income_modifier = 0.10
 	subject_opinions = 10
 }
 
-abm_jnx_diplomatic_outreach = {
+abm_jnx_distant_diplomacy_charter = {
 	age = age_4_reformation
-	icon = bos_cultural_customs
+	icon = efficient_spies
 
 	potential = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = diplomatic_range_age_1
+	requires = global_trade_advance
 
 	diplomatic_range_modifier = 0.30
 }
 
-abm_jnx_noble_satisfaction_edict = {
+abm_jnx_stability_ordinance = {
 	age = age_5_absolutism
-	icon = bantu_and_perso_arabian
+	icon = legalism_advance
 
 	potential = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = absolute_rulership
+	requires = government_size_absolutism
 
 	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction
 	stability_cost_efficiency = 0.20
@@ -702,7 +700,7 @@ abm_jnx_noble_satisfaction_edict = {
 
 abm_jnx_china_ambition = {
 	age = age_6_revolutions
-	icon = bank_of_saint_george
+	icon = government_size
 
 	potential = {
 		has_or_had_tag = ABJNX
@@ -719,33 +717,33 @@ abm_jnx_china_ambition = {
 
 abm_ctw_china_tradition_1 = {
 	age = age_1_traditions
-	icon = reform_the_ecclesiastical_authorities
+	icon = efficient_mining
 
 	potential = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = legalism_advance
+	requires = construction_speed_renaissance
 
 	global_build_buildings_efficiency = 0.10
 }
 
 abm_ctw_china_tradition_2 = {
 	age = age_1_traditions
-	icon = serbian_mining
+	icon = bhakti_movement
 
 	potential = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = legalism_advance
+	requires = construction_speed_renaissance
 
 	global_monthly_prosperity = 0.001
 }
 
 abm_ctw_levy_training_reform = {
 	age = age_2_renaissance
-	icon = hussite_traditions
+	icon = regimental_system
 
 	potential = {
 		has_or_had_tag = CTW
@@ -757,22 +755,22 @@ abm_ctw_levy_training_reform = {
 	global_levy_size_modifier = 0.25
 }
 
-abm_ctw_road_cost_reduction = {
+abm_ctw_highway_efficiency_edict = {
 	age = age_2_renaissance
-	icon = ues_strong_dynastic_ties
+	icon = city_building_advance
 
 	potential = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = diplomatic_range_age_1
+	requires = paved_road_advance
 
 	road_cost_on_distance_from_capital = -1
 }
 
 abm_ctw_development_commission = {
 	age = age_3_discovery
-	icon = smooth_administration
+	icon = administrative_leadership
 
 	potential = {
 		OR = {
@@ -781,67 +779,67 @@ abm_ctw_development_commission = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = regulate_court_procedures
+	requires = colonial_charters
 
 	global_monthly_development = 0.001
 }
 
-abm_ctw_literacy_expansion_edict = {
+abm_ctw_scholarly_education_board = {
 	age = age_3_discovery
-	icon = vid_the_codex_shishman
+	icon = vegetarianism
 
 	potential = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = cultural_traditions_law_advance
+	requires = colonial_charters
 
-	global_max_literacy = 0.10
+	global_max_literacy = 10
 }
 
-abm_ctw_public_health_ordinance = {
+abm_ctw_plague_prevention_bureau = {
 	age = age_4_reformation
-	icon = origin_of_coffee
+	icon = church_councils
 
 	potential = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = pharmacology_advance
+	requires = confessionalism_advance
 
 	global_disease_resistance = 0.10
 	global_population_growth = 0.0002
 }
 
-abm_ctw_combined_bonus_system = {
+abm_ctw_integrated_advancement = {
 	age = age_4_reformation
-	icon = scholasticism
+	icon = a_central_power
 
 	potential = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = imperial_ambitions
+	requires = early_modern_administation
 
 	combined_bonus_per_type = 0.01
 }
 
-abm_ctw_scorched_earth_doctrine = {
+abm_ctw_attrition_warfare_code = {
 	age = age_5_absolutism
-	icon = slovene_the_dukes_chair_tradition
+	icon = defensive_army_attrition
 
 	potential = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = power_projection_advance_5
+	requires = government_size_absolutism
 
 	global_hostile_attrition = 1
 }
 
 abm_ctw_china_ambition = {
 	age = age_6_revolutions
-	icon = the_age_of_the_genoese
+	icon = court_accounting
 
 	potential = {
 		has_or_had_tag = CTW
@@ -858,33 +856,7 @@ abm_ctw_china_ambition = {
 
 abm_chu_china_tradition_1 = {
 	age = age_1_traditions
-	icon = buddhist_syncretism
-
-	potential = {
-		has_or_had_tag = ABCHU
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = legalism_advance
-
-	minting_income_factor = 0.10
-}
-
-abm_chu_china_tradition_2 = {
-	age = age_1_traditions
-	icon = frankokratia_frankokratia_advance
-
-	potential = {
-		has_or_had_tag = ABCHU
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = legalism_advance
-
-	global_manpower_modifier = 0.15
-}
-
-abm_chu_precious_metal_mining = {
-	age = age_2_renaissance
-	icon = defenses_of_novgorod
+	icon = food_advance_renaissance
 
 	potential = {
 		has_or_had_tag = ABCHU
@@ -892,26 +864,25 @@ abm_chu_precious_metal_mining = {
 	}
 	requires = counting_house_advance
 
-	global_goods_gold_output_modifier = 0.15
-	global_silver_output_modifier = 0.15
+	minting_income_factor = 0.10
 }
 
-abm_chu_jewelry_workshop_charter = {
-	age = age_2_renaissance
-	icon = byz_heart_of_orthodoxy_advance
+abm_chu_china_tradition_2 = {
+	age = age_1_traditions
+	icon = feudalism_advance
 
 	potential = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = merchant_power_from_maritime_discovery_advance
+	requires = feudalism_advance
 
-	global_jewelry_output_modifier = 0.15
+	global_manpower_modifier = 0.15
 }
 
-abm_chu_iron_and_coal_expansion = {
-	age = age_3_discovery
-	icon = red_sea_trade
+abm_chu_gold_extraction_bureau = {
+	age = age_2_renaissance
+	icon = artists_advance
 
 	potential = {
 		has_or_had_tag = ABCHU
@@ -919,26 +890,53 @@ abm_chu_iron_and_coal_expansion = {
 	}
 	requires = bole_smelting
 
-	global_iron_output_modifier = 0.20
-	global_coal_output_modifier = 0.20
+	global_goods_gold_output_modifier = 0.15
+	global_silver_output_modifier = 0.15
 }
 
-abm_chu_army_supply_board = {
-	age = age_3_discovery
-	icon = council_of_elders
+abm_chu_gem_crafting_office = {
+	age = age_2_renaissance
+	icon = merchants_and_trade
 
 	potential = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = supply_lines
+	requires = merchants_and_trade
+
+	global_jewelry_output_modifier = 0.15
+}
+
+abm_chu_ironworks_expansion = {
+	age = age_3_discovery
+	icon = banking_advance
+
+	potential = {
+		has_or_had_tag = ABCHU
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = colonial_charters
+
+	global_iron_output_modifier = 0.20
+	global_coal_output_modifier = 0.20
+}
+
+abm_chu_military_provision_system = {
+	age = age_3_discovery
+	icon = administrative_leadership
+
+	potential = {
+		has_or_had_tag = ABCHU
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = pike_and_shot_advance
 
 	army_maintenance_efficiency = 0.20
 }
 
-abm_chu_currency_stabilization = {
+abm_chu_price_regulation_edict = {
 	age = age_4_reformation
-	icon = porto_franco
+	icon = abacus_advance
 
 	potential = {
 		OR = {
@@ -947,14 +945,14 @@ abm_chu_currency_stabilization = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = imperial_ambitions
+	requires = construction_speed_reformation
 
 	monthly_inflation = -0.001
 }
 
 abm_chu_veteran_cadre_system = {
 	age = age_4_reformation
-	icon = islamic_calligraphy
+	icon = army_professionalism
 
 	potential = {
 		has_or_had_tag = ABCHU
@@ -966,28 +964,28 @@ abm_chu_veteran_cadre_system = {
 	monthly_experience_gain = 0.10
 }
 
-abm_chu_battle_line_extension = {
+abm_chu_frontage_reform_ordinance = {
 	age = age_5_absolutism
-	icon = estates_general
+	icon = offensive_army
 
 	potential = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = national_sovereignty
+	requires = government_size_absolutism
 
 	possible_frontage_modifier = 0.20
 }
 
 abm_chu_china_ambition = {
 	age = age_6_revolutions
-	icon = ecclesiastical_primacy
+	icon = industrialization_advance
 
 	potential = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = modern_bureaucracy
+	requires = industrialization_advance
 
 	monthly_inflation = -0.0025
 }
@@ -998,7 +996,7 @@ abm_chu_china_ambition = {
 
 abm_che_china_tradition_1 = {
 	age = age_1_traditions
-	icon = bng_bengali_traders
+	icon = buddhist_meditation
 
 	potential = {
 		has_or_had_tag = CHE
@@ -1011,7 +1009,20 @@ abm_che_china_tradition_1 = {
 
 abm_che_china_tradition_2 = {
 	age = age_1_traditions
-	icon = letters_of_marque
+	icon = defensive_army
+
+	potential = {
+		has_or_had_tag = CHE
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = pike_square
+
+	army_heavy_infantry_power = 0.10
+}
+
+abm_che_religious_tolerance_edict = {
+	age = age_2_renaissance
+	icon = cultural_acceptance_advance
 
 	potential = {
 		has_or_had_tag = CHE
@@ -1019,52 +1030,39 @@ abm_che_china_tradition_2 = {
 	}
 	requires = organized_religion
 
-	army_heavy_infantry_power = 0.10
-}
-
-abm_che_religious_tolerance_edict = {
-	age = age_2_renaissance
-	icon = kgk_omi_genji
-
-	potential = {
-		has_or_had_tag = CHE
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = legalism_advance
-
 	tolerance_own = 2
 }
 
 abm_che_wetland_adaptation = {
 	age = age_2_renaissance
-	icon = arte_della_lana
+	icon = defensive_mentality
 
 	potential = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = diplomatic_range_age_1
+	requires = feudalism_advance
 
 	wetlands_proximity_impact = -0.50
 	hills_proximity_impact = 0.25
 }
 
-abm_che_cultural_acceptance_edict = {
+abm_che_diverse_customs_charter = {
 	age = age_3_discovery
-	icon = land_of_the_ancestors
+	icon = library_advance
 
 	potential = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = cultural_acceptance_advance
+	requires = colonial_charters
 
 	cultures_capacity = 2
 }
 
 abm_che_light_infantry_doctrine = {
 	age = age_3_discovery
-	icon = global_production_efficiency
+	icon = drill_army_advance
 
 	potential = {
 		has_or_had_tag = CHE
@@ -1075,21 +1073,7 @@ abm_che_light_infantry_doctrine = {
 	army_light_infantry_power = 0.10
 }
 
-abm_che_agricultural_expansion = {
-	age = age_4_reformation
-	icon = abacus_advance
-
-	potential = {
-		has_or_had_tag = CHE
-		culture = { has_culture_group = culture_group:chinese_group }
-	}
-	requires = road_building
-
-	global_rice_output_modifier = 0.10
-	global_food_output_modifier = 0.10
-}
-
-abm_che_territorial_control_edict = {
+abm_che_grain_production_bureau = {
 	age = age_4_reformation
 	icon = court_accounting
 
@@ -1097,33 +1081,47 @@ abm_che_territorial_control_edict = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = power_projection_advance_3
+	requires = construction_speed_reformation
 
-	global_max_control = 0.025
+	global_rice_output_modifier = 0.10
+	global_food_output_modifier = 0.10
 }
 
-abm_che_cannon_foundry_board = {
-	age = age_5_absolutism
-	icon = urbanization_decrees
+abm_che_territorial_control_edict = {
+	age = age_4_reformation
+	icon = town_rights_advance
 
 	potential = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = unlock_chambered_cannon_advance
+	requires = early_modern_administation
+
+	global_max_control = 0.025
+}
+
+abm_che_gunpowder_ordinance_office = {
+	age = age_5_absolutism
+	icon = artillery_institution_advance
+
+	potential = {
+		has_or_had_tag = CHE
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = manufactories_advance
 
 	army_artillery_power = 0.10
 }
 
 abm_che_china_ambition = {
 	age = age_6_revolutions
-	icon = byz_reaffirm_synod_powers
+	icon = industrialization_advance
 
 	potential = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = unlock_chambered_cannon_advance
+	requires = industrialization_advance
 
 	artillery_bonus_vs_fort = 1
 }
@@ -1134,7 +1132,7 @@ abm_che_china_ambition = {
 
 abm_mng_china_tradition_1 = {
 	age = age_1_traditions
-	icon = ven_stato_da_mar
+	icon = fortified_towns
 
 	potential = {
 		OR = {
@@ -1143,14 +1141,14 @@ abm_mng_china_tradition_1 = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = cultural_traditions_law_advance
+	requires = feudalism_advance
 
-	fort_limit_modifier = 0.20
+	global_fort_limit_modifier = 0.20
 }
 
 abm_mng_china_tradition_2 = {
 	age = age_1_traditions
-	icon = htk_shogunate_ties
+	icon = glorious_arms
 
 	potential = {
 		OR = {
@@ -1159,14 +1157,14 @@ abm_mng_china_tradition_2 = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = cultural_traditions_law_advance
+	requires = feudalism_advance
 
 	global_garrison_size_modifier = 0.20
 }
 
-abm_mng_military_discipline_code = {
+abm_mng_revived_three_grand_divisions = {
 	age = age_2_renaissance
-	icon = university_naples
+	icon = offensive_army
 
 	potential = {
 		has_or_had_tag = MNG
@@ -1177,9 +1175,9 @@ abm_mng_military_discipline_code = {
 	discipline = 0.05
 }
 
-abm_mng_stability_ordinance = {
+abm_mng_inward_perfection = {
 	age = age_2_renaissance
-	icon = genoese_banking_traditions
+	icon = road_building
 
 	potential = {
 		has_or_had_tag = MNG
@@ -1190,75 +1188,75 @@ abm_mng_stability_ordinance = {
 	stability_cost_efficiency = 0.10
 }
 
-abm_mng_production_efficiency_edict = {
+abm_mng_yellow_river_dykes = {
 	age = age_3_discovery
-	icon = government_size_revolutions
+	icon = city_building_advance
 
 	potential = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = construction_speed_renaissance
+	requires = colonial_charters
 
 	global_production_efficiency = medium_production_efficiency_bonus
 }
 
-abm_mng_goods_market_reform = {
+abm_mng_salt_monopoly = {
 	age = age_3_discovery
-	icon = scientific_revolution_advance
+	icon = trade_caravans
 
 	potential = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = global_trade_advance
+	requires = trade_range_advance_age_3
 
 	selling_efficiency = small_trade_efficiency_bonus
 	export_efficiency = small_trade_efficiency_bonus
 }
 
-abm_mng_tax_collection_reform = {
+abm_mng_single_whip_law = {
 	age = age_4_reformation
-	icon = plutocracy
+	icon = artists_advance
 
 	potential = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = regulate_court_procedures
+	requires = construction_speed_reformation
 
 	tax_income_efficiency = large_tax_income_efficiency_bonus
 }
 
-abm_mng_siege_engineer_corps = {
+abm_mng_the_red_cannon = {
 	age = age_4_reformation
-	icon = association_with_unbelievers
+	icon = gunpowder_advance
 
 	potential = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = supply_depot_advance_age_3_discovery
+	requires = artillery_institution_advance
 
 	siege_ability = 0.20
 }
 
 abm_mng_reform_capacity_edict = {
 	age = age_5_absolutism
-	icon = islamic_schoolars
+	icon = renaissance_advance
 
 	potential = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = national_sovereignty
+	requires = government_size_absolutism
 
 	government_reform_slots = 1
 }
 
 abm_mng_china_ambition = {
 	age = age_6_revolutions
-	icon = offensive_army
+	icon = a_central_power
 
 	potential = {
 		has_or_had_tag = MNG

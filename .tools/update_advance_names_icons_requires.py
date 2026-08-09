@@ -20,9 +20,13 @@ import sys
 BASE = Path(__file__).resolve().parent.parent
 ADVANCE_DIR = BASE / "in_game/common/advances"
 VANILLA_ADVANCE_DIR = BASE / ".tools/eu5/advances"
-REGIONAL_MOD_MAP = runpy.run_path(
-    str(BASE / ".tools/update_india_advance_icons_requires.py")
-)["MOD_MAP"]
+
+# Try to import the regional mod map; skip if the file doesn't exist.
+_regional_path = BASE / ".tools/update_india_advance_icons_requires.py"
+if _regional_path.is_file():
+    REGIONAL_MOD_MAP = runpy.run_path(str(_regional_path))["MOD_MAP"]
+else:
+    REGIONAL_MOD_MAP = {}
 TARGET_GLOBS = (
         "abm_f4-t2_india_*.txt",
         "abm_f4-t2_indochina.txt",
@@ -405,6 +409,74 @@ NAME_TEMPLATES = {
     'terrain_road_cost': ['road_cost_reduction', 'highway_efficiency_edict', 'road_building_reform'],
 }
 
+# ── Age → family → age-appropriate vanilla requires ────────────────
+AGE_REQUIRES = {
+    3: {  # age_3_discovery
+        'trade': 'trade_range_advance_age_3',
+        'naval': 'ship_building_techniques_discovery',
+        'military': 'pike_and_shot_advance',
+        'artillery': 'unlock_chambered_cannon_advance',
+        'cavalry': 'horse_riding_advance',
+        'economy': 'colonial_charters',
+        'administration': 'colonial_charters',
+        'diplomacy': 'colonial_charters',
+        'culture': 'colonial_charters',
+        'estate': 'colonial_charters',
+        'subject': 'colonial_charters',
+    },
+    4: {  # age_4_reformation
+        'trade': 'global_trade_advance',
+        'naval': 'letters_of_marque',
+        'military': 'recruitment_improvements_reformation',
+        'artillery': 'artillery_institution_advance',
+        'cavalry': 'recruitment_improvements_reformation',
+        'economy': 'construction_speed_reformation',
+        'administration': 'early_modern_administation',
+        'diplomacy': 'global_trade_advance',
+        'culture': 'confessionalism_advance',
+        'estate': 'crown_power_advance_reformation',
+        'subject': 'global_trade_advance',
+    },
+    5: {  # age_5_absolutism
+        'trade': 'central_bank_advance',
+        'naval': 'central_bank_advance',
+        'military': 'government_size_absolutism',
+        'artillery': 'manufactories_advance',
+        'cavalry': 'government_size_absolutism',
+        'economy': 'manufactories_advance',
+        'administration': 'government_size_absolutism',
+        'diplomacy': 'central_bank_advance',
+        'culture': 'scientific_revolution_advance',
+        'estate': 'government_size_absolutism',
+        'subject': 'central_bank_advance',
+    },
+    6: {  # age_6_revolutions
+        'trade': 'industrialization_advance',
+        'naval': 'industrialization_advance',
+        'military': 'modern_bureaucracy',
+        'artillery': 'industrialization_advance',
+        'cavalry': 'modern_bureaucracy',
+        'economy': 'industrialization_advance',
+        'administration': 'modern_bureaucracy',
+        'diplomacy': 'enlightenment_advance',
+        'culture': 'enlightenment_advance',
+        'estate': 'modern_bureaucracy',
+        'subject': 'enlightenment_advance',
+    },
+}
+
+
+def get_age_require(age_str, family):
+    """Return age-appropriate vanilla requires, falling back to the
+    hardcoded MOD_MAP value if the age isn't covered."""
+    match = re.search(r'age_(\d+)_', age_str)
+    if match:
+        age_num = int(match.group(1))
+        age_map = AGE_REQUIRES.get(age_num, {})
+        if family in age_map:
+            return age_map[family]
+    return None
+
 
 def find_block(text, key):
     escaped = re.escape(key)
@@ -555,6 +627,15 @@ def transform_file(filepath, available_icons, icon_counts):
 
         primary, requirement, category = get_mod_mapping(mods)
         signature = potential_signature(block, key)
+        family = category_family(category)
+
+        # Extract age for age-aware requires
+        age_match = re.search(r'(?m)^\s*age\s*=\s*(\S+)', block)
+        age_str = age_match.group(1) if age_match else ''
+        age_require = get_age_require(age_str, family)
+        if age_require:
+            requirement = age_require
+
         icon = choose_icon(
             key, primary, requirement, category, available_icons,
             icon_counts, used_by_group[signature],
@@ -564,6 +645,7 @@ def transform_file(filepath, available_icons, icon_counts):
         new_lines = []
         had_icon = any(line.strip().startswith('icon = ') for line in lines)
         icon_written = False
+        req_written = False
         for line in lines:
             s = line.strip()
             if s.startswith('icon = '):
@@ -573,11 +655,23 @@ def transform_file(filepath, available_icons, icon_counts):
                 new_lines.append(f'{indent}icon = {icon}')
                 icon_written = True
                 continue
+            if s.startswith('requires = '):
+                indent = line[:len(line) - len(line.lstrip())]
+                new_lines.append(f'{indent}requires = {requirement}')
+                req_written = True
+                continue
             new_lines.append(line)
             if not had_icon and not icon_written and s.startswith('age = '):
                 indent = line[:len(line) - len(line.lstrip())]
                 new_lines.append(f'{indent}icon = {icon}')
                 icon_written = True
+            # If no requires line exists, insert one after age line
+            if not req_written and s.startswith('age = ') and not any(
+                ls.strip().startswith('requires = ') for ls in lines
+            ):
+                indent = line[:len(line) - len(line.lstrip())]
+                new_lines.append(f'{indent}requires = {requirement}')
+                req_written = True
 
         new_block = '\n'.join(new_lines)
         if not icon_written:
