@@ -161,6 +161,91 @@ a_abm_early_yari_ashigaru = {
 	gfx_tags = { spear_tag medium_tag }
 }
 
+#Steppe Horde#
+
+a_late_steppe_lancers = { 
+	copy_from = a_age_2_renaissance_heavy_cavalry
+	is_special = yes
+	upgrades_to = a_lancers
+
+	initiative = 1 #same as previous tier
+	movement_speed = 0.5
+
+	combat = {
+		grasslands = 0.2
+		sparse = 0.2
+		coastal = -0.10
+	}
+
+    maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+
+	gfx_tags = { spear_tag heavy_tag }
+}
+
+a_late_steppe_horse_archers = {
+	copy_from = a_age_2_renaissance_light_cavalry
+	is_special = yes
+	upgrades_to = a_light_lancers
+
+	initiative = 2 #reduced by 1 compared to previous tier
+	movement_speed = 1.0
+
+	combat = {
+		grasslands = 0.2
+		sparse = 0.2
+		coastal = -0.10 
+	}
+	
+	maintenance_demand =  steppe_horse_archers_maintenance
+	construction_demand = steppe_horse_archers_construction
+	
+
+	gfx_tags = { archer_tag light_tag }
+}
+
+a_late_steppe_horde = {
+	copy_from = a_age_2_renaissance_light_cavalry
+	is_special = yes
+
+	movement_speed = 1
+	initiative = 1 #reduced by 1 compared to previous tier
+	buildable = no
+	levy = yes
+
+	combat = {
+		grasslands = 0.20 
+		sparse = 0.20 
+		coastal = -0.10
+	}
+	
+	maintenance_demand =  steppe_horse_archers_maintenance
+	construction_demand = steppe_horse_archers_construction
+	
+
+	gfx_tags = { spear_tag light_tag }
+}
+
+a_late_a_urughs = {
+	copy_from = a_age_2_renaissance_auxiliary
+	is_special = yes
+	upgrades_to = a_supply_convoy
+
+	movement_speed = 1.0
+
+	combat = { 
+		grasslands = 0.2
+		sparse = 0.2
+		coastal = -0.10
+	}
+	
+	maintenance_demand =  steppe_horse_auxiliary_maintenance
+	construction_demand = steppe_auxiliary_construction
+	
+
+	gfx_tags = { spear_tag light_tag }
+}
+
 #####ArsBelliMod#####
 
 #####ChangedByABM#####
