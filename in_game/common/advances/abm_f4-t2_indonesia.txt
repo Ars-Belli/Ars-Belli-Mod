@@ -1,0 +1,3089 @@
+# Generate EU5 advance definitions from EU4 national idea sets for `eu5_tag` rows
+# with fewer than 10 generated ABM advances.
+#
+# Sources:
+# - Tag / country data: `.tools/india_merged.csv`
+# - EU4 national ideas: `.tools/eu4/ideas/*.txt`
+#
+# General rules:
+# - Ignore EU4 `trigger` blocks completely.
+# - Do not use EU4 `trigger` blocks to determine applicable tags.
+# - Use the tag list in the source comment immediately above each idea set as the
+#   authoritative tag mapping.
+# - Do not generate an idea set again if all of its relevant tags already have
+#   10 or more generated ABM advances.
+#
+# EU4 idea-set structure:
+# - Every processed EU4 idea set contains:
+#   - 2 traditions in `start`
+#   - 7 regular ideas
+#   - 1 ambition / bonus in `bonus`
+# - Generate 10 advances per normal idea set:
+#   - Age 1: tradition 1 and tradition 2
+#   - Age 2: regular idea 1 and regular idea 2
+#   - Age 3: regular idea 3 and regular idea 4
+#   - Age 4: regular idea 5 and regular idea 6
+#   - Age 5: regular idea 7
+#   - Age 6: ambition / bonus
+#
+# Age values:
+# - Traditions:
+#   `age = age_1_traditions`
+# - Regular ideas 1 and 2:
+#   `age = age_2_renaissance`
+# - Regular ideas 3 and 4:
+#   `age = age_3_discovery`
+# - Regular ideas 5 and 6:
+#   `age = age_4_reformation`
+# - Regular idea 7:
+#   `age = age_5_absolutism`
+# - Ambition:
+#   `age = age_6_revolutions`
+#
+# Naming conventions:
+# - Tradition 1:
+#   `abm_<idea_set>_tradition_1`
+# - Tradition 2:
+#   `abm_<idea_set>_tradition_2`
+# - Normal regular idea:
+#   `abm_<idea_name>`
+# - Ambition:
+#   `abm_<idea_set>_ambition`
+#
+# Example naming:
+# - First Sumatran tradition:
+#   `abm_sumatran_ideas_tradition_1`
+# - Sumatran idea `reliance_on_trade`:
+#   `abm_reliance_on_trade`
+# - Sumatran ambition:
+#   `abm_sumatran_ideas_ambition`
+#
+# Potential block rules:
+# - Every advance must include a `potential` block.
+# - Use `has_or_had_tag` for every tag.
+# - If exactly one tag uses an advance, do not use an `OR` block:
+#
+#   potential = {
+#	   has_or_had_tag = <TAG>
+#   }
+#
+# - If two or more tags use an advance, place all tags in a single `OR` block:
+#
+#   potential = {
+#	   OR = {
+#		   has_or_had_tag = <TAG_1>
+#		   has_or_had_tag = <TAG_2>
+#	   }
+#   }
+#
+# Requirements:
+# - Every advance must include exactly one `requires = <advance_key>` entry.
+# - `requires` is a single advance key, never a list.
+# - Never use display names in `requires`.
+# - Select an existing prerequisite advance that best matches the primary theme
+#   of the generated advance, when one is known.
+# - Advances do not need to form a linear prerequisite chain within their
+#   original EU4 idea set.
+# - If no suitable existing prerequisite is known, use a descriptive placeholder:
+#
+#   requires = TODO_<theme>_requirement
+#
+# - Examples:
+#   `requires = TODO_trade_efficiency_requirement`
+#   `requires = TODO_naval_morale_requirement`
+#   `requires = TODO_missionary_strength_requirement`
+#   `requires = TODO_fortifications_requirement`
+#   `requires = TODO_diplomatic_reputation_requirement`
+#
+# Icons:
+# - Every generated advance must include an `icon` key.
+# - Select an existing project icon key that best matches the advance's primary
+#   theme, source idea name, or most important modifier.
+# - Prefer existing project icon keys; do not invent new icon keys unless the
+#   project explicitly supports creating them.
+# - If no suitable existing icon can be identified, use a descriptive placeholder:
+#
+#   icon = TODO_<theme>_icon
+#
+# - Suggested placeholder themes:
+#   - Trade, merchants, trade power, trade efficiency, trade steering:
+#	 `icon = TODO_trade_icon`
+#   - Ships, sailors, naval morale, naval force limit, ship cost:
+#	 `icon = TODO_naval_icon`
+#   - Land morale, infantry, manpower, warfare, attrition:
+#	 `icon = TODO_military_icon`
+#   - Missionaries, religious conversion, tolerance:
+#	 `icon = TODO_religion_icon`
+#   - Technology, institutions, advisors, idea cost, scholarship:
+#	 `icon = TODO_scholarship_icon`
+#   - Prestige, legitimacy, stability, authority, government:
+#	 `icon = TODO_government_icon`
+#   - Production, tax, trade goods, construction, development:
+#	 `icon = TODO_economy_icon`
+#   - Diplomacy, diplomats, reputation, relations:
+#	 `icon = TODO_diplomacy_icon`
+#   - Colonization, settlers, colonial growth:
+#	 `icon = TODO_colonization_icon`
+#   - Forts, defensiveness, defensive structures:
+#	 `icon = TODO_fortification_icon`
+# - Traditions may use their own advance key as the icon only when the icon
+#   already exists in the project:
+#
+#   icon = abm_<idea_set>_tradition_1
+#
+# Modifier preservation:
+# - Preserve every original EU4 modifier as a comment directly inside the
+#   generated advance.
+# - Preserve modifier keys and values exactly as written in the EU4 source.
+# - Do not remove, merge, reinterpret, round, correct, or silently discard
+#   EU4 modifiers.
+# - Preserve source spelling errors exactly, including modifier keys such as:
+#   - `sailor_maintenance_modifer`
+#   - `leader_naval_manuever`
+#   - `sunk_ship_morale_hit_recieved`
+#
+# Tradition conversion:
+# - The two modifiers in the EU4 idea set's `start` block become two separate
+#   Age 1 tradition advances.
+# - The first modifier becomes tradition 1.
+# - The second modifier becomes tradition 2.
+#
+# Ambition conversion:
+# - The modifier or modifiers in the EU4 idea set's `bonus` block become one
+#   Age 6 ambition advance.
+#
+# Explicitly shared regular ideas:
+# - Do not automatically treat identical idea names as shared advances.
+# - A regular idea is shared only when the EU4 source explicitly identifies it
+#   as shared, for example:
+#
+#   settle_the_islands = { # same as malay ideas
+#	   global_colonial_growth = 20
+#   }
+#
+# - An explicitly shared idea produces one shared advance:
+#
+#   abm_<idea_name>
+#
+# - Merge all tags from every explicitly shared occurrence into the shared
+#   advance's `potential` block.
+# - If the source modifier blocks are identical, preserve the modifier comments
+#   only once in the shared advance.
+# - Use one icon that matches the shared advance's common effect or theme.
+# - If the shared advance occurs at different positions in different idea sets,
+#   and therefore has conflicting ages or prerequisites, use placeholders:
+#
+#   age = TODO_shared_<idea_name>_age
+#   requires = TODO_shared_<idea_name>_requirement
+#
+# - Generate the shared advance only once.
+#
+# Conflicting duplicate regular-idea names:
+# - If the same EU4 idea key appears in multiple idea sets without an explicit
+#   shared-idea annotation, treat each occurrence as a separate advance.
+# - This is required even if the names are identical, especially when modifiers
+#   differ.
+# - Namespace each conflicting advance using its source idea set:
+#
+#   abm_<idea_set>_<idea_name>
+#
+# - Example:
+#
+#   # Sumatran version:
+#   porch_of_mecca = {
+#	   global_missionary_strength = 0.02
+#   }
+#
+#   # Aceh version:
+#   porch_of_mecca = {
+#	   technology_cost = -0.10
+#   }
+#
+#   # Generated advances:
+#   abm_sumatran_ideas_porch_of_mecca
+#   abm_atj_ideas_porch_of_mecca
+#
+# - Each namespaced conflicting advance receives only the tags, age, icon,
+#   requirement, and modifier comments belonging to its own source idea set.
+#
+# Output formatting:
+# - Add a comment header containing the idea-set display name.
+# - Add a comment listing all tags applicable to that idea set or advance.
+# - Follow the project's established Paradox script indentation and formatting.
+# - Do not generate duplicate advance keys.
+# - The exception is conflicting duplicate EU4 idea names, which must be
+#   namespace-qualified as described above.
+#
+# Standard output structure:
+#
+# # <Idea Set Display Name>
+# # <TAG_1> <TAG_2>
+#
+# <advance_key> = {
+#	 age = <age_key>
+#	 icon = <existing_icon_key_or_TODO_placeholder>
+#	 potential = {
+#		 OR = {
+#			 has_or_had_tag = <TAG_1>
+#			 has_or_had_tag = <TAG_2>
+#		 }
+#	 }
+#
+#	 requires = <prerequisite_advance>
+#
+#	 # <original_eu4_modifier> = <original_value>
+# }
+#
+# Single-tag example:
+#
+# abm_example_advance = {
+#	 age = age_2_renaissance
+#	 icon = TODO_trade_icon
+#	 potential = {
+#		 has_or_had_tag = EXM
+#	 }
+#
+#	 requires = TODO_trade_requirement
+#
+#	 # trade_efficiency = 0.10
+# }
+#
+# Multi-tag example:
+#
+# abm_example_advance = {
+#	 age = age_2_renaissance
+#	 icon = TODO_trade_icon
+#	 potential = {
+#		 OR = {
+#			 has_or_had_tag = EXM
+#			 has_or_had_tag = EX2
+#		 }
+#	 }
+#
+#	 requires = TODO_trade_requirement
+#
+#	 # trade_efficiency = 0.10
+# }
+
+
+# Sumatran Ideas
+# JMB INR PNI ARU BUS
+abm_sumatran_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = agriculture_advance
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = construction_speed_renaissance
+
+	# production_efficiency = 0.10
+	global_production_efficiency = medium_production_efficiency_bonus
+}
+
+abm_sumatran_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = global_trade_routes_advance
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = trade_range_advance_age_2
+
+	# trade_range_modifier = 0.15
+	trade_range_modifier = 0.15
+}
+
+abm_reliance_on_trade = {
+	age = age_2_renaissance
+	icon = feudalism_advance
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = feudalism_advance
+
+	# trade_efficiency = 0.10
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+}
+
+abm_sumatran_ideas_porch_of_mecca = {
+	age = age_2_renaissance
+	icon = roman_orthodoxy
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = organized_religion
+
+	# global_missionary_strength = 0.02
+	global_pop_conversion_speed_modifier = 0.20
+}
+
+abm_spice_pirates = {
+	age = age_3_discovery
+	icon = ship_building_advance
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = ship_building_techniques_discovery
+
+	# light_ship_power = 0.10
+	# privateer_efficiency = 0.15
+	navy_light_ship_power = 0.10
+	privateer_maintenance_cost_modifier = -0.10
+}
+
+abm_center_of_scholarship = {
+	age = age_3_discovery
+	icon = drill_army_advance
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# advisor_cost = -0.15
+	hire_advisor_cost_modifier = -0.15
+}
+
+abm_merchants_of_the_indian_ocean = {
+	age = age_4_reformation
+	icon = regimental_system
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# merchants = 1
+	global_merchant_power = 0.20
+}
+
+abm_legacy_of_srivijaya = {
+	age = age_4_reformation
+	icon = pike_and_shot_advance
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# prestige = 1
+	monthly_prestige = 0.10
+}
+
+abm_rule_of_the_sea = {
+	age = age_5_absolutism
+	icon = expanded_supply_trains
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = government_size_absolutism
+
+	# naval_forcelimit_modifier = 0.25
+	navy_maintenance_efficiency = 0.25
+}
+
+abm_sumatran_ideas_ambition = {
+	age = age_6_revolutions
+	icon = royal_navy
+	potential = {
+		OR = {
+			has_or_had_tag = JMB
+			has_or_had_tag = INR
+			has_or_had_tag = PNI
+			has_or_had_tag = ARU
+			has_or_had_tag = BUS
+		}
+	}
+
+	requires = industrialization_advance
+
+	# defensiveness = 0.20
+	navy_heavy_ship_power = 0.15
+}
+
+
+# Pasai and Aceh Ideas
+# PSA ACH
+abm_atj_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = letters_of_marque
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
+
+	requires = ship_building_advance
+
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
+}
+
+abm_atj_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = library_advance
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
+
+	requires = organized_religion
+
+	# global_missionary_strength = 0.02
+	global_pop_conversion_speed_modifier = 0.20
+}
+
+abm_export_economy = {
+	age = age_2_renaissance
+	icon = offensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
+
+	requires = feudalism_advance
+
+	# global_trade_power = 0.1
+	global_merchant_power = 0.10
+}
+
+abm_islamise_sumatra = {
+	age = age_2_renaissance
+	icon = hindu_muslim_relations
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
+
+	requires = organized_religion
+
+	# missionary_maintenance_cost = -0.25
+	global_pop_conversion_speed_modifier = 0.10
+}
+
+abm_rise_of_aceh = {
+	age = age_3_discovery
+	icon = army_professionalism
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# province_warscore_cost = -0.1
+	global_war_score_efficiency = 0.10
+}
+
+abm_military_adventures = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
+}
+
+abm_atj_ideas_porch_of_mecca = {
+	age = age_4_reformation
+	icon = smooth_administration
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
+
+	requires = early_modern_administation
+
+	# technology_cost = -0.10
+	research_speed_modifier = 0.05
+}
+
+abm_acehnese_moneylending = {
+	age = age_4_reformation
+	icon = free_merchants
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
+
+	requires = global_trade_advance
+
+	# interest = -1
+	bank_interest = -0.01
+}
+
+abm_settle_the_islands = {
+	age = age_5_absolutism
+	icon = students_of_foreign_courts
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+			has_or_had_tag = BEI
+		}
+	}
+
+	requires = central_bank_advance
+
+	# global_colonial_growth = 20
+	colonial_migration_size = 20
+}
+
+abm_atj_ideas_ambition = {
+	age = age_6_revolutions
+	icon = industrialization_advance
+	potential = {
+		OR = {
+			has_or_had_tag = PSA
+			has_or_had_tag = ACH
+		}
+	}
+
+	requires = industrialization_advance
+
+	# production_efficiency = 0.1
+	global_production_efficiency = large_production_efficiency_bonus
+}
+
+
+# Siguntur Ideas
+# SGT
+abm_pgr_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = expansionism
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = boarding_parties
+
+	# defensiveness = 0.1
+	sea_cost_on_distance_from_capital_when_maritime = -0.5
+}
+
+abm_pgr_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = feudalism_advance
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = feudalism_advance
+
+	# tolerance_heathen = 2
+	tolerance_heathen = 2
+}
+
+abm_pgr_tantric_legacy = {
+	age = age_2_renaissance
+	icon = buddhist_meditation
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = organized_religion
+
+	# global_missionary_strength = 0.02
+	global_pop_conversion_speed_modifier = 0.20
+}
+
+abm_pgr_gold_trade = {
+	age = age_2_renaissance
+	icon = defensive_army
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = feudalism_advance
+
+	# global_trade_power = 0.1
+	global_merchant_power = 0.10
+}
+
+abm_pgr_istano_basa = {
+	age = age_3_discovery
+	icon = defensive_mentality
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = pike_and_shot_advance
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
+}
+
+abm_pgr_rajo_tigo_selo = {
+	age = age_3_discovery
+	icon = army_professionalism
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = pike_and_shot_advance
+
+	# global_unrest = -1
+	pop_join_rebel_threshold = -0.03
+	global_defensive = 0.10
+}
+
+abm_pgr_high_education = {
+	age = age_4_reformation
+	icon = library_advance
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = confessionalism_advance
+
+	# global_institution_spread = 0.1
+	global_institution_growth_modifier = 0.10
+}
+
+abm_pgr_rumah_gadang = {
+	age = age_4_reformation
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# prestige = 1
+	monthly_prestige = 0.10
+}
+
+abm_pgr_matrilinear_culture = {
+	age = age_5_absolutism
+	icon = administrative_leadership
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = government_size_absolutism
+
+	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.20
+}
+
+abm_pgr_ideas_ambition = {
+	age = age_6_revolutions
+	icon = pike_and_shot_advance
+	potential = {
+		has_or_had_tag = SGT
+	}
+
+	requires = modern_bureaucracy
+
+	# trade_efficiency = 0.1
+	trade_income = 0.10
+}
+
+
+# Palembang Ideas
+# PLB
+abm_plb_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = feudalism_advance
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = feudalism_advance
+
+	# global_trade_power = 0.15
+	global_merchant_power = 0.15
+}
+
+abm_plb_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = rudimentary_coastal_ship_repair
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = ship_building_advance
+
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
+}
+
+abm_plb_ancient_scriptures = {
+	age = age_2_renaissance
+	icon = offensive_army
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = feudalism_advance
+
+	# prestige = 1
+	monthly_prestige = 0.10
+}
+
+abm_plb_pirate_ancestry = {
+	age = age_2_renaissance
+	icon = efficient_spies
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = formalized_relations
+
+	# rebel_support_efficiency = 0.25
+	spy_network_construction = 0.20
+}
+
+abm_plb_controlling_the_strait = {
+	age = age_3_discovery
+	icon = incense_trade_route
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = trade_range_advance_age_3
+
+	# embargo_efficiency = 0.05
+	# privateer_efficiency = 0.4
+	global_trade_center_power = 0.10
+	global_merchant_power = 0.20
+}
+
+abm_plb_center_of_the_dynasty = {
+	age = age_3_discovery
+	icon = diplomatic_range_age_1
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = colonial_charters
+
+	# improve_relation_modifier = 0.1
+	# fabricate_claims_cost = -0.25
+	improve_relation_impact = 0.10
+	casus_belli_creation_speed_modifier = 0.25
+}
+
+abm_plb_trading_hub = {
+	age = age_4_reformation
+	icon = defensive_mentality
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# global_ship_trade_power = 0.2
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+}
+
+abm_plb_through_the_monsoon = {
+	age = age_4_reformation
+	icon = safe_exploration_techniques_advance
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = letters_of_marque
+
+	# recover_navy_morale_speed = 0.25
+	naval_morale_recovery = 0.05
+}
+
+abm_plb_learned_scholars = {
+	age = age_5_absolutism
+	icon = renaissance_advance
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = government_size_absolutism
+
+	# technology_cost = -0.1
+	research_speed_modifier = 0.05
+}
+
+abm_plb_ideas_ambition = {
+	age = age_6_revolutions
+	icon = drill_army_advance
+	potential = {
+		has_or_had_tag = PLB
+	}
+
+	requires = modern_bureaucracy
+
+	# ship_durability = 0.1
+	naval_morale_modifier = 0.10
+}
+
+
+# Sundanese Ideas
+# SUN MTM DEM PJN
+abm_sun_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = defensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = feudalism_advance
+
+	# tolerance_heretic = 1
+	tolerance_heretic = 1
+	tolerance_heathen = 1
+}
+
+abm_sun_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = regimental_system
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = drill_army_advance
+
+	# manpower_recovery_speed = 0.2
+	possible_frontage_modifier = 0.10
+}
+
+abm_candi_shrines = {
+	age = age_2_renaissance
+	icon = vegetarianism
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = organized_religion
+
+	# tolerance_own = 1
+	tolerance_own = 1
+}
+
+abm_sunda_galuh = {
+	age = age_2_renaissance
+	icon = expanded_supply_trains
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = feudalism_advance
+
+	# global_unrest = -1
+	pop_join_rebel_threshold = -0.03
+	monthly_religious_rebel_growth = -0.01
+}
+
+abm_defensive_moats = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# defensiveness = 0.2
+	global_defensive = 0.20
+}
+
+abm_wooden_architecture = {
+	age = age_3_discovery
+	icon = city_building_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = colonial_charters
+
+	# build_cost = -0.1
+	global_build_buildings_efficiency = 0.10
+}
+
+abm_pan_asian_trade = {
+	age = age_4_reformation
+	icon = zmw_merchant_taxes
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = global_trade_advance
+
+	# merchants = 1
+	# trade_steering = 0.10
+	global_merchant_power = 0.20
+	global_trade_center_power = 0.10
+}
+
+abm_seren_taun = {
+	age = age_4_reformation
+	icon = local_nobility
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = crown_power_advance_reformation
+
+	# global_tax_modifier = 0.1
+	nobles_estate_max_tax = 0.05
+	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction
+}
+
+abm_bi_yearly_harvest = {
+	age = age_5_absolutism
+	icon = offensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = government_size_absolutism
+
+	# global_trade_goods_size_modifier = 0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+abm_sun_ideas_ambition = {
+	age = age_6_revolutions
+	icon = defensive_mentality
+	potential = {
+		OR = {
+			has_or_had_tag = SUN
+			has_or_had_tag = MTM
+			has_or_had_tag = DEM
+			has_or_had_tag = PJN
+		}
+	}
+
+	requires = modern_bureaucracy
+
+	# land_morale = 0.20
+	combat_speed_modifier = 0.10
+	correct_box_chance = 0.10
+}
+
+
+# Balinese Ideas
+# BLI SLP TLW NGL DOM BIM LRT WHL
+abm_bli_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = feudalism_advance
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = feudalism_advance
+
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
+}
+
+abm_bli_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = safe_exploration_techniques_advance
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = ship_building_advance
+
+	# light_ship_cost = -0.20
+	navy_light_ship_build_cost_modifier = -0.20
+}
+
+abm_bli_island_settlers = {
+	age = age_2_renaissance
+	icon = diplomatic_influence
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = formalized_relations
+
+	# global_colonial_growth = 20
+	colonial_migration_size = 20
+}
+
+abm_javanese_culture = {
+	age = age_2_renaissance
+	icon = a_central_power
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = modern_bureaucracy
+
+	# technology_cost = -0.05
+	research_speed_modifier = 0.05
+}
+
+abm_aristocratic_refugees = {
+	age = age_3_discovery
+	icon = defensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# prestige = 1
+	monthly_prestige = 0.10
+}
+
+abm_staunch_hindus = {
+	age = age_3_discovery
+	icon = church_councils
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = colonial_charters
+
+	# tolerance_own = 2
+	tolerance_own = 2
+}
+
+abm_conquerer_dalems = {
+	age = age_4_reformation
+	icon = regimental_system
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# land_morale = 0.15
+	land_morale_modifier = 0.15
+}
+
+abm_hindu_reformation = {
+	age = age_4_reformation
+	icon = religious_melting_pot
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = confessionalism_advance
+
+	# global_missionary_strength = 0.02
+	global_pop_conversion_speed_modifier = 0.20
+}
+
+abm_rivals_to_slaves = {
+	age = age_5_absolutism
+	icon = expanded_supply_trains
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = government_size_absolutism
+
+	# manpower_recovery_speed = 0.10
+	regiment_reinforcement_speed = 0.10
+}
+
+abm_bli_ideas_ambition = {
+	age = age_6_revolutions
+	icon = pike_and_shot_advance
+	potential = {
+		OR = {
+			has_or_had_tag = BLI
+			has_or_had_tag = SLP
+			has_or_had_tag = TLW
+			has_or_had_tag = NGL
+			has_or_had_tag = DOM
+			has_or_had_tag = BIM
+			has_or_had_tag = LRT
+			has_or_had_tag = WHL
+		}
+	}
+
+	requires = modern_bureaucracy
+
+	# ae_impact = -0.15
+	aggressiveness_modifier = -0.15
+}
+
+
+# Bruneian Ideas
+# BEI# Bruneian Ideas
+# BEI
+abm_bei_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = drill_army_advance
+	potential = {
+		has_or_had_tag = BEI
+	}
+
+	requires = army_professionalism
+
+	# land_morale = 0.1
+	land_morale_modifier = 0.10
+}
+
+abm_bei_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = merchant_power_from_maritime_reformation_advance
+	potential = {
+		has_or_had_tag = BEI
+	}
+
+	requires = ship_building_advance
+
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
+}
+
+abm_bei_galleys = {
+	age = age_2_renaissance
+	icon = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = BEI
+	}
+
+	requires = ship_building_advance
+
+	# galley_power = 0.2
+	navy_galley_power = 0.20
+}
+
+abm_bei_sea_nomads = {
+	age = age_2_renaissance
+	icon = nor_bounties_of_the_sea
+	potential = {
+		has_or_had_tag = BEI
+	}
+
+	requires = trade_range_advance_age_2
+
+	# global_sailors_modifier = 0.2
+	global_sailors_modifier = 0.20
+}
+
+abm_bei_diplomacy = {
+	age = age_3_discovery
+	icon = diplomatic_training
+	potential = {
+		has_or_had_tag = BEI
+	}
+
+	requires = colonial_charters
+
+	# diplomatic_reputation = 1
+	diplomatic_reputation = diplomatic_reputation_weak_bonus
+}
+
+abm_bei_vassals = {
+	age = age_3_discovery
+	icon = students_of_foreign_courts
+	potential = {
+		has_or_had_tag = BEI
+	}
+
+	requires = colonial_charters
+
+	# reduced_liberty_desire = 10
+	loyalty_to_overlord = 10
+}
+
+abm_bei_naval_prowess = {
+	age = age_4_reformation
+	icon = army_professionalism
+	potential = {
+		has_or_had_tag = BEI
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
+}
+
+abm_bei_trade = {
+	age = age_5_absolutism
+	icon = colonies
+	potential = {
+		has_or_had_tag = BEI
+	}
+
+	requires = central_bank_advance
+
+	# trade_efficiency = 0.1
+	trade_sea_efficiency = small_trade_sea_efficiency_bonus
+	global_maritime_presence_modifier = 0.10
+}
+
+abm_bei_ideas_ambition = {
+	age = age_6_revolutions
+	icon = ship_building_advance
+	potential = {
+		has_or_had_tag = BEI
+	}
+
+	requires = industrialization_advance
+
+	# ship_durability = 0.1
+	ship_durability = 0.10
+}
+
+
+# Bornean Ideas
+# MNU SBG TJP SMB KRP NSR MRP KKG TDG
+abm_kut_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = rudimentary_coastal_ship_repair
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = ship_building_advance
+
+	# global_prov_trade_power_modifier = 0.1
+	own_coast_naval_combat_bonus = 0.10
+}
+
+abm_kut_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = trade_caravans
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = trade_range_advance_age_2
+
+	# trade_steering = 0.2
+	global_trade_center_power = 0.20
+}
+
+abm_kut_earliest_indic_state = {
+	age = age_2_renaissance
+	icon = royal_navy
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = ship_building_advance
+
+	# trade_efficiency = 0.1
+	sea_cost_on_distance_from_capital = -10
+}
+
+abm_kut_muslim_trading_communities = {
+	age = age_2_renaissance
+	icon = drill_army_advance
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = feudalism_advance
+
+	# tolerance_heathen = 2
+	tolerance_heathen = 2
+}
+
+abm_kut_riches_of_borneo = {
+	age = age_3_discovery
+	icon = offensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
+}
+
+abm_kut_anti_piracy_measures = {
+	age = age_3_discovery
+	icon = regimental_system
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# defensiveness = 0.1
+	global_defensive = 0.10
+}
+
+abm_kut_encourage_immigration = {
+	age = age_4_reformation
+	icon = administrative_leadership
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# global_manpower_modifier = 0.15
+	army_maintenance_efficiency = 0.15
+}
+
+abm_kut_consolidation_of_kutai = {
+	age = age_4_reformation
+	icon = peasants_rights_laws_advance
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = crown_power_advance_reformation
+
+	# global_tax_modifier = 0.1
+	global_estate_target_satisfaction = small_permanent_target_satisfaction
+}
+
+abm_kut_subdue_the_inlands = {
+	age = age_5_absolutism
+	icon = scientific_revolution_advance
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = scientific_revolution_advance
+
+	# global_unrest = -1
+	cultures_capacity_modifier = 0.20
+}
+
+abm_kut_ideas_ambition = {
+	age = age_6_revolutions
+	icon = letters_of_marque
+	potential = {
+		OR = {
+			has_or_had_tag = MNU
+			has_or_had_tag = SBG
+			has_or_had_tag = TJP
+			has_or_had_tag = SMB
+			has_or_had_tag = KRP
+			has_or_had_tag = NSR
+			has_or_had_tag = MRP
+			has_or_had_tag = KKG
+			has_or_had_tag = TDG
+		}
+	}
+
+	requires = industrialization_advance
+
+	# global_own_trade_power = 0.2
+	naval_damage_taken = -0.10
+}
+
+
+# Sulawesi Ideas
+# LUW BOW BLN GRT PJT PKR
+abm_sulawesi_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = ship_building_advance
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = ship_building_advance
+
+	# naval_forcelimit_modifier = 0.25
+	navy_galley_build_cost_modifier = -0.20
+	navy_transport_build_cost_modifier = -0.20
+}
+
+abm_sulawesi_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = feudalism_advance
+
+	# sailor_maintenance_modifer = -0.1
+	navy_maintenance_efficiency = 0.10
+}
+
+abm_sulawesi_intra_asian_trade = {
+	age = age_2_renaissance
+	icon = saharan_gold_trade
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = trade_range_advance_age_2
+
+	# trade_steering = 0.1
+	global_trade_center_power = 0.10
+}
+
+abm_sulawesi_bajau = {
+	age = age_2_renaissance
+	icon = maritime_advance_age_4
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = ship_building_advance
+
+	# navy_tradition_decay = -0.01
+	navy_tradition_decay = -0.01
+}
+
+abm_sulawesi_prau = {
+	age = age_3_discovery
+	icon = royal_navy
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = ship_building_techniques_discovery
+
+	# light_ship_cost = -0.2
+	navy_light_ship_build_cost_modifier = -0.20
+}
+
+abm_sulawesi_unification = {
+	age = age_3_discovery
+	icon = banking_advance
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = colonial_charters
+
+	# global_tax_modifier = 0.1
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
+}
+
+abm_sulawesi_learning_from_outsiders = {
+	age = age_4_reformation
+	icon = scholasticism
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = confessionalism_advance
+
+	# global_institution_spread = 0.1
+	global_institution_growth_modifier = 0.10
+}
+
+abm_sulawesi_entrepot = {
+	age = age_4_reformation
+	icon = defensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# global_trade_power = 0.1
+	global_merchant_power = 0.10
+}
+
+abm_sulawesi_assymetrical_warfare = {
+	age = age_5_absolutism
+	icon = defensive_army_attrition
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = government_size_absolutism
+
+	# hostile_attrition = 1
+	global_hostile_attrition = 1
+}
+
+abm_sulawesi_ideas_ambition = {
+	age = age_6_revolutions
+	icon = defensive_mentality
+	potential = {
+		OR = {
+			has_or_had_tag = LUW
+			has_or_had_tag = BOW
+			has_or_had_tag = BLN
+			has_or_had_tag = GRT
+			has_or_had_tag = PJT
+			has_or_had_tag = PKR
+		}
+	}
+
+	requires = modern_bureaucracy
+
+	# trade_efficiency = 0.1
+	trade_income = 0.05
+}
+
+
+# Moluccan Ideas
+# JLO MOO LOL BAC TER TID
+abm_moluccan_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = expanded_supply_trains
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = feudalism_advance
+
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
+}
+
+abm_moluccan_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = debt_and_loans
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = construction_speed_renaissance
+
+	# production_efficiency = 0.1
+	global_production_efficiency = medium_production_efficiency_bonus
+}
+
+abm_moluccan_spice_islands = {
+	age = age_2_renaissance
+	icon = red_sea_trade
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = global_trade_advance
+
+	# trade_efficiency = 0.1
+	global_merchant_capacity_modifier = 0.20
+}
+
+abm_moluccan_cultural_heritage = {
+	age = age_2_renaissance
+	icon = pike_and_shot_advance
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = feudalism_advance
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
+}
+
+abm_moluccan_agents_of_trade = {
+	age = age_3_discovery
+	icon = army_professionalism
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# merchants = 1
+	global_merchant_power = 0.20
+}
+
+abm_moluccan_four_kingdoms = {
+	age = age_3_discovery
+	icon = colonies
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = ship_building_techniques_discovery
+
+	# global_unrest = -2
+	global_maritime_presence_decay = -0.001
+	global_maritime_presence_modifier = 0.10
+}
+
+abm_moluccan_dominance_over_the_outer_islands = {
+	age = age_4_reformation
+	icon = global_trade_advance
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = global_trade_advance
+
+	# global_colonial_growth = 20
+	colonial_migration_size = 20
+}
+
+abm_moluccan_ally_papuan_raiders = {
+	age = age_4_reformation
+	icon = rudimentary_coastal_ship_repair
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = letters_of_marque
+
+	# light_ship_power = 0.15
+	navy_light_ship_power = 0.20
+}
+
+abm_moluccan_pragmatic_diplomacy = {
+	age = age_5_absolutism
+	icon = diplomatic_influence
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = central_bank_advance
+
+	# diplomats = 1
+	max_diplomats = 1
+}
+
+abm_moluccan_ideas_ambition = {
+	age = age_6_revolutions
+	icon = drill_army_advance
+	potential = {
+		OR = {
+			has_or_had_tag = JLO
+			has_or_had_tag = MOO
+			has_or_had_tag = LOL
+			has_or_had_tag = BAC
+			has_or_had_tag = TER
+			has_or_had_tag = TID
+		}
+	}
+
+	requires = modern_bureaucracy
+
+	# sailor_maintenance_modifer = -0.1
+	navy_maintenance_efficiency = 0.10
+}
+
+
+# Luzon Ideas
+# ILC PGS TDO MYI IBL
+abm_luzon_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = feudalism_advance
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = feudalism_advance
+
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
+}
+
+abm_luzon_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = safe_exploration_techniques_advance
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = ship_building_advance
+
+	# navy_tradition = 1
+	monthly_navy_tradition = 0.10
+}
+
+abm_luzon_barangay = {
+	age = age_2_renaissance
+	icon = nor_bounties_of_the_sea
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = trade_range_advance_age_2
+
+	# naval_maintenance_modifier = -0.2
+	# sailor_maintenance_modifer = -0.1
+	navy_maintenance_efficiency = 0.20
+	global_sailors_modifier = 0.10
+}
+
+abm_luzon_conquest_of_paradise = {
+	age = age_2_renaissance
+	icon = defensive_army_attrition
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = fortification_advance
+
+	# hostile_attrition = 1
+	global_hostile_attrition = 1
+}
+
+abm_luzon_sino_philippine_trade = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# global_ship_trade_power = 0.1
+	global_merchant_power = 0.10
+}
+
+abm_luzon_tagalog_syncretism = {
+	age = age_3_discovery
+	icon = defensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# tolerance_heathen = 2
+	tolerance_heathen = 2
+}
+
+abm_luzon_sailors = {
+	age = age_4_reformation
+	icon = merchant_power_from_maritime_reformation_advance
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = letters_of_marque
+
+	# navy_tradition_decay = -0.01
+	navy_tradition_decay = -0.01
+}
+
+abm_luzon_a_safe_haven = {
+	age = age_4_reformation
+	icon = roman_orthodoxy
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = confessionalism_advance
+
+	# advisor_cost = -0.1
+	set_cabinet_member_cost_modifier = -0.25
+	country_cabinet_efficiency = 0.15
+}
+
+abm_luzon_expand_the_sugar_production = {
+	age = age_5_absolutism
+	icon = food_advance_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = manufactories_advance
+
+	# production_efficiency = 0.1
+	global_production_efficiency = 0.10
+}
+
+abm_luzon_ideas_ambition = {
+	age = age_6_revolutions
+	icon = regimental_system
+	potential = {
+		OR = {
+			has_or_had_tag = ILC
+			has_or_had_tag = PGS
+			has_or_had_tag = TDO
+			has_or_had_tag = MYI
+			has_or_had_tag = IBL
+		}
+	}
+
+	requires = modern_bureaucracy
+
+	# naval_morale = 0.2
+	naval_morale_modifier = 0.15
+}
+
+
+# Madyas Ideas
+# MAS
+abm_mas_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = letters_of_marque
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = ship_building_advance
+
+	# leader_naval_manuever = 1
+	navy_movement_speed = 0.10
+}
+
+abm_mas_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = nor_bounties_of_the_sea
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = trade_range_advance_age_2
+
+	# sailor_maintenance_modifer = -0.1
+	global_sailors_modifier = 0.10
+}
+
+abm_mas_hinalliwood = {
+	age = age_2_renaissance
+	icon = laws
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = modern_bureaucracy
+
+	# idea_cost = -0.1
+	research_speed_modifier = 0.05
+}
+
+abm_mas_legacy_of_panai = {
+	age = age_2_renaissance
+	icon = defensive_mentality
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = feudalism_advance
+
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
+}
+
+abm_mas_riches_of_the_visayas = {
+	age = age_3_discovery
+	icon = agriculture_advance
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = colonial_charters
+
+	# development_cost = -0.1
+	global_monthly_prosperity = 0.001
+}
+
+abm_mas_masters_of_maritime_warfare = {
+	age = age_3_discovery
+	icon = rudimentary_coastal_ship_repair
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = ship_building_techniques_discovery
+
+	# leader_naval_shock = 1
+	train_admiral_ability = 25
+}
+
+abm_mas_articles_of_the_confederation = {
+	age = age_4_reformation
+	icon = expanded_supply_trains
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# prestige = 1
+	monthly_prestige = 0.10
+}
+
+abm_mas_kinaduatan = {
+	age = age_4_reformation
+	icon = government_size
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = early_modern_administation
+
+	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
+	diplomatic_upkeep_efficiency = 0.10
+}
+
+abm_mas_expand_the_shipbuilding_sector = {
+	age = age_5_absolutism
+	icon = merchant_power_from_maritime_reformation_advance
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = central_bank_advance
+
+	# ship_durability = 0.05
+	naval_damage_taken = -0.05
+}
+
+abm_mas_ideas_ambition = {
+	age = age_6_revolutions
+	icon = industrialization_advance
+	potential = {
+		has_or_had_tag = MDY
+	}
+
+	requires = industrialization_advance
+
+	# leader_naval_fire = 1
+	heavy_ship_power = 0.10
+}
+
+# Cebuano Ideas
+# CEB BOL
+abm_ceb_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = pike_and_shot_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = feudalism_advance
+
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
+}
+
+abm_ceb_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = letters_of_marque
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = ship_building_advance
+
+	# light_ship_cost = -0.2
+	navy_light_ship_build_cost_modifier = -0.20
+}
+
+abm_ceb_rajah_humabon = {
+	age = age_2_renaissance
+	icon = feudalism_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = feudalism_advance
+
+	# prestige = 1
+	monthly_prestige = 0.10
+}
+
+abm_ceb_lapu_lapu = {
+	age = age_2_renaissance
+	icon = army_professionalism
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = army_professionalism
+
+	# land_morale = 0.1
+	land_morale_modifier = 0.10
+}
+
+abm_ceb_visayan_warriors = {
+	age = age_3_discovery
+	icon = offensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# infantry_power = 0.1
+	army_heavy_infantry_power = 0.10
+}
+
+abm_ceb_trade_networks = {
+	age = age_3_discovery
+	icon = free_merchants
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = trade_range_advance_age_3
+
+	# trade_efficiency = 0.1
+	global_merchant_capacity_modifier = 0.35
+}
+
+abm_ceb_island_hopping = {
+	age = age_4_reformation
+	icon = global_trade_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = global_trade_advance
+
+	# global_colonial_growth = 15
+	colonial_migration_size = 15
+}
+
+abm_ceb_cebuano_culture = {
+	age = age_4_reformation
+	icon = town_rights_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = early_modern_administation
+
+	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
+}
+
+abm_ceb_expand_the_fleet = {
+	age = age_5_absolutism
+	icon = defensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = government_size_absolutism
+
+	# naval_forcelimit_modifier = 0.25
+	navy_maintenance_efficiency = 0.20
+}
+
+abm_ceb_ideas_ambition = {
+	age = age_6_revolutions
+	icon = defensive_mentality
+	potential = {
+		OR = {
+			has_or_had_tag = CEB
+			has_or_had_tag = BOL
+		}
+	}
+
+	requires = modern_bureaucracy
+
+	# discipline = 0.05
+	discipline = 0.05
+}
+
+
+# Mindanao Ideas
+# SML LNO MGD KIM
+abm_mindanao_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = ship_building_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = ship_building_advance
+
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
+}
+
+abm_mindanao_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = army_professionalism
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = feudalism_advance
+
+	# tolerance_heathen = 2
+	tolerance_heathen = 2
+}
+
+abm_mindanao_sultanate = {
+	age = age_2_renaissance
+	icon = drill_army_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = feudalism_advance
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
+}
+
+abm_mindanao_maranao_lake = {
+	age = age_2_renaissance
+	icon = regimental_system
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = feudalism_advance
+
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
+}
+
+abm_mindanao_warriors = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# infantry_power = 0.1
+	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.10
+}
+
+abm_mindanao_piracy = {
+	age = age_3_discovery
+	icon = royal_navy
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = ship_building_techniques_discovery
+
+	# light_ship_power = 0.15
+	navy_light_ship_power = 0.15
+}
+
+abm_mindanao_trade_routes = {
+	age = age_4_reformation
+	icon = pike_and_shot_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# trade_efficiency = 0.1
+	trade_income = 0.05
+}
+
+abm_mindanao_resistance = {
+	age = age_4_reformation
+	icon = defensive_army_attrition
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# hostile_attrition = 1
+	global_hostile_attrition = 1
+}
+
+abm_mindanao_consolidation = {
+	age = age_5_absolutism
+	icon = expanded_supply_trains
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = government_size_absolutism
+
+	# global_unrest = -1
+	pop_join_rebel_threshold = -0.05
+}
+
+abm_mindanao_ideas_ambition = {
+	age = age_6_revolutions
+	icon = offensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = SML
+			has_or_had_tag = LNO
+			has_or_had_tag = MGD
+			has_or_had_tag = KIM
+		}
+	}
+
+	requires = modern_bureaucracy
+
+	# land_morale = 0.15
+	land_morale_modifier = 0.15
+}
+
+
+# Butuan Ideas
+# BTU
+abm_btu_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = safe_exploration_techniques_advance
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = ship_building_advance
+
+	# global_trade_power = 0.1
+	can_hire_privateers = yes
+	allow_privateers_slave_raid = yes
+}
+
+abm_btu_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = ship_building_advance
+
+	# navy_tradition = 1
+	monthly_monthly_navy_tradition = 0.1
+}
+
+abm_btu_butuan_trade_connections = {
+	age = age_2_renaissance
+	icon = feudalism_advance
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = feudalism_advance
+
+	# merchants = 1
+	global_merchant_power = 0.20
+}
+
+abm_btu_gold_of_butuan = {
+	age = age_2_renaissance
+	icon = court_accounting
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = rgo_logistics_discovery
+
+	# production_efficiency = 0.1
+	global_max_rgo_size_modifier_in_non_rural = 0.20
+}
+
+abm_btu_laguna_copperplate = {
+	age = age_3_discovery
+	icon = bonded_by_loyalty
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = colonial_charters
+
+	# technology_cost = -0.05
+	research_speed_modifier = 0.05
+}
+
+abm_btu_rajahnate = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = pike_and_shot_advance
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
+}
+
+abm_btu_visayan_allies = {
+	age = age_4_reformation
+	icon = expanded_supply_trains
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# global_manpower_modifier = 0.15
+	global_manpower_modifier = 0.15
+}
+
+abm_btu_mindanao_sea_trade = {
+	age = age_4_reformation
+	icon = red_sea_trade
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = global_trade_advance
+
+	# trade_steering = 0.1
+	global_trade_center_power = 0.10
+}
+
+abm_btu_fortify_the_coast = {
+	age = age_5_absolutism
+	icon = army_professionalism
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = government_size_absolutism
+
+	# defensiveness = 0.15
+	global_defensive = 0.15
+}
+
+abm_btu_ideas_ambition = {
+	age = age_6_revolutions
+	icon = offensive_army
+	potential = {
+		has_or_had_tag = BTU
+	}
+
+	requires = modern_bureaucracy
+
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
+}
+
+
+# Sulu Ideas
+# SUL KML
+abm_sulu_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = royal_navy
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = ship_building_advance
+
+	# global_ship_cost = -0.1
+	navy_light_ship_build_cost_modifier = -0.10
+	navy_galley_build_cost_modifier = -0.10
+}
+
+abm_sulu_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = trade_caravans
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = trade_range_advance_age_2
+
+	# trade_range_modifier = 0.2
+	trade_range_modifier = 0.20
+}
+
+abm_sulu_sultanate = {
+	age = age_2_renaissance
+	icon = feudalism_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = feudalism_advance
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
+}
+
+abm_sulu_sea_raiders = {
+	age = age_2_renaissance
+	icon = maritime_advance_age_4
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = ship_building_advance
+
+	# light_ship_power = 0.15
+	navy_light_ship_power = 0.15
+}
+
+abm_sulu_slave_trade = {
+	age = age_3_discovery
+	icon = defensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier = 0.10
+}
+
+abm_sulu_pearls = {
+	age = age_3_discovery
+	icon = artists_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = colonial_charters
+
+	# production_efficiency = 0.1
+	global_production_efficiency = 0.10
+}
+
+abm_sulu_island_network = {
+	age = age_4_reformation
+	icon = defensive_mentality
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# merchants = 1
+	global_merchant_power = 0.20
+}
+
+abm_sulu_naval_dominance = {
+	age = age_4_reformation
+	icon = regimental_system
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# naval_morale = 0.15
+	naval_morale_modifier = 0.15
+}
+
+abm_sulu_consolidation = {
+	age = age_5_absolutism
+	icon = scientific_revolution_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = scientific_revolution_advance
+
+	# global_unrest = -1
+	tolerance_own = 3
+}
+
+abm_sulu_ideas_ambition = {
+	age = age_6_revolutions
+	icon = drill_army_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SUL
+			has_or_had_tag = KML
+		}
+	}
+
+	requires = modern_bureaucracy
+
+	# naval_forcelimit_modifier = 0.33
+	navy_maintenance_efficiency = 0.15
+}

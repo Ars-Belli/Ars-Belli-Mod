@@ -1,0 +1,132 @@
+############################
+# Launggyet (Arakan)
+# Western Burma Coast: Maritime kingdom
+# Concept: Coastal trader-raider state with strong naval tradition and cultural/religious resilience — shifted toward trade and diplomacy.
+############################
+
+# Tag: ARK
+
+############################
+# age_1_traditions (1337-1437)
+############################
+
+ark_coastal_raiders = {
+    age = age_1_traditions
+    requires = galley_combat
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+    global_maritime_presence_modifier = 0.20
+}
+
+ark_arakan_trade = {
+    age = age_1_traditions
+    requires = ark_coastal_raiders
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+    global_pop_promotion_speed_modifier = 0.1
+}
+
+############################
+# age_3_discovery (1437-1537)
+############################
+
+ark_buddhist_kingdom = {
+    age = age_3_discovery
+    requires = religious_tolerance
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+    tolerance_own_religion = 1
+    tolerance_heretic = 1
+}
+
+ark_maritime_networks = {
+    age = age_3_discovery
+    requires = ark_buddhist_kingdom
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+    trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+}
+
+############################
+# age_4_reformation (1537-1637)
+############################
+
+ark_portuguese_alliance = {
+    age = age_4_reformation
+    requires = diplomatic_corps
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+	monthly_republican_tradition = 0.1
+	monthly_legitimacy = 0.1
+	monthly_devotion = 0.1
+}
+
+ark_independent_coast = {
+    age = age_4_reformation
+    requires = ark_portuguese_alliance
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+    global_max_rgo_size_modifier_in_non_rural = 0.20
+}
+
+############################
+# age_5_absolutism (1637-1737)
+############################
+
+ark_muslim_influence = {
+    age = age_5_absolutism
+    requires = mercantilism
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+    monthly_war_exhaustion = -0.05
+	monthly_navy_tradition = 0.1
+}
+
+ark_arakan_prosperity = {
+    age = age_5_absolutism
+    requires = ark_muslim_influence
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+    global_monthly_prosperity = 0.002
+}
+
+############################
+# age_6_revolutions (1737-1837)
+############################
+
+ark_delta_defense = {
+    age = age_6_revolutions
+    requires = improved_governance
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+    global_hostile_attrition = 1
+	global_pop_food_consumption = -0.10
+}
+
+ark_arakan_revival = {
+    age = age_6_revolutions
+    requires = ark_delta_defense
+    potential = {
+        has_or_had_tag = ARK
+    }
+
+    army_artillery_power = 0.10
+}

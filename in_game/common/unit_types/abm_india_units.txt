@@ -1,0 +1,236 @@
+a_footmen = {
+	default = yes
+	copy_from = a_age_1_traditions_heavy_infantry
+	strength_damage_taken = -0.05
+	
+	
+	country_potential = { 
+		government_type != government_type:steppe_horde
+	}
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.1
+	}
+	
+	upgrades_to = a_men_at_arms
+
+	
+	maintenance_demand =  early_heavy_infantry_maintenance
+	construction_demand = early_heavy_infantry_construction
+	
+	gfx_tags = { medium_tag }
+	
+
+}
+
+abm_dmb_valangai_velaikkarar = {
+	copy_from = a_age_3_discovery_heavy_infantry
+	is_special = yes
+	upgrades_to_only = abm_dmb_perundanattu_velaikkarar 
+
+    movement_speed = 0.50
+    combat_speed = 0.25
+    initiative = 0.50
+    #max_strength = 0.10
+
+	buildable = yes
+	country_potential = {
+		OR = {
+            has_or_had_tag = DBD
+            has_or_had_tag = MAB
+            has_or_had_tag = VND
+		}
+	}
+
+	location_potential = {
+        is_coastal = yes
+        has_building = building:dock
+    }
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.3
+	}
+
+	impact = {
+		jungle = -0.15
+		mountains = -0.15
+		hills = -0.15
+		forest = -0.15
+	}
+	combat = {
+		jungle = 0.10
+		mountains = 0.10
+		hills = 0.10
+		forest = 0.10
+	}
+
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
+
+abm_dmb_perundanattu_velaikkarar = {
+	copy_from = a_age_4_reformation_heavy_infantry
+	is_special = yes
+	upgrades_to_only = abm_dmb_elite_perundanattu_velaikkarar
+
+    movement_speed = 0.50
+    combat_speed = 0.25
+    initiative = 0.50
+    # max_strength = 0.25
+
+	buildable = yes
+	country_potential = {
+		OR = {
+            has_or_had_tag = DBD
+            has_or_had_tag = MAB
+            has_or_had_tag = VND
+		}
+	}
+
+	location_potential = {
+        is_coastal = yes
+        has_building = building:dock
+    }
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.3
+	}
+
+	impact = {
+		jungle = -0.15
+		mountains = -0.15
+		hills = -0.15
+		forest = -0.15
+	}
+	combat = {
+		jungle = 0.15
+		mountains = 0.10
+		hills = 0.10
+		forest = 0.10
+	}
+
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
+
+abm_dmb_elite_perundanattu_velaikkarar = {
+	copy_from = a_age_5_absolutism_heavy_infantry
+	is_special = yes
+	upgrades_to_only = a_age_6_revolutions_heavy_infantry 
+
+    movement_speed = 1.0
+    combat_speed = 0.25
+    initiative = 0.50
+    # max_strength = 0.25
+	buildable = yes
+	country_potential = {
+		OR = {
+            has_or_had_tag = DBD
+            has_or_had_tag = MAB
+            has_or_had_tag = VND
+		}
+	}
+
+	location_potential = {
+        is_coastal = yes
+        has_building = building:dock
+    }
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.3
+	}
+
+	impact = {
+		jungle = -0.15
+		mountains = -0.15
+		hills = -0.15
+		forest = -0.15
+	}
+	combat = {
+		jungle = 0.15
+		mountains = 0.15
+		hills = 0.15
+		forest = 0.15
+	}
+
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
+
+
+abm_a_india_hasshashun_infiltrators = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	upgrades_to_only = abm_a_india_veteran_hasshashun_infiltrators
+
+    movement_speed = 2
+    combat_speed = 1
+    initiative = 1
+    strength_damage_done = 0.10
+    morale_damage_taken = -0.10
+    strength_damage_taken = 0.10
+
+	buildable = yes
+	country_potential = {
+		has_reform = government_reform:abm_india_hasshashun_branch
+	}
+
+	location_potential = {
+        has_building = building:mosque
+    }
+
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
+
+abm_a_india_veteran_hasshashun_infiltrators = {
+	copy_from = a_age_3_discovery_light_infantry
+	is_special = yes
+	upgrades_to_only = abm_a_india_elite_hasshashun_infiltrators
+
+    movement_speed = 2
+    combat_speed = 1
+    initiative = 1
+    strength_damage_done = 0.10
+    morale_damage_taken = -0.10
+    strength_damage_taken = 0.10
+
+	buildable = yes
+	country_potential = {
+		has_reform = government_reform:abm_india_hasshashun_branch
+	}
+
+	location_potential = {
+        has_building = building:mosque
+    }
+
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
+
+abm_a_india_elite_hasshashun_infiltrators = {
+	copy_from = a_age_4_reformation_light_infantry
+	is_special = yes
+	upgrades_to_only = a_age_5_absolutism_light_infantry
+
+    movement_speed = 2
+    combat_speed = 1
+    initiative = 1
+    strength_damage_done = 0.10
+    morale_damage_taken = -0.10
+    strength_damage_taken = 0.10
+
+	buildable = yes
+	country_potential = {
+		has_reform = government_reform:abm_india_hasshashun_branch
+	}
+
+	location_potential = {
+        has_building = building:mosque
+    }
+
+	gfx_tags = { crusader_tag sword_tag heavy_tag }
+}
