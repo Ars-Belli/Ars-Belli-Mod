@@ -1234,6 +1234,103 @@ abm_hnm_eco3_the_wealth_of_sado = {
 	monthly_inflation = -0.001
 }
 
+abm_ryu_eco1_mercantile_traditions = {
+	icon = ktb_control_of_ise
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = mining_advance
+
+	trade_sea_efficiency = large_trade_sea_efficiency_bonus
+	global_trade_center_power = 0.05
+}
+
+abm_ryu_dip1_chinese_investiture = {
+	icon = jap_bushido
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = written_alphabet
+
+	diplomatic_reputation = diplomatic_reputation_weak_bonus
+	antagonism_received_modifier = -0.25
+}
+
+abm_ryu_nav1_mastery_of_the_sea = {
+	icon = soo_tradition_of_wakou
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = unlock_cog_advance
+
+	naval_damage_taken = -0.1
+}
+
+abm_anu_mil1_hunters_and_warriors = {
+	icon = akt_ezo_kanrei
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = mining_advance
+
+	global_hostile_attrition = 1
+	army_light_infantry_build_cost_modifier = -0.2
+}
+
+abm_anu_mil2_forest_trails = {
+	icon = jap_bushido
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = agriculture_advance
+
+	combat_speed_modifier = 0.1
+	movement_speed_if_no_road = 0.2
+}
+
+abm_anu_eco1_riches_of_the_sea = {
+	icon = soo_tradition_of_wakou
+	age = age_1_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = unlock_cog_advance
+
+	global_raw_material_output = 0.1
+}
+
 ############################
 # age_2_renaissance
 ############################
@@ -2441,6 +2538,101 @@ abm_hnm_nav1_pirate_haven = {
 	can_hire_privateers = yes
 	allow_privateers_slave_raid = yes
 	army_disembark_speed = 0.5
+}
+
+abm_ryu_eco2_extensive_trade_networks = {
+	icon = ouc_korea_trade
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = grant_privilege_cost_modifier_renaissance_advance
+
+	trade_range_modifier = 0.2
+}
+
+abm_ryu_dip2_reliance_on_diplomacy = {
+	icon = htk_shogunate_ties
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = late_feudal_relations
+
+	diplomatic_range_modifier = 0.3
+	monthly_diplomats = 0.05
+}
+
+abm_ryu_nav2_expert_sailors = {
+	icon = isk_sanindo_gate
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = unlock_m_galley_advance
+
+	navy_movement_speed = 0.1
+	naval_range = 500
+}
+
+abm_anu_mil3_fierce_resistance = {
+	icon = jap_ichiban_yari
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = grant_privilege_cost_modifier_renaissance_advance
+
+	tribes_estate_levy_size = 0.5
+}
+
+abm_anu_mil4_chasi = {
+	icon = jap_jokamachi
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = grant_privilege_cost_modifier_renaissance_advance
+
+	global_defensive = 0.2
+}
+
+abm_anu_adm1_heirs_of_jomon = {
+	icon = jap_land_of_the_rising_sun
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = late_feudal_relations
+
+	monthly_prestige = 0.1
 }
 
 ############################
@@ -3717,6 +3909,103 @@ abm_hnm_nav3_bold_captains = {
 
 	naval_morale_modifier = 0.1
 	navy_initiative = 0.2
+}
+
+abm_ryu_nav3_join_the_wokou_raids = {
+	icon = isk_sanindo_gate
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = naval_morale_advance_2
+
+	can_hire_privateers = yes
+	allow_privateers_slave_raid = yes
+	ship_capture_chance = 0.025
+}
+
+abm_ryu_adm1_reform_the_ryukyuan_religion = {
+	icon = hachiman_worship
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = power_projection_advance_4
+
+	tolerance_own = 1
+}
+
+abm_ryu_nav4_tradition_of_maintenance = {
+	icon = jap_bushido
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = naval_morale_advance_2
+
+	ship_repair_at_sea_to_max_strength = 0.1
+	ship_repair_at_sea = 0.025
+}
+
+abm_anu_adm2_yukar = {
+	icon = cba_katori_jingu
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = power_projection_advance_4
+
+	tolerance_own = 2
+}
+
+abm_anu_eco2_southern_traders = {
+	icon = isk_sanindo_gate
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = pop_promotion_speed_age_3
+
+	global_merchant_capacity_modifier = 0.2
+}
+
+abm_anu_mil5_hunter_gatherer_traditions = {
+	icon = hsk_rising_clan
+	age = age_3_discovery
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = paved_road_advance
+
+	land_unit_attrition = -0.15
+	global_supply_limit_modifier = 0.1
 }
 
 ############################
@@ -5054,6 +5343,82 @@ abm_hnm_mil1_recruit_wakou_corsairs = {
 	army_light_infantry_power = 0.1
 }
 
+abm_ryu_eco3_ryukyuan_merchant_houses = {
+	icon = ouc_korea_trade
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = global_trade_routes_advance
+
+	global_merchant_power = 0.1
+	merchant_maintenance_efficiency = 0.3
+}
+
+abm_ryu_mil1_the_three_mountains = {
+	icon = cba_katori_jingu
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = flintlock_gun
+
+	global_manpower_modifier = 0.15
+}
+
+abm_ryu_adm2_new_administration_system = {
+	icon = jap_land_of_the_rising_sun
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = shipyard_advance
+
+	num_naval_governors = 1
+}
+
+abm_anu_eco3_the_riches_of_hokkaido = {
+	icon = akt_march_of_akita
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = tools_workshop_advance
+
+	global_max_rgo_size_modifier = 0.15
+}
+
+abm_anu_mil6_military_reforms = {
+	icon = kkc_disinguished_family_in_kyushu
+	age = age_4_reformation
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = unlock_arquebusiers_advance
+
+	army_light_infantry_power = 0.1
+	army_light_infantry_maintenance_cost_modifier = -0.1
+}
+
 ############################
 # age_5_absolutism
 ############################
@@ -5097,6 +5462,83 @@ jap_wandering_ronin = {
 	hire_mercenary_premium_cost_modifier = -0.1
 }
 
+abm_ryu_adm3_shuri_castle = {
+	age = age_5_absolutism
+	icon = jap_jokamachi
+	potential = {
+		has_or_had_tag = RYU
+	}
+	
+	requires = modern_council_hall_advance
+	
+	monthly_prestige = 0.1
+	global_defensive = 0.1
+}
+
+abm_ryu_adm4_maritime_realm = {
+	age = age_5_absolutism
+	icon = soo_tradition_of_wakou
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = unlock_frigate_advance
+
+	sea_cost_on_distance_from_capital_when_maritime = -1
+}
+
+abm_ryu_dip2_the_empire_of_ryukyu = {
+	age = age_5_absolutism
+	icon = fukko_shinto
+	potential = {
+		has_or_had_tag = RYU
+	}
+	
+	requires = pacify_population_advance
+	
+	global_war_score_efficiency = 0.20
+	war_no_cb_cost_modifier = -0.25
+}
+
+abm_anu_eco4_reorganize_the_taxation_system = {
+	age = age_5_absolutism
+	icon = ktb_control_of_ise
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = absolutist_court
+
+	estate_enrichment = -0.05
+}
+
+abm_anu_dip2_a_modern_administration = {
+	age = age_5_absolutism
+	icon = jap_bushido
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+	
+	requires = integrate_area_advance
+	
+	government_size = 1
+}
+
+
 ############################
 # age_6_revolutions
 ############################
@@ -5138,4 +5580,79 @@ jap_reformed_land_holding = {
 	requires = steel_mill_advance
 	
 	global_max_rgo_size_modifier = 0.2
+}
+
+abm_ryu_eco4_global_commercial_empire = {
+	age = age_6_revolutions
+	icon = ktb_control_of_ise
+	potential = {
+		has_or_had_tag = RYU
+	}
+	
+	requires = commerce_center_advance
+	
+	export_efficiency = medium_trade_efficiency_bonus
+	global_merchant_capacity_modifier = 0.2
+}
+
+abm_ryu_adm5_national_academy = {
+	age = age_6_revolutions
+	
+	potential = {
+		has_or_had_tag = RYU
+	}
+
+	requires = rights_of_man
+
+	research_speed_modifier = 0.1
+}
+
+abm_ryu_nav5_ryukyu_rules_the_waves = {
+	age = age_6_revolutions
+	icon = jap_jokamachi
+	potential = {
+		has_or_had_tag = RYU
+	}
+	
+	requires = unlock_ship_of_the_line_advance
+	
+	naval_damage_done = 0.1
+}
+
+abm_anu_eco5_reform_our_economy = {
+	age = age_6_revolutions
+	icon = csk_clans_of_tosa
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+
+	requires = railroad_advance
+
+	global_production_efficiency = large_production_efficiency_bonus
+}
+
+abm_anu_adm4_ainu_cultural_renaissance = {
+	age = age_6_revolutions
+	icon = jap_jokamachi
+	potential = {
+		OR = {
+			has_or_had_tag = ANU
+			has_or_had_tag = ABNNU
+			has_or_had_tag = ABENU
+			has_or_had_tag = ABCNU
+			has_or_had_tag = ABWNU
+			has_or_had_tag = ABSNU
+		}
+	}
+	
+	requires = artists_advance_revolutions
+	
+	cultural_influence_modifier = 0.5
 }
