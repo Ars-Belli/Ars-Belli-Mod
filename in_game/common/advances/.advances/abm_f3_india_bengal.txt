@@ -1,0 +1,111 @@
+############################
+# Bengal formable (River Ganges)
+# 
+# 
+############################
+
+# Tag: BEN 
+
+############################
+# age_3_discovery (1437-1537)
+############################
+
+ben_delta_agriculture = {
+    age = age_3_discovery
+    requires = improved_farming
+    potential = {
+        has_or_had_tag = BEN
+    }
+
+    global_population_capacity_modifier = 0.10
+    global_cloth_output_modifier = 0.10
+}
+
+ben_bengal_trade = {
+    age = age_3_discovery
+    requires = ben_delta_agriculture
+    potential = {
+        has_or_had_tag = BEN
+    }
+
+    global_trade_center_power = 0.10
+    global_trade_through_owned_territory_efficiency = 0.10
+}
+
+############################
+# age_4_reformation (1537-1637)
+############################
+
+ben_riverine_fleets = {
+    age = age_4_reformation
+    requires = ship_building_advance
+    potential = {
+        has_or_had_tag = BEN
+    }
+
+    ship_build_speed = 0.10
+    navy_maintenance_efficiency = 0.10
+}
+
+ben_sufi_syncretism = {
+    age = age_4_reformation
+    requires = ben_riverine_fleets
+    potential = {
+        has_or_had_tag = BEN
+    }
+
+    global_build_buildings_efficiency = 0.05
+    tolerance_own = 1
+}
+
+############################
+# age_5_absolutism (1637-1737)
+############################
+
+ben_textile_boom = {
+    age = age_5_absolutism
+    requires = proto_industrialization
+    potential = {
+        has_or_had_tag = BEN
+    }
+
+    global_fine_cloth_output_modifier = 0.15
+    global_merchant_capacity_modifier = 0.10
+}
+
+ben_nawabi_administration = {
+    age = age_5_absolutism
+    requires = ben_textile_boom
+    potential = {
+        has_or_had_tag = BEN
+    }
+
+    global_production_efficiency = medium_production_efficiency_bonus
+    global_max_literacy = 5
+}
+
+############################
+# age_6_revolutions (1737-1837)
+############################
+
+ben_delta_resilience = {
+    age = age_6_revolutions
+    requires = improved_logistics
+    potential = {
+        has_or_had_tag = BEN
+    }
+
+    global_trade_protection_factor = 0.05
+    global_monthly_control = 0.002
+}
+
+ben_indian_ocean_emporium = {
+    age = age_6_revolutions
+    requires = ben_delta_resilience
+    potential = {
+        has_or_had_tag = BEN
+    }
+
+    global_merchant_power = 0.20
+
+}
