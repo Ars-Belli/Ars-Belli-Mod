@@ -1,0 +1,52 @@
+ABKHR_f = { #Khorasan
+	level = 4
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = {
+            OR = {
+			has_culture_group = culture_group:iranian_group
+            has_culture_group = culture_group:turkic_group
+            }
+		}
+	}
+
+	allow = {
+		is_subject = no
+		OR = {
+			has_culture_group = culture_group:iranian_group
+            has_culture_group = culture_group:turkic_group
+        }
+		capital = { 
+            OR = { 
+            area = area:khwarazm_area 
+            area = area:transoxiana_area
+            area = area:badakhshan_area
+            area = area:eastern_khorasan_area
+            area = area:western_khorasan_area
+            province = province:gorgan_province
+            } 
+        }
+	}
+
+	tag = ABKHR
+
+	areas = {
+		khwarazm_area  
+        transoxiana_area
+        badakhshan_area
+        eastern_khorasan_area
+        western_khorasan_area
+	}
+    provinces = {
+        gorgan_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
