@@ -294,6 +294,7 @@ REPLACE:sme_proactive_diplomacy = {
 
 abm_geo_restoration_of_fortresses_and_churches = {
     age = age_3_discovery
+    icon = efficient_mining
     potential = {
         OR = {
             AND = {
@@ -311,7 +312,7 @@ abm_geo_restoration_of_fortresses_and_churches = {
         }
     }
 
-    requires = lumber_improvements_discovery
+    requires = colonial_charters
 
     global_build_buildings_efficiency = 0.20
 }
@@ -356,11 +357,11 @@ abm_cir_grand_prince_of_circassia = {
             culture = culture:circassian_culture
         }
     }
-    icon = supply_depot_advance_age_3_discovery
+    icon = expanded_supply_trains
     land_morale_modifier = 0.10
     ai_weight = { add = 10 }
 
-    requires = paved_road_advance
+    requires = pike_and_shot_advance
 }
 
 REPLACE:cir_multireligious_society = {
@@ -541,6 +542,32 @@ REPLACE:geo_georgian_unification = {
 # culture_group = caucasian OR primary_culture = azerbaijani
 abm_caucasus_ideas_tradition_1 = {
     age = age_1_traditions
+    icon = pike_and_shot_advance
+    potential = {
+        OR = {
+            has_or_had_tag = CPA
+            has_or_had_tag = HTY
+            has_or_had_tag = KIP
+            has_or_had_tag = HYT
+            has_or_had_tag = TEM
+            has_or_had_tag = KDA
+            has_or_had_tag = ALN
+            has_or_had_tag = DZK
+            has_or_had_tag = SMS
+            has_or_had_tag = AVR
+        }
+    }
+
+    requires = fortification_advance
+
+    # hostile_attrition = 1
+    #Auto: global_hostile_attrition = 1
+    global_hostile_attrition = 1
+}
+
+abm_caucasus_ideas_tradition_2 = {
+    age = age_1_traditions
+    icon = feudalism_advance
     potential = {
         OR = {
             has_or_had_tag = CPA
@@ -558,35 +585,14 @@ abm_caucasus_ideas_tradition_1 = {
 
     requires = feudalism_advance
 
-    # hostile_attrition = 1
-    global_hostile_attrition = 1
-}
-
-abm_caucasus_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
-
-    requires = abm_caucasus_ideas_tradition_1
-
     # global_manpower_modifier = 0.15
+    #Auto: global_manpower_modifier = 0.10
     global_manpower_modifier = 0.10
 }
 
 abm_crossroads_of_cultures = {
     age = age_2_renaissance
+    icon = cultural_acceptance_advance
     potential = {
         OR = {
             has_or_had_tag = CPA
@@ -602,14 +608,16 @@ abm_crossroads_of_cultures = {
         }
     }
 
-    requires = renaissance_thought
+    requires = legalism_advance
 
     # num_accepted_cultures = 1
-    cultures_capacity = 1
+    #Auto: cultures_capacity = 1
+    cultures_capacity_modifier = 0.35
 }
 
 abm_alan_mercenaries = {
     age = age_2_renaissance
+    icon = offensive_army
     potential = {
         OR = {
             has_or_had_tag = CPA
@@ -625,16 +633,19 @@ abm_alan_mercenaries = {
         }
     }
 
-    requires = abm_crossroads_of_cultures
+    requires = drill_army_advance
 
     # merc_maintenance_modifier = -0.10
     # mercenary_manpower = 0.15
-    mercenary_maintenance_cost = -0.10
-    mercenary_manpower_modifier = 0.15
+    #Auto: mercenary_maintenance_cost = -0.10
+    #Auto: mercenary_manpower_modifier = 0.15
+    mercenary_maintenance_efficiency = 0.10
+    hire_mercenary_premium_cost_modifier = -0.15
 }
 
 abm_caucasus_hit_and_run = {
     age = age_3_discovery
+    icon = defensive_mentality
     potential = {
         OR = {
             has_or_had_tag = CPA
@@ -650,14 +661,17 @@ abm_caucasus_hit_and_run = {
         }
     }
 
-    requires = military_traditions
+    requires = pike_and_shot_advance
 
     # leader_land_manuever = 1
-    train_general_ability = 1
+    #Auto: train_general_ability = 1
+    combat_speed_modifier = 0.10
+    army_movement_speed = 0.1
 }
 
 abm_persian_poetry = {
     age = age_3_discovery
+    icon = glorious_arms
     potential = {
         OR = {
             has_or_had_tag = CPA
@@ -673,14 +687,16 @@ abm_persian_poetry = {
         }
     }
 
-    requires = abm_caucasus_hit_and_run
+    requires = pike_and_shot_advance
 
     # prestige = 1
+    #Auto: monthly_prestige = 0.10
     monthly_prestige = 0.10
 }
 
 abm_highland_khans = {
     age = age_4_reformation
+    icon = army_professionalism
     potential = {
         OR = {
             has_or_had_tag = CPA
@@ -696,13 +712,18 @@ abm_highland_khans = {
         }
     }
 
-    requires = supply_depot_advance_age_4_reformation
+    requires = recruitment_improvements_reformation
 
     # legitimacy = 1
     # devotion = 1
     # republican_tradition = 0.3
     # meritocracy = 1
     # horde_unity = 1
+    #Auto: monthly_legitimacy = 0.10
+    #Auto: monthly_republican_tradition = 0.10
+    #Auto: monthly_devotion = 0.10
+    #Auto: monthly_horde_unity = 0.10
+    #Auto: monthly_tribal_cohesion = 0.10
     monthly_legitimacy = 0.10
     monthly_republican_tradition = 0.10
     monthly_devotion = 0.10
@@ -712,6 +733,7 @@ abm_highland_khans = {
 
 abm_eastern_influence = {
     age = age_4_reformation
+    icon = defensive_army
     potential = {
         OR = {
             has_or_had_tag = CPA
@@ -727,14 +749,16 @@ abm_eastern_influence = {
         }
     }
 
-    requires = abm_highland_khans
+    requires = recruitment_improvements_reformation
 
     # army_tradition = 0.5
-    monthly_army_tradition = 0.05
+    #Auto: monthly_army_tradition = 0.05
+    monthly_army_tradition = 0.10
 }
 
 abm_caucasus_cavalry_armies = {
     age = age_5_absolutism
+    icon = finest_of_horses
     potential = {
         OR = {
             has_or_had_tag = CPA
@@ -750,14 +774,16 @@ abm_caucasus_cavalry_armies = {
         }
     }
 
-    requires = absolutist_court
+    requires = government_size_absolutism
 
     # cavalry_power = 0.1
-    army_light_cavalry_power = 0.10
+    #Auto: army_light_cavalry_power = 0.10
+    army_light_cavalry_power = 0.15
 }
 
 abm_caucasus_ideas_ambition = {
     age = age_6_revolutions
+    icon = agriculture_advance
     potential = {
         OR = {
             has_or_had_tag = CPA
@@ -773,44 +799,51 @@ abm_caucasus_ideas_ambition = {
         }
     }
 
-    requires = abm_caucasus_cavalry_armies
+    requires = industrialization_advance
 
     # global_tax_modifier = 0.10
-    tax_income_efficiency = 0.10
+    #Auto: tax_income_efficiency = 0.10
+    tax_income_efficiency = medium_tax_income_efficiency_bonus
 }
 
 # Shivan Ideas - SRV
 abm_srv_ideas_tradition_1 = {
     age = age_1_traditions
+    icon = elephant_cavalry
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = horse_riding_advance
+
+    # leader_land_shock = 1
+    #Auto: army_initiative = 0.10
+    army_heavy_cavalry_power = 0.10
+    army_heavy_infantry_power = 0.10
+}
+
+abm_srv_ideas_tradition_2 = {
+    age = age_1_traditions
+    icon = zmw_merchant_taxes
+    potential = {
+        has_or_had_tag = SRV
+    }
+
+    requires = global_trade_advance
+
+    # global_prov_trade_power_modifier = 0.1
+    #Auto: global_merchant_power = 0.10
+    global_trade_through_owned_territory_efficiency = 0.10
+}
+
+abm_srv_khalwati_order = {
+    age = age_2_renaissance
+    icon = defensive_mentality
     potential = {
         has_or_had_tag = SRV
     }
 
     requires = feudalism_advance
-
-    # leader_land_shock = 1
-    army_initiative = 0.10
-}
-
-abm_srv_ideas_tradition_2 = {
-    age = age_1_traditions
-    potential = {
-        has_or_had_tag = SRV
-    }
-
-    requires = abm_srv_ideas_tradition_1
-
-    # global_prov_trade_power_modifier = 0.1
-    global_merchant_power = 0.10
-}
-
-abm_srv_khalwati_order = {
-    age = age_2_renaissance
-    potential = {
-        has_or_had_tag = SRV
-    }
-
-    requires = renaissance_thought
 
     # legitimacy = 1
     # devotion = 1
@@ -818,6 +851,11 @@ abm_srv_khalwati_order = {
     # meritocracy = 1
     # horde_unity = 1
     # monthly_piety = -0.001
+    #Auto: monthly_legitimacy = 0.10
+    #Auto: monthly_republican_tradition = 0.10
+    #Auto: monthly_devotion = 0.10
+    #Auto: monthly_horde_unity = 0.10
+    #Auto: monthly_tribal_cohesion = 0.10
     monthly_legitimacy = 0.10
     monthly_republican_tradition = 0.10
     monthly_devotion = 0.10
@@ -827,11 +865,12 @@ abm_srv_khalwati_order = {
 
 abm_srv_fortresses_of_shirvan = {
     age = age_2_renaissance
+    icon = regimental_system
     potential = {
         has_or_had_tag = SRV
     }
 
-    requires = abm_srv_khalwati_order
+    requires = feudalism_advance
 
     # defensiveness = 0.2
     global_defensive = 0.20
@@ -839,74 +878,88 @@ abm_srv_fortresses_of_shirvan = {
 
 abm_srv_tribesmen_of_the_caucasus = {
     age = age_3_discovery
+    icon = glorious_arms
     potential = {
         has_or_had_tag = SRV
     }
 
-    requires = military_traditions
+    requires = horse_riding_advance
 
     # cavalry_power = 0.15
+    #Auto: army_light_cavalry_power = 0.15
     army_light_cavalry_power = 0.15
 }
 
 abm_srv_persianate_patronage = {
     age = age_3_discovery
+    icon = drill_army_advance
     potential = {
         has_or_had_tag = SRV
     }
 
-    requires = abm_srv_tribesmen_of_the_caucasus
+    requires = pike_and_shot_advance
 
     # same_culture_advisor_cost = -0.2
+    #Auto: hire_advisor_cost_modifier = -0.20
     hire_advisor_cost_modifier = -0.20
+    train_general_cost_modifier = -0.20
 }
 
 abm_srv_caspian_trade = {
     age = age_4_reformation
+    icon = red_sea_trade
     potential = {
         has_or_had_tag = SRV
     }
 
-    requires = supply_depot_advance_age_4_reformation
+    requires = global_trade_advance
 
     # caravan_power = 0.2
-    global_trade_center_power = 0.10
+    #Auto: global_trade_center_power = 0.10
+    global_trade_center_power = 0.20
 }
 
 abm_srv_shirvani_architecture = {
     age = age_4_reformation
+    icon = expanded_supply_trains
     potential = {
         has_or_had_tag = SRV
     }
 
-    requires = abm_srv_caspian_trade
+    requires = recruitment_improvements_reformation
 
     # build_cost = -0.1
     # prestige = 1
-    global_build_buildings_cost = -0.10
+    #Auto: global_build_buildings_cost = -0.10
+    #Auto: monthly_prestige = 0.10
+    global_urban_build_buildings_cost = -0.10
     monthly_prestige = 0.10
 }
 
 abm_srv_merchants_of_baku = {
     age = age_5_absolutism
+    icon = pike_and_shot_advance
     potential = {
         has_or_had_tag = SRV
     }
 
-    requires = absolutist_court
+    requires = government_size_absolutism
 
     # merchants = 1
+    #Auto: global_merchant_power = 0.20
     global_merchant_power = 0.20
 }
 
 abm_srv_ideas_ambition = {
     age = age_6_revolutions
+    icon = offensive_army
     potential = {
         has_or_had_tag = SRV
     }
 
-    requires = abm_srv_merchants_of_baku
+    requires = modern_bureaucracy
 
     # global_trade_goods_size_modifier = 0.1
+    #Auto: global_max_rgo_size_modifier = 0.10
     global_max_rgo_size_modifier = 0.10
 }

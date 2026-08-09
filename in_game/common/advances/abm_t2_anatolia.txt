@@ -1,0 +1,312 @@
+############################
+# age_1_traditions (1337)
+############################
+REPLACE:tre_pontic_trail_mastery = {
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = TRE
+	}
+	
+	requires = feudalism_advance
+	
+	mountains_proximity_impact = -0.50
+	plateau_proximity_impact = -0.25
+    hills_proximity_impact = -0.25
+}
+
+REPLACE:tre_komnenos_legacy = {
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = TRE
+	}
+
+	requires = written_alphabet
+	
+	global_crown_estate_power = 0.10
+	monthly_army_tradition = 0.10
+}
+
+REPLACE:tre_pontic_mountains = {
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = TRE
+	}
+
+	requires = supply_depot_advance_age_2_renaissance
+
+	global_hostile_attrition = 0.50
+	global_defensive = 0.10
+}
+
+
+########################################
+# Pontus (PON) Ideas
+########################################
+
+abm_pon_ideas_tradition_1 = {
+	age = age_2_renaissance
+	icon = free_merchants
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	trade_range_modifier = 0.25
+	merchant_maintenance_efficiency = 0.30
+
+	requires = trade_range_advance_age_2
+}
+
+abm_pon_ideas_tradition_2 = {
+	age = age_2_renaissance
+	icon = royal_navy
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	navy_galley_power = 0.10
+	own_coast_naval_combat_bonus = 0.10
+
+	requires = ship_building_advance
+}
+
+abm_pon_euxine_border_harassment = {
+	age = age_3_discovery
+	icon = drill_army_advance
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	possible_frontage_modifier = 0.10
+
+	requires = pike_and_shot_advance
+}
+
+abm_pon_ancient_colony_heritage = {
+	age = age_3_discovery
+	icon = religious_melting_pot
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	global_monthly_prosperity = 0.001
+
+	requires = colonial_charters
+}
+
+abm_pon_black_sea_guilds = {
+	age = age_3_discovery
+	icon = saharan_gold_trade
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	export_efficiency = medium_trade_efficiency_bonus
+	import_efficiency = medium_trade_efficiency_bonus
+	requires = trade_range_advance_age_3
+}
+
+abm_pon_workshop_networks = {
+	age = age_4_reformation
+	icon = court_accounting
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	global_raw_material_output = 0.10
+
+	requires = construction_speed_reformation
+}
+
+abm_pon_republic_admiralty = {
+	age = age_4_reformation
+	icon = regimental_system
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	naval_morale_modifier = 0.10
+
+	requires = recruitment_improvements_reformation
+}
+
+abm_pon_border_military_contracts = {
+	age = age_3_discovery
+	icon = army_professionalism
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	army_maintenance_efficiency = 0.10
+
+	requires = pike_and_shot_advance
+}
+
+abm_pon_young_can_serve = {
+	age = age_5_absolutism
+	icon = defensive_army
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	global_manpower_modifier = 0.15
+
+	requires = government_size_absolutism
+}
+
+abm_pon_urban_promotion_networks = {
+	age = age_5_absolutism
+	icon = library_advance
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	global_pop_promotion_speed_modifier = 0.10
+
+	requires = scientific_revolution_advance
+}
+
+abm_pon_ideas_ambition = {
+	age = age_6_revolutions
+	icon = renaissance_advance
+
+	potential = {
+		has_or_had_tag = PON
+	}
+
+	research_speed_modifier = 0.10
+	cultural_influence_modifier = 0.10
+
+	requires = modern_bureaucracy
+}
+
+
+REPLACE:greek_group_the_spirit_of_resistance_advance = {
+	age = age_1_traditions
+	icon = offensive_army
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+		}
+	}
+
+	morale_recovery_in_friendly = 0.05
+	selling_efficiency = small_trade_efficiency_bonus
+
+	requires = feudalism_advance
+}
+
+REPLACE:greek_group_hesychast_traditions_advance = {
+	age = age_2_renaissance
+	icon = patriarchate_of_lithuania
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		religion = religion:orthodox
+		NOR = {
+			has_or_had_tag = BYZ
+		}
+	}
+
+	global_clergy_max_literacy = 5
+	tolerance_own = 1
+
+	requires = renaissance_development
+}
+
+REPLACE:greek_group_hesychast_traditions_advance = {
+	age = age_2_renaissance
+	icon = patriarchate_of_lithuania
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		religion = religion:orthodox
+		NOR = {
+			has_or_had_tag = BYZ
+		}
+	}
+
+	global_clergy_max_literacy = 5
+	tolerance_own = 1
+
+	requires = renaissance_development
+}
+
+REPLACE:greek_group_stratioti_levies_advance = {
+	age = age_3_discovery
+	icon = professional_armies_advance
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+		}
+	}
+
+	army_light_cavalry_power = 0.1
+	army_initiative = 0.1
+
+	requires = pike_and_shot_advance
+}
+
+REPLACE:greek_group_the_phanariote_network_advance = {
+	age = age_4_reformation
+	icon = diplomatic_influence
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+		}
+	}
+
+	global_burghers_max_literacy = 10
+	monthly_diplomats = 0.05
+
+	requires = global_trade_advance
+}
+
+REPLACE:greek_group_aegean_coastal_defence_advance = {
+	age = age_5_absolutism
+	icon = ship_building_advance
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+		}
+	}
+
+	navy_galley_power = 0.15
+	own_coast_naval_combat_bonus = 0.1
+
+	requires = scientific_mapping_advance
+}
+
+REPLACE:greek_group_the_modern_greek_enlightenment_advance = {
+	age = age_6_revolutions
+	icon = students_of_foreign_courts
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+		}
+	}
+
+	cultural_influence_modifier = 0.1
+	research_speed_modifier = 0.2
+
+	requires = enlightened_court
+}
