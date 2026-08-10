@@ -32,8 +32,26 @@ REPLACE:a_genoese_crossbowmen = {
 
 	#root = location. Checks location_potential first so don't need that scripting in
 
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
 	location_potential = {
-		unit_genoese_crossbowmen_location_trigger = yes
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
 	}
 	mercenaries_per_location = {
 		pop_type = peasants
@@ -82,8 +100,26 @@ a_abm_late_genoese_crossbowmen = {
 
 	#root = location. Checks location_potential first so don't need that scripting in
 
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
 	location_potential = {
-		unit_genoese_crossbowmen_location_trigger = yes
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
 	}
 	mercenaries_per_location = {
 		pop_type = peasants
@@ -127,8 +163,26 @@ a_abm_genoese_arquebusiers = {
 
 	#root = location. Checks location_potential first so don't need that scripting in
 
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
 	location_potential = {
-		unit_genoese_crossbowmen_location_trigger = yes
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
 	}
 	mercenaries_per_location = {
 		pop_type = peasants
@@ -172,8 +226,26 @@ a_abm_genoese_musketeers = {
 
 	#root = location. Checks location_potential first so don't need that scripting in
 
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
 	location_potential = {
-		unit_genoese_crossbowmen_location_trigger = yes
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
 	}
 
 	gfx_tags = { musket_tag pavise_tag medium_tag }
@@ -207,8 +279,26 @@ a_abm_genoese_riflemen = {
 
 	#root = location. Checks location_potential first so don't need that scripting in
 
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
 	location_potential = {
-		unit_genoese_crossbowmen_location_trigger = yes
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
 	}
 
 	gfx_tags = { rifle_tag pavise_tag medium_tag }
@@ -252,7 +342,7 @@ a_abm_balestrieri = {
 	}
 	#root = location. Checks location_potential first so don't need that scripting in
 	location_potential = {
-		# unit_genoese_crossbowmen_location_trigger = yes
+		dominant_culture = { has_culture_group = culture_group:italian_group }
 	}
 
 	mercenaries_per_location = {
@@ -300,7 +390,7 @@ a_abm_late_balestrieri = {
 	}
 	#root = location. Checks location_potential first so don't need that scripting in
 	location_potential = {
-		# unit_genoese_crossbowmen_location_trigger = yes
+		dominant_culture = { has_culture_group = culture_group:italian_group }
 	}
 
 	mercenaries_per_location = {
@@ -332,10 +422,28 @@ a_abm_venettian_stradioti = {
 		wetlands = 0.20
 		coastal = 0.10
 	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
 
-	country_potential = { has_or_had_tag = VEN }
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
 
-	location_potential = {}
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
 
 	gfx_tags = { medium_tag }
 }
@@ -357,10 +465,28 @@ a_abm_late_venettian_stradioti = {
 		wetlands = 0.20
 		coastal = 0.10
 	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
 
-	country_potential = { has_or_had_tag = VEN }
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
 
-	location_potential = {}
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
 
 	gfx_tags = { medium_tag }
 }
@@ -382,10 +508,28 @@ a_abm_venettian_cappelletti = {
 		wetlands = 0.20
 		coastal = 0.10
 	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
 
-	country_potential = { has_or_had_tag = VEN }
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
 
-	location_potential = {}
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
 
 	gfx_tags = { medium_tag }
 }
@@ -407,10 +551,28 @@ a_abm_venettian_cravates = {
 		wetlands = 0.20
 		coastal = 0.10
 	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
 
-	country_potential = { has_or_had_tag = VEN }
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
 
-	location_potential = {}
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
 
 	gfx_tags = { medium_tag }
 }
@@ -431,10 +593,28 @@ a_abm_venettian_dragoons = {
 		wetlands = 0.20
 		coastal = 0.10
 	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
 
-	country_potential = { has_or_had_tag = VEN }
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
 
-	location_potential = {}
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
 
 	gfx_tags = { medium_tag }
 }
@@ -455,7 +635,7 @@ a_abm_italian_stradioti = {
 	}
 	#root = location. Checks location_potential first so don't need that scripting in
 	location_potential = {
-		# unit_genoese_crossbowmen_location_trigger = yes
+		dominant_culture = { has_culture_group = culture_group:italian_group }
 	}
 
 	gfx_tags = { medium_tag }
@@ -482,7 +662,9 @@ a_abm_late_italian_stradioti = {
 		culture = { has_culture_group = culture_group:italian_group }
 	}
 
-	location_potential = {}
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:italian_group }
+	}
 
 	gfx_tags = { medium_tag }
 }
@@ -508,7 +690,9 @@ a_abm_italian_cappelletti = {
 		culture = { has_culture_group = culture_group:italian_group }
 	}
 
-	location_potential = {}
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:italian_group }
+	}
 
 	gfx_tags = { medium_tag }
 }
