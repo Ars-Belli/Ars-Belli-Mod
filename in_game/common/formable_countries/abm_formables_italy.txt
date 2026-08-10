@@ -34,33 +34,32 @@ ABLOM_f = { # Lombardia
     }
 }
 
-ABKOG_f = { # Kingdom of God (PAP stays PAP, nominal rename)
-    level = 4
-    required_locations_fraction = 0.60
-    rule = historical
-
-    potential = {
-        has_or_had_tag = PAP
-        owns = location:rome
-    }
-
-    allow = {
-        owns = location:rome
-    }
-
-    name = ABKOG
-    flag = PAP
-    adjective = ABKOG_ADJ
-    color = map_PAP
-
-    regions = {
-        italy_region
-    }
-    form_effect = {
-        if = {
-            limit = { country_rank_level < 4 }
-            set_country_rank = country_rank:rank_empire
-        }
-        set_variable = { name = abm_is_kingdom_of_god value = 1 }
-    }
-}
+# ABKOG_f = { # Kingdom of God — commented out, use generic_action instead (papacy reform blocks forming)
+#     level = 4
+#     required_locations_fraction = 0.60
+#     rule = historical
+#
+#     potential = {
+#         has_or_had_tag = PAP
+#     }
+#
+#     allow = {
+#         owns = location:rome
+#     }
+#
+#     name = ABKOG
+#     flag = PAP
+#     adjective = ABKOG_ADJ
+#     color = map_PAP
+#
+#     regions = {
+#         italy_region
+#     }
+#     form_effect = {
+#         if = {
+#             limit = { country_rank_level < 4 }
+#             set_country_rank = country_rank:rank_empire
+#         }
+#         set_variable = { name = abm_is_kingdom_of_god value = 1 }
+#     }
+# }
