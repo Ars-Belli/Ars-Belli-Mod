@@ -40,8 +40,8 @@ ABNJD_f = { #Najd
 
 	form_effect = {
 		if = {
-			limit = { country_rank_level < 3 }
-			set_country_rank = country_rank:rank_kingdom
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
 		}
 	}
 }
@@ -84,8 +84,8 @@ ABHEJ_f = { #Hejaz
 
 	form_effect = {
 		if = {
-			limit = { country_rank_level < 3 }
-			set_country_rank = country_rank:rank_kingdom
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
 		}
 	}
 }
@@ -128,8 +128,8 @@ ABHDM_f = { #Hadramawt
 
 	form_effect = {
 		if = {
-			limit = { country_rank_level < 3 }
-			set_country_rank = country_rank:rank_kingdom
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
 		}
 	}
 }
@@ -166,8 +166,8 @@ ABHAS_f = { #Al-Haasa
 
 	form_effect = {
 		if = {
-			limit = { country_rank_level < 3 }
-			set_country_rank = country_rank:rank_kingdom
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
 		}
 	}
 }
@@ -206,8 +206,8 @@ YEM_f = { #Yemen
 
 	form_effect = {
 		if = {
-			limit = { country_rank_level < 3 }
-			set_country_rank = country_rank:rank_kingdom
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
 		}
 	}
 }
@@ -245,6 +245,36 @@ OMA_f = { #Oman
 
 	form_effect = {
 		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+REPLACE:AIA_f = { # Arabia 
+
+	level = 4
+	required_locations_fraction = 0.75
+	rule = plausible
+	
+	potential = {
+		culture = { has_culture_group = culture_group:arabian_group }
+	}
+
+	allow = {
+	}
+	
+	name = AIA
+	flag = AIA
+	adjective = AIA_ADJ
+	tag = AIA
+	color = map_AIA
+	
+	regions = {
+		arabia_region
+	}
+	form_effect = {
+        if = {
 			limit = { country_rank_level < 3 }
 			set_country_rank = country_rank:rank_kingdom
 		}
