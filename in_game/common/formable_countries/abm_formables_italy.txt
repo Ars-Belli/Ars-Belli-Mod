@@ -31,28 +31,25 @@ ABLOM_f = { # Lombardia
     }
 }
 
-ABKOG_f = { # Kingdom of God
+ABKOG_f = { # Kingdom of God (nominal — name only, PAP stays PAP)
     level = 4
     required_locations_fraction = 0.60
     rule = historical
 
     potential = {
-        capital = { region = region:italy_region }
-        culture = { has_culture_group = culture_group:italian_group }
+        #capital = { region = region:italy_region }
+        #culture = { has_culture_group = culture_group:italian_group }
         has_or_had_tag = PAP
     }
 
     allow = {
-        capital = { region = region:italy_region }
-        culture = { has_culture_group = culture_group:italian_group }
+        #capital = { region = region:italy_region }
+        #culture = { has_culture_group = culture_group:italian_group }
         has_or_had_tag = PAP
     }
 
     name = ABKOG
-    #flag = ABKOG
-    #adjective = ABKOG_ADJ
-    tag = ABKOG
-    #color = map_ABKOG
+    adjective = ABKOG_ADJ
 
     region = {
         italy_region
@@ -62,5 +59,6 @@ ABKOG_f = { # Kingdom of God
             limit = { country_rank_level < 4 }
             set_country_rank = country_rank:rank_empire
         }
+        set_variable = { name = abm_is_kingdom_of_god value = 1 }
     }
 }
