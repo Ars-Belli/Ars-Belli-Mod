@@ -1,0 +1,44 @@
+#This file exists so generic buildings (such as castles) can properly replace the unique ones
+REPLACE:sofa_stockade = {
+	audio_tier = 1
+	is_special = yes
+	
+	max_levels = 1
+	pop_type = soldiers
+	
+	category = defense_category
+	
+	employment_size = 0.2 #was 2...
+	
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	
+	expensive = yes
+	build_time = small_fort_building
+
+	
+	
+	country_potential = {
+		has_advance = sofa_levies_advance
+	}
+	unique_production_methods = {
+		sofa_stockade_maintenance = {
+			clay = 0.2
+			weaponry = 0.05
+			tar = 0.05
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = sofa_stockade_construction
+	
+
+	modifier = {
+		local_garrison_size = 0.1
+		local_defensive = 0.25
+		local_unrest = -0.05
+	}
+}
