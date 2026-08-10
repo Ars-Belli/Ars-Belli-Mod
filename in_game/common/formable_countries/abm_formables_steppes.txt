@@ -2,6 +2,72 @@
 ### Western Steppes ###
 #######################
 
+GLH_f = { #Golden Horde formable
+	level = 4
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+        government_type = government_type:steppe_horde
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        has_culture_group = culture_group:tatar_group        
+
+		capital = { 
+            OR = { 
+            region = region:steppes_region
+            area = area:northern_caucasus_area 
+            area = area:tambov_area
+            area = area:samara_area
+            area = area:kazan_area
+            area = area:bolghar_area
+            area = area:bashkiria_area
+            } 
+        }
+	}
+
+	tag = GLH
+
+    regions = {
+        steppes_region
+    }
+
+	areas = {
+		northern_caucasus_area  
+        tambov_area
+        samara_area
+        kazan_area
+        bolghar_area
+        bashkiria_area
+	}
+
+    provinces = {
+        bogdanovo_province
+        sarov_province
+        khaqmar_province
+        ural_province
+        baytak_province
+        uil_province
+        shagiz_province
+        upper_emba_province
+        lower_emba_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
 ####################
 ### Central Asia ###
 ####################
