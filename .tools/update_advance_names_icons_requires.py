@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Regenerate advance icons based on modifier-to-vanilla mapping.
+"""Regenerate advance icons and requires based on modifier-to-vanilla mapping.
 
 Rules:
-- Advance keys and prerequisites are never changed
+- Advance keys are never changed
 - Icons are selected from semantically related vanilla EU5 advances
+- Requires are set based on the primary modifier's vanilla prerequisite
 - Icon usage is balanced globally and kept unique within an idea group when possible
 
 Usage: python .tools/update_advance_names_icons_requires.py [file ...]
-    If no files are given, processes the India, Indochina, and Indonesia files.
+    If no files are given, processes all abm_*.txt advance files.
 """
 
 from collections import Counter, defaultdict
@@ -28,9 +29,7 @@ if _regional_path.is_file():
 else:
     REGIONAL_MOD_MAP = {}
 TARGET_GLOBS = (
-        "abm_f4-t2_india_*.txt",
-        "abm_f4-t2_indochina.txt",
-        "abm_f4-t2_indonesia.txt",
+        "abm_*.txt",
 )
 
 # ── Modifier → (icon, requires, category) ──────────────────────────
