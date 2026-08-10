@@ -11,10 +11,6 @@ REPLACE:genoese_crossbowmen = {
     army_light_infantry_power = 0.20
 
     unlock_unit = a_genoese_crossbowmen
-    unlock_unit = a_abm_late_genoese_crossbowmen
-    unlock_unit = a_abm_genoese_arquebusiers
-    unlock_unit = a_abm_genoese_musketeers
-    unlock_unit = a_abm_genoese_riflemen
 
     requires = unlock_crossbowmen_advance
 }
@@ -33,11 +29,39 @@ abm_venettian_stradioti = {
     army_light_cavalry_power = 0.15
 
     unlock_unit = a_abm_venettian_stradioti
-    unlock_unit = a_abm_late_venettian_stradioti
-    unlock_unit = a_abm_venettian_cappelletti
-    unlock_unit = a_abm_venettian_cravates
-    unlock_unit = a_abm_venettian_dragoons
 
+}
+
+abm_italian_balestrieri = {
+    content_priority = 900
+    age = age_2_renaissance
+    icon = age_of_condottieri
+
+    potential = {
+        culture = { has_culture_group = culture_group:italian_group }
+    }
+
+    requires = unlock_crossbowmen_advance
+
+    army_light_infantry_power = 0.10
+
+    unlock_unit = a_abm_balestrieri
+}
+
+abm_italian_stradioti = {
+    content_priority = 900
+    age = age_2_renaissance
+    icon = glorious_arms
+
+    potential = {
+        culture = { has_culture_group = culture_group:italian_group }
+    }
+
+    requires = horse_riding_advance
+
+    army_light_cavalry_power = 0.10
+
+    unlock_unit = a_abm_italian_stradioti
 }
 
 # SPI_ideas — Sardinia-Piedmont (SPI)
