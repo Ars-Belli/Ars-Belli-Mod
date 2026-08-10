@@ -1,7 +1,7 @@
 ﻿
 ABLOM_f = { # Lombardia
     level = 2
-    required_locations_fraction = 0.80
+    required_locations_fraction = 0.60
     rule = historical
 
     potential = {
@@ -20,8 +20,11 @@ ABLOM_f = { # Lombardia
     tag = ABLOM
     color = map_ABLOM
 
-    area = {
+    areas = {
         lombardy_area
+        piemonte_area
+        emilia_area
+        liguria_area
     }
     form_effect = {
         if = {
@@ -31,27 +34,26 @@ ABLOM_f = { # Lombardia
     }
 }
 
-ABKOG_f = { # Kingdom of God (nominal — name only, PAP stays PAP)
+ABKOG_f = { # Kingdom of God (PAP stays PAP, nominal rename)
     level = 4
     required_locations_fraction = 0.60
     rule = historical
 
     potential = {
-        #capital = { region = region:italy_region }
-        #culture = { has_culture_group = culture_group:italian_group }
         has_or_had_tag = PAP
+        owns = location:rome
     }
 
     allow = {
-        #capital = { region = region:italy_region }
-        #culture = { has_culture_group = culture_group:italian_group }
-        has_or_had_tag = PAP
+        owns = location:rome
     }
 
     name = ABKOG
+    flag = PAP
     adjective = ABKOG_ADJ
+    color = map_PAP
 
-    region = {
+    regions = {
         italy_region
     }
     form_effect = {
