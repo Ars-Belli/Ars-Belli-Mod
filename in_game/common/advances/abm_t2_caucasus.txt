@@ -1,538 +1,162 @@
-############################
-# age_1_traditions (1337)
-############################
+REPLACE:geo_legacy_of_saint_george = {
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = GEO
+	}
+
+	requires = scholasticism
+
+	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.10
+}
+
+REPLACE:geo_georgian_highlands = {
+	age = age_1_traditions
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:georgian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:georgian_culture
+		}
+	}
+
+	requires = agriculture_advance
+
+	global_defensive = 0.25
+}
+
+REPLACE:geo_georgian_isolation = {
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:georgian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:georgian_culture
+			culture = { merged_culture_group_contains_culture = culture:georgian_culture }
+		}
+	}
+
+	requires = renaissance_court
+
+	improve_relation_impact = 0.20
+}
+
+REPLACE:sme_independent_ambitions = {
+	age = age_3_discovery
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:georgian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:georgian_culture
+			has_or_had_tag = SME
+		}
+	}
+
+	requires = lumber_improvements_discovery
+	
+	land_morale_modifier = 0.1
+	ai_weight = { add = 10 }
+}
+
 REPLACE:arm_legacy_of_hayk = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                has_accepted_culture = culture:armenian_culture
-                culture = { has_culture_group = culture_group:caucasian_group }
-            }
-            culture = culture:armenian_culture
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:armenian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:armenian_culture
+		}
+	}
 
-    requires = unlock_footmen_advance
+	requires = unlock_footmen_advance
 
-    land_morale_recovery = 0.05
-    military_tactics = 0.10
+	land_morale_recovery = 0.05
 }
 
 REPLACE:arm_mount_ararat = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-            }
-            culture = culture:armenian_culture
-        }
-    }
+	age = age_1_traditions
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:armenian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:armenian_culture
+		}
+	}
 
-    requires = agriculture_advance
+	requires = agriculture_advance
 
-    mountains_proximity_impact = -0.4
-    plateau_proximity_impact = -0.3
-    hills_proximity_impact = -0.3
-}
-
-REPLACE:cir_mercenary_employment = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:armenian_culture
-            }
-            culture = culture:circassian_culture
-        }
-    }
-    icon = scholasticism
-    hire_mercenary_premium_cost_modifier = -0.1
-
-    requires = guilds
-}
-
-REPLACE:geo_legacy_of_saint_george = {
-    age = age_1_traditions
-    potential = {
-        OR = {
-            has_or_had_tag = GEO
-            has_or_had_tag = ARM
-            has_or_had_tag = CIL
-            has_or_had_tag = CIR
-        }
-        culture = { has_culture_group = culture_group:caucasian_group }
-        has_accepted_culture = culture:georgian_culture
-    }
-
-    requires = scholasticism
-
-    army_heavy_infantry_power = 0.10
-    army_light_infantry_power = 0.10
-}
-
-############################
-# age_2_renaissance (1337-1437)
-############################
-
-REPLACE:geo_georgian_isolation = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:georgian_culture
-            }
-            culture = culture:georgian_culture
-        }
-    }
-
-    requires = renaissance_court
-
-    improve_relation_impact = 0.20
-}
-
-REPLACE:arm_apostolic_church = {
-    age = age_2_renaissance
-    icon = life_among_infidels
-    potential = {
-        OR = {
-            AND = {
-                culture = { has_culture_group = culture_group:caucasian_group }
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:armenian_culture
-            }
-            culture = culture:armenian_culture
-        }
-    }
-
-    requires = global_clergy_max_literacy_advance
-
-    global_pop_assimilation_speed_modifier = 0.1
+	mountains_proximity_impact = -0.40
+	plateau_proximity_impact = -0.30
+	hills_proximity_impact = -0.30
 }
 
 REPLACE:arm_land_reclamation = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:armenian_culture
-            }
-            culture = culture:armenian_culture
-        }
-    }
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			AND = {
+				OR = {
+					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:armenian_culture
+			}
+			culture = culture:armenian_culture
+		}
+	}
 
-    requires = renaissance_thought
+	requires = renaissance_thought
 
-    global_monthly_development = 0.001
-}
-
-REPLACE:cir_city_and_fortress = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:circassian_culture
-            }
-            culture = culture:circassian_culture
-        }
-    }
-    icon = laws
-    town_upgrade_cost_modifier = -0.10
-    city_upgrade_cost_modifier = -0.10
-    megalopolis_upgrade_cost_modifier = -0.10
-
-    requires = global_clergy_max_literacy_advance
+	global_monthly_development = 0.001
 }
 
 REPLACE:cir_horsemen_of_the_steppe = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:circassian_culture
-            }
-            culture = culture:circassian_culture
-        }
-    }
-    icon = merchants_and_trade
-    army_light_cavalry_power = 0.10
-    army_light_cavalry_build_cost_modifier = -0.10
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:circassian_culture
+		}
+	}
+	icon = merchants_and_trade
+	army_light_cavalry_power = 0.10
+	army_light_cavalry_build_cost_modifier = -0.10
 
-    requires = recruitment_improvements_renaissance
+	requires = recruitment_improvements_renaissance
 }
 
-REPLACE:geo_georgian_principalities = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:georgian_culture
-            }
-            culture = culture:georgian_culture
-        }
-    }
+REPLACE:cir_grand_prince_of_circassia = {
+	age = age_3_discovery
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:circassian_culture
+		}
+	}
+	icon = supply_depot_advance_age_3_discovery
+	land_morale_modifier = 0.10
+	ai_weight = { add = 10 }
 
-    requires = renaissance_thought
-
-    global_distance_from_capital_speed_propagation = 0.1
-}
-
-REPLACE:sme_atabegs_of_samtskhe = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                    has_or_had_tag = SME
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:georgian_culture
-            }
-            culture = culture:georgian_culture
-        }
-    }
-
-    requires = global_nobles_max_literacy_advance
-
-    monthly_legitimacy = 0.10
-    monthly_devotion = 0.10
-    monthly_republican_tradition = 0.10
-}
-
-REPLACE:sme_proactive_diplomacy = {
-    age = age_2_renaissance
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                    has_or_had_tag = SME
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:georgian_culture
-            }
-            culture = culture:georgian_culture
-        }
-    }
-
-    requires = sme_atabegs_of_samtskhe
-
-    spy_network_construction = 0.2
-}
-
-############################
-# age_3_discovery (1437-1537)
-############################
-
-abm_geo_restoration_of_fortresses_and_churches = {
-    age = age_3_discovery
-    icon = efficient_mining
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                    has_or_had_tag = SME
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:georgian_culture
-            }
-            culture = culture:georgian_culture
-        }
-    }
-
-    requires = colonial_charters
-
-    global_build_buildings_efficiency = 0.20
-}
-
-REPLACE:arm_melikdom_organization = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:armenian_culture
-            }
-            culture = culture:armenian_culture
-        }
-    }
-
-    requires = lumber_improvements_discovery
-
-    tax_income_efficiency = medium_tax_income_efficiency_bonus
-}
-
-abm_cir_grand_prince_of_circassia = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:circassian_culture
-            }
-            culture = culture:circassian_culture
-        }
-    }
-    icon = expanded_supply_trains
-    land_morale_modifier = 0.10
-    ai_weight = { add = 10 }
-
-    requires = pike_and_shot_advance
-}
-
-REPLACE:cir_multireligious_society = {
-    age = age_3_discovery
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:circassian_culture
-            }
-            culture = culture:circassian_culture
-        }
-    }
-    icon = merchants_and_trade
-    tolerance_heretic = 1
-    tolerance_heathen = 1
-
-    requires = regulate_court_procedures
-}
-
-REPLACE:sme_fortresses_of_samtskhe = {
-    icon = arm_highland_fortresses
-    age = age_3_discovery
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:georgian_culture
-            }
-            culture = culture:georgian_culture
-        }
-    }
-
-    requires = correct_box_advance_discovery
-
-    fort_limit_modifier = 0.20
-}
-
-############################
-# age_4_reformation (1537-1637)
-############################
-
-REPLACE:arm_mountain_armies = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:armenian_culture
-            }
-            culture = culture:armenian_culture
-        }
-    }
-
-    requires = maurician_infantry
-
-    army_maintenance_efficiency = 0.1
-}
-
-REPLACE:arm_nakharar_titles = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:armenian_culture
-            }
-            culture = culture:armenian_culture
-        }
-    }
-
-    requires = artists_advance_reformations
-
-    monthly_army_tradition = 0.10
-}
-
-REPLACE:sme_protect_trade_routes = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:georgian_culture
-            }
-            culture = culture:georgian_culture
-        }
-    }
-
-    requires = global_trade_routes_advance
-
-    trade_land_efficiency = large_trade_land_efficiency_bonus
-}
-
-REPLACE:geo_sadrosho_districts = {
-    age = age_4_reformation
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                    has_or_had_tag = SME
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:georgian_culture
-            }
-            culture = culture:georgian_culture
-        }
-    }
-
-    requires = leader_recruit_cost_advance
-
-    army_reinforce_efficiency = 0.10
-}
-
-############################
-# age_6_revolutions
-############################
-REPLACE:geo_georgian_unification = {
-    age = age_6_revolutions
-    potential = {
-        OR = {
-            AND = {
-                OR = {
-                    has_or_had_tag = GEO
-                    has_or_had_tag = ARM
-                    has_or_had_tag = CIL
-                    has_or_had_tag = CIR
-                }
-                culture = { has_culture_group = culture_group:caucasian_group }
-                has_accepted_culture = culture:georgian_culture
-            }
-            culture = culture:georgian_culture
-        }
-    }
-
-    requires = siege_ability_revolutions
-
-    army_heavy_infantry_build_cost_modifier = -0.20
+	requires = paved_road_advance
 }
 
 
@@ -541,425 +165,572 @@ REPLACE:geo_georgian_unification = {
 # Caucasus Ideas
 # culture_group = caucasian OR primary_culture = azerbaijani
 abm_caucasus_ideas_tradition_1 = {
-    age = age_1_traditions
-    icon = drill_army_advance
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_1_traditions
+	icon = drill_army_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = fortification_advance
+	requires = fortification_advance
 
-    # hostile_attrition = 1
-    #Auto: global_hostile_attrition = 1
-    global_hostile_attrition = 1
+	# hostile_attrition = 1
+	#Auto: global_hostile_attrition = 1
+	global_hostile_attrition = 1
 }
 
 abm_caucasus_ideas_tradition_2 = {
-    age = age_1_traditions
-    icon = feudalism_advance
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_1_traditions
+	icon = feudalism_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # global_manpower_modifier = 0.15
-    #Auto: global_manpower_modifier = 0.10
-    global_manpower_modifier = 0.10
+	# global_manpower_modifier = 0.15
+	#Auto: global_manpower_modifier = 0.10
+	global_manpower_modifier = 0.10
 }
 
 abm_crossroads_of_cultures = {
-    age = age_2_renaissance
-    icon = cultural_acceptance_advance
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_2_renaissance
+	icon = cultural_acceptance_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = legalism_advance
+	requires = legalism_advance
 
-    # num_accepted_cultures = 1
-    #Auto: cultures_capacity = 1
-    cultures_capacity_modifier = 0.35
+	# num_accepted_cultures = 1
+	#Auto: cultures_capacity = 1
+	cultures_capacity_modifier = 0.35
 }
 
 abm_alan_mercenaries = {
-    age = age_2_renaissance
-    icon = offensive_army
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_2_renaissance
+	icon = offensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = drill_army_advance
+	requires = drill_army_advance
 
-    # merc_maintenance_modifier = -0.10
-    # mercenary_manpower = 0.15
-    #Auto: mercenary_maintenance_cost = -0.10
-    #Auto: mercenary_manpower_modifier = 0.15
-    mercenary_maintenance_efficiency = 0.10
-    hire_mercenary_premium_cost_modifier = -0.15
+	# merc_maintenance_modifier = -0.10
+	# mercenary_manpower = 0.15
+	#Auto: mercenary_maintenance_cost = -0.10
+	#Auto: mercenary_manpower_modifier = 0.15
+	mercenary_maintenance_efficiency = 0.10
+	hire_mercenary_premium_cost_modifier = -0.15
 }
 
 abm_caucasus_hit_and_run = {
-    age = age_3_discovery
-    icon = defensive_army
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_3_discovery
+	icon = defensive_army
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = pike_and_shot_advance
+	requires = pike_and_shot_advance
 
-    # leader_land_manuever = 1
-    #Auto: train_general_ability = 1
-    combat_speed_modifier = 0.10
-    army_movement_speed = 0.1
+	# leader_land_manuever = 1
+	#Auto: train_general_ability = 1
+	combat_speed_modifier = 0.10
+	army_movement_speed = 0.1
 }
 
 abm_persian_poetry = {
-    age = age_3_discovery
-    icon = glorious_arms
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = pike_and_shot_advance
+	requires = pike_and_shot_advance
 
-    # prestige = 1
-    #Auto: monthly_prestige = 0.10
-    monthly_prestige = 0.10
+	# prestige = 1
+	#Auto: monthly_prestige = 0.10
+	monthly_prestige = 0.10
 }
 
 abm_highland_khans = {
-    age = age_4_reformation
-    icon = defensive_mentality
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_4_reformation
+	icon = defensive_mentality
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = recruitment_improvements_reformation
+	requires = recruitment_improvements_reformation
 
-    # legitimacy = 1
-    # devotion = 1
-    # republican_tradition = 0.3
-    # meritocracy = 1
-    # horde_unity = 1
-    #Auto: monthly_legitimacy = 0.10
-    #Auto: monthly_republican_tradition = 0.10
-    #Auto: monthly_devotion = 0.10
-    #Auto: monthly_horde_unity = 0.10
-    #Auto: monthly_tribal_cohesion = 0.10
-    monthly_legitimacy = 0.10
-    monthly_republican_tradition = 0.10
-    monthly_devotion = 0.10
-    monthly_horde_unity = 0.10
-    monthly_tribal_cohesion = 0.10
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	#Auto: monthly_legitimacy = 0.10
+	#Auto: monthly_republican_tradition = 0.10
+	#Auto: monthly_devotion = 0.10
+	#Auto: monthly_horde_unity = 0.10
+	#Auto: monthly_tribal_cohesion = 0.10
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_eastern_influence = {
-    age = age_4_reformation
-    icon = army_professionalism
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_4_reformation
+	icon = army_professionalism
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:circassian_culture
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = recruitment_improvements_reformation
+	requires = recruitment_improvements_reformation
 
-    # army_tradition = 0.5
-    #Auto: monthly_army_tradition = 0.05
-    monthly_army_tradition = 0.10
+	# army_tradition = 0.5
+	#Auto: monthly_army_tradition = 0.05
+	monthly_army_tradition = 0.10
 }
 
 abm_caucasus_cavalry_armies = {
-    age = age_5_absolutism
-    icon = finest_of_horses
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_5_absolutism
+	icon = finest_of_horses
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = government_size_absolutism
+	requires = government_size_absolutism
 
-    # cavalry_power = 0.1
-    #Auto: army_light_cavalry_power = 0.10
-    army_light_cavalry_power = 0.15
+	# cavalry_power = 0.1
+	#Auto: army_light_cavalry_power = 0.10
+	army_light_cavalry_power = 0.15
 }
 
 abm_caucasus_ideas_ambition = {
-    age = age_6_revolutions
-    icon = agriculture_advance
-    potential = {
-        OR = {
-            has_or_had_tag = CPA
-            has_or_had_tag = HTY
-            has_or_had_tag = KIP
-            has_or_had_tag = HYT
-            has_or_had_tag = TEM
-            has_or_had_tag = KDA
-            has_or_had_tag = ALN
-            has_or_had_tag = DZK
-            has_or_had_tag = SMS
-            has_or_had_tag = AVR
-        }
-    }
+	age = age_6_revolutions
+	icon = agriculture_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
 
-    requires = industrialization_advance
+	requires = industrialization_advance
 
-    # global_tax_modifier = 0.10
-    #Auto: tax_income_efficiency = 0.10
-    tax_income_efficiency = medium_tax_income_efficiency_bonus
+	# global_tax_modifier = 0.10
+	#Auto: tax_income_efficiency = 0.10
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
 }
 
 # Shivan Ideas - SRV
 abm_srv_ideas_tradition_1 = {
-    age = age_1_traditions
-    icon = elephant_cavalry
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_1_traditions
+	icon = elephant_cavalry
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = horse_riding_advance
+	requires = horse_riding_advance
 
-    # leader_land_shock = 1
-    #Auto: army_initiative = 0.10
-    army_heavy_cavalry_power = 0.10
-    army_heavy_infantry_power = 0.10
+	# leader_land_shock = 1
+	#Auto: army_initiative = 0.10
+	army_heavy_cavalry_power = 0.10
+	army_heavy_infantry_power = 0.10
 }
 
 abm_srv_ideas_tradition_2 = {
-    age = age_1_traditions
-    icon = zmw_merchant_taxes
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_1_traditions
+	icon = zmw_merchant_taxes
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = global_trade_advance
+	requires = global_trade_advance
 
-    # global_prov_trade_power_modifier = 0.1
-    #Auto: global_merchant_power = 0.10
-    global_trade_through_owned_territory_efficiency = 0.10
+	# global_prov_trade_power_modifier = 0.1
+	#Auto: global_merchant_power = 0.10
+	global_trade_through_owned_territory_efficiency = 0.10
 }
 
 abm_srv_khalwati_order = {
-    age = age_2_renaissance
-    icon = regimental_system
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_2_renaissance
+	icon = regimental_system
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # legitimacy = 1
-    # devotion = 1
-    # republican_tradition = 0.3
-    # meritocracy = 1
-    # horde_unity = 1
-    # monthly_piety = -0.001
-    #Auto: monthly_legitimacy = 0.10
-    #Auto: monthly_republican_tradition = 0.10
-    #Auto: monthly_devotion = 0.10
-    #Auto: monthly_horde_unity = 0.10
-    #Auto: monthly_tribal_cohesion = 0.10
-    monthly_legitimacy = 0.10
-    monthly_republican_tradition = 0.10
-    monthly_devotion = 0.10
-    monthly_horde_unity = 0.10
-    monthly_tribal_cohesion = 0.10
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	# monthly_piety = -0.001
+	#Auto: monthly_legitimacy = 0.10
+	#Auto: monthly_republican_tradition = 0.10
+	#Auto: monthly_devotion = 0.10
+	#Auto: monthly_horde_unity = 0.10
+	#Auto: monthly_tribal_cohesion = 0.10
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
 }
 
 abm_srv_fortresses_of_shirvan = {
-    age = age_2_renaissance
-    icon = pike_and_shot_advance
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_2_renaissance
+	icon = pike_and_shot_advance
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = feudalism_advance
+	requires = feudalism_advance
 
-    # defensiveness = 0.2
-    global_defensive = 0.20
+	# defensiveness = 0.2
+	global_defensive = 0.20
 }
 
 abm_srv_tribesmen_of_the_caucasus = {
-    age = age_3_discovery
-    icon = glorious_arms
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = horse_riding_advance
+	requires = horse_riding_advance
 
-    # cavalry_power = 0.15
-    #Auto: army_light_cavalry_power = 0.15
-    army_light_cavalry_power = 0.15
+	# cavalry_power = 0.15
+	#Auto: army_light_cavalry_power = 0.15
+	army_light_cavalry_power = 0.15
 }
 
 abm_srv_persianate_patronage = {
-    age = age_3_discovery
-    icon = drill_army_advance
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_3_discovery
+	icon = drill_army_advance
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = pike_and_shot_advance
+	requires = pike_and_shot_advance
 
-    # same_culture_advisor_cost = -0.2
-    #Auto: hire_advisor_cost_modifier = -0.20
-    hire_advisor_cost_modifier = -0.20
-    train_general_cost_modifier = -0.20
+	# same_culture_advisor_cost = -0.2
+	#Auto: hire_advisor_cost_modifier = -0.20
+	hire_advisor_cost_modifier = -0.20
+	train_general_cost_modifier = -0.20
 }
 
 abm_srv_caspian_trade = {
-    age = age_4_reformation
-    icon = red_sea_trade
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_4_reformation
+	icon = red_sea_trade
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = global_trade_advance
+	requires = global_trade_advance
 
-    # caravan_power = 0.2
-    #Auto: global_trade_center_power = 0.10
-    global_trade_center_power = 0.20
+	# caravan_power = 0.2
+	#Auto: global_trade_center_power = 0.10
+	global_trade_center_power = 0.20
 }
 
 abm_srv_shirvani_architecture = {
-    age = age_4_reformation
-    icon = expanded_supply_trains
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_4_reformation
+	icon = expanded_supply_trains
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = recruitment_improvements_reformation
+	requires = recruitment_improvements_reformation
 
-    # build_cost = -0.1
-    # prestige = 1
-    #Auto: global_build_buildings_cost = -0.10
-    #Auto: monthly_prestige = 0.10
-    global_urban_build_buildings_cost = -0.10
-    monthly_prestige = 0.10
+	# build_cost = -0.1
+	# prestige = 1
+	#Auto: global_build_buildings_cost = -0.10
+	#Auto: monthly_prestige = 0.10
+	global_urban_build_buildings_cost = -0.10
+	monthly_prestige = 0.10
 }
 
 abm_srv_merchants_of_baku = {
-    age = age_5_absolutism
-    icon = offensive_army
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_5_absolutism
+	icon = offensive_army
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = government_size_absolutism
+	requires = government_size_absolutism
 
-    # merchants = 1
-    #Auto: global_merchant_power = 0.20
-    global_merchant_power = 0.20
+	# merchants = 1
+	#Auto: global_merchant_power = 0.20
+	global_merchant_power = 0.20
 }
 
 abm_srv_ideas_ambition = {
-    age = age_6_revolutions
-    icon = defensive_army
-    potential = {
-        has_or_had_tag = SRV
-    }
+	age = age_6_revolutions
+	icon = defensive_army
+	potential = {
+		has_or_had_tag = SRV
+	}
 
-    requires = modern_bureaucracy
+	requires = modern_bureaucracy
 
-    # global_trade_goods_size_modifier = 0.1
-    #Auto: global_max_rgo_size_modifier = 0.10
-    global_max_rgo_size_modifier = 0.10
+	# global_trade_goods_size_modifier = 0.1
+	#Auto: global_max_rgo_size_modifier = 0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+# CIR_ideas — Circassia (CIR)
+abm_cir_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = smooth_administration
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = feudalism_advance
+
+	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
+}
+
+abm_cir_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = defensive_army
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:circassian_culture
+            has_or_had_tag = CIR
+		}
+	}
+
+	requires = feudalism_advance
+
+	# defensiveness = 0.2
+	fort_limit_modifier = 0.20
+}
+
+abm_horsemen_of_the_steppe = {
+	age = age_2_renaissance
+	icon = horse_riding_advance
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = horse_riding_advance
+
+	# cavalry_power = 0.05
+	# cavalry_cost = -0.1
+	army_heavy_cavalry_power=0.10
+	army_heavy_cavalry_build_cost_modifier=-0.10
+}
+
+abm_merchants_of_genoa = {
+	age = age_2_renaissance
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = renaissance_advance
+
+	# global_prov_trade_power_modifier = 0.15
+	global_merchant_power = 0.15
+}
+
+abm_circassian_grain = {
+	age = age_3_discovery
+	icon = agriculture_advance
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = pike_and_shot_advance
+
+	# trade_efficiency = 0.1
+	export_efficiency = 0.10
+}
+
+abm_franciscan_missionaries = {
+	age = age_3_discovery
+	icon = church_councils
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = pike_and_shot_advance
+
+	# missionaries = 1
+	number_of_allowed_religious_figures = 1
+}
+
+abm_adyghe_beauty = {
+	age = age_4_reformation
+	icon = students_of_foreign_courts
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = confessionalism_advance
+
+	# prestige_decay = -0.01
+	prestige_decay = -0.001
+}
+
+abm_steppe_diplomats = {
+	age = age_4_reformation
+	icon = diplomatic_training
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = recruitment_improvements_reformation
+
+	# diplomats = 1
+	monthly_diplomats = 0.10
+}
+
+abm_religious_flexibility = {
+	age = age_5_absolutism
+	icon = religious_melting_pot
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = government_size_absolutism
+
+	# tolerance_heathen = 1
+	# tolerance_heretic = 1
+	tolerance_heathen = 1
+	tolerance_heretic = 1
+}
+
+abm_cir_ideas_ambition = {
+	age = age_6_revolutions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = modern_bureaucracy
+
+	# land_morale = 0.10
+	land_morale_modifier = 0.10
 }
