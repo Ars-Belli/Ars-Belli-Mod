@@ -1,5 +1,5 @@
 ﻿############################
-# age_1_traditions
+# Ruthenian and Cossack Cultures
 ############################
 REPLACE:flexible_loyalty = {
     age = age_1_traditions
@@ -16,6 +16,50 @@ REPLACE:flexible_loyalty = {
     requires = feudalism_advance
 }
 
+REPLACE:heritage_of_the_rus = {
+    age = age_1_traditions
+    potential = {
+        OR = {
+            culture = culture:ruthenian
+            culture = culture:cossack_culture
+            culture = { merged_culture_group_contains_culture = culture:ruthenian }
+        }
+    }
+    cultural_tradition_modifier = 0.1
+
+    requires = flexible_loyalty
+}
+
+REPLACE:mother_of_russian_cities = {
+    age = age_2_renaissance
+    potential = {
+        OR = {
+            culture = culture:ruthenian
+            culture = culture:cossack_culture
+            culture = { merged_culture_group_contains_culture = culture:ruthenian }
+        }
+    }
+    global_urban_build_buildings_efficiency = 0.1
+    global_devastation_recovery = 0.005
+
+    requires = power_projection_advance_2
+}
+
+REPLACE:united_faith = {
+    age = age_2_renaissance
+    potential = {
+        OR = {
+            culture = culture:ruthenian
+            culture = culture:cossack_culture
+            culture = { merged_culture_group_contains_culture = culture:ruthenian }
+        }
+    }
+    tolerance_own = 1
+    global_clergy_max_literacy = 5
+
+    requires = mother_of_russian_cities
+}
+
 REPLACE:ruthenia_commoner_education = {
     age = age_3_discovery
     potential = {
@@ -30,12 +74,84 @@ REPLACE:ruthenia_commoner_education = {
     global_laborers_max_literacy = 10
 
 
-    requires = study_institutions_advance
+    requires = crown_power_advance_discovery
+}
+
+REPLACE:ruthenian_state_advance = {
+    age = age_3_discovery
+    potential = {
+        OR = {
+            culture = culture:ruthenian
+            culture = culture:cossack_culture
+            culture = { merged_culture_group_contains_culture = culture:ruthenian }
+        }
+    }
+    stability_cost_efficiency = 0.2
+
+    requires = ruthenia_commoner_education
+}
+
+east_and_west = {
+    age = age_4_reformation
+    potential = {
+        OR = {
+            culture = culture:ruthenian
+            culture = culture:cossack_culture
+            culture = { merged_culture_group_contains_culture = culture:ruthenian }
+        }
+    }
+    global_merchant_power = 0.1
+
+    requires = confessional_court
 }
 
 
+REPLACE:ruthenian_rural_buildings = {
+    age = age_5_absolutism
+    potential = {
+        OR = {
+            culture = culture:ruthenian
+            culture = { merged_culture_group_contains_culture = culture:ruthenian }
+        }
+    }
+    global_rural_build_buildings_efficiency = 0.2
+
+    requires = the_constitution
+}
+
+REPLACE:international_influences = {
+    age = age_6_revolutions
+    potential = {
+        OR = {
+            culture = culture:ruthenian
+            culture = culture:cossack_culture
+            culture = { merged_culture_group_contains_culture = culture:ruthenian }
+        }
+    }
+    tolerance_heretic = 1
+    non_rural_migration_attraction = 0.2
+
+    requires = *
+}
+
+
+
+REPLACE:reuniting_rus = {
+    age = age_3_discovery
+    potential = {
+        OR = {
+            culture = culture:ruthenian
+            culture = { merged_culture_group_contains_culture = culture:ruthenian }
+        }
+    }
+    global_separatism = -0.1
+    monthly_legitimacy = 0.05
+
+    requires = enlightened_court
+}
+
 ############################
-# Ruthenia/Ukraine (UKR)
+# Ruthenia/Ukraine (UKR) - Formable
 ############################
 abm_ukr_ideas_tradition_1 = {
     age = age_3_discovery
@@ -154,12 +270,12 @@ abm_ukr_ideas_ambition = {
     }
     requires = modern_bureaucracy
     # discipline = 0.05
-    discipline = 0.05
+    army_maintenance_efficiency = 0.20
 }
 
 
 #############################
-# Kyiv
+# Kyiv - (KIE)
 #############################
 
 abm_kie_ideas_tradition_1 = {
@@ -209,6 +325,7 @@ abm_heritage_of_rus = {
 
     # diplomatic_reputation = 1
     diplomatic_reputation = diplomatic_reputation_mild_bonus
+    subject_loyalty = 5
 }
 
 abm_fending_off_the_invaders = {
@@ -233,8 +350,8 @@ abm_chernozem_land = {
     requires = colonial_charters
 
     # production_efficiency = 0.1
-    global_wheat_output_modifier = 0.25
-    global_monthly_food_modifier = 0.25
+    global_wheat_output_modifier = 0.20
+    global_monthly_food_modifier = 0.20
 }
 
 abm_center_of_orthodox_church = {
@@ -299,7 +416,7 @@ abm_chr_ideas_tradition_1 = {
     requires = army_professionalism
 
     # land_morale = 0.1
-    land_morale_modifier = 0.10
+    army_initiative = 0.10
 }
 
 abm_chr_ideas_tradition_2 = {
@@ -424,8 +541,8 @@ abm_plt_ideas_tradition_1 = {
     requires = drill_army_advance
 
     # infantry_cost = -0.1
-    army_heavy_infantry_build_cost_modifier = -0.10
-    army_light_infantry_build_cost_modifier = -0.10
+    army_heavy_infantry_power = 0.10
+    army_light_infantry_power = 0.10
 }
 
 abm_plt_ideas_tradition_2 = {
@@ -437,7 +554,7 @@ abm_plt_ideas_tradition_2 = {
     requires = fortification_advance
 
     # hostile_attrition = 1
-    global_hostile_attrition = 1.0
+    global_hostile_attrition = 1
 }
 
 abm_legacy_of_the_werewolf_prince = {
@@ -510,7 +627,7 @@ abm_diplomatic_initiative = {
     requires = recruitment_improvements_reformation
 
     # diplomatic_upkeep = 1
-    diplomatic_spending_cost = -0.010
+    diplomatic_upkeep_efficiency = 0.10
 }
 
 abm_forest_of_europe = {
@@ -522,7 +639,7 @@ abm_forest_of_europe = {
     requires = manufactories_advance
 
     # build_cost = -0.1, development_cost = -0.1
-    global_build_buildings_efficiency = 0.1
+    global_build_buildings_efficiency = 0.10
     global_monthly_development = 0.001
 }
 
@@ -535,8 +652,8 @@ abm_plt_ideas_ambition = {
     requires = government_size_absolutism
 
     # infantry_power = 0.1
-    army_heavy_infantry_power = 0.10
-    army_light_infantry_power = 0.10
+    army_heavy_infantry_build_cost_modifier = -0.10
+    army_light_infantry_build_cost_modifier = -0.10
 }
 
 
@@ -564,7 +681,8 @@ abm_smo_ideas_tradition_2 = {
     requires = regulate_court_procedures
 
     # advisor_cost = -0.15
-    court_spending_efficiency = 0.15
+    court_spending_efficiency = 0.10
+    estate_power_from_cabinet = -0.10
 }
 
 abm_smo_smolenskian_resolve = {
@@ -625,8 +743,8 @@ abm_smo_hold_the_line = {
     requires = recruitment_improvements_reformation
 
     # leader_land_fire = 1
-    army_light_infantry_power = 0.1
-    army_light_cavalry_power = 0.1
+    army_light_infantry_power = 0.10
+    army_light_cavalry_power = 0.10
 }
 
 abm_smo_artillery_before_all = {
@@ -650,7 +768,7 @@ abm_smo_tsar_mortars = {
     requires = manufactories_advance
 
     # siege_ability = 0.10
-    siege_ability = 0.1
+    siege_ability = 0.10
 }
 
 abm_smo_ideas_ambition = {
@@ -662,7 +780,5 @@ abm_smo_ideas_ambition = {
     requires = government_size_absolutism
 
     # prestige = 1
-    monthly_prestige = 0.1
+    monthly_prestige = 0.10
 }
-
-
