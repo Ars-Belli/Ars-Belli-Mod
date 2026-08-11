@@ -1002,11 +1002,8 @@ countries = {
 		own_control_core = {
 			dayr_aqul badra ilam
 			wasit abdanan al_tib arkvaz bakusaya dehloran meymeh
-			basra abadan abdas al_madar al_qatr zuwayr
 			an_nil nasiriyah numaniyyah rusafa
-			khalafabad quban
-			ahvaz dowraq hamidiyeh hoveyzeh mosharahat muhammerah
-			samawa suq_al_shuyukh
+			samawa 
 		}
 
 		include = "expl_middle_east"
@@ -1037,9 +1034,41 @@ countries = {
 		government = { mysticism_vs_jurisprudence = 20 }
 
 		country_rank = rank_kingdom
-		capital = basra
+		capital = wasit
 	}
 	
+	ABMSS = { #custom tag for Mushasha
+		own_control_core = {
+			basra abadan abdas al_madar al_qatr zuwayr suq_al_shuyukh #Basra
+			ahvaz dowraq hamidiyeh hoveyzeh mosharahat muhammerah #Ahvaz
+			khalafabad quban #Ramhormoz
+		}
+
+		starting_technology_level = 3
+		include = "expl_middle_east"
+		include = "muslim_monarchy_no_abrahamic_dhimmi_no_coast"
+		
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = random
+
+			laws = {
+				sharia_law = zaidi_policy
+			}
+		}
+
+		capital = basra
+
+		court_language = arabic_language
+
+		accepted_cultures = {
+			lur_culture
+		}
+
+		religious_school = zaidi_school
+	}
+
 #	MSH = { #Mishmi
 #		type = pop
 #
