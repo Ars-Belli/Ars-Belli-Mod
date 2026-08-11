@@ -1,0 +1,87 @@
+﻿# ARS BELLI: scripted replacement for the engine "Send Economic Support".
+#
+# The engine version is untouchable from script - it is not a relation_type, has no
+# scripted_relation, country_interaction, on_action, ai_diplochance entry or allowed_*
+# modifier, and its action list is enumerated by the engine - so none of the three
+# requirements below could be attached to it. This rebuilds it as a scripted relation,
+# which gets all three. The vanilla action is marked as against the rules in
+# localisation instead, since it cannot be removed.
+#
+#   Nr.3  the recipient gets an accept/decline popup
+#   Nr.4  giving OR receiving costs a Defensive Point (see the mp weight recompute in
+#         scripted_effects/ars_belli_scripted_effects.txt, which spills into Alliance
+#         Points via the existing overflow rules)
+#   Nr.5  -0.10 monthly diplomats on BOTH sides via the giving_/receiving_ auto-modifiers
+#         in static_modifiers/ars_belli_country_changes.txt
+#
+# This file is only the ongoing half of the mechanic. Starting it lives in
+# country_interactions/ars_belli_send_economic_support.txt, which carries the amount
+# slider and the accept/decline popup - see offer_visible below for why.
+#
+# first = the country sending gold, second = the country receiving it.
+
+ars_belli_economic_support = {
+	type = diplomacy
+	relation_type = oneway
+
+	category = {
+		offer = CATEGORY_ECONOMY_ACTIONS
+		request = CATEGORY_ECONOMY_ACTIONS
+		cancellation = CATEGORY_ECONOMY_ACTIONS
+		break = CATEGORY_ECONOMY_ACTIONS
+	}
+
+	break_on_war = yes
+	annulled_by_peace_treaty = yes
+
+	# The agreed monthly sum, stored on the RECIPIENT by the interaction that starts the
+	# relation. The interaction allows a country only one patron at a time, which is what
+	# makes a single variable on the recipient unambiguous.
+	gold_to_second = ars_belli_economic_support_amount
+
+	visible = {
+		scope:actor = {
+			has_limited_diplomacy = no
+		}
+	}
+
+	# Started through ars_belli_send_economic_support instead of from the relation panel.
+	# A relation's own select_trigger is the only selection stage in its flow, so a
+	# value-type one leaves the picker with no attribute columns and the game asserts on
+	# (AttributeColumns.GetSize() > 0) and dies. The interaction has a country stage
+	# carrying columns ahead of the amount stage, which avoids that.
+	offer_visible = { always = no }
+	request_visible = { always = no }
+
+	# Free the stored figure when the arrangement ends. On a cancellation the giver is
+	# the actor, on a break the receiver is; expiry is engine-evaluated and uses
+	# first/second instead. Each clears the variable on whichever side is the receiver.
+	cancel_effect = {
+		scope:recipient = { remove_variable = ab_ecosupport_amount }
+	}
+
+	break_effect = {
+		scope:actor = { remove_variable = ab_ecosupport_amount }
+	}
+
+	expire_effect = {
+		scope:second = { remove_variable = ab_ecosupport_amount }
+	}
+
+	# Keep it unless it starts costing points we cannot afford.
+	wants_to_keep = {
+		add = {
+			desc = "BASE_VALUE"
+			value = 100
+		}
+		if = {
+			limit = {
+				scope:actor = { is_over_alliance_limit = 1 }
+			}
+			subtract = {
+				desc = ars_belli_economic_support_points_tt
+				value = 500
+			}
+		}
+	}
+}

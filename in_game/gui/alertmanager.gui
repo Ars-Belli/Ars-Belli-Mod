@@ -1,0 +1,7412 @@
+###########################################################################
+###########################################################################
+# TYPES AND TEMPLATES
+###########################################################################
+
+@alert_wide = 45
+@tooltip_title_wide = 420
+@tooltip_title_high = 20
+@tooltip_inner_margin = 10
+@tooltip_inner_wide =  @[tooltip_title_wide - tooltip_inner_margin * 2]
+
+template green_diplo_icon {
+	textcontext = "ALERT_PRIORITY_GREEN"
+	texture = "gfx/interface/alerts/dip_green.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 55
+	spriteborder_bottom = 16
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" {
+		on_start = "[PlayAudioEffect('UI_alert_appear_green_diplo')]"
+	}
+}
+
+template blue_alert {
+	textcontext = "ALERT_PRIORITY_BLUE"
+	texture = "gfx/interface/alerts/alert_blue.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 60
+	spriteborder_bottom = 13
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" {
+		on_start = "[PlayAudioEffect('UI_alert_appear_blue')]"
+	}
+}
+
+template red_alert {
+	textcontext = "ALERT_PRIORITY_RED"
+	texture = "gfx/interface/alerts/alert_red.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 47
+	spriteborder_bottom = 25
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" {
+		on_start = "[PlayAudioEffect('UI_alert_appear_red')]"
+	}
+}
+
+template red_war_alert {
+	textcontext = "ALERT_PRIORITY_WAR"
+	texture = "gfx/interface/alerts/alert_red.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 47
+	spriteborder_bottom = 25
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" {
+		on_start = "[PlayAudioEffect('UI_alert_appear_red')]"
+	}
+}
+
+template black_alert {
+	textcontext = "ALERT_PRIORITY_SITUATIONS"
+	texture = "gfx/interface/alerts/alert_black.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 55
+	spriteborder_bottom = 21
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" {
+		on_start = "[PlayAudioEffect('UI_alert_appear_black')]"
+	}
+}
+
+template yellow_alert {
+	textcontext = "ALERT_PRIORITY_YELLOW"
+	texture = "gfx/interface/alerts/alert_yellow.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 50
+	spriteborder_bottom = 24
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" {
+		on_start = "[PlayAudioEffect('UI_alert_appear_yellow')]"
+	}
+}
+
+template green_alert {
+	textcontext = "ALERT_PRIORITY_GREEN"
+	texture = "gfx/interface/alerts/alert_green.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 50
+	spriteborder_bottom = 21
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" {
+		on_start = "[PlayAudioEffect('UI_alert_appear_green')]"
+	}
+}
+
+template purple_alert {
+	textcontext = "ALERT_PRIORITY_SITUATIONS"
+	texture = "gfx/interface/alerts/alert_purple.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 55
+	spriteborder_bottom = 21
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" {
+		on_start = "[PlayAudioEffect('UI_alert_appear_purple')]"
+	}
+}
+
+template orange_alert {
+	textcontext = "ALERT_PRIORITY_ORANGE"
+	texture = "gfx/interface/alerts/alert_orange.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 55
+	spriteborder_bottom = 18
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" {
+		on_start = "[PlayAudioEffect('UI_alert_appear_orange')]"
+	}
+}
+
+
+template alert_discard {
+	textcontext = "ALERT_PRIORITY_BLUE"
+	texture = "gfx/interface/alerts/discard_alert.dds"
+	spriteType = Corneredstretched
+	spriteborder_top = 60
+	spriteborder_bottom = 13
+	texture_density = 4
+	using = snd_UI_hover_alert
+	blockoverride "alert_appear_default_soundeffect" { 
+		on_start = "[PlayAudioEffect('UI_alert_appear_blue')]"
+	}
+}
+
+template automatic_priority_alert {
+	textcontext = "[AlertEntry.GetDescription.GetPriority]"
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('blue')]"
+		using = blue_alert
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('green')]"
+		using = green_alert
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('yellow')]"
+		using = yellow_alert
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('orange')]"
+		using = orange_alert
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('red')]"
+		using = red_alert
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('purple')]"
+		using = purple_alert
+	}
+}
+
+template blue_alert_horizontal {
+	texture = "gfx/interface/alerts/discarded_alert_button_blue.dds"
+}
+
+template red_alert_horizontal {
+	texture = "gfx/interface/alerts/discarded_alert_button_red.dds"
+}
+
+template yellow_alert_horizontal {
+	texture = "gfx/interface/alerts/discarded_alert_button_yellow.dds"
+}
+
+template green_alert_horizontal {
+	texture = "gfx/interface/alerts/discarded_alert_button_green.dds"
+}
+
+template purple_alert_horizontal {
+	texture = "gfx/interface/alerts/discarded_alert_button_purple.dds"
+}
+
+template orange_alert_horizontal {
+	texture = "gfx/interface/alerts/discarded_alert_button_brown.dds"
+}
+
+template automatic_priority_alert_horizontal {
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('blue')]"
+		using = blue_alert_horizontal
+		block "alert_button_setup" {}
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('green')]"
+		using = green_alert_horizontal
+		block "alert_button_setup" {}
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('yellow')]"
+		using = yellow_alert_horizontal
+		block "alert_button_setup" {}
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('orange')]"
+		using = orange_alert_horizontal
+		block "alert_button_setup" {}
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('red')]"
+		using = red_alert_horizontal
+		block "alert_button_setup" {}
+	}
+
+	button = {
+		size = { 100% 100% }
+		alwaystransparent = yes
+		visible = "[AlertEntry.GetDescription.IsPriority('purple')]"
+		using = purple_alert_horizontal
+		block "alert_button_setup" {}
+	}
+}
+
+template alert_banner_anim {
+	state = {
+		name = alert_drop
+		position_y = -80
+		next = alert_drop_1
+		on_start = "[PdxGuiWidget.SetAlertSmoothPositioning('(bool)no')]"
+	}
+	state = {
+		name = alert_drop_1
+		duration = 0.4
+		position_y = 0
+		bezier = { 1.0 0.0 1.0 0.0 }
+		using = snd_UI_alert_appear_default
+		next = alert_drop_2
+	}
+	state = {
+		name = alert_drop_2
+		duration = 0.2
+		position_y = -25
+		bezier = { 0.0 0.7 0.3 1.0 }
+		next = alert_drop_3
+	}
+	state = {
+		name = alert_drop_3
+		duration = 0.2
+		bezier = { 0.8 0.0 1.0 0.2 }
+		position_y = 0
+		next = alert_drop_4
+	}
+	state = {
+		name = alert_drop_4
+		position_y = 0
+	}
+}
+
+template alert_banner_setup {
+	block "alert_banner_priority" {}
+	vbox = {
+		set_parent_size_to_minimum = yes
+
+		widget = {
+			size = { @alert_wide 70 }
+			vbox = {
+				spacing = 5
+				block "alert_more_icons_before" {}
+
+				block "icon_texture_obj" {
+					icon = {
+						size = { 30 30 }
+						block "icon_texture" { 
+							texture = "[AlertEntry.GetDescription.GetIcon]"
+						}
+						alwaystransparent = yes
+						texture_density = 2
+						alpha = 1
+
+						glow = {
+							name = "drop_shadow"
+							glow_radius = 3
+							color = {0.0 0.0 0.0 1.0}
+							alpha = 0.3
+						}
+
+						block "icon_setup" {}
+					}
+				}
+
+				block "alert_more_icons_after" {}
+			}
+		}
+
+		block "alert_is_new_padding" {
+			widget = {
+				layoutpolicy_horizontal = expanding
+				block "alert_is_new_padding_visible" {
+					visible = "[AlertEntry.IsNew]"
+				}
+
+				size = { -1 8 }
+
+				state = {
+					name = _show
+					duration = 0.2
+					bezier = { 0.0 1.0 0.0 1.0 }
+					size = { -1 8 }
+				}
+
+				state = {
+					name = _hide
+					duration = 0.2
+					bezier = { 0.0 1.0 0.0 1.0 }
+					size = { -1 5 }
+				}
+			}
+		}
+	}
+}
+
+template progress_banner_setup {
+	tooltipmeta = {
+		block "icon_texture" {}
+	}
+
+	vbox = {
+		set_parent_size_to_minimum = yes
+
+		widget = {
+			size = { @alert_wide 75 }
+			vbox = {
+				spacing = 5
+				block "alert_more_icons_before" {}
+
+				widget = {
+					size = { 35 35 }
+					using = marker_bg_circle
+
+					piechart = {
+						parentanchor = center
+						size = { 90% 90% }
+						using = piechart_angles
+
+						pieslice = {
+							texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+							block "pieslice_progress_setup" {}
+							color = { 0.01 0.6 0.9 1 }
+							alwaystransparent = yes
+						}
+
+						pieslice = {
+							texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+							block "pieslice_background_setup" {}
+							color = { 0.0 0.1 0.0 1 }
+							alwaystransparent = yes
+						}
+					}
+
+					icon = {
+						size = { 75% 75% }
+						texture = "[PdxGuiWidget.GetTooltipMetaTexture]"
+						parentanchor = center
+						allow_outside = yes
+						alwaystransparent = yes
+						texture_density = 2
+						alpha = 1
+
+						glow = {
+							name = "drop_shadow"
+							glow_radius = 3
+							color = {0.0 0.0 0.0 1.0}
+							alpha = 0.5
+						}
+
+						block "icon_setup" {}
+					}
+				}
+
+				block "alert_more_icons_after" {}
+			}
+		}
+
+		block "alert_is_new_padding" {
+			widget = {
+				layoutpolicy_horizontal = expanding
+
+				block "alert_is_new_visible" {
+					# override in alert itself
+					visible = no
+				}
+				size = { -1 8 }
+
+				state = {
+					name = _show
+					duration = 0.2
+					bezier = { 0.0 1.0 0.0 1.0 }
+					size = { -1 8 }
+				}
+
+				state = {
+					name = _hide
+					duration = 0.2
+					bezier = { 0.0 1.0 0.0 1.0 }
+					size = { -1 5 }
+				}
+			}
+		}
+	}
+}
+
+types AlertManager {
+	type alert_action = button {
+		tooltip_enabled = no
+	}
+
+	type alert_tooltip_container = container {
+		alwaystransparent = no
+	}
+
+	type alert_banner = button {
+		ontextcontextchanged = "[SetAlertPriorityFromTextContext(PdxGuiWidget.AccessSelf)]"
+
+		using = alert_banner_setup
+		using = alert_banner_anim
+
+		blockoverride "alert_banner_priority" {
+			using = automatic_priority_alert
+		}
+
+		blockoverride "alert_appear_default_soundeffect" {
+			on_start = "[PlayAudioEffect(AlertEntry.GetDescription.GetAlertAppearSound)]"
+		}
+
+		onmousehierarchyenter = "[AlertEntry.SetAsOld]"
+
+		# block "action_tooltip_left" {
+			action_tooltip = {
+				click_type = left
+				click_mode = single
+				visible = "[AlertEntry.GetAlertAction.IsVisible]"
+				enabled = "[AlertEntry.GetAlertAction.IsEnabled]"
+				title = "[AlertEntry.GetAlertAction.GetName]"
+				cost = "[AlertEntry.GetAlertAction.GetCost]"
+				description = "[AlertEntry.GetAlertAction.GetDescription]"
+				conditions = "[AlertEntry.GetAlertAction.GetConditions]"
+				on_action_with_params = "[AlertEntry.GetAlertAction.PerformAction]"
+			}
+		# }
+
+		action_tooltip = {
+			click_type = left
+			click_modifier = shift
+			click_modifier_description = "OPEN_HINT_TEXT"
+			title = "ALERT_HINT"
+			visible = "[AlertEntry.GetDescription.HasHint]"
+			on_action_with_params = "[AlertEntry.GetAlertAction.PerformAction]"
+			on_action = "[OpenLateralViewWithParams('hints', LinkParam('selected_hint', AlertEntry.GetDescription.GetHint))]"
+		}
+
+		# block "action_tooltip_right" {
+			action_tooltip = {
+				click_type = right
+				title = "ALERT_HIDE"
+				clicksound = "UI_alert_discard"
+				on_action = "[AlertEntry.Hide]"
+			}
+
+			action_tooltip = {
+				click_type = right
+				click_modifier = shift
+				title = "ALERT_HIDE_AND_MUTE"
+				clicksound = "UI_alert_discard"
+				on_action = "[AlertEntry.Hide]"
+				on_action = "[AlertEntry.SetMuted]"
+			}
+		# }
+
+		# using = alert_tooltip
+		using = snd_UI_alert_hide
+
+		modify_texture = {
+			visible = "[AlertEntry.IsNew]"
+			alpha = "[GetHighlightAnim('4.0, 0.1, 0.25')]"
+		}
+
+		tagtooltip_enabled = yes
+		tooltip = "[AlertEntry.GetDescription.GetTitleWithTooltip]"
+	}
+
+	type situation_banner = button {
+		ontextcontextchanged = "[SetAlertPriorityFromTextContext(PdxGuiWidget.AccessSelf)]"
+
+		size = { @alert_wide 90 }
+		using = alert_banner_anim
+		using = snd_UI_alert_openAndCycle
+		using = snd_UI_alert_hide
+
+		tooltipmeta = {
+			block "icon_texture" {}
+		}
+
+		block "icon_texture_obj" {
+			icon = {
+				parentanchor = center
+				size = { 35 35 }
+				block "icon_texture" {}
+
+				glow = {
+					name = "drop_shadow"
+					glow_radius = 3
+					color = {0.0 0.0 0.0 1.0}
+					alpha = 0.2
+				}
+			}
+		}
+	}
+
+	# type simple_banner = button {
+	# 	using = alert_banner_setup
+	# }
+
+	###########################################################################
+	# ALERT MANAGER
+	###########################################################################
+
+	type alert_manager = alerts_layout {
+		name = "alert_manager"
+		visible = "[Not(IsLobbyOpen)]"
+		ignoreinvisible = yes
+		allow_outside = yes
+		spacing = -2
+		scissor = yes
+		distance = 10
+		speed = 150
+
+		righttoleft = no #left side
+		bottomtotop = no #right side
+
+		datacontext = "[InGameTopbar.AccessAlertManager]"
+	}
+}
+
+###########################
+# Default Alert
+###########################
+
+alert_banner = {
+	name = "AlertEntry"
+}
+
+###########################
+# Default Tooltip
+###########################
+
+types AlertTooltipTypes {
+	# lowpriotextcontext = "[AlertEntry.GetTooltip]"
+	# ontextcontextchanged = "[SetTitleDescTooltipFromTextContext(PdxGuiWidget.AccessSelf)]"
+	# textcontext = "[TitleDescTooltip.GetDesc]"
+
+	###########################################################################
+	# ALERT TOOLTIP BASE
+	###########################################################################
+
+	type AlertTooltipType = ContextualTooltipType {
+		blockoverride "title_icon_texture" {
+			block "title_icon_texture" {
+				texture = "[AlertEntry.GetDescription.GetIcon]"
+			}
+		}
+
+		blockoverride "title_text" {
+			block "title_text" {
+				text = "[AlertEntry.GetDescription.GetTitle]"
+			}
+		}
+
+		blockoverride "concept_link" {
+			visible = "[IsBuildDebug]"
+			raw_text = "#debug [AlertEntry.GetTriggerValue]#!"
+		}
+
+		blockoverride "title_button" {
+			hint_button = {
+				visible = "[AlertEntry.GetDescription.HasHint]"
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', LinkParam('selected_hint', AlertEntry.GetDescription.GetHint))]"
+				}
+			}
+			block "mapmode_tooltip_button" {}
+		}
+	}
+
+	type AlertTooltipTextType = AlertTooltipType {
+		blockoverride "tooltip_content" {
+			TooltipDebugTextBlock = {
+				blockoverride "text" {
+					debug_text = "[AlertDescription.GetDebugText]"
+				}
+			}
+			TooltipScrolledBlockList = {
+				textcontext = "[AlertEntry.GetTooltip]"
+			}
+		}
+	}
+
+	type AlertTooltipListType = AlertTooltipType {
+		blockoverride "tooltip_content" {
+			TooltipDebugTextBlock = {
+				blockoverride "text" {
+					debug_text = "[AlertDescription.GetDebugText]"
+				}
+			}
+			TooltipScrolledBlockList = {
+				textcontext = "[AlertEntry.GetTooltip]"
+			}
+		}
+	}
+}
+
+container = {
+	name = "AlertTooltip"
+	alwaystransparent = no
+	AlertTooltipTextType = {}
+}
+
+###########################################################################
+# RED ALERTS
+###########################################################################
+
+###########################
+# Member Leaving Union
+###########################
+
+alert_banner = {
+	name = "member_leaving_union"
+}
+
+alert_action = {
+	name = "member_leaving_union_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_HAS_MEMBER_LEAVING_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenInternationalOrganizationView(AlertMemberLeavingUnion.GetUnion)]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "member_leaving_union_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipBlockList = {
+				textcontext = "[AlertEntry.GetTooltip]"
+			}
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_HAS_MEMBER_LEAVING_UNION_TEXT"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Disease affecting your country
+###########################
+
+alert_banner = {
+	name = "has_disease"
+	onmousehierarchyenter = "[SetHighlightedTab('geography_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_disease_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('diseases')]"
+	}
+}
+
+###########################
+# Movement affecting your country
+###########################
+
+alert_banner = {
+	name = "has_movement"
+	onmousehierarchyenter = "[SetHighlightedTab('geography_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_movement_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('country_people', 'subtab = movements')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_movement_tooltip"
+	AlertTooltipListType = {}
+}
+
+###########################
+# Constructions missing input
+###########################
+
+alert_banner = {
+	name = "has_constructions_missing_input"
+	onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_constructions_missing_input_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertConstructionMissingInput.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_constructions_missing_input_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_CONSTRUCTIONS_MISSING_INPUT_TEXT"
+				}
+
+				blockoverride "textblock_background_tint"  {
+					modify_texture = {
+						using = color_red_texture
+					}
+				}
+			}
+
+			TooltipContentSection = { #1 Market
+				datacontext = "[GetCountryNeeds(Player.Self)]"
+				datamodel = "[CountryNeeds.GetMarketNeeds]"
+				visible = "[EqualTo_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)1' )]"
+				item = {
+					TooltipStringPairList = {
+						blockoverride "block_title" {
+							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+						textcontext = "[MarketCountryNeeds.GetGovernmentMissingGoodsInfo]"
+					}
+				}
+			}
+
+			TooltipContentSection = { #-5 Markets
+				datacontext = "[GetCountryNeeds(Player.Self)]"
+				datamodel = "[CountryNeeds.GetMarketNeeds]"
+				visible = "[And(LessThanOrEqualTo_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)4' ), GreaterThan_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)1' ))]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+						textcontext = "[MarketCountryNeeds.GetGovernmentMissingGoodsInfo]"
+					}
+				}
+			}
+
+			TooltipListBase = { #+6 Markets
+				datacontext = "[GetCountryNeeds(Player.Self)]"
+				visible = "[GreaterThan_int32(CountryNeeds.GetMarketGovernmentMissingGoodsCount, '(int32)4' )]"
+
+				TooltipListColumnContent = {
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_text" {
+							text = "[market|e]"
+						}
+						blockoverride "column_title_right" {
+							expand = {}
+						}
+
+						blockoverride "field_left" {
+							visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+						}
+
+						blockoverride "field_text" {
+							default_format = "#subtle_name"
+							align = left|nobaseline
+							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]"
+						}
+
+						blockoverride "field_right" { expand = {} }
+					}
+
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_left" {
+							expand = {}
+						}
+						blockoverride "column_title_text" {
+							text = "[goods_demands|e]"
+							default_format = "#explanation_link"
+
+						}
+
+						blockoverride "field_text" { visible = no }
+						blockoverride "field_right" {
+							spacing = 7
+							expand = {}
+							visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+							datacontext = "[GetMarketCountryNeeds(Player.Self, Market.Self)]"
+							datacontext = "[MarketCountryNeeds.GetMarket]"
+							tooltipwidget = { using = market_hub_gov_needs_tooltip }
+
+							text_single = {
+								visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
+								text = "[MarketCountryNeeds.GetGovernmentMissingGoodsAmount]"
+							}
+
+							icon = {
+								shaderfile = "gfx/FX/pdxgui_default.shader"
+								size = {15 15}
+								texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
+
+								using = bg_banner_button_vertical
+
+								blockoverride "banner_button_extra" {}
+
+								blockoverride "banner_button_color" {
+									modify_texture = {
+										using = color_red_texture
+										alpha = 0.6
+									}
+								}
+							}
+						}
+					}
+
+					blockoverride "column_datamodel"  {
+						datacontext = "[GetCountryNeeds(Player.Self)]"
+						datamodel = "[CountryNeeds.GetMarketNeeds]"
+					}
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Starving provinces
+###########################
+
+alert_banner = {
+	name = "has_starving_provinces"
+}
+
+alert_action = {
+	name = "has_starving_provinces_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertStarvingProvinces.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_starving_provinces_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_STARVING_PROVINCES"
+				}
+
+				blockoverride "textblock_background_tint"  {
+					modify_texture = {
+						using = color_red_texture
+					}
+				}
+			}
+
+			TooltipContentSection = { #1 Market
+				datamodel = "[AlertStarvingProvinces.GetMarketEntries]"
+				visible = "[EqualTo_int32(GetDataModelSize(AlertStarvingProvinces.GetMarketEntries), '(int32)1')]"
+				item = {
+					TooltipStringPairList = {
+						blockoverride "block_title" {
+							raw_text = "@market! [StarvingProvincesMarketEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[StarvingProvincesMarketEntry.GetProvincesInfo]"
+					}
+				}
+			}
+
+			TooltipContentSection = { #2-3 Markets
+				datamodel = "[AlertStarvingProvinces.GetMarketEntries]"
+				visible = "[And(LessThanOrEqualTo_int32(GetDataModelSize(AlertStarvingProvinces.GetMarketEntries), '(int32)3'), GreaterThan_int32(GetDataModelSize(AlertStarvingProvinces.GetMarketEntries), '(int32)1'))]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [StarvingProvincesMarketEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[StarvingProvincesMarketEntry.GetProvincesInfo]"
+					}
+				}
+			}
+
+			TooltipListBase = { #+3 Markets
+				visible = "[GreaterThan_int32(GetDataModelSize(AlertStarvingProvinces.GetMarketEntries), '(int32)3')]"
+				TooltipListColumnContent = {
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_text" {
+							text = "[market|e]"
+						}
+						blockoverride "column_title_right" { expand = {} }
+						blockoverride "field_text" {
+							default_format = "#subtle_name"
+							align = left|nobaseline
+							raw_text = "@market! [StarvingProvincesMarketEntry.GetMarket.GetName]"
+						}
+						blockoverride "field_right" { expand = {} }
+					}
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_left" { expand = {} }
+						blockoverride "column_title_text" {
+							text = "[provinces|e]"
+						}
+						blockoverride "field_text" { visible = no }
+						blockoverride "field_right" {
+							spacing = 7
+							expand = {}
+							tooltipwidget = { using = starving_provinces_market_entry_tooltip }
+							text_single = {
+								text = "[StarvingProvincesMarketEntry.GetProvincesAmount]"
+							}
+							icon = {
+								shaderfile = "gfx/FX/pdxgui_default.shader"
+								size = {15 15}
+								texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
+								using = bg_banner_button_vertical
+								blockoverride "banner_button_extra" { visible = yes }
+								blockoverride "banner_button_color" {
+									modify_texture = {
+										using = color_red_texture
+										alpha = 0.6
+									}
+								}
+							}
+						}
+					}
+					blockoverride "column_datamodel" {
+						datamodel = "[AlertStarvingProvinces.GetMarketEntries]"
+					}
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Static modifiers active
+###########################
+
+alert_banner = {
+	name = "static_modifier_active"
+}
+
+alert_tooltip_container = {
+	name = "static_modifier_active_tooltip"
+	AlertTooltipListType = {}
+}
+
+alert_action = {
+	name = "static_modifier_active_action"
+}
+
+###########################
+# About to lose great power
+###########################
+
+alert_banner = {
+	name = "about_to_lose_great_power_status"
+}
+
+alert_action = {
+	name = "about_to_lose_great_power_status_action"
+	action_tooltip = {
+		click_type = left
+		click_mode = single
+		title = "OPEN_KNOWN_COUNTRIES_TAB"
+		on_action = "[OpenLateralViewWithParams('diplomacy', 'relations_tab = known_countries')]"
+	}
+}
+
+###########################
+# About to lose hegemon
+###########################
+
+alert_banner = {
+	name = "about_to_lose_hegemon"
+}
+
+alert_action = {
+	name = "about_to_lose_hegemon_action"
+}
+
+###########################################################################
+# ORANGE ALERTS
+###########################################################################
+
+###########################
+# Bad shit is happening to me waa waa waa
+###########################
+
+alert_banner = {
+	name = "dangerous_relation"
+	onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "dangerous_relation_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = cabinet')]"
+	}
+}
+
+###########################
+# Intervene in Rival War
+###########################
+
+alert_banner = {
+	name = "can_intervene_in_rival_war"
+	onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_intervene_in_rival_war_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenDiploAction('ars_belli_enforce_peace')]"
+	}
+}
+
+###########################
+# Angry with no Parliament
+###########################
+
+alert_banner = {
+	name = "estate_unhappy_with_lack_of_parliament"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "estate_unhappy_with_lack_of_parliament_action"
+	datacontext = "[GetGenericAction('call_parliament')]"
+
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[PerformGenericAction(GenericAction.Self)]"
+	}
+}
+
+############################
+# Call For Peace
+############################
+
+alert_action = {
+	name = "has_call_for_peace_action"
+}
+
+alert_tooltip_container = {
+	name = "has_call_for_peace_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_call_for_peace')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Can be target of international organization
+####################################
+
+alert_banner = {
+	name = "can_potentially_be_target_of_io"
+	blockoverride "icon_texture" {
+		texture = "[AlertCanBeTargetOfIO.GetIcon]"
+	}
+}
+
+alert_action = {
+	name = "can_potentially_be_target_of_io_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		conditions = "[MakeItFailIfLoc(Not(AlertCanBeTargetOfIO.HasNext), 'CANNOT_ALERT_CTA_CYCLE_LEFT_CLICK')]"
+		enabled = "[AlertCanBeTargetOfIO.HasNext]"
+		on_action = "[AlertCanBeTargetOfIO.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "can_potentially_be_target_of_io_tooltip"
+	AlertTooltipType = {
+		blockoverride "title_icon_texture" {
+			texture = "[AlertCanBeTargetOfIO.GetIcon]"
+		}
+		
+
+		blockoverride "mapmode_tooltip_button" {
+			mapmode_tooltip_button = {
+				datacontext = "[GetMapMode('antagonism')]"
+			}
+		}
+
+		blockoverride "tooltip_content" {
+			block "tooltip_content" {
+				TooltipRequirementsList = {
+					visible = "[AlertCanBeTargetOfIO.ShouldShowRequirements]"
+					textcontext = "[AlertEntry.GetTooltip]"
+
+					blockoverride "set_textcontext" {
+						ontextcontextchanged = "[SetRequirementsListFromTextContextWithTitle(PdxGuiWidget.AccessSelf)]"
+					}
+				}
+
+				TooltipListBase = { ### Disloyal Countries List
+					datacontext = "[GetAutoTableWidthFor('can_potentially_be_target_of_io_table')]"
+					minimumsize = "[AutoTableWidth.GetTableMinimumSize('(float)420', '(float)10', PdxGuiWidget.Self)]"
+					visible = "[AlertCanBeTargetOfIO.IsACoalitionAlert]"
+					blockoverride "block_title" {
+						text = "LIST_OF_POTENTIAL_COALITION_COUNTRIES_TT"
+					}
+
+					TooltipScrolledContentSection = {
+						autoresize_axis = vertical
+						blockoverride "block_scrollarea" {
+							maximumsize = { -1 665 }
+						}
+						blockoverride "scrollarea_content" {
+							fixedgridbox = {
+								addcolumn = "[AutoTableWidth.GetTableWidth]"
+								addrow = 30
+								setitemsizefromcell = no
+
+								datamodel = "[AlertCanBeTargetOfIO.GetAntagonismCountries]"
+								item = {
+									widget = {
+										size = "[ToVector2f(AutoTableWidth.GetTableWidth, '(float)30')]"
+										
+										background = {
+											visible = "[IsOdd_int32(PdxGuiWidget.GetIndexInDataModel)]"
+											using = tooltip_table_field_texture
+										}
+
+										hbox = {
+											margin = { 10 0 }
+											spacing = 10
+											
+											#COUNTRY FLAG
+											country_flag_small = {
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)0', PdxGuiWidget.Self)]"
+											}
+
+											#COUNTRY
+											text_single = {
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)1', PdxGuiWidget.Self)]"
+												layoutpolicy_horizontal = expanding
+												autoresize = yes
+												text = "[Country.GetName]"
+											}
+
+											#ANTAGONISM
+											text_single = {
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)2', PdxGuiWidget.Self)]"
+												autoresize = yes
+												align = right|nobaseline
+												raw_text = "[Country.GetDiplomacy.GetAntagonismTowards(GetPlayer)|2-=][antagonism_icon]"
+
+												tagtooltip_enabled = yes
+												tooltip = "[antagonism|e]"
+											}
+
+											#ARMY SIZE
+											text_single = {
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)3', PdxGuiWidget.Self)]"
+												autoresize = yes
+												align = right|nobaseline
+												raw_text = "[Country.GetRaisedPotentialLevyAndRegularArmyStrength]@army_strength!"
+
+												tagtooltip_enabled = yes
+												tooltip = "[army|e]"
+											}
+
+											#NAVY SIZE
+											text_single = {
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)4', PdxGuiWidget.Self)]"
+												autoresize = yes
+												align = right|nobaseline
+												raw_text = "[Country.GetNavyStrength|0V]@navy_strength!"
+
+												tagtooltip_enabled = yes
+												tooltip = "[navy|e]"
+											}
+
+											#GREAT POWER RANK
+											text_single = {
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)5', PdxGuiWidget.Self)]"
+												autoresize = yes
+												align = right|nobaseline
+												raw_text = "[Country.GetGreatPowerRank][great_power_rank_icon]"
+
+												tagtooltip_enabled = yes
+												tooltip = "[great_power_rank|e]"
+											}
+
+											#STATUS
+											hbox = {
+												layoutpolicy_horizontal = preferred
+												layoutpolicy_vertical = expanding
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)6', PdxGuiWidget.Self)]"
+												spacing = 2
+												
+												container = {
+													piechart = {
+														size = { 25 25 }
+														visible = "[Country.GetDiplomacy.GetRelation(GetPlayer.Self).HasTruce]"
+
+														using = bg_circle_piechart
+														using = piechart_angles
+
+														pieslice = {
+															texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+															value = "[Country.GetDiplomacy.GetRelation(GetPlayer.Self).GetTruceProgress]"
+															color = { 0.01 0.6 0.9 1 }
+														}
+
+														pieslice = {
+															texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+															value = "[Subtract_float('(float)100.0', Country.GetDiplomacy.GetRelation(GetPlayer.Self).GetTruceProgress)]"
+															color = { 1 1 1 0 }
+														}
+
+														icon = {
+															texture = "gfx/interface/icons/diplomatic_status/truce.dds"
+															size = { 85% 85% }
+															parentanchor = center
+														}
+
+														tooltipwidget = {
+															ContextualTooltipType = {
+																blockoverride "title_icon" {
+																	icon = {
+																		using = tooltip_title_icon_size
+																		texture = "gfx/interface/icons/diplomatic_status/truce.dds"
+																	}
+																}
+
+																blockoverride "title_text" {
+																	datacontext = "[Country]"
+																	text = "TRUCE_WITH_COUNTRY_TITLE"
+																}
+
+																blockoverride "concept_link" {
+																	text = [truce|E]
+																}
+
+																blockoverride "tooltip_content" {
+																	TooltipTextBlock = {
+																		blockoverride "text" {
+																			text = "TRUCE_WITH_COUNTRY_UNTIL"
+																		}
+																	}
+																}
+															}
+														}
+													}
+
+													icon = {
+														datacontext = "[Country]"
+														texture = "gfx/interface/icons/international_organizations/coalition.dds"
+														visible = "[Country.GetDiplomacy.HasCoalitionAgainst(Player.Self)]"
+														size = { 25 25 }
+														tooltipwidget = {
+															ContextualTooltipType = {
+																blockoverride "title_icon" {
+																	icon = {
+																		size = { 50 50 }
+																		texture = "gfx/interface/icons/international_organizations/coalition.dds"
+																	}
+																}
+
+																blockoverride "title_text" {
+																	datacontext = "[Country]"
+																	text = "COALITION_AGAINST_US_TITLE"
+																}
+
+																blockoverride "concept_link" {
+																	text = [coalition|E]
+																}
+
+																blockoverride "tooltip_content" {
+																	TooltipTextBlock = {
+																		blockoverride "text" {
+																			text = "COALITION_AGAINST_US_DESC"
+																		}
+																	}
+																}
+															}
+														}
+													}
+
+													icon = {
+														datacontext = "[Country]"
+														texture = "gfx/interface/icons/diplomatic_status/war.dds"
+														visible = "[Country.GetDiplomacy.GetRelation(GetPlayer.Self).HasWar]"
+														size = { 25 25 }
+														tooltipwidget = {
+															ContextualTooltipType = {
+																blockoverride "title_icon" {
+																	icon = {
+																		size = { 50 50 }
+																		texture = "gfx/interface/icons/diplomatic_status/war.dds"
+																	}
+																}
+
+																blockoverride "title_text" {
+																	datacontext = "[Country]"
+																	text = "WAR_WITH_COUNTRY_TITLE"
+																}
+
+																blockoverride "concept_link" {
+																	text = [war|E]
+																}
+
+																blockoverride "tooltip_content" {
+																	TooltipTextBlock = {
+																		blockoverride "text" {
+																			text = "WAR_WITH_COUNTRY_DESC"
+																		}
+																	}
+																}
+															}
+														}
+													}
+
+													icon = {
+														texture = "gfx/interface/icons/diplomatic_status/opinion_improvement_active.dds"
+														visible = "[GreaterThan_CFixedPoint(Country.GetDiplomacy.GetOpinionOf(GetPlayer), '(CFixedPoint)0')]"
+														size = { 25 25 }
+														tooltipwidget = {
+															ContextualTooltipType = {
+																blockoverride "title_icon" {
+																	icon = {
+																		size = { 50 50 }
+																		texture = "gfx/interface/icons/diplomatic_status/opinion_improvement_active.dds"
+																	}
+																}
+
+																blockoverride "title_text" {
+																	datacontext = "[Country]"
+																	text = "POSITIVE_OPINION_WITH_TITLE"
+																}
+
+																blockoverride "concept_link" {
+																	text = [opinion|E]
+																}
+
+																blockoverride "tooltip_content" {
+																	TooltipTextBlock = {
+																		blockoverride "text" {
+																			text = "POSITIVE_OPINION_WITH_DESC"
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+############################
+# Peace may enforced on us in a war.
+############################
+
+alert_banner = {
+	name = "has_negative_enforced_war_goal"
+}
+
+alert_action = {
+	name = "has_negative_enforced_war_goal_action"
+}
+
+############################
+# White Peace may enforced on us in a war.
+############################
+
+alert_banner = {
+	name = "has_negative_white_peace"
+}
+
+alert_action = {
+	name = "has_negative_white_peace_action"
+}
+
+###########################
+# IO Breaking
+###########################
+
+alert_banner = {
+	name = "has_io_breaking"
+}
+
+alert_action = {
+	name = "has_io_breaking_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertIOBreaking.Next]"
+	}
+}
+
+###########################
+# Above Diplomatic Relations Limit
+###########################
+
+alert_banner = {
+	name = "has_over_diplomacy_limit"
+	onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_over_diplomacy_limit_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('diplomacy')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_over_diplomacy_limit_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_over_diplo_capacity')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Clan Can Settle
+###########################
+
+alert_banner = {
+	name = "clan_can_become_landed"
+}
+
+alert_action = {
+	name = "clan_can_become_landed_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CLAN_CAN_SETTLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertClanCanBecomeLanded.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "clan_can_become_landed_tooltip"
+	AlertTooltipListType = {}
+}
+
+###########################
+# red (Imminent) Revolt Tick
+###########################
+
+alert_banner = {
+	name = "has_imminent_revolt"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_imminent_revolt_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('country_people', 'subtab = rebels')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_imminent_revolt_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_rebels_growing')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Deficit
+###########################
+
+alert_banner = {
+	name = "has_dangerous_deficit"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_dangerous_deficit_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('economy')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_dangerous_deficit_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_in_deficit')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Low Army Maintenance
+###########################
+
+alert_banner = {
+	name = "has_low_army_maintenance"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_low_army_maintenance_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertManager.ShowEconomyWindow]"
+	}
+}
+
+###########################
+# Low Navy Maintenance
+###########################
+
+alert_banner = {
+	name = "has_low_navy_maintenance"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_low_navy_maintenance_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertManager.ShowEconomyWindow]"
+	}
+}
+
+###########################
+# High Warexhaustion
+###########################
+
+alert_banner = {
+	name = "has_high_war_exhaustion"
+}
+
+alert_action = {
+	name = "has_high_war_exhaustion_action"
+}
+
+alert_tooltip_container = {
+	name = "has_high_war_exhaustion_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_war_exhaustion')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Has Doom
+###########################
+
+alert_banner = {
+	name = "has_doom"
+
+	blockoverride "icon_setup" {
+		visible = no
+	}
+
+	blockoverride "alert_more_icons_before" {
+		piechart = {
+			visible = "[Player.HasDoom]"
+			size = { 30 30 }
+			alwaystransparent = yes
+
+			using = piechart_angles
+
+			icon = {
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+				size = { 100% 100% }
+				parentanchor = center
+				color = { 0 0 0 1 }
+			}
+
+			pieslice = {
+				alwaystransparent = yes
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+				value = "[Player.GetFixedPointCurrencyValue('doom')]"
+				using = color_value_progress_blue
+			}
+
+			pieslice = {
+				alwaystransparent = yes
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+				value = "[Subtract_float('(float)100.0', FixedPointToFloat(Player.GetFixedPointCurrencyValue('doom')))]"
+				using = color_value_progress_gray
+			}
+
+			icon = {
+				size = { 60% 60% }
+				parentanchor = center
+				texture = "gfx/interface/icons/alerts_icons/alert_doom.dds"
+			}
+		}
+	}
+
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_doom_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('country_religion', 'subtab = doctrine')]"
+	}
+}
+
+###########################
+# High Doom
+###########################
+
+alert_banner = {
+	name = "has_high_doom"
+
+	blockoverride "icon_setup" {
+		visible = no
+	}
+
+	blockoverride "alert_more_icons_before" {
+		piechart = {
+			visible = "[Player.HasDoom]"
+			size = { 30 30 }
+			alwaystransparent = yes
+
+			using = piechart_angles
+
+			icon = {
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+				size = { 100% 100% }
+				parentanchor = center
+				color = { 0 0 0 1 }
+			}
+
+			pieslice = {
+				alwaystransparent = yes
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+				value = "[Player.GetFixedPointCurrencyValue('doom')]"
+				using = color_value_progress_blue
+			}
+
+			pieslice = {
+				alwaystransparent = yes
+				texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+				value = "[Subtract_float('(float)100.0', FixedPointToFloat(Player.GetFixedPointCurrencyValue('doom')))]"
+				using = color_value_progress_gray
+			}
+
+			icon = {
+				size = { 60% 60% }
+				parentanchor = center
+				texture = "gfx/interface/icons/alerts_icons/alert_doom.dds"
+			}
+		}
+	}
+
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_high_doom_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('country_religion', 'subtab = doctrine')]"
+	}
+}
+
+###########################
+# Army with really low food
+###########################
+
+alert_banner = {
+	name = "has_army_with_very_low_food"
+}
+
+alert_action = {
+	name = "has_army_with_very_low_food_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertArmyWithVeryLowFood.Next]"
+	}
+}
+
+###########################
+# Rebellious Estates
+###########################
+
+alert_banner = {
+	name = "has_rebellious_estates"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_rebellious_estates_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = estates')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_rebellious_estates_tooltip"
+
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_unhappy_estates')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# High Inflation
+###########################
+
+alert_banner = {
+	name = "has_high_inflation"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_high_inflation_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('economy')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_high_inflation_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_inflation')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Maxed out stored research progress
+###################################
+
+alert_banner = {
+	name = "has_maxed_out_stored_research_progress"
+	onmousehierarchyenter = "[SetHighlightedTab('advances_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_maxed_out_stored_research_progress_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('advances', 'subtab = research')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_maxed_out_stored_research_progress_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_can_do_more_research')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Has subjects with loyalty 0
+###################################
+
+alert_banner = {
+	name = "has_rebellious_subjects"
+}
+
+alert_action = {
+	name = "has_rebellious_subjects_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[ShowManageSubjects]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_rebellious_subjects_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			block "tooltip_content" {
+				TooltipListBase = { ### Disloyal Countries List
+					datacontext = "[GetAutoTableWidthFor('rebellious_subjects_table')]"
+					minimumsize = "[AutoTableWidth.GetTableMinimumSize('(float)420', '(float)10', PdxGuiWidget.Self)]"
+
+					blockoverride "block_title" {
+						text = "ALERT_HAS_REBELLIOUS_SUBJECTS"
+					}
+
+					TooltipScrolledContentSection = {
+						autoresize_axis = vertical
+						blockoverride "block_scrollarea" {
+							maximumsize = { -1 400 }
+						}
+						blockoverride "scrollarea_content" {
+							fixedgridbox = {
+								addcolumn = "[AutoTableWidth.GetTableWidth]"
+								addrow = 30
+								setitemsizefromcell = no
+
+								datamodel = "[AlertHasRebelliousSubjects.GetEntries]"
+								item = {
+									widget = {
+										size = "[ToVector2f(AutoTableWidth.GetTableWidth, '(float)30')]"
+										background = {
+											visible = "[IsOdd_int32(PdxGuiWidget.GetIndexInDataModel)]"
+											using = tooltip_table_field_texture
+										}
+
+										hbox = {
+											margin = { 10 0 }
+											spacing = 10
+
+											country_flag_small = {
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)0', PdxGuiWidget.Self)]"
+											}
+
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = yes
+												align = nobaseline
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)1', PdxGuiWidget.Self)]"
+												text = "[Country.GetLongName]"
+											}
+
+											text_single = {
+												autoresize = yes
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)2', PdxGuiWidget.Self)]"
+												text = "[Country.GetDiplomacy.GetSubjectLoyalty|R2%/]"
+												tooltipwidget = {
+													using = SubjectTypeDetail_tooltip
+												}
+											}
+
+											icon = {
+												size = { 24 24 }
+												texture = "[GetSubjectTypeIcon(Country.GetDiplomacy.GetSubjectType)]"
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)3', PdxGuiWidget.Self)]"
+												alpha = 0.8
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.3
+												}
+												tooltipwidget = {
+													using = SubjectTypeDetail_tooltip
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_disloyal_subjects')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Has imminent independence war
+###################################
+
+alert_banner = {
+	name = "has_imminent_independence_war"
+}
+
+alert_action = {
+	name = "has_imminent_independence_war_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[ShowManageSubjects]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_imminent_independence_war_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			block "tooltip_content" {
+				TooltipListBase = {
+					datacontext = "[GetAutoTableWidthFor('imminent_independence_war_table')]"
+					minimumsize = "[AutoTableWidth.GetTableMinimumSize('(float)420', '(float)10', PdxGuiWidget.Self)]"
+
+					blockoverride "block_title" {
+						text = "ALERT_HAS_IMMINENT_INDEPENDENCE_WAR"
+					}
+
+					TooltipScrolledContentSection = {
+						autoresize_axis = vertical
+						blockoverride "block_scrollarea" {
+							maximumsize = { -1 400 }
+						}
+						blockoverride "scrollarea_content" {
+							fixedgridbox = {
+								addcolumn = "[AutoTableWidth.GetTableWidth]"
+								addrow = 30
+								setitemsizefromcell = no
+
+								datamodel = "[AlertHasImminentIndependenceWar.GetEntries]"
+								item = {
+									widget = {
+										size = "[ToVector2f(AutoTableWidth.GetTableWidth, '(float)30')]"
+										background = {
+											visible = "[IsOdd_int32(PdxGuiWidget.GetIndexInDataModel)]"
+											using = tooltip_table_field_texture
+										}
+
+										hbox = {
+											margin = { 10 0 }
+											spacing = 10
+
+											country_flag_small = {
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)0', PdxGuiWidget.Self)]"
+											}
+
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = yes
+												align = nobaseline
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)1', PdxGuiWidget.Self)]"
+												text = "[Country.GetLongName]"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_imminent_independence_war')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Has raised army levies in peace
+###################################
+
+alert_banner = {
+	name = "has_raised_army_levies_in_peace"
+	onmousehierarchyenter = "[SetHighlightedTab('military_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_raised_army_levies_in_peace_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasRaisedArmyLeviesInPeace.Next]"
+	}
+}
+
+###################################
+# Has raised navy levies in peace
+###################################
+
+alert_banner = {
+	name = "has_raised_navy_levies_in_peace"
+	onmousehierarchyenter = "[SetHighlightedTab('military_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_raised_navy_levies_in_peace_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasRaisedNavyLeviesInPeace.Next]"
+	}
+}
+
+###################################
+# Government reform about to expire
+###################################
+
+alert_banner = {
+	name = "lack_societal_value_requirements_for_government_reform"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "lack_societal_value_requirements_for_government_reform_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = estates')]"
+	}
+}
+
+###################################
+# Ships are not repairing at all
+###################################
+
+alert_banner = {
+	name = "has_not_enough_goods_for_any_ship_repairs"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_not_enough_goods_for_any_ship_repairs_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasNotEnoughGoodsForAnyShipRepairs.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_not_enough_goods_for_any_ship_repairs_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_HAS_NOT_ENOUGH_GOODS_FOR_ANY_SHIP_REPAIRS_TEXT"
+				}
+
+				blockoverride "textblock_background_tint"  {
+					modify_texture = {
+						using = color_red_texture
+					}
+				}
+			}
+			TooltipContentSection = { # One Market
+				datamodel = "[AlertHasNotEnoughGoodsForAnyShipRepairs.GetLackingGoodsForRepairs]"
+				visible = "[EqualTo_int32(GetDataModelSize(AlertHasNotEnoughGoodsForAnyShipRepairs.GetLackingGoodsForRepairs), '(int32)1')]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 360 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [LackingGoodsForRepairEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[LackingGoodsForRepairEntry.GetLackingGoodsForRepairInfo]"
+					}
+				}
+			}
+
+			TooltipContentSection = { # Two to Three Markets
+				datamodel = "[AlertHasNotEnoughGoodsForAnyShipRepairs.GetLackingGoodsForRepairs]"
+				visible = "[And(LessThanOrEqualTo_int32(GetDataModelSize(AlertHasNotEnoughGoodsForAnyShipRepairs.GetLackingGoodsForRepairs), '(int32)3' ), GreaterThan_int32(GetDataModelSize(AlertHasNotEnoughGoodsForAnyShipRepairs.GetLackingGoodsForRepairs), '(int32)1'))]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [LackingGoodsForRepairEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[LackingGoodsForRepairEntry.GetLackingGoodsForRepairInfo]"
+					}
+				}
+			}
+
+			TooltipListBase = { # More than Three Markets
+				visible = "[GreaterThan_int32(GetDataModelSize(AlertHasNotEnoughGoodsForAnyShipRepairs.GetLackingGoodsForRepairs), '(int32)3' )]"
+
+				TooltipListColumnContent = {
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_text" {
+							text = "[market|e]"
+						}
+						blockoverride "column_title_right" {
+							expand = {}
+						}
+
+						blockoverride "field_text" {
+							default_format = "#subtle_name"
+							align = left|nobaseline
+							raw_text = "@market! [LackingGoodsForRepairEntry.GetMarket.GetName]"
+						}
+
+						blockoverride "field_right" { expand = {} }
+					}
+
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_left" {
+							expand = {}
+						}
+						blockoverride "column_title_text" {
+							text = "[goods|e]"
+						}
+
+						blockoverride "field_text" { visible = no }
+						blockoverride "field_right" {
+							spacing = 7
+							expand = {}
+							tooltipwidget = { using = market_hub_lacking_good_for_repairs_tooltip }
+
+							text_single = {
+								text = "[LackingGoodsForRepairEntry.GetLackingGoodsForRepairAmount]"
+							}
+
+							icon = {
+								shaderfile = "gfx/FX/pdxgui_default.shader"
+								size = {15 15}
+								texture = "gfx/interface/icons/unit_actions/repair_ship.dds"
+
+								using = bg_banner_button_vertical
+
+								blockoverride "banner_button_extra" {
+									visible = yes
+								}
+							}
+						}
+					}
+
+					blockoverride "column_datamodel"  {
+						datamodel = "[AlertHasNotEnoughGoodsForAnyShipRepairs.GetLackingGoodsForRepairs]"
+					}
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Over fort limit
+###################################
+
+alert_banner = {
+	name = "is_over_fort_limit"
+
+	blockoverride "icon_texture" {
+		texture = "[GetConceptTexture('fort_limit')]"
+	}
+
+	onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "is_over_fort_limit_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithFilter('production', 'defense_category')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "is_over_fort_limit_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_icon_texture" {
+			texture = "[GetConceptTexture('fort_limit')]"
+		}
+	}
+}
+
+###########################
+# WEATHER SYSTEM
+###########################
+
+alert_banner = {
+	name = "has_weather_system" # Could be bad, as in Sweden, or in a fantasy mod, possibly even good?
+}
+
+alert_action = {
+	name = "has_weather_system_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasWeatherSystem.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_weather_system_tooltip"
+	AlertTooltipListType = {}
+}
+
+###########################
+# Can Lose Senior Partner Status
+###########################
+
+alert_banner = {
+	name = "has_less_power_in_union"
+	blockoverride "icon_texture" {
+		texture = "[GetSpecialStatusIconFromKey('senior_partner')]"
+	}
+}
+
+alert_action = {
+	name = "has_less_power_in_union_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_HAS_LESS_POWER_IN_UNION_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenInternationalOrganizationView(AlertHasLessPowerInUnion.GetUnion)]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_less_power_in_union_tooltip"
+	AlertTooltipType = {
+		blockoverride "title_icon_texture" {
+			texture = "[GetSpecialStatusIconFromKey('senior_partner')]"
+		}
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_HAS_LESS_POWER_IN_UNION_TEXT"
+				}
+			}
+
+			TooltipListBase = {
+				TooltipListColumnContent = {
+					TooltipTableColumn = {
+						layoutpolicy_horizontal = expanding
+						blockoverride "column_title" {}
+						blockoverride "column_title_text" {
+							text = "[member|e]"
+						}
+						blockoverride "column_title_right" {
+							expand = {}
+						}
+
+						blockoverride "field_left" {}
+
+						blockoverride "field_text" {
+							default_format = "#subtle_name"
+							align = left|nobaseline
+							raw_text = "[Country.GetNameWithFlag]"
+						}
+
+						blockoverride "field_right" { expand = {} }
+					}
+
+					TooltipTableColumn = {
+						layoutpolicy_horizontal = fixed
+						blockoverride "column_title" {}
+						blockoverride "column_title_left" {
+							expand = {}
+						}
+
+						blockoverride "column_title_text" {
+							text = "[economical_base|e]"
+							default_format = "#explanation_link"
+						}
+
+						blockoverride "field_text" {
+							visible = no
+						}
+
+						blockoverride "field_right" {
+							expand = {}
+
+							text_single = {
+								text = "[Country.GetEconomicalBase|L2]"
+
+								tooltipwidget = {
+									using = EconomicalBaseTooltip
+								}
+							}
+						}
+					}
+
+					blockoverride "column_datamodel"  {
+						datamodel = "[AlertHasLessPowerInUnion.GetThreateningCountries]"
+					}
+				}
+			}
+		}
+	}
+}
+
+###########################################################################
+# YELLOW ALERTS
+###########################################################################
+
+############################
+# Our Truce will expire soon
+############################
+
+alert_banner = {
+	name = "truce_ending"
+	onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "truce_ending_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('diplomacy', 'tabcontent = relations')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "truce_ending_tooltip"
+	AlertTooltipListType = {}
+}
+
+###################################
+# Nearly maxed out stored research progress
+###################################
+
+alert_banner = {
+	name = "has_nearly_maxed_out_stored_research_progress"
+	onmousehierarchyenter = "[SetHighlightedTab('advances_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_nearly_maxed_out_stored_research_progress_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('advances', 'subtab = research')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_nearly_maxed_out_stored_research_progress_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_can_do_more_research')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Army with low food
+###########################
+
+alert_banner = {
+	name = "has_army_with_low_food"
+}
+
+alert_action = {
+	name = "has_army_with_low_food_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertArmyWithLowFood.Next]"
+	}
+}
+
+###########################
+# Unused cb
+###########################
+
+alert_banner = {
+	name = "has_casus_belli"
+}
+
+alert_action = {
+	name = "has_casus_belli_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertUnusedCB.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_casus_belli_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_casus_belli')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Unhappy Estates
+###########################
+
+alert_banner = {
+	name = "has_unhappy_estates"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_unhappy_estates_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = estates')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_unhappy_estates_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_unhappy_estates')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Estates with Discriminated Culture
+###########################
+
+alert_banner = {
+	name = "has_estate_discriminated_culture"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_estate_discriminated_culture_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_culture')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_estate_discriminated_culture_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipScrolledStringPairList = {
+				textcontext = "[AlertEntry.GetTooltip]"
+			}
+			TooltipStringPairList = {
+				textcontext = "[Localize('ALERT_DISCRIMINATED_CULTURE_PENALTY_INFO')]"
+			}
+		}
+	}
+}
+
+###########################
+# Estates with Non-Primary Religion
+###########################
+
+alert_banner = {
+	name = "has_estate_nonprimary_religion"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_estate_nonprimary_religion_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('country_religion', 'subtab = doctrine')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_estate_nonprimary_religion_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipScrolledStringPairList = {
+				visible = "[AlertEntry.HasPrimaryContent]"
+				textcontext = "[AlertEntry.GetTooltip]"
+			}
+			TooltipTextBlock = {
+				visible = "[AlertEntry.HasPrimaryContent]"
+				blockoverride "text" {
+					text = "[Localize('ALERT_NONPRIMARY_RELIGION_HERETIC_PENALTY_INFO')]"
+				}				
+			}
+			TooltipScrolledStringPairList = {
+				visible = "[AlertEntry.HasSecondaryContent]"
+				textcontext = "[AlertEntry.GetSecondaryTooltip]"
+			}
+			TooltipTextBlock = {
+				visible = "[AlertEntry.HasSecondaryContent]"
+				blockoverride "text" {
+					text = "[Localize('ALERT_NONPRIMARY_RELIGION_HERETIC_PENALTY_INFO')]"
+				}	
+			}
+		}
+	}
+}
+
+###########################
+# Estates with Tolerated Culture
+###########################
+
+alert_banner = {
+	name = "has_estate_tolerated_culture"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_estate_tolerated_culture_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_culture')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_estate_tolerated_culture_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipScrolledStringPairList = {
+				textcontext = "[AlertEntry.GetTooltip]"
+			}
+			TooltipStringPairList = {
+				textcontext = "[Localize('ALERT_TOLERATED_CULTURE_PENALTY_INFO')]"
+			}
+		}
+	}
+}
+
+###########################
+# Pirates/privateers in maritime
+###########################
+
+alert_banner = {
+	name = "has_pirates_in_maritime_areas"
+
+	onmousehierarchyenter = "[SetHighlightedTab('geography_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_pirates_in_maritime_areas_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertPirates.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_pirates_in_maritime_areas_tooltip"
+	AlertTooltipType = {		
+		blockoverride "mapmode_tooltip_button" {
+			mapmode_tooltip_button = {
+				datacontext = "[GetMapMode('privateering')]"
+			}
+		}
+		blockoverride "tooltip_content" {
+			TooltipListBase = { ### Pirates/Privateers				
+				blockoverride "block_title" {
+					text = "ALERT_PRIVATEERS"
+				}
+					
+				TooltipListScrollArea = {
+					blockoverride "block_scrollarea" {
+						maximumsize = { -1 400 }
+					}
+					blockoverride "scrollarea_content" {
+						TooltipListColumnContent = {
+							set_parent_dimension_to_minimum = height
+							layoutpolicy_horizontal = expanding
+							TooltipTableColumn = {
+								layoutpolicy_horizontal = expanding
+								blockoverride "column_title" {}
+								blockoverride "column_title_text" { text = "[location|e]" }
+								blockoverride "column_title_right" { expand = {} }
+								
+								blockoverride "field_text" {
+									default_format = "#subtle_name"
+									align = left|nobaseline
+									raw_text = "[Location.GetName]"
+								}
+
+								blockoverride "field_right" { expand = {} }
+							}
+
+							TooltipTableColumn = {
+								layoutpolicy_horizontal = fixed
+								blockoverride "column_title" {}
+								blockoverride "column_title_left" { expand = {} }
+								blockoverride "column_title_text" { text = "ALERT_PIRATES_COLUMN" }
+
+								blockoverride "field_left" { expand = {} }
+								blockoverride "field_text" { 
+									text = "[Location.GetHostilePiratesPower(GetPlayer)|%]"
+								}
+							}
+
+							TooltipTableColumn = {
+								layoutpolicy_horizontal = fixed
+								blockoverride "column_title" {}
+								blockoverride "column_title_left" { expand = {} }
+								blockoverride "column_title_text" { text = "ALERT_PRIVATEERS_COLUMN" }
+
+								blockoverride "field_left" { expand = {} }
+								blockoverride "field_text" { 
+									text = "[Location.GetHostilePrivateersPower(GetPlayer)|%]"
+								}
+							}
+
+							blockoverride "column_datamodel"  {  datamodel = "[AlertPirates.GetLocationsWithPiratesOrPrivateers]" }
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Inflation
+###########################
+
+alert_banner = {
+	name = "has_inflation"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_inflation_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('economy')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_inflation_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_inflation')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Inefficient minting
+###########################
+
+alert_banner = {
+	name = "has_inefficient_minting"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_inefficient_minting_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('economy')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_inefficient_minting_tooltip"
+	AlertTooltipTextType = {}
+}
+
+###########################
+# Negative Trade
+###########################
+
+alert_banner = {
+	name = "has_unprofitable_trade"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_unprofitable_trade_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertUnprofitableTrade.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_unprofitable_trade_tooltip"
+	AlertTooltipListType = {}
+}
+
+###########################
+# No More Goods Trade
+###########################
+
+alert_banner = {
+	name = "has_no_supplies_trade"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_no_supplies_trade_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasNoSuppliesTrade.Next]"
+	}
+}
+
+###################################
+# Lacking Rivals
+####################################
+
+alert_banner = {
+	name = "lacks_of_rivals"
+}
+
+alert_action = {
+	name = "lacks_of_rivals_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[ShowSelectRivals]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "lacks_of_rivals_tooltip"
+
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_lacks_of_rivals')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Mercenary Contract Expiring
+####################################
+
+alert_banner = {
+	name = "has_expiring_contracts"
+	onmousehierarchyenter = "[SetHighlightedTab('military_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_expiring_contracts_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertExpiringContracts.Next]"
+	}
+}
+
+###################################
+# Mercenaries in trouble
+####################################
+
+alert_banner = {
+	name = "has_mercenaries_in_trouble"
+	onmousehierarchyenter = "[SetHighlightedTab('military_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_mercenaries_in_trouble_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertMercenariesInTrouble.Next]"
+	}
+}
+
+###################################
+# Can join an international organization targetting X
+####################################
+
+alert_banner = {
+	name = "can_join_targetted_io"
+}
+
+alert_action = {
+	name = "can_join_targetted_io_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenInternationalOrganizationView(AlertCanJoinTargettedIO.GetTargettedIO)]"
+	}
+}
+
+###################################
+# Parliament in session
+####################################
+
+alert_banner = {
+	name = "parliament_in_session"
+
+	blockoverride "icon_texture" {
+		texture = "[GetConceptTexture('parliament')]"
+	}
+	
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+
+	blockoverride "icon_texture_obj" {
+		vbox = {
+			margin_top = 13
+			margin_bottom = 22
+
+			piechart = {
+				alwaystransparent = yes
+				size = { 33 33 }
+				using = piechart_angles
+
+				background = {
+					texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+					texture_density = 2
+					alpha = 0.5
+					modify_texture = {
+						using = color_dark_brown_texture
+						blend_mode = multiply
+					}
+				}
+				
+				icon = {
+					texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+					size = { 100% 100% }
+					parentanchor = center
+					color = { 0.45 0.59  0.67 1 }
+					alpha = 0.3
+				}
+
+				pieslice_no_highlight = {
+					alwaystransparent = yes
+					texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+					value = "[ParliamentInSession.GetParliament.GetParliamentDurationProgress]"
+					color = { 1 1 1 1 }
+				}
+
+				pieslice_no_highlight = {
+					alwaystransparent = yes
+					texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+					value = "[Subtract_float('(float)1.0', FixedPointToFloat(ParliamentInSession.GetParliament.GetParliamentDurationProgress))]"
+					color = { 1 1 1 0 }
+				}
+
+				icon = {
+					texture = "gfx/interface/icons/flat_icons/parliament.dds"
+					size = { 58% 58% }
+					using = overlay_color_light_green
+					parentanchor = center
+					visible = "[ParliamentInSession.GetParliament.WillParliamentIssuePass]"
+				}
+				icon = {
+					texture = "gfx/interface/icons/flat_icons/parliament.dds"
+					size = { 58% 58% }
+					using = overlay_color_red
+					parentanchor = center
+					visible = "[Not(ParliamentInSession.GetParliament.WillParliamentIssuePass)]"
+				}
+				using = bg_circle_piechart
+			}
+
+			expand = {}
+
+			text_single = {
+				autoresize = no
+				size = { 35 15 }
+				fontsize = 14
+				align = center
+				visible = "[ParliamentInSession.GetParliament.WillParliamentIssuePass]"
+
+				text = "[ParliamentInSession.GetParliament.GetParliamentIssueSupport|0+%]"
+			}
+
+			text_single = {
+				autoresize = no
+				size = { 35 15 }
+				fontsize = 14
+				align = center
+				visible = "[Not(ParliamentInSession.GetParliament.WillParliamentIssuePass)]"
+
+				text = "[ParliamentInSession.GetParliament.GetParliamentIssueSupport|R0%]"
+			}
+		}
+	}
+
+	blockoverride "alert_is_new_padding" {
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { -1 15 }
+		}
+	}
+}
+
+alert_action = {
+	name = "parliament_in_session_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = parliament')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "parliament_in_session_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_icon_texture" {
+			texture = "[GetConceptTexture('parliament')]"
+		}
+	}
+}
+
+###################################
+# Imperial Diet in session (HRE parliament)
+####################################
+
+alert_banner = {
+	name = "imperial_diet_in_session"
+
+	blockoverride "icon_texture" {
+		texture = "[GetConceptTexture('parliament')]"
+	}
+
+	blockoverride "icon_texture_obj" {
+		vbox = {
+			margin_top = 13
+			margin_bottom = 22
+
+			datacontext = "[ImperialDietInSession.GetInternationalOrganization.GetParliament]"
+			piechart = {
+				visible = "[Parliament.HasOngoingParliamentDebate]"
+				size = { 33 33 }
+				using = piechart_angles
+
+				background = {
+					texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+					texture_density = 2
+					alpha = 0.5
+					modify_texture = {
+						using = color_dark_brown_texture
+						blend_mode = multiply
+					}
+				}
+				
+				icon = {
+					texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
+					size = { 97% 97% }
+					parentanchor = center
+					color = { 0.45 0.59  0.67 1 }
+					alpha = 0.3
+				}
+
+				pieslice_no_highlight = {
+					texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+					value = "[Parliament.GetParliamentDurationProgress]"
+					color = { 1 1 1 1 }
+				}
+
+				pieslice_no_highlight = {
+					texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+					value = "[Subtract_float('(float)1.0', FixedPointToFloat(Parliament.GetParliamentDurationProgress))]"
+					color = { 1 1 1 0 }
+				}
+
+				icon = {
+					name = "plus"
+					texture = "gfx/interface/icons/flat_icons/hre_parliament.dds"
+					size = { 58% 58% }
+					using = overlay_color_light_green
+					parentanchor = center
+					visible = "[Parliament.WillParliamentIssuePass]"
+				}
+				icon = {
+					name = "minus"
+					texture = "gfx/interface/icons/flat_icons/hre_parliament.dds"
+					size = { 58% 58% }
+					using = overlay_color_red
+					parentanchor = center
+					visible = "[Not(Parliament.WillParliamentIssuePass)]"
+				}
+				using = bg_circle_piechart
+			}
+
+			expand = {}
+
+			text_single = {
+				autoresize = no
+				size = { 35 15 }
+				fontsize = 14
+				align = center
+				visible = "[And(Parliament.HasOngoingParliamentDebate,
+				GreaterThan_CFixedPoint(Parliament.GetParliamentIssueSupport, '(CFixedPoint)0.5'))]"
+
+				text = "[Parliament.GetParliamentIssueSupport|0+%]"
+			}
+
+			text_single = {
+				autoresize = no
+				size = { 35 15 }
+				fontsize = 14
+				align = center
+				visible = "[And(Parliament.HasOngoingParliamentDebate,
+				LessThan_CFixedPoint(Parliament.GetParliamentIssueSupport, '(CFixedPoint)0.5'))]"
+
+				text = "[Parliament.GetParliamentIssueSupport|R0%]"
+			}
+		}
+	}
+
+	blockoverride "alert_is_new_padding" {
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { -1 15 }
+		}
+	}
+}
+
+alert_action = {
+	name = "imperial_diet_in_session_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenImperialDietView]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "imperial_diet_in_session_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_icon_texture" {
+			texture = "gfx/interface/icons/flat_icons/hre_parliament.dds"
+		}
+	}
+}
+
+###################################
+# Ruler Unmarried and no children
+####################################
+
+alert_banner = {
+	name = "has_unmarried_adult_ruler"
+}
+
+alert_action = {
+	name = "has_unmarried_adult_ruler_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasUnmarriedAdultRuler.OpenMarriageFinder]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_unmarried_adult_ruler_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_unmarried_adult_ruler')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Heir Unmarried and no children
+####################################
+
+alert_banner = {
+	name = "has_unmarried_adult_heir"
+}
+
+alert_action = {
+	name = "has_unmarried_adult_heir_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasUnmarriedAdultHeir.OpenMarriageFinder]"
+	}
+}
+
+###################################
+# Can Arrange International Marriage
+####################################
+
+alert_banner = {
+	name = "can_arrange_international_marriage"
+}
+
+alert_action = {
+	name = "can_arrange_international_marriage_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertCanArrangeInternationalMarriage.Next]"
+	}
+}
+
+###################################
+# Heir Underage
+####################################
+
+alert_banner = {
+	name = "is_heir_underage"
+}
+
+alert_action = {
+	name = "is_heir_underage_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertManager.ShowHeir]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "is_heir_underage_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_is_heir_underage')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Heir Incompetent
+####################################
+
+alert_banner = {
+	name = "is_heir_incompetent"
+}
+
+alert_action = {
+	name = "is_heir_incompetent_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertManager.ShowHeir]"
+	}
+}
+
+###################################
+# Ruler Incompetent
+####################################
+
+alert_banner = {
+	name = "is_ruler_incompetent"
+}
+
+alert_action = {
+	name = "is_ruler_incompetent_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertManager.ShowRuler]"
+	}
+}
+
+###########################
+# Army without leader in war
+###########################
+
+alert_banner = {
+	name = "has_army_without_leader_in_war"
+}
+
+alert_action = {
+	name = "has_army_without_leader_in_war_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertArmyWithoutLeaderInWar.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_army_without_leader_in_war_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_army_without_leader')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Relation about to be broken
+###########################
+
+alert_banner = {
+	name = "relation_about_to_be_broken"
+}
+
+alert_action = {
+	name = "relation_about_to_be_broken_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertRelationAboutToBeBroken.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "relation_about_to_be_broken_tooltip"
+	AlertTooltipListType = {}
+}
+
+###########################
+# Outside of naval range
+###########################
+
+alert_banner = {
+	name = "has_navy_outside_range"
+}
+
+alert_action = {
+	name = "has_navy_outside_range_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertOutsideOfNavalRange.Next]"
+	}
+}
+
+###########################
+# Unprofitable Buildings
+###########################
+
+alert_banner = {
+	name = "has_unprofitable_buildings"
+	onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_unprofitable_buildings_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[ShowProductionViewWithFilter('building_only_not_profitable', '(bool)yes')]"
+		on_action = "[RemoveUIFocusMarket]"
+	}
+	action_tooltip = {
+		click_modifier = shift
+		click_type = left
+		title = "ALERT_HINT"
+		click_modifier_description = "OPEN_HINT_TEXT"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_unprofitable_buildings')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_unprofitable_buildings_tooltip"
+	AlertTooltipType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_unprofitable_buildings')]"
+				}
+			}
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_UNPROFITABLE_BUILDINGS_TEXT"
+				}
+
+				blockoverride "textblock_background_tint"  {
+					modify_texture = {
+						using = color_yellow_texture
+					}
+				}
+			}
+			
+			TooltipContentSection = { # One Market
+				datamodel = "[AlertHasUnprofitableBuildings.GetUnprofitableBuildings]"
+				visible = "[EqualTo_int32(GetDataModelSize(AlertHasUnprofitableBuildings.GetUnprofitableBuildings), '(int32)1')]"
+
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 360 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [UnprofitableBuildingsEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[UnprofitableBuildingsEntry.GetUnprofitableBuildingsInfo]"
+					}
+				}
+			}
+
+			TooltipContentSection = { # Two to Three Markets
+				datamodel = "[AlertHasUnprofitableBuildings.GetUnprofitableBuildings]"
+				visible = "[And(LessThanOrEqualTo_int32(GetDataModelSize(AlertHasUnprofitableBuildings.GetUnprofitableBuildings), '(int32)3' ), GreaterThan_int32(GetDataModelSize(AlertHasUnprofitableBuildings.GetUnprofitableBuildings), '(int32)1'))]"
+
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [UnprofitableBuildingsEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[UnprofitableBuildingsEntry.GetUnprofitableBuildingsInfo]"
+					}
+				}
+			}
+
+			TooltipListBase = { # More than Three Markets
+				visible = "[GreaterThan_int32(GetDataModelSize(AlertHasUnprofitableBuildings.GetUnprofitableBuildings), '(int32)3' )]"
+
+				TooltipListColumnContent = {
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_text" {
+							text = "[market|e]"
+						}
+						blockoverride "column_title_right" {
+							expand = {}
+						}
+
+						blockoverride "field_text" {
+							default_format = "#subtle_name"
+							align = left|nobaseline
+							raw_text = "@market! [UnprofitableBuildingsEntry.GetMarket.GetName]"
+						}
+
+						blockoverride "field_right" { expand = {} }
+					}
+
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_left" {
+							expand = {}
+						}
+						blockoverride "column_title_text" {
+							text = "[buildings|e]"
+						}
+
+						blockoverride "field_text" { visible = no }
+						blockoverride "field_right" {
+							spacing = 7
+							expand = {}
+							tooltipwidget = { using = market_hub_unporfitable_buildings_tooltip }
+
+							text_single = {
+								text = "[UnprofitableBuildingsEntry.GetUnprofitableBuildingsAmount]"
+							}
+
+							icon = {
+								shaderfile = "gfx/FX/pdxgui_default.shader"
+								size = {15 15}
+								texture = "gfx/interface/icons/alerts_icons/unprofitable_buildings.dds"
+
+								using = bg_banner_button_vertical
+
+								blockoverride "banner_button_extra" {
+									visible = yes
+								}
+
+								blockoverride "banner_button_color" {
+									modify_texture = {
+										using = color_yellow_texture
+										alpha = 0.6
+									}
+								}
+							}
+						}
+					}
+
+					blockoverride "column_datamodel"  {
+						datamodel = "[AlertHasUnprofitableBuildings.GetUnprofitableBuildings]"
+					}
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Buildings missing input
+###########################
+
+alert_banner = {
+	name = "has_buildings_missing_input"
+	onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_buildings_missing_input_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertBuildingsMissingInput.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_buildings_missing_input_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_BUILDINGS_MISSING_INPUT_TEXT"
+				}
+
+				blockoverride "textblock_background_tint"  {
+					modify_texture = {
+						using = color_yellow_texture
+					}
+				}
+			}
+
+			TooltipContentSection = { #1 Market
+				datacontext = "[GetCountryNeeds(Player.Self)]"
+				datamodel = "[CountryNeeds.GetMarketNeeds]"
+				visible = "[EqualTo_int32(CountryNeeds.GetMarketBuildingsMissingGoodsCount, '(int32)1' )]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 400 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+						textcontext = "[MarketCountryNeeds.GetBuildingsMissingGoodsInfo]"
+					}
+				}
+			}
+
+			TooltipContentSection = { #2-3 Markets
+				datacontext = "[GetCountryNeeds(Player.Self)]"
+				datamodel = "[CountryNeeds.GetMarketNeeds]"
+				visible = "[And(LessThanOrEqualTo_int32(CountryNeeds.GetMarketBuildingsMissingGoodsCount, '(int32)3' ), GreaterThan_int32(CountryNeeds.GetMarketBuildingsMissingGoodsCount, '(int32)1' ))]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+						blockoverride "block_title" {
+							text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+						textcontext = "[MarketCountryNeeds.GetBuildingsMissingGoodsInfo]"
+
+					}
+				}
+			}
+
+			TooltipListBase = { #+3 Markets
+				datacontext = "[GetCountryNeeds(Player.Self)]"
+				visible = "[GreaterThan_int32(CountryNeeds.GetMarketBuildingsMissingGoodsCount, '(int32)3' )]"
+
+				TooltipListColumnContent = {
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_text" {
+							text = "[market|e]"
+						}
+						blockoverride "column_title_right" {
+							expand = {}
+						}
+
+						blockoverride "field_left" {
+							visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+							# visible = "[GreaterThan_CFixedPoint(MarketCountryNeeds.GetMarket.GetCountryPopulation(Player.Self),'(CFixedPoint)0')]"
+						}
+
+						blockoverride "field_text" {
+							default_format = "#subtle_name"
+							align = left|nobaseline
+							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]"
+						}
+
+						blockoverride "field_right" { expand = {} }
+					}
+
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_left" {
+							expand = {}
+						}
+						blockoverride "column_title_text" {
+							text = "[goods_demands|e]"
+							default_format = "#explanation_link"
+
+						}
+
+						blockoverride "field_text" { visible = no }
+						blockoverride "field_right" {
+							spacing = 7
+							expand = {}
+							visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+							datacontext = "[GetMarketCountryNeeds(Player.Self, Market.Self)]"
+							datacontext = "[MarketCountryNeeds.GetMarket]"
+							tooltipwidget = { using = market_hub_gov_needs_tooltip }
+
+							text_single = {
+								visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+								text = "[MarketCountryNeeds.GetGovernmentMissingGoodsAmount]"
+							}
+
+							icon = {
+								shaderfile = "gfx/FX/pdxgui_default.shader"
+								size = {15 15}
+								texture = "gfx/interface/icons/alerts_icons/buildings_missing_input.dds"
+
+								using = bg_banner_button_vertical
+
+								blockoverride "banner_button_extra" {}
+
+								blockoverride "banner_button_color" {
+									modify_texture = {
+										using = color_yellow_texture
+										alpha = 0.6
+									}
+								}
+							}
+						}
+					}
+
+					blockoverride "column_datamodel"  {
+						datacontext = "[GetCountryNeeds(Player.Self)]"
+						datamodel = "[CountryNeeds.GetMarketNeeds]"
+					}
+				}
+			}
+		}
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_buildings_missing_input')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Important Buildings Missing Input
+###########################
+
+alert_banner = {
+	name = "has_important_buildings_missing_input"
+	onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_important_buildings_missing_input_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertImportantBuildingsMissingInput.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_important_buildings_missing_input_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_IMPORTANT_BUILDINGS_MISSING_INPUT_TEXT"
+				}
+
+				blockoverride "textblock_background_tint"  {
+					modify_texture = {
+						using = color_yellow_texture
+					}
+				}
+			}
+
+			TooltipContentSection = { #1 Market
+				datacontext = "[GetImportantBuildingsCountryNeeds(Player.Self)]"
+				datamodel = "[ImportantBuildingsCountryNeeds.GetMarketNeeds]"
+				visible = "[EqualTo_int32(ImportantBuildingsCountryNeeds.GetMarketBuildingsMissingGoodsCount, '(int32)1' )]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 400 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+						textcontext = "[MarketCountryNeeds.GetBuildingsMissingGoodsInfo]"
+					}
+				}
+			}
+
+			TooltipContentSection = { #2-3 Markets
+				datacontext = "[GetImportantBuildingsCountryNeeds(Player.Self)]"
+				datamodel = "[ImportantBuildingsCountryNeeds.GetMarketNeeds]"
+				visible = "[And(LessThanOrEqualTo_int32(ImportantBuildingsCountryNeeds.GetMarketBuildingsMissingGoodsCount, '(int32)3' ), GreaterThan_int32(ImportantBuildingsCountryNeeds.GetMarketBuildingsMissingGoodsCount, '(int32)1' ))]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+						blockoverride "block_title" {
+							text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+						textcontext = "[MarketCountryNeeds.GetBuildingsMissingGoodsInfo]"
+
+					}
+				}
+			}
+
+			TooltipListBase = { #+3 Markets
+				datacontext = "[GetImportantBuildingsCountryNeeds(Player.Self)]"
+				visible = "[GreaterThan_int32(ImportantBuildingsCountryNeeds.GetMarketBuildingsMissingGoodsCount, '(int32)3' )]"
+
+				TooltipListColumnContent = {
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_text" {
+							text = "[market|e]"
+						}
+						blockoverride "column_title_right" {
+							expand = {}
+						}
+
+						blockoverride "field_left" {
+							visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+						}
+
+						blockoverride "field_text" {
+							default_format = "#subtle_name"
+							align = left|nobaseline
+							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]"
+						}
+
+						blockoverride "field_right" { expand = {} }
+					}
+
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_left" {
+							expand = {}
+						}
+						blockoverride "column_title_text" {
+							text = "[goods_demands|e]"
+							default_format = "#explanation_link"
+
+						}
+
+						blockoverride "field_text" { visible = no }
+						blockoverride "field_right" {
+							spacing = 7
+							expand = {}
+							visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+							datacontext = "[GetImportantBuildingsMarketCountryNeeds(Player.Self, Market.Self)]"
+							datacontext = "[MarketCountryNeeds.GetMarket]"
+							tooltipwidget = { using = market_hub_gov_needs_tooltip }
+
+							text_single = {
+								visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
+								text = "[MarketCountryNeeds.GetGovernmentMissingGoodsAmount]"
+							}
+
+							icon = {
+								shaderfile = "gfx/FX/pdxgui_default.shader"
+								size = {15 15}
+								texture = "gfx/interface/icons/alerts_icons/buildings_missing_input.dds"
+
+								using = bg_banner_button_vertical
+
+								blockoverride "banner_button_extra" {}
+
+								blockoverride "banner_button_color" {
+									modify_texture = {
+										using = color_yellow_texture
+										alpha = 0.6
+									}
+								}
+							}
+						}
+					}
+
+					blockoverride "column_datamodel"  {
+						datacontext = "[GetImportantBuildingsCountryNeeds(Player.Self)]"
+						datamodel = "[ImportantBuildingsCountryNeeds.GetMarketNeeds]"
+					}
+				}
+			}
+		}
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_buildings_missing_input')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Buildings missing employees
+###########################
+
+alert_banner = {
+	name = "lack_pop_promotion_to_fill_buildings"
+}
+
+alert_action = {
+	name = "lack_pop_promotion_to_fill_buildings_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertLackPopPromotion.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "lack_pop_promotion_to_fill_buildings_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			block "tooltip_content" {
+				TooltipTextBlock = {
+					blockoverride "text" {
+						text = "ALERT_BUILDINGS_MISSING_EMPLOYEES"
+					}
+
+					# blockoverride "textblock_background_tint"  {
+					# 	modify_texture = {
+					# 		using = color_yellow_texture
+					# 	}
+					# }
+				}
+				TooltipListBase = {
+					# blockoverride "block_title" {
+					# 	text = "ALERT_BUILDINGS_MISSING_EMPLOYEES"
+					# }
+					datacontext = "[GetAutoTableWidthFor('lack_pop_promotion_table')]"
+					minimumsize = "[AutoTableWidth.GetTableMinimumSize('(float)420', '(float)10', PdxGuiWidget.Self)]"
+
+					TooltipScrolledContentSection = {
+						autoresize_axis = vertical
+						blockoverride "block_scrollarea" {
+							maximumsize = { -1 400 }
+						}
+						blockoverride "scrollarea_content" {
+							fixedgridbox = {
+								addcolumn = "[AutoTableWidth.GetTableWidth]"
+								addrow = 30
+								setitemsizefromcell = no
+
+								datamodel = "[AlertLackPopPromotion.GetBuildings]"
+								item = {
+									widget = {
+										size = "[ToVector2f(AutoTableWidth.GetTableWidth, '(float)30')]"
+										background = {
+											visible = "[IsOdd_int32(PdxGuiWidget.GetIndexInDataModel)]"
+											using = tooltip_table_field_texture
+										}
+
+										hbox = {
+											margin = { 10 0 }
+											spacing = 10
+
+											text_single = {
+												autoresize = yes
+												layoutpolicy_horizontal = expanding
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)0', PdxGuiWidget.Self)]"
+												text = "ALERT_BUILDINGS_MISSING_EMPLOYEES_BUILDING"
+											}
+
+											text_single = {
+												autoresize = yes
+												align = right
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)1', PdxGuiWidget.Self)]"
+												text = "[SelectLocalization(SBuildingWithMissingEmployees.HasMonthsNeeded, SBuildingWithMissingEmployees.GetMonths, 'ALERT_BUILDINGS_MISSING_EMPLOYEES_BUILDING_NONE')]"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_lack_pop_promotion_to_fill_buildings')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# RGOs missing employees
+###########################
+
+alert_banner = {
+	name = "lack_pop_for_rgo"
+}
+
+alert_action = {
+	name = "lack_pop_for_rgo_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertLackPopRGO.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "lack_pop_for_rgo_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			block "tooltip_content" {
+				TooltipTextBlock = {
+					blockoverride "text" {
+						text = "ALERT_RGO_MISSING_EMPLOYEES"
+					}
+
+					# blockoverride "textblock_background_tint"  {
+					# 	modify_texture = {
+					# 		using = color_yellow_texture
+					# 	}
+					# }
+				}
+				TooltipListBase = { ### Disloyal Countries List
+					# blockoverride "block_title" {
+					# 	text = "ALERT_RGO_MISSING_EMPLOYEES"
+					# }
+					datacontext = "[GetAutoTableWidthFor('lack_pop_for_rgo_table')]"
+					minimumsize = "[AutoTableWidth.GetTableMinimumSize('(float)420', '(float)10', PdxGuiWidget.Self)]"
+
+					TooltipScrolledContentSection = {
+						autoresize_axis = vertical
+						blockoverride "block_scrollarea" {
+							maximumsize = { -1 400 }
+						}
+						blockoverride "scrollarea_content" {
+							fixedgridbox = {
+								addcolumn = "[AutoTableWidth.GetTableWidth]"
+								addrow = 30
+								setitemsizefromcell = no
+
+								datamodel = "[AlertLackPopRGO.GetRGOs]"
+								item = {
+									widget = {
+										size = "[ToVector2f(AutoTableWidth.GetTableWidth, '(float)30')]"
+										background = {
+											visible = "[IsOdd_int32(PdxGuiWidget.GetIndexInDataModel)]"
+											using = tooltip_table_field_texture
+										}
+
+										hbox = {
+											margin = { 10 0 }
+											spacing = 10
+
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = yes
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)0', PdxGuiWidget.Self)]"
+												text = "ALERT_RGO_MISSING_EMPLOYEES_LOCATION"
+											}
+
+											text_single = {
+												layoutpolicy_horizontal = fixed
+												autoresize = yes
+												align = right
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)1', PdxGuiWidget.Self)]"
+												text = "[SelectLocalization(SBuildingWithMissingEmployees.HasMonthsNeeded, SBuildingWithMissingEmployees.GetMonths, 'ALERT_BUILDINGS_MISSING_EMPLOYEES_BUILDING_NONE')]"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_lack_pop_promotion_to_fill_buildings')]"
+				}
+			}
+		}
+	}
+
+}
+
+###########################
+# Risk Starving provinces
+###########################
+
+alert_banner = {
+	name = "has_risk_starving_provinces"
+}
+
+alert_action = {
+	name = "has_risk_starving_provinces_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertRiskStarvingProvinces.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_risk_starving_provinces_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_RISK_STARVING_PROVINCES"
+				}
+
+				blockoverride "textblock_background_tint"  {
+					modify_texture = {
+						using = color_yellow_texture
+					}
+				}
+			}
+
+			TooltipContentSection = { #1 Market
+				datamodel = "[AlertRiskStarvingProvinces.GetMarketEntries]"
+				visible = "[EqualTo_int32(GetDataModelSize(AlertRiskStarvingProvinces.GetMarketEntries), '(int32)1')]"
+				item = {
+					TooltipStringPairList = {
+						blockoverride "block_title" {
+							raw_text = "@market! [RiskStarvingProvincesMarketEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[RiskStarvingProvincesMarketEntry.GetProvincesInfo]"
+					}
+				}
+			}
+
+			TooltipContentSection = { #2-3 Markets
+				datamodel = "[AlertRiskStarvingProvinces.GetMarketEntries]"
+				visible = "[And(LessThanOrEqualTo_int32(GetDataModelSize(AlertRiskStarvingProvinces.GetMarketEntries), '(int32)3'), GreaterThan_int32(GetDataModelSize(AlertRiskStarvingProvinces.GetMarketEntries), '(int32)1'))]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [RiskStarvingProvincesMarketEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[RiskStarvingProvincesMarketEntry.GetProvincesInfo]"
+					}
+				}
+			}
+
+			TooltipListBase = { #+3 Markets
+				visible = "[GreaterThan_int32(GetDataModelSize(AlertRiskStarvingProvinces.GetMarketEntries), '(int32)3')]"
+				TooltipListColumnContent = {
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_text" {
+							text = "[market|e]"
+						}
+						blockoverride "column_title_right" { expand = {} }
+						blockoverride "field_text" {
+							default_format = "#subtle_name"
+							align = left|nobaseline
+							raw_text = "@market! [RiskStarvingProvincesMarketEntry.GetMarket.GetName]"
+						}
+						blockoverride "field_right" { expand = {} }
+					}
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_left" { expand = {} }
+						blockoverride "column_title_text" {
+							text = "[provinces|e]"
+						}
+						blockoverride "field_text" { visible = no }
+						blockoverride "field_right" {
+							spacing = 7
+							expand = {}
+							tooltipwidget = { using = risk_starving_provinces_market_entry_tooltip }
+							text_single = {
+								text = "[RiskStarvingProvincesMarketEntry.GetProvincesAmount]"
+							}
+							icon = {
+								shaderfile = "gfx/FX/pdxgui_default.shader"
+								size = {15 15}
+								texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
+								using = bg_banner_button_vertical
+								blockoverride "banner_button_extra" { visible = yes }
+								blockoverride "banner_button_color" {
+									modify_texture = {
+										using = color_yellow_texture
+										alpha = 0.6
+									}
+								}
+							}
+						}
+					}
+					blockoverride "column_datamodel" {
+						datamodel = "[AlertRiskStarvingProvinces.GetMarketEntries]"
+					}
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Unintegrated provinces
+###########################
+
+alert_banner = {
+	name = "has_conquered_provinces"
+	onmousehierarchyenter = "[AlertUnintegratedProvinces.EnableHighlight(PdxGuiWidget.AccessSelf)]"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_conquered_provinces_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = cabinet')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_conquered_provinces_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_conquered_provinces')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Pops wanting stuff
+###########################
+
+alert_banner = {
+	name = "has_pop_needs"
+	onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_pop_needs_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertPopNeeds.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_pop_needs_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_POPS_WITH_NEEDS_TEXT"
+				}
+
+				# blockoverride "textblock_background_tint"  {
+				# 	modify_texture = {
+				# 		using = color_yellow_texture
+				# 	}
+				# }
+			}
+
+			TooltipContentSection = { #1 Market
+				datacontext = "[GetCountryNeeds(Player.Self)]"
+				datamodel = "[CountryNeeds.GetMarketNeeds]"
+				visible = "[EqualTo_int32(CountryNeeds.GetMarketPopsMissingGoodsCount, '(int32)1' )]"
+				item = {
+					TooltipStringPairList = {
+						blockoverride "block_title" {
+							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						visible = "[MarketCountryNeeds.HasPopsMissingGoods]"
+						textcontext = "[MarketCountryNeeds.GetPopsMissingGoodsInfo]"
+					}
+				}
+			}
+
+			TooltipContentSection = { #-3 Markets
+				datacontext = "[GetCountryNeeds(Player.Self)]"
+				datamodel = "[CountryNeeds.GetMarketNeeds]"
+				visible = "[And(LessThanOrEqualTo_int32(CountryNeeds.GetMarketPopsMissingGoodsCount, '(int32)3' ), GreaterThan_int32(CountryNeeds.GetMarketPopsMissingGoodsCount, '(int32)1' ))]"
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						visible = "[MarketCountryNeeds.HasPopsMissingGoods]"
+						textcontext = "[MarketCountryNeeds.GetPopsMissingGoodsInfo]"
+					}
+				}
+			}
+
+			TooltipListBase = { #+3 Markets
+				datacontext = "[GetCountryNeeds(Player.Self)]"
+				visible = "[GreaterThan_int32(CountryNeeds.GetMarketPopsMissingGoodsCount, '(int32)3' )]"
+
+				TooltipScrolledContentSection = {
+					blockoverride "section_content" {							
+						TooltipListColumnContent = {
+							set_parent_dimension_to_minimum = height
+							layoutpolicy_horizontal = expanding
+							ignoreinvisible = yes
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_text" {
+									text = "[market|e]"
+								}
+								blockoverride "column_title_right" {
+									expand = {}
+								}
+		
+								blockoverride "field_left" {
+									visible = "[GreaterThan_CFixedPoint(MarketCountryNeeds.GetMarket.GetCountryPopulation(Player.Self),'(CFixedPoint)0')]"
+								}
+		
+								blockoverride "field_text" {
+									default_format = "#subtle_name"
+									align = left|nobaseline
+									raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]"
+								}
+		
+								blockoverride "field_right" { expand = {} }
+							}
+		
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_left" {
+									expand = {}
+								}
+								blockoverride "column_title_text" {
+									text = "[goods_demands|e]"
+		
+								}
+		
+								blockoverride "field_text" { visible = no }
+								blockoverride "field_right" {
+									spacing = 7
+									expand = {}
+									visible = "[GreaterThan_CFixedPoint(MarketCountryNeeds.GetMarket.GetCountryPopulation(Player.Self),'(CFixedPoint)0')]"
+									datacontext = "[MarketCountryNeeds.GetMarket]"
+									datacontext = "[GetMarketCountryNeeds(Player.Self, Market.Self)]"
+									tooltipwidget = { using = market_hub_pop_needs_tooltip }
+		
+									text_single = {
+										visible = "[GreaterThan_CFixedPoint(MarketCountryNeeds.GetMarket.GetCountryPopulation(Player.Self),'(CFixedPoint)0')]"
+										text = "[MarketCountryNeeds.GetPopsMissingGoodsAmount]"
+									}
+		
+									text_single = {
+										visible = "[Not(GreaterThan_CFixedPoint(MarketCountryNeeds.GetMarket.GetCountryPopulation(Player.Self),'(CFixedPoint)0'))]"
+										raw_text = "-"
+									}
+		
+									icon = {
+										shaderfile = "gfx/FX/pdxgui_default.shader"
+										size = {15 15}
+										texture = "gfx/interface/icons/alerts_icons/pops_wanting_stuff.dds"
+		
+										using = bg_banner_button_vertical
+		
+										blockoverride "banner_button_extra" {
+											visible = "[Not(And(Not(MarketCountryNeeds.HasPopsMissingGoods), Not(MarketCountryNeeds.HasRebelPopsMissingGoods)))]"
+										}
+		
+										blockoverride "banner_button_color" {
+											modify_texture = {
+												visible = "[And(MarketCountryNeeds.HasPopsMissingGoods, Not(MarketCountryNeeds.HasRebelPopsMissingGoods))]"
+												using = color_yellow_texture
+												alpha = 0.6
+											}
+											modify_texture = {
+												visible = "[MarketCountryNeeds.HasRebelPopsMissingGoods]"
+												using = color_dark_red_texture
+											}
+										}
+									}
+								}
+							}
+
+							blockoverride "column_datamodel"  {
+								datacontext = "[GetCountryNeeds(Player.Self)]"
+								datamodel = "[CountryNeeds.GetMarketNeeds]"
+							}
+						}
+					}
+				}
+			}
+		}
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_pops_with_needs_yellow')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Upgradeable Buildings
+###########################
+
+alert_banner = {
+	name = "has_upgradeable_buildings"
+	onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_upgradeable_buildings_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertUpgradeableBuildings.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_upgradeable_buildings_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_UPGRADEABLE_BUILDINGS_TEXT"
+				}
+			}
+
+			TooltipContentSection = { #1 Market
+				datacontext = "[GetCountryUpgradeableBuildings(Player.Self)]"
+				datamodel = "[CountryUpgradeableBuildings.GetMarketUpgradeableBuildings]"
+				visible = "[EqualTo_int32(CountryUpgradeableBuildings.GetMarketUpgradeableBuildingsCount, '(int32)1' )]"
+				item = {
+					TooltipListBase = {
+						visible = "[MarketUpgradeableBuildings.HasUpgradeableBuildings]"
+						blockoverride "block_title" {
+							raw_text = "@market! [MarketUpgradeableBuildings.GetMarket.GetName]:"
+						}
+						TooltipListColumnContent = {
+							set_parent_dimension_to_minimum = height
+							layoutpolicy_horizontal = expanding
+							ignoreinvisible = yes
+							TooltipTableColumn = {
+								blockoverride "column_title" { visible = no }
+								blockoverride "column_title_text" { }
+								blockoverride "field_left" {}
+								blockoverride "field_text" {
+									default_format = "#subtle_name"
+									align = left|nobaseline
+									raw_text = "[UpgradeableBuildingTypeLevels.GetBuildingType.GetIcon] [UpgradeableBuildingTypeLevels.GetBuildingType.GetName]"
+								}
+								blockoverride "field_right" { expand = {} }
+							}
+							TooltipTableColumn = {
+								blockoverride "column_title" { visible = no }
+								blockoverride "column_title_text" { }
+								blockoverride "field_left" { expand = {} }
+								blockoverride "field_text" { 
+									tooltipwidget = { using = upgradeable_building_type_levels_breakdown_tooltip }
+									text = "[UpgradeableBuildingTypeLevels.GetLevels|L]"
+								}
+							}
+							blockoverride "column_datamodel" {
+								datacontext = "[GetCountryUpgradeableBuildings(Player.Self)]"
+								datamodel = "[MarketUpgradeableBuildings.GetBuildingTypeLevels]"
+							}
+						}
+					}
+				}
+			}
+
+			TooltipContentSection = { #-3 Markets
+				datacontext = "[GetCountryUpgradeableBuildings(Player.Self)]"
+				datamodel = "[CountryUpgradeableBuildings.GetMarketUpgradeableBuildings]"
+				visible = "[And(LessThanOrEqualTo_int32(CountryUpgradeableBuildings.GetMarketUpgradeableBuildingsCount, '(int32)3' ), GreaterThan_int32(CountryUpgradeableBuildings.GetMarketUpgradeableBuildingsCount, '(int32)1' ))]"
+				item = {
+					TooltipListBase = {
+						visible = "[MarketUpgradeableBuildings.HasUpgradeableBuildings]"
+						blockoverride "block_title" {
+							raw_text = "@market! [MarketUpgradeableBuildings.GetMarket.GetName]:"
+						}
+						TooltipScrolledContentSection = {
+							blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+							blockoverride "section_content" {
+								TooltipListColumnContent = {
+									set_parent_dimension_to_minimum = height
+									layoutpolicy_horizontal = expanding
+									ignoreinvisible = yes
+									TooltipTableColumn = {
+										blockoverride "column_title" { visible = no }
+										blockoverride "column_title_text" { }
+										blockoverride "field_left" {}
+										blockoverride "field_text" {
+											default_format = "#subtle_name"
+											align = left|nobaseline
+											raw_text = "[UpgradeableBuildingTypeLevels.GetBuildingType.GetIcon] [UpgradeableBuildingTypeLevels.GetBuildingType.GetName]"
+										}
+										blockoverride "field_right" { expand = {} }
+									}
+									TooltipTableColumn = {
+										blockoverride "column_title" { visible = no }
+										blockoverride "column_title_text" { }
+										blockoverride "field_left" { expand = {} }
+										blockoverride "field_text" {
+											tooltipwidget = { using = upgradeable_building_type_levels_breakdown_tooltip }
+											text = "[UpgradeableBuildingTypeLevels.GetLevels|L]"
+										}
+									}
+									blockoverride "column_datamodel" {
+										datacontext = "[GetCountryUpgradeableBuildings(Player.Self)]"
+										datamodel = "[MarketUpgradeableBuildings.GetBuildingTypeLevels]"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			TooltipListBase = { #+3 Markets
+				datacontext = "[GetCountryUpgradeableBuildings(Player.Self)]"
+				visible = "[GreaterThan_int32(CountryUpgradeableBuildings.GetMarketUpgradeableBuildingsCount, '(int32)3' )]"
+				TooltipScrolledContentSection = {
+					blockoverride "block_scrollarea" { maximumsize = { -1 420 } }
+					blockoverride "section_content" {
+						TooltipListColumnContent = {
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_text" {
+									text = "[market|e]"
+								}
+								blockoverride "column_title_right" {
+									expand = {}
+								}
+
+								blockoverride "field_left" {
+									visible = "[GreaterThan_int32(MarketUpgradeableBuildings.GetUpgradeableBuildingLevelsCount, '(int32)0')]"
+								}
+
+								blockoverride "field_text" {
+									default_format = "#subtle_name"
+									align = left|nobaseline
+									raw_text = "@market! [MarketUpgradeableBuildings.GetMarket.GetName]"
+								}
+
+								blockoverride "field_right" { expand = {} }
+							}
+
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_left" {
+									expand = {}
+								}
+								blockoverride "column_title_text" {
+									text = "MARKET_UPGRADEABLE_BUILDING_LEVELS_COLUMN"
+								}
+
+								blockoverride "field_text" { visible = no }
+								blockoverride "field_right" {
+									spacing = 7
+									expand = {}
+									visible = "[GreaterThan_int32(MarketUpgradeableBuildings.GetUpgradeableBuildingLevelsCount, '(int32)0')]"
+									datacontext = "[MarketUpgradeableBuildings.GetMarket]"
+									datacontext = "[GetMarketUpgradeableBuildings(Player.Self, Market.Self)]"
+									tooltipwidget = { using = market_hub_upgradeable_buildings_tooltip }
+
+									text_single = {
+										visible = "[GreaterThan_int32(MarketUpgradeableBuildings.GetUpgradeableBuildingLevelsCount, '(int32)0')]"
+										text = "[MarketUpgradeableBuildings.GetUpgradeableBuildingLevelsCount|L]"
+									}
+
+									text_single = {
+										visible = "[Not(GreaterThan_int32(MarketUpgradeableBuildings.GetUpgradeableBuildingLevelsCount, '(int32)0'))]"
+										raw_text = "-"
+									}
+
+									icon = {
+										shaderfile = "gfx/FX/pdxgui_default.shader"
+										size = {15 15}
+										texture = "gfx/interface/icons/alerts_icons/upgradeable_buildings.dds"
+
+										using = bg_banner_button_vertical
+
+										blockoverride "banner_button_extra" {
+											visible = "[MarketUpgradeableBuildings.HasUpgradeableBuildings]"
+										}
+
+										blockoverride "banner_button_color" {
+											modify_texture = {
+												visible = "[MarketUpgradeableBuildings.HasUpgradeableBuildings]"
+												using = color_yellow_texture
+												alpha = 0.6
+											}
+										}
+									}
+								}
+							}
+
+							blockoverride "column_datamodel"  {
+								datacontext = "[GetCountryUpgradeableBuildings(Player.Self)]"
+								datamodel = "[CountryUpgradeableBuildings.GetMarketUpgradeableBuildings]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Blockaded Ports
+###########################
+
+alert_banner = {
+	name = "has_blockaded_ports"
+}
+
+alert_action = {
+	name = "has_blockaded_ports_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertBlockadedPorts.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_blockaded_ports_tooltip"
+	AlertTooltipListType = {}
+}
+
+###########################
+# Exiled Units
+###########################
+
+alert_banner = {
+	name = "has_exiled_units"
+}
+
+alert_action = {
+	name = "has_exiled_units_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertExiledUnits.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_exiled_units_tooltip"
+	AlertTooltipListType = {}
+}
+
+###########################
+# Armies on ice
+###########################
+
+alert_banner = {
+	name = "has_armies_on_ice"
+}
+
+alert_action = {
+	name = "has_armies_on_ice_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertArmiesOnIce.Next]"
+	}
+}
+
+###########################
+# Navies stuck in ice
+###########################
+
+alert_banner = {
+	name = "has_navies_stuck_in_ice"
+}
+
+alert_action = {
+	name = "has_navies_stuck_in_ice_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertNaviesStuckInIce.Next]"
+	}
+}
+
+###########################
+# Navies with attrition
+###########################
+
+alert_banner = {
+	name = "has_navy_attrition"
+}
+
+alert_action = {
+	name = "has_navy_attrition_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertNavyAttrition.Next]"
+	}
+}
+
+###########################
+# Active IO resolution
+###########################
+
+alert_banner = {
+	name = "is_voter_in_active_resolution"
+}
+
+alert_action = {
+	name = "is_voter_in_active_resolution_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertActiveIOResolution.Next]"
+	}
+}
+
+###########################
+# (Eventual) Yellow Revolt Tick
+###########################
+
+alert_banner = {
+	name = "has_possible_revolt"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_possible_revolt_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('country_people', 'subtab = rebels')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_possible_revolt_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_rebels_growing')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Action lacks a cabinet member
+###################################
+
+alert_banner = {
+	name = "lack_cabinet_for_cabinet_action"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "lack_cabinet_for_cabinet_action_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = cabinet')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "lack_cabinet_for_cabinet_action_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_lack_cabinet_for_cabinet_action')]"
+				}
+			}
+		}
+	}
+}
+
+
+###################################
+# Action lacks a cabinet member
+###################################
+
+###########################
+# Fewer Bureaucracies
+###########################
+
+alert_banner = {
+	name = "has_fewer_bureaucracies"
+	blockoverride "icon_texture" {
+		texture = "[GetConceptTexture('bureaucracy')]"
+	}
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_fewer_bureaucracies_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('bureaucracies')]"
+	}
+}
+
+###########################
+# Over Bureaucracies Limit
+###########################
+
+alert_banner = {
+	name = "is_over_bureaucracies_limit"
+	blockoverride "icon_texture" {
+		texture = "[GetConceptTexture('bureaucracy')]"
+	}
+	
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "is_over_bureaucracies_limit_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('bureaucracies')]"
+	}
+}
+
+###########################
+# Non Crown Estate In Cabinet
+###########################
+
+alert_banner = {
+	name = "non_crown_estate_in_cabinet"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "non_crown_estate_in_cabinet_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = cabinet')]"
+	}
+}
+
+###################################
+# Has disloyal subjects
+###################################
+
+alert_banner = {
+	name = "has_disloyal_subjects"
+}
+
+alert_action = {
+	name = "has_disloyal_subjects_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[ShowManageSubjects]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_disloyal_subjects_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			block "tooltip_content" {
+				TooltipListBase = { ### Disloyal Countries List
+					datacontext = "[GetAutoTableWidthFor('disloyal_subjects_table')]"
+					minimumsize = "[AutoTableWidth.GetTableMinimumSize('(float)420', '(float)10', PdxGuiWidget.Self)]"
+
+					blockoverride "block_title" {
+						text = "ALERT_HAS_DISLOYAL_SUBJECTS"
+					}
+
+					TooltipScrolledContentSection = {
+						autoresize_axis = vertical
+						blockoverride "block_scrollarea" {
+							maximumsize = { -1 400 }
+						}
+						blockoverride "scrollarea_content" {
+							fixedgridbox = {
+								addcolumn = "[AutoTableWidth.GetTableWidth]"
+								addrow = 30
+								setitemsizefromcell = no
+
+								datamodel = "[AlertHasDisloyalSubjects.GetEntries]"
+								item = {
+									widget = {
+										size = "[ToVector2f(AutoTableWidth.GetTableWidth, '(float)30')]"
+										background = {
+											visible = "[IsOdd_int32(PdxGuiWidget.GetIndexInDataModel)]"
+											using = tooltip_table_field_texture
+										}
+
+										hbox = {
+											margin = { 10 0 }
+											spacing = 10
+
+											country_flag_small = {
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)0', PdxGuiWidget.Self)]"
+											}
+
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = yes
+												align = nobaseline
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)1', PdxGuiWidget.Self)]"
+												text = "[Country.GetLongName]"
+											}
+
+											text_single = {
+												align = right
+												autoresize = yes
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)2', PdxGuiWidget.Self)]"
+												text = "[Country.GetDiplomacy.GetSubjectLoyalty|R2%/]"
+												tooltipwidget = {
+													using = SubjectTypeDetail_tooltip
+												}
+											}
+
+											icon = {
+												size = { 24 24 }
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)3', PdxGuiWidget.Self)]"
+												texture = "[GetSubjectTypeIcon(Country.GetDiplomacy.GetSubjectType)]"
+												alpha = 0.8
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.3
+												}
+												tooltipwidget = {
+													using = SubjectTypeDetail_tooltip
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_disloyal_subjects')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Above Accepted Culture Limit
+###########################
+
+alert_banner = {
+	name = "has_over_accepted_culture_limit"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_over_accepted_culture_limit_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_culture')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_over_accepted_culture_limit_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_cultural_capacity')]"
+				}
+			}
+		}
+	}
+}
+
+############################
+# Missing Explorer
+############################
+
+alert_banner = {
+	name = "missing_explorer"
+	onmousehierarchyenter = "[SetHighlightedTab('geography_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "missing_explorer_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_MISSING_EXPLORER_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('expansion', 'low_tab = exploration')]"
+	}
+}
+
+###########################
+# Low Food Stockpile
+###########################
+
+alert_banner = {
+	name = "has_low_food_stockpile_market"
+}
+
+alert_action = {
+	name = "has_low_food_stockpile_market_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasLowFoodStockpileMarket.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_low_food_stockpile_market_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_low_food_in_market')]"
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Locations Depopulating
+###########################
+
+alert_banner = {
+	name = "depopulating_locations"
+}
+
+alert_action = {
+	name = "depopulating_locations_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertDepopulatingLocations.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "depopulating_locations_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			block "tooltip_content" {
+				TooltipListBase = { ### Disloyal Countries List
+					datacontext = "[GetAutoTableWidthFor('depopulating_locations_table')]"
+					minimumsize = "[AutoTableWidth.GetTableMinimumSize('(float)420', '(float)10', PdxGuiWidget.Self)]"
+
+					blockoverride "block_title" {
+						text = "ALERT_DEPOPULATING_LOCATIONS"
+					}
+
+					TooltipScrolledContentSection = {
+						autoresize_axis = vertical
+						blockoverride "block_scrollarea" {
+							maximumsize = { -1 400 }
+						}
+						blockoverride "scrollarea_content" {
+							fixedgridbox = {
+								addcolumn = "[AutoTableWidth.GetTableWidth]"
+								addrow = 30
+								setitemsizefromcell = no
+
+								datamodel = "[AlertDepopulatingLocations.GetLocations]"
+								item = {
+									widget = {
+										size = "[ToVector2f(AutoTableWidth.GetTableWidth, '(float)30')]"
+										background = {
+											visible = "[IsOdd_int32(PdxGuiWidget.GetIndexInDataModel)]"
+											using = tooltip_table_field_texture
+										}
+
+										hbox = {
+											margin = { 10 0 }
+											spacing = 10
+
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = yes
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)0', PdxGuiWidget.Self)]"
+												raw_text = "@location! [Location.GetName]:"
+											}
+
+											text_single = {
+												layoutpolicy_horizontal = fixed
+												autoresize = yes
+												align = right
+												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)1', PdxGuiWidget.Self)]"
+												raw_text = "[Location.GetPopulationChangeLabel]@population!"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+###################################
+# We have Low Purity
+###################################
+
+alert_banner = {
+	name = "has_low_purity"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_low_purity_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_religion')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_low_purity_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipScrolledStringPairList = {
+				blockoverride "block_title" {
+					text = "ALERT_HAS_LOW_PURITY_TEXT"
+				}
+				textcontext = "[Localize(GetAutoModifier('low_purity').GetDesc)][Localize('SCALING_WITH_OUR')][Localize('purity')]"
+			}
+		}
+	}
+}
+
+###################################
+# Ships are slowly repairing
+###################################
+
+alert_banner = {
+	name = "has_not_enough_goods_for_ship_repairs"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_not_enough_goods_for_ship_repairs_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasNotEnoughGoodsForShipRepairs.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_not_enough_goods_for_ship_repairs_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_HAS_NOT_ENOUGH_GOODS_FOR_SHIP_REPAIRS_TEXT"
+				}
+
+				blockoverride "textblock_background_tint"  {
+					modify_texture = {
+						using = color_yellow_texture
+					}
+				}
+			}
+			vbox = { # One Market
+				layoutpolicy_horizontal = expanding
+				datamodel = "[AlertHasNotEnoughGoodsForShipRepairs.GetLackingGoodsForRepairs]"
+				visible = "[EqualTo_int32(GetDataModelSize(AlertHasNotEnoughGoodsForShipRepairs.GetLackingGoodsForRepairs), '(int32)1')]"
+				spacing = 12
+
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 360 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [LackingGoodsForRepairEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[LackingGoodsForRepairEntry.GetLackingGoodsForRepairInfo]"
+					}
+				}
+			}
+
+			vbox = { # Two to Three Markets
+				layoutpolicy_horizontal = expanding
+				datamodel = "[AlertHasNotEnoughGoodsForShipRepairs.GetLackingGoodsForRepairs]"
+				visible = "[And(LessThanOrEqualTo_int32(GetDataModelSize(AlertHasNotEnoughGoodsForShipRepairs.GetLackingGoodsForRepairs), '(int32)3' ), GreaterThan_int32(GetDataModelSize(AlertHasNotEnoughGoodsForShipRepairs.GetLackingGoodsForRepairs), '(int32)1'))]"
+				spacing = 12
+
+				item = {
+					TooltipScrolledStringPairList = {
+						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
+						blockoverride "block_title" {
+							raw_text = "@market! [LackingGoodsForRepairEntry.GetMarket.GetName]:"
+						}
+						textcontext = "[LackingGoodsForRepairEntry.GetLackingGoodsForRepairInfo]"
+					}
+				}
+			}
+
+			TooltipListBase = { # More than Three Markets
+				visible = "[GreaterThan_int32(GetDataModelSize(AlertHasNotEnoughGoodsForShipRepairs.GetLackingGoodsForRepairs), '(int32)3' )]"
+
+				TooltipListColumnContent = {
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_text" {
+							text = "[market|e]"
+						}
+						blockoverride "column_title_right" {
+							expand = {}
+						}
+
+						blockoverride "field_text" {
+							default_format = "#subtle_name"
+							align = left|nobaseline
+							raw_text = "@market! [LackingGoodsForRepairEntry.GetMarket.GetName]"
+						}
+
+						blockoverride "field_right" { expand = {} }
+					}
+
+					TooltipTableColumn = {
+						blockoverride "column_title" {}
+						blockoverride "column_title_left" {
+							expand = {}
+						}
+						blockoverride "column_title_text" {
+							text = "[goods|e]"
+						}
+
+						blockoverride "field_text" { visible = no }
+						blockoverride "field_right" {
+							spacing = 7
+							expand = {}
+							tooltipwidget = { using = market_hub_lacking_good_for_repairs_tooltip }
+
+							text_single = {
+								text = "[LackingGoodsForRepairEntry.GetLackingGoodsForRepairAmount]"
+							}
+
+							icon = {
+								shaderfile = "gfx/FX/pdxgui_default.shader"
+								size = {15 15}
+								texture = "gfx/interface/icons/unit_actions/repair_ship.dds"
+
+								using = bg_banner_button_vertical
+
+								blockoverride "banner_button_extra" {
+									visible = yes
+								}
+							}
+						}
+					}
+
+					blockoverride "column_datamodel"  {
+						datamodel = "[AlertHasNotEnoughGoodsForShipRepairs.GetLackingGoodsForRepairs]"
+					}
+				}
+			}
+		}
+	}
+}
+
+###################################
+# At fort limit
+###################################
+
+alert_banner = {
+	name = "is_at_fort_limit"
+	onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "is_at_fort_limit_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action =  "[AlertIsAtFortLimit.Next]"
+	}
+}
+
+###################################
+# Devastated locations
+###################################
+
+alert_banner = {
+	name = "has_devastated_locations"
+	onmousehierarchyenter = "[AlertHasDevastatedLocations.EnableHighlight(PdxGuiWidget.AccessSelf)]"
+}
+
+alert_action = {
+	name = "has_devastated_locations_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LOCATIONS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasDevastatedLocations.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_devastated_locations_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipListBase = {
+				blockoverride "block_title" {
+					text = "ALERT_HAS_DEVASTATED_LOCATIONS_TEXT"
+				}
+				TooltipListScrollArea = {
+					blockoverride "block_scrollarea" {
+						maximumsize = { -1 390 }
+					}
+
+					blockoverride "scrollarea_content" {
+						TooltipListColumnContent = {
+							set_parent_dimension_to_minimum = height
+							layoutpolicy_horizontal = expanding
+
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_text" {
+									text = "[location|e]"
+								}
+								blockoverride "column_title_right" {
+									expand = {}
+								}
+
+								blockoverride "field_left" {}
+
+								blockoverride "field_text" {
+									default_format = "#subtle_name"
+									align = left|nobaseline
+									raw_text = "[Location.GetName]"
+								}
+
+								blockoverride "field_right" { expand = {} }
+							}
+
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_left" {
+									expand = {}
+								}
+
+								blockoverride "column_title_text" {
+									text = "[prosperity|e]"
+									default_format = "#explanation_link"
+								}
+
+								blockoverride "field_text" {
+									visible = no
+								}
+
+								blockoverride "field_right" {
+									expand = {}
+
+									text_single = {
+										text = "[Location.GetProsperity|+r%]"
+
+										tooltipwidget = {
+											using = location_prosperity_tooltip
+										}
+									}
+								}
+							}
+
+							blockoverride "column_datamodel"  {
+								datamodel = "[AlertHasDevastatedLocations.GetDevastatedLocations]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+###################################
+# We can add setup a law
+###################################
+
+alert_banner = {
+	name = "has_possible_law"
+}
+
+alert_action = {
+	name = "has_possible_law_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertPossibleLaw.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_possible_law_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_possible_law')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# High complacency
+###################################
+
+alert_banner = {
+	name = "has_high_complacency"
+}
+
+alert_action = {
+	name = "has_high_complacency_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = estates')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_high_complacency_tooltip"
+
+	AlertTooltipTextType = {}
+}
+
+###########################################################################
+# GREEN ALERTS
+###########################################################################
+
+############################
+# We are annexing a subject but they are disloyal
+############################
+
+alert_banner = {
+	name = "annexing_disloyal_subject"
+}
+
+alert_action = {
+	name = "annexing_disloyal_subject_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[ShowManageSubjects]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "annexing_disloyal_subject_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_disloyal_subjects')]"
+				}
+			}
+		}
+	}
+}
+
+############################
+# We are annexing a subject but opinion is too low
+############################
+
+alert_banner = {
+	name = "annexing_stalled_low_opinion"
+}
+
+alert_action = {
+	name = "annexing_stalled_low_opinion_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[ShowManageSubjects]"
+	}
+}
+
+###########################
+# Parliament
+###########################
+
+alert_banner = {
+	name = "can_player_call_parliament"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_player_call_parliament_action"
+	datacontext = "[GetGenericAction('call_parliament')]"
+
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[PerformGenericAction(GenericAction.Self)]"
+	}
+}
+
+###########################
+# Parliament not doing anything
+###########################
+
+alert_banner = {
+	name = "no_parliament_debate"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "no_parliament_debate_action"
+
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = parliament')]"
+	}
+}
+
+###########################
+# Available Trade
+###########################
+
+alert_banner = {
+	name = "has_available_trade_capacity"
+	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_available_trade_capacity_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_MARKETS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertAvailableTradeCapacity.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_available_trade_capacity_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_unused_trade_capacity')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# We can do more research
+###################################
+
+alert_banner = {
+	name = "can_do_more_research"
+	onmousehierarchyenter = "[SetHighlightedTab('advances_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_do_more_research_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('advances', 'subtab = research')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "can_do_more_research_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_can_do_more_research')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# We can embrace an institution
+###################################
+
+alert_banner = {
+	name = "can_embrace_institutions"
+	onmousehierarchyenter = "[SetHighlightedTab('advances_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_embrace_institutions_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('advances', 'subtab = ages')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "can_embrace_institutions_tooltip"
+	AlertTooltipListType = {}
+}
+
+###################################
+# We can upgrade our country rank
+###################################
+
+alert_banner = {
+	name = "has_possible_country_rank_upgrade"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_possible_country_rank_upgrade_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'togglebutton = select_form_new_country')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_possible_country_rank_upgrade_tooltip"
+	AlertTooltipListType = {}
+}
+
+###################################
+# We can add another reform
+###################################
+
+alert_banner = {
+	name = "has_possible_reform"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_possible_reform_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = estates')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_possible_reform_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_possible_reform')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# We can form a new country
+###################################
+
+alert_banner = {
+	name = "has_possible_formable_country"
+
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+
+	blockoverride "alert_more_icons_after" { expand = {} }
+	blockoverride "alert_more_icons_before" {
+		margin_top = 5
+		spacing = -0.5
+
+		country_flag = {
+			size = { 36 24 }
+			datacontext = "[AlertFormableCountry.GetFormableCountry]"
+			blockoverride "tooltip" {
+				tooltip_enabled = yes
+				tagtooltip_enabled = yes
+				tooltip = "[FormableCountry.GetName]"
+			}
+
+			blockoverride "contextmenu" {
+				contextmenu_enabled = no
+			}
+
+			blockoverride "flag" {
+				datacontext = "[GetFormableCountryCoatOfArms(FormableCountry.Self)]"
+				texture = "[CoatOfArmsWrapper.GetTexture('(int32)144','(int32)96')]"
+				frame = "[CoatOfArmsWrapper.GetFrame('(int32)144','(int32)96')]"
+				framesize = "[CoatOfArmsWrapper.GetFrameSizeOrFallback('(int32)144','(int32)96','(float)0.5')]"
+				texture_density = 2
+			}
+
+			blockoverride "click" {
+				onclick = "[OpenLateralViewWithParams('government', 'togglebutton = select_form_new_country')]"
+			}
+			blockoverride "double_click" {}
+			blockoverride "hover" {}
+		}
+	}
+}
+
+alert_action = {
+	name = "has_possible_formable_country_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'togglebutton = select_form_new_country')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_possible_formable_country_tooltip"
+
+	AlertTooltipListType = {
+		datacontext = "[AlertFormableCountry.GetFormableCountry]"
+		blockoverride "field_format_right" { visible = no }
+		blockoverride "field_text_content_left" { text = "[StringViewPair.GetRight.GetStringView]" }
+		blockoverride "field_left" {
+			country_flag = {
+				size = { 36 24 }
+
+				blockoverride "tooltip" {
+					tooltip_enabled = yes
+					tagtooltip_enabled = yes
+					tooltip = "[FormableCountry.GetName]"
+				}
+
+				blockoverride "contextmenu" {
+					contextmenu_enabled = no
+				}
+
+				blockoverride "flag" {
+					datacontext = "[FormableCountry.GetOrCreateCoatOfArms(Player.Self)]"
+					texture = "[CoatOfArmsWrapper.GetTexture('(int32)144','(int32)96')]"
+					frame = "[CoatOfArmsWrapper.GetFrame('(int32)144','(int32)96')]"
+					framesize = "[CoatOfArmsWrapper.GetFrameSizeOrFallback('(int32)144','(int32)96','(float)0.5')]"
+					texture_density = 2
+				}
+
+				blockoverride "click" {}
+				blockoverride "double_click" {}
+				blockoverride "hover" {}
+			}
+		}
+	}
+}
+
+###################################
+# We can do a government action
+###################################
+
+alert_banner = {
+	name = "has_possible_cabinet_action"
+
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_possible_cabinet_action_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = cabinet')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_possible_cabinet_action_tooltip"
+	AlertTooltipTextType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_possible_cabinet_action')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# We are getting a wargoal accepted
+###################################
+
+alert_banner = {
+	name = "has_positive_enforced_war_goal"
+}
+
+alert_action = {
+	name = "has_positive_enforced_war_goal_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenEnforceWarGoal]"
+	}
+}
+
+####################################
+# We are being saved by White Peace
+####################################
+
+alert_banner = {
+	name = "has_positive_white_peace"
+}
+
+alert_action = {
+	name = "has_positive_white_peace_action"
+}
+
+###################################
+# Has unraised levies in ongoing war
+###################################
+
+alert_banner = {
+	name = "has_unraised_levies_in_war"
+}
+
+alert_action = {
+	name = "has_unraised_levies_in_war_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasUnraisedLeviesInWar.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_unraised_levies_in_war_tooltip"
+	AlertTooltipTextType = {
+		lowpriotextcontext = "[AlertEntry.GetTooltip]"
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_unraised_levies_in_war')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# We have max Diplomats available
+###################################
+
+alert_banner = {
+	name = "has_max_diplomats_available"
+	onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_max_diplomats_available_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('diplomacy_macrobuilder')]"
+	}
+}
+
+###################################
+# We have Religious Aspect available
+###################################
+
+alert_banner = {
+	name = "has_religious_aspect_available"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_religious_aspect_available_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_religion')]"
+	}
+}
+
+###################################
+# We can spend Religious Influence
+###################################
+
+alert_banner = {
+	name = "can_spend_religious_influence"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_spend_religious_influence_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_religion')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "can_spend_religious_influence_tooltip"
+	AlertTooltipListType = {}
+}
+
+###################################
+# We can use Religious Actions
+###################################
+
+alert_banner = {
+	name = "can_use_religious_action"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_use_religious_action_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_religion')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "can_use_religious_action_tooltip"
+	AlertTooltipListType = {}
+}
+
+###################################
+# We have Religious Focus to add to queue
+###################################
+
+alert_banner = {
+	name = "has_religious_focus_available"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_religious_focus_available_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_religion')]"
+	}
+}
+
+###################################
+# Unmarried Children
+###################################
+
+alert_banner = {
+	name = "has_unmarried_children"
+}
+
+alert_action = {
+	name = "has_unmarried_children_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_HAS_UNMARRIED_CHILDREN_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasUnmarriedChildren.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_unmarried_children_tooltip"
+	AlertTooltipListType = {}
+}
+
+###################################
+# Can Request Aid
+###################################
+
+alert_banner = {
+	name = "can_request_aid"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_request_aid_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_religion')]"
+	}
+}
+
+###################################
+# Heir Can Have Better Education
+####################################
+
+alert_banner = {
+	name = "heir_can_have_better_education"
+}
+
+alert_action = {
+	name = "heir_can_have_better_education_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertManager.ShowHeir]"
+	}
+}
+
+###################################
+# We Can Join Sect
+###################################
+
+alert_banner = {
+	name = "can_join_sect"
+	blockoverride "icon_texture" {
+		texture = "[GetReligionIcon(GetPlayer.GetReligion)]"
+	}
+
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_join_sect_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_religion')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "can_join_sect_tooltip"
+	AlertTooltipType = {
+		blockoverride "title_icon_texture" {
+			texture = "[GetReligionIcon(GetPlayer.GetReligion)]"
+		}
+	}
+}
+
+###################################
+# We Can Activate Avatar
+###################################
+
+# [SD] Made redundant by can_use_religious_action
+# alert_banner = {
+# 	name = "can_activate_avatar"
+
+# 	action_tooltip = {
+# 		click_type = left
+# 		title = "ALERT_CTA_LEFT_CLICK"
+# 		using = snd_UI_alert_openAndCycle
+# 		on_action = "[OpenLateralView('country_religion')]"
+# 	}
+
+# 	using = green_alert
+
+# 	blockoverride "icon_texture" {
+# 		texture = "[GetReligionIcon(GetPlayer.GetReligion)]"
+# 	}
+
+# 	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+# 	onmousehierarchyleave = "[ResetHighlightedTab]"
+# }
+
+###################################
+# We Can Invite Religious Figure
+###################################
+
+alert_banner = {
+	name = "can_invite_religious_figure"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_invite_religious_figure_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_religion')]"
+	}
+}
+
+###########################
+# Children can have better education
+###########################
+
+alert_banner = {
+	name = "has_uneducated_child"
+}
+
+alert_action = {
+	name = "has_uneducated_child_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasUneducatedChild.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_uneducated_child_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "ALERT_CHILD_UNEDUCATED_TEXT"
+				}
+			}
+			TooltipScrolledRowList = {
+				blockoverride "block_title" {
+					text = "ALERT_CHILD_UNEDUCATED_PLURAL"
+					default_format = "#color_white"
+				}
+				blockoverride "rowlist_datamodel_is_empty" { visible = "[IsDataModelEmpty(AlertHasUneducatedChild.GetUneducatedChildren)]"}
+				blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(AlertHasUneducatedChild.GetUneducatedChildren)]"}
+				blockoverride "rowlist_datamodel" {
+					datamodel = "[AlertHasUneducatedChild.GetUneducatedChildren]"
+					ignoreinvisible = yes
+				}
+				blockoverride "visibility" {
+					visible = "[And3(Not(Character.GetEducation.IsDefault), Not(Character.IsAdult), GreaterThanOrEqualTo_int32(Character.GetAgeInYears, GetDefine('NCharacter','EDUCATION_AGE')))]"
+				}
+				blockoverride "rowlist_content" {
+					hbox = {
+						using = layoutpolicy_expanding
+						margin = { 10 10 }
+						spacing = 10
+
+						widget = {
+							size = {65 65}
+							character_frame_small = {
+								blockoverride "portrait_datacontext" {
+									datacontext = "[Character]"
+								}
+								parentanchor = hcenter|bottom
+								blockoverride "character_frame_texture" {
+									texture = "gfx/interface/component_decoration/character_frames/character_non_stretchable_frame_2.dds"
+								}
+							}
+						}
+
+						text_multi = {
+							layoutpolicy_horizontal = expanding
+							autoresize = yes
+							multiline = yes
+							size = { -1 60 }
+							align = left|nobaseline
+							text = "[Character.GetName], [Character.GetAge|Y]"
+						}
+
+						hbox = {
+							spacing = 5
+							datamodel = "[Character.GetTraits]"
+							item = {
+								widget = {
+									size = { 40 40 }
+									icon = {
+										size = { 100% 100% }
+										using = trait_item
+										parentanchor = center
+									}
+								}
+							}
+						}
+					}
+				}
+
+				blockoverride "block_scrollarea" {
+					maximumsize = { -1 500 }
+				}
+
+				blockoverride "row_size" {
+					maximumsize = { -1 50 }
+					minimumsize = { -1 50 }
+				}
+			}
+		}
+	}
+}
+
+###########################
+# Army without leader
+###########################
+
+alert_banner = {
+	name = "has_army_without_leader"
+}
+
+alert_action = {
+	name = "has_army_without_leader_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertArmyWithoutLeader.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_army_without_leader_tooltip"
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_army_without_leader')]"
+				}
+			}
+		}
+	}
+}
+
+############################
+# New policies are available
+############################
+
+alert_banner = {
+	name = "can_codify_new_policies"
+}
+
+alert_action = {
+	name = "can_codify_new_policies_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_POLICIES_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertCanCodifyNewPolicies.Next]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "can_codify_new_policies_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipListBase = {
+				blockoverride "block_title" {
+					text = "ALERT_CAN_CODIFY_NEW_POLICIES_TEXT"
+				}
+				TooltipListScrollArea = {
+					blockoverride "block_scrollarea" {
+						maximumsize = { -1 390 }
+					}
+
+					blockoverride "scrollarea_content" {
+						TooltipListColumnContent = {
+							set_parent_dimension_to_minimum = height
+							layoutpolicy_horizontal = expanding
+
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_text" {
+									text = "[law|e]"
+								}
+								blockoverride "column_title_right" {
+									expand = {}
+								}
+
+								blockoverride "field_left" {}
+
+								blockoverride "field_text" {
+									default_format = "#subtle_name"
+									align = left|nobaseline
+									raw_text = "[Policy.GetLaw.GetName]"
+								}
+
+								blockoverride "field_right" { expand = {} }
+							}
+
+							TooltipTableColumn = {
+								blockoverride "column_title" {}
+								blockoverride "column_title_left" {
+									expand = {}
+								}
+
+								blockoverride "column_title_text" {
+									text = "[policy|e]"
+									default_format = "#explanation_link"
+								}
+
+								blockoverride "field_text" {
+									visible = no
+								}
+
+								blockoverride "field_right" {
+									expand = {}
+
+									text_single = {
+										text = "[Policy.GetName]"
+									}
+								}
+							}
+
+							blockoverride "column_datamodel"  {
+								datamodel = "[AlertCanCodifyNewPolicies.GetPolicies]"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+###################################
+# We can ask subject to improve cultural view
+###################################
+
+alert_banner = {
+	name = "can_improve_subject_cultural_view"
+	onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_improve_subject_cultural_view_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertCanImproveSubjectCulturalView.OnAction]"
+	}
+}
+
+###################################
+# Compose Stratēgikòn available
+###################################
+
+alert_banner = {
+	name = "can_compose_strategikon"
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_compose_strategikon_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertCanComposeStrategikon.OnAction]"
+	}
+}
+
+###################################
+# We can ask for money
+###################################
+
+alert_banner = {
+	name = "can_ask_for_money"
+	onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_ask_for_money_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertCanAskForMoney.OnAction]"
+	}
+}
+
+###################################
+# HRE Emperor actions available
+###################################
+
+alert_banner = {
+	name = "can_use_hre_emperor_action"
+	onmousehierarchyenter = "[SetHighlightedTab('diplomacy_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_use_hre_emperor_action_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_ACTIONS_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertCanUseHreEmperorAction.OnAction]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "can_use_hre_emperor_action_tooltip"
+	AlertTooltipListType = {}
+}
+
+###########################################################################
+# BLUE ALERTS
+###########################################################################
+###########################
+# Welcome to Project Caesar
+###########################
+
+alert_banner = {
+	name = "is_startup_help"
+}
+
+alert_action = {
+	name = "is_startup_help_action"
+	action_tooltip = {
+		click_type = left
+		title = "OUTLINER_AGENDA_OPEN"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenGameView('agenda')]"
+	}
+	action_tooltip = {
+		click_modifier = shift
+		click_type = left
+		title = "OPEN_HINTS"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('hints', '')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "is_startup_help_tooltip"
+	AlertTooltipTextType = {}
+}
+
+###########################
+# Non-Expert Welcome
+###########################
+
+alert_banner = {
+	name = "non_expert_welcome"
+	datacontext = "[Player]"
+
+	blockoverride "icon_setup" {
+		country_flag_small = {
+			parentanchor = center
+		}
+	}
+}
+
+alert_action = {
+	name = "non_expert_welcome_action"
+	action_tooltip = {
+		click_type = left
+		title = "OPEN_HINTS"
+		using = snd_UI_alert_openAndCycle
+		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'HUN'))]"
+		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_hungary')]"
+	}
+	action_tooltip = {
+		click_type = left
+		title = "OPEN_HINTS"
+		using = snd_UI_alert_openAndCycle
+		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'HOL'))]"
+		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_holland')]"
+	}
+	action_tooltip = {
+		click_type = left
+		title = "OPEN_HINTS"
+		using = snd_UI_alert_openAndCycle
+		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'NOR'))]"
+		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_norway')]"
+	}
+	action_tooltip = {
+		click_type = left
+		title = "OPEN_HINTS"
+		using = snd_UI_alert_openAndCycle
+		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'NAP'))]"
+		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_naples')]"
+	}
+	action_tooltip = {
+		click_type = left
+		title = "OPEN_HINTS"
+		using = snd_UI_alert_openAndCycle
+		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'CAS'))]"
+		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_castile')]"
+	}
+	action_tooltip = {
+		click_type = left
+		title = "OPEN_HINTS"
+		using = snd_UI_alert_openAndCycle
+		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'TUR'))]"
+		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_ottomans')]"
+	}
+	action_tooltip = {
+		click_type = left
+		title = "OPEN_HINTS"
+		using = snd_UI_alert_openAndCycle
+		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'BYZ'))]"
+		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_eastern_roman_empire')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "non_expert_welcome_tooltip"
+	AlertTooltipTextType = {}
+}
+
+###########################
+# Start New Mission
+###########################
+
+alert_banner = {
+	name = "start_new_mission"
+
+	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "start_new_mission_action"
+	action_tooltip = {
+		click_type = left
+		title = "TOPBAR_MISSION_OPEN"
+		using = snd_UI_alert_openAndCycle
+		enabled = "[IsMissionsEnabled]"
+		on_action = "[OpenLateralView('missions')]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "start_new_mission_tooltip"
+	AlertTooltipType = {
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				blockoverride "text" {
+					text = "game_concept_mission_desc"
+				}
+			}
+		}
+	}
+}
+
+#################################
+# No Control Groups Assigned
+#################################
+alert_banner = {
+	name = "has_not_any_control_groups"
+}
+
+alert_action = {
+	name = "has_not_any_control_groups_action"
+}
+
+###########################################################################
+# CALL ALLY ALERTS
+###########################################################################
+
+template call_ally_alert_action_provider {
+	enabled = "[CallAllyAlert.IsEnabled]"
+
+	action_tooltip = {
+		click_type = left
+		click_mode = confirm
+		enabled = "[CallAllyAlert.IsCallAllyEnabled]"
+		title = "[CallAllyAlert.GetCallAllyTitle]"
+		description = "[CallAllyAlert.GetCallAllyDescription]"
+		on_action_with_params = "[CallAllyAlert.OnCallAlly]"
+	}
+
+	action_tooltip = {
+		click_type = right
+		click_mode = single
+		enabled = "[CallAllyAlert.IsHideAlertEnabled]"
+		title = "[CallAllyAlert.GetHideAlertTitle]"
+		on_action_with_params = "[CallAllyAlert.OnHideAlert]"
+	}
+}
+
+alert_action = {
+	name = "call_ally_alert"
+	tooltip_enabled = yes
+
+	ontextcontextchanged = "[SetAlertPriorityFromTextContext(PdxGuiWidget.AccessSelf)]"
+
+	using = alert_banner_anim
+	using = green_diplo_icon
+
+	rightclicksound = "UI_alert_discard"
+
+	tooltipmeta = {
+		texture = "gfx/interface/icons/alerts_icons/can_call_ally.dds"
+	}
+
+	tooltipwidget = {
+		SimpleContextualTooltipType = {
+			lowpriotextcontext = "[CallAllyAlert.GetTooltip]"
+		}
+	}
+	using = snd_UI_alert_openAndCycle
+	using = snd_UI_alert_hide
+	using = call_ally_alert_action_provider
+
+	vbox = {
+		set_parent_size_to_minimum = yes
+
+		widget = {
+			size = { @alert_wide 75 }
+			vbox = {
+				spacing = 5
+				expand = {}
+
+				country_flag_small = {
+					datacontext = "[CallAllyAlert.GetCountry]"
+				}
+
+				icon = {
+					size = { 30 30 }
+					texture = "gfx/interface/icons/alerts_icons/can_call_ally.dds"
+					texture_density = 2
+					alpha = 1
+
+					glow = {
+						name = "drop_shadow"
+						glow_radius = 3
+						color = {0.0 0.0 0.0 1.0}
+						alpha = 0.5
+					}
+				}
+
+				expand = {}
+			}
+		}
+
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { -1 12 }
+		}
+	}
+}
+
+###########################################################################
+# HAS OBJECTIVE GROUP MISSING TRANSPORT NAVY
+###########################################################################
+
+alert_action = {
+	name = "has_objective_group_missing_transport_navy_action"
+}
+
+###########################################################################
+# DIPLO ALERTS
+###########################################################################
+
+button = {
+	name = "diplo_alert"
+
+	ontextcontextchanged = "[SetAlertPriorityFromTextContext(PdxGuiWidget.AccessSelf)]"
+
+	using = alert_banner_anim
+	using = green_diplo_icon
+	using = snd_UI_alert_hide
+
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[DiploAlert.OnClick]"
+	}
+
+	action_tooltip = {
+		click_type = left
+		click_mode = single
+		click_modifier = ctrl
+		visible = "[DiploAlert.ShowAction('OptionA')]"
+		title = "[DiploAlert.GetActionName('OptionA')]"
+		enabled = "[DiploAlert.GetOptionEnabled('OptionA')]"
+		conditions = "[DiploAlert.GetToolTip('OptionA')]"
+		using = snd_UI_popup_confirm
+		on_action = "[DiploAlert.OnCtrlClick]"
+	}
+
+	action_tooltip = {
+		click_type = right
+		click_mode = single
+		visible = "[DiploAlert.ShowAction('OptionB')]"
+		title = "[DiploAlert.GetActionName('OptionB')]"
+		enabled = "[DiploAlert.GetOptionEnabled('OptionB')]"
+		conditions = "[DiploAlert.GetToolTip('OptionB')]"
+		clicksound = "UI_alert_discard"
+		on_action = "[DiploAlert.OnCtrlRightClick]"
+	}
+
+	vbox = {
+		set_parent_size_to_minimum = yes
+
+		widget = {
+			size = { @alert_wide 75 }
+			vbox = {
+				spacing = 5
+				expand = {}
+
+				country_flag_small = {
+					blockoverride "tooltip" {
+						tooltip_enabled = no
+					}
+					datacontext = "[DiploAlert.GetCountry]"
+				}
+
+				icon = {
+					size = { 30 30 }
+					texture = "[DiploAlert.GetIconTexture]"
+					texture_density = 2
+					alpha = 1
+
+					glow = {
+						name = "drop_shadow"
+						glow_radius = 3
+						color = {0.0 0.0 0.0 1.0}
+						alpha = 0.5
+					}
+				}
+
+				expand = {}
+			}
+		}
+
+		widget = {
+			layoutpolicy_horizontal = expanding
+			size = { -1 12 }
+		}
+	}
+
+	tooltipwidget = {
+		SimpleContextualTooltipType = {
+			blockoverride "title_icon" {
+				icon = {
+					texture = "[DiploAlert.GetIconTexture]"
+					using = tooltip_title_icon_size
+				}
+			}
+			lowpriotextcontext = "[DiploAlert.GetTooltip]"
+		}
+	}
+}
+
+###########################################################################
+# WAR
+###########################################################################
+
+situation_banner = {
+	name = "war_alert"
+
+	datacontext = "[WarsOverviewWar.GetWar]"
+	tooltipwidget = {
+		using = War_tooltip
+	}
+
+	action_tooltip = {
+		click_type = left
+		click_mode = single
+		title = "OPEN_WAR"
+		on_action = "[WarsOverviewWar.OnClick]"
+	}
+
+	action_tooltip = {
+		click_modifier = shift
+		click_modifier_description = "OPEN_HINT_TEXT"
+		click_type = left
+		title = "ALERT_HINT"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[WarsOverviewWar.OnClick]"
+		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_war')]"
+	}
+
+	action_tooltip = {
+		click_type = right
+		click_mode = single
+		title = "PEACETITLE"
+		visible = "[Not(War.IsCivilWar)]"
+		on_action = "[ShowWarPeaceOffer(War.Self)]"
+	}
+
+	using = red_war_alert
+	mirror = horizontal
+
+	blockoverride "icon_texture_obj" {
+		vbox = {
+			spacing = 3
+			margin_bottom = 22
+			expand = {}
+
+			vbox = {
+				spacing = 3
+				country_flag_very_small = {
+					datacontext = "[WarsOverviewWar.GetMainEnemy]"
+					filter_mouse = none
+					alwaystransparent = yes
+					blockoverride "tooltip" {}
+					blockoverride "contextmenu" {}
+					blockoverride "click" {}
+					blockoverride "double_click" {}
+					blockoverride "show_as_button" { visible = no }
+					blockoverride "show_as_icon" { visible = yes }
+				}
+
+				icon = {
+					size = { 22 22 }
+					texture = "gfx/interface/icons/map_modes/war.dds"
+
+					glow = {
+						name = "drop_shadow"
+						glow_radius = 3
+						color = {0.0 0.0 0.0 1.0}
+						alpha = 0.3
+					}
+				}
+			}
+
+			text_single = {
+				autoresize = no
+				size = { 35 15 }
+				fontsize = 14
+				align = center
+				visible = "[Not(War.IsCivilWar)]"
+
+				raw_text = "[War.GetWarScore|+=0%/]"
+			}
+		}
+	}
+}
+
+###########################################################################
+# SITUATION
+###########################################################################
+
+situation_banner = {
+	name = "situation_alert"
+
+	using = purple_alert
+	mirror = horizontal
+
+	datacontext = "[ActiveSituation.GetSituation]"
+	tooltipwidget = {
+		using = Situation_tooltip
+	}
+
+	action_tooltip = {
+		click_type = left
+		click_mode = single
+		title = "ALERT_CTA_LEFT_CLICK"
+		on_action = "[ShowSituation(ActiveSituation.Self)]"
+	}
+
+	action_tooltip = {
+		click_modifier = shift
+		click_type = left
+		title = "ALERT_HINT"
+		using = snd_UI_alert_openAndCycle
+		visible = "[Situation.HasHint]"
+		on_action = "[ShowSituation(ActiveSituation.Self)]"
+		on_action = "[OpenLateralViewWithParams('hints', LinkParam('selected_hint', Situation.GetHintTag))]"
+	}
+
+	blockoverride "icon_texture" {
+		texture = "[ActiveSituation.GetIcon]"
+	}
+}
+
+###########################################################################
+# DISASTER
+###########################################################################
+
+situation_banner = {
+	name = "disaster_alert"
+
+	using = black_alert
+	mirror = horizontal
+
+	tooltipwidget = {
+		using = Disaster_tooltip
+	}
+
+	action_tooltip = {
+		title = "ALERT_CTA_LEFT_CLICK"
+	}
+
+	action_tooltip = {
+		click_type = left
+		click_mode = single
+		title = "ALERT_CTA_LEFT_CLICK"
+		on_action = "[ShowDisaster(Disaster.Self)]"
+	}
+
+	action_tooltip = {
+		click_modifier = shift
+		click_type = left
+		title = "ALERT_HINT"
+		using = snd_UI_alert_openAndCycle
+		visible = "[Disaster.GetType.HasHint]"
+		on_action = "[ShowDisaster(Disaster.Self)]"
+		on_action = "[OpenLateralViewWithParams('hints', LinkParam('selected_hint', Disaster.GetType.GetHintTag))]"
+	}
+
+	blockoverride "icon_texture" {
+		texture = "[Disaster.GetIcon]"
+	}
+}
+
+###########################################################################
+# POTENTIAL DISASTER
+###########################################################################
+
+situation_banner = {
+	name = "potential_disaster_alert"
+
+	# We don't wanna show the disaster panel anymore as it's confusing.
+	#onclick = "[ShowDisaster(Disaster.Self)]"
+	#action_tooltip = {
+	#	title = "ALERT_CTA_LEFT_CLICK"
+	#}
+
+	using = orange_alert
+	mirror = horizontal
+
+	tooltipwidget = { using = Disaster_tooltip }
+
+	blockoverride "icon_texture" {
+		texture = "[Disaster.GetIcon]"
+	}
+}
+
+###########################################################################
+# MISSION
+###########################################################################
+
+button = {
+	name = "mission_alert"
+	ontextcontextchanged = "[SetAlertPriorityFromTextContext(PdxGuiWidget.AccessSelf)]"
+
+	visible = "[Or(MissionAlert.IsInProgress, MissionAlert.IsMissionStartEnabled)]"
+	using = alert_banner_setup
+	using = alert_banner_anim
+	using = blue_alert
+
+	blockoverride "alert_is_new_padding" {}
+	blockoverride "icon_texture" {
+		texture = "[GetMissionTaskIcon(MissionAlert.GetTask)]"
+	}
+
+	blockoverride "icon_setup" {
+		allow_outside = yes
+		icon = {
+			alwaystransparent = yes
+			visible = "[Not(MissionAlert.IsInstant)]"
+			parentanchor = center
+			size = { 116% 116% }
+			texture = "gfx/interface/buttons/checkbox_round.dds"
+			frame_grid = { 2 1 }
+
+			modify_texture = {
+				using = color_new_gold_texture
+			}
+		}
+
+		piechart = {
+			alwaystransparent = yes
+			parentanchor = center
+			allow_outside = yes
+			visible = "[Not(MissionAlert.IsInstant)]"
+			size = { 100% 100% }
+
+			using = piechart_angles
+
+			pieslice = {
+				alwaystransparent = yes
+				texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+				value = "[MissionAlert.GetProgress]"
+				color = { 1 1 1 1 }
+			}
+
+			pieslice = {
+				alwaystransparent = yes
+				texture = "gfx/interface/pie_charts/pie_chart_blue_progress.dds"
+				value = "[Subtract_float('(float)1.0', MissionAlert.GetProgress)]"
+				color = { 1 1 1 0 }
+			}
+		}
+
+		modify_texture = {
+			visible = "[Not(MissionAlert.IsInstant)]"
+			texture = "gfx/interface/buttons/checkbox_bg_round.dds"
+			blend_mode = alphamultiply
+		}
+	}
+
+	action_tooltip = {
+		click_type = left
+		enabled = "[MissionAlert.IsMissionStartEnabled]"
+		description = "[MissionAlert.GetMissionStartDescription]"
+		title = "MISSION_TASK_START"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[MissionAlert.OnMissionStartClick]"
+	}
+
+	action_tooltip = {
+		click_type = right
+		title = "TOPBAR_MISSION_OPEN"
+		clicksound = "UI_alert_discard"
+		on_action = "[OpenLateralView('mission_tasks')]"
+	}
+
+	tooltipwidget = {
+		ContextualTooltipType = {
+			blockoverride "title_text" {
+				text = "[MissionAlert.GetName]"
+			}
+
+			blockoverride "tooltip_content" {
+				TooltipTextBlock = {
+					blockoverride "text" {
+						text = "[MissionAlert.GetMissionStartDescription]"
+					}
+				}
+
+				TooltipFlavorTextBlock = {
+					visible = "[Not(StringIsEmpty( MissionAlert.GetTask.GetDesc ))]"
+					blockoverride "text" {
+						text = "[MissionAlert.GetTask.GetDesc]"
+					}
+				}
+			}
+		}
+	}
+}
+
+###########################################################################
+# ANNEXATION
+###########################################################################
+
+button = {
+	ontextcontextchanged = "[SetAlertPriorityFromTextContext(PdxGuiWidget.AccessSelf)]"
+
+	name = "annexation_alert"
+
+	using = orange_alert
+	using = progress_banner_setup
+	using = alert_banner_anim
+
+	onmousehierarchyenter = "[AnnexationAlert.SetAsOld]"
+
+	using = snd_UI_alert_openAndCycle
+	using = snd_UI_alert_hide
+
+	modify_texture = {
+		visible = "[AnnexationAlert.IsNew]"
+		alpha = "[GetHighlightAnim('4.0, 0.1, 0.25')]"
+	}
+
+	blockoverride "alert_is_new_padding" {}
+
+	blockoverride "alert_is_new_visible" {
+		visible = "[AnnexationAlert.IsNew]"
+	}
+
+	action_tooltip = {
+		click_type = left
+		title = "WARTITLE"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AnnexationAlert.DeclareWarOnOverlord]"
+	}
+
+	action_tooltip = {
+		click_type = right
+		title = "ALERT_CTA_RIGHT_CLICK"
+		clicksound = "UI_alert_discard"
+		on_action = "[AnnexationAlert.Hide]"
+	}
+
+	tooltipwidget = {
+		SimpleContextualTooltipType = {
+			lowpriotextcontext = "[AnnexationAlert.GetTooltip]"
+		}
+	}
+
+	blockoverride "icon_texture" {
+		texture = "gfx/interface/icons/alerts_icons/alert_being_annexed.dds"
+	}
+
+	blockoverride "pieslice_progress_setup" {
+		value = "[AnnexationAlert.GetProgress]"
+	}
+
+	blockoverride "pieslice_background_setup" {
+		value = "[Subtract_float('(float)100.0', AnnexationAlert.GetProgress)]"
+	}
+}
+
+button = {
+	ontextcontextchanged = "[SetAlertPriorityFromTextContext(PdxGuiWidget.AccessSelf)]"
+
+	name = "annexation_disloyal_alert"
+
+	using = yellow_alert
+	using = progress_banner_setup
+	using = alert_banner_anim
+
+	onrightclick = "[AnnexationAlert.Hide]"
+	rightclicksound = "UI_alert_discard"
+	onmousehierarchyenter = "[AnnexationAlert.SetAsOld]"
+
+	using = snd_UI_alert_openAndCycle
+	using = snd_UI_alert_hide
+
+	modify_texture = {
+		visible = "[AnnexationAlert.IsNew]"
+		alpha = "[GetHighlightAnim('4.0, 0.1, 0.25')]"
+	}
+
+	blockoverride "alert_is_new_padding" {}
+
+	blockoverride "alert_is_new_visible" {
+		visible = "[AnnexationAlert.IsNew]"
+	}
+
+	action_tooltip = {
+		click_type = left
+		title = "WARTITLE"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AnnexationAlert.DeclareWarOnOverlord]"
+	}
+
+	action_tooltip = {
+		click_type = right
+		title = "ALERT_CTA_RIGHT_CLICK"
+		clicksound = "UI_alert_discard"
+		on_action = "[AnnexationAlert.Hide]"
+	}
+
+	tooltipwidget = {
+		SimpleContextualTooltipType = {
+			lowpriotextcontext = "[AnnexationAlert.GetTooltip]"
+		}
+	}
+
+	blockoverride "icon_texture" {
+		texture = "gfx/interface/icons/alerts_icons/being_annexed_disloyal.dds"
+	}
+
+	blockoverride "pieslice_progress_setup" {
+		value = "[AnnexationAlert.GetProgress]"
+	}
+
+	blockoverride "pieslice_background_setup" {
+		value = "[Subtract_float('(float)100.0', AnnexationAlert.GetProgress)]"
+	}
+}
+
+###########################################################################
+# IO LAWS ALERT
+###########################################################################
+
+button = {
+	visible = "[And(GreaterThan_CFixedPoint(GetPlayer.GetFixedPointCurrencyValue('prestige'), '(CFixedPoint)4.9'),
+	GreaterThan_CFixedPoint(GetPlayer.GetFixedPointCurrencyValue('legitimacy'), '(CFixedPoint)4.9'))]"
+	name = "international_organization_law_alert"
+
+	ontextcontextchanged = "[SetAlertPriorityFromTextContext(PdxGuiWidget.AccessSelf)]"
+
+	using = alert_banner_setup
+	using = alert_banner_anim
+	using = yellow_alert
+
+	onrightclick = "[InternationalOrganizationLawAlert.Hide]"
+	rightclicksound = "UI_alert_discard"
+	onmousehierarchyenter = "[InternationalOrganizationLawAlert.SetAsOld]"
+
+	using = snd_UI_alert_openAndCycle
+	using = snd_UI_alert_hide
+
+	modify_texture = {
+		visible = "[InternationalOrganizationLawAlert.IsNew]"
+		alpha = "[GetHighlightAnim('4.0, 0.1, 0.25')]"
+	}
+
+	blockoverride "alert_is_new_padding_visible" {
+		visible = "[InternationalOrganizationLawAlert.IsNew]"
+	}
+
+	blockoverride "alert_is_new_visible" {
+		visible = "[InternationalOrganizationLawAlert.IsNew]"
+	}
+
+	action_tooltip = {
+		title = "IO_GOTO_LAW"
+		on_action = "[InternationalOrganizationLawAlert.GoToInternationalOrganizationLaws]"
+	}
+
+	action_tooltip = {
+		click_type = right
+		title = "ALERT_CTA_RIGHT_CLICK"
+		on_action = "[InternationalOrganizationLawAlert.Hide]"
+	}
+
+	tooltipwidget = {
+		SimpleContextualTooltipType = {
+			lowpriotextcontext = "[InternationalOrganizationLawAlert.GetTooltip]"
+		}
+	}
+
+	blockoverride "icon_texture" {
+		texture = "[InternationalOrganizationLawAlert.GetIconTexture]"
+	}
+}
+
+###########################################################################
+# DISCARD STASH ALERT
+###########################################################################
+
+button = {
+	name = "discard_stash"
+	ontextcontextchanged = "[SetAlertPriorityFromTextContext(PdxGuiWidget.AccessSelf)]"
+
+	using = alert_banner_setup
+	using = alert_banner_anim
+	using = alert_discard
+
+	blockoverride "icon_texture" { texture = "gfx/interface/component_tiles/hud_corners/circle_frame_alt_thin.dds" }
+	blockoverride "alert_is_new_padding_visible" { visible = no }
+
+	blockoverride "icon_setup" {
+		text_single = {
+			autoresize = yes
+			text = "[GetDataModelSize(DiscardStash.GetManager.GetHidden)|L]"
+			parentanchor = center
+			align = center|nobaseline
+			fontsize = 16
+			block "great_power_sort_highlight" {}
+		}
+	}
+
+	action_tooltip = {
+		click_type = left
+		click_mode = single
+
+		title = "ALERTS_SETTINGS_TOGGLE"
+		on_action = "[DiscardStash.GetManager.ToggleSettings]"
+	}
+
+	input_action = "toggle_alert_stash"
+	use_global_input_instance = yes
+	tooltipwidget = { BasicFunctionalTooltip = {} }
+}

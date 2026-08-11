@@ -1,4 +1,21 @@
-﻿# remove parliament changes from scottish civil war
+﻿# Auto-applied by the ars_belli_economic_support scripted relation. The engine matches
+# these by name: giving_<relation> goes on the sender, receiving_<relation> on the
+# recipient. Both sides pay the diplomat upkeep while the relation is active.
+giving_ars_belli_economic_support = {
+	game_data = {
+		category = country
+	}
+	monthly_diplomats = -0.1
+}
+
+receiving_ars_belli_economic_support = {
+	game_data = {
+		category = country
+	}
+	monthly_diplomats = -0.1
+}
+
+# remove parliament changes from scottish civil war
 REPLACE:sco_civil_war_aggressive = {
 	game_data = {
 		category = country
@@ -29,8 +46,12 @@ REPLACE:is_great_power = {
 	monthly_prestige = 0.1
 
 
-	allowed_enforce_peace = yes
-	allowed_intervene_in_war = yes
+	# Intervene in War is removed mod-wide: players consistently misread it as unfair
+	# because the target never gets a say. Enforce Peace covers every case it used to.
+	allowed_intervene_in_war = no
+	# The engine Enforce Peace is a single attacker-side accept/decline, which cannot
+	# express the defender-first flow. Replaced by ars_belli_enforce_peace.
+	allowed_enforce_peace = no
 	# disable threaten war until confirmed it's not bugged:
 	allowed_threaten_war = no
 }
@@ -53,3 +74,24 @@ REPLACE:favoring_buddhism_schools = {
 	monthly_purity = -0.20 # was -0.1
 	monthly_honor = -0.20 #was -0.5
 }
+
+# Vanilla grants regional powers the same two actions; mirror the great power changes.
+REPLACE:is_regional_power = {
+	game_data = {
+		category = country
+	}
+	monthly_diplomats = 0.1
+	power_projection = 5
+	monthly_prestige = 0.05
+	mercenary_range_modifier = 0.25
+	creditworthiness_bonus = 0.1
+	max_bonds = 1
+
+	allowed_intervene_in_war = no
+	allowed_enforce_peace = no
+	allowed_threaten_war = yes
+
+	alliance_weight = 0.5
+	union_weight = 0.25
+}
+>>>>>>> main:main_menu/common/static_modifiers/ars_belli_country_changes.txt

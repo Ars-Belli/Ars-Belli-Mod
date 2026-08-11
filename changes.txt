@@ -45,6 +45,16 @@ guarantee relation no longer grants +50 opinion
 
 new "Worsen Opinion" action: worsens YOUR opinion of another country by -100, decays over 10 years
 alliances no longer break when opinion turns negative (opinion is no longer an alliance precondition)
+defensive leagues no longer require non-negative opinion between the parties, either to form one or to join one
+
+# Antagonism:
+
+new "Forgive half antagonism" and "Forgive 200 antagonism" friendly actions: write off antagonism you hold against another country, either half of it or a flat 200. Each requires at least 10 antagonism towards them, each has its own 10-year cooldown, and using both is cumulative
+stealing maps generates 1 antagonism instead of vanilla's 10
+
+# Rivals:
+
+no cooldown on removing a rival (vanilla locks you out for 5 years), so rivals can be swapped freely
 
 # Vision Sharing:
 
@@ -58,10 +68,28 @@ Deus Vult crusade CB is usable from game start by every country: the CB is hardc
 religious-war wargoals now use near-neutral conquer + subjugate cost (vanilla was +75% / +20% loaded): Religious Conquer Province is 1.0/1.0 on both sides; the Heretic wargoal charges the attacker a slightly higher 1.1 (defender stays 1.0)
 location warscore: tax-base contribution reduced to 20% of vanilla; lack-of-control impact on warscore scales 0.2/0.4/0.6/0.8/1.0/1.0 across ages 1-6 (vanilla 0.1/0.2/0.4/0.6/0.8/1.0), so unoccupied land is worth less and occupied land more
 
+# Enforce Peace:
+
+Intervene in War is removed mod-wide (it resolved with no input from the countries at war), and the vanilla Enforce Peace is replaced by a new "Enforce Peace" action that covers every case Intervene used to
+the defender is asked first, and only if they accept is the demand put to the attacker: the attacker accepting ends the war in a white peace, the attacker refusing brings the enforcer into the war on the defender's side. Asking the defender first is the point - it stops Enforce Peace being used to rescue a losing attacker over the defender's objection
+usable by Great Powers and Major Powers (Ars Belli ranks, not vanilla's), and by any country at all when either leader of the war is its rival
+the Enforce Peace button on the war view is always shown and greys out with a tooltip listing which requirement is unmet, rather than disappearing
+the "a rival is at war" alert opens Enforce Peace instead of Intervene in War
+the HRE Emperor no longer gets the vanilla Enforce Peace and Intervene in War, and uses the same Enforce Peace as everyone else
+
 # Economy:
 
 destroy market price capped at 10
 Manden Kurufa reform (Mali traditions) is removable
+
+# Economic Support:
+
+new "Send Economic Support" action: choose a country and a monthly sum of gold, and they get an accept/decline popup before the arrangement starts
+the amount slider runs from 0 up to the sender's whole monthly income and opens at 10% of it
+costs both sides a Defensive Point and -0.10 monthly diplomats for as long as it runs
+a country can only receive Economic Support from one patron at a time
+breaks on war between the two parties and is annulled by a peace treaty; either side can end it early (Cancel for the sender, Refuse for the recipient)
+the vanilla Send Economic Support cannot be removed from the game, so it is relabelled as against the rules to steer players onto the new action
 
 # Power Ranking & Diplo Limits:
 
@@ -73,7 +101,8 @@ colonial-nation overlord ↔ colonial-nation relationships now count as Alliance
 personal unions with an offensive policy active (Possible / Automatic / Assured Offense) now consume Alliance Points instead of Defensive Points on both sides; defensive unions still cost DP as before
 only GPs and Majors get guarantee points; everyone else gets 0
 mutable alert when over the alliance limit
-hegemons can now ally each other (the alliance_can_exist override no longer blocks them)
+two Great Powers can no longer be allied: an alliance expires as soon as both partners are GPs. This replaces vanilla's hegemon-to-hegemon block, so two hegemons may ally as long as they are not both GPs
+Economic Support costs a Defensive Point to both the sender and the recipient (flat 1 each, not scaled by rank), deduped against an alliance or defensive league with the same country
 tier-list panel and rank label toggle are now per-player in MP (one player opening the panel no longer opens it for every connected player)
 over-alliance-limit penalty now also includes -90% trade income (selling efficiency) and -90% research speed, on top of the existing -90% tax income, -40% land morale, and war-declaration block
 alliance-limit penalty is now OFF by default; the setting now sits next to "Multiplayer Diplo Limits Targets" in the rule list
@@ -100,3 +129,4 @@ pop adjustments across Asia: Timurid, Delhi, Khmer, Ayutthaya, Ming (middle king
 # Patch Compatibility:
 
 updated for game 1.2.5 (pops, town setups, country/market/institution/disease/development setup, diplomacy, wars, and localisation refreshed to the 1.2.5 baseline)
+updated for game 1.3.11 (supported game version raised to 1.3.*; Holy Roman Empire organization definition refreshed to the 1.3 baseline)

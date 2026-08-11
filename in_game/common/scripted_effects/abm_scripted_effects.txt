@@ -736,6 +736,56 @@ mp_limits_calculate_diplo_weights = {
 			}
 		}
 
+		# 5. Economic Support costs a Defensive Point to BOTH parties, sender and
+		# recipient alike. Overflow past the DP limit spills into AP through the
+		# existing rules in total_player_alliance_weight, so nothing extra is needed
+		# for that here. Deduped against everything above, so a partner who is already
+		# an ally or defensive-league mate does not get charged twice.
+		#
+		# Flat 1 per relation, NOT country_slot_weight - the cost does not scale with
+		# the other party's rank the way an alliance or defensive pact does. Same
+		# treatment as guarantees in block 4 above.
+		every_country = {
+			limit = {
+				OR = {
+					giving_scripted_relation = {
+						type = relation_type:ars_belli_economic_support
+						target = scope:mp_dw_p
+					}
+					receiving_scripted_relation = {
+						type = relation_type:ars_belli_economic_support
+						target = scope:mp_dw_p
+					}
+				}
+				NOT = { this = scope:mp_dw_p }
+			}
+			save_temporary_scope_as = mp_dw_mate
+			scope:mp_dw_p = {
+				if = {
+					limit = {
+						NOT = {
+							is_target_in_variable_list = {
+								name = mp_dp_mates_buf
+								target = scope:mp_dw_mate
+							}
+						}
+					}
+					add_to_variable_list = {
+						name = mp_dp_mates_buf
+						target = scope:mp_dw_mate
+					}
+					add_to_variable_list = {
+						name = mp_dp_partners
+						target = scope:mp_dw_mate
+					}
+					change_variable = {
+						name = mp_dp_weight
+						add = 1
+					}
+				}
+			}
+		}
+
 		clear_variable_list = mp_dp_mates_buf
 	}
 }

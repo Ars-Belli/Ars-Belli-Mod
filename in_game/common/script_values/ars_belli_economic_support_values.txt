@@ -1,0 +1,38 @@
+﻿# --- tune here -------------------------------------------------------------
+# Where the amount slider starts, as a share of the sender's monthly income.
+ars_belli_economic_support_default_share = {
+	value = 0.1
+}
+# ---------------------------------------------------------------------------
+
+# Upper bound of the slider: everything the sender earns in a month. There is no
+# artificial ceiling on top of that - to impose one, add a max here, e.g.
+#   max = 25
+# Keep any such ceiling on the slider rather than on the transfer value below, so the
+# player is stopped at selection time instead of having their figure silently rewritten.
+ars_belli_economic_support_slider_max = {
+	value = scope:actor.monthly_income_total
+	min = 0
+}
+
+# Slider default and the AI's choice when it offers. scope:actor is the sender.
+ars_belli_economic_support_default_amount = {
+	value = scope:actor.monthly_income_total
+	multiply = ars_belli_economic_support_default_share
+	min = 0
+	max = ars_belli_economic_support_slider_max
+}
+
+# The monthly transfer. scope:first is the giver, scope:second the receiver.
+# The agreed figure is stored on the receiver by the interaction that starts the
+# relation. No max here on purpose - see the note above.
+ars_belli_economic_support_amount = {
+	value = 0
+	if = {
+		limit = {
+			scope:second = { has_variable = ab_ecosupport_amount }
+		}
+		add = scope:second.var:ab_ecosupport_amount
+	}
+	min = 0
+}

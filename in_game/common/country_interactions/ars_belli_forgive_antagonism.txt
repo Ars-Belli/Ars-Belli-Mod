@@ -1,0 +1,175 @@
+﻿# ARS BELLI: let a country forgive the antagonism IT feels towards another country.
+# scope:actor holds the grudge and does the forgiving; scope:recipient is forgiven.
+#
+# Antagonism is a pool of bias instances plus a static baseline, so it cannot be set or
+# multiplied directly. Instead each action adds one negative bias scaled to the amount
+# being forgiven. Each action removes its OWN previous offset first, so re-using an
+# action re-measures against the current pool instead of stacking on itself; the two
+# actions use different biases, so using both is cumulative.
+
+ars_belli_forgive_half_antagonism = {
+	type = diplomacy
+	category = CATEGORY_FRIENDLY_ACTIONS
+
+	potential = {
+		scope:actor = {
+			has_limited_diplomacy = no
+		}
+	}
+
+	allow = {
+		# Overridden: the auto-generated line renders this in the third person and reads
+		# as if THEY need antagonism towards US. It is our antagonism towards them.
+		custom_tooltip = {
+			text = ars_belli_forgive_antagonism_requirement_tt
+			scope:actor = {
+				antagonism = {
+					target = scope:recipient
+					value >= 10
+				}
+			}
+		}
+	}
+
+	cooldown = {
+		type = ars_belli_forgive_half_antagonism
+		years = 10
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "choose_country"
+		column = {
+			data = name
+		}
+		visible = {
+			within_diplomatic_range = scope:actor
+		}
+		enabled = {
+			custom_tooltip = {
+				text = ars_belli_forgive_antagonism_requirement_tt
+				scope:actor = {
+					antagonism = {
+						target = root
+						value >= 10
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		scope:actor = {
+			# Drop this action's earlier pardon so the scale below reads the current pool.
+			remove_antagonism = {
+				modifier = ars_belli_antagonism_forgiven_half
+				target = scope:recipient
+			}
+			add_antagonism = {
+				modifier = ars_belli_antagonism_forgiven_half
+				target = scope:recipient
+				scale = ars_belli_antagonism_forgive_half
+			}
+		}
+	}
+
+	ai_tick = never
+	ai_will_do = {
+		add = -1000
+	}
+
+	diplo_chance = {
+		base = 1000
+	}
+
+	accept = {
+		add = {
+			desc = "game_concept_antagonism"
+			value = 1000
+		}
+	}
+}
+
+ars_belli_forgive_200_antagonism = {
+	type = diplomacy
+	category = CATEGORY_FRIENDLY_ACTIONS
+
+	potential = {
+		scope:actor = {
+			has_limited_diplomacy = no
+		}
+	}
+
+	allow = {
+		# Overridden: the auto-generated line renders this in the third person and reads
+		# as if THEY need antagonism towards US. It is our antagonism towards them.
+		custom_tooltip = {
+			text = ars_belli_forgive_antagonism_requirement_tt
+			scope:actor = {
+				antagonism = {
+					target = scope:recipient
+					value >= 10
+				}
+			}
+		}
+	}
+
+	cooldown = {
+		type = ars_belli_forgive_200_antagonism
+		years = 10
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "choose_country"
+		column = {
+			data = name
+		}
+		visible = {
+			within_diplomatic_range = scope:actor
+		}
+		enabled = {
+			custom_tooltip = {
+				text = ars_belli_forgive_antagonism_requirement_tt
+				scope:actor = {
+					antagonism = {
+						target = root
+						value >= 10
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		scope:actor = {
+			remove_antagonism = {
+				modifier = ars_belli_antagonism_forgiven_flat
+				target = scope:recipient
+			}
+			add_antagonism = {
+				modifier = ars_belli_antagonism_forgiven_flat
+				target = scope:recipient
+				scale = ars_belli_antagonism_forgive_200
+			}
+		}
+	}
+
+	ai_tick = never
+	ai_will_do = {
+		add = -1000
+	}
+
+	diplo_chance = {
+		base = 1000
+	}
+
+	accept = {
+		add = {
+			desc = "game_concept_antagonism"
+			value = 1000
+		}
+	}
+}
