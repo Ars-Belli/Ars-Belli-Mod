@@ -42,3 +42,41 @@ REPLACE:sofa_stockade = {
 		local_unrest = -0.05
 	}
 }
+
+REPLACE:provincial_garrison = {
+	audio_tier = 1
+	is_foreign = no
+	max_levels = 1
+	pop_type = soldiers
+	
+	employment_size = 0.25 #down from 1
+	category = military_category
+	
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	build_time = soldier_building
+	
+	country_potential = {
+		OR = {
+			AND = {
+				exists = international_organization:middle_kingdom
+				is_leader_of_international_organization = international_organization:middle_kingdom
+			}
+			culture ?= { has_culture_group = culture_group:chinese_group }
+		}
+	}
+
+	location_potential = {
+	}
+	
+	possible_production_methods = { early_soldier_building_maintenance }
+	construction_demand = soldier_building_construction
+
+	modifier = {
+		local_manpower = 0.0025
+		can_recruit_regiment_in_this_location = yes
+	}
+}
