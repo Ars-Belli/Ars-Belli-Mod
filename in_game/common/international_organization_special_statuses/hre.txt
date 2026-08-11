@@ -88,7 +88,7 @@ elector = {
 	}
 	elector = yes
 	special_status_power = {
-		value = 125 #was 75
+		value = 100 #was 75
 		if = {
 			limit = { 
 				OR = {
@@ -158,7 +158,7 @@ archbishop_elector = {
 	}
 
 	special_status_power = {
-		value = 125 #was 75
+		value = 100 #was 75
 		if = {
 			limit = { 
 				OR = {
@@ -264,7 +264,7 @@ free_city = {
 
 	map_color = define:NMapColors|HRE_FREE_CITY_COLOR
 	special_status_power = {
-		value = 15 #was 25
+		value = 20 #was 25
 		if = {
 			limit = { 
 				OR = {
@@ -276,15 +276,15 @@ free_city = {
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_early_imperial_diet_policy } }
-			multiply = 0.25
+			multiply = 0.25 
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_bi_camerial_imperial_diet_policy } }
-			multiply = 0.0
+			multiply = 0.25 #was 0 - scaling was weird going from something to nothing then scaling up at the end
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_tri_camerial_imperial_diet_policy } }
-			multiply = 2
+			multiply = 1.25 #was 2 - this would put too much emphasis on AI voting power
 		}
 	}
 }
@@ -326,7 +326,7 @@ primas_germaniae = {
 
 	map_color = define:NMapColors|HRE_PRIMAS_GERMANIAE_COLOR
 	special_status_power = {
-		value = 25 #was 4
+		value = 20 #was 4
 		if = {
 			limit = { 
 				OR = {
@@ -334,7 +334,7 @@ primas_germaniae = {
 					scope:recipient = { international_organization_has_policy = policy:no_golden_bull_policy } 
 				}
 			}
-			multiply = 10
+			multiply = 2 #was 10 - this value is only appropriate for the original base
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_early_imperial_diet_policy } }
@@ -387,7 +387,7 @@ legatus_natus = {
 
 	map_color = define:NMapColors|HRE_LEGATUS_NATUS_COLOR
 	special_status_power = {
-		value = 25 #was 4
+		value = 20 #was 4
 		if = {
 			limit = { 
 				OR = {
@@ -395,7 +395,7 @@ legatus_natus = {
 					scope:recipient = { international_organization_has_policy = policy:no_golden_bull_policy } 
 				}
 			}
-			multiply = 10
+			multiply = 2 #was 10 - this value is only appropriate for the original base
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_early_imperial_diet_policy } }
@@ -450,7 +450,7 @@ imperial_prelate = {
 
 	map_color = define:NMapColors|HRE_IMPERIAL_PRELATE_COLOR
 	special_status_power = {
-		value = 1 #was 2
+		value = 2
 		if = {
 			limit = { 
 				OR = {
@@ -462,15 +462,15 @@ imperial_prelate = {
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_early_imperial_diet_policy } }
-			multiply = 1.0
+			multiply = 0.5 #was 1
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_bi_camerial_imperial_diet_policy } }
-			multiply = 1.25
+			multiply = 1 #was 1.25 - don't wan't decimals
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_tri_camerial_imperial_diet_policy } }
-			multiply = 1.25
+			multiply = 1.5 #was 1.25 - don't wan't decimals
 		}
 	}
 }
@@ -528,7 +528,7 @@ imperial_prince = {
 	}
 	map_color = define:NMapColors|HRE_IMPERIAL_PRINCE_COLOR
 	special_status_power = {
-		value = 1 #was 2
+		value = 2 #was 2
 		if = {
 			limit = { 
 				OR = {
@@ -536,15 +536,15 @@ imperial_prince = {
 					scope:recipient = { international_organization_has_policy = policy:no_golden_bull_policy } 
 				}
 			}
-			multiply = 1
+			multiply = 0.5 #was 1
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_early_imperial_diet_policy } }
-			multiply = 1.25
+			multiply = 0.5 #was 1.25
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_bi_camerial_imperial_diet_policy } }
-			multiply = 1.5
+			multiply = 1 #was 1.5
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_tri_camerial_imperial_diet_policy } }
@@ -559,7 +559,7 @@ imperial_prince = {
 				}
 				country_rank = country_rank:rank_kingdom
 			}
-			multiply = 36
+			multiply = 10 #was 36 - reduced, no welfare for Bohemia
 		}
 	}
 }
@@ -634,7 +634,7 @@ imperial_peasant_republic = {
 		}
 		else_if = {
 			limit = { scope:recipient = { international_organization_has_policy = policy:hre_tri_camerial_imperial_diet_policy } }
-			multiply = 2.5
+			multiply = 3 #was 2.5 - don't wan't decimals
 		}
 	}
 }

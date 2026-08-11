@@ -1,0 +1,134 @@
+REPLACE:imperial_authority_golden_bull = {
+    value = 5 #This should allow Bavaria to initiate the Golden Bull vote close to the end of the 1st year, which makes their starting emperorship worth something.
+    subtract = {
+        value = current_year
+        subtract = 1337
+    }
+    min = 0
+}
+
+REPLACE:hre_default_policy_opinion = {
+	if = {
+		limit = {
+			exists = scope:policy
+			exists = scope:recipient
+			scope:recipient = {
+				international_organization_has_leader = yes
+			}
+			NOT = { is_leader_of_international_organization = scope:recipient }
+		}		
+		#opinion of the leader country
+		add = {
+			desc = "POLICY_BIAS_OPINION_OF_EMPEROR"
+			value = "opinion(scope:recipient.leader_country)"
+			multiply = 0.25 #was 0.5 - to my understanding this makes both positive and negative opinion matter less
+		}
+		#diplomatic rep of the leader country
+		add = {
+			desc = "IO_LEADER_DIP_REP"
+			value = scope:recipient.leader_country.modifier:diplomatic_reputation
+			multiply = 3
+		}
+		add = {
+			desc = "POLICY_BIAS_FAVORS_OF_EMPEROR"
+			value = "favors(scope:recipient.leader_country)"
+			multiply = 2
+		}
+		add = {
+			desc = "POLICY_BIAS_ANTAGONISM_OF_EMPEROR"
+			value = "antagonism(scope:recipient.leader_country)"
+			multiply = -0.5
+		}
+		add = {
+			desc = "TAX_BASE_LEADER_COMPARISON"
+			value = scope:recipient.leader_country.country_tax_base
+			subtract = country_tax_base
+			multiply = 0.025 # Balance factor
+		}
+		if = {
+			limit = { is_allied_with = { target = scope:recipient.leader_country } }
+			add = {
+				desc = "game_concept_alliance"
+				value = 5
+			}
+		}
+		if = {
+			limit = { same_dynasty_as = { target = scope:recipient.leader_country } }
+			add = {
+				desc = "opinion_same_dynasty"
+				value = 10
+			}
+		}
+		if = {
+			limit = { is_subject_of = scope:recipient.leader_country }
+			add = {
+				desc = "game_concept_subject"
+				value = 25
+			}
+		}
+		if = {
+			limit = { culture.language = scope:recipient.leader_country.culture.language }
+			add = {
+				desc = "DIPLOREASON_SAME_COMMON_LANGUAGE"
+				value = 5
+			}
+		}
+		if = {
+			limit = { NOT = { culture.language = scope:recipient.leader_country.culture.language } }
+			add = {
+				desc = "DIPLOREASON_DIFFERENT_COMMON_LANGUAGE"
+				value = -5
+			}
+		}
+		# Dynastic Power of Emperor
+		add = {
+			desc = "IA_DYNASTIC_POWER"
+			value = "scope:recipient.leader_country.dynastic_power(international_organization:hre)"
+			multiply = 0.5
+		}
+		# Higher IA gives higher ability to pass reforms
+		if = {
+			limit = { scope:recipient.var:imperial_authority > 50 }
+			add = {
+				desc = "imperial_authority"
+				value = "scope:recipient.var:imperial_authority"
+				subtract = 50
+				multiply = 1.5 #was 2.5 - if too easy to pass laws benefitting only the emperor lower further
+			}
+		}
+		if = {
+			limit = { government_type = government_type:monarchy }
+			add = {
+				desc = "monarchy"
+				value = 5
+			}
+		}
+		if = {
+			limit = { government_type = government_type:theocracy }
+			add = {
+				desc = "theocracy"
+				value = -5
+			}
+		}
+		if = {
+			limit = { scope:recipient = { has_variable = hre_imperial_religion_group } }
+			if = {
+				limit = { NOT = { religion.group = scope:recipient.var:hre_imperial_religion_group } }
+				add = {
+					desc = "DIPLOREASON_DIFFERENT_RELIGION_GROUP"
+					value = -250
+				}
+			}
+		}
+		if = {
+			limit = { scope:recipient = { has_variable = hre_imperial_religion } }
+			if = {
+				limit = { NOT = { religion = scope:recipient.var:hre_imperial_religion } }
+				add = {
+					desc = "DIPLOREASON_DIFFERENT_RELIGION"
+					value = -50
+				}
+			}
+		}
+	}
+}
