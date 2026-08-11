@@ -1,0 +1,76 @@
+REPLACE:balance_the_budget = {
+	estate = burghers_estate
+
+	modifier_when_in_debate = {
+		monthly_inflation = -0.004
+		#bank_interest = -0.02
+	}
+
+	allow = {
+		OR = {
+			num_loans >= 1
+			inflation > 0.075
+		}
+	}
+
+	chance = {
+		add = 1
+		#add = {
+		#	if = {
+		#		limit = {
+		#			num_loans >= 5
+		#		}
+		#		value = 2
+		#	}
+		#}
+		#add = {
+		#	if = {
+		#		limit = {
+		#			num_loans >= 10
+		#		}
+		#		value = 4
+		#	}
+		#}
+		add = {
+			if = {
+				limit = {
+					inflation >= 0.1 
+				}
+				value = 1
+			}
+		}
+		add = {
+			if = {
+				limit = {
+					inflation >= 0.15 
+				}
+				value = 1
+			}
+		}
+        add = {
+			if = {
+				limit = {
+					inflation >= 0.20 
+				}
+				value = 1
+			}
+		}
+	}
+	
+	on_debate_passed = {
+		#random_loan = {
+		#	limit = {
+		#		loan_amount > 0
+		#	}
+		#	change_loan_amount = {
+		#		value = loan_amount
+		#		multiply = -0.5
+		#	}
+		#}
+		add_inflation = inflation_mild_bonus
+		
+	}
+	on_debate_failed = {
+		parliament_debate_failed_effect = yes
+	}
+}
