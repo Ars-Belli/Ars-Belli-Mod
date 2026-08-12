@@ -1,28 +1,23 @@
 ﻿abm_cossack_hetmanate_reform = {
 	major = yes
 	unique = yes
-	age = age_2_renaissance
 	government = republic
 
 	potential = {
-		OR = {
-			has_or_had_tag = ZAZ
-			AND = {
-				culture = culture:cossack_culture
-				has_advance = abm_zaz_hetmanate
-			}
-		}
+		has_or_had_tag = ZAZ
+		culture = culture:cossack_culture
 	}
 
-	# Core Cossack identity — always active
+	locked = {
+		always = yes
+	}
+
 	country_modifier = {
 		government_reform_slots = 1
-		monthly_towards_free_subjects = societal_value_monthly_move
+		monthly_towards_free_subjects = societal_value_huge_monthly_move
 		global_nobles_estate_power = -0.10
-		global_cossacks_estate_power = 0.25
+		global_cossacks_estate_power = 0.50
 	}
-
-	# Cossack military machine — active while at war
 	country_modifier = {
 		potential_trigger = {
 			at_war = yes
