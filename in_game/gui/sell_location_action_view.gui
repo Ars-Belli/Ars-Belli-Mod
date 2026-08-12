@@ -227,21 +227,41 @@ lateralview = {
 						# can be applied at all.
 						#
 						# Player, not the seller: SellLocationActionView.GetSeller / GetBuyer are
-						# localization-only functions and are not registered with the GUI data
-						# system, so asking for them here fails the whole expression ("FetchData
-						# failed") and the slider silently falls back to a default max of 100.
+						# localization-only functions, not registered with the GUI data system.
 						# Player is whichever side is acting - the seller when selling, the buyer
 						# when buying - so the ceiling is always one of the two parties to the
 						# deal, which is what the requirement asked for.
 						#
-						# Shape follows vanilla diseases_lateralview.gui:103, which is the
-						# precedent for a slider max built out of FixedPointToFloat and a float
-						# combinator over view data and Player data.
+						# Kept as a bare getter, exactly the shape of the vanilla line it replaces
+						# ("[SellLocationActionView.GetMaxPrice]"). Two earlier attempts wrapped it
+						# in Min_float/FixedPointToFloat to also keep vanilla's own ceiling, and
+						# both failed to resolve ("FetchData failed" in error.log) - a slider whose
+						# max expression fails falls back to a default of 100, which showed up in
+						# game as every country being capped at 100 gold. Do not reintroduce a
+						# combinator here without checking error.log after opening this window.
+						# Player, not the seller: SellLocationActionView.GetSeller / GetBuyer are
+						# localization-only functions and are not registered with the GUI data
+						# system. Player is whichever side is acting - the seller when selling,
+						# the buyer when buying - so the ceiling is always one of the two parties
+						# to the deal, which is what the requirement asked for.
+						#
+						# Deliberately a bare getter with no Min_float against GetMaxPrice. Two
+						# earlier attempts wrapped it in Min_float/FixedPointToFloat and both
+						# failed to resolve ("FetchData failed" in error.log), and the wrapping
+						# turned out to be pointless anyway: verified in game with a literal max
+						# that the engine applies GetMaxPrice as its own clamp on top of whatever
+						# this slider allows. The effective ceiling is therefore already
+						# min(tax base, engine max) without any combinator here.
+						#
+						# GetMaxPrice appears to be the buyer's treasury - it differs between
+						# selling and buying and tracks no property of the country's size - so
+						# the engine's half of the clamp is an affordability limit and this half
+						# is the economic one.
 						economy_slider = {
 							size = { 350 10 }
 							min = "[SellLocationActionView.GetMinPrice]"
 							step = 1
-							max = "[Min_float(FixedPointToFloat(SellLocationActionView.GetMaxPrice), FixedPointToFloat(Player.GetTotalTaxBase))]"
+							max = "[Player.GetTotalTaxBase]"
 							value = "[SellLocationActionView.GetTotalPrice]"
 							onvaluechanged = "[SellLocationActionView.SetTotalPrice]"
 						}
