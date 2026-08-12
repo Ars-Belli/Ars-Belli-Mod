@@ -40,8 +40,11 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - Requires not being at war. Creates a truce on use.
 
 ### 2c. Worsen Opinion
-- Country interaction allowing a player to worsen their own opinion of another country (-100 opinion, decays over 10 years).
-- Files: `in_game\common\country_interactions\worsen_opinion.txt`, `in_game\common\biases\ars_belli_opinion.txt`
+- Country interaction allowing a player to worsen their own opinion of another country (-200 opinion, decays over 10 years). -200 is twice vanilla's Improve Relations cap (`opinion_improve_relation` = +100 in vanilla `biases\00_opinion_hardcoded.txt`) and is the floor of the opinion scale (`OPINION_MAX = 200`).
+- Costs one diplomat and has a **1-month per-actor cooldown** (`cooldown = { type = worsen_opinion_cd months = 1 }`). Both exist because the action pushes a notification at the target on every use, and unthrottled spam at another player was reported to be able to crash their client. Per-actor, not per-target: a per-target cooldown still lets a player cycle every country in one sitting.
+- Diplomat cost pattern (vanilla `country_interactions\form_closer_bond_iroquois.txt`): `allow = { scope:actor = { num_of_diplomats >= N } }` + `add_diplomats = -N` in the effect. Diplomats are a pool that regenerates at `monthly_diplomats` up to `max_diplomats` — not a permanent capacity, so spending them is a real but temporary cost.
+- Cooldown loc key convention is `<cooldown_type>_cooldown` (e.g. `worsen_opinion_cd_cooldown`).
+- Files: `in_game\common\country_interactions\worsen_opinion.txt`, `in_game\common\biases\ars_belli_opinion.txt`, loc in `main_menu\localization\english\00_mp_limits_l_english.yml`
 
 ### 3. War & Military Rebalancing
 - **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
@@ -82,6 +85,28 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - `country_tax_base` is the country-scope value for Tax Base and works as `scope:recipient.country_tax_base` inside a value `select_trigger`'s min/max/default (vanilla precedent: `bribe_vote.txt`). Guard it with `exists = scope:recipient` — `ai_override_value` can be evaluated with no recipient in scope. Pass `max` a plain number or a single value reference; vanilla never inlines arithmetic into `max = { ... }`.
 - Costs both sides a Defensive Point (see `mp_limits` weight recompute) and -0.10 monthly diplomats via `giving_`/`receiving_` auto-modifiers in `main_menu\common\static_modifiers\ars_belli_country_changes.txt`. `ai_tick = never` on the interaction.
 
+### 3f2. Tributaries excluded from transfers
+- A tributary can no longer appear on either end of `give_subject_location_to_other_subject` or `transfer_subject`. Checks sit in the `enabled` block of each selection stage (`custom_tooltip` + `NOT = { is_subject_type = tributary }`), so the country greys out with a reason instead of vanishing from the picker.
+- Both are same-name full-file replacements of vanilla country_interactions (in `replaced_files.txt`); shared loc key `ars_belli_not_a_tributary_tt` in `in_game\localization\english\ars_belli_tributaries_l_english.yml`.
+
+### 3g. Union war participation (call to arms)
+- IO war-joining is controlled by six fields on the international_organization, documented in vanilla `international_organizations\readme.txt` lines 94-99. For each of defensive/offensive: `join_*_wars_always` (silently auto-join, no prompt), `join_*_wars_auto_call` (**call to arms is issued automatically, the callee still accepts/declines**), `join_*_wars_can_call` (a call may be made manually). Scopes: root = the IO, `scope:actor` = caller, `scope:recipient` = callee, `scope:target` (optional) = against who.
+- Vanilla `union.txt` had `join_defensive_wars_always = { always = yes }`, commented as the baseline of a union that "will never change" — union partners were dragged into each other's defensive wars with no popup. Ars Belli sets it to `no` and adds `join_defensive_wars_auto_call = { always = yes }`, which is what produces the accept/decline popup. Vanilla precedents for auto_call: `hre.txt`, `ilkhanate.txt`.
+- **The offensive side is untouched and is not in `union.txt` at all** — it is voted through `laws\40_personal_unions.txt` → `union_mutual_offense_law`: Assured Offense sets `join_offensive_wars_always`, Automatic Offense sets `join_offensive_wars_auto_call`, Possible Offense sets `join_offensive_wars_can_call`. There is no defensive equivalent law, so the hardcoded baseline in `union.txt` is the only defensive lever.
+- `union.txt` is a same-name full-file replacement (in `replaced_files.txt`).
+
+### 3h. Sell / Buy Location — engine-locked, GUI is the only lever
+- The sell/buy location action is **entirely engine-implemented**, like vanilla Economic Support was (see 3f). Confirmed absent: no `country_interactions` file, no price id in `prices\00_hardcoded.txt` (checked against the full several-hundred-entry list), no `diplomatic_costs` entry, and no on_action of its own. Only `ai_diplochance\00_ai_diplochance.txt` (`sell_location` / `buy_location` AI weights) and the GUI are moddable.
+- **`on_location_changed_owner` is the only ownership hook** (root = location, `scope:loser` = previous owner, `scope:winner` = new owner) and it **cannot tell a sale from a conquest, a peace-treaty transfer, a gift to a subject, or any of the ~155 scripted `change_location_owner` calls in vanilla**. Do not use it to hang costs on "selling" — it will silently tax event-driven transfers. This is why the requested -10 prestige on sale/purchase was **not implemented**: there is no data-side hook for it. The only engine cost that exists is `SELL_CORE_STABILITY_COST` (-20 stability, seller only, core locations only).
+- Gold cap therefore lives in the GUI: `in_game\gui\sell_location_action_view.gui`, the `economy_slider` `max`, changed from `[SellLocationActionView.GetMaxPrice]` (the buyer's whole treasury) to a `Min_float` against the **seller's** tax base, matching how Economic Support caps on the recipient's tax base. `SellLocationActionView` exposes `GetSeller` / `GetBuyer` (both used in vanilla loc), and `Country.GetTotalTaxBase` is a valid GUI accessor. Same-name full-file replacement, in `replaced_files.txt`.
+- **Gift scale for reference** (`prices\00_hardcoded.txt` → `send_gift`): `scaled_recipient_gold = 2`, `scaled_gold = 1`, `min_scale = 25` — i.e. 2 months of recipient income + 1 of sender. Not reachable from GUI script, which is why the tax base was used instead.
+
+### 3i. Mercenary listing removed
+- `make_unit_available_for_hire` (generic_action, "Make Available For Hire") is disabled via `REPLACE:` with `potential = { always = no }` in `in_game\common\generic_actions\ars_belli_no_mercenary_listing.txt`. Renting out own regiments put the mercenary modifiers on the hirer while the owner kept the full hire price — a gold transfer that paid a profit.
+- Gate in `potential`, not `allow`, so the action leaves the list instead of sitting greyed out; that covers player, delegation automation and AI, which share the gate.
+- **`ai_tick = never` means "already handled in code"** per `country_interactions\readme.txt` — so if AI countries list mercenaries at all, it is engine code and no data change reaches it. Keep this reading of `ai_tick = never` in mind generally: it does not simply mean "AI never does this".
+- `delist_unit` is a separate key in the same vanilla file and is deliberately left vanilla, so already-listed units can be pulled back. This is why `REPLACE:` was used rather than a same-name file copy.
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
@@ -119,7 +144,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-08-13 (economic support cap on recipient tax base).
+Last updated: 2026-08-13 (economic support cap; union call to arms; tributary transfer bans; sell/buy location engine lock; mercenary listing removed).
 
 ## Important Files
 - `README.md`: Basic mod title.
