@@ -74,6 +74,14 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **Global cooldown:** Both Crusade and Jihad limited to once per 100 years globally per religion. Enforced via global vars `crusade_recently_called_global` / `jihad_recently_called_global` (set in effect with `years = 100`), checked through scripted triggers `crusade_global_cooldown` / `jihad_global_cooldown` (same overrides file). Per-actor `cooldown` block also bumped to 100 for UI consistency.
 - **Files:** `in_game\common\resolutions\ars_belli_crusade.txt` (REPLACE:call_crusade), `in_game\common\generic_actions\ars_belli_jihad.txt` (REPLACE:call_jihad). Cooldown loc strings in `in_game\localization\english\ars_belli_crusade_l_english.yml`.
 
+### 3f. Economic Support (scripted replacement)
+- Vanilla "Send Economic Support" is **engine-only** — not a relation_type, no scripted_relation / country_interaction / on_action / ai_diplochance entry, and its action list comes from `Country.GetQuickDiplomaticActions`. It cannot be removed or hooked, so it is relabelled "AGAINST THE RULES" in loc (`ECONOMIC_SUPPORT*` keys) and a replacement was built alongside it.
+- **Split across two files on purpose:** the relation `ars_belli_economic_support` (`in_game\common\scripted_relations\`) is the ongoing half; the amount slider + accept/decline popup live in the country_interaction `ars_belli_send_economic_support` (`in_game\common\country_interactions\`). A relation's own `select_trigger` is the only selection stage in its flow, so a value-type one leaves the picker with no attribute columns and the game asserts on `(AttributeColumns.GetSize() > 0)` and crashes. The interaction's country stage supplies columns first. Hence `offer_visible/request_visible = { always = no }` on the relation.
+- **Amount storage:** the agreed figure is a variable `ab_ecosupport_amount` on the RECIPIENT (unambiguous because the interaction allows only one patron at a time). Set to 0 then `change_variable add = scope:target_value` — assigning the selection scope directly can store the object instead of the number. `gold_to_second = ars_belli_economic_support_amount` reads it back. Cleared by cancel/break/expire (each uses a different scope — actor / actor / `scope:second`).
+- **Cap on the amount** (`in_game\common\script_values\ars_belli_economic_support_values.txt`, `# --- tune here ---` block at the top): the slider max is the lower of a share of the RECIPIENT's `country_tax_base` (currently 1.0) and a share of the SENDER's `monthly_income_total` (currently 10.0, a backstop), floored at 1 gold, opening at half the cap. Scaling both shares together moves the ceiling; their ratio decides how small a recipient must be before its own economy is the limit. **The shares are spelled out in words in the loc file** (`ars_belli_economic_support_relation_desc`, `ars_belli_send_economic_support_desc`) — retune those texts alongside.
+- `country_tax_base` is the country-scope value for Tax Base and works as `scope:recipient.country_tax_base` inside a value `select_trigger`'s min/max/default (vanilla precedent: `bribe_vote.txt`). Guard it with `exists = scope:recipient` — `ai_override_value` can be evaluated with no recipient in scope. Pass `max` a plain number or a single value reference; vanilla never inlines arithmetic into `max = { ... }`.
+- Costs both sides a Defensive Point (see `mp_limits` weight recompute) and -0.10 monthly diplomats via `giving_`/`receiving_` auto-modifiers in `main_menu\common\static_modifiers\ars_belli_country_changes.txt`. `ai_tick = never` on the interaction.
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
@@ -111,7 +119,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-05-11 (crusade/jihad rebalance + force-break-union).
+Last updated: 2026-08-13 (economic support cap on recipient tax base).
 
 ## Important Files
 - `README.md`: Basic mod title.
