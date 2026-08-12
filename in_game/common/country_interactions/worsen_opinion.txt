@@ -1,9 +1,25 @@
 ﻿# Worsen OUR opinion of THEM
+#
+# The action used to be free and unthrottled. Because it targets another country it pushes a
+# notification at them on every use, so a player could fire it at the same victim over and
+# over - enough of them in a row was reported to be able to take a client down. It now costs
+# a diplomat and can only be used once a month, which is the same shape of cost that Improve
+# Relations carries, and which caps the spam at one message per month per country.
 worsen_opinion = {
 	type = diplomacy
 	category = CATEGORY_HOSTILE_ACTIONS
 
 	allow = {
+		scope:actor = {
+			num_of_diplomats >= 1
+		}
+	}
+
+	# One use a month for the actor, whoever the target is - a per-target cooldown would still
+	# leave a player free to cycle through every country in the game in a single sitting.
+	cooldown = {
+		type = worsen_opinion_cd
+		months = 1
 	}
 
 	select_trigger = {
@@ -27,6 +43,8 @@ worsen_opinion = {
 				exists = scope:recipient
 			}
 			scope:actor = {
+				# Charged inside the guard so a cancelled selection is not billed.
+				add_diplomats = -1
 				add_opinion = {
 					target = scope:recipient
 					modifier = opinion_worsen_opinion
