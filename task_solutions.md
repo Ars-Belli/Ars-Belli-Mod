@@ -16,7 +16,7 @@ Status summary:
 | 8 | Tributaries excluded from location/subject transfers | Done | `cdde1dc` |
 | 10 | Throttle Worsen Opinion, 2x Improve Relations | Done | `8c3057e` |
 | 11 | Base location warscore cost 2 → 2.5 | Done | `7bb2b53` |
-| 16 | Cap gold transferable via sell/buy location | Done, verified in game | `0d73498`, fixed in `d6e524a` and `ebd9ca5` |
+| 16 | Cap gold transferable via sell/buy location | **Not done — engine-locked, reverted** | — |
 | 17 | −10 prestige to both sides of a location sale | **Not done — engine-locked** | — |
 
 ---
@@ -175,72 +175,78 @@ contributes little, while the reduced scale keeps late-game tax base from inflat
 
 ## MED Nr.16 — cap the gold transferable through sell/buy location
 
+**Status: not implemented. Reverted. No hook exists, including the GUI.**
+
 **Request.** Limit it to the same amount as Gifts, or to the receiver's or sender's tax base if
 that is not possible.
 
-**What the engine allowed.** Nothing script-side. The action is entirely engine-implemented:
+**Why it is blocked.** The action is entirely engine-implemented:
 
 - no `country_interactions` file
 - no price id in `prices/00_hardcoded.txt` (checked against the full several-hundred-entry list)
 - no `diplomatic_costs` entry
 - no on_action of its own
 
-Only `ai_diplochance/00_ai_diplochance.txt` and the GUI are moddable. The gift scale itself
-(`send_gift`: `scaled_recipient_gold = 2`, `scaled_gold = 1`, `min_scale = 25` — two months of
-recipient income plus one of sender) is not reachable from GUI script, so the stated tax base
-fallback was used.
+Only `ai_diplochance/00_ai_diplochance.txt` and the GUI are moddable, and the GUI turned out not
+to be a lever either. The gift scale itself (`send_gift`: `scaled_recipient_gold = 2`,
+`scaled_gold = 1`, `min_scale = 25` — two months of recipient income plus one of sender) is not
+reachable from GUI script in any case.
 
-**Solution.** `in_game/gui/sell_location_action_view.gui` (same-name full-file replacement), the
-price `economy_slider`:
+**What was tried, and the experiment that settled it.** Four attempts were made at capping the
+price `economy_slider`'s `max` in `sell_location_action_view.gui`. All failed, in two different
+and easily-confused ways:
 
-```
-max = "[Player.GetTotalTaxBase]"
-```
+| Attempt | Result |
+|---|---|
+| `Min_float(FixedPointToFloat(GetMaxPrice), FixedPointToFloat(GetSeller.GetTotalTaxBase))` | logged `FetchData failed` |
+| `Min_float(FixedPointToFloat(GetMaxPrice), FixedPointToFloat(Player.GetTotalTaxBase))` | logged `FetchData failed` |
+| `Player.GetTotalTaxBase` (bare) | **silent** — slider stuck at 100 |
+| `FixedPointToFloat(Player.GetTotalTaxBase)` | **silent** — slider stuck at 100 |
 
-replacing vanilla's `max = "[SellLocationActionView.GetMaxPrice]"`.
+The question was finally settled by rendering four otherwise-identical sliders side by side,
+differing only in `max`:
 
-**How it got there — three attempts, two of them wrong.** Worth recording, because the failures
-were more informative than the fix.
+| | `max` expression | Result |
+|---|---|---|
+| C | `Multiply_float(SellLocationActionView.GetMaxPrice, 0.5)` | stuck at 100 |
+| D | `FixedPointToFloat(Player.GetTotalTaxBase)` | stuck at 100 |
+| E | `FixedPointToFloat(GetPlayer.GetTotalTaxBase)` | stuck at 100 |
+| F | literal `9999` | works |
 
-1. `Min_float(FixedPointToFloat(...GetMaxPrice), FixedPointToFloat(...GetSeller.GetTotalTaxBase))`
-   — failed. `GetSeller`/`GetBuyer` appear in `diplomacy_l_english.yml` but in **no vanilla `.gui`
-   file**: they are localization-only, and localization and the GUI use separate data registries.
-2. Same expression with `Player.GetTotalTaxBase` — also failed. `Player` was fine; the
-   `FixedPointToFloat` wrapping was rejecting one of its arguments. Vanilla only ever passes
-   `GetMaxPrice` to a slider raw, never through a conversion.
-3. Bare `[Player.GetTotalTaxBase]` — resolves, no errors in `error.log`.
+**C is the decisive one.** It held the source constant — vanilla's own `GetMaxPrice`, known to
+work — and varied only one thing, wrapping it in arithmetic. It still failed. So the `max`
+property accepts **only a literal or a bare getter on the view's own datacontext**, and no
+computed expression at all. `SellLocationActionView` exposes no tax-base getter (`CanSend`,
+`GetAcceptance*`, `GetConfirmMessage`, `GetLocationsSortSearch`, `GetMax/MinPrice`,
+`GetPossibleLocations`, `GetTotalPrice`, `IsBuying`, `IsSelected`, `OnSend`, `SetTotalPrice`,
+`ToggleLocation`), and nothing can transform a value into one. Therefore no tax-base ceiling can
+be expressed here.
 
-Both failures logged `FetchData failed for '<expression>' - gui/sell_location_action_view.gui:<line>`,
-which is the signal to look for when a GUI expression is suspect. Note that GUI property
-expressions are only evaluated when their widget is built, so these surfaced on opening the
-window, not at load.
+Clamping the committed value instead of the range is not available either: the commit path is
+`onvaluechanged = "[SellLocationActionView.SetTotalPrice]"`, with no scripted intermediary to
+wrap.
 
-**The clamp is already a min, so no combinator is needed.** Confirmed in game with a literal
-`max = 12345` plus a temporary readout of the candidate values: the slider honours its own max,
-but the engine applies `GetMaxPrice` as a further clamp on top. The effective ceiling is therefore
-`min(tax base, engine max)` without any combinator in the GUI at all — which is what the
-`Min_float` attempts were trying and failing to build by hand.
+**Two silent-failure traps worth carrying forward.**
 
-`GetMaxPrice` appears to be **the buyer's treasury**: it differs between selling and buying and
-tracks no property of the country's size. So the engine's half of the clamp is an affordability
-limit, and the mod's half is the economic one.
+1. A `ranged_slider` whose `max` assignment is rejected keeps its built-in default of **100** and
+   logs nothing. A clean `error.log` does *not* mean a GUI property took effect. This is what
+   produced the phantom "capped at 100 for any country", and it survived three wrong diagnoses
+   (including one where the reported 100 was wrongly explained as the player's own tax base —
+   it was 16780).
+2. `FixedPointToFloat` applied to something already a float — `GetMaxPrice` — *does* log
+   `FetchData failed`, and kills the entire enclosing expression, not just that term.
 
-**A false trail worth remembering.** The reported symptom was "capped at 100 for any country", and
-it was assumed that a failed expression made the slider fall back to a default of 100. That was
-never verified and is probably wrong — 100 is a perfectly ordinary total tax base (vanilla uses
-100 as its tax base reference in several defines), and because the ceiling is the *acting player's*
-tax base it does not change with the counterparty, so a working cap looks identical to a stuck one.
-Diagnose this class of bug with a literal value, not by reasoning about defaults.
+The method that worked, and should be reached for first next time: bisect with parallel widgets
+and a literal control, rather than reasoning about which sub-term is wrong.
 
-**Semantic consequence.** The ceiling is the *acting player's* tax base — the seller's when
-selling, the buyer's when buying. The other country is not reachable from GUI script. This stays
-within the requirement, which allowed either party's tax base.
+**Also disproved along the way:** `GetSeller` / `GetBuyer` appear in `diplomacy_l_english.yml` but
+in no vanilla `.gui` file — localization and the GUI use separate data registries, so loc-only
+functions cannot be called from GUI expressions.
 
-**Nature of the enforcement.** This is a client-side UI ceiling, not an engine rule — the same
-class of enforcement as relabelling the vanilla Economic Support button as against the rules.
-Appropriate for a house-rules MP mod; it is not tamper-proof.
-
----
+**Reverted.** `in_game/gui/sell_location_action_view.gui` and
+`ars_belli_sell_location_l_english.yml` are deleted, the entry is out of `replaced_files.txt`,
+and the `changes.txt` line is removed. Shipping a same-name GUI replacement that silently does
+nothing would cost a maintenance burden on every vanilla update for no gameplay effect.
 
 ## MED Nr.17 — −10 prestige to both selling and buying a location
 
@@ -280,9 +286,9 @@ parse or script errors** from any changed file — `union.txt`, `transfer_subjec
 key would have thrown there.
 
 GUI property expressions are only evaluated when their widget is built, which is why the Nr.16
-failure surfaced only on opening the sell/buy window and not at load. Nr.16 was then verified
-in game directly: the slider honours its max, `Player.GetTotalTaxBase` resolves to the correct
-value, and `error.log` reports no `FetchData` failures for the final expression.
+failures surfaced only on opening the sell/buy window and not at load — and, worse, why some of
+them never appeared in the log at all. See Nr.16 for the two silent-failure modes and the
+parallel-widget bisect that finally settled it.
 
 ### Known gaps found while reading the logs (pre-existing, not from this batch)
 
