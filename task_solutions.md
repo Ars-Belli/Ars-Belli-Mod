@@ -16,7 +16,7 @@ Status summary:
 | 8 | Tributaries excluded from location/subject transfers | Done | `cdde1dc` |
 | 10 | Throttle Worsen Opinion, 2x Improve Relations | Done | `8c3057e` |
 | 11 | Base location warscore cost 2 → 2.5 | Done | `7bb2b53` |
-| 16 | Cap gold transferable via sell/buy location | Done, verified in game | `0d73498`, fixed in `d6e524a` and `e6ec2c1` |
+| 16 | Cap gold transferable via sell/buy location | Done, verified in game | `0d73498`, fixed in `d6e524a` and `ebd9ca5` |
 | 17 | −10 prestige to both sides of a location sale | **Not done — engine-locked** | — |
 
 ---
