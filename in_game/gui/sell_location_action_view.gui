@@ -217,7 +217,7 @@ lateralview = {
 							text = "left_click_cost" 
 						}
 	
-						# Ars Belli: cap the price at the seller's tax base.
+						# Ars Belli: cap the price at the local player's tax base.
 						#
 						# Vanilla's GetMaxPrice lets the buyer hand over as much gold as it has,
 						# which turned a location sale into an uncapped transfer of money between
@@ -226,13 +226,22 @@ lateralview = {
 						# interaction for this action, so this slider is the only place a ceiling
 						# can be applied at all.
 						#
-						# The seller is the side receiving the gold, so its tax base is the measure
-						# used, matching how Send Economic Support caps on the recipient's tax base.
+						# Player, not the seller: SellLocationActionView.GetSeller / GetBuyer are
+						# localization-only functions and are not registered with the GUI data
+						# system, so asking for them here fails the whole expression ("FetchData
+						# failed") and the slider silently falls back to a default max of 100.
+						# Player is whichever side is acting - the seller when selling, the buyer
+						# when buying - so the ceiling is always one of the two parties to the
+						# deal, which is what the requirement asked for.
+						#
+						# Shape follows vanilla diseases_lateralview.gui:103, which is the
+						# precedent for a slider max built out of FixedPointToFloat and a float
+						# combinator over view data and Player data.
 						economy_slider = {
 							size = { 350 10 }
 							min = "[SellLocationActionView.GetMinPrice]"
 							step = 1
-							max = "[Min_float(FixedPointToFloat(SellLocationActionView.GetMaxPrice), FixedPointToFloat(SellLocationActionView.GetSeller.GetTotalTaxBase))]"
+							max = "[Min_float(FixedPointToFloat(SellLocationActionView.GetMaxPrice), FixedPointToFloat(Player.GetTotalTaxBase))]"
 							value = "[SellLocationActionView.GetTotalPrice]"
 							onvaluechanged = "[SellLocationActionView.SetTotalPrice]"
 						}
