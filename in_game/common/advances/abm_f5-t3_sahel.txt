@@ -3,6 +3,48 @@
 
 # SAHEL
 
+############
+### Mali ###
+############
+
+REPLACE:accounts_of_the_atlantic_voyage = {
+	content_priority = 100
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = MAL
+	}
+	recruit_explorer_cost_modifier = -0.33
+	exploration_mission_speed_modifier = 0.1 #new
+	requires = explorer_commisions_advance
+}
+
+REPLACE:markets_for_salt = {
+	age = age_4_reformation
+	potential = {
+		has_or_had_tag = MAL
+	}
+	global_merchant_power = 0.05
+	global_salt_output_modifier = 0.2 #was 0.1
+}
+
+###############
+### Songhai ###
+###############
+
+REPLACE:gold_to_salt_trade = {
+	age = age_2_renaissance
+	icon = markets_for_salt
+	potential = {
+		has_or_had_tag = SON
+	}
+	global_merchant_power = 0.1
+	trade_range = 200 #new
+}
+
+####################################
+### West African - group content ###
+####################################
+
 abm_west_african_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = glorious_arms
@@ -35,7 +77,7 @@ abm_west_african_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.10
+	monthly_diplomats = 0.10 #bonus swapped with ambition	
 }
 
 abm_west_african_ideas_tradition_2 = {
@@ -70,7 +112,8 @@ abm_west_african_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# loot_amount = 0.20
-	amount_looted_modifier = 0.25
+	amount_looted_modifier = 0.25 
+	slave_raid_efficiency = 0.10 #new
 }
 
 abm_west_african_idea_1 = {
@@ -105,7 +148,7 @@ abm_west_african_idea_1 = {
 	requires = renaissance_thought
 
 	# advisor_pool = 1
-	hire_advisor_cost_modifier = -0.10
+	hire_advisor_cost_modifier = -0.20 #was -0.10
 }
 
 abm_west_african_idea_2 = {
@@ -210,7 +253,7 @@ abm_west_african_idea_4 = {
 	requires = paved_road_advance
 
 	# religious_unity = 0.20
-	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
+	tolerance_heathen = 2 #was clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
 }
 
 abm_west_african_idea_5 = {
@@ -245,6 +288,7 @@ abm_west_african_idea_5 = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# cavalry_cost = -0.1
+	global_horses_output_modifier = 0.1 #new
 	army_light_cavalry_build_cost_modifier = -0.10
 	army_heavy_cavalry_build_cost_modifier = -0.10
 }
@@ -282,8 +326,8 @@ abm_west_african_idea_6 = {
 
 	# trade_efficiency = 0.05
 	# envoy_travel_time = -0.25
-	trade_income = 0.10
-	diplomatic_range_modifier = 0.10
+	trade_income = 0.025 #was 0.10
+	trade_range_modifier = 0.2 #was diplomatic_range_modifier = 0.10
 }
 
 abm_west_african_idea_7 = {
@@ -318,7 +362,7 @@ abm_west_african_idea_7 = {
 	requires = absolutist_court
 
 	# num_accepted_cultures = 1
-	cultures_capacity = 1
+	cultures_capacity = 1.5 #was 1
 }
 
 abm_west_african_ideas_ambition = {
@@ -353,8 +397,12 @@ abm_west_african_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# diplomats = 1
-	monthly_diplomats = 0.10
+	global_manpower_modifier = 0.15 #bonus swapped with tradition_1 and rebuffed to 0.15
 }
+
+###########
+### Air ###
+###########
 
 abm_air_ideas_tradition_1 = {
 	age = age_1_traditions
@@ -370,7 +418,7 @@ abm_air_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# movement_speed = 0.15
-	army_movement_speed = 0.10
+	army_movement_speed = 0.15 #rebuffed to 15%
 }
 
 abm_air_ideas_tradition_2 = {
@@ -404,7 +452,7 @@ abm_taghlamt = {
 	requires = renaissance_thought
 
 	# trade_efficiency = 0.10
-	trade_income = 0.10
+	global_merchant_capacity_modifier = 0.15 #was trade_income = 0.10
 }
 
 abm_cross_of_agades = {
@@ -421,6 +469,7 @@ abm_cross_of_agades = {
 	requires = legalism_advance
 
 	# land_morale = 0.15
+	land_morale_recovery = 0.01 #new
 	land_morale_modifier = 0.10
 }
 
@@ -480,7 +529,7 @@ abm_inadan_castes = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# production_efficiency = 0.1
-	global_production_efficiency = 0.10
+	global_production_efficiency = 0.05 #was 0.1
 }
 
 abm_nomadic_traditions = {
@@ -497,7 +546,7 @@ abm_nomadic_traditions = {
 	requires = global_trade_advance
 
 	# leader_land_manuever = 1
-	army_movement_speed = 0.10
+	land_morale_movement_cost = -0.0002 #was army_movement_speed = 0.10
 }
 
 abm_ineslemen_teachings = {
@@ -531,8 +580,12 @@ abm_air_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# leader_land_shock = 1
-	army_initiative = 0.10
+	army_initiative = 0.20 #was 0.1
 }
+
+#############
+### Mossi ###
+#############
 
 abm_mossi_ideas_tradition_1 = {
 	age = age_1_traditions
@@ -545,13 +598,14 @@ abm_mossi_ideas_tradition_1 = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
 	requires = feudalism_advance
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	global_estate_target_satisfaction = tiny_permanent_target_satisfaction #was pop_join_rebel_threshold = -0.05
 }
 
 abm_mossi_ideas_tradition_2 = {
@@ -565,6 +619,7 @@ abm_mossi_ideas_tradition_2 = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
@@ -572,6 +627,7 @@ abm_mossi_ideas_tradition_2 = {
 
 	# cavalry_power = 0.1
 	army_heavy_cavalry_power = 0.10
+	army_light_cavalry_power = 0.10 #moved from abm_mossi_cavalry_raids
 }
 
 abm_riale_and_yennenga = {
@@ -585,6 +641,7 @@ abm_riale_and_yennenga = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
@@ -613,13 +670,14 @@ abm_mossi_cavalry_raids = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
 	requires = legalism_advance
 
 	# cavalry_flanking = 0.5
-	army_light_cavalry_power = 0.10
+	combat_speed_modifier = 0.15 #was army_light_cavalry_power = 0.10
 }
 
 abm_nyonnyonse_vassals = {
@@ -633,6 +691,7 @@ abm_nyonnyonse_vassals = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
@@ -653,13 +712,15 @@ abm_nakomse = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
 	requires = paved_road_advance
 
 	# global_autonomy = -0.05
-	global_monthly_control = 0.001
+	global_crown_estate_power = 0.1 #new
+	global_monthly_control = 0.002 #was 0.001
 }
 
 abm_land_of_the_ancestors = {
@@ -673,6 +734,7 @@ abm_land_of_the_ancestors = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
@@ -680,6 +742,7 @@ abm_land_of_the_ancestors = {
 
 	# defensiveness = 0.15
 	global_defensive = 0.15
+	global_hostile_attrition = 0.5 #new
 }
 
 abm_honoring_the_masks = {
@@ -693,6 +756,7 @@ abm_honoring_the_masks = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
@@ -713,13 +777,14 @@ abm_friday_court = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
 	requires = absolutist_court
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	stability_cost_efficiency = 0.25 #was 0.1
 }
 
 abm_mossi_ideas_ambition = {
@@ -733,14 +798,19 @@ abm_mossi_ideas_ambition = {
 			has_or_had_tag = BSM
 			has_or_had_tag = LIP
 			has_or_had_tag = TEN
+			has_or_had_tag = MSI #Mossi formable
 		}
 	}
 
 	requires = imperial_ambitions
 
 	# diplomatic_upkeep = 1
-	diplomatic_upkeep_efficiency = 0.10
+	diplomatic_spending_cost = -0.025 #was diplomatic_upkeep_efficiency = 0.10
 }
+
+#############
+### Kanem ###
+#############
 
 abm_kbo_ideas_tradition_1 = {
 	age = age_1_traditions
@@ -752,7 +822,7 @@ abm_kbo_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# vassal_income = 0.25
-	subject_tax_efficiency = 0.10
+	subject_income_modifier = 0.1 #was subject_tax_efficiency = 0.10
 }
 
 abm_kbo_ideas_tradition_2 = {
@@ -765,7 +835,7 @@ abm_kbo_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# ae_impact = -0.1
-	antagonism_received_modifier = -0.10
+	antagonism_received_modifier = -0.20 #was -0.1
 }
 
 abm_land_of_ngazargamu = {
@@ -778,7 +848,8 @@ abm_land_of_ngazargamu = {
 	requires = renaissance_thought
 
 	# production_efficiency = 0.1
-	global_production_efficiency = 0.10
+	global_production_efficiency = 0.025 #was 0.1
+	global_urban_build_buildings_efficiency = 0.1 #new
 }
 
 abm_sayfawad_dynasty = {
@@ -792,6 +863,7 @@ abm_sayfawad_dynasty = {
 
 	# global_unrest = -1
 	pop_join_rebel_threshold = -0.05
+	stability_investment = tiny_stability_investment #new
 }
 
 abm_alumas_reforms = {
@@ -818,34 +890,49 @@ abm_house_of_kanem = {
 
 	# global_missionary_strength = 0.02
 	# tolerance_own = 1
-	global_pop_conversion_speed_modifier = 0.20
+	global_pop_conversion_speed_modifier = 0.10 #was 0.2
 	tolerance_own = 1
 }
 
-abm_fixed_military_camps = {
+#DUPLICATE ADVANCE
+#abm_fixed_military_camps = {
+#	age = age_4_reformation
+#	icon = glorious_arms
+#	potential = {
+#		has_or_had_tag = KBO
+#	}
+#
+#	requires = supply_depot_advance_age_4_reformation
+#
+#	# shock_damage_received = -0.1
+#	army_shock_damage_taken = -0.10
+#}
+
+#Exists already as a (kinda meh) government reform
+#abm_clan_head_council = {
+#	age = age_4_reformation
+#	icon = smooth_administration
+#	potential = {
+#		has_or_had_tag = KBO
+#	}
+#
+#	requires = global_trade_advance
+#
+#	# stability_cost_modifier = -0.1
+#	stability_cost_efficiency = 0.10
+#}
+
+REPLACE:kbo_permanent_sieges = {
 	age = age_4_reformation
-	icon = glorious_arms
+	icon = mandinka_warrior_spirit
 	potential = {
 		has_or_had_tag = KBO
 	}
-
-	requires = supply_depot_advance_age_4_reformation
-
-	# shock_damage_received = -0.1
-	army_shock_damage_taken = -0.10
-}
-
-abm_clan_head_council = {
-	age = age_4_reformation
-	icon = smooth_administration
-	potential = {
-		has_or_had_tag = KBO
-	}
-
-	requires = global_trade_advance
-
-	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	
+	requires = artillery_institution_advance
+	
+	siege_ability = 0.1
+	movement_speed_if_no_road = 0.20 #was 0.05
 }
 
 abm_duties_on_sahara_trade = {
@@ -859,6 +946,7 @@ abm_duties_on_sahara_trade = {
 
 	# global_prov_trade_power_modifier = 0.15
 	global_merchant_power = 0.10
+	export_efficiency = medium_trade_efficiency_bonus #new - 5%
 }
 
 abm_kbo_ideas_ambition = {
@@ -875,12 +963,17 @@ abm_kbo_ideas_ambition = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
+	court_spending_efficiency = 0.1 #new
 	monthly_legitimacy = 0.10
 	monthly_devotion = 0.10
 	monthly_republican_tradition = 0.10
 	monthly_tribal_cohesion = 0.10
 	monthly_horde_unity = 0.10
 }
+
+##############################
+#### Hausa - group content ###
+##############################
 
 abm_hausa_ideas_tradition_1 = {
 	age = age_1_traditions
@@ -902,6 +995,7 @@ abm_hausa_ideas_tradition_1 = {
 
 	# diplomats = 1
 	monthly_diplomats = 0.10
+	max_diplomats = 1 #new
 }
 
 abm_hausa_ideas_tradition_2 = {
@@ -945,7 +1039,8 @@ abm_heirs_of_bayajida = {
 	requires = renaissance_thought
 
 	# diplomatic_upkeep = 1
-	diplomatic_upkeep_efficiency = 0.10
+	diplomatic_capacity = 1 #was diplomatic_upkeep_efficiency = 0.10
+	subject_opinions = 25 #new
 }
 
 abm_regnal_chronicles = {
@@ -989,7 +1084,8 @@ abm_sarakunan_babba = {
 	requires = military_traditions
 
 	# production_efficiency = 0.1
-	global_production_efficiency = 0.10
+	global_dyes_output_modifier = 0.25 #was global_production_efficiency = 0.10
+	global_fine_cloth_output_modifier = 0.1
 }
 
 abm_sarakunan_kasuwa = {
@@ -1033,7 +1129,8 @@ abm_sarkin_yaki = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# shock_damage_received = -0.1
-	army_shock_damage_taken = -0.10
+	military_tactics = 0.10 #was army_shock_damage_taken = -0.10 which is not functional
+	global_garrison_size_modifier = 0.2 #new
 }
 
 abm_sarkin_bayi = {
@@ -1056,6 +1153,7 @@ abm_sarkin_bayi = {
 
 	# build_cost = -0.1
 	global_build_buildings_efficiency = 0.10
+	global_slaves_goods_output_modifier = 0.2 #new
 }
 
 abm_borno_refugees = {
@@ -1077,7 +1175,7 @@ abm_borno_refugees = {
 	requires = absolutist_court
 
 	# global_institution_spread = 0.1
-	global_institution_growth_modifier = 0.10
+	global_institution_growth_modifier = 0.33 #was 0.1
 }
 
 abm_hausa_ideas_ambition = {
@@ -1100,4 +1198,5 @@ abm_hausa_ideas_ambition = {
 
 	# development_cost = -0.1
 	global_monthly_prosperity = 0.001
+	global_non_rural_monthly_prosperity = 0.001 #new
 }

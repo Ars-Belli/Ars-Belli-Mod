@@ -20,7 +20,7 @@ abm_malagasy_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	global_pop_food_consumption = -0.05 #was stability_cost_efficiency = 0.10
 }
 
 abm_malagasy_ideas_tradition_2 = {
@@ -36,7 +36,7 @@ abm_malagasy_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# light_ship_cost = -0.2
-	navy_maintenance_efficiency = 0.10
+	navy_light_ship_build_cost_modifier = -0.3 #was navy_maintenance_efficiency = 0.10
 }
 
 abm_malagasy_fortify_coastline = {
@@ -52,7 +52,8 @@ abm_malagasy_fortify_coastline = {
 	requires = renaissance_thought
 
 	# defensiveness = 0.15
-	global_defensive = 0.15
+	global_defensive = 0.10 #was 0.15
+	global_fort_build_buildings_efficiency = 0.2 #new 
 }
 
 abm_malagasy_zafivolemena = {
@@ -93,8 +94,8 @@ abm_malagasy_pirate_ports = {
 
 	# embargo_efficiency = 0.1
 	# privateer_efficiency = 0.15
-	embargo_efficiency = 0.10
-	privateer_durability = 0.10
+	blockade_efficiency = 0.25 #was embargo_efficiency = 0.1
+	privateer_durability = 0.01 #was 0.10 which is a LOT
 }
 
 abm_malagasy_raid_warfare = {
@@ -126,7 +127,7 @@ abm_malagasy_sacred_law = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	tolerance_own = 1 #was pop_join_rebel_threshold = -0.05
 }
 
 abm_malagasy_foreign_traders = {
@@ -142,7 +143,9 @@ abm_malagasy_foreign_traders = {
 	requires = global_trade_advance
 
 	# trade_efficiency = 0.1
-	trade_income = 0.10
+	global_merchant_power = 0.05
+	global_pop_assimilation_speed_modifier = 0.1
+	global_trade_protection_factor = 0.2 #was trade_income = 0.10
 }
 
 abm_malagasy_permanent_taxation_system = {
@@ -158,7 +161,7 @@ abm_malagasy_permanent_taxation_system = {
 	requires = absolutist_court
 
 	# global_tax_modifier = 0.1
-	tax_income_efficiency = 0.10
+	estate_enrichment = -0.05 #was tax_income_efficiency = 0.10
 }
 
 abm_malagasy_ideas_ambition = {
@@ -174,8 +177,12 @@ abm_malagasy_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# naval_forcelimit_modifier = 0.25
-	expected_navy_size_modifier = 0.25
+	navy_maintenance_efficiency = 0.2 #was expected_navy_size_modifier = 0.25
 }
+
+########################
+### Antemoro - South ###
+########################
 
 abm_ant_ideas_tradition_1 = {
 	age = age_1_traditions
@@ -191,7 +198,7 @@ abm_ant_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# diplomatic_upkeep = 1
-	diplomatic_upkeep_efficiency = 0.10
+	diplomatic_spending_cost = -0.025 #was diplomatic_upkeep_efficiency = 0.10
 }
 
 abm_ant_ideas_tradition_2 = {
@@ -208,7 +215,7 @@ abm_ant_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# improve_relation_modifier = 0.3
-	improve_relation_impact = 0.20
+	improve_relation_impact = 0.3 #was 0.2
 }
 
 abm_ant_tampon_tany = {
@@ -225,7 +232,7 @@ abm_ant_tampon_tany = {
 	requires = renaissance_thought
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	tolerance_heathen = 2 #was pop_join_rebel_threshold = -0.05
 }
 
 abm_ant_sorabe = {
@@ -277,6 +284,7 @@ abm_ant_ombiasa = {
 
 	# diplomatic_reputation = 1
 	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	max_diplomats = 2 #new
 }
 
 abm_ant_religious_control = {
@@ -311,6 +319,7 @@ abm_ant_slave_trade = {
 
 	# global_trade_power = 0.1
 	global_merchant_power = 0.10
+	slave_raid_efficiency = 0.25
 }
 
 abm_ant_unify_political_and_religious_power = {
@@ -327,7 +336,8 @@ abm_ant_unify_political_and_religious_power = {
 	requires = absolutist_court
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	global_crown_estate_power = 0.25 #was stability_cost_efficiency = 0.10
+	global_clergy_estate_power = -0.25 #new
 }
 
 abm_ant_ideas_ambition = {
@@ -344,7 +354,8 @@ abm_ant_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# diplomats = 1
-	monthly_diplomats = 0.10
+	monthly_diplomats = 0.20 #was 0.1
+	diplomatic_capacity = 1 #new
 }
 
 abm_mir_ideas_tradition_1 = {
@@ -395,7 +406,7 @@ abm_mir_unify_inlands = {
 	requires = renaissance_thought
 
 	# global_autonomy = -0.05
-	global_monthly_control = 0.001
+	global_integration_speed_modifier = 0.2 #was global_monthly_control = 0.001
 }
 
 abm_mir_twelve_sampys = {
@@ -429,7 +440,8 @@ abm_mir_intensive_rice_cultivation = {
 	requires = military_traditions
 
 	# global_trade_goods_size_modifier = 0.1
-	global_max_rgo_size_modifier = 0.10
+	global_rice_output_modifier = 0.10 #was global_max_rgo_size_modifier = 0.10
+	global_max_rgo_size_modifier_in_rural = 0.1 #new
 }
 
 abm_mir_fortify_highlands = {
@@ -463,7 +475,8 @@ abm_mir_reform_the_nobility = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_tax_modifier = 0.1
-	tax_income_efficiency = 0.10
+	nobles_estate_max_tax = 0.05 #was tax_income_efficiency = 0.10
+	global_nobles_estate_power = -0.25
 }
 
 abm_mir_unified_legal_system = {
@@ -480,7 +493,9 @@ abm_mir_unified_legal_system = {
 	requires = global_trade_advance
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	legislative_efficiency = 0.3 #was stability_cost_efficiency = 0.10
+	pop_leave_rebels_threshold = -0.05
+
 }
 
 abm_mir_foloalinday = {
@@ -497,6 +512,8 @@ abm_mir_foloalinday = {
 	requires = absolutist_court
 
 	# infantry_cost = -0.2
+	army_light_infantry_maintenance_cost_modifier = -0.1 #new
+	army_heavy_infantry_maintenance_cost_modifier = -0.1 #new
 	army_light_infantry_build_cost_modifier = -0.10
 	army_heavy_infantry_build_cost_modifier = -0.10
 }
@@ -515,5 +532,6 @@ abm_mir_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# infantry_power = 0.10
-	army_heavy_infantry_power = 0.10
+	possible_frontage_modifier = 0.1 #was army_heavy_infantry_power = 0.10
+	correct_box_chance = 0.1
 }

@@ -72,7 +72,7 @@ abm_zambezi_maravi_influences = {
 	requires = legalism_advance
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	stability_cost_efficiency = 0.20 #was 0.1
 }
 
 abm_zambezi_control_the_zambezi_trade = {
@@ -90,7 +90,8 @@ abm_zambezi_control_the_zambezi_trade = {
 	requires = military_traditions
 
 	# global_own_trade_power = 0.25
-	global_trade_center_power = 0.10
+	global_trade_center_power = 0.05
+	global_trade_through_owned_territory_efficiency = 0.2
 }
 
 abm_zambezi_strengthen_the_chieftaincies = {
@@ -108,7 +109,8 @@ abm_zambezi_strengthen_the_chieftaincies = {
 	requires = paved_road_advance
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	peasants_estate_target_satisfaction = 0.05 #was pop_join_rebel_threshold = -0.05
+	tribes_estate_target_satisfaction = 0.05 #new
 }
 
 abm_zambezi_centralizing_the_mbona_cult = {
@@ -130,11 +132,12 @@ abm_zambezi_centralizing_the_mbona_cult = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
-	monthly_legitimacy = 0.10
-	monthly_devotion = 0.10
-	monthly_republican_tradition = 0.10
-	monthly_tribal_cohesion = 0.10
-	monthly_horde_unity = 0.10
+	#monthly_legitimacy = 0.10
+	#monthly_devotion = 0.10
+	#monthly_republican_tradition = 0.10
+	#monthly_tribal_cohesion = 0.10
+	#monthly_horde_unity = 0.10
+	stability_decay = -0.0015 #new
 }
 
 abm_zambezi_wealth_of_the_shire_valley = {
@@ -152,7 +155,10 @@ abm_zambezi_wealth_of_the_shire_valley = {
 	requires = global_trade_advance
 
 	# diplomatic_annexation_cost = -0.15
-	integration_cost_modifier = -0.10
+	diplomatic_annexation_efficiency = 0.1 #was non-functional 'integration_cost_modifier'
+	global_cloth_output_modifier = 0.1
+	global_iron_output_modifier = 0.1
+	global_salt_output_modifier = 0.1
 }
 
 abm_zambezi_loyal_local_representatives = {
@@ -170,7 +176,7 @@ abm_zambezi_loyal_local_representatives = {
 	requires = absolutist_court
 
 	# global_tax_modifier = 0.1
-	tax_income_efficiency = 0.10
+	tax_income_efficiency = 0.05 #was 0.1
 }
 
 abm_zambezi_ideas_ambition = {
@@ -188,5 +194,5 @@ abm_zambezi_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# vassal_income = 0.20
-	subject_tax_efficiency = 0.10
+	num_local_governors = 1 #was subject_tax_efficiency = 0.10
 }

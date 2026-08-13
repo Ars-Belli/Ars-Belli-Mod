@@ -1,6 +1,6 @@
 ABAFG_f = { #Afghanistan
-	level = 4
-	required_locations_fraction = 0.6
+	level = 3
+	required_locations_fraction = 0.65
 	rule = historical
 
 	potential = {
@@ -12,12 +12,8 @@ ABAFG_f = { #Afghanistan
 
 	allow = {
 		is_subject = no
-		
-        OR = {
-			culture = culture:afghan_culture
-			culture = culture:tajik_culture
-            culture = culture:hazara_culture
-		}
+        
+		culture = culture:afghan_culture
 
 		capital = { 
             OR = { 
@@ -38,7 +34,7 @@ ABAFG_f = { #Afghanistan
         adraskan_province
         bost_province
         ghazni_province
-        kabul_province  
+        kabul_province
         herat_province
         badhghis_province
         maymana_province
@@ -48,6 +44,185 @@ ABAFG_f = { #Afghanistan
         badakhshan_province
         wakhan_province
         kafiristan
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABBAL_f = { #Baluchistan
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:iranian_group
+            }
+	}
+
+	allow = {
+		is_subject = no
+        
+		culture = culture:baloch_culture
+
+		capital = { 
+            area = area:baluchistan_area 
+        }
+	}
+
+	tag = ABBAL
+
+    areas = {
+        baluchistan_area
+    }
+
+    provinces = {
+        sibi_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABFRS_f = { #Fars
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:iranian_group
+            }
+	}
+
+	allow = {
+		is_subject = no
+        
+		culture = culture:farsi_culture
+
+		capital = { 
+            OR = {
+            area = area:iraq_ajam_area
+            area = area:fars_area
+            area = area:kerman_area 
+            }
+        }
+	}
+
+	tag = ABFRS
+
+    areas = {
+        iraq_ajam_area
+        fars_area
+        kerman_area
+    }
+
+    provinces = {
+        tabas_al_tamr_province
+        deh_kord_province
+        izeh_province
+        borujerd_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABKHR_f = { #Khorasan
+	level = 3
+	required_locations_fraction = 0.7
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:iranian_group
+            }
+	}
+
+	allow = {
+		is_subject = no
+        
+		culture = culture:khorasani_culture
+
+		capital = { 
+            OR = {
+            area = area:quhestan_area
+            area = area:western_khorasan_area
+            }
+        }
+	}
+
+	tag = ABKHR
+
+    areas = {
+        quhestan_area
+        western_khorasan_area
+    }
+
+    provinces = {
+        gorgan_province
+        herat_province
+        zabol_province
+        farah_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+MZN_f = { #Tabaristan
+	level = 3
+	required_locations_fraction = 0.7
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:iranian_group
+            }
+	}
+
+	allow = {
+		is_subject = no
+        
+        OR = {
+		culture = culture:mazanderani_culture
+        culture = culture:semnani_culture
+        culture = culture:gilak_culture
+        }
+
+		capital = { 
+            OR = {
+            area = area:mazandaran_area
+            }
+        }
+	}
+
+	tag = MZN
+
+    areas = {
+        mazandaran_area
+    }
+
+    provinces = {
+        rey_province
+        qazvin_province
     }
 
 	form_effect = {

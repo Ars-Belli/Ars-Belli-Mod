@@ -3,6 +3,10 @@
 
 # SOMALIA
 
+######################################
+### Horn of Africa - group content ###
+######################################
+
 abm_horn_of_african_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = smooth_administration
@@ -22,7 +26,7 @@ abm_horn_of_african_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# stability_cost_modifier = -0.1
-	stability_cost_efficiency = 0.10
+	court_spending_efficiency = 0.1 #was stability_cost_efficiency = 0.10
 }
 
 abm_horn_of_african_ideas_tradition_2 = {
@@ -44,7 +48,7 @@ abm_horn_of_african_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# global_tax_modifier = 0.1
-	tax_income_efficiency = 0.10
+	raw_material_in_province_impact = 0.05 #was tax_income_efficiency = 0.10
 }
 
 abm_horn_of_african_aksumite_legacy = {
@@ -67,6 +71,7 @@ abm_horn_of_african_aksumite_legacy = {
 
 	# global_unrest = -1
 	pop_join_rebel_threshold = -0.05
+	monthly_rebel_growth = -0.0010 #new
 }
 
 abm_horn_of_african_punt_legend = {
@@ -88,7 +93,7 @@ abm_horn_of_african_punt_legend = {
 	requires = legalism_advance
 
 	# trade_range_modifier = 0.2
-	diplomatic_range_modifier = 0.10
+	trade_range_modifier = 0.2 #was diplomatic_range_modifier = 0.10
 }
 
 abm_horn_of_african_highland_cultivation = {
@@ -132,7 +137,7 @@ abm_horn_of_african_oromon_warriors = {
 	requires = paved_road_advance
 
 	# infantry_power = 0.1
-	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.15 #was army_heavy_infantry_power = 0.10
 }
 
 abm_horn_of_african_religious_melting_pot = {
@@ -199,6 +204,7 @@ abm_horn_of_african_religious_defensive_nature = {
 
 	# defensiveness = 0.2
 	global_defensive = 0.15
+	global_garrison_growth = 0.01 #new
 }
 
 abm_horn_of_african_ideas_ambition = {
@@ -220,8 +226,147 @@ abm_horn_of_african_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# prestige = 1
-	monthly_prestige = 0.10
+	prestige_decay = -0.002 #was monthly_prestige = 0.10
 }
+
+########################
+### Somalia formable ###
+########################
+
+abm_somali_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = feudalism_advance
+
+	# infantry_cost = -0.1
+	army_light_infantry_build_cost_modifier = -0.10
+	army_heavy_infantry_build_cost_modifier = -0.10
+}
+
+abm_somali_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = feudalism_advance
+
+	# trade_steering = 0.15
+	global_trade_center_power = 0.10
+}
+
+abm_somali_maritime_heritage = {
+	age = age_2_renaissance
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = renaissance_thought
+
+	# light_ship_cost = -0.20
+	navy_tradition_decay = -0.001 #was navy_maintenance_efficiency = 0.10
+}
+
+abm_somali_qalqads = {
+	age = age_2_renaissance
+	icon = defensive_mentality
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = legalism_advance
+
+	# fort_maintenance_modifier = -0.2
+	fort_maintenance_efficiency = 0.20 #was 0.1
+}
+
+abm_somali_clans = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = military_traditions
+
+	# global_manpower_modifier = 0.15
+	global_levy_size_modifier = 0.15 #swapped with abm_somali_ideas_ambition and nerfed to 0.15
+}
+
+abm_somali_offensive_warfare = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = paved_road_advance
+
+	# infantry_power = 0.1
+	damage_done_versus_heathens_modifier = 0.05 #was army_heavy_infantry_power = 0.10
+}
+
+abm_somali_indian_ocean_trade = {
+	age = age_4_reformation
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# trade_efficiency = 0.1
+	import_efficiency = medium_trade_efficiency_bonus #was trade_income = 0.10
+}
+
+abm_somali_corsairs_of_the_red_sea = {
+	age = age_4_reformation
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = global_trade_advance
+
+	# light_ship_power = 0.1
+	navy_light_ship_power = 0.2 #was naval_damage = 0.10 - non functional, correct one is naval_damage_done
+}
+
+abm_somali_perso_arab_influx = {
+	age = age_5_absolutism
+	icon = court_accounting
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = absolutist_court
+
+	# advisor_cost = -0.1
+	non_rural_migration_attraction = 0.25 #was hire_advisor_cost_modifier = -0.10
+}
+
+abm_somali_ideas_ambition = {
+	age = age_6_revolutions
+	icon = defensive_mentality
+	potential = {
+		has_or_had_tag = SOI
+	}
+
+	requires = imperial_ambitions
+
+	# land_forcelimit_modifier = 0.2
+	global_manpower_modifier = 0.15 #swapped with abm_somali_clans and rebuffed to 0.15
+}
+
+############
+### Adal ###
+############
 
 abm_ada_ideas_tradition_1 = {
 	age = age_1_traditions
@@ -237,7 +382,7 @@ abm_ada_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# land_maintenance_modifier = -0.1
-	army_maintenance_efficiency = 0.10
+	navy_maintenance_efficiency = 0.1 #was army_maintenance_efficiency = 0.10
 }
 
 abm_ada_ideas_tradition_2 = {
@@ -254,7 +399,8 @@ abm_ada_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# trade_efficiency = 0.1
-	trade_income = 0.10
+	can_hire_privateers = yes #was trade_income = 0.10
+	allow_privateers_slave_raid = yes
 }
 
 abm_ada_our_infinite_struggle = {
@@ -313,7 +459,7 @@ abm_ada_zeila_and_harar = {
 	requires = military_traditions
 
 	# global_trade_power = 0.15
-	global_merchant_power = 0.10
+	global_merchant_power = 0.15 #was 0.1
 }
 
 abm_ada_mujahiduir_cavalry = {
@@ -331,9 +477,8 @@ abm_ada_mujahiduir_cavalry = {
 
 	# cavalry_power = 0.1
 	# cavalry_cost = -0.1
-	army_heavy_cavalry_power = 0.10
-	army_light_cavalry_build_cost_modifier = -0.10
-	army_heavy_cavalry_build_cost_modifier = -0.10
+	army_heavy_cavalry_maintenance_cost_modifier = -0.15
+	army_light_cavalry_maintenance_cost_modifier = -0.15
 }
 
 abm_ada_unite_the_clans = {
@@ -351,6 +496,7 @@ abm_ada_unite_the_clans = {
 
 	# years_of_nationalism = -5
 	pop_join_rebel_threshold = -0.05
+	global_integration_speed_modifier = 0.1
 }
 
 abm_ada_yahu_yahu = {
@@ -385,6 +531,7 @@ abm_ada_embrace_the_cannons = {
 
 	# artillery_power = 0.1
 	army_artillery_power = 0.10
+	army_artillery_maintenance_cost_modifier = -0.1 #new
 }
 
 abm_ada_ideas_ambition = {
@@ -401,8 +548,13 @@ abm_ada_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# discipline = 0.05
-	discipline = 0.05
+	regiment_reinforcement_speed = 0.2 #was discipline = 0.05
+	army_logistics_distance_modifier = 0.1 #new
 }
+
+#################
+### Mogadishu ###
+#################
 
 abm_mdi_ideas_tradition_1 = {
 	age = age_1_traditions
@@ -427,7 +579,8 @@ abm_mdi_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# light_ship_cost = -0.2
-	navy_maintenance_efficiency = 0.10
+	navy_repair_efficiency = 0.2 #was navy_maintenance_efficiency = 0.10
+	navy_light_ship_build_cost_modifier = -0.2
 }
 
 abm_mdi_indian_ocean_trade = {
@@ -441,8 +594,8 @@ abm_mdi_indian_ocean_trade = {
 
 	# merchants = 1
 	# trade_range_modifier = 0.2
-	global_merchant_power = 0.20
-	diplomatic_range_modifier = 0.10
+	merchant_power_from_maritime_modifier = 0.1 #was global_merchant_power = 0.20
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus #was diplomatic_range_modifier = 0.10
 }
 
 abm_somali_sailors = {
@@ -455,7 +608,7 @@ abm_somali_sailors = {
 	requires = legalism_advance
 
 	# leader_naval_manuever = 1
-	navy_movement_speed = 0.10
+	navy_movement_speed = 0.15 #was 0.1
 }
 
 abm_mdi_east_african_gold_trade = {
@@ -481,7 +634,7 @@ abm_city_of_mogadishu = {
 	requires = paved_road_advance
 
 	# development_cost = -0.1
-	global_monthly_prosperity = 0.001
+	global_non_rural_monthly_development = 0.0015 #was global_monthly_prosperity = 0.001
 }
 
 abm_mogadishan_currency = {
@@ -494,7 +647,7 @@ abm_mogadishan_currency = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# trade_efficiency = 0.1
-	trade_income = 0.10
+	selling_efficiency = small_trade_efficiency_bonus #was trade_income = 0.10
 }
 
 abm_horn_of_africa = {
@@ -507,7 +660,7 @@ abm_horn_of_africa = {
 	requires = global_trade_advance
 
 	# naval_forcelimit_modifier = 0.2
-	expected_navy_size_modifier = 0.25
+	navy_maintenance_efficiency = 0.2 #was expected_navy_size_modifier = 0.25
 }
 
 abm_toob_benadir = {
@@ -520,7 +673,7 @@ abm_toob_benadir = {
 	requires = absolutist_court
 
 	# global_trade_goods_size_modifier = 0.1
-	global_max_rgo_size_modifier = 0.10
+	global_cloth_output_modifier = 0.2 #was global_max_rgo_size_modifier = 0.10
 }
 
 abm_mdi_ideas_ambition = {
@@ -533,8 +686,12 @@ abm_mdi_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# naval_morale = 0.15
-	naval_morale_modifier = 0.10
+	naval_morale_modifier = 0.15 #was 0.1
 }
+
+##############
+### Ajuran ###
+##############
 
 abm_aju_ideas_tradition_1 = {
 	age = age_1_traditions
@@ -546,7 +703,7 @@ abm_aju_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# build_cost = -0.1
-	global_build_buildings_efficiency = 0.10
+	global_rural_build_buildings_efficiency = 0.2 #was global_build_buildings_efficiency = 0.10
 }
 
 abm_aju_ideas_tradition_2 = {
@@ -559,7 +716,7 @@ abm_aju_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# global_missionary_strength = 0.01
-	global_pop_conversion_speed_modifier = 0.20
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction #was global_pop_conversion_speed_modifier = 0.20
 }
 
 abm_aju_maritime_enterprise = {
@@ -572,7 +729,8 @@ abm_aju_maritime_enterprise = {
 	requires = renaissance_thought
 
 	# global_ship_cost = -0.1
-	navy_maintenance_efficiency = 0.10
+	navy_maintenance_efficiency = 0.05 #was 0.1
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus #new
 }
 
 abm_istunka_tournament = {
@@ -585,7 +743,7 @@ abm_istunka_tournament = {
 	requires = legalism_advance
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	experience_decay = -0.01 #was pop_join_rebel_threshold = -0.05
 }
 
 abm_gareen_imams = {
@@ -611,7 +769,9 @@ abm_aju_muslim_migrations = {
 	requires = paved_road_advance
 
 	# advisor_pool = 1
-	hire_advisor_cost_modifier = -0.10
+	hire_advisor_cost_modifier = -0.20 #was -0.1
+	train_general_cost_modifier = -0.20
+	train_admiral_cost_modifier = -0.20
 }
 
 abm_aju_hydraulic_empire = {
@@ -625,7 +785,7 @@ abm_aju_hydraulic_empire = {
 
 	# development_cost = -0.1
 	# stability_cost_modifier = -0.1
-	global_monthly_prosperity = 0.001
+	global_monthly_development = 0.0010 #was global_monthly_prosperity = 0.001
 	stability_cost_efficiency = 0.10
 }
 
@@ -639,7 +799,7 @@ abm_aju_expelling_the_infidel = {
 	requires = global_trade_advance
 
 	# leader_land_shock = 1
-	army_initiative = 0.10
+	army_initiative = 0.20 #was 0.1
 }
 
 abm_aju_received_assistance = {
@@ -652,7 +812,7 @@ abm_aju_received_assistance = {
 	requires = absolutist_court
 
 	# global_institution_spread = 0.1
-	global_institution_growth_modifier = 0.10
+	global_institution_growth_modifier = 0.25 #was 0.1
 }
 
 abm_aju_ideas_ambition = {

@@ -68,11 +68,219 @@ GLH_f = { #Golden Horde formable
 	}
 }
 
+CRI_f = { #Crimean formable
+	level = 3
+	required_locations_fraction = 0.55
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:crimean    
+
+		capital = { 
+            OR = { 
+            area = area:yedisan_area 
+            area = area:crimea_area
+			area = area:pryazovia_area
+			area = area:zaporizhzhia_area
+            } 
+        }
+	}
+
+	tag = CRI
+
+	areas = {
+		yedisan_area 
+        crimea_area
+		pryazovia_area
+		zaporizhzhia_area
+	}
+    provinces = {
+        tana_province
+        azov_province
+        akhtar_province
+        labinsk_province
+        privolnoye_province
+        stavropol_province
+        majar_province
+        taman_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+NOG_f = { #Nogai formable
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:nogai    
+
+		capital = { 
+            OR = { 
+            area = area:lower_yik_area 
+            area = area:desht_kipchak_area
+            } 
+        }
+	}
+
+	tag = NOG
+
+	areas = {
+		lower_yik_area 
+	}
+    provinces = {
+        bolkhuny_province
+        baytak_province
+        uil_province
+        shagiz_province
+        upper_emba_province
+        lower_emba_province
+        ust_yurt_province
+        mangyshlak_province
+		mangistau_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ATR_f = { #Astrakhan formable
+	level = 3
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:astrakhani    
+
+		capital = { 
+            OR = { 
+            area = area:astrakhan_area 
+            area = area:lower_don_area
+            } 
+        }
+	}
+
+	tag = ATR
+
+	areas = {
+		astrakhan_area
+	}
+    provinces = {
+        terek_province
+        majar_province
+        semikarakorsk_province
+        ust_tsimla_province
+        beljamen_province
+        kremenskaya_province
+        mikhaylovka_province
+        yelan_province
+		piterka_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABKZN_f = { #Kazan formable
+	level = 3
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        OR = {
+			culture = culture:bolghar_culture
+			culture = culture:kazani
+		}    
+
+		capital = { 
+            OR = { 
+            area = area:samara_area 
+            area = area:kazan_area
+			area = area:bolghar_area
+			area = area:tambov_area
+            } 
+        }
+	}
+
+	tag = ABKZN
+
+	areas = {
+		samara_area
+		kazan_area
+		bolghar_area
+	}
+    provinces = {
+        penza_province
+        atkarsk_province
+        saratov_province
+        piterka_province
+        mechetnaya_province
+        sorochinskaya_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
 ####################
 ### Central Asia ###
 ####################
 
-ABKHR_f = { #Khorasan
+ABGKH_f = { #Greater Khorasan
 	level = 4
 	required_locations_fraction = 0.6
 	rule = historical
@@ -96,11 +304,12 @@ ABKHR_f = { #Khorasan
             area = area:badakhshan_area
             area = area:eastern_khorasan_area
             area = area:western_khorasan_area
+			area = area:quhestan_area
             } 
         }
 	}
 
-	tag = ABKHR
+	tag = ABGKH
 
 	areas = {
 		khwarazm_area  
@@ -108,9 +317,12 @@ ABKHR_f = { #Khorasan
         badakhshan_area
         eastern_khorasan_area
         western_khorasan_area
+		quhestan_area
 	}
     provinces = {
         gorgan_province
+		zabol_province
+        farah_province
     }
 
 	form_effect = {
@@ -295,6 +507,60 @@ CHG_f = { #Chagatai formable
 	}
 }
 
+ABUZB_f = { #Uzbek formable
+	level = 3
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:steppe_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:uzbek_culture   
+
+		capital = { 
+            OR = { 
+            area = area:desht_kipchak_area 
+            area = area:kulykol_area
+			area = area:chimgi_tura_area
+			area = area:omsk_area
+			area = area:bursol_area
+            } 
+        }
+	}
+
+	tag = ABUZB
+
+	areas = {
+		desht_kipchak_area
+		chimgi_tura_area
+        kulykol_area
+        omsk_area
+        bursol_area
+	}
+    provinces = {
+        yangikent_province
+        sighnaq_province
+        sozak_province
+        akkol_province
+        talas_province
+        kuragharty_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
 ###################
 ### Middle East ###
 ###################
@@ -331,6 +597,8 @@ REPLACE:ILK_f = { #International Organization mechanics commented out.
 		#}
         in_civil_war = no
         is_subject = no
+
+		has_culture_group = culture_group:steppe_group
 	}
 	
 	name = ILK

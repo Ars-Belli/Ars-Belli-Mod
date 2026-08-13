@@ -3,141 +3,6 @@
 
 # EAST AFRICA
 
-########################
-### Somalia formable ###
-########################
-
-abm_somali_ideas_tradition_1 = {
-	age = age_1_traditions
-	icon = glorious_arms
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = feudalism_advance
-
-	# infantry_cost = -0.1
-	army_light_infantry_build_cost_modifier = -0.10
-	army_heavy_infantry_build_cost_modifier = -0.10
-}
-
-abm_somali_ideas_tradition_2 = {
-	age = age_1_traditions
-	icon = merchants_and_trade
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = feudalism_advance
-
-	# trade_steering = 0.15
-	global_trade_center_power = 0.10
-}
-
-abm_somali_maritime_heritage = {
-	age = age_2_renaissance
-	icon = royal_navy
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = renaissance_thought
-
-	# light_ship_cost = -0.20
-	navy_maintenance_efficiency = 0.10
-}
-
-abm_somali_qalqads = {
-	age = age_2_renaissance
-	icon = defensive_mentality
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = legalism_advance
-
-	# fort_maintenance_modifier = -0.2
-	fort_maintenance_efficiency = 0.10
-}
-
-abm_somali_clans = {
-	age = age_3_discovery
-	icon = glorious_arms
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = military_traditions
-
-	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.10
-}
-
-abm_somali_offensive_warfare = {
-	age = age_3_discovery
-	icon = glorious_arms
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = paved_road_advance
-
-	# infantry_power = 0.1
-	army_heavy_infantry_power = 0.10
-}
-
-abm_somali_indian_ocean_trade = {
-	age = age_4_reformation
-	icon = merchants_and_trade
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = supply_depot_advance_age_4_reformation
-
-	# trade_efficiency = 0.1
-	trade_income = 0.10
-}
-
-abm_somali_corsairs_of_the_red_sea = {
-	age = age_4_reformation
-	icon = royal_navy
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = global_trade_advance
-
-	# light_ship_power = 0.1
-	naval_damage = 0.10
-}
-
-abm_somali_perso_arab_influx = {
-	age = age_5_absolutism
-	icon = court_accounting
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = absolutist_court
-
-	# advisor_cost = -0.1
-	hire_advisor_cost_modifier = -0.10
-}
-
-abm_somali_ideas_ambition = {
-	age = age_6_revolutions
-	icon = defensive_mentality
-	potential = {
-		has_or_had_tag = SOI
-	}
-
-	requires = imperial_ambitions
-
-	# land_forcelimit_modifier = 0.2
-	global_levy_size_modifier = 0.20
-}
-
 ###########################
 ### Swahili City States ###
 ###########################
@@ -170,7 +35,7 @@ abm_swahili_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# trade_range_modifier = 0.25
-	diplomatic_range_modifier = 0.10
+	diplomatic_range_modifier = 0.33 #kept diplo range for variety' sake, was 0.1
 }
 
 abm_swahili_ideas_tradition_2 = {
@@ -202,6 +67,7 @@ abm_swahili_ideas_tradition_2 = {
 
 	# light_ship_cost = -0.2
 	navy_maintenance_efficiency = 0.10
+	navy_light_ship_maintenance_cost_modifier = -0.1 #new
 }
 
 abm_swa_indian_ocean_trade = {
@@ -233,8 +99,8 @@ abm_swa_indian_ocean_trade = {
 
 	# trade_efficiency = 0.1
 	# sailor_maintenance_modifer = -0.1
-	trade_income = 0.10
-	navy_maintenance_efficiency = 0.10
+	trade_range_modifier = 0.2 #was trade_income = 0.10
+	global_sailors_modifier = 0.1 #was navy_maintenance_efficiency = 0.10
 }
 
 abm_monsoon_season = {
@@ -265,7 +131,7 @@ abm_monsoon_season = {
 	requires = legalism_advance
 
 	# leader_naval_manuever = 1
-	navy_movement_speed = 0.10
+	navy_movement_speed = 0.15 #was 0.1
 }
 
 abm_great_mosque_of_kilwa = {
@@ -358,7 +224,7 @@ abm_recruit_the_unbelievers = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# merc_maintenance_modifier = -0.15
-	mercenary_maintenance_efficiency = 0.15
+	mercenary_maintenance_efficiency = 0.2 #was 0.15
 }
 
 abm_ivory_trade = {
@@ -389,7 +255,8 @@ abm_ivory_trade = {
 	requires = global_trade_advance
 
 	# production_efficiency = 0.1
-	global_production_efficiency = 0.10
+	export_efficiency = small_trade_efficiency_bonus
+	global_ivory_output_modifier = 0.2 #was global_production_efficiency = 0.10
 }
 
 abm_familiar_presence_abroad = {
@@ -422,7 +289,7 @@ abm_familiar_presence_abroad = {
 	# diplomatic_reputation = 1
 	# diplomatic_upkeep = 1
 	diplomatic_reputation = diplomatic_reputation_mild_bonus
-	diplomatic_upkeep_efficiency = 0.10
+	spy_network_construction = 0.25 #was diplomatic_upkeep_efficiency = 0.10
 }
 
 abm_swahili_ideas_ambition = {
@@ -453,6 +320,7 @@ abm_swahili_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# global_trade_power = 0.1
+	global_merchant_capacity_modifier = 0.33 #new
 	global_merchant_power = 0.10
 }
 
