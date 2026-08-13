@@ -2,17 +2,14 @@
 """Rematch icons and/or prerequisites for mod advances against vanilla EU5 advances.
 
 Successor of update_advance_names_icons_requires.py:
-  * keeps the curated modifier -> (icon, requires) mapping and the icon
-    picking of the old tool (that part works well and is unchanged), with one
-    rule: icon repetition is avoided WITHIN an advance set (same potential
-    block / same tag), not across the whole file.
+  * keeps the curated modifier -> (icon, requires) mapping and the balanced
+    icon picking of the old tool (that part works well and is unchanged),
   * drops the unused "advance renaming" part entirely,
   * adds a compatibility table built from vanilla EU5 advances so every match
     is thematic: a military advance gets a military icon and a military
     prerequisite, an economic advance an economic prerequisite, a government
     advance a government prerequisite, and so on. Prerequisites are always
-    picked from the SAME AGE as the advance itself (never cross-age), and
-    icons follow the same type + age rules.
+    picked from the SAME AGE as the advance itself (never cross-age).
 
 Reference data (--dir, default .tools/eu5/advances):
   * _advances_template.txt   reference template (defines the six ages and the
@@ -28,8 +25,6 @@ Without positional arguments, all abm_*.txt files in in_game/common/advances
 are processed.
 
 Actions: --icons (only icons), --requires (only prerequisites), neither = both.
-Encoding: every written file is UTF-8 with BOM (a missing BOM is added
-automatically); existing line endings (LF or CRLF) are preserved.
 
 Examples:
   python .tools/update_advance_names_icons_requires2.py
@@ -374,20 +369,6 @@ FAMILY_TYPE = {
     'military': 'military',
     'artillery': 'military',
     'cavalry': 'military',
-    'economy': 'economy',
-    'administration': 'administration',
-    'diplomacy': 'diplomacy',
-    'culture': 'culture',
-    'estate': 'estate',
-    'subject': 'subject',
-}
-
-# Inverse mapping: an inferred type picks the icon pool of its family. Used
-# for advances without a curated MOD_MAP entry so their icon pool matches the
-# inferred type (same rule as the requirement matching).
-FAMILY_FOR_TYPE = {
-    'military': 'military',
-    'naval': 'naval',
     'economy': 'economy',
     'administration': 'administration',
     'diplomacy': 'diplomacy',
@@ -863,85 +844,38 @@ def get_age_require(age_str, family):
     return None
 
 
-# ── Icon picking (same type + same age rules as requirements) ───────
-def choose_icon(key, primary, requirement, type_, family, age, ref,
-                group_icons):
-    """Pick an icon for `key`.
-
-    1. Candidates: curated primary, the prerequisite's icon, then the
-       family's icon pool.
-    2. TYPE is a hard rule: known candidates of another type are excluded.
-       AGE is a preference: same-age candidates are rank 0, cross-age
-       same-type candidates rank 1 (used only when needed to avoid repeats).
-    3. The pool is widened with same-age, same-type vanilla icons first
-       (hub-ranked), then same-type icons of any age.
-    4. Final pick: icons already used by the advance's own set (same
-       potential block) are avoided first — repetition ACROSS different sets
-       is fine; then same-age is preferred over cross-age, deterministically
-       rotated by a hash of the advance key.
-    """
+# ── Icon picking (unchanged logic, plus thematic filter) ───────────
+def choose_icon(key, primary, requirement, type_, family, ref,
+                icon_counts, group_icons):
     candidates = [primary, requirement, *ICON_POOLS.get(family, ())]
-    candidates = [c for c in candidates if c]
     candidates = list(dict.fromkeys(candidates))
-
-    def rank_of(candidate):
-        entry = ref.table.get(candidate)
-        if entry is None or not entry['known']:
-            return 0  # curated/unknown: trusted, treated as same-age
-        if entry['type'] != type_:
-            return None  # wrong type: excluded (hard rule)
-        if age and entry['age'] and entry['age'] != age:
-            return 1  # same type, cross-age: allowed only to avoid repeats
-        return 0  # same type + same age: preferred
-
-    ranked = {}
-    for c in candidates:
-        r = rank_of(c)
-        if r is not None:
-            ranked[c] = r
-
-    # Widen the pool: same-age, same-type vanilla icons first (rank 0), then
-    # same-type icons of any age (rank 1), most-required advances first.
-    same_age = sorted(
-        (
-            k for k, e in ref.table.items()
-            if e['known'] and e['type'] == type_ and e['icons']
-            and (not age or e['age'] == age)
-        ),
-        key=lambda k: (-ref.hub.get(k, 0), k),
-    )
-    any_age = sorted(
-        (
-            k for k, e in ref.table.items()
-            if e['known'] and e['type'] == type_ and e['icons']
-        ),
-        key=lambda k: (-ref.hub.get(k, 0), k),
-    )
-    for rank, keys, cap in ((0, same_age, 24), (1, any_age, 12)):
-        added = 0
-        for k in keys:
-            if added >= cap:
-                break
-            icon = ref.table[k]['icons'][0]
-            if icon in ranked:
-                continue
-            ranked[icon] = rank
-            added += 1
-
-    pool = [c for c in ranked if c in ref.available_icons]
+    # Thematic filter: candidates whose vanilla advance has a KNOWN type must
+    # match the input advance's type. Unknown/curated ones are kept (trusted).
+    themed = [
+        c for c in candidates
+        if c not in ref.table or not ref.table[c]['known']
+        or ref.table[c]['type'] == type_
+    ]
+    pool = themed if themed else candidates
+    pool = [c for c in pool if c in ref.available_icons]
+    if not pool:
+        # Last resort: any icon of a same-type vanilla advance.
+        pool = [
+            e['icons'][0]
+            for e in ref.table.values()
+            if e['type'] == type_ and e['icons']
+        ]
+        pool = [c for c in pool if c in ref.available_icons]
     if not pool:
         raise ValueError(
             f"No valid icon candidates for {key} ({family}, {type_})"
         )
-
     rotation = int(hashlib.sha256(key.encode()).hexdigest()[:8], 16)
     offset = rotation % len(pool)
     pool = pool[offset:] + pool[:offset]
     return min(
         pool,
-        key=lambda icon: (
-            icon in group_icons, ranked[icon], pool.index(icon),
-        ),
+        key=lambda icon: (icon in group_icons, icon_counts[icon], pool.index(icon)),
     )
 
 
@@ -958,7 +892,7 @@ def transform_file(filepath, ref, options):
     tag_filter = options['tags']
     dry_run = options['dry_run']
 
-    used_by_group = options['used_by_group']
+    used_by_group = defaultdict(set)
     icon_counts = options['icon_counts']
     changed = 0
     output_parts = []
@@ -979,7 +913,7 @@ def transform_file(filepath, ref, options):
                 continue
 
         entry = parse_advance_block(block, key)
-        if not entry['age'] and not entry['fields']:
+        if not entry['fields']:
             continue
 
         mapped = lookup_mod_map(entry['mod_keys'])
@@ -988,11 +922,9 @@ def transform_file(filepath, ref, options):
             family = category_family(category)
             type_ = FAMILY_TYPE[family]
         else:
-            # No curated icon anchor: build the icon pool from the inferred
-            # type's family instead of the DEFAULT_MAP's military tuple.
-            primary, requirement, category = None, DEFAULT_MAP[1], DEFAULT_MAP[2]
+            primary, requirement, category = DEFAULT_MAP
+            family = category_family(category)
             type_ = classify_entry(entry, ref)
-            family = FAMILY_FOR_TYPE[type_]
             print(
                 f"  ! {key}: no curated mapping, inferred type "
                 f"'{type_}' from {'/'.join(entry['mod_keys'][:3]) or 'nothing'}"
@@ -1036,8 +968,8 @@ def transform_file(filepath, ref, options):
             signature = potential_signature(block, key)
             try:
                 icon = choose_icon(
-                    key, primary, requirement, type_, family,
-                    entry['age'], ref, used_by_group[signature],
+                    key, primary, requirement, type_, family, ref,
+                    icon_counts, used_by_group[signature],
                 )
             except ValueError as exc:
                 print(f"  ! {key}: {exc}")
@@ -1095,20 +1027,12 @@ def transform_file(filepath, ref, options):
     output_parts.append(content[cursor:])
     content = ''.join(output_parts)
     if not dry_run:
-        # Repo convention: all files must be UTF-8 with BOM. Always write a
-        # BOM, adding one when it was missing.
         output = content.replace('\n', newline).encode('utf-8')
-        if content:
+        if has_bom:
             output = b'\xef\xbb\xbf' + output
         filepath.write_bytes(output)
     mode = 'DRY-RUN' if dry_run else 'Done'
-    if not content:
-        bom_note = 'empty'
-    elif has_bom:
-        bom_note = 'BOM ok'
-    else:
-        bom_note = 'BOM ' + ('missing (would add)' if dry_run else 'ADDED')
-    print(f'{mode}: {filepath} ({changed} advances processed; {bom_note})')
+    print(f'{mode}: {filepath} ({changed} advances processed)')
 
 
 # ── CLI ────────────────────────────────────────────────────────────
@@ -1180,7 +1104,6 @@ def main(argv=None):
         'tags': tags or None,
         'dry_run': args.dry_run,
         'icon_counts': Counter(),
-        'used_by_group': defaultdict(set),
     }
     for filepath in files:
         transform_file(filepath, ref, options)
