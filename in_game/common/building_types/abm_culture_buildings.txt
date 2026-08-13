@@ -138,7 +138,11 @@ matenadaran = {
 
 
     country_potential = {
-        religion = religion:miaphysite
+        OR = {
+            religion = religion:orthodox
+            religion = religion:nestorian
+            religion = religion:miaphysite
+        }
     }
 
     possible_production_methods = {
@@ -147,7 +151,11 @@ matenadaran = {
 
     remove_if = {
         owner = {
-            religion != religion:miaphysite
+            NOR = {
+                religion = religion:orthodox
+                religion = religion:nestorianism
+                religion = religion:miaphysite
+            }
         }
     }
 
