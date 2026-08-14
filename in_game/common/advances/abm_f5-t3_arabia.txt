@@ -3,7 +3,39 @@
 
 # ARABIA
 
+#############################
+### Culture Group Arabian ###
+#############################
+
+REPLACE:arabian_horsemanship = {
+	age = age_1_traditions
+	icon = glorious_arms
+
+	potential = {
+		culture ?= { has_culture_group = culture_group:arabian_group }
+	}
+	#global_horses_output_modifier = 0.2 #removed to control modifier stacking
+	army_light_cavalry_power = 0.1
+
+	requires = guilds
+}
+
+REPLACE:arabian_desert_warfare = {
+	age = age_2_renaissance
+	icon = glorious_arms
+	potential = {
+		culture ?= { has_culture_group = culture_group:arabian_group }
+	}
+	tribes_estate_levy_size = 0.33 #was land_morale_modifier = 0.1
+	ai_weight = { add = 10 }
+
+	requires = correct_box_advance_renaissance
+}
+
+################
 ### Mushasha ###
+################
+
 abm_msy_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = administrative_leadership
@@ -42,7 +74,8 @@ abm_msy_fervent_millenarianism = {
 	# land_morale = 0.1
 	# monthly_piety = -0.001
 	land_morale_modifier = 0.10
-	monthly_purity = 0.10
+	monthly_war_exhaustion = -0.02
+	#monthly_purity = 0.10 #This is a shinto specific modifier in EU5
 }
 
 abm_msy_messianic_legacy = {
@@ -116,6 +149,7 @@ abm_msy_outward_pragmatism = {
 
 	# diplomats = 1
 	monthly_diplomats = 0.10
+	improve_relation_impact = 0.1 #new
 }
 
 abm_msy_sufis_shias_middle_east = {
@@ -142,9 +176,13 @@ abm_msy_ideas_ambition = {
 
 	# tolerance_own = 2
 	tolerance_own = 1
+	tolerance_heathen = 1 #new
 }
 
+############################
 ### Arabia - T4 formable ###
+############################
+
 abm_arb_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = church_councils
@@ -168,7 +206,7 @@ abm_arb_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# years_of_nationalism = -10
-	pop_join_rebel_threshold = -0.05
+	global_separatism = -0.10 #was pop_join_rebel_threshold = -0.05
 }
 
 abm_arb_arabian_pincers = {
@@ -183,7 +221,7 @@ abm_arb_arabian_pincers = {
 	# cav_to_inf_ratio = 0.25
 	# cavalry_power = 0.25
 	combined_arms_max_threshold = 0.10
-	army_heavy_cavalry_power = 0.10
+	combined_bonus_per_type = 0.01 #was army_heavy_cavalry_power = 0.10
 }
 
 abm_arb_pact_of_umar = {
@@ -197,8 +235,8 @@ abm_arb_pact_of_umar = {
 
 	# dhimmi_loyalty_modifier = 0.1
 	# global_tax_modifier = 0.2
-	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
-	tax_income_efficiency = 0.10
+	dhimmi_estate_target_satisfaction = medium_permanent_target_satisfaction #was clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
+	tax_income_efficiency = medium_tax_income_efficiency_bonus #was 0.1
 }
 
 abm_arb_engage_in_indian_ocean_trade = {
@@ -211,7 +249,8 @@ abm_arb_engage_in_indian_ocean_trade = {
 	requires = military_traditions
 
 	# trade_steering = 0.2
-	global_trade_center_power = 0.10
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+	global_trade_center_power = 0.05
 }
 
 abm_arb_conversion = {
@@ -224,7 +263,7 @@ abm_arb_conversion = {
 	requires = paved_road_advance
 
 	# global_missionary_strength = 0.03
-	global_pop_conversion_speed_modifier = 0.20
+	global_heathen_pop_conversion_speed_modifier = 0.20 #global_pop_conversion_speed_modifier = 0.20
 }
 
 abm_arb_jihad = {
@@ -250,7 +289,7 @@ abm_arb_new_caliphate_rising = {
 	requires = global_trade_advance
 
 	# missionaries = 2
-	number_of_allowed_religious_figures = 1
+	court_spending_efficiency = 0.10 #was number_of_allowed_religious_figures = 1
 }
 
 abm_arb_mubarizun = {
@@ -276,10 +315,13 @@ abm_arb_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# siege_ability = 0.15
-	siege_ability = 0.10
+	assault_ability = 0.25 #was siege_ability = 0.10
 }
 
+##########################
 ### Najd - T3 formable ###
+##########################
+
 abm_naj_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = church_councils
@@ -303,7 +345,7 @@ abm_naj_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# movement_speed = 0.15
-	army_movement_speed = 0.10
+	army_movement_speed = 0.15 #was 0.1
 }
 
 abm_bedouin_poets = {
@@ -329,7 +371,8 @@ abm_hanbali_school_ni = {
 	requires = legalism_advance
 
 	# missionaries = 1
-	number_of_allowed_religious_figures = 1
+	clergy_estate_satisfaction_recovery = 0.002 #new
+	clergy_estate_agenda_impact = 0.2 #was number_of_allowed_religious_figures = 1
 }
 
 abm_ships_of_the_desert = {
@@ -342,7 +385,7 @@ abm_ships_of_the_desert = {
 	requires = military_traditions
 
 	# global_trade_power = 0.1
-	global_merchant_power = 0.10
+	trade_land_efficiency = large_trade_land_efficiency_bonus #was global_merchant_power = 0.10
 }
 
 abm_bedouin_raiders = {
@@ -358,7 +401,7 @@ abm_bedouin_raiders = {
 	global_hostile_attrition = 1
 }
 
-abm_arabian_horsemanship = {
+abm_arabian_horsemanship = { #name, but not bonus or description is shared with the cultural advance
 	age = age_4_reformation
 	icon = glorious_arms
 	potential = {
@@ -407,7 +450,7 @@ abm_naj_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# missionaries = 1
-	number_of_allowed_religious_figures = 1
+	clergy_estate_target_satisfaction = large_permanent_target_satisfaction
 }
 
 ##############################
@@ -421,12 +464,6 @@ abm_arabian_ideas_tradition_1 = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -434,7 +471,6 @@ abm_arabian_ideas_tradition_1 = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -448,7 +484,8 @@ abm_arabian_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.10
+	army_initiative = 0.10 #moved from abm_arabian_ideas_ambition
+	global_supply_limit_modifier = 0.1 #new
 }
 
 abm_arabian_ideas_tradition_2 = {
@@ -458,12 +495,6 @@ abm_arabian_ideas_tradition_2 = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -471,7 +502,6 @@ abm_arabian_ideas_tradition_2 = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -486,6 +516,7 @@ abm_arabian_ideas_tradition_2 = {
 
 	# land_attrition = -0.15
 	land_unit_attrition = -0.10
+	land_morale_attrition_cost = -0.002 #new
 }
 
 abm_arab_indian_ocean_trade = {
@@ -495,12 +526,6 @@ abm_arab_indian_ocean_trade = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -508,7 +533,6 @@ abm_arab_indian_ocean_trade = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -522,7 +546,8 @@ abm_arab_indian_ocean_trade = {
 	requires = renaissance_thought
 
 	# trade_steering = 0.15
-	global_trade_center_power = 0.10
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus #was global_trade_center_power = 0.10
+	merchant_power_from_maritime = 0.025 #new
 }
 
 abm_arabian_horses = {
@@ -532,12 +557,6 @@ abm_arabian_horses = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -545,7 +564,6 @@ abm_arabian_horses = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -560,9 +578,10 @@ abm_arabian_horses = {
 
 	# cavalry_cost = -0.1
 	# cavalry_flanking = 0.25
-	army_light_cavalry_build_cost_modifier = -0.10
-	army_heavy_cavalry_build_cost_modifier = -0.10
-	army_light_cavalry_power = 0.10
+	#army_light_cavalry_build_cost_modifier = -0.10
+	#army_heavy_cavalry_build_cost_modifier = -0.10
+	#army_light_cavalry_power = 0.10
+	global_horses_output_modifier = 0.25 #new - horses output removed from the basegame arabian culture advance
 }
 
 abm_land_of_the_prophet = {
@@ -572,12 +591,6 @@ abm_land_of_the_prophet = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -585,7 +598,6 @@ abm_land_of_the_prophet = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -599,7 +611,7 @@ abm_land_of_the_prophet = {
 	requires = military_traditions
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	global_estate_target_satisfaction = 0.01 #was pop_join_rebel_threshold = -0.05
 }
 
 abm_spreading_the_prophets_word = {
@@ -609,12 +621,6 @@ abm_spreading_the_prophets_word = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -622,7 +628,6 @@ abm_spreading_the_prophets_word = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -636,7 +641,7 @@ abm_spreading_the_prophets_word = {
 	requires = paved_road_advance
 
 	# global_missionary_strength = 0.01
-	global_pop_conversion_speed_modifier = 0.20
+	global_pop_conversion_speed = 0.001 #was global_pop_conversion_speed_modifier = 0.20
 }
 
 abm_bedouin_traders = {
@@ -646,12 +651,6 @@ abm_bedouin_traders = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -659,7 +658,6 @@ abm_bedouin_traders = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -673,7 +671,7 @@ abm_bedouin_traders = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_trade_power = 0.1
-	global_merchant_power = 0.10
+	merchant_maintenance_efficiency = 0.2 #was global_merchant_power = 0.10
 }
 
 abm_arab_clan_loyalties = {
@@ -683,12 +681,6 @@ abm_arab_clan_loyalties = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -696,7 +688,6 @@ abm_arab_clan_loyalties = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -710,7 +701,7 @@ abm_arab_clan_loyalties = {
 	requires = global_trade_advance
 
 	# leader_land_manuever = 1
-	army_movement_speed = 0.10
+	land_morale_movement_cost = -0.0002 #was army_movement_speed = 0.10
 }
 
 abm_arabia = {
@@ -720,12 +711,6 @@ abm_arabia = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -733,7 +718,6 @@ abm_arabia = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -757,12 +741,6 @@ abm_arabian_ideas_ambition = {
 		OR = {
 			has_or_had_tag = BNL
 			has_or_had_tag = MEC
-			has_or_had_tag = ABTBU
-			has_or_had_tag = AMR
-			has_or_had_tag = AAL
-			has_or_had_tag = HUT
-			has_or_had_tag = FDL
-			has_or_had_tag = SHM
 			has_or_had_tag = ANZ
 			has_or_had_tag = MUT
 			has_or_had_tag = AZF
@@ -770,7 +748,6 @@ abm_arabian_ideas_ambition = {
 			has_or_had_tag = HRB
 			has_or_had_tag = UTB
 			has_or_had_tag = SBY
-			has_or_had_tag = QHT
 			has_or_had_tag = DWS
 			has_or_had_tag = KLB
 			has_or_had_tag = AAD
@@ -784,12 +761,12 @@ abm_arabian_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# leader_land_shock = 1
-	army_initiative = 0.10
+	army_reinforce_efficiency = 0.15 #new
 }
 
-##############################
-### Bedouin tags in Egypt  ###
-##############################
+#################################################
+### Bedouin tags (currently arabian group 2)  ###
+#################################################
 
 abm_bedouin_ideas_tradition_1 = {
 	age = age_1_traditions
@@ -800,13 +777,20 @@ abm_bedouin_ideas_tradition_1 = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
 	requires = feudalism_advance
 
 	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.10
+	army_initiative = 0.10 #moved from abm_arabian_ideas_ambition
+	global_supply_limit_modifier = 0.1 #new
 }
 
 abm_bedouin_ideas_tradition_2 = {
@@ -818,6 +802,12 @@ abm_bedouin_ideas_tradition_2 = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
@@ -825,6 +815,7 @@ abm_bedouin_ideas_tradition_2 = {
 
 	# land_attrition = -0.15
 	land_unit_attrition = -0.10
+	land_morale_attrition_cost = -0.002 #new
 }
 
 abm_bedouin_arab_indian_ocean_trade = {
@@ -836,13 +827,20 @@ abm_bedouin_arab_indian_ocean_trade = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
 	requires = renaissance_thought
 
 	# trade_steering = 0.15
-	global_trade_center_power = 0.10
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus #was global_trade_center_power = 0.10
+	merchant_power_from_maritime = 0.025 #new
 }
 
 abm_bedouin_arabian_horses = {
@@ -854,6 +852,12 @@ abm_bedouin_arabian_horses = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
@@ -861,9 +865,10 @@ abm_bedouin_arabian_horses = {
 
 	# cavalry_cost = -0.1
 	# cavalry_flanking = 0.25
-	army_light_cavalry_build_cost_modifier = -0.10
-	army_heavy_cavalry_build_cost_modifier = -0.10
-	army_light_cavalry_power = 0.10
+	#army_light_cavalry_build_cost_modifier = -0.10
+	#army_heavy_cavalry_build_cost_modifier = -0.10
+	#army_light_cavalry_power = 0.10
+	global_horses_output_modifier = 0.25 #new - horses output removed from the basegame arabian culture advance
 }
 
 abm_bedouin_land_of_the_prophet = {
@@ -875,13 +880,19 @@ abm_bedouin_land_of_the_prophet = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
 	requires = military_traditions
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	global_estate_target_satisfaction = 0.01 #was pop_join_rebel_threshold = -0.05
 }
 
 abm_bedouin_spreading_the_prophets_word = {
@@ -893,13 +904,19 @@ abm_bedouin_spreading_the_prophets_word = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
 	requires = paved_road_advance
 
 	# global_missionary_strength = 0.01
-	global_pop_conversion_speed_modifier = 0.20
+	global_pop_conversion_speed = 0.001 #was global_pop_conversion_speed_modifier = 0.20
 }
 
 abm_bedouin_bedouin_traders = {
@@ -911,13 +928,19 @@ abm_bedouin_bedouin_traders = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_trade_power = 0.1
-	global_merchant_power = 0.10
+	merchant_maintenance_efficiency = 0.2 #was global_merchant_power = 0.10
 }
 
 abm_bedouin_arab_clan_loyalties = {
@@ -929,13 +952,19 @@ abm_bedouin_arab_clan_loyalties = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
 	requires = global_trade_advance
 
 	# leader_land_manuever = 1
-	army_movement_speed = 0.10
+	land_morale_movement_cost = -0.0002 #was army_movement_speed = 0.10
 }
 
 abm_bedouin_arabia = {
@@ -947,6 +976,12 @@ abm_bedouin_arabia = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
@@ -965,13 +1000,19 @@ abm_bedouin_arabian_ideas_ambition = {
 			has_or_had_tag = ABSWS
 			has_or_had_tag = BKZ
 			has_or_had_tag = SKN
+			has_or_had_tag = ABTBU
+			has_or_had_tag = AMR
+			has_or_had_tag = AAL
+			has_or_had_tag = HUT
+			has_or_had_tag = FDL
+			has_or_had_tag = SHM
 		}
 	}
 
 	requires = imperial_ambitions
 
 	# leader_land_shock = 1
-	army_initiative = 0.10
+	army_reinforce_efficiency = 0.15 #new
 }
 
 ##############################
@@ -988,7 +1029,7 @@ abm_alh_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# tolerance_heretic = 2
-	tolerance_heretic = 1
+	tolerance_heretic = 2 #was 1
 }
 
 abm_alh_ideas_tradition_2 = {
@@ -1001,7 +1042,7 @@ abm_alh_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# cavalry_power = 0.1
-	army_heavy_cavalry_power = 0.10
+	army_light_cavalry_maintenance_cost_modifier = -0.15 #was army_heavy_cavalry_power = 0.10
 }
 
 abm_alh_desert_warfare = {
@@ -1014,8 +1055,9 @@ abm_alh_desert_warfare = {
 	requires = renaissance_thought
 
 	# cavalry_cost = -0.1
-	army_light_cavalry_build_cost_modifier = -0.10
-	army_heavy_cavalry_build_cost_modifier = -0.10
+	#army_light_cavalry_build_cost_modifier = -0.10
+	#army_heavy_cavalry_build_cost_modifier = -0.10
+	global_hostile_attrition = 1
 }
 
 abm_alh_lord_of_the_eastern_bedouin = {
@@ -1041,7 +1083,8 @@ abm_alh_pearls_of_the_persian_gulf = {
 	requires = military_traditions
 
 	# global_trade_goods_size_modifier = 0.1
-	global_max_rgo_size_modifier = 0.10
+	global_fish_output_modifier = 0.1 #new
+	global_pearls_output_modifier = 0.2 #was global_max_rgo_size_modifier = 0.10
 }
 
 abm_alh_fortify_the_coastline = {
@@ -1054,7 +1097,7 @@ abm_alh_fortify_the_coastline = {
 	requires = paved_road_advance
 
 	# defensiveness = 0.2
-	global_defensive = 0.15
+	global_fort_build_buildings_efficiency = 0.33 #was global_defensive = 0.15
 }
 
 abm_alh_entrepot_of_india = {
@@ -1067,7 +1110,8 @@ abm_alh_entrepot_of_india = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# trade_efficiency = 0.1
-	trade_income = 0.10
+	export_efficiency = medium_trade_efficiency_bonus #was trade_income = 0.10
+
 }
 
 abm_alh_a_modern_navy = {
@@ -1081,6 +1125,7 @@ abm_alh_a_modern_navy = {
 
 	# ship_durability = 0.05
 	naval_damage_taken = -0.05
+	merchant_power_from_maritime_modifier = 0.1
 }
 
 abm_alh_legacy_of_rahmah_ibn_jabir = {
@@ -1095,7 +1140,7 @@ abm_alh_legacy_of_rahmah_ibn_jabir = {
 	# navy_tradition = 1
 	# privateer_efficiency = 0.15
 	monthly_navy_tradition = 0.10
-	privateer_durability = 0.10
+	privateer_durability = 0.01 #was 0.10
 }
 
 abm_alh_ideas_ambition = {
@@ -1108,10 +1153,14 @@ abm_alh_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# naval_forcelimit_modifier = 0.2
-	expected_navy_size_modifier = 0.25
+	global_sailors_modifier = 0.2 #was expected_navy_size_modifier = 0.25
+	ship_build_speed = 0.5
 }
 
+###########################
 ### Hejaz - T3 formable ###
+###########################
+
 abm_hed_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = glorious_arms
@@ -1135,8 +1184,9 @@ abm_hed_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# cavalry_cost = -0.1
-	army_light_cavalry_build_cost_modifier = -0.10
-	army_heavy_cavalry_build_cost_modifier = -0.10
+	#army_light_cavalry_build_cost_modifier = -0.10
+	#army_heavy_cavalry_build_cost_modifier = -0.10
+	army_tradition_from_battle = 1 #new
 }
 
 abm_custodian_of_the_two_holy_cities = {
@@ -1162,7 +1212,8 @@ abm_hed_red_sea_trade = {
 	requires = legalism_advance
 
 	# global_own_trade_power = 0.1
-	global_trade_center_power = 0.10
+	global_trade_center_power = 0.05 #was 0.1
+	global_merchant_capacity_modifier = 0.1
 }
 
 abm_sharifs_of_mecca = {
@@ -1176,6 +1227,7 @@ abm_sharifs_of_mecca = {
 
 	# ae_impact = -0.1
 	antagonism_received_modifier = -0.10
+	diplomatic_reputation = diplomatic_reputation_mild_bonus #new
 }
 
 abm_hed_desert_warfare = {
@@ -1201,7 +1253,7 @@ abm_cradle_of_gold = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_tax_modifier = 0.1
-	tax_income_efficiency = 0.10
+	minting_income_factor = 0.15 #was tax_income_efficiency = 0.10
 }
 
 abm_hajj = {
@@ -1214,7 +1266,8 @@ abm_hajj = {
 	requires = global_trade_advance
 
 	# global_missionary_strength = 0.01
-	global_pop_conversion_speed_modifier = 0.20
+	cultural_influence_modifier = 0.1 #was global_pop_conversion_speed_modifier = 0.20
+	pilgrimage_action_cost_modifier = -0.5 #new
 }
 
 abm_successor_to_the_caliphate = {
@@ -1229,7 +1282,7 @@ abm_successor_to_the_caliphate = {
 	# prestige = 1
 	# monthly_piety = 0.001
 	monthly_prestige = 0.10
-	monthly_purity = 0.10
+	cultural_tradition_modifier = 0.1 #was monthly_purity = 0.10
 }
 
 abm_hed_ideas_ambition = {
@@ -1242,10 +1295,14 @@ abm_hed_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# cavalry_power = 0.15
-	army_heavy_cavalry_power = 0.10
+	food_consumption_modifier = -0.1 #was army_heavy_cavalry_power = 0.10
+	army_auxiliary_build_cost_modifier = -0.3 #new
 }
 
+###############
 ### Rassids ###
+###############
+
 abm_ras_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = glorious_arms
@@ -1253,13 +1310,14 @@ abm_ras_ideas_tradition_1 = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
 	requires = feudalism_advance
 
 	# infantry_power = 0.1
-	army_heavy_infantry_power = 0.10
+	army_heavy_infantry_power = 0.1
 }
 
 abm_ras_ideas_tradition_2 = {
@@ -1269,13 +1327,15 @@ abm_ras_ideas_tradition_2 = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
 	requires = feudalism_advance
 
 	# global_manpower_modifier = 0.2
-	global_manpower_modifier = 0.10
+	global_levy_size_modifier = 0.125 #was global_manpower_modifier = 0.10
+	levy_combat_efficiency_modifier = 0.05 #new
 }
 
 abm_ras_living_imam = {
@@ -1285,6 +1345,7 @@ abm_ras_living_imam = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
@@ -1301,6 +1362,7 @@ abm_ras_yemeni_highlands = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
@@ -1317,6 +1379,7 @@ abm_coffea_arabica = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
@@ -1324,6 +1387,7 @@ abm_coffea_arabica = {
 
 	# global_trade_power = 0.1
 	global_merchant_power = 0.10
+	global_trade_through_owned_territory_efficiency = 0.1 #new
 }
 
 abm_ras_unite_rassid_state = {
@@ -1333,6 +1397,7 @@ abm_ras_unite_rassid_state = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
@@ -1357,13 +1422,14 @@ abm_ras_mountain_strongholds = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
 	requires = supply_depot_advance_age_4_reformation
 
 	# shock_damage_received = -0.15
-	army_shock_damage_taken = -0.10
+	global_defensive = 0.2 #was army_shock_damage_taken = -0.10
 }
 
 abm_ras_salt_in_water = {
@@ -1373,13 +1439,14 @@ abm_ras_salt_in_water = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
 	requires = global_trade_advance
 
 	# leader_land_shock = 1
-	army_initiative = 0.10
+	global_hostile_attrition = 1 #army_initiative = 0.10
 }
 
 abm_ras_secure_trade_monopolies = {
@@ -1389,13 +1456,14 @@ abm_ras_secure_trade_monopolies = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
 	requires = absolutist_court
 
 	# trade_efficiency = 0.1
-	trade_income = 0.10
+	global_merchant_capacity_modifier = 0.25 #was trade_income = 0.10
 }
 
 abm_ras_ideas_ambition = {
@@ -1405,16 +1473,20 @@ abm_ras_ideas_ambition = {
 		OR = {
 			has_or_had_tag = YAM
 			has_or_had_tag = ABRSD
+			has_or_had_tag = QHT
 		}
 	}
 
 	requires = imperial_ambitions
 
 	# defensiveness = 0.2
-	global_defensive = 0.15
+	army_heavy_infantry_reinforce_cost_modifier = -0.2 #was global_defensive = 0.15
 }
 
+###############################
 ### Hadramaut - T3 formable ###
+###############################
+
 abm_hdr_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = smooth_administration
@@ -1438,7 +1510,8 @@ abm_hdr_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# global_foreign_trade_power = 0.10
-	global_merchant_power = 0.10
+	selling_efficiency = small_trade_efficiency_bonus #was global_merchant_power = 0.10
+	global_trades_per_burgher = 0.2
 }
 
 abm_hdr_death_has_come = {
@@ -1477,7 +1550,8 @@ abm_hdr_hawtas = {
 	requires = military_traditions
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	pop_join_rebel_threshold = -0.04 #was -0.05
+	pop_leave_rebels_threshold = -0.04 #new
 }
 
 abm_hdr_encouraging_the_incense_trade = {
@@ -1490,7 +1564,7 @@ abm_hdr_encouraging_the_incense_trade = {
 	requires = paved_road_advance
 
 	# trade_efficiency = 0.1
-	trade_income = 0.10
+	global_incense_output_modifier = 0.25 #was trade_income = 0.10
 }
 
 abm_hdr_sailors_of_the_indian_ocean = {
@@ -1504,7 +1578,7 @@ abm_hdr_sailors_of_the_indian_ocean = {
 
 	# naval_forcelimit_modifier = 0.25
 	# sailors_recovery_speed = 0.05
-	expected_navy_size_modifier = 0.25
+	navy_maintenance_efficiency = 0.1 #was expected_navy_size_modifier = 0.25
 	global_sailors_modifier = 0.10
 }
 
@@ -1531,7 +1605,7 @@ abm_hdr_distant_diplomacy = {
 	requires = absolutist_court
 
 	# improve_relation_modifier = 0.3
-	improve_relation_impact = 0.20
+	improve_relation_impact = 0.30 #was 0.2
 }
 
 abm_hdr_ideas_ambition = {
@@ -1544,10 +1618,14 @@ abm_hdr_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# colonists = 1
-	can_colonize = yes
+	trade_range_modifier = 0.3 #was can_colonize = yes
+	merchant_power_from_maritime_modifier = 0.2 #new
 }
 
+######################
 ### Dhofar - Mahra ###
+######################
+
 abm_mhr_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = royal_navy
@@ -1571,7 +1649,8 @@ abm_mhr_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# navy_tradition = 1
-	monthly_navy_tradition = 0.10
+	train_admiral_ability = 10 #was monthly_navy_tradition = 0.10
+	navy_tradition_from_battle = 0.5 #new
 }
 
 abm_mhr_lands_of_frankincense_and_the_khareef = {
@@ -1584,7 +1663,7 @@ abm_mhr_lands_of_frankincense_and_the_khareef = {
 	requires = renaissance_thought
 
 	# global_trade_goods_size_modifier = 0.1
-	global_max_rgo_size_modifier = 0.10
+	global_monthly_prosperity = 0.001 #was global_max_rgo_size_modifier = 0.10
 }
 
 abm_mhr_mercenary_traditions = {
@@ -1598,6 +1677,7 @@ abm_mhr_mercenary_traditions = {
 
 	# merc_maintenance_modifier = -0.1
 	mercenary_maintenance_efficiency = 0.15
+	hire_mercenary_leader_cost_modifier = -0.25 #new
 }
 
 abm_mhr_mahra_tribes = {
@@ -1623,7 +1703,7 @@ abm_mhr_pilots_of_the_arabian_sea = {
 	requires = paved_road_advance
 
 	# leader_naval_manuever = 1
-	navy_movement_speed = 0.10
+	navy_movement_speed = 0.20 #was 0.1
 }
 
 abm_mhr_camels = {
@@ -1638,8 +1718,8 @@ abm_mhr_camels = {
 	# movement_speed = 0.15
 	# cavalry_cost = -0.05
 	army_movement_speed = 0.10
-	army_light_cavalry_build_cost_modifier = -0.10
-	army_heavy_cavalry_build_cost_modifier = -0.10
+	army_light_cavalry_build_cost_modifier = -0.20 #was -0.1
+	army_heavy_cavalry_build_cost_modifier = -0.20 #was -0.1
 }
 
 abm_mhr_book_of_navigation = {
@@ -1652,7 +1732,8 @@ abm_mhr_book_of_navigation = {
 	requires = global_trade_advance
 
 	# navy_tradition_decay = -0.01
-	navy_tradition_decay = -0.01
+	navy_tradition_decay = -0.001 #was -0.01
+	naval_range_modifier = 0.25 #new
 }
 
 abm_mhr_rein_in_the_chiefs = {
@@ -1678,5 +1759,6 @@ abm_mhr_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# naval_maintenance_modifier = -0.2
-	navy_maintenance_efficiency = 0.10
+	naval_morale_recovery = 0.05 #was navy_maintenance_efficiency = 0.10
+	naval_morale_modifier = 0.1 #new
 }
