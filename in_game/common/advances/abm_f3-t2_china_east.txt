@@ -1156,10 +1156,10 @@ abm_mng_tradition_2 = {
 	}
 	requires = unlock_feudal_levy_advance
 
-	global_garrison_size_modifier = 0.20
+	government_reform_slots = 1
 }
 
-abm_mng_grand_divisions_restored = {
+abm_mng_nine_garrisons_of_the_great_wall = {
 	age = age_2_renaissance
 	icon = defensive_army
 
@@ -1169,10 +1169,10 @@ abm_mng_grand_divisions_restored = {
 	}
 	requires = drill_army_advance
 
-	discipline = 0.05
+	global_defensive = 0.20
 }
 
-abm_mng_inward_perfection = {
+abm_mng_revived_three_grand_divisions = {
 	age = age_2_renaissance
 	icon = crown_power_advance_renaissance
 
@@ -1182,90 +1182,84 @@ abm_mng_inward_perfection = {
 	}
 	requires = recruitment_law_advance
 
+	discipline = 0.05
+}
+
+abm_mng_inward_perfection = {
+	age = age_3_discovery
+	icon = smooth_administration
+
+	potential = {
+		has_or_had_tag = MNG
+		culture = { has_culture_group = culture_group:chinese_group }
+	}
+	requires = colonial_charters
+
 	stability_cost_efficiency = 0.10
 }
 
-<<<<<<< HEAD
-abm_mng_repair_yellow_river_dykes = {
+abm_mng_yellow_river_dykes = {
 	age = age_3_discovery
-	icon = smooth_administration
-	=======
-	abm_mng_yellow_river_dykes = {
-		age = age_3_discovery
-		icon = city_building_advance
-		>>>>>>> feature/china
+	icon = red_sea_trade
 
-		potential = {
-			has_or_had_tag = MNG
-			culture = { has_culture_group = culture_group:chinese_group }
-		}
-		requires = colonial_charters
-
-		global_production_efficiency = medium_production_efficiency_bonus
+	potential = {
+		has_or_had_tag = MNG
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
+	requires = trade_range_advance_age_3
 
-	abm_mng_restore_salt_monopoly = {
-		age = age_3_discovery
-		icon = red_sea_trade
+	global_production_efficiency = medium_production_efficiency_bonus
+}
 
-		potential = {
-			has_or_had_tag = MNG
-			culture = { has_culture_group = culture_group:chinese_group }
-		}
-		requires = trade_range_advance_age_3
+abm_mng_salt_monopoly  = {
+	age = age_4_reformation
+	icon = artists_advance
 
-		selling_efficiency = small_trade_efficiency_bonus
-		export_efficiency = small_trade_efficiency_bonus
+	potential = {
+		has_or_had_tag = MNG
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
+	requires = construction_speed_reformation
 
-	abm_mng_single_whip_law = {
-		age = age_4_reformation
-		icon = artists_advance
+	selling_efficiency = small_trade_efficiency_bonus
+	export_efficiency = small_trade_efficiency_bonus
+}
 
-		potential = {
-			has_or_had_tag = MNG
-			culture = { has_culture_group = culture_group:chinese_group }
-		}
-		requires = construction_speed_reformation
+abm_mng_single_whip_law = {
+	age = age_4_reformation
+	icon = gunpowder_advance
 
-		tax_income_efficiency = large_tax_income_efficiency_bonus
+	potential = {
+		has_or_had_tag = MNG
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
+	requires = artillery_institution_advance
 
-	abm_mng_the_red_cannon = {
-		age = age_4_reformation
-		icon = gunpowder_advance
+	tax_income_efficiency = large_tax_income_efficiency_bonus
+}
 
-		potential = {
-			has_or_had_tag = MNG
-			culture = { has_culture_group = culture_group:chinese_group }
-		}
-		requires = artillery_institution_advance
+abm_mng_the_red_cannon = {
+	age = age_5_absolutism
+	icon = court_accounting
 
-		siege_ability = 0.20
+	potential = {
+		has_or_had_tag = MNG
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
+	requires = government_size_absolutism
 
-	abm_mng_reconstructed_grand_secretariat = {
-		age = age_5_absolutism
-		icon = court_accounting
+	siege_ability = 0.20
+}
 
-		potential = {
-			has_or_had_tag = MNG
-			culture = { has_culture_group = culture_group:chinese_group }
-		}
-		requires = government_size_absolutism
+abm_mng_ambition = {
+	age = age_6_revolutions
+	icon = administrative_leadership
 
-		government_reform_slots = 1
+	potential = {
+		has_or_had_tag = MNG
+		culture = { has_culture_group = culture_group:chinese_group }
 	}
+	requires = crown_power_advance_revolutions
 
-	abm_mng_ambition = {
-		age = age_6_revolutions
-		icon = administrative_leadership
-
-		potential = {
-			has_or_had_tag = MNG
-			culture = { has_culture_group = culture_group:chinese_group }
-		}
-		requires = crown_power_advance_revolutions
-
-		research_speed_modifier = 0.05
-	}
+	research_speed_modifier = 0.05
+}
