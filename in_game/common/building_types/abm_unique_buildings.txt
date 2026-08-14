@@ -227,3 +227,166 @@ abm_buddhist_monastery_stronghold = {
 	#}
 	construction_demand = early_soldier_building_construction
 }
+
+REPLACE:safaviyya_order_hall = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = no
+	pop_type = tribesmen	#Qizilbash are intentionally tribesmen pops
+	max_levels = 1 #was 2
+	employment_size = generic_tribesmen_employment
+	category = military_category
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	build_time = soldier_building
+	always_add_demands = yes
+	modifier = {
+		local_manpower = 0.005 #was 0.01 
+		can_recruit_regiment_in_this_location = yes
+	}
+	possible_production_methods = {
+		safaviyya_order_hall_maintenance
+	}
+	allow = {
+		dominant_culture = { has_culture_group = culture_group:iranian_group }
+		dominant_religion ?= religion:shia
+	}
+	construction_demand = early_soldier_building_construction
+}
+
+REPLACE:cawa_barracks = {
+	audio_tier = 2
+	is_special = yes
+	is_foreign = no
+	pop_type = soldiers
+	
+	max_levels = 1 #was janissary_barracks_size
+	employment_size = 0.5 #was manpower_employment
+	
+	category = military_category
+	
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	
+	build_time = soldier_building
+	
+	always_add_demands = yes
+	
+	modifier = {
+		local_manpower = 0.005 #was 0.01
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	possible_production_methods = {
+		cawa_barracks_maintenance
+	}
+	construction_demand = early_soldier_building_construction
+}
+
+REPLACE:janissary_barracks = {
+	audio_tier = 4
+	is_special = yes
+	is_foreign = no
+	pop_type = slaves
+	
+	max_levels = 1 #was janissary_barracks_size
+	employment_size = slave_soldier_barracks
+	
+	category = military_category
+	
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	
+	build_time = soldier_building
+	
+	always_add_demands = yes
+	
+	modifier = {
+		local_manpower = 0.010
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	possible_production_methods = {
+		janissary_barracks_maintenance
+	}
+	construction_demand = early_soldier_building_construction
+}
+
+REPLACE:mamluk_barracks = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = no
+	pop_type = slaves
+	
+	max_levels = 1 #was 3
+	employment_size = slave_soldier_barracks
+	
+	category = military_category
+	
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	
+	build_time = soldier_building
+
+	expensive = yes
+	
+	country_potential = {
+		modifier:can_build_mamluk_barracks = yes
+	}
+
+	
+	always_add_demands = yes
+	
+	modifier = {
+		local_manpower = 0.01
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	unique_production_methods = {
+		mamluk_barracks_maintenance  = {
+			leather = 0.15
+			cloth = 0.1
+			weaponry = 0.1
+			slaves_goods = 0.05
+			category = building_maintenance
+		}
+	}
+	construction_demand = soldier_building_construction
+}
+
+REPLACE:ghilman_barracks = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = no
+	pop_type = slaves
+	max_levels = 1
+	employment_size = slave_soldier_barracks
+	category = military_category
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	build_time = soldier_building
+	always_add_demands = yes
+	modifier = {
+		local_manpower = 0.010 #was 0.025
+		can_recruit_regiment_in_this_location = yes
+	}
+	possible_production_methods = {
+		ghilman_barracks_maintenance
+	}
+	construction_demand = early_soldier_building_construction
+}
