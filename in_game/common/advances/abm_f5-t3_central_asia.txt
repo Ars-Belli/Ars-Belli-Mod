@@ -48,7 +48,7 @@ abm_buk_jochid_patrimony = {
 	# republican_tradition = 0.15
 	# meritocracy = 0.5
 	# horde_unity = 0.5
-	global_integration_speed_modifier = 0.15
+	#global_integration_speed_modifier = 0.15 #this was too much
 	monthly_legitimacy = 0.10
 	monthly_devotion = 0.10
 	monthly_republican_tradition = 0.10
@@ -67,8 +67,9 @@ abm_buk_naqshbandi_patronage = {
 
 	# monthly_piety_accelerator = 0.001
 	# global_institution_spread = 0.15
-	monthly_purity = 0.05
+	#monthly_purity = 0.05 #not applicable - shinto mechanic
 	global_institution_growth_modifier = 0.10
+	embrace_institution_cost_modifier = -0.25 #new
 }
 
 abm_buk_mahalla_schools = {
@@ -96,7 +97,7 @@ abm_buk_the_jews_of_bukhara = {
 	# tolerance_of_heathens_capacity = 1
 	# dhimmi_loyalty_modifier = 0.05
 	tolerance_heathen = 1
-	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
+	dhimmi_estate_target_satisfaction = medium_permanent_target_satisfaction #was targeting clergy erroneously
 }
 
 abm_buk_the_ark = {
@@ -109,7 +110,7 @@ abm_buk_the_ark = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# fort_maintenance_modifier = -0.25
-	fort_maintenance_efficiency = 0.10
+	fort_maintenance_efficiency = 0.30 #was 0.1
 }
 
 abm_buk_the_tower_of_death = {
@@ -123,6 +124,7 @@ abm_buk_the_tower_of_death = {
 
 	# global_unrest = -2
 	pop_join_rebel_threshold = -0.05
+	monthly_rebel_growth = -0.001 #new
 }
 
 abm_buk_sahih_al_bukhari = {
@@ -150,101 +152,216 @@ abm_buk_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# build_cost = -0.15
-	global_build_buildings_efficiency = 0.10
+	global_build_buildings_efficiency = 0.20 #was 0.1
 }
 
-###################################
-### Khorasan - settled formable ###
-###################################
+####################################################
+### Greater Khorasan - T4 Central Asian formable ###
+####################################################
+
+abm_gkh_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = feudalism_advance
+
+	army_initiative = 0.1
+	correct_box_chance = 0.1 
+}
+
+abm_gkh_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = diplomatic_training
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = feudalism_advance
+
+	global_horses_output_modifier = 0.25
+}
+
+abm_gkh_advance_1 = {
+	age = age_2_renaissance
+	icon = court_accounting
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = renaissance_thought
+
+	max_diplomats = 2
+	diplomatic_capacity_modifier = 0.2
+}
+
+abm_gkh_advance_2 = {
+	age = age_2_renaissance
+	icon = smooth_administration
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = legalism_advance
+
+	combined_bonus_per_type = 0.01
+}
+
+abm_gkh_advance_3 = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = military_traditions
+
+	global_manpower_modifier = 0.1
+}
+
+abm_gkh_advance_4 = {
+	age = age_3_discovery
+	icon = smooth_administration
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = paved_road_advance
+
+	nobles_estate_allowed_to_build_roads = yes
+	build_paved_road_cost_modifier = -0.2
+	build_modern_road_cost_modifier = -0.2
+}
+
+abm_gkh_advance_5 = {
+	age = age_4_reformation
+	icon = abacus_advance
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	food_consumption_modifier = -0.1
+	global_supply_limit_modifier = 0.1
+}
+
+abm_gkh_advance_6 = {
+	age = age_4_reformation
+	icon = church_councils
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = global_trade_advance
+
+	trade_range_modifier = 0.3
+}
+
+abm_gkh_advance_7 = {
+	age = age_5_absolutism
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = absolutist_court
+
+	possible_frontage_modifier = 0.1
+}
+
+abm_gkh_ideas_ambition = {
+	age = age_6_revolutions
+	icon = library_advance
+	potential = {
+		has_or_had_tag = ABGKH
+	}
+
+	requires = imperial_ambitions
+
+	num_possible_artists = 2
+	skill_of_new_artists = 0.25
+	global_monthly_art_start_chance = 0.2
+}
+
+######################################
+### Khorasan - T3 Iranian formable ###
+######################################
 
 abm_khr_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = glorious_arms
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = feudalism_advance
 
 	# cavalry_power = 0.15
-	army_heavy_cavalry_power = 0.10
+	army_initiative = 0.1 #was army_heavy_cavalry_power = 0.10
+	combat_speed_modifier = 0.1 #new
 }
 
 abm_khr_ideas_tradition_2 = {
 	age = age_1_traditions
 	icon = diplomatic_training
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = feudalism_advance
 
 	# land_morale = 0.1
-	land_morale_modifier = 0.10
+	global_saffron_output_modifier = 0.25 #was land_morale_modifier = 0.10
 }
 
 abm_khr_land_of_the_rising_sun = {
 	age = age_2_renaissance
 	icon = court_accounting
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = renaissance_thought
 
 	# diplomatic_reputation = 1
 	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	diplomatic_capacity = 0.5 #new
 }
 
 abm_khr_rein_in_the_turko_mongol_emirs = {
 	age = age_2_renaissance
 	icon = smooth_administration
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = legalism_advance
 
 	# army_tradition = 0.5
-	monthly_army_tradition = 0.05
+	monthly_army_tradition = 0.1 #was 0.05
 }
 
 abm_khr_princely_appanages = {
 	age = age_3_discovery
 	icon = glorious_arms
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = military_traditions
 
 	# global_manpower_modifier = 0.1
-	global_manpower_modifier = 0.10
+	army_maintenance_efficiency = 0.1 #was global_manpower_modifier = 0.10
 }
 
 abm_khr_dynastic_chronicles = {
 	age = age_3_discovery
 	icon = smooth_administration
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = paved_road_advance
@@ -265,26 +382,21 @@ abm_khr_irrigation_network = {
 	age = age_4_reformation
 	icon = abacus_advance
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = supply_depot_advance_age_4_reformation
 
 	# global_trade_goods_size_modifier = 0.1
-	global_max_rgo_size_modifier = 0.10
+	global_monthly_food_modifier = 0.1
+	expand_rgo_farming_cost_modifier = 0.3 #was global_max_rgo_size_modifier = 0.10
 }
 
 abm_khr_great_sheiks_of_khorasan = {
 	age = age_4_reformation
 	icon = church_councils
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = global_trade_advance
@@ -297,32 +409,26 @@ abm_khr_protect_the_caravan_routes = {
 	age = age_5_absolutism
 	icon = merchants_and_trade
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = absolutist_court
 
 	# trade_efficiency = 0.10
-	trade_income = 0.10
+	global_merchant_capacity_modifier = 0.25 #was trade_income = 0.10
 }
 
 abm_khr_ideas_ambition = {
 	age = age_6_revolutions
 	icon = library_advance
 	potential = {
-		OR = {
 		has_or_had_tag = ABKHR
-		has_or_had_tag = ABGKH
-		}
 	}
 
 	requires = imperial_ambitions
 
 	# technology_cost = -0.05
-	research_speed_modifier = 0.05
+	research_speed_modifier = 0.10 #was 0.05
 }
 
 #############
@@ -339,7 +445,7 @@ abm_khi_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# land_attrition = -0.1
-	land_unit_attrition = -0.10
+	global_population_capacity_modifier = 0.15 #was land_unit_attrition = -0.10
 }
 
 abm_khi_ideas_tradition_2 = {
@@ -352,8 +458,9 @@ abm_khi_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# cavalry_cost = -0.1
-	army_light_cavalry_build_cost_modifier = -0.10
-	army_heavy_cavalry_build_cost_modifier = -0.10
+	#army_light_cavalry_build_cost_modifier = -0.10
+	#army_heavy_cavalry_build_cost_modifier = -0.10
+	trade_range = 300 #new
 }
 
 abm_horde_legacy = {
@@ -367,6 +474,7 @@ abm_horde_legacy = {
 
 	# cavalry_power = 0.15
 	army_heavy_cavalry_power = 0.10
+	army_heavy_cavalry_build_cost_modifier = -0.10 #new
 }
 
 abm_deserts_of_khiva = {
@@ -392,7 +500,7 @@ abm_oasis_of_merv = {
 	requires = military_traditions
 
 	# caravan_power = 0.2
-	trade_land_efficiency = medium_trade_land_efficiency_bonus
+	trade_land_efficiency = large_trade_land_efficiency_bonus #was medium_trade_land_efficiency_bonus
 }
 
 abm_djuma_mosque = {
@@ -405,7 +513,8 @@ abm_djuma_mosque = {
 	requires = paved_road_advance
 
 	# global_missionary_strength = 0.01
-	global_pop_conversion_speed_modifier = 0.20
+	cultural_influence_modifier = 0.1 #was global_pop_conversion_speed_modifier = 0.20
+	global_urban_build_buildings_efficiency = 0.2 #new
 }
 
 abm_amu_darya = {
@@ -418,7 +527,8 @@ abm_amu_darya = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# trade_efficiency = 0.1
-	trade_income = 0.10
+	import_efficiency = medium_trade_efficiency_bonus #trade_income = 0.10
+	global_merchant_power = 0.1 #new
 }
 
 abm_ichan_qala = {
@@ -432,6 +542,7 @@ abm_ichan_qala = {
 
 	# defensiveness = 0.15
 	global_defensive = 0.15
+	fort_limit_modifier = 0.1 #new
 }
 
 abm_great_powers_diplomacy = {
@@ -445,6 +556,7 @@ abm_great_powers_diplomacy = {
 
 	# improve_relation_modifier = 0.2
 	improve_relation_impact = 0.20
+	diplomatic_range_modifier = 0.33 #new
 }
 
 abm_khi_ideas_ambition = {
@@ -457,7 +569,8 @@ abm_khi_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# reinforce_speed = 0.1
-	regiment_reinforcement_speed = 0.10
+	correct_box_chance = 0.1 #was regiment_reinforcement_speed = 0.10
+	combat_speed_modifier = 0.2 #new
 }
 
 ###################
@@ -487,8 +600,9 @@ abm_trs_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# cavalry_cost = -0.1
-	army_light_cavalry_build_cost_modifier = -0.10
-	army_heavy_cavalry_build_cost_modifier = -0.10
+	#army_light_cavalry_build_cost_modifier = -0.10
+	#army_heavy_cavalry_build_cost_modifier = -0.10
+	peasants_estate_levy_size = 0.15 #new
 }
 
 abm_trs_mawarannahr = {
@@ -514,6 +628,7 @@ abm_trs_threshold_of_paradise = {
 	requires = legalism_advance
 
 	# prestige = 1
+	global_urban_build_buildings_efficiency = 0.1 #new
 	monthly_prestige = 0.10
 }
 
@@ -527,7 +642,8 @@ abm_trs_adept_diplomacy = {
 	requires = military_traditions
 
 	# spy_offence = 0.2
-	spy_network_construction = 0.20
+	spy_network_construction = 0.15 #was 0.2
+	monthly_diplomats = 0.1 #new
 }
 
 abm_trs_turkoman_cannoneers = {
@@ -541,6 +657,7 @@ abm_trs_turkoman_cannoneers = {
 
 	# artillery_cost = -0.15
 	army_artillery_build_cost_modifier = -0.10
+	army_artillery_power = 0.1 #new
 }
 
 abm_trs_scientific_patronage = {
@@ -566,7 +683,8 @@ abm_trs_entrepot_of_the_silk_road = {
 	requires = global_trade_advance
 
 	# global_own_trade_power = 0.25
-	global_trade_center_power = 0.10
+	global_trade_center_power = 0.05
+	global_trade_through_owned_territory_efficiency = 0.4
 }
 
 abm_chagatai_literature = {
@@ -583,11 +701,12 @@ abm_chagatai_literature = {
 	# republican_tradition = 0.3
 	# meritocracy = 1
 	# horde_unity = 1
-	monthly_legitimacy = 0.10
-	monthly_devotion = 0.10
-	monthly_republican_tradition = 0.10
-	monthly_tribal_cohesion = 0.10
-	monthly_horde_unity = 0.10
+	#monthly_legitimacy = 0.10
+	#monthly_devotion = 0.10
+	#monthly_republican_tradition = 0.10
+	#monthly_tribal_cohesion = 0.10
+	#monthly_horde_unity = 0.10
+	court_spending_efficiency = 0.2 #new
 }
 
 abm_trs_ideas_ambition = {
@@ -600,5 +719,5 @@ abm_trs_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# idea_cost = -0.1
-	research_speed_modifier = 0.05
+	global_max_literacy = 10 #was research_speed_modifier = 0.05
 }
