@@ -15,6 +15,12 @@ REPLACE:alliance_can_exist = {
 			in_union_with = $second$
 		}
 		is_rebel_country = no
+		NOT = {
+			AND = {
+				is_mp_gp = yes
+				$second$ = { is_mp_gp = yes }
+			}
+		}
 	}
 	$second$ = {
 		opinion = { target = $first$ value >= 0 }

@@ -1,0 +1,196 @@
+﻿# ARS BELLI: replacement for both the engine "Intervene in War" and the engine
+# "Enforce Peace". Intervene is disabled mod-wide (see static_modifiers) because it
+# resolves with no input from the countries at war, which reads as unfair. This action
+# covers every case Intervene used to: Ars Belli Great Powers and Major Powers (the
+# mp_power_score ranks, not vanilla's), and any country at all when either leader of
+# the war is its rival.
+#
+# The engine Enforce Peace could not be reused because it is a single accept/decline by
+# one side. The required flow is defender first, attacker second:
+#
+#   actor picks a war -> DEFENDER leader gets accept/decline (this interaction)
+#     declined -> nothing happens, the war carries on
+#     accepted -> ATTACKER leader gets an event (ars_belli_enforce_peace.1)
+#       accepted -> white peace
+#       declined -> the actor joins the war on the defender's side
+#
+# The defender-first order is the point: it stops Enforce Peace being used to rescue a
+# losing attacker by forcing a white peace over the defender's objection.
+
+ars_belli_enforce_peace = {
+	type = diplomacy
+	category = CATEGORY_MILITARY_ACTIONS
+
+	potential = {
+		scope:actor = {
+			has_limited_diplomacy = no
+		}
+	}
+
+	# Deliberately empty. The standing requirement needs to know WHICH war is being
+	# targeted - being rival to the attacker is just as valid as being rival to the
+	# defender - and scope:target is not set while the selection lists are being drawn.
+	# Testing it here greyed out every entry, so it lives on the war select_trigger's
+	# enabled block below, where root is the war and both leaders are reachable.
+	allow = {
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "ars_belli_enforce_peace_select_defender"
+		none_available_msg_key = "ars_belli_enforce_peace_no_defenders"
+		column = {
+			data = name
+		}
+		visible = {
+			within_diplomatic_range = scope:actor
+			this != scope:actor
+			any_current_war = {
+				defender_leader = prev
+				NOT = {
+					any_war_participant = {
+						this = scope:actor
+					}
+				}
+			}
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = war
+		source = recipient
+		target_flag = target
+		name = "ars_belli_enforce_peace_select_war"
+		none_available_msg_key = "ars_belli_enforce_peace_no_wars"
+		column = {
+			data = name
+		}
+		visible = {
+			defender_leader = scope:recipient
+			NOT = {
+				any_war_participant = {
+					this = scope:actor
+				}
+			}
+		}
+		# root is the war here, so both leaders are directly reachable and rivalry with
+		# either one counts. Mod ranks, not vanilla: Ars Belli assigns Great / Major
+		# Power from mp_power_score (see scripted_triggers/mp_limits_triggers.txt).
+		enabled = {
+			custom_tooltip = {
+				text = ars_belli_enforce_peace_standing_tt
+				OR = {
+					scope:actor = { is_mp_gp = yes }
+					scope:actor = { is_mp_major = yes }
+					attacker_leader = { is_rival_of = scope:actor }
+					defender_leader = { is_rival_of = scope:actor }
+				}
+			}
+		}
+	}
+
+	# The defender accepted. Hand the decision to the attacker.
+	effect = {
+		if = {
+			limit = { exists = scope:target }
+			# Handed over as variables, not save_scope_as. Scopes saved in a
+			# country_interaction effect do not survive into the triggered event at all -
+			# "Undefined event target" in error.log - because the interaction's scope
+			# container is gone by the time the event resolves. Variables live on the
+			# country, so they always survive; the event turns them back into scopes.
+			scope:target.attacker_leader = {
+				set_variable = {
+					name = ab_ep_enforcer
+					value = scope:actor
+				}
+				set_variable = {
+					name = ab_ep_defender
+					value = scope:recipient
+				}
+				set_variable = {
+					name = ab_ep_war
+					value = scope:target
+				}
+				trigger_event_non_silently = ars_belli_enforce_peace.1
+			}
+		}
+		else = {
+			custom_tooltip = ars_belli_enforce_peace_select_a_war
+		}
+	}
+
+	# The defender declined. Nothing changes; the war carries on.
+	reject_effect = {
+		custom_tooltip = ars_belli_enforce_peace_defender_refused_tt
+	}
+
+	block_when_at_war = no
+
+	ai_tick = monthly
+	ai_tick_frequency = 6
+
+	diplo_chance = {
+		base = 0
+	}
+
+	# The defender is being offered a way out, so weigh how badly the war is going for
+	# them. A defender who is winning should not take a white peace.
+	accept = {
+		add = {
+			desc = "BASE_VALUE"
+			value = 25
+		}
+		if = {
+			limit = { exists = scope:target }
+			add = {
+				desc = "DIPLOREASON_LOSING_WAR"
+				value = "scope:recipient.war_score_in_war_whole_side(scope:target)"
+				multiply = -1.5
+			}
+		}
+		add = {
+			desc = "game_concept_opinion"
+			value = "scope:recipient.opinion(scope:actor)"
+			divide = 4
+		}
+		if = {
+			limit = {
+				scope:recipient = { is_rival_of = scope:actor }
+			}
+			subtract = {
+				desc = "game_concept_rival"
+				value = 50
+			}
+		}
+	}
+
+	# Deliberately conservative: a refusal by the attacker drags us into the war, so the
+	# AI should only reach for this when it clearly outweighs the attacker.
+	ai_will_do = {
+		add = {
+			desc = "BASE_VALUE"
+			value = 10
+		}
+		if = {
+			limit = {
+				scope:actor = { is_mp_gp = yes }
+			}
+			add = {
+				desc = "ars_belli_ep_reason_standing"
+				value = 20
+			}
+		}
+		if = {
+			limit = {
+				exists = scope:target
+				scope:target.attacker_leader = { is_mp_gp = yes }
+				scope:actor = { NOT = { is_mp_gp = yes } }
+			}
+			subtract = {
+				desc = "ars_belli_ep_reason_outmatched"
+				value = 100
+			}
+		}
+	}
+}

@@ -2,7 +2,7 @@
 
 [i]A gameplay-focused mod for Europa Universalis V, built primarily for multiplayer sessions.[/i]
 
-Ars Belli adds a custom power-ranking system, diplomatic alliance limits, and an extensive military/diplomacy rebalance. Supports game version 1.2.*.
+Ars Belli adds a custom power-ranking system, diplomatic alliance limits, and an extensive military/diplomacy rebalance. Supports game version 1.3.*.
 Server link: https://discord.gg/ZxbBhu9W
 
 [hr][/hr]
@@ -33,7 +33,8 @@ Server link: https://discord.gg/ZxbBhu9W
 [*]Personal unions count as defensive, [b]unless[/b] the union has an offensive policy active (Possible / Automatic / Assured Offense), in which case both members consume Alliance Points instead — defensive unions still cost DP.
 [*]Colonial nations and their overlord now consume Alliance Points on both sides (when both are players).
 [*]Only Great Powers and Majors get Guarantee Relations; everyone else gets 0. Each guarantee counts as 1 relation regardless of rank.
-[*]Hegemons can now ally each other.
+[*][b]Two Great Powers cannot be allied[/b] — an alliance expires as soon as both partners are GPs. This replaces vanilla's hegemon-to-hegemon block, so two hegemons may ally provided they are not both GPs.
+[*]Economic Support costs a Defensive Point to both the sender and the recipient.
 [*]Toggleable alert when over the alliance limit (default OFF), enabled from the tier list UI.
 [/list]
 
@@ -45,6 +46,19 @@ Server link: https://discord.gg/ZxbBhu9W
 [*][b]Unconditional Surrender[/b] action from Gekkarino's Grand EU5 Rebalance and Complete Overhaul Mod.
 [*][b]Vision Sharing:[/b] no longer requires non-negative opinion on either side — share vision with countries you dislike.
 [*][b]Institution-spread exploits closed:[/b] Knowledge Sharing is disabled outright, and Alliance + Fleet Basing Rights no longer spread institutions between the parties (they were a spammable instant-action vector in MP).
+[*][b]Send Economic Support:[/b] rebuilt so the recipient gets an accept/decline popup first. The slider runs from 0 to the sender's whole monthly income (opening at 10%), costs both sides a Defensive Point and -0.10 monthly diplomats, and a country can only have one patron at a time. The vanilla action can't be removed from the game, so it is flagged as against the rules.
+[*][b]Forgive Antagonism:[/b] two new friendly actions that write off antagonism you hold against another country — half of it, or a flat 200. Each needs at least 10 antagonism, each has its own 10-year cooldown, and using both is cumulative. Stealing maps now generates 1 antagonism instead of 10.
+[*][b]Rivals can be swapped freely:[/b] the 5-year lockout after dropping a rival is removed.
+[*][b]Defensive leagues[/b] no longer require non-negative opinion between the parties, to form or to join.
+[/list]
+
+[h2]Enforce Peace[/h2]
+[list]
+[*][b]Intervene in War is removed[/b] mod-wide — it resolved with no input from the countries actually at war — and the vanilla Enforce Peace is replaced by a new [b]Enforce Peace[/b] action covering every case Intervene used to.
+[*][b]The defender is asked first.[/b] Only if they accept is the demand put to the attacker: the attacker accepting ends the war in a white peace, the attacker refusing brings the enforcer into the war on the defender's side. This is the point of the ordering — it stops Enforce Peace being used to rescue a losing attacker over the defender's objection.
+[*]Usable by [b]Great Powers and Major Powers[/b] (Ars Belli ranks, not vanilla's), and by any country at all when either leader of the war is its rival.
+[*]The war-view button is always visible and greys out with a tooltip listing the unmet requirement, instead of disappearing. The "a rival is at war" alert opens Enforce Peace too.
+[*]The HRE Emperor no longer gets the vanilla Enforce Peace and Intervene in War, and uses the same action as everyone else.
 [/list]
 
 [h2]Personal Unions[/h2]
