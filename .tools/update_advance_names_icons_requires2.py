@@ -3,9 +3,10 @@
 
 Successor of update_advance_names_icons_requires.py:
   * keeps the curated modifier -> (icon, requires) mapping and the icon
-    picking of the old tool (that part works well and is unchanged), with one
-    rule: icon repetition is avoided WITHIN an advance set (same potential
-    block / same tag), not across the whole file.
+    picking of the old tool, with two anti-repetition rules: an icon is never
+    reused within an advance set (same potential block / same tag), and the
+    least-used icon across the whole run is preferred so the same icon does
+    not show up all over the mod.
   * drops the unused "advance renaming" part entirely,
   * adds a compatibility table built from vanilla EU5 advances so every match
     is thematic: a military advance gets a military icon and a military
@@ -27,7 +28,8 @@ Inputs (positional arguments, can be mixed and repeated):
 Without positional arguments, all abm_*.txt files in in_game/common/advances
 are processed.
 
-Actions: --icons (only icons), --requires (only prerequisites), neither = both.
+Actions: --icons (only icons), --requires (only prerequisites), neither = both;
+--force overwrites values even when the recomputed value is unchanged.
 Skip filters: --skip-key, --skip-pattern, --skip-tag, --skip-replace exclude
 matching advances from processing.
 Encoding: every written file is UTF-8 with BOM (a missing BOM is added
@@ -717,14 +719,16 @@ class Reference:
             for req in entry['requires']:
                 self.hub[req] += 1
 
-    def pick_requires(self, key, type_, age):
-        """Pick a same-age thematic vanilla prerequisite for `key`.
+    def pick_requires(self, key, type_, age, preferred=None,
+                      requires_counts=None):
+        """Pick a same-age, same-type prerequisite, spreading usage.
 
-        Only advances from the SAME age as the input advance are considered,
-        so prerequisites never cross age boundaries. Same-type advances that
-        many other advances already require (canonical prerequisites) are
-        preferred, deterministically rotated by a hash of the advance key.
-        Returns None if no same-age candidate exists.
+        Only advances from the SAME age and type as the input advance are
+        considered. When a usage counter is supplied the least-used candidate
+        is preferred (so the same prerequisite does not clump); the curated or
+        age-default `preferred` requirement wins ties, then canonical
+        prerequisites; the choice is deterministically rotated by a hash of
+        the advance key. Returns None if no same-age candidate exists.
         """
         candidates = [
             k for k, e in self.table.items()
@@ -733,7 +737,16 @@ class Reference:
         ]
         if not candidates:
             return None
-        candidates.sort(key=lambda k: (-self.hub.get(k, 0), k))
+
+        def rank(k):
+            return 0 if k == preferred else 1
+
+        def count(k):
+            return (requires_counts.get(k, 0)
+                    if requires_counts is not None else 0)
+
+        candidates.sort(key=lambda k: (count(k), rank(k),
+                                       -self.hub.get(k, 0), k))
         offset = int(hashlib.sha256(key.encode()).hexdigest()[:8], 16) % len(candidates)
         return candidates[offset]
 
@@ -867,7 +880,7 @@ def get_age_require(age_str, family):
 
 # ── Icon picking (same type + same age rules as requirements) ───────
 def choose_icon(key, primary, requirement, type_, family, age, ref,
-                group_icons):
+                group_icons, icon_counts):
     """Pick an icon for `key`.
 
     1. Candidates: curated primary, the prerequisite's icon, then the
@@ -878,9 +891,10 @@ def choose_icon(key, primary, requirement, type_, family, age, ref,
     3. The pool is widened with same-age, same-type vanilla icons first
        (hub-ranked), then same-type icons of any age.
     4. Final pick: icons already used by the advance's own set (same
-       potential block) are avoided first — repetition ACROSS different sets
-       is fine; then same-age is preferred over cross-age, deterministically
-       rotated by a hash of the advance key.
+       potential block) are avoided first; then same-age is preferred over
+       cross-age; within that, the least-used icon across the whole run is
+       preferred to cut down on repetition; finally the choice is
+       deterministically rotated by a hash of the advance key.
     """
     candidates = [primary, requirement, *ICON_POOLS.get(family, ())]
     candidates = [c for c in candidates if c]
@@ -942,9 +956,27 @@ def choose_icon(key, primary, requirement, type_, family, age, ref,
     return min(
         pool,
         key=lambda icon: (
-            icon in group_icons, ranked[icon], pool.index(icon),
+            icon in group_icons, ranked[icon],
+            icon_counts.get(icon, 0), pool.index(icon),
         ),
     )
+
+
+def seed_icon_counts(filepath, icon_counts):
+    """Count existing `icon = ...` values so re-runs avoid reusing them."""
+    raw = filepath.read_bytes()
+    content = raw.decode('utf-8-sig').replace('\r\n', '\n')
+    for match in re.finditer(r'^\s*icon\s*=\s*([A-Za-z_]\w*)', content, re.M):
+        icon_counts[match.group(1)] += 1
+
+
+def seed_requires_counts(filepath, requires_counts):
+    """Count existing `requires = ...` values so re-runs avoid reusing them."""
+    raw = filepath.read_bytes()
+    content = raw.decode('utf-8-sig').replace('\r\n', '\n')
+    for match in re.finditer(
+            r'^\s*requires\s*=\s*([A-Za-z_]\w*)', content, re.M):
+        requires_counts[match.group(1)] += 1
 
 
 # ── File transformation ────────────────────────────────────────────
@@ -963,6 +995,8 @@ def transform_file(filepath, ref, options):
     skip_keys = options['skip_keys']
     skip_patterns = options['skip_patterns']
     skip_tags = options['skip_tags']
+    force = options['force']
+    requires_counts = options['requires_counts']
 
     used_by_group = options['used_by_group']
     icon_counts = options['icon_counts']
@@ -1017,28 +1051,23 @@ def transform_file(filepath, ref, options):
                 f"'{type_}' from {'/'.join(entry['mod_keys'][:3]) or 'nothing'}"
             )
 
-        # Age-aware requires override (old behavior).
+        # Age-aware requires override (kept as the preferred prerequisite).
         age_require = get_age_require(entry['age'], family)
         if age_require:
             requirement = age_require
 
-        # Thematic + same-age requires correction against the table.
-        # A prerequisite must match the advance's type AND come from the same
-        # age; when the curated value violates either, it is replaced with a
-        # same-age, same-type vanilla prerequisite.
-        req_entry = ref.table.get(requirement)
-        if do_requires and req_entry and req_entry['known'] and entry['age']:
-            type_ok = req_entry['type'] == type_
-            age_ok = req_entry['age'] == entry['age']
-            if not (type_ok and age_ok):
-                repl = ref.pick_requires(key, type_, entry['age'])
-                if repl and repl != requirement:
-                    requirement = repl
-                else:
-                    print(
-                        f"  ! {key}: no same-age {type_} prerequisite in "
-                        f"{entry['age']}; keeping {requirement}"
-                    )
+        # Spread prerequisites like icons: among same-age, same-type
+        # candidates, prefer the least-used one so the same prerequisite does
+        # not clump across the mod; the curated/age-default requirement only
+        # wins ties.
+        if do_requires and entry['age']:
+            repl = ref.pick_requires(
+                key, type_, entry['age'], requirement, requires_counts,
+            )
+            if repl:
+                requirement = repl
+        if do_requires:
+            requires_counts[requirement] += 1
 
         if do_requires and entry['requires'] \
                 and entry['requires'] != [requirement]:
@@ -1057,6 +1086,7 @@ def transform_file(filepath, ref, options):
                 icon = choose_icon(
                     key, primary, requirement, type_, family,
                     entry['age'], ref, used_by_group[signature],
+                    icon_counts,
                 )
             except ValueError as exc:
                 print(f"  ! {key}: {exc}")
@@ -1078,13 +1108,19 @@ def transform_file(filepath, ref, options):
             if do_icons and icon is not None and s.startswith('icon = '):
                 if icon_written:
                     continue
-                indent = line[:len(line) - len(line.lstrip())]
-                new_lines.append(f'{indent}icon = {icon}')
+                if force or icon not in entry['icons']:
+                    indent = line[:len(line) - len(line.lstrip())]
+                    new_lines.append(f'{indent}icon = {icon}')
+                else:
+                    new_lines.append(line)
                 icon_written = True
                 continue
             if do_requires and s.startswith('requires = '):
-                indent = line[:len(line) - len(line.lstrip())]
-                new_lines.append(f'{indent}requires = {requirement}')
+                if force or entry['requires'] != [requirement]:
+                    indent = line[:len(line) - len(line.lstrip())]
+                    new_lines.append(f'{indent}requires = {requirement}')
+                else:
+                    new_lines.append(line)
                 req_written = True
                 continue
             new_lines.append(line)
@@ -1177,6 +1213,9 @@ def main(argv=None):
                         metavar='TAG',
                         help='skip advances whose potential references this '
                              '3-letter tag (repeatable)')
+    parser.add_argument('--force', action='store_true',
+                        help='overwrite existing icon/requires values even '
+                             'when the recomputed value is unchanged')
     args = parser.parse_args(argv)
 
     skip_patterns = []
@@ -1232,9 +1271,18 @@ def main(argv=None):
         'skip_keys': set(args.skip_key),
         'skip_patterns': skip_patterns,
         'skip_tags': {t.upper() for t in args.skip_tag},
+        'force': args.force,
         'icon_counts': Counter(),
+        'requires_counts': Counter(),
         'used_by_group': defaultdict(set),
     }
+    if do_icons:
+        for filepath in files:
+            seed_icon_counts(filepath, options['icon_counts'])
+    if do_requires:
+        for filepath in files:
+            seed_requires_counts(filepath, options['requires_counts'])
+
     for filepath in files:
         transform_file(filepath, ref, options)
 
