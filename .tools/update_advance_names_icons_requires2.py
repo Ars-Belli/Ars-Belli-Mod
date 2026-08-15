@@ -28,6 +28,8 @@ Without positional arguments, all abm_*.txt files in in_game/common/advances
 are processed.
 
 Actions: --icons (only icons), --requires (only prerequisites), neither = both.
+Skip filters: --skip-key, --skip-pattern, --skip-tag, --skip-replace exclude
+matching advances from processing.
 Encoding: every written file is UTF-8 with BOM (a missing BOM is added
 automatically); existing line endings (LF or CRLF) are preserved.
 
@@ -957,6 +959,10 @@ def transform_file(filepath, ref, options):
     key_filter = options['keys']
     tag_filter = options['tags']
     dry_run = options['dry_run']
+    skip_replace = options['skip_replace']
+    skip_keys = options['skip_keys']
+    skip_patterns = options['skip_patterns']
+    skip_tags = options['skip_tags']
 
     used_by_group = options['used_by_group']
     icon_counts = options['icon_counts']
@@ -967,15 +973,28 @@ def transform_file(filepath, ref, options):
     for key, start, end in find_top_level_blocks(content):
         block = content[start:end]
 
+        if skip_replace and key.startswith('REPLACE:'):
+            continue
+
         bare_key = key.split(':', 1)[-1]
+        if skip_keys and (bare_key in skip_keys or key in skip_keys):
+            continue
+        if skip_patterns and any(
+            pat.search(bare_key) or pat.search(key)
+            for pat in skip_patterns
+        ):
+            continue
+
         if key_filter and bare_key not in key_filter \
                 and key not in key_filter:
             continue
-        if tag_filter:
+        if tag_filter or skip_tags:
             block_tags = set(
                 re.findall(r'has_or_had_tag\s*=\s*([A-Z]{3})', block)
             )
-            if not (block_tags & tag_filter):
+            if tag_filter and not (block_tags & tag_filter):
+                continue
+            if skip_tags and (block_tags & skip_tags):
                 continue
 
         entry = parse_advance_block(block, key)
@@ -1144,7 +1163,30 @@ def main(argv=None):
                         help='match prerequisites only')
     parser.add_argument('--dry-run', action='store_true',
                         help='report changes without writing files')
+    parser.add_argument('--skip-replace', action='store_true',
+                        help='skip advance blocks whose key starts with '
+                             'REPLACE:')
+    parser.add_argument('--skip-key', action='append', default=[],
+                        metavar='KEY',
+                        help='skip advances with this exact key (repeatable)')
+    parser.add_argument('--skip-pattern', action='append', default=[],
+                        metavar='REGEX',
+                        help='skip advances whose key matches this regex '
+                             '(repeatable)')
+    parser.add_argument('--skip-tag', action='append', default=[],
+                        metavar='TAG',
+                        help='skip advances whose potential references this '
+                             '3-letter tag (repeatable)')
     args = parser.parse_args(argv)
+
+    skip_patterns = []
+    for pattern in args.skip_pattern:
+        try:
+            skip_patterns.append(re.compile(pattern))
+        except re.error as exc:
+            raise SystemExit(
+                f'Invalid --skip-pattern regex {pattern!r}: {exc}'
+            )
 
     do_icons = args.icons or not args.requires
     do_requires = args.requires or not args.icons
@@ -1171,6 +1213,13 @@ def main(argv=None):
         print(f"Advance filter: {', '.join(sorted(keys))}")
     if tags:
         print(f"Tag filter: {', '.join(sorted(tags))}")
+    if args.skip_key:
+        print(f"Skip keys: {', '.join(sorted(set(args.skip_key)))}")
+    if args.skip_pattern:
+        print(f"Skip patterns: {', '.join(args.skip_pattern)}")
+    if args.skip_tag:
+        skip_tags_norm = sorted({t.upper() for t in args.skip_tag})
+        print(f"Skip tags: {', '.join(skip_tags_norm)}")
     print()
 
     options = {
@@ -1179,6 +1228,10 @@ def main(argv=None):
         'keys': keys or None,
         'tags': tags or None,
         'dry_run': args.dry_run,
+        'skip_replace': args.skip_replace,
+        'skip_keys': set(args.skip_key),
+        'skip_patterns': skip_patterns,
+        'skip_tags': {t.upper() for t in args.skip_tag},
         'icon_counts': Counter(),
         'used_by_group': defaultdict(set),
     }
