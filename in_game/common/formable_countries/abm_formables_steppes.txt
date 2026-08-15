@@ -1,0 +1,964 @@
+#######################
+### Western Steppes ###
+#######################
+
+GLH_f = { #Golden Horde formable
+	level = 4
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+        government_type = government_type:steppe_horde
+		NOT = { has_or_had_tag = TIM }
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        has_culture_group = culture_group:tatar_group        
+
+		capital = { 
+            OR = { 
+            region = region:steppes_region
+            area = area:northern_caucasus_area 
+            area = area:tambov_area
+            area = area:samara_area
+            area = area:kazan_area
+            area = area:bolghar_area
+            area = area:bashkiria_area
+            } 
+        }
+	}
+
+	tag = GLH
+
+    regions = {
+        steppes_region
+    }
+
+	areas = {
+		northern_caucasus_area  
+        tambov_area
+        samara_area
+        kazan_area
+        bolghar_area
+        bashkiria_area
+	}
+
+    provinces = {
+        bogdanovo_province
+        sarov_province
+        khaqmar_province
+        ural_province
+        baytak_province
+        uil_province
+        shagiz_province
+        upper_emba_province
+        lower_emba_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+CRI_f = { #Crimean formable
+	level = 3
+	required_locations_fraction = 0.55
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:crimean    
+
+		capital = { 
+            OR = { 
+            area = area:yedisan_area 
+            area = area:crimea_area
+			area = area:pryazovia_area
+			area = area:zaporizhzhia_area
+            } 
+        }
+	}
+
+	tag = CRI
+
+	areas = {
+		yedisan_area 
+        crimea_area
+		pryazovia_area
+		zaporizhzhia_area
+	}
+    provinces = {
+        tana_province
+        azov_province
+        akhtar_province
+        labinsk_province
+        privolnoye_province
+        stavropol_province
+        majar_province
+        taman_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+NOG_f = { #Nogai formable
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:nogai    
+
+		capital = { 
+            OR = { 
+            area = area:lower_yik_area 
+            area = area:desht_kipchak_area
+            } 
+        }
+	}
+
+	tag = NOG
+
+	areas = {
+		lower_yik_area 
+	}
+    provinces = {
+        bolkhuny_province
+        baytak_province
+        uil_province
+        shagiz_province
+        upper_emba_province
+        lower_emba_province
+        ust_yurt_province
+        mangyshlak_province
+		mangistau_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ATR_f = { #Astrakhan formable
+	level = 3
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:astrakhani    
+
+		capital = { 
+            OR = { 
+            area = area:astrakhan_area 
+            area = area:lower_don_area
+            } 
+        }
+	}
+
+	tag = ATR
+
+	areas = {
+		astrakhan_area
+	}
+    provinces = {
+        terek_province
+        majar_province
+        semikarakorsk_province
+        ust_tsimla_province
+        beljamen_province
+        kremenskaya_province
+        mikhaylovka_province
+        yelan_province
+		piterka_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABKZN_f = { #Kazan formable
+	level = 3
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:tatar_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        OR = {
+			culture = culture:bolghar_culture
+			culture = culture:kazani
+		}    
+
+		capital = { 
+            OR = { 
+            area = area:samara_area 
+            area = area:kazan_area
+			area = area:bolghar_area
+			area = area:tambov_area
+            } 
+        }
+	}
+
+	tag = ABKZN
+
+	areas = {
+		samara_area
+		kazan_area
+		bolghar_area
+	}
+    provinces = {
+        penza_province
+        atkarsk_province
+        saratov_province
+        piterka_province
+        mechetnaya_province
+        sorochinskaya_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+####################
+### Central Asia ###
+####################
+
+ABGKH_f = { #Greater Khorasan
+	level = 4
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:iranian_group
+            }
+        NOT = { government_type = government_type:steppe_horde }
+		NOT = { has_or_had_tag = TIM }
+	}
+
+	allow = {
+		is_subject = no
+		
+        has_culture_group = culture_group:iranian_group
+
+		capital = { 
+            OR = { 
+            area = area:khwarazm_area 
+            area = area:transoxiana_area
+            area = area:badakhshan_area
+            area = area:eastern_khorasan_area
+            area = area:western_khorasan_area
+			area = area:quhestan_area
+            } 
+        }
+	}
+
+	tag = ABGKH
+
+	areas = {
+		khwarazm_area  
+        transoxiana_area
+        badakhshan_area
+        eastern_khorasan_area
+        western_khorasan_area
+		quhestan_area
+	}
+    provinces = {
+        gorgan_province
+		zabol_province
+        farah_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+ABBAC_f = { #Bactria - ahistorical formable
+	level = 4
+	required_locations_fraction = 0.6
+	rule = fantasy
+
+	potential = {
+		capital = { 
+            OR = { 
+            area = area:khwarazm_area 
+            area = area:transoxiana_area
+            area = area:badakhshan_area
+            area = area:eastern_khorasan_area
+            area = area:western_khorasan_area
+            } 
+        }
+        NOT = { government_type = government_type:steppe_horde }
+        NOT = { religion.group = religion_group:muslim }
+		NOT = { has_or_had_tag = TIM }
+	}
+
+	allow = {
+		is_subject = no
+		
+        OR = {
+			culture = culture:khorezmian_culture
+			culture = culture:tajik_culture
+            culture = culture:pamiri_culture
+            culture = culture:greek_culture
+			culture = culture:cappadocian_greek_culture
+            culture = culture:pontic_greek_culture
+		}
+
+		capital = { 
+            OR = { 
+            area = area:khwarazm_area 
+            area = area:transoxiana_area
+            area = area:badakhshan_area
+            area = area:eastern_khorasan_area
+            area = area:western_khorasan_area
+            } 
+        }
+	}
+
+	tag = ABBAC
+
+	areas = {
+		khwarazm_area  
+        transoxiana_area
+        badakhshan_area
+        eastern_khorasan_area
+        western_khorasan_area
+	}
+    provinces = {
+        gorgan_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+ABBUK_f = { #Bukhara
+	level = 4
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:steppe_group
+		}
+        government_type = government_type:steppe_horde
+		NOT = { has_or_had_tag = TIM }
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        has_culture_group = culture_group:steppe_group        
+
+		capital = { 
+            OR = { 
+            area = area:khwarazm_area 
+            area = area:transoxiana_area
+            area = area:badakhshan_area
+            area = area:eastern_khorasan_area
+            area = area:western_khorasan_area
+            } 
+        }
+	}
+
+	tag = ABBUK
+
+	areas = {
+		khwarazm_area  
+        transoxiana_area
+        badakhshan_area
+        eastern_khorasan_area
+        western_khorasan_area
+	}
+    provinces = {
+        gorgan_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+        if = {
+            limit = { government_type = government_type:steppe_horde }
+            change_government_type = government_type:monarchy
+        }
+	}
+}
+
+CHG_f = { #Chagatai formable
+	level = 4
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:steppe_group
+		}
+        government_type = government_type:steppe_horde
+		NOT = { has_or_had_tag = TIM }
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        has_culture_group = culture_group:steppe_group        
+
+		capital = { 
+            OR = { 
+            area = area:khwarazm_area 
+            area = area:transoxiana_area
+            area = area:badakhshan_area
+            area = area:tarim_area
+            area = area:dzungaria_area
+            area = area:zhetysu_area
+            area = area:desht_kipchak_area
+            area = area:kulykol_area
+            area = area:omsk_area
+            area = area:bursol_area
+            } 
+        }
+	}
+
+	tag = CHG
+
+	areas = {
+		khwarazm_area  
+        transoxiana_area
+        badakhshan_area
+        tarim_area
+        dzungaria_area
+        zhetysu_area
+        desht_kipchak_area
+        kulykol_area
+        omsk_area
+        bursol_area
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+ABUZB_f = { #Uzbek formable
+	level = 3
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:steppe_group
+		}
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:uzbek_culture   
+
+		capital = { 
+            OR = { 
+            area = area:desht_kipchak_area 
+            area = area:kulykol_area
+			area = area:chimgi_tura_area
+			area = area:omsk_area
+			area = area:bursol_area
+            } 
+        }
+	}
+
+	tag = ABUZB
+
+	areas = {
+		desht_kipchak_area
+		chimgi_tura_area
+        kulykol_area
+        omsk_area
+        bursol_area
+	}
+    provinces = {
+        yangikent_province
+        sighnaq_province
+        sozak_province
+        akkol_province
+        talas_province
+        kuragharty_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABTRS_f = { #Transoxiana formable
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:iranian_group
+		}
+		NOT = { government_type = government_type:steppe_horde }
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:khorezmian_culture   
+
+		capital = { 
+            area = area:transoxiana_area
+            } 
+	}
+
+	tag = ABTRS
+
+	areas = {
+		transoxiana_area
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABKHI_f = { #Transoxiana formable
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:iranian_group
+		}
+		NOT = { government_type = government_type:steppe_horde }
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:khorezmian_culture   
+
+		capital = { 
+            area = area:khwarazm_area
+            } 
+	}
+
+	tag = ABKHI
+
+	areas = {
+		khwarazm_area
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABYRK_f = { #Yarkand formable
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:turkic_group
+		}
+		NOT = { government_type = government_type:steppe_horde }
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+       OR = {
+			culture = culture:uyghur_culture
+			culture = culture:khorezmian_culture
+		}   
+
+		capital = { 
+            area = area:tarim_area
+            } 
+	}
+
+	tag = ABYRK
+
+	areas = {
+		tarim_area
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+###################
+### Middle East ###
+###################
+
+# Aq Qoyunlu?
+# Qara Qoyunlu?
+# Jalayirids?
+# Gurgan?
+# Chobanids?
+
+REPLACE:ILK_f = { #International Organization mechanics commented out.
+
+	level = 4
+	required_locations_fraction = 0.6 # was 0.75
+	rule = historical
+	potential = {
+		#exists = international_organization:ilkhanate
+		#is_member_of_international_organization = international_organization:ilkhanate
+		NOT = { tag = IRA }
+        culture = {
+            has_culture_group = culture_group:steppe_group
+		}
+        government_type = government_type:steppe_horde
+	}
+
+	allow = {
+		#exists = international_organization:ilkhanate
+		#is_leader_of_international_organization = international_organization:ilkhanate
+		#international_organization:ilkhanate = {
+		#	num_countries_with_special_status = {
+		#		type = special_status:ilkhan_claimant
+		#		value = 0
+		#	}
+		#}
+        in_civil_war = no
+        is_subject = no
+
+		has_culture_group = culture_group:steppe_group
+	}
+	
+	name = ILK
+	flag = ILK
+	adjective = ILK_ADJ
+	tag = ILK
+	color = map_ILK
+	
+	regions = {
+		persia_region
+	}
+	areas = { #Requirements relaxed
+		iraq_arabi_area
+		jazira_area
+		shirvan_area
+		armenia_area
+		armenian_highlands_area
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom #new
+		}
+        #destroy_international_organization = { target = international_organization:ilkhanate }
+	}
+}
+
+################
+### Mongolia ###
+################
+
+ABTUM_f = { #Tumed formable
+	level = 3
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:mongolian_group
+		}
+        government_type = government_type:steppe_horde
+	}
+
+	allow = {
+		in_civil_war = no
+        is_subject = no
+
+        culture = culture:tumed_culture    
+
+		capital = { 
+            OR = { 
+            area = area:southern_gobi_area 
+            area = area:datong_area
+            } 
+        }
+	}
+
+	tag = ABTUM
+
+	areas = {
+		southern_gobi_area
+        datong_area
+	}
+    provinces = {
+        western_gobi_province
+        gobi_altai_province
+        ulaan_province
+        dorbod_province
+        lingzhou_province
+        ningxia_province
+        guyuan_province
+        jingning_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+OIR_f = { #Oirat formable
+	level = 3
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:mongolian_group
+		}
+        government_type = government_type:steppe_horde
+	}
+
+	allow = {
+		is_subject = no
+        in_civil_war = no
+        culture = culture:oirat_culture    
+
+		capital = { 
+            OR = { 
+            area = area:mongolian_great_lakes_area 
+            area = area:upper_selenga_area
+            area = area:western_gobi_area
+            area = area:dzungaria_area
+            } 
+        }
+	}
+
+	tag = OIR
+
+	areas = {
+		mongolian_great_lakes_area
+        upper_selenga_area
+        western_gobi_area
+        dzungaria_area
+	}
+    provinces = {
+        emin_province
+        kayalyk_province
+        ilibalyk_province
+        almaliq_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+REPLACE:MGO_f = { #National Mongolia tag
+	level = 4 #was 3
+	required_locations_fraction = 0.6 #was 0.85
+	rule = historical
+	potential = {
+		culture = {
+			has_culture_group = culture_group:mongolian_group
+		}
+        government_type = government_type:steppe_horde
+	}
+	allow = {
+		in_civil_war = no
+        is_subject = no
+	}
+	
+	name = MGO
+	flag = MGO
+	adjective = MGO_ADJ
+	tag = MGO
+	color = map_MGO
+	regions = {
+		mongolia_region
+	}
+    
+    areas = {
+        songnen_area
+        yanbei_area
+        datong_area
+    }
+
+	form_effect = {
+        if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom #new
+		}
+	}
+}
+
+REPLACE:MGE_f = { #Imperial Mongol Formable
+	level = 5 #was 4
+	required_locations_fraction = 0.75 #was 0.85
+	rule = historical
+	potential = {		
+		culture = {
+				has_culture_group = culture_group:steppe_group
+		}
+		government_type = government_type:steppe_horde	
+	}
+	allow = {
+		in_civil_war = no
+        is_subject = no
+		owns = location:sarai_al_jadid
+		owns = location:samarkand
+		owns = location:dadu
+		owns = location:karakorum
+	}
+	
+	name = MGE
+	flag = MGE
+	adjective = MGE_ADJ
+	tag = MGE
+	color = map_MGE
+	regions = { #Requirements relaxed
+		mongolia_region
+		steppes_region
+		khorasan_region
+		xinjiang_region
+	}
+    areas = {
+        mazandaran_area
+        quhestan_area
+        sistan_area
+        shirvan_area
+        northern_caucasus_area
+        tambov_area
+        bashkiria_area
+        kulykol_area
+        chimgi_tura_area
+        omsk_area
+        bursol_area
+        suzun_area
+        songnen_area
+        yanbei_area
+        beiping_area
+        yannan_area
+        datong_area
+        shanxi_area
+        hexi_area
+        longyou_area
+        gansu_area
+        shaanxi_area
+        hebei_area
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 4 }
+			set_country_rank_effect = { rank = country_rank:rank_empire }
+		}
+		if = {
+			limit = { has_variable = rise_of_timur_situation_country }
+			trigger_event_non_silently = rise_of_timur.9
+		}
+		else = {
+			add_country_modifier = {
+				modifier = restoration_of_the_mongol_empire
+				years = 30 #was 50
+				mode = add_and_extend
+			}
+		}
+	}
+}

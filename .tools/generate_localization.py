@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate localization entries for all ABM China advance keys.
-Reads all abm_f3-t2_*_china.txt files, extracts advance keys,
+"""Generate localization entries for ABM Middle East advance keys.
+Reads all abm_f5-t3_*.txt files, extracts advance keys,
 and generates name + desc entries (both using the same Title Case text).
 
-Output: main_menu/localization/english/abm_advances_china.yml
+Output: main_menu/localization/english/abm_advances_middle_east_l_english.yml
 
 Usage: python .tools/generate_localization.py
 """
@@ -21,7 +21,7 @@ def key_to_display(key):
 
 
 def generate():
-    files = sorted(glob.glob('in_game/common/advances/abm_f3-t2_*_china.txt'))
+    files = sorted(glob.glob('in_game/common/advances/abm_f5-t3_*.txt'))
     all_keys = set()
 
     for fp in files:
@@ -45,7 +45,7 @@ def generate():
         lines.append(f' {key}: "{display}"')
         lines.append(f' {key}_desc: "{display}"')
 
-    output_path = 'main_menu/localization/english/abm_advances_china_l_english.yml'
+    output_path = 'main_menu/localization/english/abm_advances_middle_east_l_english.yml'
     with open(output_path, 'w', encoding='utf-8-sig') as f:
         f.write('\n'.join(lines) + '\n')
 

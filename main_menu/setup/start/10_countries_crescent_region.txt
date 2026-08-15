@@ -873,7 +873,8 @@ countries = {
 	HLL = {
 		#Ruler Title: Sharifate (Sharif)
 		own_control_core = {
-			hillah kufa al_udayb qadisiyyah
+			hillah kufa al_udayb qadisiyyah #Al-Kufa
+			samawa nasiriyah #Al-Bata'ih
 		}
 
 		starting_technology_level = 3
@@ -891,8 +892,8 @@ countries = {
 
 		capital = hillah
 		court_language = persian_language
-		tolerated_cultures = {
-			iraqi_culture
+		accepted_cultures = {
+			syriac_culture
 		}
 		religious_school = zaidi_school
 	}
@@ -1002,11 +1003,7 @@ countries = {
 		own_control_core = {
 			dayr_aqul badra ilam
 			wasit abdanan al_tib arkvaz bakusaya dehloran meymeh
-			basra abadan abdas al_madar al_qatr zuwayr
-			an_nil nasiriyah numaniyyah rusafa
-			khalafabad quban
-			ahvaz dowraq hamidiyeh hoveyzeh mosharahat muhammerah
-			samawa suq_al_shuyukh
+			an_nil numaniyyah rusafa #Al-Bata'ih
 		}
 
 		include = "expl_middle_east"
@@ -1031,15 +1028,51 @@ countries = {
 		tolerated_cultures = {
 			iraqi_culture
 			lur_culture
+			syriac_culture
 		}
 
 		religious_school = shafii_school
 		government = { mysticism_vs_jurisprudence = 20 }
 
 		country_rank = rank_kingdom
-		capital = basra
+		capital = wasit
 	}
 	
+	ABMSS = { #custom tag for Mushasha
+		own_control_core = {
+			basra abadan abdas al_madar al_qatr zuwayr suq_al_shuyukh #Basra
+			ahvaz dowraq hamidiyeh hoveyzeh mosharahat muhammerah #Ahvaz
+			khalafabad quban machul #Ramhormoz
+			kazimah #Wadi al-Batin
+		}
+
+		starting_technology_level = 3
+		include = "expl_middle_east"
+		include = "muslim_monarchy_no_abrahamic_dhimmi_no_coast"
+		
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = random
+
+			laws = {
+				sharia_law = zaidi_policy
+			}
+		}
+
+		capital = basra
+		country_rank = rank_duchy
+
+		court_language = arabic_language
+
+		accepted_cultures = {
+			syriac_culture
+			mandean_culture
+		}
+
+		religious_school = zaidi_school
+	}
+
 #	MSH = { #Mishmi
 #		type = pop
 #

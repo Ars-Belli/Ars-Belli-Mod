@@ -160,6 +160,34 @@ ars_belli_base_honor = {
 	monthly_honor = 0.25
 }
 
+REPLACE:horde_army_expectation = { #Hordes are already too volatile
+	potential_trigger = { 
+		government_type ?= government_type:steppe_horde
+	}
+
+	scales_with = {
+		value = 1
+		subtract = army_size_percentage
+		min = 0
+	}
+
+	stability_cost_efficiency = -2
+	land_morale_modifier = -0.1 #was -0.5
+}
+
+REPLACE:high_horde_unity = { #Hordes are already too volatile
+	potential_trigger = {
+		uses_government_power = horde_unity
+	}
+	scales_with = {
+		value = horde_unity
+		multiply = 0.01
+	}
+
+	discipline = 0.05 #was 0.10
+	pop_leave_rebels_threshold = -0.05
+}
+
 # abm_china_ahimsa_clergy_defensive_war = {
 # 	potential_trigger = {
 # 		has_estate_privilege = estate_privilege:abm_china_ahimsa_clergy_commitment
