@@ -16,7 +16,7 @@ Status summary:
 | 8 | Tributaries excluded from location/subject transfers | Done | `cdde1dc` |
 | 10 | Throttle Worsen Opinion, 2x Improve Relations | Done | `8c3057e` |
 | 11 | Base location warscore cost 2 → 2.5 | Done | `7bb2b53` |
-| 16 | Cap gold transferable via sell/buy location | **Not done — engine-locked, reverted** | — |
+| 16 | Cap gold transferable via sell/buy location | Done — flat 100 gold; a scaling cap is engine-locked | pending |
 | 17 | −10 prestige to both sides of a location sale | **Not done — engine-locked** | — |
 
 ---
@@ -175,26 +175,45 @@ contributes little, while the reduced scale keeps late-game tax base from inflat
 
 ## MED Nr.16 — cap the gold transferable through sell/buy location
 
-**Status: not implemented. Reverted. No hook exists, including the GUI.**
+**Status: done, as a flat 100 gold ceiling. A ceiling that *scales* is impossible — see below.**
 
 **Request.** Limit it to the same amount as Gifts, or to the receiver's or sender's tax base if
-that is not possible.
+that is not possible. Settled on a flat number once both of those turned out to be unreachable:
+the point is that gold transfer between players is bounded, not that the bound is proportionate.
 
-**Why it is blocked.** The action is entirely engine-implemented:
+**Solution.** `in_game/gui/sell_location_action_view.gui` (same-name full-file replacement), the
+price `economy_slider`:
+
+```
+max = 100
+```
+
+replacing vanilla's `max = "[SellLocationActionView.GetMaxPrice]"`, which is the buyer's entire
+treasury. The engine applies `GetMaxPrice` as a further clamp on top of whatever the slider
+allows, so the effective ceiling is `min(100, buyer's treasury)`. `ars_belli_sell_location_l_english.yml`
+relabels `sell_buy_location_price` from "Total Cost:" to "Total Cost (at most 100@gold!):".
+
+Two caveats on the enforcement. It is a client-side UI ceiling, not an engine rule — the same
+class of enforcement as relabelling a vanilla button as against the rules; appropriate for a
+house-rules MP mod, not tamper-proof. And `min` is left at vanilla's `[GetMinPrice]`: if that ever
+turns out to be negative and unbounded, the reverse direction (paying someone to take a location)
+is a second uncapped channel that this does not close.
+
+**Why it has to be a flat number.** The action is entirely engine-implemented:
 
 - no `country_interactions` file
 - no price id in `prices/00_hardcoded.txt` (checked against the full several-hundred-entry list)
 - no `diplomatic_costs` entry
 - no on_action of its own
 
-Only `ai_diplochance/00_ai_diplochance.txt` and the GUI are moddable, and the GUI turned out not
-to be a lever either. The gift scale itself (`send_gift`: `scaled_recipient_gold = 2`,
-`scaled_gold = 1`, `min_scale = 25` — two months of recipient income plus one of sender) is not
-reachable from GUI script in any case.
+Only `ai_diplochance/00_ai_diplochance.txt` and the GUI are moddable, and the GUI accepts only a
+constant. The gift scale itself (`send_gift`: `scaled_recipient_gold = 2`, `scaled_gold = 1`,
+`min_scale = 25` — two months of recipient income plus one of sender) is not reachable from GUI
+script in any case, so matching Gifts was out from the start.
 
-**What was tried, and the experiment that settled it.** Four attempts were made at capping the
-price `economy_slider`'s `max` in `sell_location_action_view.gui`. All failed, in two different
-and easily-confused ways:
+**What was tried, and the experiment that settled it.** Four attempts were made at a *scaling*
+ceiling on the price `economy_slider`'s `max`. All failed, in two different and easily-confused
+ways:
 
 | Attempt | Result |
 |---|---|
@@ -226,6 +245,11 @@ Clamping the committed value instead of the range is not available either: the c
 `onvaluechanged = "[SellLocationActionView.SetTotalPrice]"`, with no scripted intermediary to
 wrap.
 
+Slider F is also what makes the shipped fix work: a literal resolves, so a literal is what got
+used. Note that the fallback for a *rejected* `max` happens to be 100 as well, which means the
+shipped `max = 100` cannot be distinguished in game from a broken one. If this number is ever
+changed, verify with a value that is not 100.
+
 **Two silent-failure traps worth carrying forward.**
 
 1. A `ranged_slider` whose `max` assignment is rejected keeps its built-in default of **100** and
@@ -243,10 +267,10 @@ and a literal control, rather than reasoning about which sub-term is wrong.
 in no vanilla `.gui` file — localization and the GUI use separate data registries, so loc-only
 functions cannot be called from GUI expressions.
 
-**Reverted.** `in_game/gui/sell_location_action_view.gui` and
-`ars_belli_sell_location_l_english.yml` are deleted, the entry is out of `replaced_files.txt`,
-and the `changes.txt` line is removed. Shipping a same-name GUI replacement that silently does
-nothing would cost a maintenance burden on every vanilla update for no gameplay effect.
+**History.** The tax-base version of this was reverted in `051f4ed` on the finding above, then
+re-added in the flat form once it was decided a constant bound is enough. `replaced_files.txt`
+carries `in_game/gui/sell_location_action_view.gui`, so the one-line `max` change has to be
+reapplied on every vanilla update of that file.
 
 ## MED Nr.17 — −10 prestige to both selling and buying a location
 
@@ -272,7 +296,9 @@ the seller and only core locations), or accept the false positives on the `on_lo
 route. Awaiting a decision.
 
 Note that the Nr.16 cap already addresses the underlying money-transfer abuse; the prestige cost
-was belt-and-braces on top of it.
+was belt-and-braces on top of it. Also note the asymmetry between the two: Nr.16 is satisfiable
+because the GUI can *constrain* a value, while Nr.17 needs the GUI to *apply an effect*, which it
+cannot do.
 
 ---
 
@@ -289,6 +315,12 @@ GUI property expressions are only evaluated when their widget is built, which is
 failures surfaced only on opening the sell/buy window and not at load — and, worse, why some of
 them never appeared in the log at all. See Nr.16 for the two silent-failure modes and the
 parallel-widget bisect that finally settled it.
+
+The shipped Nr.16 `max = 100` has **not** been re-tested in game since it was re-added; it rests
+on slider F of that bisect, which established that a literal `max` resolves. Because a rejected
+`max` also falls back to 100, this particular value cannot be told apart from a failure by
+looking at the slider, so there is nothing useful to observe anyway — the thing to check is that
+the sell/buy window still opens with a clean `error.log`.
 
 ### Known gaps found while reading the logs (pre-existing, not from this batch)
 
