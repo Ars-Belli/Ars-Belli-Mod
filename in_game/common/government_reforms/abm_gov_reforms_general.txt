@@ -1,20 +1,4 @@
-﻿REPLACE:manden_kurufa_reform = {
-	major = yes
-	unique = yes
-	age = age_1_traditions
-	potential = {
-		has_advance = kouroukan_fouga_advance
-	}
-	country_modifier = {
-		cultural_tradition = 0.5
-		monthly_towards_decentralization = societal_value_minor_monthly_move
-		stability_decay = -0.00025
-		global_crown_estate_power = 0.05
-	}
-	years = 2
-}
-
-REPLACE:merchant_republic = {
+﻿REPLACE:merchant_republic = {
 	major = yes
 	government = republic
 
@@ -40,3 +24,29 @@ REPLACE:merchant_republic = {
 
 	years = 2
 }
+
+abm_eastern_christian_militant_church = {
+	major = yes
+	unique = yes
+	age = age_1_traditions
+	potential = {
+		government = theocracy
+		OR = {
+			religion = religion:orthodox
+			religion = religion:miaphysite
+			religion = religion:nestorianism
+		}
+	}
+	country_modifier = {
+		damage_done_versus_heathens_modifier = 0.10
+		global_population_capacity_modifier = 0.10
+		global_institution_growth_modifier = 0.10
+
+		tolerance_heathen = -2
+
+		monthly_towards_spiritualist = societal_value_monthly_move
+		monthly_towards_innovative = societal_value_monthly_move
+	}
+	years = 2
+}
+
