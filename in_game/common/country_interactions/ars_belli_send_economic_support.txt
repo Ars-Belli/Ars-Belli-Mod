@@ -1,0 +1,116 @@
+﻿# ARS BELLI: starts the ars_belli_economic_support relation.
+#
+# This exists as an interaction rather than the relation's own offer flow for two
+# reasons. A relation's select_trigger is the only selection stage in its flow, so a
+# value-type one leaves the picker with no attribute columns and the game asserts on
+# (AttributeColumns.GetSize() > 0) and crashes; here the country stage supplies columns
+# first. And an interaction gives the recipient a real accept/decline popup, which is
+# requirement Nr.3.
+
+ars_belli_send_economic_support = {
+	type = diplomacy
+	category = CATEGORY_ECONOMY_ACTIONS
+
+	potential = {
+		scope:actor = {
+			has_limited_diplomacy = no
+		}
+	}
+
+	allow = {
+		# One patron at a time, so the amount stored on the recipient is unambiguous.
+		custom_tooltip = {
+			text = ars_belli_economic_support_one_patron_tt
+			NOT = {
+				any_country = {
+					giving_scripted_relation = {
+						type = relation_type:ars_belli_economic_support
+						target = scope:recipient
+					}
+				}
+			}
+		}
+		# No Defensive Point limit check on purpose. The relation still costs a point on
+		# both sides, but going over the limit does not block the arrangement - the
+		# overflow rules in total_player_alliance_weight handle it as normal.
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "choose_country"
+		column = {
+			data = name
+		}
+		visible = {
+			within_diplomatic_range = scope:actor
+			this != scope:actor
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = value
+		target_flag = target_value
+		name = "ars_belli_economic_support_select_amount"
+		min = 0
+		max = ars_belli_economic_support_slider_max
+		step = 1
+		default = ars_belli_economic_support_default_amount
+		ai_override_value = ars_belli_economic_support_default_amount
+	}
+
+	effect = {
+		if = {
+			limit = { exists = scope:target_value }
+			scope:recipient = {
+				# Set to 0 then add, rather than assigning scope:target_value straight
+				# in. The selection scope is an object, and assigning it can store the
+				# object rather than the number it stands for; going through
+				# change_variable forces arithmetic, so what lands is always a number.
+				set_variable = {
+					name = ab_ecosupport_amount
+					value = 0
+				}
+				change_variable = {
+					name = ab_ecosupport_amount
+					add = scope:target_value
+				}
+			}
+			create_relation = {
+				first = scope:actor
+				second = scope:recipient
+				type = relation_type:ars_belli_economic_support
+			}
+		}
+	}
+
+	block_when_at_war = no
+
+	ai_tick = never
+	ai_will_do = {
+		add = -1000
+	}
+
+	diplo_chance = {
+		base = 1000
+	}
+
+	# Free gold, so the AI takes it unless doing so would put it over its Alliance Point
+	# limit. The Defensive Point limit is deliberately not checked here either - it no
+	# longer blocks the action, so it should not sway the AI's answer.
+	accept = {
+		add = {
+			desc = "BASE_VALUE"
+			value = 1000
+		}
+		if = {
+			limit = {
+				scope:recipient = { is_over_alliance_limit = 1 }
+			}
+			subtract = {
+				desc = ars_belli_economic_support_recipient_points_tt
+				value = 5000
+			}
+		}
+	}
+}
