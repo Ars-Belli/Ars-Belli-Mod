@@ -1,17 +1,46 @@
-﻿REPLACE:manden_kurufa_reform = {
+﻿abm_cossack_hetmanate_reform = {
 	major = yes
 	unique = yes
-	age = age_1_traditions
+	government = republic
+
 	potential = {
-		has_advance = kouroukan_fouga_advance
+		has_or_had_tag = ZAZ
+		culture = culture:cossack_culture
+	}
+
+	locked = {
+		always = yes
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+		monthly_towards_free_subjects = societal_value_huge_monthly_move
+		global_nobles_estate_power = -0.10
+		global_cossacks_estate_power = 0.50
 	}
 	country_modifier = {
-		cultural_tradition = 0.5
-		monthly_towards_decentralization = societal_value_minor_monthly_move
-		stability_decay = -0.00025
-		global_crown_estate_power = 0.05
+		potential_trigger = {
+			at_war = yes
+		}
+		
+		army_maintenance_efficiency = 0.10
+		army_reinforce_efficiency = 0.10
+		global_crown_estate_power = 0.10
+		global_estate_target_satisfaction = small_permanent_target_satisfaction_penalty
 	}
-	years = 2
+
+	# Cultural golden age & diplomacy — active while at peace
+	country_modifier = {
+		potential_trigger = {
+			at_war = no
+		}
+		global_monthly_prosperity = 0.001
+		cultural_tradition = 0.25
+		global_crown_estate_power = -0.10
+		global_estate_target_satisfaction = small_permanent_target_satisfaction
+	}
+
+	years = 3
 }
 
 abm_india_kshatra_heathen_war_code = {
