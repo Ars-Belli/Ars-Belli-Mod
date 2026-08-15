@@ -76,6 +76,16 @@ STYLE_OVERRIDES = {
     "TKG": CoaStyle("ce_mon_tokugawa.dds", "0.825", "color2"),
 }
 
+# EU5 tags that must never be imported or modified, regardless of --force.
+# Japan (vanilla + AB daimyo/shogunate tags) and Mysore are already handled.
+SKIP_TARGETS = frozenset({
+    # Japan
+    "JAP", "YMT", "TKD", "OTM", "SMZ", "DTE", "MRI", "ODA",
+    "ABASK", "ABWJP", "ABEJP", "ABHJO", "ABTKG",
+    # Mysore
+    "ABMYS",
+})
+
 
 def read_text(path: Path) -> tuple[str, TextFormat]:
     raw = path.read_bytes()
@@ -469,12 +479,15 @@ def update_country_colors(text: str, imports: list[ImportedTag]) -> str:
         block = text[block_start:block_end]
         replacement = f"color = map_{imported.target}"
         color_pattern = re.compile(
-            r"(?m)^(\s*)color\s*=\s*(?:rgb\s*\{[^}\r\n]*\}|[^\r\n#}]+)"
+            r"(?m)^(\s*)color\s*=\s*(?:rgb\s*\{[^}\r\n]*\}|[A-Za-z0-9_]+)([^\r\n]*)"
         )
         color_match = color_pattern.search(block)
         if color_match:
             indent = color_match.group(1)
-            block = color_pattern.sub(f"{indent}{replacement}", block, count=1)
+            comment = color_match.group(2)
+            block = color_pattern.sub(
+                f"{indent}{replacement}{comment}", block, count=1
+            )
         else:
             first_newline = block.find("\n")
             block = block[: first_newline + 1] + f"\t{replacement}\n" + block[first_newline + 1 :]
@@ -700,6 +713,13 @@ def main() -> int:
             if not target_specs:
                 print("error: no ABxxx tags found in country files", file=sys.stderr)
                 return 2
+
+        for target in sorted(spec.target for spec in target_specs if spec.target in SKIP_TARGETS):
+            print(f"skip: {target} (excluded: Japan/Mysore)", file=sys.stderr)
+        target_specs = [spec for spec in target_specs if spec.target not in SKIP_TARGETS]
+        if not target_specs:
+            print("nothing to import: all selected tags are excluded")
+            return 0
 
         existing = (
             set()
