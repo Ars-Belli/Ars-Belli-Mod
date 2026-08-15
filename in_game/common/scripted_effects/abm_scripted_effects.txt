@@ -175,10 +175,7 @@ mp_limits_game_start_effect = {
 		limit = {
 			global_var:mp_limits_players_only = 1
 		}
-		set_variable = {
-			name = mp_is_player_only_local
-			value = 1
-		}
+		set_global_variable = { name = mp_is_player_only_local value = 1 }
 		set_global_variable = { name = mp_limits_players_only value = 0 }
 	}
 
@@ -194,12 +191,9 @@ mp_limits_game_start_effect = {
 
 	if = {
 		limit = {
-			var:mp_is_player_only_local = 1
+			global_var:mp_is_player_only_local = 1
 		}
-		set_variable = {
-			name = mp_is_player_only_local
-			value = 0
-		}
+		set_global_variable = { name = mp_is_player_only_local value = 0 }
 		set_global_variable = { name = mp_limits_players_only value = 1 }
 	}
 }

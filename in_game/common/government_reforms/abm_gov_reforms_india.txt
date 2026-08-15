@@ -36,15 +36,15 @@ abm_india_kshatra_heathen_war_code = {
 	unique = yes
 	age = age_1_traditions
 	potential = {
-		has_culture_group = indian
-		religion = hindu
+		culture = { has_culture_group = culture_group:indian_group }
+		religion = religion:hindu
 		government = theocracy
 		societal_value:spiritualist_vs_humanist > 50
 		original_capital ?= { sub_continent = sub_continent:south_asia }
 	}
 	allow = {
 		any_neighbor_country = {
-			NOT = { religion = hindu }
+			NOT = { religion = religion:hindu }
 		}
 		societal_value:traditionalist_vs_innovative > 50
 	}
@@ -67,7 +67,7 @@ abm_india_bazaar_republic = {
 	unique = yes
 	age = age_1_traditions
 	potential = {
-		has_culture_group = indian
+		culture = { has_culture_group = culture_group:indian_group }
 		government = republic
 		num_of_ports > 1
 	}
@@ -99,7 +99,7 @@ abm_india_hasshashun_branch = {
 	unique = yes
 	age = age_1_traditions
 	potential = {
-		religion = shia
+		religion = religion:shia
 		government = theocracy
 		OR = {
 			has_or_had_tag = SND
