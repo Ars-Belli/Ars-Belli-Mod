@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_EU4_ROOT = Path(
     "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis IV"
 )
@@ -117,6 +117,24 @@ def parse_target_specs(values: list[str]) -> list[TargetSpec]:
     return specs
 
 
+def discover_ab_tags(repo_root: Path) -> list[TargetSpec]:
+    """Discover EU5 country tags in ABxxx format from the country files.
+
+    The EU4 source tag is inferred by stripping the AB prefix (ABJAP -> JAP).
+    """
+    pattern = re.compile(r"(?m)^\s*(?:REPLACE:)?(AB[A-Z0-9]{3})\s*=\s*\{")
+    specs: list[TargetSpec] = []
+    seen: set[str] = set()
+    for country_file in sorted((repo_root / COUNTRIES_DIR).rglob("*.txt")):
+        text = country_file.read_text(encoding="utf-8-sig", errors="replace")
+        for tag in pattern.findall(text):
+            if tag in seen:
+                continue
+            seen.add(tag)
+            specs.append(TargetSpec(target=tag, source=tag[2:]))
+    return specs
+
+
 def find_country_files(repo_root: Path, targets: list[str]) -> dict[str, Path]:
     definitions: dict[str, Path] = {}
     target_pattern = "|".join(re.escape(target) for target in targets)
@@ -159,10 +177,42 @@ def parse_country_color(country_file: Path) -> tuple[int, int, int]:
     return red, green, blue
 
 
+def load_colors_file(path: Path) -> dict[str, tuple[int, int, int]]:
+    """Parse a colors file of 'TAG = rgb { r g b }' lines into a mapping."""
+    colors: dict[str, tuple[int, int, int]] = {}
+    for raw_line in path.read_text(encoding="utf-8-sig", errors="replace").splitlines():
+        line = raw_line.split("#", 1)[0].strip()
+        if not line:
+            continue
+        match = re.fullmatch(
+            r"([A-Z0-9]{3,5})\s*=\s*rgb\s*\{\s*(\d+)\s+(\d+)\s+(\d+)\s*\}",
+            line,
+        )
+        if not match:
+            raise ValueError(f"invalid colors-file line: {raw_line!r}")
+        tag, red, green, blue = match.groups()
+        colors[tag] = (int(red), int(green), int(blue))
+    return colors
+
+
+def find_flag_image(flags_dir: Path, source: str) -> Path | None:
+    """Locate a flag image for a source tag (TGA or PNG)."""
+    for extension in (".tga", ".png"):
+        candidate = flags_dir / f"{source}{extension}"
+        if candidate.is_file():
+            return candidate
+    return None
+
+
 def decode_tga_pixels(path: Path) -> list[tuple[int, int, int]]:
-    data = path.read_bytes()
+    """Decode the pixels of a TGA file as (r, g, b) tuples."""
+    return decode_tga_bytes(path.read_bytes(), str(path))
+
+
+def decode_tga_bytes(data: bytes, source: str = "<data>") -> list[tuple[int, int, int]]:
+    """Decode raw TGA bytes (uncompressed or RLE) into (r, g, b) tuples."""
     if len(data) < 18:
-        raise ValueError(f"invalid TGA header: {path}")
+        raise ValueError(f"invalid TGA header: {source}")
 
     (
         id_length,
@@ -180,9 +230,9 @@ def decode_tga_pixels(path: Path) -> list[tuple[int, int, int]]:
     ) = struct.unpack_from("<BBBHHBHHHHBB", data)
 
     if color_map_type != 0 or image_type not in {2, 10}:
-        raise ValueError(f"unsupported TGA type {image_type}: {path}")
+        raise ValueError(f"unsupported TGA type {image_type}: {source}")
     if bits_per_pixel not in {24, 32}:
-        raise ValueError(f"unsupported TGA depth {bits_per_pixel}: {path}")
+        raise ValueError(f"unsupported TGA depth {bits_per_pixel}: {source}")
 
     bytes_per_pixel = bits_per_pixel // 8
     color_map_bytes = color_map_length * ((color_map_depth + 7) // 8)
@@ -193,7 +243,7 @@ def decode_tga_pixels(path: Path) -> list[tuple[int, int, int]]:
         nonlocal offset
         end = offset + bytes_per_pixel
         if end > len(data):
-            raise ValueError(f"truncated TGA pixel data: {path}")
+            raise ValueError(f"truncated TGA pixel data: {source}")
         blue, green, red = data[offset : offset + 3]
         offset = end
         return red, green, blue
@@ -204,7 +254,7 @@ def decode_tga_pixels(path: Path) -> list[tuple[int, int, int]]:
     else:
         while len(pixels) < expected_pixels:
             if offset >= len(data):
-                raise ValueError(f"truncated TGA RLE data: {path}")
+                raise ValueError(f"truncated TGA RLE data: {source}")
             packet_header = data[offset]
             offset += 1
             packet_size = (packet_header & 0x7F) + 1
@@ -214,12 +264,21 @@ def decode_tga_pixels(path: Path) -> list[tuple[int, int, int]]:
                 pixels.extend(read_pixel() for _ in range(packet_size))
 
     if len(pixels) != expected_pixels:
-        raise ValueError(f"invalid TGA pixel count: {path}")
+        raise ValueError(f"invalid TGA pixel count: {source}")
     return pixels
 
 
 def dominant_flag_colors(flag_file: Path) -> tuple[tuple[int, int, int], ...]:
-    counts = Counter(decode_tga_pixels(flag_file))
+    if flag_file.suffix.lower() == ".tga":
+        pixels = decode_tga_pixels(flag_file)
+    else:
+        converted = subprocess.run(
+            ["magick", str(flag_file), "tga:-"],
+            check=True,
+            capture_output=True,
+        ).stdout
+        pixels = decode_tga_bytes(converted, str(flag_file))
+    counts = Counter(pixels)
     colors = tuple(color for color, _count in counts.most_common(2))
     if len(colors) < 2:
         raise ValueError(f"flag has fewer than two colors: {flag_file}")
@@ -294,29 +353,78 @@ def generate_mon_from_flag(
     )
 
 
+def coa_key_for(target: str) -> str:
+    """COA block key derived from an EU5 target tag."""
+    if target == "JAP":
+        return "ABM_JAP_EU4"
+    if len(target) == 3:
+        return f"ABM_EU4_{target}"
+    return target
+
+
+def find_existing_imports(repo_root: Path) -> set[str]:
+    """Return the COA keys already present in the generated coat-of-arms file."""
+    coa_path = repo_root / COA_OUTPUT
+    if not coa_path.exists():
+        return set()
+    text, _ = read_text(coa_path)
+    return {
+        match.group(1)
+        for match in re.finditer(r"(?m)^([A-Z0-9_]+)\s*=\s*\{", text)
+    }
+
+
 def collect_imports(
-    target_specs: list[TargetSpec], eu4_root: Path, eu5_root: Path
+    target_specs: list[TargetSpec],
+    eu4_root: Path,
+    eu5_root: Path,
+    flags_dir: Path | None = None,
+    colors: dict[str, tuple[int, int, int]] | None = None,
 ) -> tuple[list[ImportedTag], list[str]]:
-    registry = parse_eu4_registry(eu4_root / "common" / "country_tags")
+    registry = (
+        {}
+        if flags_dir is not None
+        else parse_eu4_registry(eu4_root / "common" / "country_tags")
+    )
     imports: list[ImportedTag] = []
     skipped: list[str] = []
 
     for spec in target_specs:
         target = spec.target
         source = spec.source
-        relative_country_path = registry.get(source)
-        flag_file = eu4_root / "gfx" / "flags" / f"{source}.tga"
-        if relative_country_path is None or not flag_file.is_file():
-            skipped.append(f"{target}: no complete EU4 source for {source}")
+
+        if flags_dir is not None:
+            flag_file = find_flag_image(flags_dir, source)
+            relative_country_path = None
+        else:
+            flag_file = eu4_root / "gfx" / "flags" / f"{source}.tga"
+            relative_country_path = registry.get(source)
+
+        if flag_file is None or not flag_file.is_file():
+            skipped.append(f"{target}: no flag image for {source}")
             continue
 
-        country_file = eu4_root / "common" / relative_country_path
-        if not country_file.is_file():
-            skipped.append(f"{target}: missing EU4 country file {country_file}")
-            continue
+        if colors is not None:
+            if source not in colors:
+                skipped.append(f"{target}: no color entry for {source}")
+                continue
+            country_color = colors[source]
+        else:
+            if relative_country_path is None:
+                skipped.append(f"{target}: no EU4 registry entry for {source}")
+                continue
+            country_file = eu4_root / "common" / relative_country_path
+            if not country_file.is_file():
+                skipped.append(f"{target}: missing EU4 country file {country_file}")
+                continue
+            country_color = parse_country_color(country_file)
 
         flag_background, flag_foreground = dominant_flag_colors(flag_file)
-        style = resolve_style(source, relative_country_path, eu5_root)
+        style_path = (
+            Path(f"countries/{source}.txt")
+            if relative_country_path is None else relative_country_path
+        )
+        style = resolve_style(source, style_path, eu5_root)
         if style is None:
             mon_name = flag_emblem_name(source)
             style = CoaStyle(emblem=mon_name, scale="1.0", second_emblem_color="color1")
@@ -325,16 +433,10 @@ def collect_imports(
             ImportedTag(
                 target=target,
                 source=source,
-                country_color=parse_country_color(country_file),
+                country_color=country_color,
                 flag_background=flag_background,
                 flag_foreground=flag_foreground,
-                coa_key=(
-                    "ABM_JAP_EU4"
-                    if target == "JAP"
-                    else f"ABM_EU4_{target}"
-                    if len(target) == 3
-                    else target
-                ),
+                coa_key=coa_key_for(target),
                 style=style,
             )
         )
@@ -522,18 +624,46 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Import EU4 map colors and flag styling for selected EU5 tags. "
-            "Use TARGET=SOURCE when the EU4 source cannot be inferred."
+            "Use TARGET=SOURCE when the EU4 source cannot be inferred. "
+            "With no tags, defaults to every ABxxx tag found in the EU5 country files."
         )
     )
     parser.add_argument(
         "tags",
-        nargs="+",
+        nargs="*",
         metavar="TARGET[=SOURCE]",
-        help="EU5 target tag, optionally followed by its three-character EU4 source tag",
+        help=(
+            "EU5 target tag, optionally followed by its three-character EU4 "
+            "source tag. Accepts 3-char vanilla tags, 5-char ABxxx tags, or "
+            "TARGET=SOURCE pairs. Defaults to all ABxxx tags."
+        ),
     )
     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
     parser.add_argument("--eu4-root", type=Path, default=DEFAULT_EU4_ROOT)
     parser.add_argument("--eu5-root", type=Path, default=DEFAULT_EU5_ROOT)
+    parser.add_argument(
+        "--flags-dir",
+        type=Path,
+        default=None,
+        help=(
+            "directory of EU4 flag images (<SRC>.tga or <SRC>.png) used instead "
+            "of --eu4-root's gfx/flags; enables standalone (no EU4 install) mode"
+        ),
+    )
+    parser.add_argument(
+        "--colors-file",
+        type=Path,
+        default=None,
+        help=(
+            "file of 'TAG = rgb { r g b }' lines used instead of EU4 country "
+            "files; enables standalone (no EU4 install) mode"
+        ),
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="re-import tags even if they are already present in the outputs",
+    )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--check", action="store_true", help="fail if outputs are out of date")
     mode.add_argument("--dry-run", action="store_true", help="print changes without writing")
@@ -545,14 +675,17 @@ def main() -> int:
     repo_root = args.repo_root.resolve()
     eu4_root = args.eu4_root.resolve()
     eu5_root = args.eu5_root.resolve()
+    flags_dir = args.flags_dir.resolve() if args.flags_dir else None
 
-    required_directories = [
-        repo_root,
-        eu4_root / "common" / "country_tags",
-        eu4_root / "common" / "countries",
-        eu4_root / "gfx" / "flags",
-        eu5_root / "main_menu" / "gfx" / "coat_of_arms" / "colored_emblems",
-    ]
+    required_directories = [repo_root]
+    if flags_dir is None:
+        required_directories.extend(
+            [
+                eu4_root / "common" / "country_tags",
+                eu4_root / "common" / "countries",
+                eu4_root / "gfx" / "flags",
+            ]
+        )
     missing = [path for path in required_directories if not path.is_dir()]
     if missing:
         for path in missing:
@@ -560,12 +693,41 @@ def main() -> int:
         return 2
 
     try:
-        target_specs = parse_target_specs(args.tags)
+        if args.tags:
+            target_specs = parse_target_specs(args.tags)
+        else:
+            target_specs = discover_ab_tags(repo_root)
+            if not target_specs:
+                print("error: no ABxxx tags found in country files", file=sys.stderr)
+                return 2
+
+        existing = (
+            set()
+            if args.check or args.force
+            else find_existing_imports(repo_root)
+        )
+        pending: list[TargetSpec] = []
+        for spec in target_specs:
+            if coa_key_for(spec.target) in existing:
+                print(f"exists: {spec.target} (already imported)", file=sys.stderr)
+            else:
+                pending.append(spec)
+        target_specs = pending
+        if not target_specs:
+            print("nothing to import: all selected tags already exist")
+            return 0
+
+        colors = (
+            load_colors_file(args.colors_file.resolve())
+            if args.colors_file else None
+        )
         country_files = find_country_files(
             repo_root, [spec.target for spec in target_specs]
         )
-        imports, skipped = collect_imports(target_specs, eu4_root, eu5_root)
-    except ValueError as error:
+        imports, skipped = collect_imports(
+            target_specs, eu4_root, eu5_root, flags_dir, colors
+        )
+    except (ValueError, OSError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
     if not imports:
@@ -602,14 +764,14 @@ def main() -> int:
     changed = [path for path, (old, new, _format) in outputs.items() if old != new]
 
     # Generate textured emblems from EU4 flags for tags without existing EU5 mons
-    eu4_flags_dir = eu4_root / "gfx" / "flags"
+    flag_src_dir = flags_dir if flags_dir is not None else eu4_root / "gfx" / "flags"
     textured_emblem_dir = repo_root / TEXTURED_EMBLEM_DIR
     for imported in imports:
         if imported.style is not None and imported.style.emblem.startswith("ce_eu4_flag_"):
-            tga_path = eu4_flags_dir / f"{imported.source}.tga"
+            flag_image = find_flag_image(flag_src_dir, imported.source)
             dds_path = textured_emblem_dir / imported.style.emblem
-            if tga_path.is_file():
-                generate_mon_from_flag(tga_path, imported.flag_background, dds_path)
+            if flag_image is not None:
+                generate_mon_from_flag(flag_image, imported.flag_background, dds_path)
                 print(f"mon: {imported.target} <- {imported.source} ({dds_path.name})")
 
     for message in skipped:
