@@ -71,11 +71,19 @@ abm_india_bazaar_republic = {
 	potential = {
 		has_culture_group = indian
 		government = republic
+		original_capital ?= {
+			OR = {
+				sub_continent = sub_continent:south_asia 
+				sub_continent = sub_continent:south_east_asia
+				sub_continent = sub_continent:east_africa
+			}
+		}
 	}
 	country_modifier = {
 		global_merchant_capacity_modifier = 0.20
 		trade_income = 0.10
 		merchant_maintenance_efficiency = 0.20
+		global_trades_per_burgher = 0.40
 
 		global_maritime_presence_modifier = 0.20
 
@@ -83,7 +91,7 @@ abm_india_bazaar_republic = {
 		global_clergy_estate_power = -0.25
 
 		num_local_governors = -1
-		num_naval_governors = 2
+		num_naval_governors = 1
 	}
 	years = 2
 }
