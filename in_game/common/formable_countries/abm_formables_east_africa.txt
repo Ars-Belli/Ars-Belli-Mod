@@ -1,0 +1,180 @@
+ABMDG_f = { #Madagascar
+	level = 3
+	required_locations_fraction = 0.85
+	rule = historical
+
+	potential = {
+		culture = {
+            has_culture_group = culture_group:malagasy_group
+            }
+	}
+
+	allow = {
+		is_subject = no
+        
+        has_culture_group = culture_group:malagasy_group
+
+		capital = { 
+            region = region:madagascar_region
+        }
+	}
+
+	tag = ABMDG
+
+    regions = {
+        madagascar_region
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+REPLACE:SOI_f = { #Somalia
+	level = 3 #was 2
+	required_locations_fraction = 0.65 #was 0.5
+	rule = plausible
+
+	potential = {
+		culture = culture:somali_culture
+	}
+	allow = {
+		capital = { 
+            region = region:somalia_region
+        }
+	}
+
+	name = SOI
+	flag = SOI	
+	adjective = SOI_ADJ
+	tag = SOI
+	color = map_SOI
+
+	regions = {
+		somalia_region
+	}
+
+	form_effect = {
+        if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+REPLACE:NUB_f = {
+	level = 3 #was 2
+	required_locations_fraction = 0.70
+	rule = plausible
+
+	potential = {
+		culture = culture:nubian
+        religion.group = religion_group:christian
+	}
+
+	allow = {
+		capital = { 
+            region = region:nubia_region
+        }
+	}
+
+	name = NUB
+	flag = NUB	
+	adjective = NUB_ADJ
+	tag = NUB
+	color = map_NUB
+
+	areas = {
+		nubia_proper_area
+		butana_area
+	}
+    provinces = {
+        kordofan_province
+        atbai_province
+    }
+
+	form_effect = {
+        if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+ABSUD_f = {
+	level = 3 
+	required_locations_fraction = 0.70
+	rule = plausible
+
+	potential = {
+		culture = culture:sudanese_arab
+        religion.group = religion_group:muslim
+	}
+
+	allow = {
+		capital = { 
+            region = region:nubia_region
+        }
+	}
+
+    #Needs it's own localisation.
+	
+    #name = NUB
+	#flag = NUB	
+	#adjective = NUB_ADJ
+	tag = ABSUD
+	#color = map_NUB
+
+	areas = {
+		nubia_proper_area
+		butana_area
+	}
+    provinces = {
+        kordofan_province
+        atbai_province
+    }
+
+	form_effect = {
+        if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+REPLACE:BEJ_f = { 
+
+	level = 3 #was 1
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = culture:beja_culture
+	}
+
+	allow = {
+	}
+	
+	name = BEJ
+	flag = BEJ
+	adjective = BEJ_ADJ
+	tag = BEJ
+	color = map_beja
+	
+	locations = {
+		deraheib
+		agordat
+		tesenei
+		massawa
+		zula
+	}
+	form_effect = {
+		if = { #new
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}

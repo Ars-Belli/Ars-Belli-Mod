@@ -1,0 +1,282 @@
+ABNJD_f = { #Najd
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:arabian_group
+		}
+	}
+
+	allow = {
+		is_subject = no
+		OR = {
+			culture = culture:najdi_culture
+			culture = culture:bedouin_culture
+		}
+		capital = { 
+            OR = { 
+            area = area:hail_area 
+            area = area:najd_area
+            area = area:bahrein_area
+            province = province:hinakiyah_province
+            province = province:dhalam_province
+            } 
+        }
+	}
+
+	tag = ABNJD
+
+	areas = {
+		hail_area 
+        najd_area
+        bahrein_area
+	}
+    provinces = {
+        hinakiyah_province
+        dhalam_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABHEJ_f = { #Hejaz
+	level = 3
+	required_locations_fraction = 0.8
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:arabian_group
+		}
+	}
+
+	allow = {
+		is_subject = no
+		
+		culture = culture:hijazi_culture
+		
+		capital = { 
+            OR = { 
+            area = area:hedjaz_area 
+            } 
+        }
+	}
+
+	tag = ABHEJ
+
+	areas = {
+		hedjaz_area
+	}
+    provinces = {
+        hali_province
+        turbah_province
+        ranyah_province
+        abha_province
+        tathlith_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABHDM_f = { #Hadramawt
+	level = 3
+	required_locations_fraction = 1
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:arabian_group
+		}
+	}
+
+	allow = {
+		is_subject = no
+		
+		OR = {
+			culture = culture:hadhrami_culture
+			culture = culture:mehri_culture
+            culture = culture:dhofari_culture
+            culture = culture:soqotri_culture
+		}
+		
+		capital = { 
+            OR = { 
+            area = area:south_yemen_area
+            } 
+        }
+	}
+
+	tag = ABHDM
+
+    provinces = {
+        hadramawt_province
+        birali_province
+        mahra_province
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+ABHAS_f = { #Al-Haasa
+	level = 3
+	required_locations_fraction = 0.95
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:arabian_group
+		}
+	}
+
+	allow = {
+		is_subject = no
+		
+		OR = {
+			culture = culture:kaliji_culture
+			culture = culture:bahrani_culture
+		}
+		
+		capital = { 
+            area = area:bahrein_area
+        }
+	}
+
+	tag = ABHAS
+
+    areas = {
+        bahrein_area
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+YEM_f = { #Yemen
+	level = 3
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:arabian_group
+		}
+	}
+
+	allow = {
+		is_subject = no
+		
+		OR = {
+			culture = culture:yemeni_culture
+			culture = culture:teimani
+		}
+		
+		capital = { 
+            area = area:north_yemen_area
+            area = area:south_yemen_area
+        }
+	}
+
+	tag = YEM
+
+    areas = {
+        north_yemen_area
+        south_yemen_area
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+OMA_f = { #Oman
+	level = 3
+	required_locations_fraction = 1
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:arabian_group
+		}
+	}
+
+	allow = {
+		is_subject = no
+		
+		OR = {
+			culture = culture:omani_culture
+			culture = culture:shihhi_culture
+            culture = culture:kaliji_culture
+		}
+		
+		capital = { 
+            area = area:oman_area
+        }
+	}
+
+	tag = OMA
+
+    areas = {
+        area:oman_area
+    }
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+REPLACE:AIA_f = { # Arabia 
+
+	level = 4
+	required_locations_fraction = 0.75
+	rule = plausible
+	
+	potential = {
+		culture = { has_culture_group = culture_group:arabian_group }
+	}
+
+	allow = {
+	}
+	
+	name = AIA
+	flag = AIA
+	adjective = AIA_ADJ
+	tag = AIA
+	color = map_AIA
+	
+	regions = {
+		arabia_region
+	}
+	form_effect = {
+        if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}

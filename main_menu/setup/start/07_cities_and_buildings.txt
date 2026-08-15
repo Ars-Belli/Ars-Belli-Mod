@@ -424,7 +424,7 @@ locations={
 	# Ruthenia
 	chernihiv = { rank = town 	town_setup = ruthenian_town }
 	ismail = { rank = town town_setup = ruthenian_town }
-	kyiv = { rank = town 		town_setup = ruthenian_town }
+	kyiv = { rank = city 		town_setup = ruthenian_town } #NEW
 	lviv = { rank = town 		town_setup = ruthenian_town }
 	polotsk = { rank = town 	town_setup = ruthenian_town }
 	poltava = { rank = town town_setup = ruthenian_town }
@@ -452,6 +452,9 @@ locations={
 	staraya_ladoga = { rank = town	town_setup = russian_town }
 	staraya_russa = { rank = town 	town_setup = russian_town }
 	vologda = { rank = town 		town_setup = russian_town }
+
+	# Zaporozhian Cossacks
+	kichkas = { rank = town 		town_setup = ruthenian_town } #NEW
 
 	# Golden Horde towns
 	astrakhan = { rank = city			town_setup = russian_city }
@@ -995,7 +998,7 @@ locations={
 
 	#Mongolia and Manchuria
 	karakorum = { rank = town town_setup = chinese_town }
-	erenkhot = { rank = town town_setup = chinese_town } #NEW
+	erenkhot = { rank = town town_setup = erenkhot_mongol_capital } #NEW
 	liaoyang = { rank = city town_setup = chinese_city }
 	shenyang = { rank = town town_setup = chinese_town } #NEW
 	ilan_hala = { rank = town 	town_setup = jurchen_town }
@@ -1278,6 +1281,7 @@ locations={
 	memba = { rank = town 	town_setup = east_african_coastal_town } #NEW
 	kisiju = { rank = town town_setup = east_african_coastal_town } #NEW kilwan rural settlement >>> town
 	tintingue = { rank = town 	town_setup = east_african_coastal_town } #NEW (Madagascar)
+	antananarivo = { rank = town town_setup = sahel_town  } #NEW
 	#Merchant Settlements
 	mikindani = { rank = rural_settlement town_setup = kilwan_merchant_settlement }
 	mitimiri = { rank = rural_settlement town_setup = kilwan_merchant_settlement }
@@ -1375,7 +1379,7 @@ locations={
 	goly_karamysh = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	rudnya_pontic = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	yenotayevka = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
-	malye_derbetyh = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
+	malye_derbety = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	stepanevka = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	zenzevatka = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	
@@ -1436,6 +1440,7 @@ locations={
 	boorj = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	taizhou_jurchen = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	enhe_hada = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
+	zavkhan = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	
 	uraqai = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	aerzhai = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
@@ -1451,6 +1456,13 @@ locations={
 	kyakhta = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	manzushir = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	takhilyn = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
+	dzhul = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
+	harandzuvan = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
+	tokkuztara = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
+	gulja = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
+	narat = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
+	bortala = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
+	jing = { rank = rural_settlement 	town_setup = steppe_rural_settlement }
 	
 	abagaita = { rank = rural_settlement 	town_setup = steppe_rural_settlement } #market center
 
@@ -1550,44 +1562,209 @@ building_manager = {
 
 	# steppes
 	kurultai = { tag = GLH level = 1 location = sarai_al_jadid }
+	kurultai = { tag = GLH level = 1 location = mechet }
+	kurultai = { tag = GLH level = 1 location = stepanevka }
+	kurultai = { tag = GLH level = 1 location = aksay }
+	kurultai = { tag = GLH level = 1 location = sadovoye_kalmykia }
+	kurultai = { tag = GLH level = 1 location = malye_derbety }
+	kurultai = { tag = GLH level = 1 location = chyorny_yar }
+
+	kurultai = { tag = ATR level = 1 location = astrakhan }
+	kurultai = { tag = ATR level = 1 location = krasny_yar }
+	kurultai = { tag = ATR level = 1 location = ikryanoye }
+	kurultai = { tag = ATR level = 1 location = khosheutovo }
+	kurultai = { tag = ATR level = 1 location = zamyany }
+	kurultai = { tag = ATR level = 1 location = yenotayevka }
 
 	kurultai = { tag = NOG level = 1 location = sarayjuk }
+	kurultai = { tag = NOG level = 1 location = ryn }
+	kurultai = { tag = NOG level = 1 location = kisikkamys }
+	kurultai = { tag = NOG level = 1 location = saryadyn }
+	kurultai = { tag = NOG level = 1 location = kulagin }
+	kurultai = { tag = NOG level = 1 location = tenteksor }
+
+	kurultai = { tag = ABKAZ level = 1 location = kazan }
+	kurultai = { tag = ABKAZ level = 1 location = dobyaz }
+	kurultai = { tag = ABKAZ level = 1 location = sviyazhsk }
+	kurultai = { tag = ABKAZ level = 1 location = bolghar }
+	kurultai = { tag = ABKAZ level = 1 location = laish }
+	kurultai = { tag = ABKAZ level = 1 location = calli }
+
+	kurultai = { tag = ABIGZ level = 1 location = karasay }
+	kurultai = { tag = ABIGZ level = 1 location = irgiz }
 
 	kurultai = { tag = CHG level = 1 location = almaty }
+	kurultai = { tag = CHG level = 1 location = kurty }
+	kurultai = { tag = CHG level = 1 location = shengeldy }
+	kurultai = { tag = CHG level = 1 location = koktal }
+	kurultai = { tag = CHG level = 1 location = lavar }
+	kurultai = { tag = CHG level = 1 location = boyauli }
+	kurultai = { tag = CHG level = 1 location = shelek }
 	kurultai = { tag = CHG level = 1 location = balasagun }
+	kurultai = { tag = CHG level = 1 location = talkhir } #moved from almaliq to talkhir new capital of Chagatai
 
 	kurultai = { tag = GRG level = 1 location = gorgan }
+	kurultai = { tag = GRG level = 1 location = samalqan }
+	kurultai = { tag = GRG level = 1 location = maraveh }
+	kurultai = { tag = GRG level = 1 location = incheh_borun }
+	kurultai = { tag = GRG level = 1 location = aliabad_katul }
+	kurultai = { tag = GRG level = 1 location = minudasht }
+
 	kurultai = { tag = JKR level = 1 location = nishapur }
-	kurultai = { tag = HLG level = 1 location = basra }
+	kurultai = { tag = JKR level = 1 location = radkan }
+	kurultai = { tag = JKR level = 1 location = meshkan_khorasan }
+	kurultai = { tag = JKR level = 1 location = fadisheh }
+	kurultai = { tag = JKR level = 1 location = kadkan }
+	kurultai = { tag = JKR level = 1 location = pivehzhan }
+
+	kurultai = { tag = HLG level = 1 location = wasit } #moved from basra to wasit as the capital moved
+	kurultai = { tag = HLG level = 1 location = rusafa }
+	kurultai = { tag = HLG level = 1 location = numaniyyah }
+	kurultai = { tag = HLG level = 1 location = dayr_aqul }
+	kurultai = { tag = HLG level = 1 location = bakusaya }
+	kurultai = { tag = HLG level = 1 location = al_tib }
 
 	kurultai = { tag = JAL level = 1 location = samarra }
 	kurultai = { tag = JAL level = 1 location = tabriz }
 	kurultai = { tag = JAL level = 1 location = baghdad }
+	kurultai = { tag = JAL level = 1 location = ukbara }
+	kurultai = { tag = JAL level = 1 location = baqubah }
+	kurultai = { tag = JAL level = 1 location = balad_ruz }
+	kurultai = { tag = JAL level = 1 location = khalis }
+	kurultai = { tag = JAL level = 1 location = mandali }
+	kurultai = { tag = JAL level = 1 location = khanaqin }
+	kurultai = { tag = JAL level = 1 location = eyvan }
+	kurultai = { tag = JAL level = 1 location = tikrit }
+	kurultai = { tag = JAL level = 1 location = al_sinn }
+	kurultai = { tag = JAL level = 1 location = ar_rabb }
+
 	kurultai = { tag = JUR level = 1 location = darab }
+	kurultai = { tag = JUR level = 1 location = jannat_shahr }
 	kurultai = { tag = UGH level = 1 location = qatruyeh }
+	kurultai = { tag = UGH level = 1 location = meshkan }
 #	kurultai = { tag = NGD level = 1 location = ghazni } #removed as the holder is not a horde
 #	kurultai = { tag = QUN level = 1 location = kabul } #removed as the holder is not a horde
 #	kurultai = { tag = BSD level = 1 location = deh_kundi } #removed as the holder is not a horde
 #	kurultai = { tag = ART level = 1 location = maymana } #removed as the holder is not a horde
 #	kurultai = { tag = APD level = 1 location = andkhoy } #removed as the holder is not a horde
 #	kurultai = { tag = SLD level = 1 location = balkh } #removed as the holder is not a horde
-	kurultai = { tag = BRL level = 1 location = akhsisek }
-	kurultai = { tag = YSU level = 1 location = samarkand }
+	kurultai = { tag = TIM level = 1 location = akhsisek }
+	kurultai = { tag = TIM level = 1 location = samarkand }
+	kurultai = { tag = TIM level = 1 location = bukhara }
+	kurultai = { tag = TIM level = 1 location = vardanzi }
+	kurultai = { tag = TIM level = 1 location = paykend }
+	kurultai = { tag = TIM level = 1 location = alat }
+	kurultai = { tag = TIM level = 1 location = karmana }
+	kurultai = { tag = TIM level = 1 location = tim_samarkand }
+	kurultai = { tag = TIM level = 1 location = muborak }
+	kurultai = { tag = TIM level = 1 location = paikend }
+
 #	kurultai = { tag = KTT level = 1 location = vakhs } #removed as the holder is not a horde
-	kurultai = { tag = BAT level = 1 location = naomao }
-	kurultai = { tag = CRS level = 1 location = khar_balgas }
-	kurultai = { tag = KHD level = 1 location = zavkhan }
-	kurultai = { tag = BGT level = 1 location = balj }
+	
+	kurultai = { tag = DUR level = 1 location = enhe_hada }
+	kurultai = { tag = DUR level = 1 location = emuer }
+	kurultai = { tag = DUR level = 1 location = silkari }
+	kurultai = { tag = DUR level = 1 location = lower_gazimur }
+	kurultai = { tag = DUR level = 1 location = urov }
+	kurultai = { tag = DUR level = 1 location = merelka }
+
 	market_village = { tag = BGT level = 1 location = balj } #To get market access for the kurultai to work
-	kurultai = { tag = HCN level = 1 location = qingzhou_mongol }
-	kurultai = { tag = OTC level = 1 location = taizhou_jurchen }
-	kurultai = { tag = QAS level = 1 location = boorj }
+	kurultai = { tag = BGT level = 1 location = balj }
+	kurultai = { tag = BGT level = 1 location = kyra }
+	kurultai = { tag = BGT level = 1 location = upper_ulz }
+	kurultai = { tag = BGT level = 1 location = baldan_bereeven }
+	kurultai = { tag = BGT level = 1 location = onon }
+	kurultai = { tag = BGT level = 1 location = uguumur }
+	
 	market_village = { tag = QAS level = 1 location = boorj } #To get market access for the kurultai to work
-	kurultai = { tag = CHG level = 1 location = talkhir } #moved from almaliq to talkhir new capital of Chagatai
+	kurultai = { tag = QAS level = 1 location = boorj }
+	kurultai = { tag = QAS level = 1 location = unda }
+	kurultai = { tag = QAS level = 1 location = aga }
+	kurultai = { tag = QAS level = 1 location = qorqonaq_yubur }
+	kurultai = { tag = QAS level = 1 location = baruun_tar_nuur }
+	kurultai = { tag = QAS level = 1 location = zyyn_tar_nuur }
+	
+	kurultai = { tag = OTC level = 1 location = taizhou_jurchen }
+	kurultai = { tag = OTC level = 1 location = buteha }
+	kurultai = { tag = OTC level = 1 location = chol }
+	kurultai = { tag = OTC level = 1 location = taluhe }
+	kurultai = { tag = OTC level = 1 location = hurle }
+	kurultai = { tag = OTC level = 1 location = talaha }
+
+	kurultai = { tag = HCN level = 1 location = qingzhou_mongol }
+	kurultai = { tag = HCN level = 1 location = linhuang }
+	kurultai = { tag = HCN level = 1 location = uzemchin }
+	kurultai = { tag = HCN level = 1 location = khuuchid }
+	kurultai = { tag = HCN level = 1 location = yingchang }
+	kurultai = { tag = HCN level = 1 location = pingdisonglin }
+
+	stockade = { tag = CRS level = 1 location = khar_balgas }
+	kurultai = { tag = CRS level = 1 location = khar_balgas }
+	kurultai = { tag = CRS level = 1 location = tsetserleg }
+	kurultai = { tag = CRS level = 1 location = kharkhul }
+	kurultai = { tag = CRS level = 1 location = baibalyk }
+	kurultai = { tag = CRS level = 1 location = mori_baridag }
+	kurultai = { tag = CRS level = 1 location = chuluutyn }
+	kurultai = { tag = CRS level = 1 location = zagzuugiin_balgas }
+
+	stockade = { tag = KHD level = 1 location = zavkhan }
+	kurultai = { tag = KHD level = 1 location = zavkhan }
+	kurultai = { tag = KHD level = 1 location = uliastai }
+	kurultai = { tag = KHD level = 1 location = ogomoor }
+	kurultai = { tag = KHD level = 1 location = khangal }
+	kurultai = { tag = KHD level = 1 location = biger }
+	kurultai = { tag = KHD level = 1 location = naran }
+
+	stockade = { tag = OGE level = 1 location = jeminay }
 	kurultai = { tag = OGE level = 1 location = jeminay } #moved from kurchum to jeminay capital of Torghut
-	kurultai = { tag = ABUZB level = 1 location = shybyndy }#Uzbek capital
+	kurultai = { tag = OGE level = 1 location = kurchum }
+	kurultai = { tag = OGE level = 1 location = kandysu }
+	kurultai = { tag = OGE level = 1 location = sarybulak }
+	kurultai = { tag = OGE level = 1 location = kokpekty }
+	kurultai = { tag = OGE level = 1 location = burqin }
+
+	stockade = { tag = BAT level = 1 location = altayn_ovor_gobi }
+	kurultai = { tag = BAT level = 1 location = altayn_ovor_gobi }
+	kurultai = { tag = BAT level = 1 location = shargyn_gobi }
+	kurultai = { tag = BAT level = 1 location = shira_qulusun }
+	kurultai = { tag = BAT level = 1 location = zuun_garyn_gobi }
+	kurultai = { tag = BAT level = 1 location = tsogt }
+	kurultai = { tag = BAT level = 1 location = naomao }
+
+	stockade = { tag = ABUZB level = 1 location = shybyndy } #Uzbek capital
+	kurultai = { tag = ABUZB level = 1 location = shybyndy } #Uzbek capital
+	kurultai = { tag = ABUZB level = 1 location = bozok_astana }
+	kurultai = { tag = ABUZB level = 1 location = bayanaul }
+	kurultai = { tag = ABUZB level = 1 location = tuzdysor }
+	kurultai = { tag = ABUZB level = 1 location = karasor }
+	kurultai = { tag = ABUZB level = 1 location = karabay }
+	kurultai = { tag = ABUZB level = 1 location = dandybay }
+
+
 	kurultai = { tag = CRI level = 1 location = enice } #Crimean capital
+	kurultai = { tag = CRI level = 1 location = kyrylivka }
+	kurultai = { tag = CRI level = 1 location = velyka_lepetykha }
+	kurultai = { tag = CRI level = 1 location = rohat_kermen }
+	kurultai = { tag = CRI level = 1 location = qalancaq }
+	kurultai = { tag = CRI level = 1 location = or_qapi }
+	kurultai = { tag = CRI level = 1 location = melitopol }
+
 	kurultai = { tag = MGO level = 1 location = erenkhot } #Mongol Capital
+	kurultai = { tag = MGO level = 1 location = baganuur }
+	kurultai = { tag = MGO level = 1 location = khobootsar }
+	kurultai = { tag = MGO level = 1 location = ulanchab }
+	kurultai = { tag = MGO level = 1 location = chahar }
+	kurultai = { tag = MGO level = 1 location = ulan_hua }
+	kurultai = { tag = MGO level = 1 location = jingzhou_dorbod }
+	kurultai = { tag = MGO level = 1 location = dalay }
+	kurultai = { tag = MGO level = 1 location = sonod }
+
+	kurultai = { tag = ABTUM level = 1 location = ningxia }
+	kurultai = { tag = ABTUM level = 1 location = dingyuan_lingzhou }
+	kurultai = { tag = ABTUM level = 1 location = otog }
+	kurultai = { tag = ABTUM level = 1 location = lingzhou }
+	kurultai = { tag = ABTUM level = 1 location = lingwu }
+	kurultai = { tag = ABTUM level = 1 location = bayankhot }
 
 	caravanserai = { tag = GLH level = 1 location = sarai_al_jadid }
 	caravanserai = { tag = CHG level = 1 location = almaliq }
@@ -4346,10 +4523,10 @@ building_manager = {
 	stockade = { tag = CHI level = 1 location = qiongzhou }
 	stockade = { tag = CHI level = 1 location = qingchuan }
 	stockade = { tag = CHI level = 1 location = yandao }
-	stockade = { tag = CHI level = 1 location = tsagaan_usun }
+#	stockade = { tag = CHI level = 1 location = tsagaan_usun } # moved to khar_balgas
 	stockade = { tag = CHI level = 1 location = usun }
-	stockade = { tag = CHI level = 1 location = santokhe }
-	stockade = { tag = CHI level = 1 location = khalzan_shireg }
+#	stockade = { tag = CHI level = 1 location = santokhe } #moved to altayn_ovor_gobi
+#	stockade = { tag = CHI level = 1 location = khalzan_shireg } #moved to zavkhan
 	stockade = { tag = CHI level = 1 location = boduna }
 	stockade = { tag = CHI level = 1 location = malong }
 	stockade = { tag = CHI level = 1 location = gorlos }
@@ -4963,27 +5140,31 @@ building_manager = {
 	#NEW - Steppes Castle & Building additions
 	stockade = { tag = CRI level = 1 location = enice }
 #	stockade = { tag = TIB level = 1 location = sakya } #Tibet - commented out as it now starts as a Town with stockade included
+	republican_assembly	= { tag = ZAZ level = 1 location = kichkas } #NEW - ZAZ
+	sergeantry	= { tag = ZAZ level = 1 location = kichkas } #NEW - ZAZ
+	castle = { tag = ZAZ level = 1 location =  kichkas } #NEW - ZAZ
 
-	sergeantry	= { tag = ABOXN level = 1 location = kokand }	
-	royal_court	= { tag = ABOXN level = 1 location = kokand }
-	royal_garden = { tag = ABOXN level = 1 location = kokand }
-	tar_kiln = { tag = ABOXN level = 5 location = uzkand }
-	jewelry_guild = { tag = ABOXN level = 5 location = chach }
-	cloth_guild = { tag = ABOXN level = 2 location = chach }
+	sergeantry	= { tag = ABTRS level = 1 location = kokand }	
+	royal_court	= { tag = ABTRS level = 1 location = kokand }
+	royal_garden = { tag = ABTRS level = 1 location = kokand }
+	tar_kiln = { tag = ABTRS level = 5 location = uzkand }
+	jewelry_guild = { tag = ABTRS level = 5 location = chach }
+	cloth_guild = { tag = ABTRS level = 2 location = chach }
+	castle = { tag = ABTRS level = 1 location = jizzakh }
 	
-	republican_assembly = { tag = ABKHV level = 1 location = khiva }
-	chancery = { tag = ABKHV level = 1 location = khiva }
-	city_guard = { tag = ABKHV level = 1 location = khiva }
-	hospital = { tag = ABKHV level = 1 location = khiva }
-	library = { tag = ABKHV level = 1 location = khiva }
-	madrasa = { tag = ABKHV level = 1 location = khiva }
-	city_walls = { tag = ABKHV level = 1 location = khiva }
-	city_walls = { tag = ABKHV level = 1 location = urgench }
-	bog_iron_smelter = { tag = ABKHV level = 4 location = shimbay }
-	bailiff = { tag = ABKHV level = 1 location = shimbay }
-	bailiff = { tag = ABKHV level = 1 location = darganata }
-	stockade = { tag = ABKHV level = 1 location = darganata }
-	stockade = { tag = ABKHV level = 1 location = shimbay }
+	republican_assembly = { tag = ABKHI level = 1 location = khiva }
+	chancery = { tag = ABKHI level = 1 location = khiva }
+	city_guard = { tag = ABKHI level = 1 location = khiva }
+	hospital = { tag = ABKHI level = 1 location = khiva }
+	library = { tag = ABKHI level = 1 location = khiva }
+	madrasa = { tag = ABKHI level = 1 location = khiva }
+	city_walls = { tag = ABKHI level = 1 location = khiva }
+	city_walls = { tag = ABKHI level = 1 location = urgench }
+	bog_iron_smelter = { tag = ABKHI level = 4 location = shimbay }
+	bailiff = { tag = ABKHI level = 1 location = shimbay }
+	bailiff = { tag = ABKHI level = 1 location = darganata }
+	stockade = { tag = ABKHI level = 1 location = darganata }
+	stockade = { tag = ABKHI level = 1 location = shimbay }
 	
 	sergeantry	= { tag = ABYRK level = 1 location = yarkand }	
 	royal_court	= { tag = ABYRK level = 1 location = yarkand }
@@ -5050,41 +5231,42 @@ building_manager = {
 	
 	#https://www.youtube.com/watch?v=jIxs89D9MDY
 	
-	caravanserai = { tag = ABOXN level = 1 location = karabulak }
-	caravanserai = { tag = ABOXN level = 1 location = arsubaniket }
-	caravanserai = { tag = ABOXN level = 1 location = mardankuyik }
-	caravanserai = { tag = ABOXN level = 1 location = zhaushikumtobe }
-	caravanserai = { tag = ABOXN level = 1 location = chach }
-	caravanserai = { tag = ABOXN level = 1 location = zomin }
-	caravanserai = { tag = ABOXN level = 1 location = pishagar }
-	caravanserai = { tag = ABOXN level = 1 location = jizzakh }
-	caravanserai = { tag = ABOXN level = 1 location = bogiston }
-	caravanserai = { tag = ABOXN level = 1 location = burchmullo }
-	caravanserai = { tag = ABOXN level = 1 location = ura_tyube }
-	caravanserai = { tag = ABOXN level = 1 location = dakhkat }
-	caravanserai = { tag = ABOXN level = 1 location = khujand }
-	caravanserai = { tag = ABOXN level = 1 location = konibodom }
-	caravanserai = { tag = ABOXN level = 1 location = kokand }
-	caravanserai = { tag = ABOXN level = 1 location = rishton }
-	caravanserai = { tag = ABOXN level = 1 location = fergana }
-	caravanserai = { tag = ABOXN level = 1 location = osh }
-	caravanserai = { tag = ABOXN level = 1 location = gulcha }
+	caravanserai = { tag = ABTRS level = 1 location = karabulak }
+	caravanserai = { tag = ABTRS level = 1 location = arsubaniket }
+	caravanserai = { tag = ABTRS level = 1 location = mardankuyik }
+	caravanserai = { tag = ABTRS level = 1 location = zhaushikumtobe }
+	caravanserai = { tag = ABTRS level = 1 location = chach }
+	caravanserai = { tag = ABTRS level = 1 location = zomin }
+	caravanserai = { tag = ABTRS level = 1 location = pishagar }
+	caravanserai = { tag = ABTRS level = 1 location = jizzakh }
+	caravanserai = { tag = ABTRS level = 1 location = bogiston }
+	caravanserai = { tag = ABTRS level = 1 location = burchmullo }
+	caravanserai = { tag = ABTRS level = 1 location = ura_tyube }
+	caravanserai = { tag = ABTRS level = 1 location = dakhkat }
+	caravanserai = { tag = ABTRS level = 1 location = khujand }
+	caravanserai = { tag = ABTRS level = 1 location = konibodom }
+	caravanserai = { tag = ABTRS level = 1 location = kokand }
+	caravanserai = { tag = ABTRS level = 1 location = rishton }
+	caravanserai = { tag = ABTRS level = 1 location = fergana }
+	caravanserai = { tag = ABTRS level = 1 location = osh }
+	caravanserai = { tag = ABTRS level = 1 location = gulcha }
 
-	caravanserai = { tag = ABKHV level = 1 location = kyushe }
-	caravanserai = { tag = ABKHV level = 1 location = shuruk }	
-	caravanserai = { tag = ABKHV level = 1 location = uchkuduk }
-	caravanserai = { tag = ABKHV level = 1 location = pulzhai }
-	caravanserai = { tag = ABKHV level = 1 location = urgench }
-	caravanserai = { tag = ABKHV level = 1 location = vezir }
-	caravanserai = { tag = ABKHV level = 1 location = talaikhan_ata }
-	caravanserai = { tag = ABKHV level = 1 location = uzboy }
-	caravanserai = { tag = ABKHV level = 1 location = qonirat }
-	caravanserai = { tag = ABKHV level = 1 location = shimbay }
-	caravanserai = { tag = ABKHV level = 1 location = khurgancha }
-	caravanserai = { tag = ABKHV level = 1 location = kath }
-	caravanserai = { tag = ABKHV level = 1 location = khiva }
-	caravanserai = { tag = ABKHV level = 1 location = hazarasp }
+	caravanserai = { tag = ABKHI level = 1 location = kyushe }
+	caravanserai = { tag = ABKHI level = 1 location = shuruk }	
+	caravanserai = { tag = ABKHI level = 1 location = uchkuduk }
+	caravanserai = { tag = ABKHI level = 1 location = pulzhai }
+	caravanserai = { tag = ABKHI level = 1 location = urgench }
+	caravanserai = { tag = ABKHI level = 1 location = vezir }
+	caravanserai = { tag = ABKHI level = 1 location = talaikhan_ata }
+	caravanserai = { tag = ABKHI level = 1 location = qonirat }
+	caravanserai = { tag = ABKHI level = 1 location = shimbay }
+	caravanserai = { tag = ABKHI level = 1 location = khurgancha }
+	caravanserai = { tag = ABKHI level = 1 location = kath }
+	caravanserai = { tag = ABKHI level = 1 location = khiva }
+	caravanserai = { tag = ABKHI level = 1 location = hazarasp }
+	caravanserai = { tag = ABKHI level = 1 location = daya_kathyn }
 	
+	caravanserai = { tag = GRG level = 1 location = uzboy }
 	caravanserai = { tag = GRG level = 1 location = gazanjyk }
 	caravanserai = { tag = GRG level = 1 location = faraveh }
 	caravanserai = { tag = GRG level = 1 location = ganlygala }
@@ -5124,7 +5306,6 @@ building_manager = {
 	caravanserai = { tag = TIM level = 1 location = bukhara }
 	caravanserai = { tag = TIM level = 1 location = paikend }
 	caravanserai = { tag = TIM level = 1 location = firabr }
-	caravanserai = { tag = TIM level = 1 location = daya_kathyn }
 	caravanserai = { tag = TIM level = 1 location = kish_shahrisabz }
 	caravanserai = { tag = TIM level = 1 location = chiroqchi }
 	caravanserai = { tag = TIM level = 1 location = guzor }
@@ -5207,13 +5388,13 @@ building_manager = {
 	caravanserai = { tag = QCH level = 1 location = dunla }
 
 	#NEW Khiva & Yarkand Trade Offices
-	trade_office = { tag = ABKHV level = 4 location = astarabad }
-	trade_office = { tag = ABKHV level = 5 location = nishapur }
-	trade_office = { tag = ABKHV level = 5 location = herat }
-	trade_office = { tag = ABKHV level = 3 location = merv }
-	trade_office = { tag = ABKHV level = 5 location = balkh }
-	trade_office = { tag = ABKHV level = 5 location = bukhara }
-	trade_office = { tag = ABKHV level = 5 location = samarkand }
+	trade_office = { tag = ABKHI level = 4 location = astarabad }
+	trade_office = { tag = ABKHI level = 5 location = nishapur }
+	trade_office = { tag = ABKHI level = 5 location = herat }
+	trade_office = { tag = ABKHI level = 3 location = merv }
+	trade_office = { tag = ABKHI level = 5 location = balkh }
+	trade_office = { tag = ABKHI level = 5 location = bukhara }
+	trade_office = { tag = ABKHI level = 5 location = samarkand }
 	
 	trade_office = { tag = ABYRK level = 5 location = balkh }
 	trade_office = { tag = ABYRK level = 4 location = turpan }
@@ -5292,6 +5473,12 @@ building_manager = {
 	stockade = { tag = SKA level = 1 location = andranomavo }
 	stockade = { tag = BTS level = 1 location = manahoro }
 	stockade = { tag = INH level = 1 location = inhambane }
+
+	stockade = { tag = MIR level = 1 location = antananarivo }
+	sergeantry = { tag = MIR level = 1 location = antananarivo }
+	cloth_guild = { tag = MIR level = 1 location = antananarivo }
+	paper_guild = { tag = MIR level = 1 location = antananarivo }
+	tar_kiln = { tag = MIR level = 1 location = antananarivo }
 	
 	sergeantry = { tag = ZAN level = 1 location = kilwa_kisiwani }
 	royal_court	= { tag = ZAN level = 1 location = kilwa_kisiwani }
@@ -5984,9 +6171,18 @@ building_manager = {
 	stockade = { tag = MGO level = 1 location = erenkhot }
 	stockade = { tag = MGO level = 1 location = karakorum }
 	
+	sawmill = { tag = MGO level = 1 location = jining }
+	lumber_mill = { tag = MGO level = 5 location = jining }
+	tar_kiln = { tag = MGO level = 1 location = jining }
+
 	stockade = { tag = ABKHA level = 1 location = daning_pingquan }
 	market_village = { tag = ABKHA level = 3 location = daning_pingquan }
 	kurultai = { tag = ABKHA level = 1 location = daning_pingquan }
+	kurultai = { tag = ABKHA level = 1 location = enhua }
+	kurultai = { tag = ABKHA level = 1 location = fushu }
+	kurultai = { tag = ABKHA level = 1 location = hezhong }
+	kurultai = { tag = ABKHA level = 1 location = pingquan }
+	kurultai = { tag = ABKHA level = 1 location = huihe }
 	
 	stockade = { tag = DUR level = 1 location = enhe_hada }
 	stockade = { tag = QAS level = 1 location = boorj }

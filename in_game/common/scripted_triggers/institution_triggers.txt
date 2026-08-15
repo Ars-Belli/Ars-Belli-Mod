@@ -1,0 +1,515 @@
+﻿# Scope: location
+# Used by can_spawn in game/in_game/common/institution/age_*.txt
+# Each trigger is the body of the institution's "plausible spawn site" rule,
+# i.e. the conditions that apply under has_game_rule = institution_spawn_plausible.
+
+renaissance_plausible_location = {
+	has_owner = yes
+	OR = {
+		area = area:emilia_area
+		area = area:lombardy_area
+		area = area:piemonte_area
+		area = area:tuscany_area
+		area = area:veneto_area
+		area = area:liguria_area
+	}
+	OR = {
+		location_rank = location_rank:city
+		location_rank = location_rank:megalopolis
+		has_building_with_at_least_one_level = university
+	}
+	custom_tooltip = {
+		text = dominant_culture_is_owners_culture
+		dominant_culture = owner.culture
+	}
+}
+
+banking_plausible_location = {
+	has_owner = yes
+	num_pop_type:burghers > 1.0
+	custom_tooltip = {
+		text = dominant_culture_is_owners_culture
+		dominant_culture = owner.culture
+	}
+
+	owner = {
+		societal_value:capital_economy_vs_traditional_economy < -50
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe #was continent:europe
+		region = region:russian_region #was continent:europe
+		region = region:ruthenia_region #was continent:europe
+		region = region:baltic_region #was continent:europe
+		region = region:carpathia_region #was continent:europe
+		region = region:balkan_region #was continent:europe
+		region = region:maghreb_region #was sub_continent:north_africa
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+professional_armies_plausible_location = {
+	#continent = continent:europe
+	has_owner = yes
+
+	custom_tooltip = {
+		text = dominant_culture_is_owners_culture
+		dominant_culture = owner.culture
+	}
+	modifier:local_manpower > 0
+
+	owner = {
+		societal_value:quality_vs_quantity < -10
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+new_world_plausible_location = {
+	
+	has_owner = yes
+	is_port = yes
+	num_pop_type:burghers >= 2.0
+	custom_tooltip = {
+		text = dominant_culture_is_owners_culture
+		dominant_culture = owner.culture
+	}
+	owner = {
+		OR = {
+			has_discovered_area = area:azores_area
+			has_discovered_area = area:canary_islands_area
+			has_discovered_area = area:south_macaronesia_area
+		}
+	}
+
+	OR = {
+		sub_continent = sub_continent:western_europe
+		region = region:maghreb_region
+	}
+}
+
+printing_press_plausible_location = {
+	owner ?= {
+		produced_in_country:paper > 5
+	}
+	has_institution = institution:renaissance
+
+	num_pop_type:burghers > 1
+	has_building_with_at_least_one_level = university
+
+	owner = {
+		societal_value:traditionalist_vs_innovative > 20
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+pike_and_shot_plausible_location = {
+	has_institution = institution:professional_armies
+
+	owner ?= {
+		army_tradition > 20
+		has_advance = gunpowder_advance
+		has_advance = professional_armies_advance
+	}
+
+	modifier:local_manpower > 0
+
+	owner = {
+		societal_value:land_vs_naval < -20
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+confessionalism_plausible_location = {
+	
+	has_owner = yes
+	has_building_with_at_least_one_level = printing_press_shop
+
+	OR = {
+		location_rank = location_rank:town
+		location_rank = location_rank:city
+		location_rank = location_rank:megalopolis
+	}
+
+	dominant_religion = owner.religion
+	dominant_religion = religion:catholic
+
+	owner = {
+		societal_value:spiritualist_vs_humanist < -25
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+global_trade_plausible_location = {
+	has_institution = institution:banking
+	has_institution = institution:new_world
+
+	is_market_center = yes
+	OR = {
+		location_rank = location_rank:city
+		location_rank = location_rank:megalopolis
+	}
+	market = {
+		total_goods_value_traded > 500
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+artillery_institution_plausible_location = {
+	has_institution = institution:professional_armies
+
+	has_building_with_at_least_one_level = gun_smith
+	has_building_with_at_least_one_level = tools_guild
+
+	owner = {
+		societal_value:offensive_vs_defensive < -20
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+manufactories_plausible_location = {
+	has_institution = institution:banking
+
+	num_pop_type:burghers > 20
+	total_building_levels > 80
+
+	owner = {
+		societal_value:capital_economy_vs_traditional_economy < -30
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+scientific_revolution_plausible_location = {
+	has_institution = institution:printing_press
+
+	has_building_with_at_least_one_level = university
+	average_location_literacy > 30
+
+	owner = {
+		societal_value:traditionalist_vs_innovative >= 20
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+military_revolution_plausible_location = {
+	has_institution = institution:pike_and_shot
+	has_institution = institution:artillery_institution
+
+	is_capital = yes
+	population > 30
+	owner = {
+		yearly_manpower > 2
+		societal_value:offensive_vs_defensive < -20
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+enlightenment_plausible_location = {
+	has_institution = institution:scientific_revolution
+
+	has_building_with_at_least_one_level = university
+	average_location_literacy > 30
+
+	owner = {
+		societal_value:traditionalist_vs_innovative > 20
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+industrialization_plausible_location = {
+	has_institution = institution:manufactories
+
+	num_pop_type:burghers > 20
+	total_building_levels > 120
+
+	owner = {
+		societal_value:capital_economy_vs_traditional_economy < -30
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}
+
+levee_en_masse_plausible_location = {
+	has_institution = institution:military_revolution
+	owner ?= { capital = root }
+	population > 200
+
+	owner = {
+		societal_value:quality_vs_quantity > 0
+	}
+
+	OR = { #new 'Europe' institution spawn region
+		sub_continent =  sub_continent:western_europe 
+		region = region:russian_region 
+		region = region:ruthenia_region 
+		region = region:baltic_region 
+		region = region:carpathia_region 
+		region = region:balkan_region 
+		region = region:maghreb_region 
+		area = area:zaporizhzhia_area
+		area = area:yedisan_area
+		area = area:crimea_area
+		area = area:kursk_area
+		area = area:sloboda_ukraine_area
+		area = area:pryazovia_area
+		area = area:azov_area
+		area = area:matrega_area
+		area = area:georgia_area
+		area = area:pontus_area
+		area = area:marmara_area
+		area = area:west_anatolia_area
+		area = area:central_anatolia_area
+	}
+}

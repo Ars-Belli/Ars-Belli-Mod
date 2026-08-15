@@ -9,7 +9,22 @@
 # Nepal (NPL)
 abm_npl_ideas_tradition_1 = {
 	age = age_2_renaissance
-	icon = administrative_leadership
+	icon = drill_army_advance
+	potential = {
+		has_or_had_tag = NPL
+	}
+	allow = {
+		original_capital ?= { area = area:nepal_area }
+	}
+	requires = unlock_barque_advance
+
+	# land_forcelimit_modifier = 0.25
+	army_maintenance_efficiency = 0.10
+}
+
+abm_npl_ideas_tradition_2 = {
+	age = age_2_renaissance
+	icon = professional_armies_advance
 	potential = {
 		has_or_had_tag = NPL
 	}
@@ -18,35 +33,20 @@ abm_npl_ideas_tradition_1 = {
 	}
 	requires = gunpowder_advance
 
-	# land_forcelimit_modifier = 0.25
-	army_maintenance_efficiency = 0.10
-}
-
-abm_npl_ideas_tradition_2 = {
-	age = age_2_renaissance
-	icon = glorious_arms
-	potential = {
-		has_or_had_tag = NPL
-	}
-	allow = {
-		original_capital ?= { area = area:nepal_area }
-	}
-	requires = drill_army_advance
-
 	# manpower_recovery_speed = 0.1
 	army_reinforce_efficiency = 0.10
 }
 
 abm_divya_upadesh = {
 	age = age_3_discovery
-	icon = efficient_spies
+	icon = safe_exploration_techniques_advance
 	potential = {
 		has_or_had_tag = NPL
 	}
 	allow = {
 		original_capital ?= { area = area:nepal_area }
 	}
-	requires = diplomatic_range_age_2
+	requires = diplomatic_training
 
 	# diplomatic_reputation = 1
 	improve_relation_impact = 0.20
@@ -54,14 +54,14 @@ abm_divya_upadesh = {
 
 abm_land_of_peaks = {
 	age = age_3_discovery
-	icon = pike_and_shot_advance
+	icon = defensive_army_attrition
 	potential = {
 		has_or_had_tag = NPL
 	}
 	allow = {
 		original_capital ?= { area = area:nepal_area }
 	}
-	requires = pike_and_shot_advance
+	requires = unlock_sekibune
 
 	# defensiveness = 0.15
 	global_defensive = 0.15
@@ -69,14 +69,14 @@ abm_land_of_peaks = {
 
 abm_valleys_united = {
 	age = age_4_reformation
-	icon = diplomatic_influence
+	icon = recruitment_improvements_renaissance
 	potential = {
 		has_or_had_tag = NPL
 	}
 	allow = {
 		original_capital ?= { area = area:nepal_area }
 	}
-	requires = recruitment_improvements_reformation
+	requires = unlock_pistoleers_advance
 
 	# global_manpower_modifier = 0.15
 	global_manpower_modifier = 0.10
@@ -84,14 +84,14 @@ abm_valleys_united = {
 
 abm_rajput_refugees = {
 	age = age_4_reformation
-	icon = army_professionalism
+	icon = artillery_institution_advance
 	potential = {
 		has_or_had_tag = NPL
 	}
 	allow = {
 		original_capital ?= { area = area:nepal_area }
 	}
-	requires = recruitment_improvements_reformation
+	requires = power_projection_advance_3
 
 	# army_tradition = 0.5
 	monthly_army_tradition = 0.05
@@ -100,14 +100,14 @@ abm_rajput_refugees = {
 
 abm_royal_kumari = {
 	age = age_4_reformation
-	icon = offensive_army
+	icon = regiment_reinforcement_speed_renaissance
 	potential = {
 		has_or_had_tag = NPL
 	}
 	allow = {
 		original_capital ?= { area = area:nepal_area }
 	}
-	requires = recruitment_improvements_reformation
+	requires = unlock_war_galleon
 
 	# land_morale = 0.10
 	land_morale_modifier = 0.10
@@ -115,14 +115,14 @@ abm_royal_kumari = {
 
 abm_gurkha_recruits = {
 	age = age_5_absolutism
-	icon = artillery_institution_advance
+	icon = military_revolution_advance
 	potential = {
 		has_or_had_tag = NPL
 	}
 	allow = {
 		original_capital ?= { area = area:nepal_area }
 	}
-	requires = global_supply_limit_modifier_advance_5
+	requires = unlock_merchantman_advance
 
 	# infantry_power = 0.1
 	army_heavy_infantry_power = 0.10
@@ -137,7 +137,7 @@ abm_envelopment_and_blockade = {
 	allow = {
 		original_capital ?= { area = area:nepal_area }
 	}
-	requires = unlock_merchantman_advance
+	requires = power_projection_advance_5
 
 	# leader_siege = 1
 	siege_ability = 0.10
@@ -145,7 +145,7 @@ abm_envelopment_and_blockade = {
 
 abm_npl_ideas_ambition = {
 	age = age_6_revolutions
-	icon = defensive_army
+	icon = levee_en_masse_advance
 	potential = {
 		has_or_had_tag = NPL
 	}
@@ -162,12 +162,12 @@ abm_npl_ideas_ambition = {
 # MUG
 abm_mug_ideas_tradition_1 = {
 	age = age_2_renaissance
-	icon = diplomatic_range_age_1
+	icon = zakah
 	potential = {
 		has_or_had_tag = MUG
 	}
 
-	requires = improve_relation_impact_renaissance
+	requires = spy_construction_renaissance
 
 	# core_creation = -0.25
 	global_integration_speed_modifier = 0.25
@@ -180,7 +180,7 @@ abm_mug_ideas_tradition_2 = {
 		has_or_had_tag = MUG
 	}
 
-	requires = unlock_m_galley_advance
+	requires = power_projection_advance_2
 
 	# cavalry_power = 0.20
 	army_heavy_cavalry_power = 0.10
@@ -188,12 +188,12 @@ abm_mug_ideas_tradition_2 = {
 
 abm_mansabdari_system = {
 	age = age_3_discovery
-	icon = pike_and_shot_advance
+	icon = expansionism
 	potential = {
 		has_or_had_tag = MUG
 	}
 
-	requires = pike_and_shot_advance
+	requires = unlock_baochuan
 
 	# discipline = 0.05
 	military_tactics = 0.10
@@ -201,12 +201,12 @@ abm_mansabdari_system = {
 
 abm_control_of_the_ulema = {
 	age = age_3_discovery
-	icon = crown_power_advance_renaissance
+	icon = global_supply_limit_modifier_advance_5
 	potential = {
 		has_or_had_tag = MUG
 	}
 
-	requires = pike_and_shot_advance
+	requires = unlock_light_lancers_advance
 
 	# global_unrest = -1
 	pop_join_rebel_threshold = -0.05
@@ -214,12 +214,12 @@ abm_control_of_the_ulema = {
 
 abm_mughal_ibadat_khana = {
 	age = age_4_reformation
-	icon = administrative_leadership
+	icon = laws
 	potential = {
 		has_or_had_tag = MUG
 	}
 
-	requires = early_modern_administation
+	requires = legitimization_of_power_law_advance
 
 	# idea_cost = -0.1
 	research_speed_modifier = 0.05
@@ -227,12 +227,12 @@ abm_mughal_ibadat_khana = {
 
 abm_an_indian_padshah = {
 	age = age_4_reformation
-	icon = laws
+	icon = government_size
 	potential = {
 		has_or_had_tag = MUG
 	}
 
-	requires = early_modern_administation
+	requires = tribal_migration_law_advance
 
 	# free_mil_policy = 1
 	government_reform_slots = 1
@@ -245,7 +245,7 @@ abm_zabt_system = {
 		has_or_had_tag = MUG
 	}
 
-	requires = construction_speed_reformation
+	requires = shipyard_advance
 
 	# global_tax_modifier = 0.15
 	tax_income_efficiency = 0.05
@@ -253,12 +253,12 @@ abm_zabt_system = {
 
 abm_mughal_architecture = {
 	age = age_5_absolutism
-	icon = diplomatic_influence
+	icon = scholasticism
 	potential = {
 		has_or_had_tag = MUG
 	}
 
-	requires = national_sovereignty
+	requires = relations_absolutism_advance
 
 	# prestige = 1
 	# great_project_upgrade_time = -0.1
@@ -267,12 +267,12 @@ abm_mughal_architecture = {
 
 abm_fatawa_e_alamgiri = {
 	age = age_5_absolutism
-	icon = court_accounting
+	icon = global_trade_advance
 	potential = {
 		has_or_had_tag = MUG
 	}
 
-	requires = government_size_absolutism
+	requires = measuring_the_world
 
 	# stability_cost_modifier = -0.10
 	stability_cost_efficiency = 0.10
@@ -280,12 +280,12 @@ abm_fatawa_e_alamgiri = {
 
 abm_mug_ideas_ambition = {
 	age = age_6_revolutions
-	icon = zmw_merchant_taxes
+	icon = enlightenment_advance
 	potential = {
 		has_or_had_tag = MUG
 	}
 
-	requires = unlock_cuirassiers_advance
+	requires = fort_limit_6_advance
 
 	# technology_cost = -0.05
 	power_projection = 10
@@ -295,12 +295,12 @@ abm_mug_ideas_ambition = {
 # Punjab (PUN)
 abm_pun_ideas_tradition_1 = {
 	age = age_2_renaissance
-	icon = church_councils
+	icon = bhakti_movement
 	potential = {
 		has_or_had_tag = PUN
 	}
 
-	requires = renaissance_court
+	requires = grant_privilege_cost_modifier_renaissance_advance
 
 	# religious_unity = 0.25
 	tolerance_own = 1
@@ -308,12 +308,12 @@ abm_pun_ideas_tradition_1 = {
 
 abm_pun_ideas_tradition_2 = {
 	age = age_2_renaissance
-	icon = glorious_arms
+	icon = gunpowder_advance
 	potential = {
 		has_or_had_tag = PUN
 	}
 
-	requires = army_professionalism
+	requires = medieval_military
 
 	# land_morale = 0.10
 	land_morale_modifier = 0.10
@@ -321,12 +321,12 @@ abm_pun_ideas_tradition_2 = {
 
 abm_breadbasket_of_india = {
 	age = age_3_discovery
-	icon = serbian_mining
+	icon = lumber_improvements_absolutism
 	potential = {
 		has_or_had_tag = PUN
 	}
 
-	requires = colonial_charters
+	requires = plantation_buildings_advance
 
 	# global_trade_goods_size_modifier = 0.10
 	global_max_rgo_size_modifier = 0.10
@@ -334,12 +334,12 @@ abm_breadbasket_of_india = {
 
 abm_encourage_indo_persian_trade = {
 	age = age_3_discovery
-	icon = red_sea_trade
+	icon = saharan_gold_trade
 	potential = {
 		has_or_had_tag = PUN
 	}
 
-	requires = trade_range_advance_age_3
+	requires = local_governor_advance
 
 	# trade_efficiency = 0.1
 	selling_efficiency = small_trade_efficiency_bonus
@@ -348,12 +348,12 @@ abm_encourage_indo_persian_trade = {
 
 abm_punjabi_textile_industry = {
 	age = age_4_reformation
-	icon = court_accounting
+	icon = efficient_mining
 	potential = {
 		has_or_had_tag = PUN
 	}
 
-	requires = construction_speed_reformation
+	requires = customs_house_advance
 
 	# production_efficiency = 0.15
 	global_production_efficiency = medium_production_efficiency_bonus
@@ -361,12 +361,12 @@ abm_punjabi_textile_industry = {
 
 abm_foundation_of_the_khalsa = {
 	age = age_4_reformation
-	icon = regiment_reinforcement_speed_renaissance
+	icon = recruitment_improvements_renaissance
 	potential = {
 		has_or_had_tag = PUN
 	}
 
-	requires = recruitment_improvements_reformation
+	requires = unlock_pinnace_advance
 
 	# global_manpower_modifier = 0.2
 	army_heavy_infantry_maintenance_cost_modifier = -0.10
@@ -375,12 +375,12 @@ abm_foundation_of_the_khalsa = {
 
 abm_gurmukhi_script = {
 	age = age_4_reformation
-	icon = administrative_leadership
+	icon = a_central_power
 	potential = {
 		has_or_had_tag = PUN
 	}
 
-	requires = early_modern_administation
+	requires = combined_arms_advance_reformation
 
 	# stability_cost_modifier = -0.1
 	stability_cost_efficiency = 0.10
@@ -393,7 +393,7 @@ abm_strength_of_the_misls = {
 		has_or_had_tag = PUN
 	}
 
-	requires = regiment_reinforcement_speed_absolutism
+	requires = militiamen_advance
 
 	# cavalry_cost = -0.10
 	army_light_cavalry_build_cost_modifier = -0.10
@@ -402,12 +402,12 @@ abm_strength_of_the_misls = {
 
 abm_reforming_the_punjabi_army = {
 	age = age_5_absolutism
-	icon = artillery_institution_advance
+	icon = military_revolution_advance
 	potential = {
 		has_or_had_tag = PUN
 	}
 
-	requires = fort_limit_5_advance
+	requires = unlock_twodecker_advance
 
 	# discipline = 0.05
 	discipline = 0.05
@@ -415,7 +415,7 @@ abm_reforming_the_punjabi_army = {
 
 abm_pun_ideas_ambition = {
 	age = age_6_revolutions
-	icon = army_professionalism
+	icon = levee_en_masse_advance
 	potential = {
 		has_or_had_tag = PUN
 	}
@@ -431,12 +431,12 @@ abm_pun_ideas_ambition = {
 # Bharatstan (BHA)
 abm_bha_ideas_tradition_1 = {
 	age = age_2_renaissance
-	icon = crown_power_advance_renaissance
+	icon = national_assemblies_advance
 	potential = {
 		has_or_had_tag = ABBHS
 	}
 
-	requires = crown_power_advance_renaissance
+	requires = national_assemblies_advance
 
 	# stability_cost_modifier = -0.1
 	stability_cost_efficiency = 0.1
@@ -444,12 +444,12 @@ abm_bha_ideas_tradition_1 = {
 
 abm_bha_ideas_tradition_2 = {
 	age = age_2_renaissance
-	icon = administrative_leadership
+	icon = bonded_by_loyalty
 	potential = {
 		has_or_had_tag = ABBHS
 	}
 
-	requires = national_assemblies_advance
+	requires = steppe_horde_tribal_religious_values_law_advance
 
 	# state_maintenance_modifier = -0.15
 	global_distance_from_capital_speed_propagation = 0.10
@@ -457,12 +457,12 @@ abm_bha_ideas_tradition_2 = {
 
 abm_bha_modernized_war_elephants = {
 	age = age_3_discovery
-	icon = elephant_cavalry
+	icon = finest_of_horses
 	potential = {
 		has_or_had_tag = ABBHS
 	}
 
-	requires = unlock_carrack_advance
+	requires = pike_square
 
 	# cavalry_power = 0.15
 	army_heavy_cavalry_power = 0.15
@@ -470,12 +470,12 @@ abm_bha_modernized_war_elephants = {
 
 abm_bha_united_india = {
 	age = age_3_discovery
-	icon = religious_melting_pot
+	icon = buddhist_meditation
 	potential = {
 		has_or_had_tag = ABBHS
 	}
 
-	requires = printing_press_advance
+	requires = pop_promotion_speed_age_3
 
 	# num_accepted_cultures = 2
 	cultures_capacity = 2
@@ -483,12 +483,12 @@ abm_bha_united_india = {
 
 abm_bha_sanskrit_golden_age = {
 	age = age_4_reformation
-	icon = laws
+	icon = renaissance_advance
 	potential = {
 		has_or_had_tag = ABBHS
 	}
 
-	requires = early_modern_administation
+	requires = crown_power_advance_reformation
 
 	# technology_cost = -0.05
 	research_speed_modifier = 0.05
@@ -496,7 +496,7 @@ abm_bha_sanskrit_golden_age = {
 
 abm_bha_indian_army = {
 	age = age_4_reformation
-	icon = army_professionalism
+	icon = artillery_institution_advance
 	potential = {
 		has_or_had_tag = ABBHS
 	}
@@ -509,12 +509,12 @@ abm_bha_indian_army = {
 
 abm_bha_ganga = {
 	age = age_4_reformation
-	icon = church_councils
+	icon = hindu_muslim_relations
 	potential = {
 		has_or_had_tag = ABBHS
 	}
 
-	requires = confessionalism_advance
+	requires = scientific_experimentation
 
 	# tolerance_own = 2
 	tolerance_own = 2
@@ -522,12 +522,12 @@ abm_bha_ganga = {
 
 abm_bha_brahmin_administration = {
 	age = age_5_absolutism
-	icon = government_size
+	icon = global_trade_advance
 	potential = {
 		has_or_had_tag = ABBHS
 	}
 
-	requires = government_size_absolutism
+	requires = economical_policies_law_advance
 
 	# administrative_efficiency = 0.05
 	diplomatic_annexation_efficiency = 0.10
@@ -536,12 +536,12 @@ abm_bha_brahmin_administration = {
 
 abm_bha_rocketry = {
 	age = age_5_absolutism
-	icon = offensive_army
+	icon = letters_of_marque
 	potential = {
 		has_or_had_tag = ABBHS
 	}
 
-	requires = war_score_absolutism_advance
+	requires = unlock_royal_mortar_advance
 
 	# artillery_power = 0.1
 	army_artillery_power = 0.10
@@ -549,12 +549,12 @@ abm_bha_rocketry = {
 
 abm_bha_ideas_ambition = {
 	age = age_6_revolutions
-	icon = expanded_supply_trains
+	icon = enlightenment_advance
 	potential = {
 		has_or_had_tag = ABBHS
 	}
 
-	requires = march_to_the_sound_of_the_guns_advance
+	requires = army_movement_speed_revolutions
 
 	# years_of_nationalism = -5
 	pop_join_rebel_threshold = -0.05
@@ -566,7 +566,7 @@ abm_bha_ideas_ambition = {
 # KHS DTI
 abm_nepalese_minor_ideas_tradition_1 = {
 	age = age_1_traditions
-	icon = glorious_arms
+	icon = expanded_supply_trains
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -579,7 +579,7 @@ abm_nepalese_minor_ideas_tradition_1 = {
 		}
 	}
 
-	requires = army_professionalism
+	requires = unlock_horsemen_advance
 
 	# land_morale = 0.10
 	land_morale_modifier = 0.10
@@ -587,7 +587,7 @@ abm_nepalese_minor_ideas_tradition_1 = {
 
 abm_nepalese_minor_ideas_tradition_2 = {
 	age = age_1_traditions
-	icon = defensive_army
+	icon = crown_power_advance_renaissance
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -609,7 +609,7 @@ abm_nepalese_minor_ideas_tradition_2 = {
 
 abm_nep_construct_temples = {
 	age = age_2_renaissance
-	icon = court_accounting
+	icon = standardized_coins
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -622,7 +622,7 @@ abm_nep_construct_temples = {
 		}
 	}
 
-	requires = construction_speed_renaissance
+	requires = renaissance_sculptures
 
 	# build_cost = -0.1
 	global_build_buildings_efficiency = 0.10
@@ -630,7 +630,7 @@ abm_nep_construct_temples = {
 
 abm_nep_kashmiri_traders = {
 	age = age_2_renaissance
-	icon = expanded_supply_trains
+	icon = religious_toleration
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -643,7 +643,7 @@ abm_nep_kashmiri_traders = {
 		}
 	}
 
-	requires = protected_harbor_advance
+	requires = armory_advance
 
 	# merchants = 1
 	global_merchant_power = 0.20
@@ -651,7 +651,7 @@ abm_nep_kashmiri_traders = {
 
 abm_nep_new_festivals = {
 	age = age_3_discovery
-	icon = church_councils
+	icon = printing_press_advance
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -664,7 +664,7 @@ abm_nep_new_festivals = {
 		}
 	}
 
-	requires = print_culture
+	requires = printing_press_advance
 
 	# tolerance_own = 1
 	tolerance_own = 1
@@ -672,7 +672,7 @@ abm_nep_new_festivals = {
 
 abm_nep_kavindra = {
 	age = age_3_discovery
-	icon = diplomatic_training
+	icon = safe_exploration_techniques_advance
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -693,7 +693,7 @@ abm_nep_kavindra = {
 
 abm_nep_seize_mountain_passes = {
 	age = age_4_reformation
-	icon = regimental_system
+	icon = regiment_reinforcement_speed_renaissance
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -706,7 +706,7 @@ abm_nep_seize_mountain_passes = {
 		}
 	}
 
-	requires = recruitment_improvements_reformation
+	requires = unlock_baggage_train
 
 	# defensiveness = 0.15
 	global_defensive = 0.15
@@ -714,7 +714,7 @@ abm_nep_seize_mountain_passes = {
 
 abm_nep_judicial_reforms = {
 	age = age_4_reformation
-	icon = renaissance_advance
+	icon = library_advance
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -727,7 +727,7 @@ abm_nep_judicial_reforms = {
 		}
 	}
 
-	requires = early_modern_administation
+	requires = legitimization_of_power_law_advance
 
 	# stability_cost_modifier = -0.1
 	stability_cost_efficiency = 0.10
@@ -736,7 +736,7 @@ abm_nep_judicial_reforms = {
 
 abm_nep_end_division_of_domains = {
 	age = age_5_absolutism
-	icon = administrative_leadership
+	icon = laws
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -749,7 +749,7 @@ abm_nep_end_division_of_domains = {
 		}
 	}
 
-	requires = government_size_absolutism
+	requires = measuring_the_world
 
 	# global_autonomy = -0.05
 	global_monthly_control = 0.001
@@ -757,7 +757,7 @@ abm_nep_end_division_of_domains = {
 
 abm_nepalese_minor_ideas_ambition = {
 	age = age_6_revolutions
-	icon = defensive_mentality
+	icon = levee_en_masse_advance
 	potential = {
 		OR = {
 			has_or_had_tag = KHS
@@ -770,7 +770,7 @@ abm_nepalese_minor_ideas_ambition = {
 		}
 	}
 
-	requires = march_to_the_sound_of_the_guns_advance
+	requires = recruitment_improvements_revolutions
 
 	# infantry_power = 0.1
 	army_light_infantry_power = 0.20
@@ -780,7 +780,7 @@ abm_nepalese_minor_ideas_ambition = {
 # Chitral (CTR)
 abm_hin_ideas_tradition_1 = {
 	age = age_1_traditions
-	icon = smooth_administration
+	icon = feudalism_advance
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -794,7 +794,7 @@ abm_hin_ideas_tradition_1 = {
 		religion.group = religion_group:dharmic
 	}
 
-	requires = monarchy_reform_traditions_advance
+	requires = theocracy_divine_cause_law_advance
 
 	# governing_capacity_modifier = 0.1
 	global_distance_from_capital_speed_propagation = 0.10
@@ -802,7 +802,7 @@ abm_hin_ideas_tradition_1 = {
 
 abm_hin_ideas_tradition_2 = {
 	age = age_1_traditions
-	icon = cultural_acceptance_advance
+	icon = meritocracy
 	potential = {
 		has_or_had_tag = ABCHM
 		has_or_had_tag = KLI
@@ -813,7 +813,7 @@ abm_hin_ideas_tradition_2 = {
 	}
 	religion.group = religion_group:dharmic
 
-	requires = government_sanctioned_celebrations
+	requires = scholasticism
 
 	# global_manpower_modifier = 0.2
 	global_weaponry_output_modifier = 0.20
@@ -821,7 +821,7 @@ abm_hin_ideas_tradition_2 = {
 
 abm_hin_sepahi = {
 	age = age_2_renaissance
-	icon = patron_of_art
+	icon = vegetarianism
 	potential = {
 		has_or_had_tag = ABCHM
 		has_or_had_tag = KLI
@@ -832,7 +832,7 @@ abm_hin_sepahi = {
 	}
 	religion.group = religion_group:dharmic
 
-	requires = patron_of_art
+	requires = renaissance_advance
 
 	# infantry_power = 0.15
 	army_light_infantry_power = 0.15
@@ -840,7 +840,7 @@ abm_hin_sepahi = {
 
 abm_hin_persianate_court = {
 	age = age_2_renaissance
-	icon = renaissance_development
+	icon = improved_foraging
 	potential = {
 		has_or_had_tag = ABCHM
 		has_or_had_tag = KLI
@@ -851,7 +851,7 @@ abm_hin_persianate_court = {
 	}
 	religion.group = religion_group:dharmic
 
-	requires = renaissance_development
+	requires = grant_privilege_cost_modifier_renaissance_advance
 
 	# advisor_cost = -0.1
 	government_size = 1
@@ -859,7 +859,7 @@ abm_hin_persianate_court = {
 
 abm_hin_indian_empire = {
 	age = age_3_discovery
-	icon = church_councils
+	icon = alchemy_advance
 	potential = {
 		has_or_had_tag = ABCHM
 		has_or_had_tag = KLI
@@ -870,7 +870,7 @@ abm_hin_indian_empire = {
 	}
 	religion.group = religion_group:dharmic
 
-	requires = surgery_advance
+	requires = print_culture
 
 	# years_of_nationalism = -5
 	pop_join_rebel_threshold = -0.03
@@ -906,7 +906,7 @@ abm_hin_peacock_throne = {
 
 abm_hin_gunpowder_empire = {
 	age = age_4_reformation
-	icon = religious_melting_pot
+	icon = pop_promotion_speed_age_4
 	potential = {
 		has_or_had_tag = ABCHM
 		has_or_had_tag = KLI
@@ -917,7 +917,7 @@ abm_hin_gunpowder_empire = {
 	}
 	religion.group = religion_group:dharmic
 
-	requires = confessionalism_advance
+	requires = pharmacology_advance
 
 	# fire_damage = 0.1
 	global_firearms_output_modifier = 0.20
@@ -937,7 +937,7 @@ abm_hin_sufism = {
 	}
 	religion.group = religion_group:dharmic
 
-	requires = confessionalism_advance
+	requires = pharmacology_advance
 
 	# global_missionary_strength = 0.02
 	global_pop_conversion_speed_modifier = 0.20
@@ -956,7 +956,7 @@ abm_hin_industrialization = {
 	}
 	religion.group = religion_group:dharmic
 
-	requires = scientific_revolution_advance
+	requires = sanitation_advance
 
 	# development_cost = -0.1
 	global_non_rural_monthly_prosperity = 0.002
@@ -964,7 +964,7 @@ abm_hin_industrialization = {
 
 abm_hin_ideas_ambition = {
 	age = age_6_revolutions
-	icon = enlightenment_advance
+	icon = roman_orthodoxy
 	potential = {
 		has_or_had_tag = ABCHM
 		has_or_had_tag = KLI
@@ -975,7 +975,7 @@ abm_hin_ideas_ambition = {
 	}
 	religion.group = religion_group:dharmic
 
-	requires = enlightenment_advance
+	requires = enlightened_court
 
 	# discipline = 0.05
 	military_tactics = 0.15
@@ -987,7 +987,7 @@ abm_hin_ideas_ambition = {
 # Alupa (ALU), Baudh (BAD), Chibhal (CBH), Gohilvad (GHL), Kodungallur (KDU), Karauli (KLI), Kullu (KLU), Kashmir (KSH), Mau Ganj (MAU), Swat (SWT)
 abm_indian_muslim_ideas_tradition_1 = {
 	age = age_1_traditions
-	icon = army_professionalism
+	icon = defensive_army
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1009,7 +1009,7 @@ abm_indian_muslim_ideas_tradition_1 = {
 
 abm_indian_muslim_ideas_tradition_2 = {
 	age = age_1_traditions
-	icon = offensive_army
+	icon = finest_of_horses
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1022,7 +1022,7 @@ abm_indian_muslim_ideas_tradition_2 = {
 		religion.group = religion_group:muslim
 	}
 
-	requires = horse_riding_advance
+	requires = appointed_chain_of_command
 
 	# cavalry_power = 0.1
 	army_light_cavalry_power = 0.10
@@ -1030,7 +1030,7 @@ abm_indian_muslim_ideas_tradition_2 = {
 
 abm_tolerate_idol_worshippers_i = {
 	age = age_2_renaissance
-	icon = religious_melting_pot
+	icon = renaissance_development
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1043,7 +1043,7 @@ abm_tolerate_idol_worshippers_i = {
 		religion.group = religion_group:muslim
 	}
 
-	requires = anatomy_advance
+	requires = renaissance_development
 
 	# religious_unity = 0.50
 	tolerance_heathen = 2
@@ -1051,7 +1051,7 @@ abm_tolerate_idol_worshippers_i = {
 
 abm_persian_court = {
 	age = age_2_renaissance
-	icon = regiment_reinforcement_speed_renaissance
+	icon = drill_army_advance
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1064,7 +1064,7 @@ abm_persian_court = {
 		religion.group = religion_group:muslim
 	}
 
-	requires = land_morale_recovery_renaissance_advance
+	requires = unlock_barque_advance
 
 	# global_unrest = -1
 	pop_join_rebel_threshold = -0.05
@@ -1072,7 +1072,7 @@ abm_persian_court = {
 
 abm_comphrehensive_land_survey = {
 	age = age_3_discovery
-	icon = court_accounting
+	icon = local_nobility
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1093,7 +1093,7 @@ abm_comphrehensive_land_survey = {
 
 abm_counting_the_people = {
 	age = age_3_discovery
-	icon = defensive_army
+	icon = pike_and_shot_advance
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1106,7 +1106,7 @@ abm_counting_the_people = {
 		religion.group = religion_group:muslim
 	}
 
-	requires = pike_and_shot_advance
+	requires = power_projection_advance_4
 
 	# global_manpower_modifier = 0.10
 	morale_recovery_in_friendly = 0.05
@@ -1114,7 +1114,7 @@ abm_counting_the_people = {
 
 abm_equality_under_law = {
 	age = age_4_reformation
-	icon = expanded_supply_trains
+	icon = incense_trade_route
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1127,7 +1127,7 @@ abm_equality_under_law = {
 		religion.group = religion_group:muslim
 	}
 
-	requires = global_trade_advance
+	requires = construction_speed_reformation
 
 	# global_trade_power = 0.1
 	global_trade_center_power = 0.10
@@ -1135,7 +1135,7 @@ abm_equality_under_law = {
 
 abm_high_court_culture = {
 	age = age_4_reformation
-	icon = diplomatic_influence
+	icon = efficient_spies
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1156,7 +1156,7 @@ abm_high_court_culture = {
 
 abm_sultanate_bureaucracy = {
 	age = age_5_absolutism
-	icon = administrative_leadership
+	icon = government_size
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1169,7 +1169,7 @@ abm_sultanate_bureaucracy = {
 		religion.group = religion_group:muslim
 	}
 
-	requires = government_size_absolutism
+	requires = economical_policies_law_advance
 
 	# stability_cost_modifier = -0.1
 	stability_cost_efficiency = 0.20
@@ -1177,7 +1177,7 @@ abm_sultanate_bureaucracy = {
 
 abm_indian_muslim_ideas_ambition = {
 	age = age_6_revolutions
-	icon = artillery_institution_advance
+	icon = siege_ability_revolutions
 	potential = {
 		OR = {
 			has_or_had_tag = ABCHM
@@ -1190,7 +1190,7 @@ abm_indian_muslim_ideas_ambition = {
 		religion.group = religion_group:muslim
 	}
 
-	requires = correct_box_advance_revolutions
+	requires = siege_ability_revolutions
 
 	# infantry_power = 0.1
 	army_heavy_infantry_power = 0.10
@@ -1200,7 +1200,7 @@ abm_indian_muslim_ideas_ambition = {
 # Elayadathu (ELA), Lahul (LHL)
 abm_ldk_ideas_tradition_1 = {
 	age = age_1_traditions
-	icon = improve_relation_impact_renaissance
+	icon = guilds
 	potential = {
 		OR = {
 			has_or_had_tag = SWT
@@ -1214,7 +1214,7 @@ abm_ldk_ideas_tradition_1 = {
 		}
 	}
 
-	requires = non_inheritable_offices
+	requires = guilds
 
 	# tolerance_own = 2
 	global_estate_target_satisfaction = medium_permanent_target_satisfaction
@@ -1244,7 +1244,7 @@ abm_ldk_ideas_tradition_2 = {
 
 abm_ldk_two_kingdoms = {
 	age = age_2_renaissance
-	icon = diplomatic_influence
+	icon = zakah
 	potential = {
 		OR = {
 			has_or_had_tag = SWT
@@ -1266,7 +1266,7 @@ abm_ldk_two_kingdoms = {
 
 abm_ldk_fortified_mountain_cities = {
 	age = age_2_renaissance
-	icon = defensive_army
+	icon = gunpowder_advance
 	potential = {
 		OR = {
 			has_or_had_tag = SWT
@@ -1280,7 +1280,7 @@ abm_ldk_fortified_mountain_cities = {
 		}
 	}
 
-	requires = drill_army_advance
+	requires = unlock_men_at_arms_advance
 
 	# fort_maintenance_modifier = -0.2
 	fort_limit_modifier = 0.20
@@ -1288,7 +1288,7 @@ abm_ldk_fortified_mountain_cities = {
 
 abm_ldk_wool_from_the_roof_of_the_world = {
 	age = age_3_discovery
-	icon = supply_depot_advance_age_3_discovery
+	icon = improve_relation_impact_renaissance
 	potential = {
 		OR = {
 			has_or_had_tag = SWT
@@ -1302,7 +1302,7 @@ abm_ldk_wool_from_the_roof_of_the_world = {
 		}
 	}
 
-	requires = colonial_charters
+	requires = trade_through_owned_disc_advance
 
 	# global_trade_goods_size_modifier = 0.1
 	global_wool_output_modifier = 0.20
@@ -1324,7 +1324,7 @@ abm_ldk_great_monasteries = {
 		}
 	}
 
-	requires = colonial_charters
+	requires = trade_range_advance_age_3
 
 	# build_cost = -0.1
 	global_build_buildings_efficiency = 0.10
@@ -1332,7 +1332,7 @@ abm_ldk_great_monasteries = {
 
 abm_ldk_la_dvags_rgyal_rabs = {
 	age = age_4_reformation
-	icon = church_councils
+	icon = pop_promotion_speed_age_4
 	potential = {
 		OR = {
 			has_or_had_tag = SWT
@@ -1346,7 +1346,7 @@ abm_ldk_la_dvags_rgyal_rabs = {
 		}
 	}
 
-	requires = confessionalism_advance
+	requires = pop_promotion_speed_age_4
 
 	# stability_cost_modifier = -0.1
 	stability_decay = -0.00025
@@ -1369,7 +1369,7 @@ abm_ldk_kingdom_united = {
 		}
 	}
 
-	requires = early_modern_administation
+	requires = artists_advance_reformations
 
 	# legitimacy = 1
 	# devotion = 1
@@ -1385,7 +1385,7 @@ abm_ldk_kingdom_united = {
 
 abm_ldk_far_away_traders = {
 	age = age_5_absolutism
-	icon = red_sea_trade
+	icon = saharan_gold_trade
 	potential = {
 		OR = {
 			has_or_had_tag = SWT
@@ -1395,7 +1395,7 @@ abm_ldk_far_away_traders = {
 		}
 	}
 
-	requires = central_bank_advance
+	requires = artists_advance_absolutism
 
 	# trade_efficiency = 0.1
 	export_efficiency = 0.10
@@ -1403,7 +1403,7 @@ abm_ldk_far_away_traders = {
 
 abm_ldk_ideas_ambition = {
 	age = age_6_revolutions
-	icon = offensive_army
+	icon = zmw_merchant_taxes
 	potential = {
 		OR = {
 			has_or_had_tag = SWT
@@ -1417,7 +1417,7 @@ abm_ldk_ideas_ambition = {
 		}
 	}
 
-	requires = unlock_fusiliers_advance
+	requires = unlock_cuirassiers_advance
 
 	# defensiveness = 0.2
 	global_defensive = 0.20
@@ -1427,12 +1427,12 @@ abm_ldk_ideas_ambition = {
 # Jaunpur (JNP)
 abm_jnp_ideas_tradition_1 = {
 	age = age_1_traditions
-	icon = army_professionalism
+	icon = defensive_mentality
 	potential = {
 		has_or_had_tag = JNP
 	}
 
-	requires = unlock_traditional_galley_advance
+	requires = faster_levy_recruitment
 
 	# infantry_cost = -0.1
 	army_light_infantry_build_cost_modifier = -0.10
@@ -1441,7 +1441,7 @@ abm_jnp_ideas_tradition_1 = {
 
 abm_jnp_ideas_tradition_2 = {
 	age = age_1_traditions
-	icon = students_of_foreign_courts
+	icon = efficient_spies
 	potential = {
 		has_or_had_tag = JNP
 	}
@@ -1455,12 +1455,12 @@ abm_jnp_ideas_tradition_2 = {
 
 abm_jnp_purbias = {
 	age = age_2_renaissance
-	icon = offensive_army
+	icon = professional_armies_advance
 	potential = {
 		has_or_had_tag = JNP
 	}
 
-	requires = unlock_men_at_arms_advance
+	requires = war_no_cb_cost_modifier_renaissance_advance
 
 	# fire_damage = 0.1
 	army_light_infantry_power = 0.10
@@ -1469,7 +1469,7 @@ abm_jnp_purbias = {
 
 abm_shiraz_e_hind = {
 	age = age_2_renaissance
-	icon = church_councils
+	icon = vegetarianism
 	potential = {
 		has_or_had_tag = JNP
 	}
@@ -1482,12 +1482,12 @@ abm_shiraz_e_hind = {
 
 abm_jnp_sants_and_sufis = {
 	age = age_3_discovery
-	icon = religious_melting_pot
+	icon = printing_press_advance
 	potential = {
 		has_or_had_tag = JNP
 	}
 
-	requires = surgery_advance
+	requires = print_culture
 
 	# religious_unity = 0.5
 	tolerance_own = 2
@@ -1495,12 +1495,12 @@ abm_jnp_sants_and_sufis = {
 
 abm_jaunpuri_architecture = {
 	age = age_3_discovery
-	icon = bhakti_movement
+	icon = alchemy_advance
 	potential = {
 		has_or_had_tag = JNP
 	}
 
-	requires = pop_promotion_speed_age_3
+	requires = print_culture
 
 	# development_cost = -0.1
 	global_monthly_prosperity = 0.001
@@ -1508,12 +1508,12 @@ abm_jaunpuri_architecture = {
 
 abm_jnp_gangetic_plain = {
 	age = age_4_reformation
-	icon = court_accounting
+	icon = imperial_ambitions
 	potential = {
 		has_or_had_tag = JNP
 	}
 
-	requires = construction_speed_reformation
+	requires = imperial_ambitions
 
 	# global_trade_goods_size_modifier = 0.1
 	global_food_output_modifier = 0.20
@@ -1521,7 +1521,7 @@ abm_jnp_gangetic_plain = {
 
 abm_jnp_hindusthani_classical_music = {
 	age = age_4_reformation
-	icon = diplomatic_influence
+	icon = students_of_foreign_courts
 	potential = {
 		has_or_had_tag = JNP
 	}
@@ -1534,12 +1534,12 @@ abm_jnp_hindusthani_classical_music = {
 
 abm_modernization_of_jaunpuri_army = {
 	age = age_5_absolutism
-	icon = glorious_arms
+	icon = military_revolution_advance
 	potential = {
 		has_or_had_tag = JNP
 	}
 
-	requires = unlock_gallop_cavalry_advance
+	requires = unlock_merchantman_advance
 
 	# infantry_power = 0.1
 	army_heavy_infantry_power = 0.10
@@ -1547,12 +1547,12 @@ abm_modernization_of_jaunpuri_army = {
 
 abm_jnp_ideas_ambition = {
 	age = age_6_revolutions
-	icon = banking_advance
+	icon = industrialization_advance
 	potential = {
 		has_or_had_tag = JNP
 	}
 
-	requires = industrialization_advance
+	requires = construction_speed_revolutions
 
 	# global_trade_power = 0.10
 	global_trade_center_power = 0.05
@@ -1574,7 +1574,7 @@ abm_kgr_ideas_tradition_1 = {
 		}
 	}
 
-	requires = fortification_advance
+	requires = unlock_feudal_levy_advance
 
 	# hostile_attrition = 1.0
 	global_hostile_attrition = 1
@@ -1582,7 +1582,7 @@ abm_kgr_ideas_tradition_1 = {
 
 abm_kgr_ideas_tradition_2 = {
 	age = age_1_traditions
-	icon = legalism_advance
+	icon = trade_caravans
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1593,7 +1593,7 @@ abm_kgr_ideas_tradition_2 = {
 		}
 	}
 
-	requires = trade_caravans
+	requires = ranching
 
 	# global_tax_modifier = 0.1
 	tax_income_efficiency = small_tax_income_efficiency_bonus
@@ -1601,7 +1601,7 @@ abm_kgr_ideas_tradition_2 = {
 
 abm_kgr_katoch_lineage = {
 	age = age_2_renaissance
-	icon = church_councils
+	icon = improved_foraging
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1612,7 +1612,7 @@ abm_kgr_katoch_lineage = {
 		}
 	}
 
-	requires = renaissance_court
+	requires = renaissance_advance
 
 	# prestige_decay = -0.01
 	prestige_decay = -0.001
@@ -1631,7 +1631,7 @@ abm_kgr_riches_of_the_kangra_valley = {
 		}
 	}
 
-	requires = unlock_long_fada_2
+	requires = supply_depot_advance_age_2_renaissance
 
 	# global_manpower_modifier = 0.1
 	global_manpower_modifier = 0.10
@@ -1639,7 +1639,7 @@ abm_kgr_riches_of_the_kangra_valley = {
 
 abm_kgr_martial_heritage = {
 	age = age_3_discovery
-	icon = glorious_arms
+	icon = maritime_advance_age_2
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1650,7 +1650,7 @@ abm_kgr_martial_heritage = {
 		}
 	}
 
-	requires = pike_and_shot_advance
+	requires = unlock_light_lancers_advance
 
 	# land_morale = 0.1
 	land_morale_modifier = 0.10
@@ -1658,27 +1658,6 @@ abm_kgr_martial_heritage = {
 
 abm_kgr_hill_forts = {
 	age = age_3_discovery
-	icon = offensive_army
-	potential = {
-		OR = {
-			has_or_had_tag = KGR
-			has_or_had_tag = KLU
-			has_or_had_tag = KTL
-			has_or_had_tag = BSP
-			has_or_had_tag = SKT
-		}
-	}
-
-	requires = pike_and_shot_advance
-
-	# fort_maintenance_modifier = -0.1
-	# garrison_size = 0.1
-	fort_maintenance_efficiency = 0.10
-	global_garrison_size_modifier = 0.10
-}
-
-abm_kgr_strengthen_the_mountain_trade = {
-	age = age_4_reformation
 	icon = expansionism
 	potential = {
 		OR = {
@@ -1690,7 +1669,28 @@ abm_kgr_strengthen_the_mountain_trade = {
 		}
 	}
 
-	requires = global_trade_advance
+	requires = standardized_pikes
+
+	# fort_maintenance_modifier = -0.1
+	# garrison_size = 0.1
+	fort_maintenance_efficiency = 0.10
+	global_garrison_size_modifier = 0.10
+}
+
+abm_kgr_strengthen_the_mountain_trade = {
+	age = age_4_reformation
+	icon = free_merchants
+	potential = {
+		OR = {
+			has_or_had_tag = KGR
+			has_or_had_tag = KLU
+			has_or_had_tag = KTL
+			has_or_had_tag = BSP
+			has_or_had_tag = SKT
+		}
+	}
+
+	requires = dyes_workshop_advance
 
 	# caravan_power = 0.15
 	global_own_trade_power = 0.15
@@ -1698,7 +1698,7 @@ abm_kgr_strengthen_the_mountain_trade = {
 
 abm_kgr_pahari_paintings = {
 	age = age_4_reformation
-	icon = diplomatic_influence
+	icon = efficient_spies
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1717,7 +1717,7 @@ abm_kgr_pahari_paintings = {
 
 abm_kgr_tigers_of_the_himalayas = {
 	age = age_5_absolutism
-	icon = regiment_reinforcement_speed_renaissance
+	icon = military_revolution_advance
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1728,7 +1728,7 @@ abm_kgr_tigers_of_the_himalayas = {
 		}
 	}
 
-	requires = gustavian_infantry
+	requires = global_supply_limit_modifier_advance_5
 
 	# discipline = 0.05
 	discipline = 0.05
@@ -1736,7 +1736,7 @@ abm_kgr_tigers_of_the_himalayas = {
 
 abm_kgr_ideas_ambition = {
 	age = age_6_revolutions
-	icon = defensive_army
+	icon = enlightenment_advance
 	potential = {
 		OR = {
 			has_or_had_tag = KGR
@@ -1747,7 +1747,7 @@ abm_kgr_ideas_ambition = {
 		}
 	}
 
-	requires = unlock_flying_battery_advance
+	requires = fort_limit_6_advance
 
 	# global_unrest = -1
 	monthly_rebel_growth = -0.0005
