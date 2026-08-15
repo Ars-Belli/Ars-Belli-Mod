@@ -1,106 +1,160 @@
 #!/usr/bin/env python3
-"""Generate EU5 localization for advances imported from EU4 idea groups."""
+"""Import EU5 localization for advances from EU4 idea groups.
 
+Targets (positional args) can be:
+  * file paths   -> import advances from those files
+  * country tags -> import advances whose potential references the tag
+                    (an EU4 tag XYZ also matches the AB-prefixed EU5 tag ABXYZ)
+
+For each targeted advance the script resolves the EU4 localization, checks
+whether the advance already has localization, and verifies it:
+  * MISSING   no existing entry          -> added
+  * OK        existing entry matches     -> left as-is
+  * MISMATCH  existing entry differs     -> reported
+
+By default the script only prints a report plus the changed entries. Use
+--out FILE to write the full localization file for the selected advances.
+"""
+
+import argparse
 import re
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent
 ADVANCE_DIR = BASE / "in_game/common/advances"
+LOC_DIRS = [
+    BASE / "main_menu/localization/english",
+    BASE / "in_game/localization/english",
+]
 EU4_LOC_DIR = BASE / ".tools/eu4/localisation"
 EU4_IDEA_DIR = BASE / ".tools/eu4/ideas"
-OUTPUTS = {
-    "india": BASE / "main_menu/localization/english/abm_advances_india_l_english.yml",
-    "indochina": BASE / "main_menu/localization/english/abm_advances_indochina_l_english.yml",
-    "indonesia": BASE / "main_menu/localization/english/abm_advances_indonesia_l_english.yml",
-}
+
 SET_ALIASES = {
     "lao": "laotian",
     "sulu": "sul",
+    "bedouin": "arabian",
+    "bedouin_arabian": "arabian",
 }
 
-def get_region(filename):
-    if "india_" in filename:
-        return "india"
-    if "indochina" in filename:
-        return "indochina"
-    if "indonesia" in filename:
-        return "indonesia"
-    return "other"
+
+def tag_variants(tag):
+    """EU4 tags may map to AB-prefixed EU5 tags and vice versa."""
+    tag = tag.upper()
+    variants = {tag}
+    if len(tag) == 3:
+        variants.add("AB" + tag)
+    elif tag.startswith("AB") and len(tag) == 5:
+        variants.add(tag[2:])
+    return variants
 
 # ---------------------------------------------------------------------------
-# 1. Parse all EU4 localizations
+# 1. Parse all EU4 localizations and idea groups
 # ---------------------------------------------------------------------------
 eu4_name = {}
 eu4_desc = {}
-
-for f in sorted(EU4_LOC_DIR.glob("*.yml")):
-    with open(f, encoding="utf-8") as fh:
-        for line in fh:
-            m = re.match(r'^\s*([a-zA-Z_][a-zA-Z_0-9]*):\d*\s+"(.*)"\s*$', line)
-            if m:
-                key = m.group(1).lower()
-                value = m.group(2)
-                if key.endswith("_desc"):
-                    eu4_desc[key[:-5]] = value
-                else:
-                    eu4_name[key] = value
-
-print(f"Loaded {len(eu4_name)} EU4 name keys (+ {len(eu4_desc)} descs)")
-
-# Parse the idea slots in each EU4 idea group. Converted advance keys sometimes
-# retain or drop a group prefix, so group membership provides a safe alias map.
 eu4_idea_keys = {}
 
-for f in sorted(EU4_IDEA_DIR.glob("*.txt")):
-    depth = 0
-    current_set = None
-    with open(f, encoding="utf-8-sig") as fh:
-        for line in fh:
-            code = line.split("#", 1)[0]
 
-            if depth == 0:
-                m = re.match(r'^\s*([a-zA-Z_][a-zA-Z_0-9]*)_ideas\s*=\s*\{', code)
+def load_eu4(loc_dir, idea_dir):
+    global eu4_name, eu4_desc, eu4_idea_keys
+    eu4_name = {}
+    eu4_desc = {}
+    eu4_idea_keys = {}
+
+    for f in sorted(Path(loc_dir).glob("*.yml")):
+        with open(f, encoding="utf-8") as fh:
+            for line in fh:
+                m = re.match(r'^\s*([a-zA-Z_][a-zA-Z_0-9]*):\d*\s+"(.*)"\s*$', line)
                 if m:
-                    current_set = m.group(1).lower()
-                    eu4_idea_keys.setdefault(current_set, set())
-            elif current_set and depth == 1:
-                m = re.match(r'^\s*([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*\{', code)
-                if m and m.group(1) not in {"start", "bonus", "trigger"}:
-                    eu4_idea_keys[current_set].add(m.group(1).lower())
+                    key = m.group(1).lower()
+                    value = m.group(2)
+                    if key.endswith("_desc"):
+                        eu4_desc[key[:-5]] = value
+                    else:
+                        eu4_name[key] = value
 
-            depth += code.count("{") - code.count("}")
-            if depth == 0:
-                current_set = None
+    print(f"Loaded {len(eu4_name)} EU4 name keys (+ {len(eu4_desc)} descs)")
 
-print(f"Loaded idea slots for {len(eu4_idea_keys)} EU4 idea groups")
+    # Idea slots in each EU4 idea group. Converted advance keys sometimes
+    # retain or drop a group prefix, so group membership is a safe alias map.
+    for f in sorted(Path(idea_dir).glob("*.txt")):
+        depth = 0
+        current_set = None
+        with open(f, encoding="utf-8-sig") as fh:
+            for line in fh:
+                code = line.split("#", 1)[0]
+
+                if depth == 0:
+                    m = re.match(r'^\s*([a-zA-Z_][a-zA-Z_0-9]*)_ideas\s*=\s*\{', code)
+                    if m:
+                        current_set = m.group(1).lower()
+                        eu4_idea_keys.setdefault(current_set, set())
+                elif current_set and depth == 1:
+                    m = re.match(r'^\s*([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*\{', code)
+                    if m and m.group(1) not in {"start", "bonus", "trigger"}:
+                        eu4_idea_keys[current_set].add(m.group(1).lower())
+
+                depth += code.count("{") - code.count("}")
+                if depth == 0:
+                    current_set = None
+
+    print(f"Loaded idea slots for {len(eu4_idea_keys)} EU4 idea groups")
 
 # ---------------------------------------------------------------------------
-# 2. Extract advances with their idea-set context
+# 2. Extract advances with their idea-set context and referenced tags
 # ---------------------------------------------------------------------------
-advances = []
+def extract_advances(files):
+    advances = []
+    for fpath in sorted(files):
+        with open(fpath, encoding="utf-8-sig") as fh:
+            text = fh.read().replace("\r\n", "\n")
+        current_set = None
+        lines = text.split("\n")
+        i = 0
+        while i < len(lines):
+            line = lines[i]
 
-for fpath in sorted(ADVANCE_DIR.glob("abm_*.txt")):
-    current_set = None
-    with open(fpath, encoding="utf-8") as fh:
-        for line in fh:
             m = re.match(r'^#\s*([a-zA-Z_][a-zA-Z_0-9]*)_ideas?\s*$', line)
             if m:
                 current_set = m.group(1).lower()
+                i += 1
                 continue
 
             m = re.match(r'^([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*\{', line)
             if not m:
+                i += 1
                 continue
-            key = m.group(1)
 
-            # Extract set tag from tradition/ambition keys
-            tm = re.match(r'^abm_(.+)_ideas?_tradition[s]?_[12]$', key)
+            key = m.group(1)
+            depth = line.count("{") - line.count("}")
+            block = [line]
+            i += 1
+            while i < len(lines) and depth > 0:
+                block.append(lines[i])
+                depth += lines[i].count("{") - lines[i].count("}")
+                i += 1
+            block_text = "\n".join(block)
+
+            tags = {
+                t.upper()
+                for t in re.findall(
+                    r'has_or_had_tag\s*=\s*([A-Za-z0-9]+)', block_text,
+                )
+            }
+
+            tm = re.match(r'^abm_(.+?)_(?:ideas?_)?tradition[s]?_[12]$', key)
             if tm:
                 current_set = tm.group(1).lower()
 
-            advances.append((fpath.name, key, current_set))
-
-print(f"Found {len(advances)} advance keys in {len(set(f for f,_,_ in advances))} files")
+            # Only process advances whose key starts with abm_.
+            if key.startswith("abm_"):
+                advances.append({
+                    "file": fpath.name,
+                    "key": key,
+                    "set": current_set,
+                    "tags": tags,
+                })
+    return advances
 
 # ---------------------------------------------------------------------------
 # 3. Map advance keys → EU4 localizations
@@ -133,28 +187,49 @@ def set_candidates(set_tag):
         candidates.append(SET_ALIASES[set_tag])
     return candidates
 
+def eu4_tradition_ambition_keys(adv_key):
+    """Encode the EU4 idea-set convention for tradition/ambition advances.
+
+    EU4 localises an idea set with three keys:
+        CHI_ideas        -> "Great Ming Ideas"
+        CHI_ideas_start  -> "Great Ming Traditions"   (traditions)
+        CHI_ideas_bonus  -> "Great Ming Ambition"     (ambition)
+
+    Mod advances follow the same convention:
+        abm_${idea_set}_[ideas_]tradition_1/2 -> ${idea_set}_ideas_start
+        abm_${idea_set}_[ideas_]ambition      -> ${idea_set}_ideas_bonus
+
+    Returns (eu4_keys, suffix, fallback) or (None, "", None) when the key
+    is not a tradition/ambition advance. `eu4_keys` are ordered candidate
+    EU4 loc keys to look up; `suffix` (" I"/" II"/"") is appended to a
+    matched tradition name.
+    """
+    m = re.match(r'^abm_(.+?)_(?:ideas?_)?tradition[s]?_([12])$', adv_key)
+    if m:
+        base = m.group(1)
+        suffix = " I" if m.group(2) == "1" else " II"
+        keys = [c + "_ideas_start" for c in set_candidates(base)]
+        return keys, suffix, f"{key_to_display(base)} Traditions{suffix}"
+
+    m = re.match(r'^abm_(.+?)_(?:ideas?_)?ambition$', adv_key)
+    if m:
+        base = m.group(1)
+        keys = [c + "_ideas_bonus" for c in set_candidates(base)]
+        return keys, "", f"{key_to_display(base)} Ambition"
+
+    return None, "", None
+
+
 def resolve(adv_key, set_tag):
     """Resolve an advance key to its display name and description."""
-    # Pattern 1: Tradition/ambition keys (with _idea_ or _ideas_)
-    m = re.match(r'^abm_(.+)_ideas?_tradition[s]?_([12])$', adv_key)
-    if m:
-        base = m.group(1)
-        for candidate in set_candidates(base):
-            name, desc = try_lookup(candidate + "_ideas_start")
+    # Tradition/ambition keys (EU4 idea-set convention)
+    keys, suffix, fallback = eu4_tradition_ambition_keys(adv_key)
+    if keys is not None:
+        for eu4_key in keys:
+            name, desc = try_lookup(eu4_key)
             if name:
-                suffix = " I" if m.group(2) == "1" else " II"
                 return name + suffix, desc, True
-        # Fallback
-        return f"{key_to_display(base)} Traditions{' I' if m.group(2) == '1' else ' II'}", "", False
-
-    m = re.match(r'^abm_(.+)_ideas?_ambition$', adv_key)
-    if m:
-        base = m.group(1)
-        for candidate in set_candidates(base):
-            name, desc = try_lookup(candidate + "_ideas_bonus")
-            if name:
-                return name, desc, True
-        return f"{key_to_display(base)} Ambition", "", False
+        return fallback, "", False
 
     # Pattern 2: Tradition keys without abm_ prefix (tau_traditions_1, tau_ambition)
     m = re.match(r'^([a-z]+)_traditions?_([12])$', adv_key)
@@ -233,63 +308,190 @@ def resolve(adv_key, set_tag):
     # Fallback: generate from key
     return key_to_display(idea_part), "", False
 
+
 # ---------------------------------------------------------------------------
-# 4. Group advances by region and generate output
+# 4. Existing localization
 # ---------------------------------------------------------------------------
-region_advances = {}
-for filename, adv_key, set_tag in advances:
-    region = get_region(filename)
-    region_advances.setdefault(region, []).append((filename, adv_key, set_tag))
+def load_existing_loc():
+    """Load every existing localization entry from the mod's loc files."""
+    loc = {}
+    for directory in LOC_DIRS:
+        for f in sorted(directory.glob("*.yml")):
+            with open(f, encoding="utf-8-sig") as fh:
+                for line in fh:
+                    line = line.rstrip("\r\n")
+                    m = re.match(
+                        r'^\s*([a-zA-Z_][a-zA-Z_0-9]*):\d*\s+"(.*)"\s*$',
+                        line,
+                    )
+                    if m:
+                        loc[m.group(1)] = (m.group(2), f.name)
+    return loc
 
-total_matched = 0
-total_fallback = 0
 
-for region, adv_list in sorted(region_advances.items()):
-    if region not in OUTPUTS:
-        continue
-
-    lines = ["l_english:"]
-    matched = 0
-    fallback = 0
-    duplicate = 0
-    generated = {}
-    unresolved = []
-
-    for filename, adv_key, set_tag in adv_list:
-        name, desc, was_matched = resolve(adv_key, set_tag)
-
-        if was_matched:
-            matched += 1
-        else:
-            fallback += 1
-            unresolved.append(adv_key)
-
-        display_name = name.replace('"', "'") if name else key_to_display(adv_key)
-        display_desc = desc.replace('"', "'") if desc else display_name
-
-        values = (display_name, display_desc)
-        if adv_key in generated:
-            if generated[adv_key] != values:
-                raise ValueError(f"Conflicting localization for duplicate key {adv_key}")
-            duplicate += 1
-            continue
-        generated[adv_key] = values
-
-        lines.append(f" {adv_key}: \"{display_name}\"")
-        lines.append(f" {adv_key}_desc: \"{display_desc}\"")
-        lines.append("")
-
-    outpath = OUTPUTS[region]
-    with open(outpath, "w", encoding="utf-8-sig", newline="\r\n") as f:
-        f.write("\n".join(lines))
-
-    total_matched += matched
-    total_fallback += fallback
-    print(
-        f"  {region}: {matched} matched, {fallback} fallback, "
-        f"{duplicate} duplicate skipped → {outpath.name}"
+# ---------------------------------------------------------------------------
+# 5. CLI
+# ---------------------------------------------------------------------------
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    for adv_key in unresolved:
-        print(f"    fallback: {adv_key}")
+    parser.add_argument(
+        "targets", nargs="*",
+        help="file paths or country tags to import "
+             "(default: all abm_*.txt files)",
+    )
+    parser.add_argument(
+        "--check", action="store_true",
+        help="only report, never write",
+    )
+    parser.add_argument(
+        "--out", metavar="FILE",
+        help="write the full localization file for the selected advances "
+             "(default: print report and changed entries to stdout)",
+    )
+    parser.add_argument(
+        "--eu4-loc", default=str(EU4_LOC_DIR),
+        help=f"EU4 localization directory (default: {EU4_LOC_DIR})",
+    )
+    parser.add_argument(
+        "--eu4-ideas", default=str(EU4_IDEA_DIR),
+        help=f"EU4 ideas directory (default: {EU4_IDEA_DIR})",
+    )
+    parser.add_argument(
+        "--skip-key", action="append", default=[],
+        metavar="KEY",
+        help="skip advances with this exact key (repeatable)",
+    )
+    parser.add_argument(
+        "--skip-pattern", action="append", default=[],
+        metavar="REGEX",
+        help="skip advances whose key matches this regex (repeatable; "
+             "e.g. ^REPLACE: or ^INJECT:)",
+    )
+    parser.add_argument(
+        "--skip-tag", action="append", default=[],
+        metavar="TAG",
+        help="skip advances whose potential references this tag "
+             "(repeatable; AB prefix auto-expanded)",
+    )
+    args = parser.parse_args(argv)
 
-print(f"\nTotal: {total_matched} matched, {total_fallback} fallback across {len(OUTPUTS)} files")
+    load_eu4(args.eu4_loc, args.eu4_ideas)
+
+    files = []
+    tags = set()
+    for target in args.targets:
+        path = Path(target)
+        if path.suffix == ".txt" and path.is_file():
+            files.append(path.resolve())
+        elif re.fullmatch(r"(?:AB)?[A-Z]{3}", target.upper()):
+            tags.update(tag_variants(target))
+        else:
+            raise SystemExit(f"Unrecognized target: {target}")
+
+    if not files:
+        files = sorted(ADVANCE_DIR.glob("abm_*.txt"))
+
+    all_advances = extract_advances(files)
+    if tags:
+        selected = [a for a in all_advances if a["tags"] & tags]
+    else:
+        selected = all_advances
+
+    # Skip filters (exact keys, regex patterns, tags).
+    skip_keys = set(args.skip_key)
+    skip_patterns = []
+    for pattern in args.skip_pattern:
+        try:
+            skip_patterns.append(re.compile(pattern))
+        except re.error as exc:
+            raise SystemExit(
+                f"Invalid --skip-pattern regex {pattern!r}: {exc}"
+            )
+    skip_tags = set()
+    for tag in args.skip_tag:
+        skip_tags.update(tag_variants(tag))
+
+    if skip_keys or skip_patterns or skip_tags:
+        kept = []
+        for adv in selected:
+            if adv["key"] in skip_keys:
+                continue
+            if any(p.search(adv["key"]) for p in skip_patterns):
+                continue
+            if skip_tags and (adv["tags"] & skip_tags):
+                continue
+            kept.append(adv)
+        selected = kept
+
+    print(f"Targets: {len(files)} files, "
+          f"tags={sorted(tags) if tags else 'all'}")
+    print(f"Advances selected: {len(selected)}")
+
+    existing = load_existing_loc()
+
+    ok = 0
+    missing = 0
+    mismatched = 0
+    fallback = 0
+    changed = []
+    all_entries = []
+
+    for adv in selected:
+        key = adv["key"]
+        set_tag = adv["set"]
+        name, desc, was_matched = resolve(key, set_tag)
+        if not was_matched:
+            fallback += 1
+        name = (name or key_to_display(key)).replace('"', "'")
+        desc = (desc or name).replace('"', "'")
+
+        existing_name = existing.get(key)
+        existing_desc = existing.get(key + "_desc")
+
+        if existing_name is None:
+            status = "MISSING"
+            missing += 1
+        elif (existing_name[0] == name
+              and (existing_desc is None or existing_desc[0] == desc)):
+            status = "OK"
+            ok += 1
+        else:
+            status = "MISMATCH"
+            mismatched += 1
+
+        all_entries.append((key, name, desc))
+        if status != "OK":
+            changed.append((key, name, desc))
+            print(f"  {status}: {key}")
+            if status == "MISMATCH":
+                print(f'      existing: "{existing_name[0]}"')
+                print(f'      EU4:      "{name}"')
+
+    print(f"\n{ok} OK, {missing} missing, {mismatched} mismatch, "
+          f"{fallback} fallback")
+
+    if args.check:
+        return
+
+    if args.out:
+        lines = ["l_english:"]
+        for key, name, desc in all_entries:
+            lines.append(f' {key}: "{name}"')
+            lines.append(f' {key}_desc: "{desc}"')
+            lines.append("")
+        outpath = Path(args.out)
+        with open(outpath, "w", encoding="utf-8-sig", newline="\r\n") as f:
+            f.write("\n".join(lines))
+        print(f"Wrote {len(all_entries)} entries to {outpath}")
+    elif changed:
+        print("\n--- changed entries ---")
+        for key, name, desc in changed:
+            print(f' {key}: "{name}"')
+            print(f' {key}_desc: "{desc}"')
+
+
+if __name__ == "__main__":
+    main()
