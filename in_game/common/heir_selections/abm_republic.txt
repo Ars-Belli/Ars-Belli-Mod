@@ -1,0 +1,112 @@
+﻿REPLACE:diarchic_election = {
+	use_election = yes
+	term_duration = 0	#0 = until ruler death
+	max_possible_candidates = 5
+	allowed_estates = { nobles_estate burghers_estate }
+	heir_is_allowed = {
+	}
+	potential = {
+		OR = {
+			has_reform = government_reform:diarchy_republic
+			has_or_had_tag = GEN
+		}
+	}
+	locked = {
+		has_reform = government_reform:diarchy_republic
+	}
+
+	calc = {
+		if = {
+			limit = {
+				exists = root
+			}
+			if = {
+				limit = {
+					root.dynasty ?= dynasty:spinola_dynasty
+				}
+				add = {
+					desc = "SPINOLA_DYNASTY"
+					value = 100
+				}
+			}
+			if = {
+				limit = {
+					root.dynasty ?= dynasty:doria_dynasty
+				}
+				add = {
+					desc = "DORIA_DYNASTY"
+					value = 100
+				}
+			}
+			add = {
+				desc = "HEIR_SELECTION_OLDER_HEIR_DESC"
+				value = character_age
+			}
+			add = {
+				desc = "HEIR_SELECTION_ADM_DESC"
+				value = root.adm
+			}
+			add = {
+				desc = "HEIR_SELECTION_DIP_DESC"
+				value = root.dip
+			}
+			add = {
+				desc = "HEIR_SELECTION_MIL_DESC"
+				value = root.mil
+			}
+			if = {
+				limit = {
+					has_variable = diarchy_coruler
+				}
+				add = {
+					desc = "HEIR_SELECTION_WAS_PREVIOUS_CO_RULER"
+					value = 200
+				}
+			}
+			if = { 
+				limit = { modifier:blocked_from_being_ruler = yes }
+				add = {
+					desc = "HEIR_SELECTION_IS_UNSUITED_TO_RULE_DESC"
+					value = -1000 
+				}
+			}
+		}
+		if = {
+			limit = {
+				NOT = { exists = root }
+			}
+			add = {
+				desc = "HEIR_SELECTION_MEMBER_OF_SPINOLA_DYNASTY"
+				value = 100
+			}
+			add = {
+				desc = "HEIR_SELECTION_MEMBER_OF_DORIA_DYNASTY"
+				value = 100
+			}
+			add = {
+				desc = "HEIR_SELECTION_OLDER_HEIR_DESC"
+				value = 1
+			}
+			add = {
+				desc = "HEIR_SELECTION_ADM_DESC"
+				value = 1
+			}
+			add = {
+				desc = "HEIR_SELECTION_DIP_DESC"
+				value = 1
+			}
+			add = {
+				desc = "HEIR_SELECTION_MIL_DESC"
+				value = 1
+			}
+			add = {
+				desc = "HEIR_SELECTION_WAS_PREVIOUS_CO_RULER"
+				value = 200
+			}
+		}
+	}
+
+	modifier = {
+		care_about_producing_heirs = yes
+	}
+}

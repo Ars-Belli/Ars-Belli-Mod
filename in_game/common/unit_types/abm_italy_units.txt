@@ -1,0 +1,770 @@
+REPLACE:a_genoese_crossbowmen = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	upgrades_to_only = a_late_genoese_crossbowmen
+
+	build_time_modifier = 0.5
+	# initiative = 2
+
+
+	strength_damage_done = 0.10
+	# morale_damage_done = 0.10
+	combat_speed = -0.50
+
+	strength_damage_taken = -0.10
+	morale_damage_taken = -0.10
+
+	buildable = yes
+
+	maintenance_demand =  archer_infantry_maintenance
+	construction_demand = archer_infantry_construction
+
+	combat = {
+		hills = 0.15
+		mountains = 0.15
+		wetlands = -0.15
+	}
+	impact = {
+		hills = -0.10
+		mountains = -0.10
+		wetlands = 0.10
+	}
+
+	#root = location. Checks location_potential first so don't need that scripting in
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.01
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.1
+	}
+
+	gfx_tags = { crossbow_tag pavise_tag medium_tag }
+}
+
+
+a_abm_late_genoese_crossbowmen = {
+	copy_from = a_age_3_discovery_light_infantry
+	is_special = yes
+	age = age_3_discovery
+	upgrades_to_only = a_abm_genoese_arquebusiers
+
+	build_time_modifier = 0.5
+	# initiative = 2
+
+
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = -0.50
+
+	strength_damage_taken = -0.10
+	morale_damage_taken = -0.10
+
+	buildable = yes
+
+	# maintenance_demand =  archer_infantry_maintenance
+	# construction_demand = archer_infantry_construction
+
+	combat = {
+		hills = 0.15
+		mountains = 0.15
+		wetlands = -0.15
+	}
+	impact = {
+		hills = -0.10
+		mountains = -0.10
+		wetlands = 0.10
+	}
+
+	#root = location. Checks location_potential first so don't need that scripting in
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.01
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.1
+	}
+
+	gfx_tags = { crossbow_tag pavise_tag medium_tag }
+}
+
+a_abm_genoese_arquebusiers = {
+	copy_from = a_age_4_reformation_light_infantry
+	is_special = yes
+	age = age_4_reformation
+	upgrades_to_only = a_abm_genoese_musketeers
+
+	build_time_modifier = 0.5
+	# initiative = 2
+
+
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = -0.50
+
+	strength_damage_taken = -0.10
+	morale_damage_taken = -0.10
+
+	buildable = yes
+
+	combat = {
+		hills = 0.15
+		mountains = 0.15
+		wetlands = -0.15
+	}
+	impact = {
+		hills = -0.10
+		mountains = -0.10
+	}
+
+	#root = location. Checks location_potential first so don't need that scripting in
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.01
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.1
+	}
+
+	gfx_tags = { musket_tag pavise_tag medium_tag }
+}
+
+a_abm_genoese_musketeers = {
+	copy_from = a_age_5_absolutism_light_infantry
+	is_special = yes
+	age = age_5_absolutism
+	upgrades_to_only = a_abm_genoese_riflemen
+
+	build_time_modifier = 0.5
+	initiative = 1
+
+
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = -0.50
+
+	strength_damage_taken = -0.10
+	morale_damage_taken = -0.10
+
+	buildable = yes
+
+	combat = {
+		hills = 0.15
+		mountains = 0.15
+		wetlands = -0.15
+	}
+	impact = {
+		hills = -0.10
+		mountains = -0.10
+	}
+
+	#root = location. Checks location_potential first so don't need that scripting in
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
+	}
+
+	gfx_tags = { musket_tag pavise_tag medium_tag }
+}
+
+a_abm_genoese_riflemen = {
+	copy_from = a_age_6_revolutions_light_infantry
+	is_special = yes
+	age = age_6_revolutions
+
+	build_time_modifier = 0.5
+	initiative = 1
+
+
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+
+	strength_damage_taken = -0.05
+	morale_damage_taken = -0.05
+
+	buildable = yes
+
+	combat = {
+		hills = 0.15
+		mountains = 0.15
+		wetlands = -0.15
+	}
+	impact = {
+		hills = -0.10
+		mountains = -0.10
+	}
+
+	#root = location. Checks location_potential first so don't need that scripting in
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = GEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				OR = {
+					has_accepted_culture = culture:ligurian
+					has_accepted_culture = culture:corsican
+					has_accepted_culture = culture:piedmontese
+				}
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:ligurian
+			dominant_culture = culture:corsican
+			dominant_culture = culture:piedmontese
+		}
+	}
+
+	gfx_tags = { rifle_tag pavise_tag medium_tag }
+}
+
+
+
+a_abm_balestrieri = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	age = age_2_renaissance
+	upgrades_to_only = a_abm_late_balestrieri
+
+	#build_time_modifier = 0.5
+	# initiative = 2
+
+
+	strength_damage_done = 0.10
+	# morale_damage_done = 0.10
+	combat_speed = -0.25
+
+	strength_damage_taken = -0.10
+	#morale_damage_taken = -0.05
+
+	buildable = yes
+
+	maintenance_demand =  archer_infantry_maintenance
+	construction_demand = archer_infantry_construction
+
+	combat = {
+		hills = 0.10
+		mountains = 0.10
+		wetlands = -0.10
+	}
+	impact = {
+		wetlands = 0.10
+	}
+
+	country_potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+	#root = location. Checks location_potential first so don't need that scripting in
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.01
+	}
+
+	gfx_tags = { crossbow_tag pavise_tag medium_tag }
+}
+
+
+a_abm_late_balestrieri = {
+	copy_from = a_age_3_discovery_light_infantry
+	is_special = yes
+	age = age_3_discovery
+	upgrades_to_only = a_abm_archibugieri
+
+	# build_time_modifier = 0.5
+	initiative = 1
+
+
+	strength_damage_done = 0.10
+	# morale_damage_done = 0.10
+	combat_speed = -0.25
+
+	strength_damage_taken = -0.10
+	#morale_damage_taken = -0.05
+
+	buildable = yes
+
+	maintenance_demand =  archer_infantry_maintenance
+	construction_demand = archer_infantry_construction
+
+	combat = {
+		hills = 0.10
+		mountains = 0.10
+		wetlands = -0.10
+	}
+	impact = {
+		wetlands = 0.10
+	}
+
+	country_potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+	#root = location. Checks location_potential first so don't need that scripting in
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.01
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.1
+	}
+
+	gfx_tags = { crossbow_tag pavise_tag medium_tag }
+}
+
+a_abm_archibugieri = {
+	copy_from = a_age_4_reformation_heavy_infantry
+	is_special = yes
+	age = age_4_reformation
+	upgrades_to_only = a_musketeers
+
+	# build_time_modifier = 0.5
+	initiative = -0.25
+
+
+	strength_damage_done = 0.05
+	# morale_damage_done = 0.10
+	combat_speed = -0.25
+
+	strength_damage_taken = -0.10
+	#morale_damage_taken = -0.05
+
+	buildable = yes
+
+	maintenance_demand =  archer_infantry_maintenance
+	construction_demand = archer_infantry_construction
+
+	combat = {
+		hills = 0.10
+		mountains = 0.10
+		#wetlands = -0.10
+	}
+	# impact = {
+	# 	wetlands = 0.10
+	# }
+
+	country_potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+	#root = location. Checks location_potential first so don't need that scripting in
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.01
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.1
+	}
+
+	gfx_tags = { musket_tag pavise_tag medium_tag }
+}
+
+a_abm_venettian_stradioti = {
+	copy_from = a_age_2_renaissance_light_cavalry
+	is_special = yes
+	age = age_2_renaissance
+	upgrades_to_only = a_abm_late_venettian_stradioti
+	
+	buildable = yes
+	
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = 1
+
+	combat = {
+		hills = 0.10
+		mountains = 0.20
+		wetlands = 0.20
+	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
+
+	gfx_tags = { medium_tag }
+}
+
+a_abm_late_venettian_stradioti = {
+	copy_from = a_age_3_discovery_light_cavalry
+	is_special = yes
+	age = age_3_discovery
+	upgrades_to_only = a_abm_venettian_cappelletti
+	
+	buildable = yes
+	
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = 1
+
+	combat = {
+		hills = 0.10
+		mountains = 0.20
+		wetlands = 0.20
+	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
+
+	gfx_tags = { medium_tag }
+}
+
+a_abm_venettian_cappelletti = {
+	copy_from = a_age_4_reformation_light_cavalry
+	is_special = yes
+	age = age_4_reformation
+	upgrades_to_only = a_abm_venettian_cravates
+	
+	buildable = yes
+	
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = 1
+
+	combat = {
+		hills = 0.10
+		mountains = 0.20
+		wetlands = 0.20
+	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
+
+	gfx_tags = { medium_tag }
+}
+
+a_abm_venettian_cravates = {
+	copy_from = a_age_5_absolutism_light_cavalry
+	is_special = yes
+	age = age_5_absolutism
+	upgrades_to_only = a_abm_venettian_dragoons
+	
+	buildable = yes
+	
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = 1
+
+	combat = {
+		hills = 0.10
+		mountains = 0.20
+		wetlands = 0.20
+	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
+
+	gfx_tags = { medium_tag }
+}
+
+a_abm_venettian_dragoons = {
+	copy_from = a_age_6_revolutions_light_cavalry
+	is_special = yes
+	age = age_6_revolutions
+	
+	buildable = yes
+	
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = 1
+
+	combat = {
+		hills = 0.10
+		mountains = 0.20
+		wetlands = 0.20
+	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
+
+	country_potential = {
+		OR = {
+			has_or_had_tag = VEN
+			AND = {
+				primary_culture = { has_culture_group = culture_group:italian_group }
+				has_accepted_culture = culture:venetian
+			}
+		}
+	}
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:venetian
+			dominant_culture = culture:dalmatian
+			dominant_culture = { has_culture_group = culture_group:south_slavic_group }
+		}
+	}
+
+	gfx_tags = { medium_tag }
+}
+
+a_abm_italian_stradioti = {
+	copy_from = a_age_2_renaissance_light_cavalry
+	is_special = yes
+	age = age_2_renaissance
+	upgrades_to_only = a_abm_late_italian_stradioti
+	
+	buildable = yes
+	
+	initiative = 1
+	strength_damage_done = 0.10
+
+	combat = {
+		mountains = 0.10
+		wetlands = 0.10
+	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
+
+	country_potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+	#root = location. Checks location_potential first so don't need that scripting in
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	gfx_tags = { medium_tag }
+}
+
+a_abm_late_italian_stradioti = {
+	copy_from = a_age_3_discovery_light_cavalry
+	is_special = yes
+	age = age_3_discovery
+	upgrades_to_only = a_abm_italian_cappelletti
+	
+	buildable = yes
+	
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = 1
+
+	combat = {
+		mountains = 0.10
+		wetlands = 0.10
+	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
+
+	country_potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	gfx_tags = { medium_tag }
+}
+
+a_abm_italian_cappelletti = {
+	copy_from = a_age_4_reformation_light_cavalry
+	is_special = yes
+	age = age_4_reformation
+	upgrades_to_only = a_age_5_absolutism_light_cavalry
+	
+	buildable = yes
+	
+	strength_damage_done = 0.10
+	morale_damage_done = 0.10
+	combat_speed = 1
+
+	combat = {
+		mountains = 0.10
+		wetlands = 0.10
+	}
+	impact = {
+		wetlands = -0.10
+		mountains = -0.10
+	}
+
+	country_potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	gfx_tags = { medium_tag }
+}
