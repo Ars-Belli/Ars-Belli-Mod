@@ -110,6 +110,14 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **`ai_tick = never` means "already handled in code"** per `country_interactions\readme.txt` — so if AI countries list mercenaries at all, it is engine code and no data change reaches it. Keep this reading of `ai_tick = never` in mind generally: it does not simply mean "AI never does this".
 - `delist_unit` is a separate key in the same vanilla file and is deliberately left vanilla, so already-listed units can be pulled back. This is why `REPLACE:` was used rather than a same-name file copy.
 
+### 3j. Selling works of art — AI willingness
+- **Four gold-for-art paths exist in the whole game**, and no others (`grep destroy_art|move_art_and_owner|art_price` over `in_game\`): `country_interactions\sell_work_of_art.txt` (offer to a country, they accept/decline), `country_interactions\request_work_of_art_purchase.txt` (the mirror, you buy), `generic_actions\sell_work_of_art_to_estates.txt` (instant, no counterparty, 60% of `art_price`), and the Orthodox-only `country_interactions\sell_icon.txt`.
+- **`art_price` is engine-computed and not moddable.** No define, no entry in `prices\`; `price:sell_work_of_art = { gold = 1 }` is only a stub that `price_modifier` overwrites with `scope:target.art_price`. Its magnitude relative to a country's income is **not knowable from script** — assume nothing about it.
+- **Vanilla's acceptance formula never looked at the price.** Opinion, the buyer's own treasury and the art's quality only. So a rich AI bought nearly anything at whatever the engine valued it at, which is the free-money faucet. Ars Belli's `ars_belli_sell_work_of_art.txt` (a `REPLACE:`) adds a price-against-income term, drops `diplo_chance.base` −30 → −50, halves `WEALTHY_BUYER` and raises its bar 24 → 36 months, adds a −25 band for `art_quality` 40–69 (vanilla punished only below 40) and deepens the below-40 band −50 → −90.
+- **`diplo_chance.base` and the `accept` block sum into one acceptance score** — see also 3f. `accept` factor `desc =` values are plain loc keys.
+- **`divide = { value = X min = 1 }` is the vanilla divide-by-zero guard** (`script_values\diplomatic_values.txt`), and `max = N` as a sibling of `value`/`multiply` clamps the finished term. Both are worth reaching for whenever an acceptance term divides by another country's income.
+- **Estates and "the bank" are the same thing in EU5's own vocabulary** — `generic_actions\take_bank_loan.txt` defines `take_estate_loan`, whose message log reads "We took a loan from the bank". Expect player reports about "banks" to mean either the estates or a counterparty country; ask which.
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
@@ -147,7 +155,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-08-16 (economic support cap; union call to arms; tributary transfer bans; sell/buy location capped at a flat 100 gold in the GUI; mercenary listing removed).
+Last updated: 2026-08-16 (economic support cap; union call to arms; tributary transfer bans; sell/buy location capped at a flat 100 gold in the GUI; mercenary listing removed; art-sale acceptance tightened).
 
 ## Important Files
 - `README.md`: Basic mod title.

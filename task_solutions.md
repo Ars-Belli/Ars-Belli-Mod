@@ -16,8 +16,9 @@ Status summary:
 | 8 | Tributaries excluded from location/subject transfers | Done | `cdde1dc` |
 | 10 | Throttle Worsen Opinion, 2x Improve Relations | Done | `8c3057e` |
 | 11 | Base location warscore cost 2 → 2.5 | Done | `7bb2b53` |
-| 16 | Cap gold transferable via sell/buy location | Done — flat 100 gold; a scaling cap is engine-locked | pending |
+| 16 | Cap gold transferable via sell/buy location | Done — flat 100 gold; a scaling cap is engine-locked | `cebd035` |
 | 17 | −10 prestige to both sides of a location sale | **Not done — engine-locked** | — |
+| 21 | Reduce AI willingness to buy art offered to them | Done — needs an in-game sanity check | pending |
 
 ---
 
@@ -299,6 +300,109 @@ Note that the Nr.16 cap already addresses the underlying money-transfer abuse; t
 was belt-and-braces on top of it. Also note the asymmetry between the two: Nr.16 is satisfiable
 because the GUI can *constrain* a value, while Nr.17 needs the GUI to *apply an effect*, which it
 cannot do.
+
+---
+
+## LOW Nr.21 — reduce the willingness of buyers to take any art offered to them
+
+**Status: done. Numbers want one in-game sanity check — see the caveat at the end.**
+
+**Request.** Selling works of art is a free money mechanic. Reduce how willing "banks" are to buy.
+
+**Which mechanic.** Ambiguous on first reading, because EU5 uses "bank" and "estates"
+interchangeably in its own files — `generic_actions/take_bank_loan.txt` defines an action called
+`take_estate_loan` whose message log reads *"We took a loan from the bank."* There are exactly
+four gold-for-art paths in the game, found by grepping `destroy_art|move_art_and_owner|art_price`
+across `in_game/`:
+
+| Path | Shape |
+|---|---|
+| `country_interactions/sell_work_of_art.txt` | offer to a country, it accepts or declines |
+| `country_interactions/request_work_of_art_purchase.txt` | the mirror — you buy from them |
+| `generic_actions/sell_work_of_art_to_estates.txt` | instant, no counterparty, 60% of `art_price` |
+| `country_interactions/sell_icon.txt` | Orthodox-only variant |
+
+Confirmed with the requester that the target is the **first** one — the offer-to-a-country path,
+where "willingness" and "offered to them" are literal. The estates path is untouched.
+
+**What actually made it a faucet.** Vanilla's acceptance formula never looks at the price. The
+buyer pays `scope:target.art_price` and decides on opinion, its own treasury and the art's quality
+alone:
+
+```
+diplo_chance = { base = -30 }
+accept = {
+    opinion / 3                              # -66 .. +66
+    LOW_TREASURY      -60   (gold < 6 months income)
+    WEALTHY_BUYER     +30   (gold > 24 months income)
+    HIGH_QUALITY_ART  +30   (quality >= 70)
+    LOW_QUALITY_ART   -50   (quality < 40)
+    rival            -100
+}
+```
+
+A wealthy AI at neutral opinion holding mid-quality art sits at `-30 + 30 = 0` — it buys. Nothing
+between quality 40 and 69 carried any penalty at all, which is most of what a court produces.
+
+**Solution.** `in_game/common/country_interactions/ars_belli_sell_work_of_art.txt`, a `REPLACE:`
+of the single key (not a same-name file copy, per the standing rule). Everything above
+`diplo_chance` is vanilla and has to be kept in sync on updates. The changes:
+
+| Term | Vanilla | Ars Belli |
+|---|---|---|
+| `diplo_chance.base` | −30 | **−50** |
+| price against buyer's income | *absent* | **−8 per month of income, capped at −60** |
+| `WEALTHY_BUYER` | +30 above 24 months | **+15 above 36 months** |
+| quality 40–69 | *nothing* | **−25** |
+| quality < 40 | −50 | **−90** |
+| opinion, `LOW_TREASURY`, rival | — | unchanged |
+
+The price term is the structural one — it is what stops the sale being free of any check on size:
+
+```
+subtract = {
+    desc = "AB_ART_PRICE_VS_INCOME"
+    value = scope:target.art_price
+    divide = { value = scope:recipient.monthly_income_total  min = 1 }
+    multiply = 8
+    max = 60
+}
+```
+
+`multiply = 8` is deliberately the same rate at which the mod's own pay-for-access actions price
+offered gold (`ars_belli_pay_for_access.txt`), so offered-gold and asked-gold sit on one scale.
+`min = 1` on the divisor is vanilla's divide-by-zero guard (`script_values/diplomatic_values.txt`).
+
+**How it plays out.** Sanity-checked by hand against the score, `>= 0` accepts:
+
+| Sale | Score |
+|---|---|
+| masterpiece (q≥70) → friendly (+150 opinion) wealthy buyer | `−50 +50 −24 +15 +30 = +21` accept |
+| masterpiece → *neutral* wealthy buyer | `−50 +0 −24 +15 +30 = −29` refuse |
+| mid art (q 40–69) → friendly wealthy buyer | `−50 +50 −24 +15 −25 = −34` refuse |
+| junk (q<40) → anyone | far below zero, refuse |
+
+So art still moves to buyers who actually want it and can afford it, and stops being a way to
+convert a court's output into gold on demand. The `−24` in those rows assumes the art costs the
+buyer three months of income; see below.
+
+**Caveat — the one number resting on an assumption.** `art_price` is engine-computed and its
+magnitude relative to a country's income cannot be determined from script: there is no define for
+it, no entry in `prices/`, and `price:sell_work_of_art = { gold = 1 }` is only a stub that
+`price_modifier` overwrites. If art turns out to be worth far more than a few months of income,
+the price term saturates and only the `max = 60` clamp keeps the action usable at all — which is
+exactly why the clamp is there. If art turns out to be cheap, the term is close to inert and the
+work is done by the base and quality changes instead. Either way the action still functions; the
+`multiply = 8` is the knob to turn after seeing a real acceptance tooltip in game.
+
+**Two new loc keys**, `AB_ART_PRICE_VS_INCOME` and `AB_MEDIOCRE_ART`, in
+`in_game/localization/english/ars_belli_work_of_art_l_english.yml`. The `AB_` prefix keeps them
+clear of anything vanilla might add. Every other `desc` in the block reuses a vanilla key.
+
+**Not done, and deliberately.** No cooldown was added. A rate limit on the *seller* would cap the
+faucet independently of any of the above, and `cooldown = { type = X years = N }` is available on
+country interactions (the mod already uses one on `worsen_opinion`) — but the request was about
+the buyer's willingness, so that stays on the table rather than in the diff.
 
 ---
 
