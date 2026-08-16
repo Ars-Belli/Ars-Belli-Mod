@@ -1,0 +1,2178 @@
+lateralview = {
+	name = "army_builder"
+
+	# SOUND - Military > Armies / Navies > Builder (Left Panel)
+	blockoverride "snd_panel_identifier" { soundeffect = "UI_panelAux_military_builder_show" }
+
+	blockoverride "lateralview_topbuttons_extra" {
+		widget = {
+			parentanchor = vcenter
+			size = { 40 40 }
+			position = { 30 0 }
+			button_automation_shortcut = {
+				parentanchor = vcenter
+				size = { 25 25 }
+				action_tooltip = {
+					title = "OPEN_AUTOMATION_PANEL_FILTER"
+					on_action = "[OpenLateralViewWithFilter('automation', 'automation_filter_military')]"
+				}
+				tooltipwidget = { BasicFunctionalTooltip = {} }
+			}
+		}
+	}
+
+	blockoverride "panel_header" {
+		window_header_alt = {
+			blockoverride "header_text" {
+				text = "[ArmyBuilderLateralView.GetViewTitle]"
+			}
+			blockoverride "window_header_alt_color_texture"{
+				using = color_military_texture
+			}
+		}
+	}
+
+	blockoverride "panel_content" {
+		# header_main_tabs = { #TABS
+		# 	blockoverride "content" {
+		# 		button_main_tab_alt = {
+		# 			layoutpolicy_horizontal = expanding
+		# 			blockoverride "tab_text"{
+		# 				text = "ARMY_OVERVIEW"
+		# 			}
+		# 			onclick = "[ArmyBuilderLateralView.SetArmy]"
+		# 			tooltip_enabled = no
+		# 			down = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type','army')]"
+		# 		}
+
+		# 		button_main_tab_alt = {
+		# 			layoutpolicy_horizontal = expanding
+		# 			blockoverride "tab_text"{
+		# 				text = "NAVY_OVERVIEW"
+		# 			}
+		# 			onclick = "[ArmyBuilderLateralView.SetNavy]"
+		# 			tooltip_enabled = no
+		# 			down = "[ArmyBuilderLateralView.Vars.HasValue('unit_type', 'navy')]"
+		# 		}
+		# 	}
+		# }
+
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_alt
+			using = window_main_tabs_margin_alt
+			# Hiring Mercenaries
+			vbox = {
+				visible = "[ArmyBuilderLateralView.Vars.HasValue( 'subtab', 'hiring' )]"
+				using = layoutpolicy_expanding
+				margin_top = 8
+
+				subheader_A = {
+					# Left Data
+					blockoverride "left_widget_visible" {}
+					blockoverride "left_widget" {
+						size = { 220 39 }
+
+						subheader_unified_icon = {
+							position = { -10 0 }
+							datacontext = "[Player.GetModifierTooltipContext('mercenary_range')]"
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_icon" {
+										icon = {
+											using = tooltip_title_icon_size
+											texture = "[CountryModifierWrap.GetIcon]"
+										}
+									}
+									blockoverride "title_text" {
+										text = "COUNTRYMODIFIERWRAP_T"
+									}
+									blockoverride "concept_link" {
+										text = "[country_modifier|e]"
+									}
+									blockoverride "tooltip_content" {
+										TooltipStringPairList = {
+											textcontext = "[Player.GetDoubleDescriptionFor('mercenary_range','mercenary_range_modifier')]"
+										}
+									}
+								}
+							}
+							blockoverride "subheader_unified_icon" {
+								icon = {
+									size = { 32 32 }						
+									texture = "[CountryModifierWrap.GetIcon]"
+								}
+							}
+							blockoverride "subheader_unified_top_text" {
+								text = "MODIFIER_TYPE_NAME_mercenary_range"
+								align = left|nobaseline
+							}
+							blockoverride "subheader_unified_bottom_text" {
+								text = "[Player.GetDoubleModifierValueNoFormatTruncated('mercenary_range', 'mercenary_range_modifier')]"
+								align = left|nobaseline
+							}
+							expand = {}
+						}
+
+						# header_button_left = {
+						# 	size = {100% 39}
+						# 	tooltipwidget = {
+						# 		SimpleContextualTooltipType = {
+						# 			blockoverride "title_icon" {
+						# 				icon = {
+						# 					visible = "[Not(ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army'))]"
+						# 					using = tooltip_title_icon_size
+						# 					texture = "gfx/interface/icons/unit_category/mercenary_navy.dds"
+						# 				}
+						# 				icon = {
+						# 					visible = "[Not(ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'navy'))]"
+						# 					using = tooltip_title_icon_size
+						# 					texture = "gfx/interface/icons/unit_category/mercenary.dds"
+						# 				}
+						# 			}
+	
+						# 			blockoverride "concept_link" {
+						# 				raw_text = "[mercenary|e]"
+						# 			}
+									
+						# 			lowpriotextcontext = "HIRE_MERCENARY_LEADER_SIMPLE"
+	
+						# 		}
+						# 	}
+						# 	action_tooltip = {
+						# 		click_type = left
+						# 		click_mode = single
+						# 		title = "[SelectLocalization(ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army'), 'HIRE_ARMY_MERCENARY', 'HIRE_NAVY_MERCENARY')]"
+						# 		on_action = "[ArmyBuilderLateralView.ChooseMercenaryLeader]"
+						# 	}
+							
+						# 	blockoverride "header_button_icon_obj" {
+						# 		icon = {
+						# 			visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army')]"
+						# 			parentanchor = center
+						# 			size = { 24 24 }
+						# 			texture_density = 2
+						# 			texture = "gfx/interface/icons/unit_category/mercenary.dds"
+						# 		}
+
+						# 		icon = {
+						# 			texture = "gfx/interface/icons/unit_category/mercenary_navy.dds"
+						# 			visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'navy')]"
+						# 			parentanchor = center
+						# 			size = { 24 24 }
+						# 			texture_density = 2
+						# 		}
+
+						# 		icon = {
+						# 			texture = "gfx/interface/icons/flat_icons/trade_market/blue_left.dds"
+						# 			parentanchor = bottom|left
+						# 			size = { 15 15 }
+						# 			position = { 5 -3 }
+						# 		}
+						# 	}
+	
+						# 	blockoverride "text_top" {
+						# 		autoresize = yes
+						# 		layoutpolicy_horizontal = expanding	
+						# 		maximumsize = { 150 15 }
+						# 		text = "[SelectLocalization(ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army'), 'HIRE_ARMY_MERCENARY', 'HIRE_NAVY_MERCENARY')]"
+						# 	}						
+						# }
+					}
+
+					# central toggle
+					blockoverride "checkbox" {
+						down = "[Player.IsAutoExtendMercenaries]"
+						action_tooltip = {
+							title = "TOGGLE_AUTO_EXTEND_MERCENARIES_TOOLTIP_TOGGLE"
+							on_action = "[ToggleAutoExtendMercenaries]"
+						}
+						tooltipwidget = {
+							SimpleContextualTooltipType = {
+								lowpriotextcontext = "[SelectLocalization( Player.IsAutoExtendMercenaries, 'TOGGLE_AUTO_EXTEND_MERCENARIES_TOOLTIP_IS_ON', 'TOGGLE_AUTO_EXTEND_MERCENARIES_TOOLTIP_IS_OFF' )]"
+								blockoverride "title_icon" {
+									icon = {
+										using = tooltip_title_icon_size
+										texture = "gfx/interface/icons/unit_category/mercenary.dds"
+									}
+								}
+
+								blockoverride "concept_link" {
+									raw_text = "[mercenary|e]"
+								}
+							}
+						}						
+					}
+					blockoverride "header_center_checkbox_visible" {
+						visible = yes
+					}
+
+					# Right Data
+					#
+					# ARS BELLI: this is the "Become Mercenary" button, and it is the ONLY way into
+					# the "Set Up The Mercenary Contract" window (SETUP_MERCENARY, the
+					# setup_condottieri lateralview). Hiding it is what actually removes the
+					# feature.
+					#
+					# Two earlier attempts failed because they went after the wrong thing entirely.
+					# `make_unit_available_for_hire` is a generic_action with the same name and the
+					# same tooltip title, and gating it does nothing to this path: the condottieri
+					# window is engine-driven end to end - SetupCondottieriView / CondottieriItem,
+					# with OnAccept, OnCostModifierChanged, OnDurationChanged and
+					# DelistUnhiredMercenaries all engine functions, and its refusals come from
+					# engine keys (MERC_UNIT_HAS_MERCENARIES and friends in units_l_english.yml,
+					# i.e. NUnitUtilities::CanBecomeMercenary), not from any script trigger. No data
+					# change reaches it. `ShowCondottieriViewWithFilter` is called from exactly one
+					# place in the entire game - the button below - and there is no hotkey for it,
+					# so this single blockoverride closes the whole feature.
+					#
+					# Restoring vanilla's own default rather than inventing one: windows.gui
+					# declares `block "right_widget_visible" { visible = no }`, and vanilla's
+					# army_builder empties the override to turn the button on. Putting the
+					# `visible = no` back is the smallest possible edit to this file.
+					blockoverride "right_widget_visible"{
+						visible = no
+					}
+
+					blockoverride "right_widget_setup"{
+						size = {220 40}
+						parentanchor = vcenter|right
+					}
+
+					# Ars Belli: the button widget itself is gone, not just switched off. Vanilla
+					# built a `header_button_right` here carrying BECOME_ARMY_MERCENARY /
+					# BECOME_NAVY_MERCENARY and the single `ShowCondottieriViewWithFilter` call;
+					# see the vanilla copy of this file for the original block. An empty
+					# blockoverride is vanilla's own idiom (this file uses one for
+					# "right_widget_visible"), so nothing is left to render, hover or click.
+					blockoverride "right_widget"{}
+				}
+
+				#MODIFIERS
+				hbox = {
+					margin_top = 8
+					layoutpolicy_horizontal = expanding
+					hbox =  {
+						layoutpolicy_horizontal = expanding
+						using = bg_paper_card
+						using = bg_cabinet_card_frame
+	
+						widget = {
+							layoutpolicy_horizontal = expanding
+							size = {-1 40}
+	
+							hbox = {
+								#MAINTENANCE COST
+								hbox = {
+									datacontext = "[Player.GetModifierTooltipContext('mercenary_maintenance_efficiency')]"
+									spacing = 5
+									using = layoutpolicy_expanding
+									using = bg_text_mask_container_brown
+									expand = {}
+									icon = {
+										size = { 25 25 }
+										texture = "[CountryModifierWrap.GetIcon]"
+									}
+									text_single = {
+										text = "[Player.GetModifierValue('mercenary_maintenance_efficiency')]"
+									}
+									expand = {}
+								}
+	
+								#MERCENARY SIZE
+								hbox = {
+									datacontext = "[Player.GetModifierTooltipContext('global_mercenaries_modifier')]"
+									spacing = 5
+									using = layoutpolicy_expanding
+									expand = {}
+									icon = {
+										size = { 25 25 }
+										texture = "[CountryModifierWrap.GetIcon]"
+									}
+									text_single = {
+										text = "[Player.GetModifierValue('global_mercenaries_modifier')]"
+									}
+									expand = {}
+								}
+	
+								#HIRE MERCENARY LEADER COST
+								hbox = {
+									datacontext = "[Player.GetModifierTooltipContext('hire_mercenary_leader_cost_modifier')]"
+									spacing = 5
+									using = layoutpolicy_expanding
+									expand = {}
+									icon = {
+										size = { 25 25 }
+										texture = "[CountryModifierWrap.GetIcon]"
+									}
+									text_single = {
+										text = "[Player.GetModifierValue('hire_mercenary_leader_cost_modifier')]"
+									}
+									expand = {}
+									using = bg_text_mask_container_brown
+								}
+	
+								#HIRE MERCENARY PREMIUM COST
+								hbox = {
+									datacontext = "[Player.GetModifierTooltipContext('hire_mercenary_premium_cost_modifier')]"
+									spacing = 5
+									using = layoutpolicy_expanding
+									expand = {}
+									icon = {
+										size = { 25 25 }
+										texture = "[CountryModifierWrap.GetIcon]"
+									}
+									text_single = {
+										text = "[Player.GetModifierValue('hire_mercenary_premium_cost_modifier')]"
+									}
+									expand = {}
+								}
+
+								#MERCENARIES IN HIRING RANGE
+								hbox = {
+									spacing = 5
+									using = layoutpolicy_expanding
+									using = bg_text_mask_container_brown
+									expand = {}
+									icon = {
+										size = { 25 25 }
+										texture = "gfx/interface/icons/unit_category/mercenary.dds"
+										visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army')]"
+									}
+									icon = {
+										size = { 25 25 }
+										texture = "gfx/interface/icons/unit_category/mercenary_navy.dds"
+										visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'navy')]"
+									}
+									text_single = {
+										text = "[ArmyBuilderLateralView.GetMercenaryMenInRange]"
+									}
+									expand = {}
+									tooltipwidget = {
+										ContextualTooltipType = {
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "gfx/interface/icons/unit_category/mercenary.dds"
+												}
+											}
+											blockoverride "title_text" {
+												text = "MERCENARY_MEN_IN_RANGE_TITLE"
+											}
+											blockoverride "concept_link" {
+												text = "[mercenary|e]"
+											}
+											blockoverride "tooltip_content" {
+												TooltipScrolledStringPairList = {
+													textcontext = "[ArmyBuilderLateralView.GetMercenaryRangeBreakdownTooltip]"
+												}
+											}
+										}
+									}
+								}
+							}
+	
+						}
+					}
+				}
+
+				filtered_sorted_list = {
+					datacontext = "[ArmyBuilderLateralView.GetMercenariesSortSearch]"
+
+					blockoverride "scroll_list_is_empty" {
+						visible = "[IsDataModelEmpty(ArmyBuilderLateralView.GetMercenaries)]"
+					}
+
+					blockoverride "scroll_list_is_empty_text" {
+						text = "NO_MERCENARIES_AVAILABLE"
+					}
+
+					# Push the empty-list text below both header buttons (auto-gather + gather new).
+					blockoverride "scroll_list_is_empty_position" {
+						position = { 0 88 }
+					}
+
+					blockoverride "sort_buttons_filtered_list" {
+						sort_by_key_button = {
+							name = "mercenary_relevance"
+							using = layoutpolicy_expanding
+						}
+
+						sort_by_key_button = {
+							name = "country_owner"
+							using = layoutpolicy_expanding
+						}
+
+						sort_by_key_button = {
+							name = "name"
+							using = layoutpolicy_expanding
+						}
+
+						sort_by_key_button = {
+							name = "mercenary_size"
+							using = layoutpolicy_expanding
+						}
+
+						sort_by_key_button = {
+							name = "mercenary_tpc"
+							visible = "[ArmyBuilderLateralView.IsNavy]"
+							using = layoutpolicy_expanding
+						}
+
+						sort_by_key_button = {
+							name = "cost"
+							using = layoutpolicy_expanding
+						}
+
+						sort_by_key_button = {
+							name = "mercenary_length"
+							using = layoutpolicy_expanding
+						}
+						
+						sort_by_key_button = {
+							name = "country_customer"
+							using = layoutpolicy_expanding
+						}
+					}
+
+					blockoverride "scroll_list_layout" {
+						vbox = {
+							using = layoutpolicy_expanding
+
+							# One-click auto-gather: closest-to-capital captain, biggest affordable army of the current age.
+							header_button_left = {
+								layoutpolicy_horizontal = expanding
+								size = {-1 39}
+
+								# Grey out the button entirely when neither click mode can produce a valid hire.
+								enabled = "[Or(ArmyBuilderLateralView.CanAutoGather('(bool)no'), ArmyBuilderLateralView.CanAutoGather('(bool)yes'))]"
+
+								# Hover tooltip: chosen captain and composition (default = empty-queue build site).
+								tooltipwidget = {
+									SimpleContextualTooltipType = {
+										blockoverride "title_icon" {
+											icon = {
+												visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army')]"
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/unit_category/mercenary.dds"
+											}
+											icon = {
+												visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'navy')]"
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/unit_category/mercenary_navy.dds"
+											}
+										}
+										lowpriotextcontext = "[ArmyBuilderLateralView.GetAutoGatherTooltip('(bool)yes')]"
+									}
+								}
+
+								# Default: build only at a site with nothing already being recruited.
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "[ArmyBuilderLateralView.GetAutoGatherLabel('(bool)yes')]"
+									cost = "[ArmyBuilderLateralView.GetAutoGatherCost('(bool)yes')]"
+									conditions = "[ArmyBuilderLateralView.GetAutoGatherConditions('(bool)yes')]"
+									enabled = "[ArmyBuilderLateralView.CanAutoGather('(bool)yes')]"
+									on_action = "[ArmyBuilderLateralView.AutoGatherMercenary('(bool)yes')]"
+								}
+
+								# Shift: also allow build sites that already have something being recruited.
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									click_modifier = shift
+									click_modifier_description = "AUTO_GATHER_SHIFT_DESC"
+									title = "[ArmyBuilderLateralView.GetAutoGatherLabel('(bool)no')]"
+									cost = "[ArmyBuilderLateralView.GetAutoGatherCost('(bool)no')]"
+									conditions = "[ArmyBuilderLateralView.GetAutoGatherConditions('(bool)no')]"
+									enabled = "[ArmyBuilderLateralView.CanAutoGather('(bool)no')]"
+									on_action = "[ArmyBuilderLateralView.AutoGatherMercenary('(bool)no')]"
+								}
+
+								blockoverride "header_button_icon_obj" {
+									icon = {
+										visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army')]"
+										parentanchor = center
+										size = { 24 24 }
+										texture_density = 2
+										texture = "gfx/interface/icons/unit_category/mercenary.dds"
+									}
+
+									icon = {
+										texture = "gfx/interface/icons/unit_category/mercenary_navy.dds"
+										visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'navy')]"
+										parentanchor = center
+										size = { 24 24 }
+										texture_density = 2
+									}
+								}
+
+								blockoverride "header_button_text_layout" {
+									text_single = {
+										layoutpolicy_horizontal = expanding
+										size = { -1 20 }
+										autoresize = no
+										align = center
+										text = "[ArmyBuilderLateralView.GetAutoGatherLabel('(bool)yes')]"
+									}
+								}
+							}
+
+							header_button_left = {
+								layoutpolicy_horizontal = expanding
+								size = {-1 39}
+								tooltipwidget = {
+									SimpleContextualTooltipType = {
+										blockoverride "title_icon" {
+											icon = {
+												visible = "[Not(ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army'))]"
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/unit_category/mercenary_navy.dds"
+											}
+											icon = {
+												visible = "[Not(ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'navy'))]"
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/unit_category/mercenary.dds"
+											}
+										}
+		
+										blockoverride "concept_link" {
+											raw_text = "[mercenary|e]"
+										}
+										
+										lowpriotextcontext = "HIRE_MERCENARY_LEADER_SIMPLE"
+		
+									}
+								}
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "[SelectLocalization(ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army'), 'HIRE_ARMY_MERCENARY', 'HIRE_NAVY_MERCENARY')]"
+									on_action = "[ArmyBuilderLateralView.ChooseMercenaryLeader]"
+								}
+								
+								blockoverride "header_button_icon_obj" {
+									icon = {
+										visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army')]"
+										parentanchor = center
+										size = { 24 24 }
+										texture_density = 2
+										texture = "gfx/interface/icons/unit_category/mercenary.dds"
+									}
+	
+									icon = {
+										texture = "gfx/interface/icons/unit_category/mercenary_navy.dds"
+										visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'navy')]"
+										parentanchor = center
+										size = { 24 24 }
+										texture_density = 2
+									}
+	
+									icon = {
+										texture = "gfx/interface/icons/flat_icons/trade_market/blue_left.dds"
+										parentanchor = bottom|left
+										size = { 15 15 }
+										position = { 5 -3 }
+									}
+								}
+		
+								blockoverride "header_button_text_layout" {
+									text_single = {
+										layoutpolicy_horizontal = expanding
+										size = { -1 20 }
+										autoresize = no
+										align = center
+										text = "[SelectLocalization(ArmyBuilderLateralView.Vars.NotExistOrHasValue('unit_type', 'army'), 'HIRE_ARMY_MERCENARY', 'HIRE_NAVY_MERCENARY')]"
+									}
+									
+								}						
+							}
+
+							fixedgridbox = {
+								addcolumn = 100%
+								addrow = 85
+								datamodel = "[ArmyBuilderLateralView.GetMercenaries]"
+
+								item = {
+									widget = {
+										size = { 100% 85 }
+										widget = {
+											size = { 99% 78 }
+											parentanchor = center
+											
+											hbox = {
+												using = bg_paper_card
+												using = bg_cabinet_card_frame
+												using = mercenary_card
+
+												blockoverride "country_sort_highlight" {
+													sort_by_small_highlight = {
+														name = "country_customer"
+													}
+												}
+
+												blockoverride "name_sort_highlight" {
+													sort_by_left_fade_highlight = {
+														name = "name"
+														position = { -18 0 }
+													}
+												}
+
+												blockoverride "country_owner_sort_highlight" {
+													sort_by_small_highlight = {
+														name = "country_owner"
+													}
+												}
+
+												blockoverride "mercenary_length_sort_highlight_01" {
+													sort_by_highlight = {
+														size = { 70 150% }
+														position = { -10 0 }
+														name = "mercenary_length"
+													}
+												}
+
+												blockoverride "mercenary_length_sort_highlight_02" {
+													sort_by_highlight = {
+														size = { 70 150% }
+														position = { -10 0 }
+														name = "mercenary_length"
+													}
+												}
+
+												blockoverride "mercenary_size_sort_highlight_01" {
+													sort_by_highlight = {
+														size = { 70 150% }
+														position = { -10 0 }
+														name = "mercenary_size"
+													}
+												}
+
+												blockoverride "mercenary_size_sort_highlight_02" {
+													sort_by_highlight = {
+														size = { 70 150% }
+														position = { -10 0 }
+														name = "mercenary_size"
+													}
+												}
+
+												blockoverride "cost_sort_highlight" {
+													sort_by_highlight = {
+														name = "cost"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+
+							expand = {}
+						}
+					}	
+				}
+			}
+
+			# Recruiting armies
+			vbox = {
+				visible = "[ArmyBuilderLateralView.Vars.NotExistOrHasValue('subtab','recruiting')]"
+				using = layoutpolicy_expanding
+
+				subheader = { ### TITLE
+					blockoverride "content" {
+						hbox = {
+							ignoreinvisible = yes
+							spacing = 8
+
+							icon_text_2rows = {
+								visible = "[Not(ArmyBuilderLateralView.IsNavy)]"
+
+								blockoverride "base_setup" {
+									tooltipwidget = {
+										SimpleContextualTooltipType = {
+											blockoverride "title_icon" {
+												icon = {
+													using = tooltip_title_icon_size
+													texture = "gfx/interface/icons/unit_category/army_size.dds"
+												}
+											}
+
+											blockoverride "concept_link" {
+												raw_text = "[army|e]"
+											}
+											
+											lowpriotextcontext = "ARMY_SIZE_SIMPLE"
+
+										}
+									}
+								}
+								blockoverride "icon_setup" {
+									texture = "gfx/interface/icons/unit_category/army_size.dds"
+									
+
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.5
+									}
+								}
+								blockoverride "top_text_setup" {
+									text = "ARMY_SIZE"
+								}
+								blockoverride "bottom_text_setup" {
+									text = "[Player.GetTotalStrength|Y]"
+									blockoverride "base_setup" {
+										tooltipwidget = {
+											SimpleContextualTooltipType = {
+												blockoverride "title_icon" {
+													icon = {
+														using = tooltip_title_icon_size
+														texture = "gfx/interface/icons/unit_category/army_size.dds"
+													}
+												}
+	
+												blockoverride "concept_link" {
+													raw_text = "[army|e]"
+												}
+												
+												textcontext = "ARMY_SIZE_SIMPLE"
+	
+											}
+										}
+									}
+								}
+							}
+
+							icon_text_2rows = {
+								visible = "[ArmyBuilderLateralView.IsNavy]"
+
+								blockoverride "base_setup" {
+									layoutstretchfactor_vertical = 1
+									tooltipwidget = {
+										ContextualTooltipType = {
+											blockoverride "title_icon_texture" {
+												texture = "gfx/interface/icons/unit_category/navy_size.dds"
+											}
+
+											blockoverride "title_text" {
+												text = "NAVY_EXPECTED_SIZE"
+											}
+
+											blockoverride "concept_link" {
+												text = "[navy|e]"
+											}
+
+											blockoverride "tooltip_content" {
+												TooltipStringPairList = {
+													blockoverride "block_title" {
+														text = RECRUIT_S_TT_TITLE
+													}
+													lowpriotextcontext = "[Player.GetDoubleDescriptionFor('expected_navy_size', 'expected_navy_size_modifier')]"
+												}
+											}
+										}
+									}
+								}
+								blockoverride "icon_setup" {
+									texture = "gfx/interface/icons/unit_category/navy_size.dds"
+									glow = {
+										name = "drop_shadow"
+										glow_radius = 3
+										color = {0.0 0.0 0.0 1.0}
+										alpha = 0.5
+									}
+								}
+								blockoverride "top_text_setup" {
+									text = "NAVY_EXPECTED_SIZE"
+								}
+								blockoverride "bottom_text_setup" {
+									raw_text = "[Player.GetTotalShips|Y] / [Player.GetExpectedNavySize|0]"
+								}
+							}
+
+							# Button for obsolete units visibility
+							button_check_visibility = {
+								size = { 32 32 }
+
+								tooltipwidget = {
+									BasicFunctionalTooltip = {}
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "SHOW_OBSOLETE_UNITS"
+									on_action = "[ArmyBuilderLateralView.ToggleShowOnlyCurrentAge]"
+									visible = "[ArmyBuilderLateralView.ShowOnlyCurrentAge]"
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "HIDE_OBSOLETE_UNITS"
+									on_action = "[ArmyBuilderLateralView.ToggleShowOnlyCurrentAge]"
+									visible = "[Not(ArmyBuilderLateralView.ShowOnlyCurrentAge)]"
+								}
+
+								down = "[Not(ArmyBuilderLateralView.ShowOnlyCurrentAge)]"
+							}
+
+							hbox = {
+								visible = "[EqualTo_int32(Player.GetOwnedLocationCount, '(int32)1')]"
+								datamodel = "[ArmyBuilderLateralView.GetMethods]"
+								item = {
+									button = {
+										size = {30 30}
+										using = header_button_template
+										blockoverride "header_button_template_push_properties"{using = button_tab_toggle_properties_template}
+										blockoverride "header_button_full_content"{}
+										blockoverride "header_button_template_texture"{using = pressed_button_texture}
+										tooltipwidget = {
+											using = RecruitmentMethod_tooltip
+										}
+
+										onclick = "[ArmyBuilderLateralView.SelectMethod(RecruitmentMethod.Self)]"
+										down = "[ArmyBuilderLateralView.IsMethodChecked(RecruitmentMethod.Self)]"
+
+										icon = {
+											size = {70% 70%}
+											parentanchor = center
+											texture = "[GetRecruitMethodIcon(RecruitmentMethod.Self)]"
+										}
+									}
+									# button_checkbox_round_intense = {
+									# 	size = { 23 23 }
+									# 	texture = "[GetRecruitMethodIcon(RecruitmentMethod.Self)]"
+									# 	onclick = "[ArmyBuilderLateralView.SelectMethod(RecruitmentMethod.Self)]"
+									# 	down = "[ArmyBuilderLateralView.IsMethodChecked(RecruitmentMethod.Self)]"
+									# 	tooltipwidget = {
+									# 		using = RecruitmentMethod_tooltip
+									# 	}
+									# }
+								}
+							}
+
+							header_button_right = {
+								visible = "[ArmyBuilderLateralView.IsNavy]"
+								blockoverride "adjust_to_content" {
+									minimumsize = { 150 40 }
+									set_parent_size_to_minimum = yes
+								}
+			
+								tooltipwidget = {
+									BasicFunctionalTooltip = {
+									}
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "SHOW_RECRUITMENT_BUILDINGS"
+									on_action = "[OpenLateralViewWithFilter('production', 'naval_category')]"
+								}
+			
+								blockoverride "icon_texture" {
+									texture = "gfx/interface/icons/building_categories/naval_category.dds"
+									alpha = 0.7
+								}
+
+								blockoverride "icon_size" {
+									size = { 30 30 }
+								}
+								
+								blockoverride "icon_overlay" {}
+			
+								blockoverride "text_top" {
+									text = "SHOW_RECRUITMENT_BUILDINGS"
+									maximumsize = { 150 -1 }
+									minimumsize = { 10 -1 }
+								}
+			
+								blockoverride "text_bottom" {
+									visible = no
+								}
+							}
+
+							header_button_right = {
+								visible = "[Not(ArmyBuilderLateralView.IsNavy)]"
+								blockoverride "adjust_to_content" {
+									minimumsize = { 150 40 }
+									set_parent_size_to_minimum = yes
+								}
+			
+								tooltipwidget = {
+									BasicFunctionalTooltip = {
+									}
+								}
+
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "SHOW_RECRUITMENT_BUILDINGS"
+									on_action = "[OpenLateralViewWithFilter('production', 'military_category')]"
+								}
+			
+								blockoverride "icon_texture" {
+									texture = "gfx/interface/icons/building_categories/military_category.dds"
+									alpha = 0.7
+								}
+
+								blockoverride "icon_size" {
+									size = { 22 30 }
+								}
+								
+								blockoverride "icon_overlay" {}
+			
+								blockoverride "text_top" {
+									text = "SHOW_RECRUITMENT_BUILDINGS"
+									maximumsize = { 150 -1 }
+									minimumsize = { 10 -1 }
+								}
+			
+								blockoverride "text_bottom" {
+									visible = no
+								}
+							}
+						}
+					}
+				}
+
+				filtered_sorted_list = {
+					datacontext = "[ArmyBuilderLateralView.GetArmyTypesSortSearch]"
+
+					blockoverride "filtered_sorted_list_sorts_visible" {
+						visible = no
+					}
+
+					blockoverride "searchbar_extra_pre_content" {
+						# RECRUIT METHODS WHEN FILTERED
+						hbox = {
+							visible = "[And(Not(ArmyBuilderLateralView.IsNavy), ArmyBuilderLateralView.HasFilteredLocation)]"
+							spacing = 3
+							margin_bottom = 5
+							margin_top = -3
+
+							datamodel = "[ArmyBuilderLateralView.GetMethods]"
+							item = {
+								button = {
+									size = {36 36}
+									using = header_button_template
+									blockoverride "header_button_template_push_properties"{using = button_tab_toggle_properties_template}
+									blockoverride "header_button_full_content"{}
+									blockoverride "header_button_template_texture"{using = pressed_button_texture}
+									
+									onclick = "[ArmyBuilderLateralView.SelectMethod(RecruitmentMethod.Self)]"
+									down = "[ArmyBuilderLateralView.IsMethodChecked(RecruitmentMethod.Self)]"
+
+									tooltipwidget = {
+										using = RecruitmentMethod_tooltip
+									}
+
+									icon = {
+										size = {70% 70%}
+										parentanchor = center
+										texture = "[GetRecruitMethodIcon(RecruitmentMethod.Self)]"
+									}
+								}
+							}
+						}
+					}
+
+					blockoverride "subheader_lower_divider" {
+						widget = {
+							layoutpolicy_horizontal = expanding
+							size = { -1 40 }
+
+							hbox = {
+								card_header_button_01 = {
+									name = "unit_header_button"
+									layoutpolicy_horizontal = expanding
+									size = { -1 30 }
+				
+									using = bg_paper_card
+									using = bg_card_header_01_military
+		
+		
+									tooltipwidget = {
+										basicfunctionaltooltip = {}
+									}
+		
+									text_single = {
+										text = "CREATE_UNIT_TEMPLATE"
+										autoresize = no
+										align = center
+										size = { 100% 30 }
+									}
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "CREATE_UNIT_TEMPLATE"
+										on_action = "[ShowCreateUnitTemplateLateralView(Not(ArmyBuilderLateralView.IsNavy))]"
+									}
+								}
+							}
+
+							
+						}
+					}
+
+					blockoverride "scroll_list_layout" {
+						vbox = {
+							using = layoutpolicy_expanding
+
+							fixedgridbox = {
+								addcolumn = 98%
+								addrow = 85
+								datamodel = "[ArmyBuilderLateralView.GetUnitTemplates]"
+								item = {
+									UnitTemplateCard = {}
+								}
+							}
+
+							fixedgridbox = {
+								addcolumn = 100%
+								addrow = 85
+								datamodel = "[ArmyBuilderLateralView.GetArmyTypes]"
+								item = {
+									widget = {
+										size = { 100% 85 }
+										widget = {
+											size = { 99% 74 }
+											parentanchor = center
+			
+											hbox = {
+												margin = { 1 5 }
+			
+												hbox = {
+													layoutpolicy_horizontal = expanding
+													using = bg_paper_card
+													margin = {3 0}
+			
+													widget = {
+														layoutpolicy_vertical = expanding
+														size = {50 -1}
+			
+														datacontext = "[UnitTypeItem.GetUnitType]"
+			
+														masked_threecolor_icon = {
+															visible = "[Not(UnitTypeItem.GetUnitType.GetCategory.IsArmy)]"
+															texture = "[GetSubunitTypeIllustration(UnitTypeItem.GetUnitType, ArmyBuilderLateralView.GetPlayer.GetCulture)]"
+															size = { 100% 100% }
+															texture_density = 2
+															spriteborder = { 0 0 }
+															frame_grid = {3 1}
+															frame = 2
+															mask =  "[GetSubunitTypeIllustrationMask(UnitTypeItem.GetUnitType, ArmyBuilderLateralView.GetPlayer.GetCulture)]"
+															primary_color = "[GetCountryUnitPrimaryColor(ArmyBuilderLateralView.GetPlayer, UnitTypeItem.GetUnitType)]"
+															secondary_color = "[GetCountryUnitSecondaryColor(ArmyBuilderLateralView.GetPlayer, UnitTypeItem.GetUnitType)]"
+															tertiary_color = "[GetCountryUnitTertiaryColor(ArmyBuilderLateralView.GetPlayer, UnitTypeItem.GetUnitType)]"
+														}
+														masked_threecolor_icon = {
+															visible = "[And(UnitTypeItem.GetUnitType.GetCategory.IsArmy, Not(UnitTypeItem.GetUnitType.HasStat('artillery_barrage')))]"
+															texture = "[GetSubunitTypeIllustration(UnitTypeItem.GetUnitType, ArmyBuilderLateralView.GetPlayer.GetCulture)]"
+															size = { 100% 100% }
+															texture_density = 2
+															spriteborder = { 0 0 }
+															frame_grid = {3 1}
+															frame = 1
+															mask =  "[GetSubunitTypeIllustrationMask(UnitTypeItem.GetUnitType, ArmyBuilderLateralView.GetPlayer.GetCulture)]"
+															primary_color = "[GetCountryUnitPrimaryColor(ArmyBuilderLateralView.GetPlayer, UnitTypeItem.GetUnitType)]"
+															secondary_color = "[GetCountryUnitSecondaryColor(ArmyBuilderLateralView.GetPlayer, UnitTypeItem.GetUnitType)]"
+															tertiary_color = "[GetCountryUnitTertiaryColor(ArmyBuilderLateralView.GetPlayer, UnitTypeItem.GetUnitType)]"
+														}
+														masked_threecolor_icon = {
+															visible = "[And(UnitTypeItem.GetUnitType.GetCategory.IsArmy, UnitTypeItem.GetUnitType.HasStat('artillery_barrage'))]"
+															texture = "[GetSubunitTypeIllustration(UnitTypeItem.GetUnitType, ArmyBuilderLateralView.GetPlayer.GetCulture)]"
+															size = { 100% 100% }
+															texture_density = 2
+															spriteborder = { 0 0 }
+															frame_grid = {3 1}
+															frame = 2
+															mask =  "[GetSubunitTypeIllustrationMask(UnitTypeItem.GetUnitType, ArmyBuilderLateralView.GetPlayer.GetCulture)]"
+															primary_color = "[GetCountryUnitPrimaryColor(ArmyBuilderLateralView.GetPlayer, UnitTypeItem.GetUnitType)]"
+															secondary_color = "[GetCountryUnitSecondaryColor(ArmyBuilderLateralView.GetPlayer, UnitTypeItem.GetUnitType)]"
+															tertiary_color = "[GetCountryUnitTertiaryColor(ArmyBuilderLateralView.GetPlayer, UnitTypeItem.GetUnitType)]"
+														}
+														icon = {
+															ignore_layout = yes
+															parentanchor = center
+															size = {100% 100%}
+															texture = "gfx/interface/component_masks/mask_events_texture_full.dds"
+															spriteType = corneredstretched
+															spriteborder = {60 60}
+															texture_density = 2
+															alpha = 0.6
+															modify_texture = {
+																using = color_dark_brown_texture
+															}
+														}
+			
+														card_header_button_04 = {
+															size = { 100% 100% }
+			
+															tooltipwidget = {
+																using = SubUnitType_tooltip
+															}
+															action_tooltip = {
+																click_type = left
+																click_mode = single
+																title = "SHOW_UNIT_TYPE"
+																on_action = "[ShowUnitType(UnitTypeItem.GetUnitType)]"
+															}
+															icon = {
+																size = { 100% 100% }
+																visible = "[UnitTypeItem.IsSpecialRegiment]"
+																texture = "gfx/interface/component_tiles/specialregiment_frame_gold.dds"
+															}
+														}	
+													}
+			
+													vbox = {
+														layoutpolicy_horizontal = expanding
+			
+														widget = {
+															layoutpolicy_horizontal = expanding
+															size = { -1 65 }
+			
+															clickable_header_card = {
+																parentanchor = vcenter
+			
+																blockoverride "bg_card_header_01_bg" {
+																	background = {
+																		visible = "[UnitTypeItem.GetUnitType.GetCategory.IsArmy]"
+																		using = bg_card_header_01_default
+																		alpha = 0.3
+																	}
+														
+																	background = {
+																		visible = "[Not(UnitTypeItem.GetUnitType.GetCategory.IsArmy)]"
+																		using = bg_card_header_01_default
+																		alpha = 0.5
+																		blockoverride "header_color" {
+																		using = color_military_texture
+																		}
+																	}
+																}
+																blockoverride "card_bg" {}
+																		
+																blockoverride "clickable_header_card_size"{
+																	size = { 100% 65 }
+																}
+																blockoverride "header_size" {
+																	size = { -1 35 }
+																}
+																blockoverride "header_button" {
+			
+																	hbox = {
+																		margin_left = 1
+																		spacing = 1
+																		widget = {
+																			layoutpolicy_horizontal = expanding
+																			size = { -1 35 }
+																			using = bg_card_header_01
+																			blockoverride "bg_card_header_01_bg" {
+																				background = {
+																					using = bg_card_header_01_default
+																					alpha = 0.7
+																				}
+																			}
+																			
+																			blockoverride "header_pattern_texture_density" {texture_density = 1.75}
+																			blockoverride "header_pattern_alpha" { alpha = 0.5 }
+			
+																			hbox = {
+																				margin = { 4 0 }
+																				margin_left = 12
+																				spacing = 5
+			
+																				datacontext = "[UnitTypeItem.GetUnitType]"
+																				tooltipwidget = {
+																					using = SubUnitType_tooltip
+																				}
+			
+																				# UNIT CATEGORY ICON
+																				icon = {
+																					visible = "[Not(UnitTypeItem.IsLevy)]"
+																					size = {25 25}
+			
+																					datacontext = "[SubUnitType.GetCategory]"
+			
+																					using = bg_circle_piechart
+																					texture = "[GetUnitIcon(SubUnitType.Self)]"
+																					texture_density = 2
+																				}
+			
+																				text_single = {
+																					maximumsize = {250 20}
+																					align = left|nobaseline
+																					using = Font_Type_Headers
+																					using = Font_Size_Small
+																					alwaystransparent = no
+																					text = "[UnitTypeItem.GetName]"
+																				}
+								
+																				expand = {}
+
+																				icon = {
+																					size = { 35 35 }
+																					texture = "[GetAgeIcon(SubUnitType.GetAge)]"
+																					datacontext = "[SubUnitType.GetAge]"
+																					tooltipwidget = {
+																						using = Age_tooltip
+																					}
+																				}
+			
+																				button_square_minus = {
+																					size = { 21 21 }
+																					blockoverride "square_icon_size" {
+																						size = {13 13}
+																					}
+																					visible = "[UnitTypeItem.RecruitFilteredVisible]"
+																					enabled = "[UnitTypeItem.CanCancelFiltered]"
+																					tooltipwidget = {
+																						ContextualTooltipType = {
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+																								}
+																							}
+			
+																							blockoverride "title_text" {
+																								text = "CANCEL_RECRUIT_IN_LOCATION_FILTERED"
+																							}
+			
+																							blockoverride "concept_link" {
+																								raw_text = "[unit_type|e] | [UnitTypeItem.GetUnitType.GetCategory.GetName]"
+																							}
+																							
+																							blockoverride "tooltip_content" {
+																								TooltipTextBlock = {
+																									blockoverride "text" {
+																										text = "[UnitTypeItem.CanCancelFilteredTT]"
+																									}
+																								}
+																							}
+																						}
+																					}
+																					action_tooltip = {
+																						click_type = left
+																						click_mode = single
+																	
+																						description = "[UnitTypeItem.CanRecruitTT]"
+																						title = "CANCEL_RECRUIT_IN_LOCATION_FILTERED"
+																						on_action = "[UnitTypeItem.CancelFiltered]"
+																						enabled = "[UnitTypeItem.CanCancelFiltered]"
+																					}
+																				}
+			
+																				widget = {
+																					size = { 70 20 }
+																					hbox = {
+																						expand = {}
+																						text_single = {
+																							maximumsize = { 50 20 }
+																							align = center|nobaseline
+																							text = "[UnitTypeItem.GetNumExisting]"
+																							default_format = "#important_number"
+																							tooltipwidget = {
+																								SimpleContextualTooltipType = {
+																									blockoverride "title_icon" {
+																										icon = {
+																											using = tooltip_title_icon_size
+																											texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+																										}
+																									}
+														
+																									blockoverride "concept_link" {
+																										raw_text = "[unit_type|e] | [UnitTypeItem.GetUnitType.GetCategory.GetName]"
+																									}
+																									datacontext = "[UnitTypeItem]"
+																									lowpriotextcontext = "RECRUITMENT_CURRENT_EXISTING_SIMPLE"
+														
+																								}
+																							}	
+																							fontsize = 14
+																						}
+				
+																						text_single = {
+																							visible = "[GreaterThan_int32(UnitTypeItem.GetNumInProgress, '(int32)0')]"
+																							maximumsize = { 40 20 }
+																							align = center|nobaseline
+																							raw_text = "([UnitTypeItem.GetNumInProgress|0+=])"
+																							tooltipwidget = {
+																								SimpleContextualTooltipType = {
+																									blockoverride "title_icon" {
+																										icon = {
+																											using = tooltip_title_icon_size
+																											texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+																										}
+																									}
+														
+																									blockoverride "concept_link" {
+																										raw_text = "[unit_type|e] | [UnitTypeItem.GetUnitType.GetCategory.GetName]"
+																									}
+																									
+																									lowpriotextcontext = "RECRUITMENT_IN_PROGRESS_SIMPLE"
+														
+																								}
+																							}
+																							default_format = "#important_number"
+																							fontsize = 14
+																						}
+				
+																						text_single = {
+																							visible = "[Not(EqualTo_int32('(int32)-1', UnitTypeItem.GetNumPossible))]"
+																							maximumsize = { 10 20 }
+																							align = center|nobaseline
+																							raw_text = "/"
+																							default_format = "#important_number"
+																							fontsize = 14
+																						}
+				
+																						text_single = {
+																							visible = "[Not( EqualTo_int32('(int32)-1',UnitTypeItem.GetNumPossible) )]"
+																							maximumsize = { 50 20 }
+																							align = center|nobaseline
+																							text = "[UnitTypeItem.GetNumPossible]"
+																							default_format = "#important_number"
+																							tooltipwidget = {
+																								SimpleContextualTooltipType = {
+																									blockoverride "title_icon_texture" {
+																										texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+																									}
+														
+																									blockoverride "concept_link" {
+																										raw_text = "[unit_type|e] | [UnitTypeItem.GetUnitType.GetCategory.GetName]"
+																									}
+																									
+																									lowpriotextcontext = "RECRUITMENT_TOTAL_POSSIBLE_SIMPLE"
+
+																									tooltipmeta = {
+																										game_concept = [unit_type|e]
+																										texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+																									}														
+																								}
+																							}
+																							fontsize = 14
+																						}
+			
+																						expand = {}
+																					}
+																				}
+			
+																
+																				button_square_plus = {
+																					size = { 21 21 }
+																					blockoverride "square_icon_size" {
+																						size = {13 13}
+																					}
+																					visible = "[UnitTypeItem.RecruitFilteredVisible]"
+																					enabled = "[UnitTypeItem.CanRecruitFiltered]"
+																					tooltipwidget = {
+																						ContextualTooltipType = {
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+																								}
+																							}
+			
+																							blockoverride "title_text" {
+																								text = "RECRUIT_IN_LOCATION_FILTERED"
+																							}
+			
+																							blockoverride "concept_link" {
+																								raw_text = "[unit_type|e] | [UnitTypeItem.GetUnitType.GetCategory.GetName]"
+																							}
+																							
+																							blockoverride "tooltip_content" {
+																								TooltipTextBlock = {
+																									blockoverride "text" {
+																										text = "[UnitTypeItem.CanRecruitFilteredTT]"
+																									}
+																								}
+																							}
+																						}
+																					}
+																					action_tooltip = {
+																						click_type = left
+																						click_mode = single
+																						on_action = "[UnitTypeItem.RecruitFiltered]"
+																						enabled = "[UnitTypeItem.CanRecruitFiltered]"
+																						conditions = "[UnitTypeItem.CanRecruitTT]"
+																						title = "RECRUIT_IN_LOCATION_FILTERED"
+																					}
+																					action_tooltip = {
+																						click_modifier = shift
+																						click_type = left
+																						title = "UNIT_RECRUIT_ACTION_SHIFT_TT"
+																						on_action = "[UnitTypeItem.RecruitFiltered]"
+																						enabled = "[UnitTypeItem.CanRecruitFiltered]"
+																						conditions = "[UnitTypeItem.CanRecruitTT]"
+																					}
+																					action_tooltip = {
+																						click_modifier = ctrl
+																						click_type = left
+																						title = "UNIT_RECRUIT_ACTION_CTRL_TT"
+																						on_action = "[UnitTypeItem.RecruitFiltered]"
+																						enabled = "[UnitTypeItem.CanRecruitFiltered]"
+																						conditions = "[UnitTypeItem.CanRecruitTT]"
+																					}
+																				}
+			
+																				widget = {
+																					size = {27 27}
+																					visible = "[Not(UnitTypeItem.RecruitFilteredVisible)]"
+																					navigational_button_alt = {
+																						using = bg_circle_alt_brown
+																						parentanchor = center
+																						size = { 100% 100% }
+																						blockoverride "button_icon_stretch_sprite" {}
+																						blockoverride "icon_texture" {
+																							texture = "gfx/interface/icons/flat_icons/building_panel/build_button.dds"
+																							texture_density = 2
+																							using = icon_gold_texture_alt
+																						}
+																						blockoverride "icon_size" {
+																							size = { 60% 60% }
+																						}
+																						tooltipwidget = {
+																							BasicFunctionalTooltip = {
+																							}
+																						}
+																						# Standard button
+																						action_tooltip = {
+																							click_type = left
+																							click_mode = single
+																		
+																							visible = "[And(Not(UnitTypeItem.IsLevy), Not(EqualTo_int32(Player.GetOwnedLocationCount, '(int32)1')))]"
+																							description = "[UnitTypeItem.CanRecruitTT]"
+																							title = "RECRUIT_ARMY"
+																							on_action = "[SelectLocationToRecruit(UnitTypeItem.GetUnitType, ArmyBuilderLateralView.GetUnitToMergeWith)]"
+																						}
+																						enabled = "[UnitTypeItem.EnableUIClick]"
+									
+									
+																						# One-location Country
+																						action_tooltip = {
+																							click_type = left
+																							click_mode = single
+																		
+																							visible = "[And(Not(UnitTypeItem.IsLevy), EqualTo_int32(Player.GetOwnedLocationCount, '(int32)1'))]"
+																							enabled = "[And(And(And(UnitTypeItem.CanAffordGoldCost, UnitTypeItem.CanAffordManpowerCost), UnitTypeItem.CanAffordSailorsCost), UnitTypeItem.CanRecruit)]"
+																							description = "[UnitTypeItem.CanRecruitTT]"
+																							title = "RECRUIT_ARMY"
+																							on_action = "[UnitTypeItem.Recruit]"
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+						
+																blockoverride "bottom_content" {
+																	widget = {
+																		size = {100% 100%}
+																		hbox = {
+																			margin = { 5 0 }
+																			hbox = {
+																				visible = "[UnitTypeItem.GetUnitType.GetCategory.IsArmy]"
+																				spacing = 2
+																				minimumsize = { 70 20 }
+																				margin = { 2 0 }
+																				tooltipwidget = {
+																					SimpleContextualTooltipType = {
+																						blockoverride "title_icon" {
+																							icon = {
+																								using = tooltip_title_icon_size
+																								texture = "gfx/interface/icons/unit_category/total_strength.dds"
+																							}
+																						}
+																						blockoverride "concept_link" {
+																							raw_text = "[maximum_strength|e]"
+																						}
+																						
+																						lowpriotextcontext = "MAXIMUM_STRENGTH_SIMPLE_2"
+																					}
+																				}
+																										
+							
+																				text_single = {
+																					maximumsize = { 60 20 }
+																					align = center
+																					text = "[UnitTypeItem.GetMaxStrength|0]"
+																					fontsize = 13
+																					default_format = "#important_number"
+																				}
+																				icon = {
+																					size = { 22 22 }
+																					texture = "gfx/interface/icons/unit_category/total_strength.dds"
+																					texture_density = 2
+																				}
+																			}
+			
+																			hbox = {
+																				visible = "[Not(UnitTypeItem.GetUnitType.GetCategory.IsArmy)]"
+																				spacing = 2
+																				minimumsize = { 70 20 }
+			
+																				hbox = {
+																					maximumsize = {40 -1}
+																					minimumsize = {40 -1}
+																					spacing = 2
+																					tooltipwidget = {
+																						ContextualTooltipType = {
+																							blockoverride "title_text" {
+																								text = "NAVAL_UNIT_CANNONS"
+																							}
+			
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "gfx/interface/icons/unit_types/cannons.dds"
+																								}
+																							}
+												
+																							blockoverride "concept_link" {
+																								raw_text = "[cannons|e]"
+																							}
+																							blockoverride "tooltip_content" {
+																								block "tooltip_content" {
+																									TooltipStringPairList = {
+																										textcontext = "[UnitTypeItem.GetUnitType.GetStatTooltip('cannons')]" 
+																									}
+																								}
+																							}
+																						}
+																					}			
+							
+																					text_single = {
+																						size = { 20 20 }
+																						autoresize = no
+																						align = center
+																						text = "[UnitTypeItem.GetUnitType.GetStat('cannons')]"
+																						fontsize = 13
+																						default_format = "#important_number"
+																					}
+							
+																					icon = {
+																						size = { 22 22 }
+																						texture = "gfx/interface/icons/unit_types/cannons.dds"
+							
+																						glow = {
+																							name = "drop_shadow"
+																							glow_radius = 3
+																							color = {0.0 0.0 0.0 1.0}
+																							alpha = 0.3
+																						}
+																					}
+																					divider_flavor_01 = { 
+																						blockoverride "divider_margin" {}
+																						size = {9 -1}
+																					}
+																				}
+			
+																				hbox = {
+																					maximumsize = {40 -1}
+																					minimumsize = {40 -1}
+																					spacing = 2
+																					tooltipwidget = {
+																						ContextualTooltipType = {
+																							blockoverride "title_text" {
+																								text = "NAVAL_UNIT_HULL_SIZE"
+																							}
+			
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "gfx/interface/icons/unit_types/hull_size.dds"
+																								}
+																							}
+												
+																							blockoverride "concept_link" {
+																								raw_text = "[hull_size|e]"
+																							}
+																							blockoverride "tooltip_content" {
+																								block "tooltip_content" {
+																									TooltipStringPairList = {
+																										textcontext = "[UnitTypeItem.GetUnitType.GetStatTooltip('hull_size')]" 
+																									}
+																								}
+																							}
+																						}
+																					}			
+							
+																					text_single = {
+																						size = { 20 20 }
+																						autoresize = no
+																						align = center
+																						text = "[UnitTypeItem.GetUnitType.GetStat('hull_size')]"
+																						fontsize = 13
+																						default_format = "#important_number"
+																					}
+							
+																					icon = {
+																						size = { 22 22 }
+																						texture = "gfx/interface/icons/unit_types/hull_size.dds"
+																						glow = {
+																							name = "drop_shadow"
+																							glow_radius = 3
+																							color = {0.0 0.0 0.0 1.0}
+																							alpha = 0.3
+																						}
+																					}
+																					divider_flavor_01 = { 
+																						blockoverride "divider_margin" {}
+																						size = {9 -1}
+																					}
+																				}
+																			}
+			
+																			divider_flavor_01 = { 
+																				visible = "[UnitTypeItem.GetUnitType.GetCategory.IsArmy]"
+																				blockoverride "divider_margin" {}
+																				size = {9 -1}
+																			}
+			
+																			hbox = {
+																				visible = "[UnitTypeItem.GetUnitType.GetCategory.IsArmy]"
+																				datamodel = "[DataModelFirst(UnitTypeItem.GetUniqueStats, '(int32)3')]"
+																				spacing = 2
+								
+																				item = {
+																					widget = {
+																						size = { 80 20 }
+																						hbox = {
+																							spacing = 3
+			
+																							expand = {}
+			
+																							tooltipwidget = {
+																								ContextualTooltipType = {
+																									blockoverride "title_text" {
+																										text = "[UniqueStatItem.GetName]"
+																									}
+																									blockoverride "title_icon" {
+																										icon = {
+																											using = tooltip_title_icon_size
+																											texture = "[UniqueStatItem.GetIcon]"
+																										}
+																									}
+																									
+																									blockoverride "tooltip_content" {
+																										TooltipTextBlock = {
+																											blockoverride "text" {
+																												text = "[UniqueStatItem.GetFirst]"
+																											}
+																										}
+																										TooltipTextBlock = {
+																											blockoverride "text" {
+																												text = "[UniqueStatItem.GetDesc]"
+																											}
+																										}
+																									}
+																								}
+																							}
+			
+																							text_single = {
+																								fontsize = 13
+																								maximumsize = { 40 20 }
+																								align = nobaseline
+																								text = "[UniqueStatItem.GetImpact]"
+																							}
+			
+																							icon = {
+																								size = { 16 16 }
+																								texture = "[UniqueStatItem.GetIcon]"
+																							}
+			
+																							expand = {}
+			
+																							divider_flavor_01 = { 
+																								blockoverride "divider_margin" {}
+																								size = {9 -1}
+																							}
+																						}
+																					}
+																				}
+																			}
+			
+																			hbox = {
+																				visible = "[Not(UnitTypeItem.GetUnitType.GetCategory.IsArmy)]"
+																				datamodel = "[DataModelFirst(UnitTypeItem.GetUniqueStats, '(int32)4')]"
+																				spacing = 2
+								
+																				item = {
+																					widget = {
+																						size = { 60 20 }
+																						hbox = {
+																							spacing = 2
+			
+																							expand = {}
+			
+																							tooltipwidget = {
+																								ContextualTooltipType = {
+																									blockoverride "title_text" {
+																										text = "[UniqueStatItem.GetName]"
+																									}
+																									blockoverride "title_icon" {
+																										icon = {
+																											using = tooltip_title_icon_size
+																											texture = "[UniqueStatItem.GetIcon]"
+																										}
+																									}
+																									
+																									blockoverride "tooltip_content" {
+																										TooltipTextBlock = {
+																											blockoverride "text" {
+																												text = "[UniqueStatItem.GetFirst]"
+																											}
+																										}
+																										TooltipTextBlock = {
+																											blockoverride "text" {
+																												text = "[UniqueStatItem.GetDesc]"
+																											}
+																										}
+																									}
+																								}
+																							}
+			
+																							text_single = {
+																								fontsize = 13
+																								maximumsize = { 30 20 }
+																								align = nobaseline
+																								text = "[UniqueStatItem.GetImpact]"
+																							}
+			
+																							icon = {
+																								size = { 16 16 }
+																								texture = "[UniqueStatItem.GetIcon]"
+																							}
+			
+																							expand = {}
+			
+																							divider_flavor_01 = { 
+																								blockoverride "divider_margin" {}
+																								size = {9 -1}
+																							}
+																						}
+																					}
+																				}
+																			}
+			
+																			expand = {}
+			
+																			hbox = {
+																				text_single = {
+																					using = layoutpolicy_expanding
+																					size = { 60 20 }
+																					minimumsize = { 25 20 }
+																					autoresize = yes
+																					align = right
+																					text = "[UnitTypeItem.GetGoldCost|2]"
+																					fontsize = 13
+																				}
+																				hbox = {
+																					spacing = 2
+																					margin = { 8 0 }
+																					tooltipwidget = {
+																						SimpleContextualTooltipType = {
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "gfx/interface/icons/text_icons/manpower.dds"
+																								}
+																							}
+												
+																							blockoverride "concept_link" {
+																								raw_text = "[manpower|e]"
+																							}
+																							
+																							lowpriotextcontext = "RECRUIT_ARMY_MAN_SIMPLE"
+												
+																						}
+																					}													
+																					visible = "[UnitTypeItem.GetUnitType.GetCategory.IsArmy]"
+						
+																					text_single = {
+																						using = layoutpolicy_expanding
+																						size = { 60 20 }
+																						minimumsize = { 25 20 }
+																						autoresize = yes
+																						align = right
+																						fontsize = 13
+																						raw_text = "[UnitTypeItem.GetManpowerCost|0]@manpower!"
+																					}
+																				}
+						
+																				hbox = {
+																					spacing = 2
+																					margin = { 8 0 }
+																					tooltipwidget = {
+																						SimpleContextualTooltipType = {
+																							blockoverride "title_icon" {
+																								icon = {
+																									using = tooltip_title_icon_size
+																									texture = "gfx/interface/icons/text_icons/sailors.dds"
+																								}
+																							}
+												
+																							blockoverride "concept_link" {
+																								raw_text = "[sailors|e]"
+																							}
+																							
+																							lowpriotextcontext = "RECRUIT_NAVY_SAILORS_SIMPLE"
+												
+																						}
+																					}
+						
+																					visible = "[Not(UnitTypeItem.GetUnitType.GetCategory.IsArmy)]"
+																					text_single = {
+																						using = layoutpolicy_expanding
+																						size = { 60 20 }
+																						minimumsize = { 25 20 }
+																						autoresize = yes
+																						align = right
+																						fontsize = 13
+																						raw_text = "[UnitTypeItem.GetSailorsCost|0]@sailors!"
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+			
+														# widget = {
+														# 	visible = "[UnitTypeItem.RecruitFilteredVisible]"
+														# 	layoutpolicy_horizontal = expanding
+														# 	size = {-1 34}
+			
+														# 	hbox = {
+														# 		margin_right = 8
+														# 		expand = {}
+														# 		hbox = {
+														# 			margin_left = 15
+														# 			layoutpolicy_horizontal = expanding
+														# 			background = {
+														# 				using = tile_card_bg_texture
+														# 				using = color_mid_blue
+														# 			}
+			
+														# 			text_single = {
+														# 				maximumsize = {300 30}
+														# 				text = "RECRUIT_IN_LOCATION_FILTERED"
+														# 				fontsize = 13
+														# 			}
+			
+														# 			expand = {}
+														# 			widget = {
+														# 				size = {100 30}
+														# 				hbox = {
+														# 					margin = { 5 5 }
+														# 					background = {
+														# 						using = tile_card_bg_texture
+														# 						using = color_light_blue
+														# 					}
+															
+														# 					ui_direction_button = {
+														# 						enabled = "[UnitTypeItem.CanCancelFiltered]"
+														# 						tooltipwidget = {
+														# 							ContextualTooltipType = {
+														# 								blockoverride "title_icon" {
+														# 									icon = {
+														# 										using = tooltip_title_icon_size
+														# 										texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+														# 									}
+														# 								}
+			
+														# 								blockoverride "title_text" {
+														# 									text = "CANCEL_RECRUIT_IN_LOCATION_FILTERED"
+														# 								}
+			
+														# 								blockoverride "concept_link" {
+														# 									raw_text = "[unit_type|e] | [UnitTypeItem.GetUnitType.GetCategory.GetName]"
+														# 								}
+																						
+														# 								blockoverride "tooltip_content" {
+														# 									TooltipTextBlock = {
+														# 										blockoverride "text" {
+														# 											text = "[UnitTypeItem.CanCancelFilteredTT]"
+														# 										}
+														# 									}
+														# 								}
+														# 							}
+														# 						}
+														# 						action_tooltip = {
+														# 							click_type = left
+														# 							click_mode = single
+																
+														# 							description = "[UnitTypeItem.CanRecruitTT]"
+														# 							title = "CANCEL_RECRUIT_IN_LOCATION_FILTERED"
+														# 							on_action = "[UnitTypeItem.CancelFiltered]"
+														# 							enabled = "[UnitTypeItem.CanCancelFiltered]"
+														# 						}
+														# 						size = { 15 15 }
+														# 						blockoverride "button_texture" {
+														# 							texture = "gfx/interface/buttons/flats/minus_button.dds"
+														# 						}
+														# 						using = bg_circle
+														# 					}
+			
+														# 					widget = {
+														# 						size = {60 20}
+														# 						hbox = {
+														# 							text_single = {
+														# 								size = { 30 20 }
+														# 								autoresize = no
+														# 								raw_text = "[UnitTypeItem.GetNumExisting]"
+														# 								align = center|nobaseline
+														# 								tooltipwidget = {
+														# 									SimpleContextualTooltipType = {
+														# 										blockoverride "title_icon" {
+														# 											icon = {
+														# 												using = tooltip_title_icon_size
+														# 												texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+														# 											}
+														# 										}
+													
+														# 										blockoverride "concept_link" {
+														# 											raw_text = "[unit_type|e] | [UnitTypeItem.GetUnitType.GetCategory.GetName]"
+														# 										}
+														# 										datacontext = "[UnitTypeItem]"
+														# 										lowpriotextcontext = "RECRUITMENT_CURRENT_EXISTING_SIMPLE"
+													
+														# 									}
+														# 								}			
+														# 							}
+			
+														# 							text_single = {
+														# 								size = { 30 20 }
+														# 								autoresize = no
+														# 								visible = "[GreaterThan_int32(UnitTypeItem.GetNumInProgress, '(int32)0')]"
+														# 								raw_text = "([UnitTypeItem.GetNumInProgress|0+=])"
+														# 								align = left|nobaseline
+														# 								tooltipwidget = {
+														# 									SimpleContextualTooltipType = {
+														# 										blockoverride "title_icon" {
+														# 											icon = {
+														# 												using = tooltip_title_icon_size
+														# 												texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+														# 											}
+														# 										}
+													
+														# 										blockoverride "concept_link" {
+														# 											raw_text = "[unit_type|e] | [UnitTypeItem.GetUnitType.GetCategory.GetName]"
+														# 										}
+														# 										datacontext = "[UnitTypeItem]"
+														# 										lowpriotextcontext = "CURRENT_PROGRESS_EXISTING_SIMPLE"
+													
+														# 									}
+														# 								}
+														# 							}
+														# 						}
+														# 					}
+															
+														# 					ui_direction_button = {
+														# 						enabled = "[UnitTypeItem.CanRecruitFiltered]"
+														# 						tooltipwidget = {
+														# 							ContextualTooltipType = {
+														# 								blockoverride "title_icon" {
+														# 									icon = {
+														# 										using = tooltip_title_icon_size
+														# 										texture = "[GetUnitIcon(UnitTypeItem.GetUnitType)]"
+														# 									}
+														# 								}
+			
+														# 								blockoverride "title_text" {
+														# 									text = "RECRUIT_IN_LOCATION_FILTERED"
+														# 								}
+			
+														# 								blockoverride "concept_link" {
+														# 									raw_text = "[unit_type|e] | [UnitTypeItem.GetUnitType.GetCategory.GetName]"
+														# 								}
+																						
+														# 								blockoverride "tooltip_content" {
+														# 									TooltipTextBlock = {
+														# 										blockoverride "text" {
+														# 											text = "[UnitTypeItem.CanRecruitFilteredTT]"
+														# 										}
+														# 									}
+														# 								}
+														# 							}
+														# 						}
+														# 						action_tooltip = {
+														# 							click_type = left
+														# 							click_mode = single
+																
+														# 							description = "[UnitTypeItem.CanRecruitTT]"
+														# 							title = "RECRUIT_IN_LOCATION_FILTERED"
+														# 							on_action = "[UnitTypeItem.RecruitFiltered]"
+														# 							enabled = "[UnitTypeItem.CanRecruitFiltered]"	
+														# 						}
+																				
+														# 						size = { 15 15 }
+														# 						blockoverride "button_texture" {
+														# 							texture = "gfx/interface/buttons/flats/plus_button.dds"
+														# 						}
+														# 						using = bg_circle
+														# 					}
+														# 				}
+														# 			}
+														# 		}
+														# 	}
+														# }
+			
+														# army_constructions = {}
+													}
+												}
+											}
+			
+											widget = {
+												size = { 100% 100% }
+												using = bg_cabinet_card_frame
+												ignore_layout = yes
+											}
+										}
+									}
+								}
+							}
+
+							expand = {}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+# types ArmyTypes {
+# 	type army_constructions = fixedgridbox {
+# 		layoutpolicy_horizontal = expanding
+# 		size = { -1 -1 }
+# 		addcolumn = 100%
+# 		addrow = 30
+# 		datamodel_reuse_widgets = yes
+# 		resizetofit = yes
+# 		datamodel = "[UnitTypeItem.GetConstructions]"
+# 		item = {
+# 			widget = {
+# 				size = { 100% 40 }
+
+# 				background = {
+# 					using = tile_card_bg_texture
+# 					alpha = 1
+# 					using = color_mid_blue
+# 				}
+
+# 				hbox = {
+# 					using = layoutpolicy_expanding
+# 					spacing = 5
+
+# 					margin = { 5 4 }
+# 					margin_left = 10
+
+# 					background = {
+# 						using = tile_card_bg_texture
+# 						alpha = 1
+# 						using = color_mid_blue
+# 					}
+
+# 					text_single = {
+# 						layoutpolicy_horizontal = expanding
+# 						autoresize = no
+# 						alwaystransparent = no
+# 						align = left|nobaseline
+# 						using = Font_Size_Small
+# 						text = "[ConstructionItem.GetConstruction.GetLocation.GetName]"
+# 					}
+
+# 					margin_widget = {
+# 						size = { 100 30 }
+# 						margin_left = 5
+# 						margin_right = 5
+
+# 						background = {
+# 							using = tile_card_bg_texture
+# 							using = color_light_blue
+# 						}
+
+# 						ui_direction_button = {
+# 							enabled = "[CanCancelConstruction(ConstructionItem.GetConstruction.Self)]"
+# 							tooltip = "[GetCancelConstructionInfo(ConstructionItem.GetConstruction.Self)]"
+# 							onclick = "[CancelConstruction(ConstructionItem.GetConstruction.Self)]"
+# 							size = { 15 15 }
+# 							parentanchor = left|vcenter
+# 							blockoverride "button_texture" {
+# 								texture = "gfx/interface/buttons/flats/minus_button.dds"
+# 							}
+# 							using = bg_circle
+# 						}
+
+# 						flowcontainer = {
+# 							ignoreinvisible = yes
+# 							parentanchor = center
+# 							margin = { 5 0 }
+# 							spacing = 5
+
+# 							construction_marker = {
+# 								datacontext = "[ConstructionItem.GetConstruction]"
+# 								size = { 27 27 }
+# 								blockoverride "button_size" {
+# 									size = { 17 17 }
+# 								}
+# 								blockoverride "piechart_size" {
+# 									size = { 25 25 }
+# 								}
+# 							}
+
+# 							text_single = {
+# 								size = { 20 20 }
+# 								parentanchor = vcenter
+# 								autoresize = no
+# 								visible = "[GreaterThan_int32(ConstructionItem.GetNumInQueue, '(int32)0')]"
+# 								raw_text = "([ConstructionItem.GetNumInQueue|0+=])"
+# 								align = center|nobaseline
+# 								tooltipwidget = {
+# 									SimpleContextualTooltipType = {
+# 										blockoverride "title_icon" {
+# 											icon = {
+# 												using = tooltip_title_icon_size
+# 												texture = "gfx/interface/icons/unit_category/army_size.dds"
+# 											}
+# 										}
+
+# 										blockoverride "concept_link" {
+# 											raw_text = "[units|e]"
+# 										}
+										
+# 										lowpriotextcontext = "NUMBER_UNITS_IN_QUEUE_SIMPLE"
+
+# 									}
+# 								}
+# 							}
+# 						}
+
+# 						ui_direction_button = {
+# 							onclick = "[ConstructionItem.Recruit]"
+# 							enabled = "[ConstructionItem.CanRecruit]"
+# 							tooltip = "[ConstructionItem.CanRecruitTT]"
+# 							size = { 15 15 }
+# 							parentanchor = right|vcenter
+# 							blockoverride "button_texture" {
+# 								texture = "gfx/interface/buttons/flats/plus_button.dds"
+# 							}
+# 							using = bg_circle
+# 						}
+# 					}
+# 				}
+# 			}
+# 		}
+# 	}
+# }
