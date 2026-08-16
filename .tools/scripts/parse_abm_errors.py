@@ -11,6 +11,7 @@ Usage:
   parse_abm_errors.py --severity warning     # warnings only
   parse_abm_errors.py invalid --severity error
   parse_abm_errors.py --mod-only --severity error
+  parse_abm_errors.py --all --no-dedupe      # every entry, no mod filter, no dedupe
   parse_abm_errors.py --log /path/error.log --out /tmp/out.csv
 
 Output columns: timestamp, source, category, severity, file, line, count, message
@@ -28,8 +29,7 @@ Output columns: timestamp, source, category, severity, file, line, count, messag
 # IMPORTANT BEHAVIOUR / GOTCHAS
 #   * DEFAULT FILTER IS MOD-ONLY: with no keyword and no --severity, the script
 #     silently keeps only entries whose text contains "abm". To see EVERYTHING,
-#     pass a broad keyword (e.g. `""` won't work) or `--severity error|warning`.
-#     There is NO `--all` flag; use `--severity error` or a keyword to widen.
+#     pass `--all` (or `--severity error|warning`, or any keyword).
 #   * DEDUPE IS ON BY DEFAULT: identical `message` values are collapsed into one
 #     row with a `count` column. Use `--no-dedupe` for one row per occurrence.
 #     Dedupe ignores (blanks) the timestamp, since merged rows span many times.
@@ -43,6 +43,7 @@ Output columns: timestamp, source, category, severity, file, line, count, messag
 #
 # EXAMPLES (run from repo root, python3 .tools/scripts/parse_abm_errors.py ...)
 #   <no args>                                   # abm entries only, deduped
+#   --all --no-dedupe                           # every log entry, one row each
 #   "Unknown formatting tag" --out fmt.csv      # find/group the text-format bug
 #   modifier                                     # any entry containing "modifier"
 #   china --field file                           # keyword searched in file path
@@ -164,14 +165,16 @@ def main() -> None:
     ap.add_argument("--severity", choices=["error", "warning"], help="filter by severity")
     ap.add_argument("--mod-only", action="store_true",
                     help="only include entries mentioning the mod (abm)")
+    ap.add_argument("--all", action="store_true",
+                    help="include ALL entries (disable the default mod-only filter)")
     ap.add_argument("--no-dedupe", action="store_true",
                     help="list every occurrence instead of collapsing identical messages")
     ap.add_argument("--log", default=str(DEFAULT_LOG), help="path to error.log")
     ap.add_argument("--out", default=str(DEFAULT_OUT), help="output CSV path")
     args = ap.parse_args()
 
-    # Default to mod-only when no explicit filter is requested.
-    use_mod_filter = args.mod_only or (not args.keyword and not args.severity)
+    # Default to mod-only when no explicit filter is requested; --all opts out.
+    use_mod_filter = (not args.all) and (args.mod_only or (not args.keyword and not args.severity))
 
     rows = []
     for row in build_rows(Path(args.log)):
