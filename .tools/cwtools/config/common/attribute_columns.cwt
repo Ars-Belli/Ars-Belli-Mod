@@ -1,0 +1,89 @@
+types = {
+    type[attribute_column] = {
+        path = "game/common/attribute_columns"
+        path = "game/in_game/common/attribute_columns"
+        path = "game/main_menu/common/attribute_columns"
+        path = "game/loading_screen/common/attribute_columns"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            name = "$_desc"
+        }
+        unique = no
+        skip_root_key = {
+            any
+        }
+    }
+}
+
+attribute_column = {
+    ### links to a widget type in the gui files. This widget will be given an InteractionTarget to get data from, which is the object you're selecting, so you can use InteractionTarget.GetCountry if it's a country, InteractionTarget.GetCharacter etc
+    ## cardinality = 0..1
+    widget = scalar
+
+    ### the default column width
+    ## cardinality = 0..1
+    width = int
+
+    ### the height of the widget if it's fixed. allow for performance optimization when displaying a lot of items.
+    ## cardinality = 0..1
+    fixed_height = int
+
+    ### yes/no by default yes, but setting to no allows this column to soak up any remaining column width
+    ## cardinality = 0..1
+    is_constant_width = bool
+
+    ### yes/no set this if your widget includes the select_target_button so we don't create a duplicate
+    ## cardinality = 0..1
+    contains_select_target_button = bool
+
+    ### yes/no set this if you're using one widget for the entire row so we can get errors if more columns are accidentally specified
+    ## cardinality = 0..1
+    single_widget_for_row = bool
+
+    ### you can add 0..n sort headers for each column
+    ## cardinality = 0..inf
+    sort = {
+        ### a unique key for the sort column
+        ## cardinality = 0..1
+        sort_key = scalar
+
+        ### scripted text for getting the text to sort the column by. Text has access to all the scope variables that the rest of the script has, so root is the object being selected, then others like scope:actor, scope:recipient, scope:target etc are available
+        ## cardinality = 0..1
+        sort_text = {
+            ## cardinality = 0..inf
+            if = {
+                limit = single_alias_right[trigger_clause]
+
+                value = localisation
+            }
+
+            ## cardinality = 0..inf
+            else = {
+                value = localisation
+            }
+
+            ## cardinality = 0..1
+            value = localisation
+        }
+
+        ### scripted value for getting the value to sort the column by. Script has access to all the scope variables that the rest of the script has, so root is the object being selected, then others like scope:actor, scope:recipient, scope:target etc are available
+        ## cardinality = 0..1
+        sort_value = single_alias_right[formula]
+
+        ### the text to show in the tooltip for the sort headers
+        sort_by_tooltip_key = localisation
+
+        ## cardinality = 0..1
+        sort_by_acceptance = bool
+
+        ## cardinality = 0..1
+        sort_order = enum[attribute_column_sort_order]
+
+        ## cardinality = 0..1
+        sort_by_cost_button = scalar
+
+        ## cardinality = 0..1
+        sort_by_cost_type = scalar
+    }
+}

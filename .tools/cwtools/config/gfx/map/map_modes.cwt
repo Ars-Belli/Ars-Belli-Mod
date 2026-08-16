@@ -1,0 +1,228 @@
+types = {
+    type[map_mode] = {
+        path = "gfx/map/map_modes"
+        path = "game/in_game/map/map_modes"
+        path = "game/main_menu/map/map_modes"
+        path = "game/loading_screen/map/map_modes"
+        localisation = {
+            name = "mapmode_$_name"
+            desc = "mapmode_$"
+        }
+    }
+}
+
+map_mode = {
+    ### color mode (if not using a custom mode)
+    ## cardinality = 0..1
+    color_mode = enum[map_mode_color_mode]
+
+    category = enum[map_mode_category]
+
+    ## cardinality = 0..1
+    index = int
+
+    ## cardinality = 0..1
+    legend_key = {
+        desc = localisation
+
+        alias_name[color] = alias_match_left[color]
+    }
+
+    ## cardinality = 0..1
+    pop_type = <pop_type>
+
+    ### what to text to show on the map
+    ## cardinality = 0..1
+    small_map_names = enum[map_mode_name]
+    ### what to text to show on the map
+    ## cardinality = 0..1
+    medium_map_names = enum[map_mode_name]
+    ### what to text to show on the map
+    ## cardinality = 0..1
+    large_map_names = enum[map_mode_name]
+
+    ### tooltip context for small map
+    ## cardinality = 0..1
+    small_tooltip_context = enum[map_mode_tooltip_context]
+    ### tooltip context for small map
+    ## cardinality = 0..1
+    medium_tooltip_context = enum[map_mode_tooltip_context]
+    ### tooltip context for small map
+    ## cardinality = 0..1
+    large_tooltip_context = enum[map_mode_tooltip_context]
+
+    ### map color for location (root = location, scope:actor/recipient etc)
+    ## cardinality = 0..1
+    map_color = <named_color>
+    ### map color for location (root = location, scope:actor/recipient etc)
+    ## cardinality = 0..1
+    map_color = color_field
+    ### map color for location (root = location, scope:actor/recipient etc)
+    ## cardinality = 0..1
+    map_color = single_alias_right[scripted_color_clause]
+    ### map color for location (root = location, scope:actor/recipient etc)
+    ## cardinality = 0..1
+    map_color = $define_reference
+
+    ### striped map color for location (root = location, scope:actor/recipient etc)
+    ## cardinality = 0..1
+    secondary_map_color = <named_color>
+    ### striped map color for location (root = location, scope:actor/recipient etc)
+    ## cardinality = 0..1
+    secondary_map_color = color_field
+    ### striped map color for location (root = location, scope:actor/recipient etc)
+    ## cardinality = 0..1
+    secondary_map_color = single_alias_right[scripted_color_clause]
+    ### striped map color for location (root = location, scope:actor/recipient etc)
+    ## cardinality = 0..1
+    secondary_map_color = $define_reference
+
+    ### scripted key for the tooltip localization (root = location, scope:actor/recipient etc)
+    ## cardinality = 0..1
+    tooltip_key = {
+        #TODO
+    }
+
+    ### list of counters that will cause a refresh of the map colors and names
+    ## cardinality = 0..1
+    color_and_names_refresh_counters = {
+        ## cardinality = 0..inf
+        scalar
+    }
+
+    ### list of counters that will cause a refresh of the map colors only
+    ## cardinality = 0..1
+    color_refresh_counters = {
+        ## cardinality = 0..inf
+        scalar
+    }
+
+    ### whether or not colors will be refreshed when selection changes
+    ## cardinality = 0..1
+    refresh_colors_on_selection_change = bool
+
+    ### whether or not to fill impassable terrain in
+    ## cardinality = 0..1
+    fill_in_impassable = bool
+
+    ### show snow or not
+    ## cardinality = 0..1
+    enable_snow = bool
+
+    ### whether to show names of seas and oceans
+    ## cardinality = 0..1
+    enable_water_names = bool
+
+    ### whether or not to show rivers
+    ## cardinality = 0..1
+    enable_rivers = bool
+
+    ### whether or not to show highlights
+    ## cardinality = 0..1
+    use_highlight = bool
+
+    ### whether or not to show fog of war
+    ## cardinality = 0..1
+    use_fow = bool
+
+    ## cardinality = 0..1
+    pinned_by_default = bool
+
+    ## cardinality = 0..1
+    force_brown_in_flatmap = bool
+
+    ## cardinality = 0..1
+    always_toggle_macrobuilder = bool
+
+    ## cardinality = 0..1
+    always_toggle_location = bool
+
+    ## cardinality = 0..1
+    split_problematic_blobs = bool
+
+    ## cardinality = 0..1
+    update_once_per_tick_maximum = bool
+
+    ###  whether or not to allow allocating a hot key to this map mode
+    ## cardinality = 0..1
+    allow_allocate_hotkey = bool
+
+    ### slot used for this map mode in quick actions
+    ## cardinality = 0..1
+    quick_action_slot = int
+
+    ### what type of map lines to show (hard coded)
+    ## cardinality = 0..1
+    map_lines_mode = enum[map_mode_lines_mode]
+
+    ### overrides of border rendering
+    ## cardinality = 0..1
+    override_border_rendering = {}
+
+    ### map markers to allow or disallow
+    ## cardinality = 0..1
+    map_markers = {
+        ## cardinality = 0..1
+        all = bool
+
+        ## cardinality = 0..1
+        fort_marker = bool
+
+        ## cardinality = 0..1
+        port_marker = bool
+
+        ## cardinality = 0..1
+        unit_marker = bool
+
+        ## cardinality = 0..1
+        combat_marker = bool
+
+        ## cardinality = 0..1
+        combat_imminent_marker = bool
+
+        ## cardinality = 0..1
+        supply_depot_marker = bool
+
+        ## cardinality = 0..1
+        market_marker = bool
+
+        ## cardinality = 0..1
+        toll_marker = bool
+
+        ## cardinality = 0..1
+        dynasty_marker = bool
+
+        ## cardinality = 0..1
+        raw_goods_marker = bool
+
+        ## cardinality = 0..1
+        raw_goods_marker = bool
+
+        ## cardinality = 0..1
+        raw_goods_marker = bool
+
+        ## cardinality = 0..1
+        raw_goods_marker = bool
+
+        ## cardinality = 0..1
+        raw_goods_marker = bool
+
+        ## cardinality = 0..1
+        raw_goods_marker = bool
+    }
+
+    ### how to show flat map
+    ## cardinality = 0..1
+    flatmap_behaviour = enum[map_mode_flatmap_behaviour]
+
+    ### custom handling of flat map colors
+    ## cardinality = 0..inf
+    flatmap_gradient_parameters = {
+        #TODO
+    }
+
+    ## cardinality = 0..inf
+    gradient_parameters = {
+        #TODO
+    }
+}

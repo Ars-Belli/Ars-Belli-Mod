@@ -1,0 +1,275 @@
+types = {
+    type[language] = {
+        path = "game/common/languages"
+        path = "game/in_game/common/languages"
+        path = "game/main_menu/common/languages"
+        path = "game/loading_screen/common/languages"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+    }
+    type[dialect] = {
+        path = "game/common/languages"
+        path = "game/in_game/common/languages"
+        path = "game/main_menu/common/languages"
+        path = "game/loading_screen/common/languages"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+        skip_root_key = {
+            any
+            dialects
+        }
+    }
+}
+
+language = {
+    alias_name[color] = alias_match_left[color]
+
+    ## cardinality = 0..1
+    fallback = <language>
+
+    ## cardinality = 0..1
+    family = <language_family>
+
+    ## cardinality = 0..1
+    patronym_suffix = localisation
+
+    ## cardinality = 0..1
+    patronym_suffix_son = localisation
+
+    ## cardinality = 0..1
+    patronym_suffix_daughter = localisation
+
+    ## cardinality = 0..1
+    patronym_prefix_son = localisation
+
+    ## cardinality = 0..1
+    patronym_prefix_son_vowel = localisation
+
+    ## cardinality = 0..1
+    patronym_prefix_daughter = localisation
+
+    ## cardinality = 0..1
+    patronym_prefix_daughter_vowel = localisation
+
+    ## cardinality = 0..1
+    location_prefix = localisation
+
+    ## cardinality = 0..1
+    location_prefix_ancient = localisation
+
+    ## cardinality = 0..1
+    location_prefix_ancient_vowel = localisation
+
+    ## cardinality = 0..1
+    location_suffix = localisation
+
+    ## cardinality = 0..1
+    location_prefix_elision = {
+        ## cardinality = 0..inf
+        localisation
+    }
+
+    ## cardinality = 0..1
+    character_name_short_regnal_number = localisation
+
+    ## cardinality = 0..1
+    character_name_order = localisation
+
+    ## cardinality = 0..1
+    location_prefix_vowel = localisation
+
+    ## cardinality = 0..1
+    descendant_prefix = localisation
+
+    ## cardinality = 0..1
+    descendant_prefix_male = localisation
+
+    ## cardinality = 0..1
+    descendant_prefix_female = localisation
+
+    ## cardinality = 0..1
+    descendant_suffix = localisation
+
+    ## cardinality = 0..1
+    descendant_suffix_male = localisation
+
+    ## cardinality = 0..1
+    descendant_suffix_female = localisation
+
+    ## cardinality = 0..1
+    require_genitive_location_names = bool
+
+    ## cardinality = 0..1
+    first_name_conjoiner = scalar
+
+    ## cardinality = 0..inf
+    ship_names = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+    }
+
+    ## cardinality = 0..inf
+    dynasty_template_keys = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+    }
+
+    ## cardinality = 0..inf
+    male_names = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+    }
+
+    ## cardinality = 0..inf
+    female_names = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+    }
+
+    ## cardinality = 0..inf
+    dynasty_names = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+    }
+
+    ## cardinality = 0..inf
+    lowborn = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+    }
+
+    ## cardinality = 0..1
+    dialects = {}
+}
+
+dialect = {
+    ## cardinality = 0..1
+    fallback = <dialect>
+
+    ## cardinality = 0..1
+    default = bool
+
+    ## cardinality = 0..1
+    use_female_birth_order_names = bool
+
+    ## cardinality = 0..1
+    first_name_format = enum[name_format]
+
+    ## cardinality = 0..1
+    last_name_format = enum[name_format]
+
+    ## cardinality = 0..1
+    nickname_name_format = enum[name_format]
+
+    ## cardinality = 0..inf
+    male_names = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation.localisation
+    }
+
+    ## cardinality = 0..inf
+    female_names = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation.localisation
+    }
+
+    ## cardinality = 0..inf
+    dynasty_names = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation.localisation
+    }
+
+    ## cardinality = 0..inf
+    lowborn = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation.localisation
+    }
+
+    ## cardinality = 0..1
+    patronym_suffix_son = localisation
+
+    ## cardinality = 0..1
+    patronym_suffix_daughter = localisation
+
+    ## cardinality = 0..1
+    patronym_prefix_son = localisation
+
+    ## cardinality = 0..1
+    patronym_prefix_daughter = localisation
+
+    ## cardinality = 0..1
+    location_prefix = localisation
+
+    ## cardinality = 0..1
+    location_suffix = localisation
+
+    ## cardinality = 0..1
+    character_name_short_regnal_number = localisation
+
+    ## cardinality = 0..1
+    character_name_order = localisation
+
+    ## cardinality = 0..1
+    location_prefix_vowel = localisation
+
+    ## cardinality = 0..1
+    descendant_suffix = localisation
+
+    ## cardinality = 0..1
+    descendant_suffix_male = localisation
+
+    ## cardinality = 0..1
+    descendant_suffix_female = localisation
+
+    ## cardinality = 0..1
+    require_genitive_location_names = bool
+
+    ## cardinality = 0..1
+    first_name_conjoiner = scalar
+}

@@ -1,0 +1,30 @@
+types = {
+    type[chivalric_order] = {
+        path = "game/common/chivalric_orders"
+        path = "game/in_game/common/chivalric_orders"
+        path = "game/main_menu/common/chivalric_orders"
+        path = "game/loading_screen/common/chivalric_orders"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+chivalric_order = {
+    ## cardinality = 0..inf
+    country_modifier = single_alias_right[modifier_clause]
+
+    ## cardinality = 0..inf
+    ## replace_scope = { root = character this = character }
+    character_modifier = single_alias_right[modifier_clause]
+
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = character this = character }
+    character_eligible = single_alias_right[trigger_clause]
+}

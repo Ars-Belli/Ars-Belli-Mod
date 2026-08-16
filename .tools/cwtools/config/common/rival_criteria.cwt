@@ -1,0 +1,21 @@
+types = {
+    type[rival_criteria] = {
+        path = "game/common/rival_criteria"
+        path = "game/in_game/common/rival_criteria"
+        path = "game/main_menu/common/rival_criteria"
+        path = "game/loading_screen/common/rival_criteria"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+rival_criteria = {
+    ## cardinality = 0..1
+    enabled = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    ai_rule = single_alias_right[trigger_clause]
+}

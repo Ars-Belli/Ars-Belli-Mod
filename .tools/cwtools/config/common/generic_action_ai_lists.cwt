@@ -1,0 +1,20 @@
+types = {
+    type[generic_action_ai_list] = {
+        path = "game/common/generic_action_ai_lists"
+        path = "game/in_game/common/generic_action_ai_lists"
+        path = "game/main_menu/common/generic_action_ai_lists"
+        path = "game/loading_screen/common/generic_action_ai_lists"
+        path_extension = .txt
+    }
+}
+
+## replace_scope = { root = country this = country }
+generic_action_ai_list = {
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    actions = {
+        ## cardinality = 0..inf
+        <generic_action>
+    }
+}

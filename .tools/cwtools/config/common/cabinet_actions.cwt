@@ -1,0 +1,104 @@
+types = {
+    type[cabinet_action] = {
+        path = "game/common/cabinet_actions"
+        path = "game/in_game/common/cabinet_actions"
+        path = "game/main_menu/common/cabinet_actions"
+        path = "game/loading_screen/common/cabinet_actions"
+        path_extension = .txt
+        localisation = {
+            name = $
+            desc = $_desc
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+cabinet_action = {
+    ### monarch ability that this action will use (adm/dip/mil)
+    ability = enum[ability_type]
+
+    ## cardinality = 0..1
+    icon = filepath[gfx/interface/icons/cabinet_actions/,.dds]
+
+    ### trigger for whether the action is possible (root = country)
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ### trigger for whether the action can start (root = country)
+    ## cardinality = 0..1
+    is_finished = single_alias_right[trigger_clause]
+
+    ### trigger for whether the action can start (root = country)
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+
+    ### all used to define how long it takes to become fully implemented. Modifiers will be scaled by how much of this time is completed.
+    ## cardinality = 0..inf
+    alias_name[duration] = alias_match_left[duration]
+
+    ### flag for whether we can have several of these actions going on at once (yes/no)
+    ## cardinality = 0..1
+    allow_multiple = bool
+
+    ## cardinality = 0..1
+    forbid_for_automation = bool
+
+    ### can add multiple of these to allow selection of targets/parameters for the action. They get stored in scope:target, scope:target_1, scope:target_2....etc
+    ## cardinality = 0..inf
+    ## replace_scope = { root = any this = any }
+    select_trigger = single_alias_right[selected_trigger_clause]
+
+    ### amount to change a societal value by
+    ## cardinality = 0..1
+    societal_values = value_field
+
+    ## cardinality = 0..1
+    min = value_field
+
+    ### <script value> returns the current progress of the action
+    ## cardinality = 0..1
+    progress = single_alias_right[formula]
+
+    ### fired when the action is chosen (root = cabinet, scope:actor = country, scope:target, scope:target_1 etc)
+    ## cardinality = 0..1
+    ## replace_scope = { root = cabinet this = cabinet }
+    on_activate = single_alias_right[effect_clause]
+
+    ### fired when the action's implementation reaches 100% (instant if there's no time delay) (root = cabinet, scope:actor = country, scope:target, scope:target_1 etc)
+    ## cardinality = 0..1
+    ## replace_scope = { root = cabinet this = cabinet }
+    on_fully_activated = single_alias_right[effect_clause]
+
+    ### fired when the action is removed (root = cabinet, scope:actor = country, scope:target, scope:target_1 etc)
+    ## cardinality = 0..1
+    ## replace_scope = { root = cabinet this = cabinet }
+    on_deactivate = single_alias_right[effect_clause]
+
+    ### <scaled and triggered modifier (scale = script for the scale, potential_trigger = trigger for if the modifier applies)> which is applied to whole countries
+    ## cardinality = 0..inf
+    country_modifier = single_alias_right[modifier_clause]
+
+    ### <scaled and triggered modifier (scale = script for the scale, potential_trigger = trigger for if the modifier applies)> which is applied to provinces
+    ## cardinality = 0..inf
+    ## replace_scope = { root = province this = province }
+    province_modifier = single_alias_right[modifier_clause]
+
+    ### <scaled and triggered modifier (scale = script for the scale, potential_trigger = trigger for if the modifier applies)> which is applied to locations
+    ## cardinality = 0..inf
+    ## replace_scope = { root = location this = location }
+    location_modifier = single_alias_right[modifier_clause]
+
+    ### <scaled and triggered modifier (scale = script for the scale, potential_trigger = trigger for if the modifier applies)> which is applied to rebels
+    ## cardinality = 0..inf
+    ## replace_scope = { root = rebels this = rebels }
+    rebel_modifier = single_alias_right[modifier_clause]
+
+    ### effect script for the AI to use, scope:actor is the country, scope:recipient, scope:target, scope:target_1, scope:target_2....etc
+    ## cardinality = 0..1
+    ai_will_do = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    map_marker = {
+        show_for_owner = bool
+    }
+}

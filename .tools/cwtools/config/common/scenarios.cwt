@@ -1,0 +1,20 @@
+types = {
+    type[scenario] = {
+        path = "game/common/scenarios"
+        path = "game/in_game/common/scenarios"
+        path = "game/main_menu/common/scenarios"
+        path = "game/loading_screen/common/scenarios"
+        path_extension = .txt
+    }
+}
+
+scenario = {
+    # TODO: country definition
+    country = scalar
+
+    ## cardinality = 0..1
+    flag = <coat_of_arm>
+
+    player_playstyle = enum[playstyle_type]
+    player_proficiency = enum[scenario_proficiency]
+}

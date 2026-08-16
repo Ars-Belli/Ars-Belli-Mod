@@ -1,0 +1,84 @@
+types = {
+    type[game_rule] = {
+        path = "game/common/game_rules"
+        path = "game/in_game/common/game_rules"
+        path = "game/main_menu/common/game_rules"
+        path = "game/loading_screen/common/game_rules"
+        skip_root_key = any
+        path_extension = .txt
+        localisation = {
+            ## required
+            name = "setting_$"
+            ## required
+            desc = "setting_$_desc"
+        }
+    }
+    type[game_rule_category] = {
+        path = "game/common/game_rules"
+        path = "game/in_game/common/game_rules"
+        path = "game/main_menu/common/game_rules"
+        path = "game/loading_screen/common/game_rules"
+        path_extension = .txt
+        localisation = {
+            ## required
+            name = "rule_$"
+        }
+    }
+}
+
+game_rule_category = {
+    ## cardinality = 0..1
+    default = <game_rule>
+
+    ## cardinality = 0..1
+    conditional_default = {
+        ## cardinality = 1..inf
+        {
+            ## cardinality = 0..1
+            limit = single_alias_right[trigger_clause]
+            value = <game_rule>
+        }
+    }
+
+    <game_rule> = {
+        ## cardinality = 0..1
+        ### category:modifier_key	# Apply a modifier to characters matching a specific category. Valid are player, ai, and all. E.G., player:very_easy
+        apply_modifier = scalar
+
+        ## cardinality = 0..inf
+        flag = enum[game_rule_flag]
+
+        ## cardinality = 0..inf
+        flag = force_<production_method>
+
+        ## cardinality = 0..inf
+        flag = disable_<production_method>
+
+        ## cardinality = 0..inf
+        flag = force_<unique_production_method>
+
+        ## cardinality = 0..inf
+        flag = disable_<unique_production_method>
+    }
+}
+
+game_rule = {
+    ## cardinality = 0..1
+    ### category:modifier_key	# Apply a modifier to characters matching a specific category. Valid are player, ai, and all. E.G., player:very_easy
+    apply_modifier = scalar
+
+    ## cardinality = 0..inf
+    flag = enum[game_rule_flag]
+
+    ## cardinality = 0..inf
+    flag = force_<production_method>
+
+    ## cardinality = 0..inf
+    flag = disable_<production_method>
+
+    ## cardinality = 0..inf
+    flag = force_<unique_production_method>
+
+    ## cardinality = 0..inf
+    flag = disable_<unique_production_method>
+}

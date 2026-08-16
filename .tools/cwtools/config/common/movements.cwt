@@ -1,0 +1,185 @@
+types = {
+    type[movement] = {
+        path = "game/common/movements"
+        path = "game/in_game/common/movements"
+        path = "game/main_menu/common/movements"
+        path = "game/loading_screen/common/movements"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+        subtype[religion] = {
+            religion = <religion>
+        }
+        subtype[culture] = {
+            culture = <culture>
+        }
+    }
+}
+
+movement = {
+    subtype[religion] = {
+        religion = <religion>
+    }
+
+    subtype[culture] = {
+        culture = <culture>
+    }
+
+    ### simple trigger. controls whether the movement appears in the UI at all (and is therefore eligible to spawn). Should basically only be used for has_dlc gates. (scope:movement_definition is the movement)
+    ## cardinality = 0..1
+    ## replace_scope = { root = none this = none }
+    potential = single_alias_right[trigger_clause]
+
+    ### simple trigger. if it fails the movement won't try monthly spawn chance, but will still appear in the UI. Use this for "is the world ready for this movement to spawn yet" checks. (scope:movement_definition is the movement)
+    ## cardinality = 0..1
+    ## replace_scope = { root = none this = none }
+    allow = single_alias_right[trigger_clause]
+
+    ### modifier applied to locations that have the movement (multiplied by the presence %age)
+    ## cardinality = 0..1
+    ## replace_scope = { root = location this = location }
+    location_modifier = single_alias_right[modifier_clause]
+
+    ### effect to spawn the movement somewhere when we've decided it should spawn. Include a spawn_movement effect here (scope:movement_definition is the movement)
+    spawn = single_alias_right[effect_clause]
+
+    ### event sent when the movement spreads to a country (root is the country, scope:movement_definition is the movement)
+    ## cardinality = 0..1
+    ## replace_scope = { root = country this = country }
+    on_spread_to_country = single_alias_right[effect_clause]
+
+    ### event sent when the movement spreads to a country (root is the country, scope:movement_definition is the movement)
+    ## cardinality = 0..1
+    ## replace_scope = { root = movement this = movement }
+    on_calc_effect = single_alias_right[effect_clause]
+
+    ### script value for how likely the movement is to spawn per month (0..1) (scope:movement_definition is the movement)
+    monthly_spawn_chance = value_field
+    ### script value for how likely the movement is to spawn per month (0..1) (scope:movement_definition is the movement)
+    monthly_spawn_chance = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = location this = location }
+    location_stagnation_chance = value_field
+    ## cardinality = 0..1
+    ## replace_scope = { root = location this = location }
+    location_stagnation_chance = single_alias_right[formula]
+
+    ### script value for how much more movement will be added to the location to spread the movement from individual spreaders of the movement (root = location, scope:movement_definition is the movement)
+    ## replace_scope = { root = location this = location }
+    environmental_infection = value_field
+    ### script value for how much more movement will be added to the location to spread the movement from individual spreaders of the movement (root = location, scope:movement_definition is the movement)
+    ## replace_scope = { root = location this = location }
+    environmental_infection = single_alias_right[formula]
+
+    ### script value to get the R0 number of the movement, or how many people one person will spread the movement to per interval (root is the location, scope:movement_definition is the movement)
+    ## replace_scope = { root = location this = location }
+    r0 = value_field
+    ### script value to get the R0 number of the movement, or how many people one person will spread the movement to per interval (root is the location, scope:movement_definition is the movement)
+    ## replace_scope = { root = location this = location }
+    r0 = single_alias_right[formula]
+
+    ### script value for how long between spread calculations. A lower number = possible faster spread, depending on the effect in spread. Nothing in the scope, this will usually just be a number, but could be a random range (scope:movement_definition is the movement)
+    calc_interval_days = value_field
+    ### script value for how long between spread calculations. A lower number = possible faster spread, depending on the effect in spread. Nothing in the scope, this will usually just be a number, but could be a random range (scope:movement_definition is the movement)
+    calc_interval_days = single_alias_right[formula]
+
+    ### script value for the minimum percentage there has to be in a location before it will start spreading to new locations (0..1). (root is the character's location, scope:movement_definition is the movement)
+    ## replace_scope = { root = location this = location }
+    location_spread_threshold = value_field
+    ### script value for the minimum percentage there has to be in a location before it will start spreading to new locations (0..1). (root is the character's location, scope:movement_definition is the movement)
+    ## replace_scope = { root = location this = location }
+    location_spread_threshold = single_alias_right[formula]
+
+    ### Whether development of a location is a positive or negative multiplier on the spread to pops. neutral default
+    ## cardinality = 0..1
+    development = enum[movement_impact]
+
+    ### Whether literacy is a positive or negative multiplier on the spread to pops. neutral default
+    ## cardinality = 0..1
+    literacy = enum[movement_impact]
+
+    ### Whether local control of a location is a positive or negative multiplier on the spread to pops. neutral default
+    ## cardinality = 0..1
+    local_control = enum[movement_impact]
+
+    ### Whether satisfaction of a pop is a positive or negative multiplier on the spread to pops. neutral default
+    ## cardinality = 0..1
+    pop_satisfaction = enum[movement_impact]
+
+    ### by default, movements do not spread. Set who they spread to here.
+    ## cardinality = 0..inf
+    specific_pop_type_effect = {
+        ## cardinality = 0..1
+        pop_type = <pop_type>
+
+        ## cardinality = 0..1
+        religion = <religion>
+
+        ## cardinality = 0..1
+        religion_group = <religion_group>
+
+        ## cardinality = 0..1
+        language = <language>
+
+        ## cardinality = 0..1
+        language_family = <language_family>
+
+        multiplier = float
+    }
+
+    ## cardinality = 0..1
+    required_languages = {
+        ## cardinality = 0..inf
+        <language>
+    }
+
+    ## cardinality = 0..1
+    required_language_families = {
+        ## cardinality = 0..inf
+        <language_family>
+    }
+
+    ## cardinality = 0..1
+    required_tags = {
+        ## cardinality = 0..inf
+        <country>
+        ## cardinality = 0..inf
+        value[dynamic_tag]
+    }
+
+    ## cardinality = 0..1
+    required_religions = {
+        ## cardinality = 0..inf
+        <religion>
+    }
+
+    ## cardinality = 0..1
+    required_religion_groups = {
+        ## cardinality = 0..inf
+        <religion_group>
+    }
+
+    ## cardinality = 0..1
+    required_pop_types = {
+        ## cardinality = 0..inf
+        <pop_type>
+    }
+
+    ## cardinality = 0..1
+    required_cultures = {
+        ## cardinality = 0..inf
+        <culture>
+    }
+
+    ## cardinality = 0..1
+    map_color = <named_color>
+    ## cardinality = 0..1
+    map_color = color_field
+    ## cardinality = 0..1
+    map_color = single_alias_right[scripted_color_clause]
+    ## cardinality = 0..1
+    map_color = $define_reference
+}

@@ -1,0 +1,50 @@
+types = {
+    type[location_rank] = {
+        path = "game/common/location_ranks"
+        path = "game/in_game/common/location_ranks"
+        path = "game/main_menu/common/location_ranks"
+        path = "game/loading_screen/common/location_ranks"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            name = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = location this = location }
+location_rank = {
+    alias_name[color] = alias_match_left[color]
+
+    ## cardinality = 0..1
+    build_time = int
+
+    ## cardinality = 0..1
+    defender = value_field
+
+    rank_modifier = single_alias_right[modifier_clause]
+
+    ## replace_scope = { root = country this = country }
+    country_modifier = single_alias_right[modifier_clause]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = country this = country }
+    capital_country_modifier = single_alias_right[modifier_clause]
+
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    max_rank = bool
+
+    ## cardinality = 0..1
+    is_established_city = bool
+
+    show_in_label = bool
+
+    frame_tier = int
+
+    ### what goods are required during construction
+    ## cardinality = 0..1
+    construction_demand = <goods_demand>
+}

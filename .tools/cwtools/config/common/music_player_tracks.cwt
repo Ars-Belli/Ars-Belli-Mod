@@ -1,0 +1,23 @@
+types = {
+    type[music_player_track] = {
+        path = "game/common/music_player_tracks"
+        path = "game/in_game/common/music_player_tracks"
+        path = "game/main_menu/common/music_player_tracks"
+        path = "game/loading_screen/common/music_player_tracks"
+        path_extension = .txt
+        localisation = {
+            name = $
+            flavour = $_flavour
+        }
+    }
+}
+
+music_player_track = {
+    composer = localisation
+
+    ## cardinality = 0..1
+    performer = localisation
+
+    ## cardinality = 0..1
+    soloist = localisation
+}

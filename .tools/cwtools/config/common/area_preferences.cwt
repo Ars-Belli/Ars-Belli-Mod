@@ -1,0 +1,47 @@
+types = {
+    type[area_preference] = {
+        path = "game/common/area_preferences"
+        path = "game/in_game/common/area_preferences"
+        path = "game/main_menu/common/area_preferences"
+        path = "game/loading_screen/common/area_preferences"
+        path_extension = .txt
+        subtype[conquest] = {
+            preference_type = conquest
+        }
+        subtype[exploration] = {
+            preference_type = exploration
+        }
+    }
+}
+
+## replace_scope = { root = area this = area }
+area_preference = {
+    preference_type = enum[area_preference_type]
+
+    modifier = value_field
+
+    ## cardinality = 0..inf
+    area = <area>
+
+    ## cardinality = 0..inf
+    region = <region>
+
+    ## cardinality = 0..inf
+    continent = <continent>
+
+    ## cardinality = 0..inf
+    sub_continent = <sub_continent>
+
+    subtype[conquest] = {
+        ### area must fulfil the triggers to be considered
+        ## cardinality = 0..1
+        allow = single_alias_right[trigger_clause]
+
+        ### add dynamically the areas of the capital at the time when this preference gets added; default = no
+        ## cardinality = 0..1
+        consider_capital_region = bool
+
+        ## cardinality = 0..inf
+        formable_country = <formable_country>
+    }
+}

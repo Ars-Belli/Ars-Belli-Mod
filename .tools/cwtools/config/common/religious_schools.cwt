@@ -1,0 +1,28 @@
+types = {
+    type[religious_school] = {
+        path = "game/common/religious_schools"
+        path = "game/in_game/common/religious_schools"
+        path = "game/main_menu/common/religious_schools"
+        path = "game/loading_screen/common/religious_schools"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+religious_school = {
+    alias_name[color] = alias_match_left[color]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = country this = country }
+    enabled_for_country = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = character this = character }
+    enabled_for_character = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..inf
+    modifier = single_alias_right[modifier_clause]
+}

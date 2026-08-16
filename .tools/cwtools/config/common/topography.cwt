@@ -1,0 +1,66 @@
+types = {
+    type[topography] = {
+        path = "game/common/topography"
+        path = "game/in_game/common/topography"
+        path = "game/main_menu/common/topography"
+        path = "game/loading_screen/common/topography"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            name = "$_desc"
+        }
+    }
+}
+
+topography = {
+    alias_name[color] = alias_match_left[color]
+
+    movement_cost = value_field
+
+    ## cardinality = 0..1
+    defender = value_field
+
+    ## cardinality = 0..1
+    proximity = value_field
+
+    ## cardinality = 0..1
+    colonial_migration_size_modifier = value_field
+
+    ## cardinality = 0..1
+    blocked_in_winter = bool
+
+    weather_front_strength_change_percent = value_field
+    weather_cyclone_strength_change_percent = value_field
+    weather_tornado_strength_change_percent = value_field
+
+    ## cardinality = 0..1
+    location_modifier = single_alias_right[modifier_clause]
+
+    audio_tags = {
+        #TODO
+        scalar = value_field
+    }
+
+    debug_color = <named_color>
+    debug_color = color_field
+    debug_color = single_alias_right[scripted_color_clause]
+    debug_color = $define_reference
+
+    ## cardinality = 0..1
+    vegetation_density = value_field
+
+    ## cardinality = 0..1
+    has_sand = bool
+
+    ## cardinality = 0..1
+    can_have_ice = bool
+
+    ## cardinality = 0..1
+    can_freeze_over = bool
+
+    ## cardinality = 0..1
+    is_lake = bool
+
+    ## cardinality = 0..1
+    is_deep_ocean = bool
+}

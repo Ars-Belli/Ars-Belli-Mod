@@ -1,0 +1,25 @@
+types = {
+    type[religious_faction] = {
+        path = "game/common/religious_factions"
+        path = "game/in_game/common/religious_factions"
+        path = "game/main_menu/common/religious_factions"
+        path = "game/loading_screen/common/religious_factions"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+religious_faction = {
+    visible = single_alias_right[trigger_clause]
+
+    enabled = single_alias_right[trigger_clause]
+
+    actions = {
+        ## cardinality = 0..inf
+        <generic_action>
+    }
+}

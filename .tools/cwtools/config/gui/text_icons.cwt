@@ -1,0 +1,42 @@
+types = {
+    ## type_key_filter = texticon
+    type[text_icon] = {
+        path = "game/gui"
+        path = "game/in_game/gui"
+        path = "game/main_menu/gui"
+        path = "game/loading_screen/gui"
+        path_extension = .gui
+        name_field = icon
+
+        images = {
+            ## primary
+            texture = iconsize/texture
+        }
+    }
+}
+
+text_icon = {
+    icon = scalar
+    iconsize = {
+        ## cardinality = 0..1
+        size = {
+            ## cardinality = 2..2
+            int
+        }
+
+        offset = {
+            ## cardinality = 2..2
+            int
+        }
+
+        ## cardinality = 0..1
+        uv = {
+            ## cardinality = 4..4
+            float
+        }
+
+        texture = filepath
+
+        fontsize = int[1..inf]
+    }
+}

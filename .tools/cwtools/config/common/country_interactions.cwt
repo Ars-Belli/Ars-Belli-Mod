@@ -1,0 +1,158 @@
+types = {
+    type[country_interaction] = {
+        path = "game/common/country_interactions"
+        path = "game/in_game/common/country_interactions"
+        path = "game/main_menu/common/country_interactions"
+        path = "game/loading_screen/common/country_interactions"
+        path_extension = .txt
+        localisation = {
+            name = $
+            desc = $_desc
+            act = $_act
+            effect_text = $_effect_text
+            effect_text_past = $_effect_text_past
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+country_interaction = {
+    ### subject/diplomacy
+    type = enum[country_interaction_type]
+
+    ## cardinality = 0..1
+    category = localisation
+
+    #TODO
+    ### sound to use for the action
+    ## cardinality = 0..1
+    sound = scalar
+
+    ### whether to use diplomats that take time or not
+    ## cardinality = 0..1
+    use_enroute = bool
+
+    ## cardinality = 0..1
+    is_take_over_loan = bool
+
+    ### default is yes
+    ## cardinality = 0..1
+    block_when_at_war = bool
+
+    ### scope:actor is the country attempting to perform the action
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ### if spy network/trust/favor cost is required
+    ## cardinality = 0..1
+    diplomatic_cost = <diplomatic_cost>
+
+    ## cardinality = 0..1
+    diplomatic_cost_modifier = value_field
+    ## cardinality = 0..1
+    diplomatic_cost_modifier = single_alias_right[formula]
+
+    ### Limit the amount of countries Ai will use this on per month
+    ## cardinality = 0..1
+    ai_limit_per_check = int
+
+    ### only scope:actor is available, should ai check this interaction at all, helps performance
+    ## cardinality = 0..1
+    ai_prerequisite = single_alias_right[trigger_clause]
+
+    ### scope:actor is the country attempting to perform the action
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+
+    ### a scripted standard price, listed in \common\prices\ and referenced by name (like price:<price_id>) or as a result of a script (like scope:target.price)
+    ## cardinality = 0..1
+    price = scope[price]
+
+    ### script to determine who is paying the price. By default, the actor
+    ## cardinality = 0..1
+    payer = scope[any]
+
+    ### script to determine who gets paid. By default, nobody, the price disappears into the ether
+    ## cardinality = 0..1
+    payee = scope[any]
+
+    ### scope:actor is the country attempting to perform the action
+    ## cardinality = 0..1
+    price_modifier = single_alias_right[formula]
+
+    ### scope:actor is the country, scope:recipient, scope:target, scope:target_1, scope:target_2....etc
+    ## cardinality = 0..1
+    effect = single_alias_right[effect_clause]
+
+    ## cardinality = 0..1
+    reject_effect = single_alias_right[effect_clause]
+
+    ### whether this is an interaction on your consort
+    ## cardinality = 0..1
+    is_consort_action = bool
+
+    ### optional, to prevent messages showing
+    ## cardinality = 0..1
+    show_message = bool
+
+    ### optional, to prevent messages to show to the target
+    ## cardinality = 0..1
+    show_message_to_target = bool
+
+    ### optional, to prevent the price of the action to be paid
+    ## cardinality = 0..1
+    should_execute_price = bool
+
+    ### optional, to prevent the action to be listed automatically in the GUI. Useful when you want to have very specific buttons for this action
+    ## cardinality = 0..1
+    show_in_gui_list = bool
+
+    ### can add multiple of these to allow selection of targets/parameters for the action. They get stored in scope:target, scope:target_1, scope:target_2....etc
+    ## cardinality = 0..inf
+    ## replace_scope = { root = any this = any }
+    select_trigger = single_alias_right[selected_trigger_clause]
+
+    ### use to ban the AI from using an action that is already handled in code OR to indicate how often to process
+    ## cardinality = 0..1
+    ai_tick = enum[character_interaction_ai_tick]
+
+    ### how many ticks until next. script to determine how often this action should be checked for each country. root is the country. This is just a per-country check. So ai_tick = monthly and ai_tick_frequency = 6 means "check every 6 months"
+    ## cardinality = 0..1
+    ai_tick_frequency = int_value_field
+    ### how many ticks until next. script to determine how often this action should be checked for each country. root is the country. This is just a per-country check. So ai_tick = monthly and ai_tick_frequency = 6 means "check every 6 months"
+    ## cardinality = 0..1
+    ai_tick_frequency = single_alias_right[formula]
+
+    ### script for the AI to use, scope:actor is the country, scope:recipient, scope:target, scope:target_1, scope:target_2....etc
+    ## cardinality = 0..1
+    ai_will_do = value_field
+    ### script for the AI to use, scope:actor is the country, scope:recipient, scope:target, scope:target_1, scope:target_2....etc
+    ## cardinality = 0..1
+    ai_will_do = single_alias_right[formula]
+
+    ### overrides of default acceptance values..  check ai_diplo_chances
+    ## cardinality = 0..1
+    diplo_chance = single_alias_right[diplo_chance_clause]
+
+    ### scope:actor is the country, scope:recipient, scope:target, scope:target_1, scope:target_2....etc, is executed only when the diplo action has acceptance
+    ## cardinality = 0..1
+    accept = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    automation_tick = enum[character_interaction_ai_tick]
+
+    ### how many ticks until next. script to determine how often this action should be checked for each country. root is the country. This is just a per-country check. So automation_tick = monthly and automation_tick_frequency = 6 means "check every 6 months". Used for the automation process
+    ## cardinality = 0..inf
+    automation_tick_frequency = value_field
+    ### how many ticks until next. script to determine how often this action should be checked for each country. root is the country. This is just a per-country check. So automation_tick = monthly and automation_tick_frequency = 6 means "check every 6 months". Used for the automation process
+    ## cardinality = 0..inf
+    automation_tick_frequency = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    cooldown = {
+        type = value_set[cooldown]
+
+        alias_name[duration] = alias_match_left[duration]
+    }
+
+}

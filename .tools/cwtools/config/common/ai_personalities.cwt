@@ -1,0 +1,22 @@
+types = {
+    type[ai_personality] = {
+        path = "game/common/ai_personalities"
+        path = "game/in_game/common/ai_personalities"
+        path = "game/main_menu/common/ai_personalities"
+        path = "game/loading_screen/common/ai_personalities"
+        path_extension = .txt
+        localisation = {
+            name = $
+            desc = $_desc
+        }
+    }
+}
+
+ai_personality = {
+    ## cardinality = 0..1
+    default = yes
+
+    alias_name[color] = alias_match_left[color]
+
+    modifier = single_alias_right[modifier_clause]
+}

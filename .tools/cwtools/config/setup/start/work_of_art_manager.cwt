@@ -1,0 +1,31 @@
+types = {
+    ## type_key_filter = work_of_art_manager
+    type[work_of_art_manager] = {
+        path = "game/setup/start"
+        path = "game/in_game/setup/start"
+        path = "game/main_menu/setup/start"
+        path = "game/loading_screen/setup/start"
+        path_extension = .txt
+        unique = no
+    }
+}
+
+work_of_art_manager = {
+    ## cardinality = 0..inf
+    <artist_work> = {
+        ## cardinality = 0..1
+        artist = value[character]
+
+        location = value[location]
+
+        origin = value[location]
+
+        quality = value_field
+
+        creation_date = date_field
+        creation_date = date_field[y.m.]
+        creation_date = int
+
+        key = value_set[work_of_art]
+    }
+}

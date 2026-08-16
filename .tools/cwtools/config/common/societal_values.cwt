@@ -1,0 +1,30 @@
+types = {
+    type[societal_value] = {
+        path = "game/common/societal_values"
+        path = "game/in_game/common/societal_values"
+        path = "game/main_menu/common/societal_values"
+        path = "game/loading_screen/common/societal_values"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+societal_value = {
+    ## cardinality = 0..1
+    age = <age>
+
+    ## cardinality = 0..1
+    content_priority = int
+
+    left_modifier = single_alias_right[modifier_clause]
+    right_modifier = single_alias_right[modifier_clause]
+
+    ## cardinality = 0..1
+    opinion_importance_multiplier = value_field
+
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+}

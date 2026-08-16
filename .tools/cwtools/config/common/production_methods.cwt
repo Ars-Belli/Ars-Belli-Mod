@@ -1,0 +1,38 @@
+types = {
+    type[production_method] = {
+        path = "game/common/production_methods"
+        path = "game/in_game/common/production_methods"
+        path = "game/main_menu/common/production_methods"
+        path = "game/loading_screen/common/production_methods"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+production_method = {
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    no_upkeep = bool
+
+    ## cardinality = 0..inf
+    <good> = value_field
+
+    ## cardinality = 0..1
+    produced = <good>
+
+    ## cardinality = 0..1
+    output = value_field
+
+    ## cardinality = 0..1
+    debug_max_profit = value_field
+
+    category = localisation
+}

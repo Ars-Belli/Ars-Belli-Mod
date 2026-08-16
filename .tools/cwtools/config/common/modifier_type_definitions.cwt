@@ -1,0 +1,82 @@
+types = {
+    type[modifier_type] = {
+        path = "game/common/modifier_type_definitions"
+        path = "game/in_game/common/modifier_type_definitions"
+        path = "game/main_menu/common/modifier_type_definitions"
+        path = "game/loading_screen/common/modifier_type_definitions"
+        path_extension = .txt
+        localisation = {
+            ## optional
+            name = "MODIFIER_TYPE_NAME_$"
+            ## optional
+            desc = "MODIFIER_TYPE_DESC_$"
+        }
+    }
+}
+
+modifier_type = {
+    ### color = good(default)/neutral/bad
+    ## cardinality = 0..1
+    color = enum[modifier_color]
+
+    ### decimals = 2(default)/x (int)
+    ## cardinality = 0..1
+    decimals = int
+
+    ## cardinality = 0..1
+    no_difference_sign = bool
+
+    ### percent = no(default)/yes
+    ## cardinality = 0..1
+    percent = bool
+
+    ### already_percent = no(default)/yes
+    ## cardinality = 0..1
+    already_percent = bool
+
+    ### boolean = no(default)/yes
+    ## cardinality = 0..1
+    boolean = bool
+
+    ## cardinality = 0..1
+    game_data = {
+        ### category = all(default)/none/country/location/province/character/unit/mercenary/religion/internationalorganizatiuon/rebel
+        ## cardinality = 0..1
+        category = enum[modifier_category]
+
+        ### min = -infinity(default)/x (fixed point)
+        ## cardinality = 0..1
+        min = value_field
+
+        ### max = +infinity(default)/x (fixed point)
+        ## cardinality = 0..1
+        max = value_field
+
+        ### cap_zero_to_one = no(default)/yes
+        ## cardinality = 0..1
+        cap_zero_to_one = bool
+
+        ### scale_with_pop = no(default)/yes
+        ## cardinality = 0..1
+        scale_with_pop = bool
+
+        ### format = ""(default)/FormatPopCaps/FormatManPower/FormatGold
+        ## cardinality = 0..1
+        format = enum[modifier_format]
+
+        ### ai = no(default)/yes
+        ## cardinality = 0..1
+        ai = bool
+
+        ### bias_type = opinion/trust/voting (can have more than 1 entry - default=none of them)
+        ## cardinality = 0..inf
+        bias_type = enum[modifier_bias_type]
+
+        ### should_show_in_modifiers_tab = yes(default)/no (should modifier appear in the government modifiers tab)
+        ## cardinality = 0..1
+        should_show_in_modifiers_tab = bool
+
+        ## cardinality = 0..1
+        is_societal_value_change = yes
+    }
+}

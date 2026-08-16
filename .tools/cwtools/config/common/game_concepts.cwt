@@ -1,0 +1,51 @@
+types = {
+    type[game_concept] = {
+        path = "game/common/game_concepts"
+        path = "game/in_game/common/game_concepts"
+        path = "game/main_menu/common/game_concepts"
+        path = "game/loading_screen/common/game_concepts"
+        path_extension = .txt
+        localisation = {
+            ## required
+            name = "game_concept_$"
+        }
+        images = {
+            icon = texture
+        }
+    }
+}
+
+game_concept = {
+    ## cardinality = 0..1
+    texture = filepath[gfx/interface/icons/,.dds]
+    ## cardinality = 0..1
+    texture = filepath[main_menu/gfx/interface/icons/,.dds]
+    ## cardinality = 0..1
+    texture = filepath[in_game/gfx/interface/icons/,.dds]
+    ## cardinality = 0..1
+    texture = filepath[loading_screen/gfx/interface/icons/,.dds]
+    ## cardinality = 0..1
+    texture = filepath
+    ## cardinality = 0..1
+    texture = filepath[,.dds]
+
+    ## cardinality = 0..1
+    alias = {
+        #TODO: should be game_concept_<key> as localization
+        ## cardinality = 0..inf
+        value_set[concept_alias]
+    }
+
+    ## cardinality = 0..1
+    shown_in_loading_screen = bool
+
+    ## cardinality = 0..1
+    family = enum[game_concept_family]
+
+    #TODO: adjust when map modes are mapped
+    ## cardinality = 0..1
+    tooltip_map_mode = scalar
+
+    ## cardinality = 0..1
+    tutorial_lesson = <tutorial_lesson>
+}

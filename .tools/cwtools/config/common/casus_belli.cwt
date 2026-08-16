@@ -1,0 +1,172 @@
+types = {
+    type[casus_belli] = {
+        path = "game/common/casus_belli"
+        path = "game/in_game/common/casus_belli"
+        path = "game/main_menu/common/casus_belli"
+        path = "game/loading_screen/common/casus_belli"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            name = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+casus_belli = {
+    ### yes/no only for the no cb cb (the best cb)
+    ## cardinality = 0..1
+    no_cb = bool
+
+    ### yes/no if it's a trade-related cb
+    ## cardinality = 0..1
+    trade = bool
+
+    ## cardinality = 0..1
+    no_spy_network_cost = bool
+
+    ### checks to see if we can see this cb (root = country, scope:target = target)
+    ## cardinality = 0..1
+    create_visible = single_alias_right[trigger_clause]
+
+    ### checks to see if we can create a cb against another country (root = country, scope:target = target)
+    ## cardinality = 0..1
+    create_enabled = single_alias_right[trigger_clause]
+
+    ### checks to see if we can use this cb to declare war against another country (root = country, scope:target = target)
+    ## cardinality = 0..1
+    declare_enabled = single_alias_right[trigger_clause]
+
+    ### if this CB has a province as a target, this trigger checks if the province is valid to target (root = province, scope:actor = who wants to use it, scope:recipient = who they're targetting)
+    ## cardinality = 0..1
+    ## replace_scope = { root = province this = province }
+    province = single_alias_right[trigger_clause]
+
+    ### how much is added to creation progress per month, in per cent (100 = it's created)
+    ## cardinality = 0..1
+    speed = value_field
+
+    ## cardinality = 0..1
+    can_expire = bool
+
+    ### For CBs like Crusade where we don't really care if AI will have any control, we want the land to release nations
+    ## cardinality = 0..1
+    allow_ports_for_reach_ai = bool
+
+    ### only for AI, makes AI choose release treaties more often
+    ## cardinality = 0..1
+    cut_down_in_size_cb = bool
+
+    ## cardinality = 0..1
+    allow_wars_on_own_subjects = bool
+
+    ## cardinality = 0..1
+    blocks_unconditional_surrender = bool
+
+    ### if separate peace deals are allowed (defaults to yes)
+    ## cardinality = 0..1
+    allow_separate_peace = bool
+
+    ### <int> override NDiplomacy::CASUS_BELLI_MONTHS with that script value if defined
+    ## cardinality = 0..inf
+    alias_name[duration] = alias_match_left[duration]
+
+    ### gets a value determining how enthusiastic for being in this war said country is. (root = country, scope:war = war)
+    ## cardinality = 0..1
+    additional_war_enthusiasm = value_field
+    ### gets a value determining how enthusiastic for being in this war said country is. (root = country, scope:war = war)
+    ## cardinality = 0..1
+    additional_war_enthusiasm = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    max_warscore_from_battles = value_field
+    ## cardinality = 0..1
+    max_warscore_from_battles = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    allow_release_areas = bool
+
+    ### gets a value determining how enthusiastic for being in this war said country is. (root = country, scope:war = war)
+    ## cardinality = 0..1
+    additional_war_enthusiasm_attacker = value_field
+    ### gets a value determining how enthusiastic for being in this war said country is. (root = country, scope:war = war)
+    ## cardinality = 0..1
+    additional_war_enthusiasm_attacker = single_alias_right[formula]
+
+    ### gets a value determining how enthusiastic for being in this war said country is. (root = country, scope:war = war)
+    ## cardinality = 0..1
+    additional_war_enthusiasm_defender = value_field
+    ### gets a value determining how enthusiastic for being in this war said country is. (root = country, scope:war = war)
+    ## cardinality = 0..1
+    additional_war_enthusiasm_defender = single_alias_right[formula]
+
+    ### How more likely Ai is to select this CB, 0 doesn't mean never
+    ## cardinality = 0..1
+    ai_selection_desire = value_field
+    ### How more likely Ai is to select this CB, 0 doesn't mean never
+    ## cardinality = 0..1
+    ai_selection_desire = single_alias_right[formula]
+
+    ### root = country; scope:recipient = subject; scope:subject_type = type; scope:war = war;
+    ## cardinality = 0..1
+    ai_subjugation_desire = value_field
+    ### root = country; scope:recipient = subject; scope:subject_type = type; scope:war = war;
+    ## cardinality = 0..1
+    ai_subjugation_desire = single_alias_right[formula]
+
+    ### root = country; scope:location = location; scope:war = war;
+    ## cardinality = 0..1
+    ai_cede_location_desire = value_field
+    ### root = country; scope:location = location; scope:war = war;
+    ## cardinality = 0..1
+    ai_cede_location_desire = single_alias_right[formula]
+
+    ### root = country; scope:target_province = province; scope:war = war;
+    ## cardinality = 0..1
+    ai_cede_province_desire = value_field
+    ### root = country; scope:target_province = province; scope:war = war;
+    ## cardinality = 0..1
+    ai_cede_province_desire = single_alias_right[formula]
+
+    ### root = country; scope:recipient = recipient; scope:war = war;
+    ## cardinality = 0..1
+    antagonism_reduction_per_warworth_defender = value_field
+    ### root = country; scope:recipient = recipient; scope:war = war;
+    ## cardinality = 0..1
+    antagonism_reduction_per_warworth_defender = single_alias_right[formula]
+
+    ### A set of peace treaties which need to be enforced by the attacker leader to end this war in anything but a white peace
+    ## cardinality = 0..1
+    required_attacker_peace_treaties = {
+        ## cardinality = 0..inf
+        <peace_treaty>
+    }
+
+    ### A set of peace treaties which need to be enforced by the defender leader to end this war in anything but a white peace
+    ## cardinality = 0..1
+    required_defender_peace_treaties = {
+        ## cardinality = 0..inf
+        <peace_treaty>
+    }
+
+    ### A set of peace treaties which need to be enforced by either side to end this war in anything but a white peace
+    ## cardinality = 0..1
+    required_peace_treaties = {
+        ## cardinality = 0..inf
+        <peace_treaty>
+    }
+
+    ### when using this CB, what is the war goal
+    war_goal_type = <war_goal>
+
+    ## cardinality = 0..inf
+    ai_will_do = value_field
+    ## cardinality = 0..inf
+    ai_will_do = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    custom_tags = {
+        ## cardinality = 0..inf
+        value_set[custom_tag]
+    }
+}

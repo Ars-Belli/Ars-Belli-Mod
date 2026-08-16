@@ -1,0 +1,43 @@
+types = {
+    type[scripted_trigger] = {
+        path = "game/common/scripted_triggers"
+        path = "game/in_game/common/scripted_triggers"
+        path = "game/main_menu/common/scripted_triggers"
+        path = "game/loading_screen/common/scripted_triggers"
+        path_extension = .txt
+    }
+    type[inline_scripted_trigger] = {
+        path = "game/events"
+        path = "game/in_game/events"
+        path = "game/main_menu/events"
+        path = "game/loading_screen/events"
+        path_extension = .txt
+        type_key_prefix = "scripted_trigger"
+    }
+}
+
+scripted_trigger = {
+    ## cardinality = 0..inf
+    alias_name[trigger] = alias_match_left[trigger]
+}
+
+alias[trigger:<scripted_trigger>] = bool
+
+### The scripted trigger will draw the value of the right clause via $left_clause$.
+alias[trigger:<scripted_trigger>] = {
+    ## cardinality = 0..inf
+    $parameter = $parameter_value
+}
+
+inline_scripted_trigger = {
+    ## cardinality = 0..inf
+    alias_name[trigger] = alias_match_left[trigger]
+}
+
+alias[trigger:<inline_scripted_trigger>] = bool
+
+### The scripted trigger will draw the value of the right clause via $left_clause$.
+alias[trigger:<inline_scripted_trigger>] = {
+    ## cardinality = 0..inf
+    $parameter = $parameter_value
+}

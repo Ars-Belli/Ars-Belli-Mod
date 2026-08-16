@@ -1,0 +1,145 @@
+types = {
+    type[character] = {
+        path = "game/setup/start"
+        path = "game/in_game/setup/start"
+        path = "game/main_menu/setup/start"
+        path = "game/loading_screen/setup/start"
+        path_extension = .txt
+        unique = no
+        skip_root_key = {
+            character_db
+        }
+    }
+}
+
+character = {
+    ## cardinality = 0..1
+    artist = <artist_type>
+
+    ## cardinality = 0..1
+    dynasty = <dynasty>
+
+    ## cardinality = 0..1
+    religion = <religion>
+
+    ## cardinality = 0..1
+    culture = <culture>
+
+    ## cardinality = 0..1
+    estate = <estate>
+
+    ## cardinality = 0..inf
+    health_trait = <trait>
+
+    first_name = {
+        name = localisation
+        name = localisation.localisation
+        name = localisation.localisation.localisation
+        name = random
+    }
+    first_name = localisation
+    first_name = localisation.localisation
+    first_name = localisation.localisation.localisation
+    first_name = random
+
+    ## cardinality = 0..1
+    last_name = {
+        name = localisation
+        name = localisation.localisation
+        name = localisation.localisation.localisation
+        name = random
+    }
+    ## cardinality = 0..1
+    last_name = localisation
+    ## cardinality = 0..1
+    last_name = localisation.localisation
+    ## cardinality = 0..1
+    last_name = localisation.localisation.localisation
+    ## cardinality = 0..1
+    last_name = random
+
+    ## cardinality = 0..1
+    nickname = {
+        name = localisation
+        name = localisation.localisation
+        name = localisation.localisation.localisation
+        name = random
+    }
+    ## cardinality = 0..1
+    nickname = localisation
+    ## cardinality = 0..1
+    nickname = localisation.localisation
+    ## cardinality = 0..1
+    nickname = localisation.localisation.localisation
+    ## cardinality = 0..1
+    nickname = random
+
+    ## cardinality = 0..1
+    mother = <character>
+
+    ## cardinality = 0..1
+    father = <character>
+
+    ## cardinality = 0..inf
+    spouse = <character>
+    ## cardinality = 0..inf
+    spouse = random
+
+    ## cardinality = 0..inf
+    ruler_trait = <trait>
+
+    ## cardinality = 0..inf
+    artist_trait = <trait>
+
+    ## cardinality = 0..inf
+    general_trait = <trait>
+
+    ## cardinality = 0..inf
+    admiral_trait = <trait>
+
+    ## cardinality = 0..inf
+    religious_figure_trait = <trait>
+
+    ## cardinality = 0..inf
+    child_trait = <trait>
+
+    birth_date = date_field
+    birth_date = date_field[y.m.]
+    birth_date = int
+
+    ## cardinality = 0..1
+    death_date = date_field
+    ## cardinality = 0..1
+    death_date = date_field[y.m.]
+    ## cardinality = 0..1
+    death_date = int
+
+    ## cardinality = 0..1
+    birth = value[location]
+
+    ## cardinality = 0..1
+    adm = value_field
+
+    ## cardinality = 0..1
+    dip = value_field
+
+    ## cardinality = 0..1
+    mil = value_field
+
+    ## cardinality = 0..1
+    fertility = value_field
+
+    ## cardinality = 0..1
+    artist_skill = value_field
+
+    ## cardinality = 0..1
+    female = bool
+
+    ## cardinality = 0..1
+    has_patronym = bool
+
+    ## cardinality = 0..inf
+    timed_modifier = single_alias_right[timed_modifier_clause]
+
+    tag = <country>
+}

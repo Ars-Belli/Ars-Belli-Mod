@@ -1,0 +1,87 @@
+types = {
+    type[god] = {
+        path = "game/common/gods"
+        path = "game/in_game/common/gods"
+        path = "game/main_menu/common/gods"
+        path = "game/loading_screen/common/gods"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+    type[omen] = {
+        path = "game/common/gods"
+        path = "game/in_game/common/gods"
+        path = "game/main_menu/common/gods"
+        path = "game/loading_screen/common/gods"
+        path_extension = .txt
+        skip_root_key = { any omens }
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+god = {
+    ## cardinality = 0..1
+    icon = filepath[gfx/interface/icons/gods/,.dds]
+
+    ## cardinality = 0..inf
+    religion = <religion>
+
+    ## cardinality = 0..inf
+    religion = {
+        religion = <religion>
+
+        name_key = localisation
+    }
+
+    ## cardinality = 0..inf
+    group = {
+        group = <religion_group>
+
+        name_key = localisation
+    }
+
+    omens = {}
+
+    ## cardinality = 0..1
+    ability = enum[ability_type]
+
+    ### whether or not they appear as God or Goddess in the UI. use it in script with is_god_female trigger
+    ## cardinality = 0..1
+    is_female = bool
+
+    ### trigger for whether the action is possible (root = country)
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ### which is applied to whole countries
+    ## cardinality = 0..inf
+    country_modifier = single_alias_right[modifier_clause]
+
+    ### which is applied to provinces
+    ## cardinality = 0..inf
+    province_modifier = single_alias_right[modifier_clause]
+
+    ### which is applied to locations
+    ## cardinality = 0..inf
+    location_modifier = single_alias_right[modifier_clause]
+}
+
+## replace_scope = { root = country this = country }
+omen = {
+    god = <god>
+
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..inf
+    country_modifier = single_alias_right[modifier_clause]
+}

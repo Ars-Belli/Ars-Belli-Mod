@@ -1,0 +1,174 @@
+types = {
+    type[unit_type] = {
+        path = "game/common/unit_types"
+        path = "game/in_game/common/unit_types"
+        path = "game/main_menu/common/unit_types"
+        path = "game/loading_screen/common/unit_types"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            name = "$_desc"
+        }
+        subtype[land] = {
+            category = <unit_category.land>
+        }
+        subtype[naval] = {
+            category = <unit_category.naval>
+        }
+        subtype[copy] = {
+            copy_from = <unit_type>
+        }
+    }
+}
+
+unit_type = {
+    subtype[land] = {
+        category = <unit_category.land>
+    }
+    subtype[naval] = {
+        category = <unit_category.naval>
+    }
+    subtype[copy] = {
+        copy_from = <unit_type>
+    }
+
+    ## cardinality = 0..1
+    content_priority = int
+
+    ## cardinality = 0..1
+    alias_name[color] = alias_match_left[color]
+
+    ## cardinality = 0..1
+    startup_amount = int
+
+    ## cardinality = 0..1
+    copy_from = <unit_type>
+
+    ## cardinality = 0..1
+    buildable = bool
+
+    ## cardinality = 0..1
+    is_special = bool
+
+    ## cardinality = 0..1
+    empty = bool
+
+    ## cardinality = 0..1
+    hide = bool
+
+    ## cardinality = 0..1
+    default = bool
+
+    ## cardinality = 0..1
+    levy = bool
+
+    ## cardinality = 0..1
+    age = <age>
+
+    ## cardinality = 0..inf
+    gfx_tags = {
+        value_set[unit_type_gfx_tag]
+    }
+
+    ## cardinality = 0..1
+    build_time_modifier = value_field
+
+    ## cardinality = 0..inf
+    mercenaries_per_location = {
+        pop_type = <pop_type>
+        multiply = value_field
+    }
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = country this = country }
+    country_potential = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = location this = location }
+    location_potential = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = location this = location }
+    location_trigger = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..inf
+    upgrades_to = <unit_type>
+
+    ## cardinality = 0..1
+    upgrades_to_only = <unit_type>
+
+    ## cardinality = 0..1
+    construction_demand = <goods_demand>
+
+    ## cardinality = 0..1
+    maintenance_demand = <goods_demand>
+
+    ## cardinality = 0..inf
+    alias_name[combat_modifier_element_general] = alias_match_left[combat_modifier_element_general]
+
+    ## cardinality = 0..1
+    combat = {
+        ## cardinality = 0..inf
+        <vegetation> = float
+
+        ## cardinality = 0..inf
+        <topography> = float
+
+        ## cardinality = 0..1
+        river = float
+
+        ## cardinality = 0..1
+        inland = float
+
+        ## cardinality = 0..1
+        coastal = float
+    }
+
+    ## cardinality = 0..1
+    impact = {
+        ## cardinality = 0..inf
+        <vegetation> = float
+
+        ## cardinality = 0..inf
+        <topography> = float
+
+        ## cardinality = 0..1
+        river = float
+
+        ## cardinality = 0..1
+        inland = float
+
+        ## cardinality = 0..1
+        coastal = float
+    }
+
+    subtype[land] = {
+        ## cardinality = 0..inf
+        alias_name[combat_modifier_element_land] = alias_match_left[combat_modifier_element_land]
+
+        ## cardinality = 0..1
+        light = bool
+    }
+
+    subtype[naval] = {
+        ## cardinality = 0..inf
+        alias_name[combat_modifier_element_naval] = alias_match_left[combat_modifier_element_naval]
+
+        ## cardinality = 0..1
+        use_ship_names = bool
+    }
+
+    subtype[copy] = {
+        ## cardinality = 0..inf
+        alias_name[combat_modifier_element_naval] = alias_match_left[combat_modifier_element_naval]
+
+        ## cardinality = 0..inf
+        alias_name[combat_modifier_element_land] = alias_match_left[combat_modifier_element_land]
+
+        ## cardinality = 0..1
+        use_ship_names = bool
+
+        ## cardinality = 0..1
+        light = bool
+    }
+}

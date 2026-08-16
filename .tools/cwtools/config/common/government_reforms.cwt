@@ -1,0 +1,105 @@
+types = {
+    type[government_reform] = {
+        path = "game/common/government_reforms"
+        path = "game/in_game/common/government_reforms"
+        path = "game/main_menu/common/government_reforms"
+        path = "game/loading_screen/common/government_reforms"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+government_reform = {
+    ### These are exclusive reforms, you can only implement one major one per country
+    ## cardinality = 0..1
+    major = bool
+
+    ## cardinality = 0..1
+    content_priority = int
+
+    ## cardinality = 0..1
+    icon = filepath[gfx/interface/icons/government_reforms/illustrations/,.dds]
+
+    ### Cannot be used by rebels
+    ## cardinality = 0..1
+    block_for_rebel = bool
+
+    ### Has additional UI fluff
+    ## cardinality = 0..1
+    unique = bool
+
+    ### optional age the reform can be used from
+    ## cardinality = 0..1
+    age = <age>
+
+    ### optional government type that supports the reform
+    ## cardinality = 0..1
+    government = <government_type>
+
+    ### trigger for whether the action is possible (root = country)
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ### trigger for whether the action can start (root = country)
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+
+    ### to determine if the law is currently locked and cannot be interacted with
+    ## cardinality = 0..1
+    locked = single_alias_right[trigger_clause]
+
+    ### (scale = script for the scale, potential_trigger = trigger for if the modifier applies)> which is applied to whole countries
+    ## cardinality = 0..inf
+    country_modifier = single_alias_right[modifier_clause]
+
+    ### (scale = script for the scale, potential_trigger = trigger for if the modifier applies)> which is applied to provinces
+    ## cardinality = 0..inf
+    ## replace_scope = { root = country this = location }
+    location_modifier = single_alias_right[modifier_clause]
+
+    ### (scale = script for the scale, potential_trigger = trigger for if the modifier applies)> which is applied to provinces
+    ## cardinality = 0..inf
+    ## replace_scope = { root = country this = province }
+    province_modifier = single_alias_right[modifier_clause]
+
+    ### fired when the action is chosen (root = country)
+    ## cardinality = 0..1
+    on_activate = single_alias_right[effect_clause]
+
+    ### fired when the action's implementation reaches 100% (instant if there's no time delay)
+    ## cardinality = 0..1
+    on_fully_activated = single_alias_right[effect_clause]
+
+    ### fired when the action is removed (root = country)
+    ## cardinality = 0..1
+    on_deactivate = single_alias_right[effect_clause]
+
+    ### optional list of male names assumed by rulers of the country
+    ## cardinality = 0..1
+    male_regnal_names = {
+        ## cardinality = 0..inf
+        localisation
+    }
+
+    ### optional list of female names assumed by rulers of the country
+    ## cardinality = 0..1
+    female_regnal_names = {
+        ## cardinality = 0..inf
+        localization
+    }
+
+    ## cardinality = 0..1
+    societal_values = {
+        #TODO
+        ## cardinality = 1..inf
+        scalar
+    }
+
+    ### how long it takes before the reform is fully implemented. Leave unset for instant implementation
+    ## cardinality = 0..inf
+    alias_name[duration] = alias_match_left[duration]
+}

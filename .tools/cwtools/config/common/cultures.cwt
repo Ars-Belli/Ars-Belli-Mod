@@ -1,0 +1,75 @@
+types = {
+    type[culture] = {
+        path = "game/common/cultures"
+        path = "game/in_game/common/cultures"
+        path = "game/main_menu/common/cultures"
+        path = "game/loading_screen/common/cultures"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+    }
+}
+
+culture = {
+    language = <language>
+    language = <dialect>
+
+    alias_name[color] = alias_match_left[color]
+
+    ## cardinality = 0..inf
+    culture_groups = {
+        ## cardinality = 0..inf
+        <culture_group>
+    }
+
+    ## cardinality = 0..1
+    active = bool
+
+    ## cardinality = 0..1
+    goods_demand_modifier = {
+        ## cardinality = 0..inf
+        <good> = float
+    }
+
+    tags = {
+        ## cardinality = 0..inf
+        value_set[culture_gfx_tag]
+    }
+
+    ## cardinality = 0..inf
+    opinions = {
+        ## cardinality = 0..inf
+        <culture> = enum[culture_opinion]
+    }
+
+    ## cardinality = 0..1
+    noun_keys = {
+        ## cardinality = 0..inf
+        localisation
+    }
+
+    ## cardinality = 0..1
+    adjective_keys = {
+        ## cardinality = 0..inf
+        localisation
+    }
+
+    ## cardinality = 0..1
+    use_patronym = bool
+
+    ## cardinality = 0..1
+    dynasty_name_type = enum[culture_dynastic_name_type]
+
+    ### modifier when Primary Culture is a culture with this culture group
+    ## cardinality = 0..1
+    country_modifier = single_alias_right[modifier_clause]
+
+    ### modifier when Dominant Culture is a culture with this culture group
+    ## cardinality = 0..1
+    location_modifier = single_alias_right[modifier_clause]
+
+    ### modifier when Culture is a culture with this culture group
+    ## cardinality = 0..1
+    character_modifier = single_alias_right[modifier_clause]
+}

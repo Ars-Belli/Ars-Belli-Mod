@@ -1,0 +1,239 @@
+types = {
+	## graph_related_types = { on_action }
+	type[event] = {
+        path = "game/events"
+        path = "game/in_game/events"
+        path = "game/main_menu/events"
+        path = "game/loading_screen/events"
+		path_extension = .txt
+
+        ## group = event_attribute
+		subtype[hidden] = {
+			hidden = yes
+		}
+
+		## group = event_type
+		subtype[scopeless] = {
+			## cardinality = 0..0
+			type = scalar
+		}
+		## group = event_type
+		## push_scope = country
+		## display_name = Country event
+		subtype[country] = {
+			## cardinality = 1..1
+			type = country_event
+		}
+		## group = event_type
+		## push_scope = state
+		## display_name = State event
+		subtype[state] = {
+			## cardinality = 1..1
+			type = state_event
+		}
+		## group = event_type
+		## push_scope = character
+		## display_name = Character event
+		subtype[character] = {
+			## cardinality = 1..1
+			type = character_event
+		}
+
+		localisation = {
+			subtype[!hidden] = {
+				title = title
+				desc = desc
+			}
+		}
+	}
+}
+
+event = {
+    ### Defines for what scope this event fires, must be one of the options there!
+	## cardinality = 0..1
+	type = enum[event_type]
+
+    ## cardinality = 0..1
+    randomlog = bool
+
+    ### The title of the event. Can use scopes from immediate for the localization
+    title = localisation
+    ### Alternative way for event titles which shows the first title which fulfils the trigger. Use that if you rely on saved event targets from immediate
+    title = single_alias_right[complex_desc]
+
+    subtype[!hidden] = {
+        ### The description of the event. Can use scopes from immediate for the localization
+        desc = localisation
+        ### Alternative way for event descriptions which shows the first title which fulfils the trigger. Use that if you rely on saved event targets from immediate
+        desc = single_alias_right[complex_desc]
+    }
+
+    subtype[hidden] = {
+        ### The description of the event. Can use scopes from immediate for the localization
+        ## cardinality = 0..1
+        desc = localisation
+        ### Alternative way for event descriptions which shows the first title which fulfils the trigger. Use that if you rely on saved event targets from immediate
+        ## cardinality = 0..1
+        desc = single_alias_right[complex_desc]
+    }
+
+    ### The extra text of the event describing the historical background of the event
+    ## cardinality = 0..1
+    historical_info = localisation
+    ### Alternative way for event historical info which shows the first title which fulfils the trigger. Use that if you rely on saved event targets from immediate
+    ## cardinality = 0..1
+    historical_info = single_alias_right[complex_desc]
+
+    ### The triggers needed by the event to fire in the first place. root = defined scope from type
+    ## cardinality = 0..1
+    trigger = single_alias_right[trigger_clause]
+
+    ### The event will create a notification for other countries if set to yes. Default: no
+    ## cardinality = 0..1
+    major = bool
+
+    ### Defines who can see the notification of this event. root = country who should see this event, scope:from = the original entity firing the event
+    ## cardinality = 0..1
+    major_trigger = single_alias_right[trigger_clause]
+
+    ### Event is hidden away from the country, no title or description needed in that case
+    ## cardinality = 0..1
+    hidden = bool
+
+    ### Effects which happen the moment the event fires. root = defined scope from type
+    ## cardinality = 0..1
+    immediate = single_alias_right[effect_clause]
+
+    ### Effects which happen AFTER any event option has been selected. root = defined scope from type
+    ## cardinality = 0..1
+    after = single_alias_right[effect_clause]
+
+    ### This will be run if a queued event (or one triggered immediately from script) does not fulfill its trigger. Events failing to trigger from an on-action will *not* run this
+    ## cardinality = 0..1
+    on_trigger_fail = single_alias_right[effect_clause]
+
+    ### Event will fire only once per campaign
+    ## cardinality = 0..1
+    fire_only_once = bool
+
+    ### Event pauses the game when fired in single player. Default: yes
+    ## cardinality = 0..1
+    interface_lock = bool
+
+    ### The time window for the event to occur, only tags specified in it can get the event
+    ## cardinality = 0..1
+    dynamic_historical_event = {
+        ## cardinality = 1..inf
+        tag = <country>
+        ## cardinality = 1..inf
+        tag = value[dynamic_tag]
+
+        ## cardinality = 0..1
+        from = date_field
+        ## cardinality = 0..1
+        from = date_field[y.m]
+        ## cardinality = 0..1
+        from = int
+
+        ## cardinality = 0..1
+        to = date_field
+        ## cardinality = 0..1
+        to = date_field[y.m]
+        ## cardinality = 0..1
+        to = int
+
+        monthly_chance = float
+    }
+
+    ### The game will not log an error about this event being unreferenced. Useful for debug events
+    ## cardinality = 0..1
+    orphan = bool
+
+    ### Event won't show the character portraits if any character is a saved event target in the immediate
+    ## cardinality = 0..1
+    hide_portraits = bool
+
+    ### The direction for the audio. Default: neutral
+    ## cardinality = 0..1
+    outcome = enum[event_outcome]
+
+    ### Determines what icon the event should have. Does NOT show any icon when it is a generic_event which is the default
+    ## cardinality = 0..1
+    category = enum[event_category]
+
+    ### Tags for the event picture. See existing events to see what tags are used ..
+    ## cardinality = 0..inf
+    illustration_tags = {
+        <tags>
+    }
+
+    ### Used to manipulate the weight of this on_action if it is a candidate in a random_on_action list (see below). Only relevant for events which are called in any random lists such as random_list or random_events
+    ## cardinality = 0..1
+    weight_multiplier = single_alias_right[formula]
+
+    ### The picture displayed for the event
+    ## cardinality = 0..inf
+    image = filepath
+
+    ### You can have x amounts of options in a single event
+    ### root = defined scope from type
+    ## cardinality = 0..inf
+    option = {
+        name = localisation
+
+        ### Highlights this option as a historical option
+        ## cardinality = 0..1
+        historical_option = bool
+
+        ### This option is only visible if the triggers here are fulfilled
+        ### root = defined scope from type. Note: use hidden_trigger = {} if you do not want the game say "this is available because x"
+        ## cardinality = 0..1
+        trigger = single_alias_right[trigger_clause]
+
+        ### This event option will be available when all the others are not, even if the triggers here are unfulfilled
+        ## cardinality = 0..1
+        fallback = bool
+
+        ### All non-exclusive event options are not shown if that event option is available
+        ## cardinality = 0..1
+        exclusive = bool
+
+        ### This event option is only available to the country which triggers the event for
+        ## cardinality = 0..1
+        original_recipient_only = bool
+
+        ## cardinality = 0..1
+        moral_option = bool
+
+        ## cardinality = 0..1
+        evil_option = bool
+
+        ## cardinality = 0..1
+        high_risk_option = bool
+
+        ## cardinality = 0..1
+        high_reward_option = bool
+
+        ### Defines AI willingness to pick this event option using script math. Overrules ai_chance
+        ## cardinality = 0..1
+        ai_will_select = single_alias_right[formula]
+
+        ### Defines AI likelihood to pick this event option, old school mtth style
+        ## cardinality = 0..1
+        ai_chance = value_field
+        ### Defines AI likelihood to pick this event option, old school mtth style
+        ## cardinality = 0..1
+        ai_chance = <script_value>
+        ### Defines AI likelihood to pick this event option, old school mtth style
+        ## cardinality = 0..1
+        ai_chance = <static_value>
+        ### Defines AI likelihood to pick this event option, old school mtth style
+        ## cardinality = 0..1
+        ai_chance = single_alias_right[formula]
+
+        ## cardinality = 0..inf
+        alias_name[effect] = alias_match_left[effect]
+    }
+
+}
+

@@ -1,0 +1,36 @@
+types = {
+    type[employment_system] = {
+        path = "game/common/employment_systems"
+        path = "game/in_game/common/employment_systems"
+        path = "game/main_menu/common/employment_systems"
+        path = "game/loading_screen/common/employment_systems"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+employment_system = {
+    ### modifier applied to a country that has this disaster ongoing
+    country_modifier = single_alias_right[modifier_clause]
+
+    ### script value to return the building priority (higher numbers gets done first, so priority 10 then priority 2 then priority 1 etc)
+    priority = value_field
+    ### script value to return the building priority (higher numbers gets done first, so priority 10 then priority 2 then priority 1 etc)
+    priority = <script_value>
+    ### script value to return the building priority (higher numbers gets done first, so priority 10 then priority 2 then priority 1 etc)
+    priority = <static_value>
+    ### script value to return the building priority (higher numbers gets done first, so priority 10 then priority 2 then priority 1 etc)
+    priority = single_alias_right[formula]
+
+    ### script value for how the ai willchoose which system to use
+    ai_will_do = value_field
+    ### script value for how the ai willchoose which system to use
+    ai_will_do = <script_value>
+    ### script value for how the ai willchoose which system to use
+    ai_will_do = <static_value>
+    ### script value for how the ai willchoose which system to use
+    ai_will_do = single_alias_right[formula]
+}

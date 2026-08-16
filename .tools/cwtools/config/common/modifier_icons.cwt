@@ -1,0 +1,37 @@
+types = {
+    type[modifier_icon] = {
+        path = "game/common/modifier_icons"
+        path = "game/in_game/common/modifier_icons"
+        path = "game/main_menu/common/modifier_icons"
+        path = "game/loading_screen/common/modifier_icons"
+        path_extension = .txt
+    }
+}
+
+modifier_icon = {
+    ### Will be used if >= 0 or if `negative` isn't set
+    positive = filepath
+    ### Will be used if >= 0 or if `negative` isn't set
+    positive = filepath[main_menu]
+    ### Will be used if >= 0 or if `negative` isn't set
+    positive = filepath[in_game]
+    ### Will be used if >= 0 or if `negative` isn't set
+    positive = filepath[loading_screen]
+
+    ### Will be used if < 0 (optional)
+    ## cardinality = 0..1
+    negative = filepath
+    ### Will be used if < 0 (optional)
+    ## cardinality = 0..1
+    negative = filepath[main_menu]
+    ### Will be used if < 0 (optional)
+    ## cardinality = 0..1
+    negative = filepath[in_game]
+    ### Will be used if < 0 (optional)
+    ## cardinality = 0..1
+    negative = filepath[loading_screen]
+
+    ### The first one in the file with this flag will be used as default
+    ## cardinality = 0..1
+    default = yes
+}

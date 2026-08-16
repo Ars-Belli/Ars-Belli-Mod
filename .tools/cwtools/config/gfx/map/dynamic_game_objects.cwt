@@ -1,0 +1,32 @@
+types = {
+    ## type_key_filter = dynamic_game_object
+    type[dynamic_game_object] = {
+        path = "gfx/map/map_objects"
+        path = "game/in_game/gfx/map/map_objects"
+        path = "game/main_menu/gfx/map/map_objects"
+        path = "game/loading_screen/gfx/map/map_objects"
+        name_field = name
+    }
+}
+
+dynamic_game_object = {
+    name = scalar
+
+    schematic_name = scalar
+    schematic_name = {
+        ## cardinality = 0..inf
+        scalar
+    }
+
+    entity_province_size_thresholds = {
+        ## cardinality = 2..2
+        float
+    }
+
+    map_id = {
+        ## cardinality = 0..inf
+        scalar
+    }
+
+    temporary = bool
+}

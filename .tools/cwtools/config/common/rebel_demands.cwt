@@ -1,0 +1,20 @@
+types = {
+    type[rebel_demand] = {
+        path = "game/common/rebel_demands"
+        path = "game/in_game/common/rebel_demands"
+        path = "game/main_menu/common/rebel_demands"
+        path = "game/loading_screen/common/rebel_demands"
+        path_extension = .txt
+    }
+}
+
+## replace_scope = { root = rebels this = rebels }
+rebel_demand = {
+    trigger = single_alias_right[trigger_clause]
+
+    concession_effect = single_alias_right[effect_clause]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = country this = country }
+    victory_effect = single_alias_right[effect_clause]
+}

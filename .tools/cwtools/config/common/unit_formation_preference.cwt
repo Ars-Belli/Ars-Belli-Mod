@@ -1,0 +1,129 @@
+types = {
+    type[unit_formation_preference] = {
+        path = "game/common/unit_formation_preference"
+        path = "game/in_game/common/unit_formation_preference"
+        path = "game/main_menu/common/unit_formation_preference"
+        path = "game/loading_screen/common/unit_formation_preference"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+        subtype[land] = {
+            army = yes
+        }
+        subtype[naval] = {
+            army = no
+        }
+    }
+}
+
+unit_formation_preference = {
+    army = bool
+
+    ## cardinality = 0..1
+    default = bool
+
+    subtype[land] = {
+        left = {
+            max_frontage = value_field
+
+            ## cardinality = 0..inf
+            int = light.<unit_category.land>
+
+            ## cardinality = 0..inf
+            int = heavy.<unit_category.land>
+
+            ## cardinality = 0..inf
+            int = <unit_category.land>
+        }
+
+        center = {
+            max_frontage = value_field
+
+            ## cardinality = 0..inf
+            int = light.<unit_category.land>
+
+            ## cardinality = 0..inf
+            int = heavy.<unit_category.land>
+
+            ## cardinality = 0..inf
+            int = <unit_category.land>
+        }
+
+        right = {
+            max_frontage = value_field
+
+            ## cardinality = 0..inf
+            int = light.<unit_category.land>
+
+            ## cardinality = 0..inf
+            int = heavy.<unit_category.land>
+
+            ## cardinality = 0..inf
+            int = <unit_category.land>
+        }
+
+        reserves = {
+            ## cardinality = 0..inf
+            int = light.<unit_category.land>
+
+            ## cardinality = 0..inf
+            int = heavy.<unit_category.land>
+
+            ## cardinality = 0..inf
+            int = <unit_category.land>
+        }
+    }
+
+    subtype[naval] = {
+        left = {
+            max_frontage = value_field
+
+            ## cardinality = 0..inf
+            int = light.<unit_category.naval>
+
+            ## cardinality = 0..inf
+            int = heavy.<unit_category.naval>
+
+            ## cardinality = 0..inf
+            int = <unit_category.naval>
+        }
+
+        center = {
+            max_frontage = value_field
+
+            ## cardinality = 0..inf
+            int = light.<unit_category.naval>
+
+            ## cardinality = 0..inf
+            int = heavy.<unit_category.naval>
+
+            ## cardinality = 0..inf
+            int = <unit_category.naval>
+        }
+
+        right = {
+            max_frontage = value_field
+
+            ## cardinality = 0..inf
+            int = light.<unit_category.naval>
+
+            ## cardinality = 0..inf
+            int = heavy.<unit_category.naval>
+
+            ## cardinality = 0..inf
+            int = <unit_category.naval>
+        }
+
+        reserves = {
+            ## cardinality = 0..inf
+            int = light.<unit_category.naval>
+
+            ## cardinality = 0..inf
+            int = heavy.<unit_category.naval>
+
+            ## cardinality = 0..inf
+            int = <unit_category.naval>
+        }
+    }
+}

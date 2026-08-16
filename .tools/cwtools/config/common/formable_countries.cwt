@@ -1,0 +1,101 @@
+types = {
+    type[formable_country] = {
+        path = "game/common/formable_countries"
+        path = "game/in_game/common/formable_countries"
+        path = "game/main_menu/common/formable_countries"
+        path = "game/loading_screen/common/formable_countries"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            name = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+formable_country = {
+    ### What level is this country? Players can only form countries of equal or higher level. AI can only form of higher level.
+    level = int
+
+    ### What percentage of locations do you require to be able to form this country? Default = 1.0 (100%)
+    ## cardinality = 0..1
+    required_locations_fraction = value_field
+
+    ## cardinality = 0..1
+    content_priority = int
+
+    ### Must the list of required locations/regions etc contain your current capital for the formable to even be visible? default is yes
+    ## cardinality = 0..1
+    capital_required = bool
+
+    ## cardinality = 0..1
+    potential_requires_own = bool
+
+    ### Limits sillier ones vs historical ones. Select how silly you want it in the game rules. Default is historical
+    ## cardinality = 0..1
+    rule = enum[formable_country_rule]
+
+    ### Can you even see the button?
+    ### any trigger should work here
+    ### root is active country
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ### Can you click the button?
+    ### any trigger should work here
+    ### root is active country
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+
+    ### what happens when you click form?
+    ### any effect should work here
+    ### root is active country
+    ## cardinality = 0..1
+    form_effect = single_alias_right[effect_clause]
+
+    name = localisation
+    adjective = localisation
+
+    flag = <coat_of_arm>
+    flag = <flag_definition>
+
+    tag = value_set[dynamic_tag]
+
+    alias_name[color] = alias_match_left[color]
+
+    ## cardinality = 0..1
+    continents = {
+        ## cardinality = 0..inf
+        <continent>
+    }
+
+    ## cardinality = 0..1
+    sub_continents = {
+        ## cardinality = 0..inf
+        <sub_continent>
+    }
+
+    ## cardinality = 0..1
+    regions = {
+        ## cardinality = 0..inf
+        <region>
+    }
+
+    ## cardinality = 0..1
+    areas = {
+        ## cardinality = 0..inf
+        <area>
+    }
+
+    ## cardinality = 0..1
+    provinces = {
+        ## cardinality = 0..inf
+        <province>
+    }
+
+    ## cardinality = 0..1
+    locations = {
+        ## cardinality = 0..inf
+        value[location]
+    }
+}

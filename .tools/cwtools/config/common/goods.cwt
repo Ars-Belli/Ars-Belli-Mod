@@ -1,0 +1,183 @@
+types = {
+    type[good] = {
+        path = "game/common/goods"
+        path = "game/in_game/common/goods"
+        path = "game/main_menu/common/goods"
+        path = "game/loading_screen/common/goods"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+    }
+}
+
+good = {
+    ### Defaults to no, mark that good as a slave good
+    ## cardinality = 0..1
+    is_slaves = bool
+
+    ### Defaults to no, blocks the expansion of the rgo for this good
+    ## cardinality = 0..1
+    block_rgo_upgrade = bool
+
+    ### Defaults to no, will cause inflation when produced
+    ## cardinality = 0..1
+    inflation = bool
+
+    ## cardinality = 0..1
+    origin_in_old_world = bool
+
+    ## cardinality = 0..1
+    origin_in_new_world = bool
+
+    ## cardinality = 0..1
+    no_demand_if_no_market_availability = bool
+
+    ### Defaults to 0
+    ## cardinality = 0..1
+    base_production = value_field
+
+    ### What color the goods should have in the map mode
+    ## cardinality = 0..1
+    alias_name[color] = alias_match_left[color]
+
+    ### Defaults to 0, how much food this good provides with
+    ## cardinality = 0..1
+    food = value_field
+
+    ### Defaults to 1, how expensive it is to transport the good
+    ## cardinality = 0..1
+    transport_cost = value_field
+
+    ### Defaults to 1, the default price of the good on a market
+    ## cardinality = 0..1
+    default_market_price = value_field
+
+    ### Defaults to raw_material, defines if the goods is a raw_material or not
+    ## cardinality = 0..1
+    category = enum[good_category]
+
+    ### Defaults to farming, defines the category of the good
+    ## cardinality = 0..1
+    method = enum[good_method]
+
+    ### ai preference to avoid building a city on this rgo
+    ## cardinality = 0..1
+    ai_rgo_size_importance = value_field
+    ### ai preference to avoid building a city on this rgo
+    ## cardinality = 0..1
+    ai_rgo_size_importance = single_alias_right[formula]
+
+    ### gives error log if this is false on setup
+    ## cardinality = 0..1
+    ## replace_scope = { root = location this = location }
+    location_potential = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    max_rgo_size = value_field
+    ## cardinality = 0..1
+    max_rgo_size = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    ai_rgo_expansion_priority = value_field
+    ## cardinality = 0..1
+    ai_rgo_expansion_priority = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    development_threshold = value_field
+    ## cardinality = 0..1
+    development_threshold = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    wealth_impact_threshold = {
+        ## cardinality = 0..1
+        all = float
+
+        ## cardinality = 0..inf
+        <pop_type> = float
+    }
+
+    ## cardinality = 0..1
+    demand_add = {
+        ## cardinality = 0..1
+        all = float
+
+        ## cardinality = 0..1
+        upper = float
+
+        ## cardinality = 0..inf
+        <pop_type> = float
+    }
+
+    ## cardinality = 0..1
+    demand_multiply = {
+        ## cardinality = 0..1
+        upper = float
+
+        ## cardinality = 0..inf
+        <pop_type> = float
+    }
+
+    ## cardinality = 0..1
+    winter_demand_modifier = {
+        enum[climate_winter_type] = float
+    }
+
+    ## cardinality = 0..1
+    topography_demand_modifier = {
+        <topography> = float
+    }
+
+    ## cardinality = 0..1
+    climate_demand_modifier = {
+        <climate> = float
+    }
+
+    ## cardinality = 0..1
+    sub_continent_demand_modifier = {
+        <sub_continent> = float
+    }
+
+    ## cardinality = 0..1
+    continent_demand_modifier = {
+        <continent> = float
+    }
+
+    ## cardinality = 0..1
+    region_demand_modifier = {
+        <region> = float
+    }
+
+    ## cardinality = 0..1
+    area_demand_modifier = {
+        <area> = float
+    }
+
+    ## cardinality = 0..1
+    disease_demand_modifier = float
+
+    ## cardinality = 0..1
+    market_unavailability_demand_modifier = float
+
+    ## cardinality = 0..1
+    literacy_demand_factor = float
+
+    ## cardinality = 0..inf
+    demand_only_in_continent = <continent>
+
+    ## cardinality = 0..inf
+    demand_only_in_sub_continent = <sub_continent>
+
+    ## cardinality = 0..inf
+    demand_only_in_region = <region>
+
+    ## cardinality = 0..inf
+    demand_only_in_area = <area>
+
+    ### A list of custom strings to use to identify that good
+    ## cardinality = 0..1
+    custom_tags = {
+        ## cardinality = 0..inf
+        value_set[custom_tag]
+    }
+}

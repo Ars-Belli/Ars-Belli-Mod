@@ -1,0 +1,27 @@
+types = {
+    type[alert_description] = {
+        path = "game/common/alert_descriptions"
+        path = "game/in_game/common/alert_descriptions"
+        path = "game/main_menu/common/alert_descriptions"
+        path = "game/loading_screen/common/alert_descriptions"
+        path_extension = .txt
+        images = {
+            icon = texture
+        }
+        localisation = {
+            name = title
+        }
+    }
+}
+
+alert_description = {
+    title = localisation
+
+    hint = localisation
+
+    texture = filepath[gfx/interface/icons/,.dds]
+
+    game_concept = value[concept_alias]
+
+    priority = enum[alert_description_priority]
+}

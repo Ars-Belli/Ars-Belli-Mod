@@ -1,0 +1,91 @@
+types = {
+    ## type_key_filter = war_manager
+    type[war_manager] = {
+        path = "game/setup/start"
+        path = "game/in_game/setup/start"
+        path = "game/main_menu/setup/start"
+        path = "game/loading_screen/setup/start"
+        path_extension = .txt
+        unique = no
+    }
+}
+
+war_manager = {
+    ## cardinality = 0..inf
+    enum[war_manager_war_type] = {
+        war_name = {
+            name = localisation
+
+            ordinal = int
+
+            ## cardinality = 0..1
+            first = {
+                name = localisation
+            }
+
+            ## cardinality = 0..1
+            second = {
+                name = localisation
+            }
+        }
+
+        start_date = date_field
+        start_date = date_field[y.m]
+        start_date = int
+
+        action = date_field
+        action = date_field[y.m]
+        action = int
+
+        ## cardinality = 0..inf
+        enum[war_goal_type] = {
+            type = <war_goal>
+
+            casus_belli = <casus_belli>
+
+            location = value[location]
+        }
+
+        ## cardinality = 0..inf
+        attacker = {
+            country = <country>
+
+            request = {
+                ## cardinality = 0..1
+                caller = <country>
+
+                reason = enum[join_war_reason]
+
+                ## cardinality = 0..1
+                which = <scripted_relation>
+            }
+        }
+
+        ## cardinality = 0..inf
+        defender = {
+            country = <country>
+
+            request = {
+                ## cardinality = 0..1
+                caller = <country>
+
+                reason = enum[join_war_reason]
+            }
+        }
+    }
+
+    ## cardinality = 0..inf
+    truce = {
+        ## cardinality = 0..inf
+        attacker = <country>
+
+        ## cardinality = 0..inf
+        defender = <country>
+
+        start_date = date_field
+        start_date = date_field[y.m]
+        start_date = int
+
+        months = int
+    }
+}

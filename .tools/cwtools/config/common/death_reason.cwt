@@ -1,0 +1,29 @@
+types = {
+    type[death_reason] = {
+        path = "game/common/death_reason"
+        path = "game/in_game/common/death_reason"
+        path = "game/main_menu/common/death_reason"
+        path = "game/loading_screen/common/death_reason"
+        path_extension = .txt
+        localisation = {
+            name = "DEATH_REASON_$"
+        }
+    }
+}
+
+## replace_scope = { root = character this = character }
+death_reason = {
+    ## cardinality = 0..inf
+    possible_parameter = value_set[event_target]
+
+    ## cardinality = 0..1
+    random = bool
+
+    ## cardinality = 0..1
+    weight = value_field
+    ## cardinality = 0..1
+    weight = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    trigger = single_alias_right[trigger_clause]
+}

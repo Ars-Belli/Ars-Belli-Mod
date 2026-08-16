@@ -1,0 +1,65 @@
+types = {
+    type[on_action] = {
+        path = "game/common/on_action"
+        path = "game/in_game/common/on_action"
+        path = "game/main_menu/common/on_action"
+        path = "game/loading_screen/common/on_action"
+        path_extension = .txt
+    }
+}
+
+on_action = {
+    ## cardinality = 0..1
+    trigger = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    effect = single_alias_right[effect_clause]
+
+    ## cardinality = 0..1
+    random_events = {
+        ## cardinality = 0..inf
+        int = <event>
+
+        sample_count = int
+
+        ## cardinality = 0..inf
+        delay = single_alias_right[duration_clause]
+
+        ## cardinality = 0..inf
+        int = 0
+
+        ## cardinality = 0..1
+        chance_of_no_event = value_field
+        ## cardinality = 0..1
+        chance_of_no_event = single_alias_right[formula]
+
+        ## cardinality = 0..1
+        chance_to_happen = value_field
+        ## cardinality = 0..1
+        chance_to_happen = single_alias_right[formula]
+    }
+
+    ## cardinality = 0..1
+    random_on_action = {
+        ## cardinality = 0..inf
+        int = <on_action>
+    }
+
+    ## cardinality = 0..1
+    events = {
+        ## cardinality = 0..inf
+        <event>
+    }
+
+    ## cardinality  = 0..1
+    on_actions = {
+        ## cardinality = 0..inf
+        <on_action>
+    }
+
+    ## cardinality  = 0..1
+    first_valid_on_action = {
+        ## cardinality = 0..inf
+        <on_action>
+    }
+}

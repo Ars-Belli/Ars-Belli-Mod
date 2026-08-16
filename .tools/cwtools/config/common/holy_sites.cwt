@@ -1,0 +1,31 @@
+types = {
+    type[holy_site] = {
+        path = "game/common/holy_sites"
+        path = "game/in_game/common/holy_sites"
+        path = "game/main_menu/common/holy_sites"
+        path = "game/loading_screen/common/holy_sites"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+    }
+}
+
+holy_site = {
+    location = value[location]
+
+    type = <holy_site_type>
+
+    importance = int
+
+    religions = {
+        ## cardinality = 1..inf
+        <religion>
+    }
+
+    ## cardinality = 0..1
+    god = <god>
+
+    ## cardinality = 0..1
+    avatar = <avatar>
+}

@@ -1,0 +1,63 @@
+types = {
+    type[estate] = {
+        path = "game/common/estates"
+        path = "game/in_game/common/estates"
+        path = "game/main_menu/common/estates"
+        path = "game/loading_screen/common/estates"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            name = "$_desc"
+        }
+    }
+}
+
+estate = {
+    alias_name[color] = alias_match_left[color]
+
+    power_per_pop = value_field
+
+    tax_per_pop = value_field
+
+    rival = value_field
+
+    alliance = value_field
+
+    ## cardinality = 0..1
+    characters_have_dynasty = enum[estate_character_dynasty]
+
+    revolt_court_language = enum[estate_revolt_court_language]
+
+    ## cardinality = 0..1
+    priority_for_dynasty_head = bool
+
+    ## cardinality = 0..1
+    can_spawn_random_characters = bool
+
+    ## cardinality = 0..1
+    can_generate_mercenary_leaders = bool
+
+    ## cardinality = 0..1
+    bank = bool
+
+    ## cardinality = 0..1
+    use_diminutive = bool
+
+    ## cardinality = 0..1
+    disenfranchise_to = <estate>
+
+    satisfaction = single_alias_right[modifier_clause]
+
+    high_power = single_alias_right[modifier_clause]
+
+    low_power = single_alias_right[modifier_clause]
+
+    ## cardinality = 0..1
+    power = single_alias_right[modifier_clause]
+
+    ## cardinality = 0..1
+    opinion = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    ruler = bool
+}

@@ -1,0 +1,66 @@
+types = {
+    type[estate_privilege] = {
+        path = "game/common/estate_privileges"
+        path = "game/in_game/common/estate_privileges"
+        path = "game/main_menu/common/estate_privileges"
+        path = "game/loading_screen/common/estate_privileges"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+estate_privilege = {
+    ### the estate the privilege applies to
+    estate = <estate>
+
+    ## cardinality = 0..1
+    content_priority = int
+
+    ### which is applied to whole countries
+    ## cardinality = 0..inf
+    country_modifier = single_alias_right[modifier_clause]
+
+    ### which is applied to provinces
+    ## cardinality = 0..inf
+    province_modifier = single_alias_right[modifier_clause]
+
+    ### which is applied to locations
+    ## cardinality = 0..inf
+    location_modifier = single_alias_right[modifier_clause]
+
+    ### trigger for whether the action is possible (root = country)
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ### trigger for whether the action can start (root = country)
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+
+    ### trigger when you should be capable of removing an enacted privilege
+    ## cardinality = 0..1
+    can_revoke = single_alias_right[trigger_clause]
+
+    ### fired when the action is chosen (root = country)
+    ## cardinality = 0..1
+    on_activate = single_alias_right[effect_clause]
+
+    ### fired when the action's implementation reaches 100% (instant if there's no time delay)
+    ## cardinality = 0..1
+    on_fully_activated = single_alias_right[effect_clause]
+
+    ### fired when the action is removed (root = country)
+    ## cardinality = 0..1
+    on_deactivate = single_alias_right[effect_clause]
+
+    ### used to define how long it takes to become fully implemented. Modifiers will be scaled by how much of this time is completed.
+    ## cardinality = 0..inf
+    alias_name[duration] = alias_match_left[duration]
+
+    ## cardinality = 0..1
+    ai_weight = value_field
+    ## cardinality = 0..1
+    ai_weight = single_alias_right[formula]
+}

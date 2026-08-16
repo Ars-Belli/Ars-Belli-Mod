@@ -1,0 +1,82 @@
+types = {
+    type[persistent_dna] = {
+        path = "game/common/persistent_dna"
+        path = "game/in_game/common/persistent_dna"
+        path = "game/main_menu/common/persistent_dna"
+        path = "game/loading_screen/common/persistent_dna"
+        path_extension = .txt
+    }
+}
+
+persistent_dna = {
+    ## cardinality = 0..1
+    priority = int
+
+    ## cardinality = 0..1
+    tags = {
+        ## cardinality = 0..inf
+        value_set[character]
+    }
+
+    portrait_info = {
+        genes = {
+            hair_color = { int[0..255] int[0..255] int[0..255] int[0..255] }
+
+            skin_color = { int[0..255] int[0..255] int[0..255] int[0..255] }
+
+            eye_color = { int[0..255] int[0..255] int[0..255] int[0..255] }
+
+            ## cardinality = 1..inf
+            <morph_gene> = {
+                ## cardinality = 0..inf
+                value[morph_gene_variant]
+
+                ## cardinality = 0..inf
+                ""
+
+                ## cardinality = 1..inf
+                int
+            }
+
+            ## cardinality = 0..inf
+            <special_morph_gene> = {
+                ## cardinality = 0..inf
+                value[morph_gene_variant]
+
+                ## cardinality = 0..inf
+                ""
+
+                ## cardinality = 1..inf
+                int
+            }
+
+            ## cardinality = 0..inf
+            <accessory_gene> = {
+                ## cardinality = 1..inf
+                value[accessory_gene_variant]
+
+                ## cardinality = 0..inf
+                ""
+
+                ## cardinality = 1..inf
+                int
+            }
+
+            ## cardinality = 0..inf
+            ### DEPRECATED
+            <special_accessory_gene> = {
+                ## cardinality = 1..inf
+                value[accessory_gene_variant]
+
+                ## cardinality = 0..inf
+                ""
+
+                ## cardinality = 1..inf
+                int
+            }
+        }
+
+        ## cardinality = 0..1
+        entity = { float float }
+    }
+}

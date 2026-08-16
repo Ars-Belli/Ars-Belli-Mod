@@ -1,0 +1,65 @@
+types = {
+    type[unit_category] = {
+        path = "game/common/unit_categories"
+        path = "game/in_game/common/unit_categories"
+        path = "game/main_menu/common/unit_categories"
+        path = "game/loading_screen/common/unit_categories"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+        subtype[land] = {
+            is_army = yes
+        }
+        subtype[naval] = {
+            is_army = no
+        }
+    }
+}
+
+unit_category = {
+    is_army = bool
+
+    fallback = scalar
+
+    ## cardinality = 0..1
+    startup_amount = int
+
+    build_time = value_field
+
+    ai_weight = value_field
+
+    ## cardinality = 0..1
+    assault = bool
+
+    ## cardinality = 0..1
+    exclude_from_combined_arms = bool
+
+    ## cardinality = 0..1
+    bombard = bool
+
+    ## cardinality = 0..1
+    auxiliary = bool
+
+    ## cardinality = 0..1
+    is_garrison = bool
+
+    construction_demand = <goods_demand>
+    maintenance_demand = <goods_demand>
+
+    ## cardinality = 0..inf
+    alias_name[combat_modifier_element_general] = alias_match_left[combat_modifier_element_general]
+
+    subtype[land] = {
+        ## cardinality = 0..inf
+        alias_name[combat_modifier_element_land] = alias_match_left[combat_modifier_element_land]
+    }
+
+    subtype[naval] = {
+        ## cardinality = 0..inf
+        alias_name[combat_modifier_element_naval] = alias_match_left[combat_modifier_element_naval]
+
+        ## cardinality = 0..1
+        transport = bool
+    }
+}

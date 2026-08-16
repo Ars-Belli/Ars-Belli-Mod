@@ -1,0 +1,61 @@
+types = {
+    type[pop_type] = {
+        path = "game/common/pop_types"
+        path = "game/in_game/common/pop_types"
+        path = "game/main_menu/common/pop_types"
+        path = "game/loading_screen/common/pop_types"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            name = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = pop this = pop }
+pop_type = {
+    alias_name[color] = alias_match_left[color]
+
+    ## cardinality = 0..1
+    editor = value_field
+
+    assimilation_conversion_factor = value_field
+
+    pop_food_consumption = value_field
+
+    city_graphics = value_field
+
+    ## cardinality = 0..1
+    promotion_factor = value_field
+
+    ## cardinality = 0..inf
+    promote_to = <pop_type>
+
+    ## cardinality = 0..1
+    upper = bool
+
+    ## cardinality = 0..1
+    grow = bool
+
+    ## cardinality = 0..1
+    tribal_rules = bool
+
+    ## cardinality = 0..1
+    has_cap = bool
+
+    <estate> = {
+        ## cardinality = 0..inf
+        alias_name[trigger] = alias_match_left[trigger]
+    }
+
+    ## cardinality = 0..1
+    migration_factor = value_field
+
+    ## cardinality = 0..1
+    counts_towards_market_language = bool
+
+    ## cardinality = 0..1
+    pop_percentage_impact = single_alias_right[modifier_clause]
+
+    literacy_impact = single_alias_right[modifier_clause]
+}

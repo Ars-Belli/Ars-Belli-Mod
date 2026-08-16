@@ -1,0 +1,43 @@
+types = {
+    type[vegetation] = {
+        path = "game/common/vegetation"
+        path = "game/in_game/common/vegetation"
+        path = "game/main_menu/common/vegetation"
+        path = "game/loading_screen/common/vegetation"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            name = "$_desc"
+        }
+    }
+}
+
+vegetation = {
+    alias_name[color] = alias_match_left[color]
+
+    movement_cost = value_field
+
+    ## cardinality = 0..1
+    proximity = value_field
+
+    ## cardinality = 0..1
+    colonial_migration_size_modifier = value_field
+
+    ## cardinality = 0..1
+    defender = value_field
+
+    location_modifier = single_alias_right[modifier_clause]
+
+    ## cardinality = 0..1
+    has_sand = bool
+
+    audio_tags = {
+        #TODO
+        scalar = value_field
+    }
+
+    debug_color = <named_color>
+    debug_color = color_field
+    debug_color = single_alias_right[scripted_color_clause]
+    debug_color = $define_reference
+}

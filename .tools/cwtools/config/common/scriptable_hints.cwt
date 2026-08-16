@@ -1,0 +1,33 @@
+types = {
+    type[scriptable_hint] = {
+        path = "game/common/scriptable_hints"
+        path = "game/in_game/common/scriptable_hints"
+        path = "game/main_menu/common/scriptable_hints"
+        path = "game/loading_screen/common/scriptable_hints"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+scriptable_hint = {
+    ## cardinality = 0..1
+    priority = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    sort_priority = int
+
+    ## cardinality = 0..1
+    hide = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    hint_tag = value_set[hint_tag]
+
+    ## cardinality = 0..inf
+    player_playstyle = {
+        style = enum[playstyle_type]
+        hint_tag = value_set[hint_tag]
+    }
+}

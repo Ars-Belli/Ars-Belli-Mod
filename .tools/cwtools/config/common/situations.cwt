@@ -1,0 +1,118 @@
+types = {
+    type[situation] = {
+        path = "game/common/situations"
+        path = "game/in_game/common/situations"
+        path = "game/main_menu/common/situations"
+        path = "game/loading_screen/common/situations"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = situation this = situation }
+situation = {
+    ### script value for how likely the disease is to spawn per month (0..1) (scope:situation is the situation)
+    monthly_spawn_chance = value_field
+    ### script value for how likely the disease is to spawn per month (0..1) (scope:situation is the situation)
+    monthly_spawn_chance = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    hint_tag = localisation
+
+    ## cardinality = 0..1
+    custom_description = <customizable_localization>
+
+    ## cardinality = 0..1
+    is_data_map = bool
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = country this = country }
+    content_trigger = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..inf
+    ## replace_scope = { root = location this = location }
+    legend_key = {
+        ## cardinality = 0..1
+        limit = single_alias_right[trigger_clause]
+
+        desc = scalar
+        desc = localisation
+
+        alias_name[color] = alias_match_left[color]
+
+        ## cardinality = 0..1
+        require_color_on_map = bool
+
+        ## cardinality = 0..1
+        alias_name[color] = alias_match_left[color]
+    }
+
+    ### IO type associated with the situation
+    ## cardinality = 0..1
+    international_organization_type = <international_organization>
+
+    ### a specific resolution that the situation references
+    ## cardinality = 0..1
+    resolution = <resolution>
+
+    ### list of people eligible to vote in the resolution above
+    ## cardinality = 0..1
+    voters = value[global_variable_list]
+
+    ### can the situation start now (root = situation)
+    can_start = single_alias_right[trigger_clause]
+
+    ### can the situation end (root = situation)
+    can_end = single_alias_right[trigger_clause]
+
+    ### can the player country see the situation and participate in it (root = country, scope:target = situation)
+    ## replace_scope = { root = country this = country }
+    visible = single_alias_right[trigger_clause]
+
+    ### effect when the situation starts, used for general set up (root = situation)
+    on_start = single_alias_right[effect_clause]
+
+    ### effect every month (root = situation)
+    on_monthly = single_alias_right[effect_clause]
+
+    ### effect when the situation ends, just before its status changes (root = situation)
+    ## cardinality = 0..1
+    on_ending = single_alias_right[effect_clause]
+
+    ### effect when the situation ends, just after its status changes (root = situation)
+    on_ended = single_alias_right[effect_clause]
+
+    ### used to generate a tooltip for the map, not actually executed (root = location, scope:target = situation)
+    ## cardinality = 0..1
+    ## replace_scope = { root = location this = location }
+    tooltip = single_alias_right[effect_clause]
+
+    ### map color for location (root = location, scope:target = situation)
+    ## cardinality = 0..1
+    map_color = <named_color>
+    ### map color for location (root = location, scope:target = situation)
+    ## cardinality = 0..1
+    map_color = color_field
+    ### map color for location (root = location, scope:target = situation)
+    ## cardinality = 0..1
+    map_color = single_alias_right[scripted_color_clause]
+    ### map color for location (root = location, scope:target = situation)
+    ## cardinality = 0..1
+    map_color = $define_reference
+
+    ### map color for location (root = location, scope:target = situation)
+    ## cardinality = 0..1
+    secondary_map_color = <named_color>
+    ### map color for location (root = location, scope:target = situation)
+    ## cardinality = 0..1
+    secondary_map_color = color_field
+    ### map color for location (root = location, scope:target = situation)
+    ## cardinality = 0..1
+    secondary_map_color = single_alias_right[scripted_color_clause]
+    ### map color for location (root = location, scope:target = situation)
+    ## cardinality = 0..1
+    secondary_map_color = $define_reference
+}

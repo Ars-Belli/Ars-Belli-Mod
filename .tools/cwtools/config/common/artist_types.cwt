@@ -1,0 +1,22 @@
+types = {
+    type[artist_type] = {
+        path = "game/common/artist_types"
+        path = "game/in_game/common/artist_types"
+        path = "game/main_menu/common/artist_types"
+        path = "game/loading_screen/common/artist_types"
+        path_extension = .txt
+        localisation = {
+            name = "ARTIST_TYPE_NAME_$"
+            desc = "ARTIST_TYPE_DESC_$"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+artist_type = {
+    ## cardinality = 0..1
+    potential = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    modifier = single_alias_right[modifier_clause]
+}

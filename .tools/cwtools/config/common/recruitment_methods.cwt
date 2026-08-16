@@ -1,0 +1,30 @@
+types = {
+    type[recruitment_method] = {
+        path = "game/common/recruitment_method"
+        path = "game/in_game/common/recruitment_method"
+        path = "game/main_menu/common/recruitment_method"
+        path = "game/loading_screen/common/recruitment_method"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+recruitment_method = {
+    ## cardinality = 0..1
+    strength = value_field
+
+    ## cardinality = 0..1
+    experience = value_field
+
+    ## cardinality = 0..1
+    build_time = value_field
+
+    ## cardinality = 0..1
+    army = bool
+
+    ## cardinality = 0..1
+    default = bool
+}

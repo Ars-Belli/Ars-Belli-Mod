@@ -1,0 +1,24 @@
+types = {
+    type[join_war_rule] = {
+        path = "game/common/join_war_rules"
+        path = "game/in_game/common/join_war_rules"
+        path = "game/main_menu/common/join_war_rules"
+        path = "game/loading_screen/common/join_war_rules"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scopes = { this = country root = country }
+join_war_rule = {
+
+    ### root = joining country
+    ### scope:war = war the country is joining if active
+    ### scope:first_leader = leader of the side country is joining
+    ### scope:second_leader = leader of the side country is joining against
+    join_war_disabled_trigger = single_alias_right[trigger_clause]
+
+}

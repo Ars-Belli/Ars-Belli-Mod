@@ -1,0 +1,52 @@
+types = {
+    type[disaster] = {
+        path = "game/common/disasters"
+        path = "game/in_game/common/disasters"
+        path = "game/main_menu/common/disasters"
+        path = "game/loading_screen/common/disasters"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+disaster = {
+    image = filepath
+
+    ## cardinality = 0..1
+    content_priority = int
+
+    ### script value for how likely the disease is to spawn per month (0..1) (scope:disaster is the disaster)
+    monthly_spawn_chance = value_field
+    ### script value for how likely the disease is to spawn per month (0..1) (scope:disaster is the disaster)
+    monthly_spawn_chance = single_alias_right[formula]
+
+    ### trigger to see if the disaster can start (root = country, scope:disaster = disaster type)
+    can_start = single_alias_right[trigger_clause]
+
+    ### trigger to see if the disaster should end (root = country, scope:disaster = disaster type)
+    can_end = single_alias_right[trigger_clause]
+
+    ### effect fired when the disaster starts (root = country, scope:disaster = disaster type)
+    on_start = single_alias_right[effect_clause]
+
+    ### effect fired each month that the disaster is ongoing (root = country, scope:disaster = disaster type)
+    on_end = single_alias_right[effect_clause]
+
+    ### effect fired when the disaster ends (root = country, scope:disaster = disaster type)
+    on_monthly = single_alias_right[effect_clause]
+
+    ### optional link to the map mode to show while looking at this disaster
+    ## cardinality = 0..1
+    map_mode = scalar
+
+    ### whether or not the disaster can occur multiple times to the same country
+    ## cardinality = 0..1
+    fire_only_once = bool
+
+    ### modifier applied to a country that has this disaster ongoing
+    modifier = single_alias_right[modifier_clause]
+}

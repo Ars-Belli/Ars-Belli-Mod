@@ -1,0 +1,19 @@
+types = {
+    type[achievement_group] = {
+        path = "game/common"
+        path_file = "achievement_groups.txt"
+        name_field = name
+        localisation = {
+            name = ACHIEVEMENT_GROUP_$
+        }
+    }
+}
+
+achievement_group = {
+    name = scalar
+
+    order = {
+        ## cardinality = 0..inf
+        <achievement>
+    }
+}

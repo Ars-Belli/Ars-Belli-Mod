@@ -1,0 +1,43 @@
+types = {
+    type[dynasty] = {
+        path = "game/setup/start"
+        path = "game/in_game/setup/start"
+        path = "game/main_menu/setup/start"
+        path = "game/loading_screen/setup/start"
+        path_extension = .txt
+        skip_root_key = {
+            dynasty_manager
+        }
+    }
+}
+
+dynasty = {
+    name = {
+        name = localisation
+    }
+
+    ## cardinality = 0..1
+    dynasty_name_type = enum[dynasty_name_type]
+
+    home = value[location]
+
+    important = bool
+
+    ## cardinality = 0..1
+    male_names = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+    }
+
+    ## cardinality = 0..1
+    female_names = {
+        ## cardinality = 0..inf
+        localisation
+
+        ## cardinality = 0..inf
+        localisation.localisation
+    }
+}

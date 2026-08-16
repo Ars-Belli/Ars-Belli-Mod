@@ -1,0 +1,139 @@
+# This is a hardcoded reference for value_field
+single_alias[range] = {
+    ## cardinality = 2..2
+    float
+}
+
+# This is a hardcoded reference for value_field
+single_alias[formula] = {
+    ## cardinality = 0..inf
+    alias_name[arithmetic_operation] = alias_match_left[arithmetic_operation]
+}
+
+
+alias[arithmetic_operation:add] = value_field
+alias[arithmetic_operation:add] = scope_field
+alias[arithmetic_operation:add] = single_alias_right[formula]
+alias[arithmetic_operation:add] = $define_reference
+alias[arithmetic_operation:subtract] = value_field
+alias[arithmetic_operation:subtract] = scope_field
+alias[arithmetic_operation:subtract] = single_alias_right[formula]
+alias[arithmetic_operation:subtract] = $define_reference
+alias[arithmetic_operation:multiply] = value_field
+alias[arithmetic_operation:multiply] = scope_field
+alias[arithmetic_operation:multiply] = single_alias_right[formula]
+alias[arithmetic_operation:multiply] = $define_reference
+alias[arithmetic_operation:divide] = value_field
+alias[arithmetic_operation:divide] = scope_field
+alias[arithmetic_operation:divide] = single_alias_right[formula]
+alias[arithmetic_operation:divide] = $define_reference
+alias[arithmetic_operation:modulo] = value_field
+alias[arithmetic_operation:modulo] = scope_field
+alias[arithmetic_operation:modulo] = single_alias_right[formula]
+alias[arithmetic_operation:modulo] = $define_reference
+alias[arithmetic_operation:value] = value_field
+alias[arithmetic_operation:value] = scope_field
+alias[arithmetic_operation:value] = single_alias_right[formula]
+alias[arithmetic_operation:value] = $define_reference
+alias[arithmetic_operation:max] = value_field
+alias[arithmetic_operation:max] = scope_field
+alias[arithmetic_operation:max] = single_alias_right[formula]
+alias[arithmetic_operation:max] = <script_value>
+alias[arithmetic_operation:max] = <static_value>
+alias[arithmetic_operation:max] = $define_reference
+alias[arithmetic_operation:min] = value_field
+alias[arithmetic_operation:min] = scope_field
+alias[arithmetic_operation:min] = single_alias_right[formula]
+alias[arithmetic_operation:min] = $define_reference
+alias[arithmetic_operation:base] = value_field
+alias[arithmetic_operation:base] = scope_field
+alias[arithmetic_operation:base] = single_alias_right[formula]
+alias[arithmetic_operation:base] = $define_reference
+alias[arithmetic_operation:round_to] = value_field
+alias[arithmetic_operation:round_to] = scope_field
+alias[arithmetic_operation:round_to] = single_alias_right[formula]
+alias[arithmetic_operation:round_to] = $define_reference
+alias[arithmetic_operation:factor] = value_field
+alias[arithmetic_operation:factor] = scope_field
+alias[arithmetic_operation:factor] = single_alias_right[formula]
+alias[arithmetic_operation:factor] = $define_reference
+alias[arithmetic_operation:pow] = value_field
+alias[arithmetic_operation:pow] = scope_field
+alias[arithmetic_operation:pow] = single_alias_right[formula]
+alias[arithmetic_operation:pow] = $define_reference
+
+alias[arithmetic_operation:abs] = yes
+alias[arithmetic_operation:abs] = value_field
+alias[arithmetic_operation:round] = yes
+alias[arithmetic_operation:round] = value_field
+alias[arithmetic_operation:ceiling] = yes
+alias[arithmetic_operation:ceiling] = value_field
+alias[arithmetic_operation:floor] = yes
+alias[arithmetic_operation:floor] = value_field
+
+alias[arithmetic_operation:save_temporary_value_as] = {
+    name = value_set[event_target]
+
+    value = value_field
+    value = single_alias_right[formula]
+    value = $define_reference
+}
+alias[arithmetic_operation:save_temporary_value_as] = value_set[event_target]
+alias[arithmetic_operation:save_temporary_scope_as] = value_set[event_target]
+
+
+alias[arithmetic_operation:modifier] = value_field
+alias[arithmetic_operation:modifier] = $define_reference
+alias[arithmetic_operation:modifier] = {
+    ## cardinality = 0..1
+    trigger = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..inf
+    alias_name[arithmetic_operation] = alias_match_left[arithmetic_operation]
+
+    ## cardinality = 0..inf
+    alias_name[trigger] = alias_match_left[trigger]
+}
+
+alias[arithmetic_operation:fixed_range] = {
+    min = value_field
+    min = single_alias_right[formula]
+    min = $define_reference
+    max = value_field
+    max = single_alias_right[formula]
+    max = $define_reference
+}
+
+alias[arithmetic_operation:integer_range] = {
+    min = value_field
+    min = single_alias_right[formula]
+    min = $define_reference
+    max = value_field
+    max = single_alias_right[formula]
+    max = $define_reference
+}
+
+alias[arithmetic_operation:if] = {
+    ## cardinality = 0..1
+    limit = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..inf
+    alias_name[arithmetic_operation] = alias_match_left[arithmetic_operation]
+}
+
+alias[arithmetic_operation:else_if] = {
+    ## cardinality = 0..1
+    limit = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..inf
+    alias_name[arithmetic_operation] = alias_match_left[arithmetic_operation]
+}
+
+alias[arithmetic_operation:else] = {
+    ## cardinality = 0..inf
+    alias_name[arithmetic_operation] = alias_match_left[arithmetic_operation]
+}
+
+alias[arithmetic_operation:desc] = localisation
+alias[arithmetic_operation:format] = localisation
+alias[arithmetic_operation:desc_sort_order] = int_value_field

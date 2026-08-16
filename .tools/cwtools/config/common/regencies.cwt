@@ -1,0 +1,31 @@
+types = {
+    type[regency] = {
+        path = "game/common/regencies"
+        path = "game/in_game/common/regencies"
+        path = "game/main_menu/common/regencies"
+        path = "game/loading_screen/common/regencies"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+regency = {
+    ## cardinality = 0..1
+    start_effect = single_alias_right[effect_clause]
+
+    ## cardinality = 0..1
+    end_effect = single_alias_right[effect_clause]
+
+    ## cardinality = 0..1
+    allow = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    modifier = single_alias_right[modifier_clause]
+
+    ## cardinality = 0..1
+    internally_assigned = bool
+}

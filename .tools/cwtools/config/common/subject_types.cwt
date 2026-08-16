@@ -1,0 +1,354 @@
+types = {
+    type[subject_type] = {
+        path = "game/common/subject_types"
+        path = "game/in_game/common/subject_types"
+        path = "game/main_menu/common/subject_types"
+        path = "game/loading_screen/common/subject_types"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+subject_type = {
+    alias_name[color] = alias_match_left[color]
+
+    ## cardinality = 0..1
+    content_priority = int
+
+    ## cardinality = 0..1
+    visible = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    enabled = single_alias_right[trigger_clause]
+
+    ### is this subject type visible through diplomacy in general. root = overlord, target = subject
+    ## cardinality = 0..1
+    visible_through_diplomacy = single_alias_right[trigger_clause]
+
+    ### is this subject type enabled through diplomacy. root = overlord, target = potential subject
+    ## cardinality = 0..1
+    enabled_through_diplomacy = single_alias_right[trigger_clause]
+
+    ### (optional) is this subject type visible to be offered in a peace treaty. root = overlord, target = subject, war = current war
+    ## cardinality = 0..1
+    visible_through_treaty = single_alias_right[trigger_clause]
+
+    ### (optional)is this subject type enabled in a peace treaty. root = overlord, target = potential subject, war = current war
+    ## cardinality = 0..1
+    enabled_through_treaty = single_alias_right[trigger_clause]
+
+    ### can this subject type be created in general. root = overlord
+    ## cardinality = 0..1
+    creation_visible = single_alias_right[trigger_clause]
+
+    ### can a new province or building subject be released with this subject type. root = overlord, target_province = potential geography for location- or region- based subject types
+    ## cardinality = 0..1
+    subject_creation_enabled = single_alias_right[trigger_clause]
+
+    ### can the potential overlord create released countries as this subject type. root = overlord, target = potential subject
+    ## cardinality = 0..1
+    release_country_enabled = single_alias_right[trigger_clause]
+
+    ### can this subject type offered diplomatically in general. root = subject type, overlord = overlord, subject = subject, attacker = attacker, defender = defender
+    ## cardinality = 0..1
+    can_attack = single_alias_right[trigger_clause]
+
+    ### can this subject type offered diplomatically in general. root = subject type, overlord = overlord, subject = subject, actor = country wanting to do the rivalling, recipient = country they want to rival
+    ## cardinality = 0..1
+    can_rival = single_alias_right[trigger_clause]
+
+    ### can this subject type offered diplomatically in general. root = subject type, overlord = overlord, subject = subject, actor = country wanting to do the marrying, recipient = country they want to marry into
+    ## cardinality = 0..1
+    can_marry = single_alias_right[trigger_clause]
+
+    ### how good the subject's opinion of the overlord must be before this subject type can be offered to a potential subject
+    ## cardinality = 0..1
+    minimum_opinion_for_offer = int
+
+    ### type of country that is valid for this subject type
+    ## cardinality = 0..1
+    type = enum[country_type]
+
+    ### modifiers given to the overlord country
+    ## cardinality = 0..1
+    overlord_modifier = single_alias_right[modifier_clause]
+
+    ### modifiers given to the subject country
+    ## cardinality = 0..1
+    subject_modifier = single_alias_right[modifier_clause]
+
+    ### multiplier for how much of the subject's great power score gets added to the overlord
+    ## cardinality = 0..1
+    great_power_score_transfer = value_field
+
+    ### government type for the subject on creation
+    ## cardinality = 0..1
+    government = <government_type>
+
+    ### what happens when the subject type is created. root = subject, future_overlord = overlord
+    ## cardinality = 0..1
+    on_enable = single_alias_right[effect_clause]
+
+    ### what happens when the subject type is broken. root = subject, former_overlord = overlord
+    ## cardinality = 0..1
+    on_disable = single_alias_right[effect_clause]
+
+    ### what happens to the subject each month. root = subject
+    ## cardinality = 0..1
+    on_monthly = single_alias_right[effect_clause]
+
+    ### what level this subject type has. Generally, subjects of lower levels have more autonomy than subjects of higher level; rule of thumb: level 3 is subjects for annexation, level 0 subjects are subjects in name
+    ## cardinality = 0..1
+    level = int
+
+    ## cardinality = 0..1
+    annullment_favours_required = int
+
+    ### how fast annexation progresses per month if 0, it can't be annexed
+    ## cardinality = 0..1
+    annexation_speed = value_field
+
+    ### how many years the subject must have had this relation before they can be annexed
+    ## cardinality = 0..1
+    annexation_min_years_before = int
+
+    ### how good the subject's opinion of the overlord must be before annexation can take place
+    ## cardinality = 0..1
+    annexation_min_opinion = int
+
+    ### how good the subject's opinion of the overlord must be before the annexation process is halted
+    ## cardinality = 0..1
+    annexation_stall_opinion = int
+
+    ### How much the subject pays to the overlord each month
+    ## cardinality = 0..1
+    subject_pays = <price>
+
+    ### does one country automatically join offensive wars with the other (root = subject type, scope:actor = caller, scope:recipient = callee, scope:target (optional) = against who)
+    ## cardinality = 0..1
+    join_offensive_wars_always = single_alias_right[trigger_clause]
+
+    ### does one country automatically get a call to arms from the other in offensive wars (root = subject type, scope:actor = caller, scope:recipient = callee, scope:target (optional) = against who)
+    ## cardinality = 0..1
+    join_offensive_wars_auto_call = single_alias_right[trigger_clause]
+
+    ### does one country allow a call to arms from the other in offensive wars (root = subject type, scope:actor = caller, scope:recipient = callee, scope:target (optional) = against who)
+    ## cardinality = 0..1
+    join_offensive_wars_can_call = single_alias_right[trigger_clause]
+
+    ### does one country automatically join defensive wars with the other (root = subject type, scope:actor = caller, scope:recipient = callee, scope:target (optional) = against who)
+    ## cardinality = 0..1
+    join_defensive_wars_always = single_alias_right[trigger_clause]
+
+    ### does one country automatically get a call to arms from a other in defensive wars (root = subject type, scope:actor = caller, scope:recipient = callee, scope:target (optional) = against who)
+    ## cardinality = 0..1
+    join_defensive_wars_auto_call = single_alias_right[trigger_clause]
+
+    ### does one country allow a call to arms from a other in defensive wars (root = subject type, scope:actor = caller, scope:recipient = callee, scope:target (optional) = against who)
+    ## cardinality = 0..1
+    join_defensive_wars_can_call = single_alias_right[trigger_clause]
+
+    ### whether or not the subject has the overlord's ruler as their ruler
+    ## cardinality = 0..1
+    has_overlords_ruler = bool
+
+    ### mark if the subject type can be annexed in the first place. default: yes
+    ## cardinality = 0..1
+    can_be_annexed = bool
+
+    ## cardinality = 0..1
+    allow_subjects = bool
+
+    ## cardinality = 0..1
+    shares_exploration_with_overlord = bool
+
+    ## cardinality = 0..1
+    has_overlords_religion = bool
+
+    ### whether or not the subject's diplomacy options are limited by the overlord
+    ## cardinality = 0..1
+    has_limited_diplomacy = bool
+
+    ## cardinality = 0..1
+    is_colonial_subject = bool
+
+    ### whether or not the subject can change their country rank
+    ## cardinality = 0..1
+    can_change_rank = bool
+
+    ### whether or not the subject can change their heir selection method
+    ## cardinality = 0..1
+    can_change_heir_selection = bool
+
+    ### multiplier on formula (not a script value due to checked so much)
+    ## cardinality = 0..1
+    diplomatic_capacity_cost_scape = value_field
+
+    ### whether or not the subject can cancel the relationship themselves
+    ## cardinality = 0..1
+    subject_can_cancel = bool
+
+    ### whether or not the overlord can cancel the relationship themselves
+    ## cardinality = 0..1
+    overlord_can_cancel = bool
+
+    ### whether or not the subject can join independence wars
+    ## cardinality = 0..1
+    will_join_independence_wars = bool
+
+    ### whether or not the subject gives fleet basing rights to the overlord
+    ## cardinality = 0..1
+    fleet_basing_rights = bool
+
+    ### whether or not the subject gives food access to the overlord
+    ## cardinality = 0..1
+    food_access = bool
+
+    ### whether or not the subject gives uses the same set of laws and policies as the overlord
+    ## cardinality = 0..1
+    use_overlord_laws = bool
+
+    ### whether or not the subject can declare their own wars. (root = subject type, scope:attacker = subject trying to declare war, scope:defender = country they are trying to declare war on)
+    ## cardinality = 0..1
+    allow_declaring_wars = single_alias_right[trigger_clause]
+
+    ### whether the subject shows in the same color as the overlord on the map
+    ## cardinality = 0..1
+    use_overlord_map_color = bool
+
+    ### whether the subject shows in the same name as the overlord on the map
+    ## cardinality = 0..1
+    use_overlord_map_name = bool
+
+    ### whether or not the subject must have as its culture the overlord's culture
+    ## cardinality = 0..1
+    only_overlord_culture = bool
+
+    ### whether or not the subject must have as its culture the overlord's culture or one of its kindred cultures
+    ## cardinality = 0..1
+    only_overlord_or_kindred_culture = bool
+
+    ### whether or not the subject must have as its court language the overlord's court language
+    ## cardinality = 0..1
+    only_overlord_court_language = bool
+
+    ### whether or not the overlord can recruit regiments in the subjects territory.
+    ## cardinality = 0..1
+    can_overlord_recruit_regiments = bool
+
+    ### whether or not the overlord can build ships in the subjects ports.
+    ## cardinality = 0..1
+    can_overlord_build_ships = bool
+
+    ### whether or not the overlord can build roads in the subjects land
+    ## cardinality = 0..1
+    can_overlord_build_roads = bool
+
+    ### whether or not the overlord can build buildings in the subjects locations
+    ## cardinality = 0..1
+    can_overlord_build_buildings = bool
+
+    ### whether or not the overlord can build rgos in the subjects locations
+    ## cardinality = 0..1
+    can_overlord_build_rgos = bool
+
+    ### whether or not the overlord will share their exploration or not
+    ## cardinality = 0..1
+    overlord_share_exploration = bool
+
+    ### whether or not the overlord will protect the subject from external attackers, defaults to yes
+    ## cardinality = 0..1
+    overlord_protects_external = bool
+
+    ### whether or not the overlord will protect the subject from internal attackers (such as other subjects), defaults to no
+    ## cardinality = 0..1
+    overlord_protects_other_subjects = bool
+
+    ## cardinality = 0..1
+    overlord_inherit_if_no_heir = bool
+
+    ## cardinality = 0..1
+    counts_as_external = bool
+
+    ### can this subject type be demanded to be broken in a peace treaty
+    ## cardinality = 0..1
+    can_be_force_broken_in_peace_treaty = bool
+
+    ### can the overlord demand that the subject leave any wars they're in
+    ## cardinality = 0..1
+    overlord_can_enforce_peace_on_subject = bool
+
+    ### how much will this subject cost to establish in wars, modifies the base war score cost calculation
+    ## cardinality = 0..1
+    war_score_cost = value_field
+
+    ### how much max antagonism will this subject create when established in wars, will override values calculated by the code unless the value is 0 or less
+    ## cardinality = 0..1
+    base_antagonism = value_field
+
+    ### favors gained by a country in the relationship. root = country we want the favors for, scope:overlord, scope:subject. This is in addition to the favors they gain from the relative strength of the two countries.
+    ## cardinality = 0..1
+    monthly_favor_gain = value_field
+
+    ## cardinality = 0..1
+    strength_vs_overlord = value_field
+    ## cardinality = 0..1
+    strength_vs_overlord = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    diplomatic_capacity_cost_scale = value_field
+    ## cardinality = 0..1
+    diplomatic_capacity_cost_scale = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    maritime_path_tolerance = value_field
+    ## cardinality = 0..1
+    maritime_path_tolerance = single_alias_right[formula]
+
+    ### multiplier for various values for the overlord/subject comparison that lead to the overall acceptance of an offer to become this type of subject. E.g. border_distance = -0.1 will give -0.1 points towards acceptance per unit of distance between the countries' borders.
+    ## cardinality = 0..1
+    diplo_chance_accept_subject = single_alias_right[diplo_chance_clause]
+
+    ### multiplier for various values for the overlord/subject comparison that lead to the overall acceptance of an offer to become this type of overlord. E.g. border_distance = -0.1 will give -0.1 points towards acceptance per unit of distance between the countries' borders.
+    ## cardinality = 0..1
+    diplo_chance_accept_overlord = single_alias_right[diplo_chance_clause]
+
+    ### effect script for the AI to use, can use scope:overlord and scope:subject, how much the AI country will want to be an overlord of this type. Used when trying to create a subject, picking subject peace treaties or releasing nations as subjects
+    ## cardinality = 0..1
+    ai_wants_to_be_overlord = value_field
+    ### effect script for the AI to use, can use scope:overlord and scope:subject, how much the AI country will want to be an overlord of this type. Used when trying to create a subject, picking subject peace treaties or releasing nations as subjects
+    ## cardinality = 0..1
+    ai_wants_to_be_overlord = single_alias_right[formula]
+
+    ### effect script for the AI to use, can use scope:overlord and scope:subject, how much the AI will want to become a subject of this type. Used when offering to become a subject
+    ## cardinality = 0..1
+    ai_wants_to_be_subject = value_field
+    ### effect script for the AI to use, can use scope:overlord and scope:subject, how much the AI will want to become a subject of this type. Used when offering to become a subject
+    ## cardinality = 0..1
+    ai_wants_to_be_subject = single_alias_right[formula]
+
+    ### how fast do embraced institutions spread from the Subject to the Overlord Capital?
+    ## cardinality = 0..1
+    institution_spread_to_overlord = value_field
+    ### how fast do embraced institutions spread from the Subject to the Overlord Capital?
+    ## cardinality = 0..1
+    institution_spread_to_overlord = single_alias_right[formula]
+
+    ### how fast do embraced institutions spread from the Overlord to the Subject Capital?
+    ## cardinality = 0..1
+    institution_spread_to_subject = value_field
+    ### how fast do embraced institutions spread from the Overlord to the Subject Capital?
+    ## cardinality = 0..1
+    institution_spread_to_subject = single_alias_right[formula]
+
+    ### percentage of merchant power that goes to the overlord
+    ## cardinality = 0..1
+    merchants_to_overlord_fraction = value_field
+    ### percentage of merchant power that goes to the overlord
+    ## cardinality = 0..1
+    merchants_to_overlord_fraction = single_alias_right[formula]
+}

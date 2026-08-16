@@ -1,0 +1,100 @@
+types = {
+    type[bureaucracy] = {
+        path = "game/common/bureaucracies"
+        path = "game/in_game/common/bureaucracies"
+        path = "game/main_menu/common/bureaucracies"
+        path = "game/loading_screen/common/bureaucracies"
+        path_extension = .txt
+        localisation = {
+            name = "$"
+            desc = "$_desc"
+        }
+    }
+}
+
+## replace_scope = { root = country this = country }
+bureaucracy = {
+
+    ### trigger for whether the action is possible (root = country)
+    potential = single_alias_right[trigger_clause]
+
+    ### trigger for whether the action can start (root = country)
+    allow = single_alias_right[trigger_clause]
+
+    estates_that_like = {
+        ## cardinality = 0..inf
+        <estate>
+    }
+
+    estates_that_dislike = {
+        ## cardinality = 0..inf
+        <estate>
+    }
+
+    ### all used to define how long it takes to become fully implemented. Modifiers will be scaled by how much of this time is completed.
+    ## cardinality = 0..inf
+    alias_name[duration] = alias_match_left[duration]
+
+    ### a scripted standard price, listed in \common\prices\ and referenced by name (like price:<price_id>) or as a result of a script (like scope:target.price)
+    implementation_price = scope[price]
+
+    ### calculated value, multiplies the price; root is the country
+    ## cardinality = 0..1
+    implementation_price_modifier = value_field
+    ### calculated value, multiplies the price; root is the country
+    ## cardinality = 0..1
+    implementation_price_modifier = single_alias_right[formula]
+
+    ### a scripted standard price, listed in \common\prices\ and referenced by name (like price:<price_id>) or as a result of a script (like scope:target.price)
+    removal_price = scope[price]
+
+    ### calculated value, multiplies the price; root is the country
+    ## cardinality = 0..1
+    removal_price_modifier = value_field
+    ### calculated value, multiplies the price; root is the country
+    ## cardinality = 0..1
+    removal_price_modifier = single_alias_right[formula]
+
+    ### a scripted standard price, listed in \common\prices\ and referenced by name (like price:<price_id>) or as a result of a script (like scope:target.price)
+    maintenance_price = scope[price]
+
+    ### calculated value, multiplies the price; root is the country
+    ## cardinality = 0..1
+    maintenance_price_modifier = value_field
+    ### calculated value, multiplies the price; root is the country
+    ## cardinality = 0..1
+    maintenance_price_modifier = single_alias_right[formula]
+
+    ### which is applied to whole countries: root = country; scope:maintenance = maintenance; scope:entrenchment = entrenchment.
+    ## cardinality = 0..inf
+    neutral_modifier = single_alias_right[modifier_clause]
+
+    ### which is applied to whole countries: root = country; scope:maintenance = maintenance; scope:entrenchment = entrenchment.
+    ## cardinality = 0..inf
+    positive_modifier = single_alias_right[modifier_clause]
+
+    ### which is applied to whole countries: root = country; scope:maintenance = maintenance; scope:entrenchment = entrenchment.
+    ## cardinality = 0..inf
+    negative_modifier = single_alias_right[modifier_clause]
+
+    ### which is applied to whole countries: root = country; scope:maintenance = maintenance; scope:entrenchment = entrenchment.
+    ## cardinality = 0..inf
+    negative_modifier = single_alias_right[modifier_clause]
+
+    ### called on the next day after a maintenance setting is changed: root = country; scope:old_maintenance = previous value; scope:new_maintenance = new value
+    ## cardinality = 0..1
+    on_maintenance_changed = single_alias_right[effect_clause]
+
+    ### fired when the action's implementation reaches 100% (instant if there's no time delay): root = country
+    ## cardinality = 0..1
+    on_fully_activated = single_alias_right[effect_clause]
+
+    ### fired when the action is chosen (root = country)
+    ## cardinality = 0..1
+    on_activate = single_alias_right[effect_clause]
+
+    ### fired when the action is removed (root = country)
+    ## cardinality = 0..1
+    on_deactivate = single_alias_right[effect_clause]
+
+}

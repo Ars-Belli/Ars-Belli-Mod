@@ -1,0 +1,22 @@
+types = {
+    type[achievement] = {
+        path = "game/common/achievements"
+        path = "game/in_game/common/achievements"
+        path = "game/main_menu/common/achievements"
+        path = "game/loading_screen/common/achievements"
+        path_extension = .txt
+        localisation = {
+            name = "ACHIEVEMENT_$"
+            desc = "ACHIEVEMENT_DESC_$"
+        }
+    }
+}
+
+achievement = {
+    ## cardinality = 0..1
+    ## replace_scope = { root = country this = country }
+    possible = single_alias_right[trigger_clause]
+
+    ## replace_scope = { root = country this = country }
+    happened = single_alias_right[trigger_clause]
+}

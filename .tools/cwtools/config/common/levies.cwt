@@ -1,0 +1,32 @@
+types = {
+    type[levy] = {
+        path = "game/common/levies"
+        path = "game/in_game/common/levies"
+        path = "game/main_menu/common/levies"
+        path = "game/loading_screen/common/levies"
+        path_extension = .txt
+    }
+}
+
+## replace_scope = { root = country this = country }
+levy = {
+    size = value_field
+    unit = <unit_type>
+
+    ## cardinality = 0..1
+    country_allow = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = pop this = pop }
+    allow = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..1
+    ## replace_scope = { root = pop this = pop }
+    allow_as_crew = single_alias_right[trigger_clause]
+
+    ## cardinality = 0..inf
+    allowed_pop_type = <pop_type>
+
+    ## cardinality = 0..inf
+    allowed_culture = <culture>
+}

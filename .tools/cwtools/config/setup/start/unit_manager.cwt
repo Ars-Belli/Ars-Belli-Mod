@@ -1,0 +1,66 @@
+types = {
+    ## type_key_filter = unit_manager
+    type[unit_manager] = {
+        path = "game/setup/start"
+        path = "game/in_game/setup/start"
+        path = "game/main_menu/setup/start"
+        path = "game/loading_screen/setup/start"
+        path_extension = .txt
+        unique = no
+    }
+}
+
+unit_manager = {
+    ## cardinality = 0..inf
+    army = {
+        country = <country>
+
+        location = value[location]
+
+        sub_units = {
+            ## cardinality = 0..inf
+            <unit_type> = {
+                strength = float
+            }
+        }
+
+        ## cardinality = 0..1
+        movement_progress = float
+
+        ## cardinality = 0..1
+        construction = float
+
+        ## cardinality = 0..1
+        march_data = {
+            ## cardinality = 0..inf
+            value[location]
+        }
+
+        morale = float
+
+        leader = <character>
+    }
+
+    ## cardinality = 0..inf
+    levy = {
+        country = <country>
+
+        location = value[location]
+
+        area = <area>
+
+        levy = float
+
+        ## cardinality = 0..1
+        movement_progress = float
+
+        ## cardinality = 0..1
+        construction = float
+
+        ## cardinality = 0..1
+        march_data = {
+            ## cardinality = 0..inf
+            value[location]
+        }
+    }
+}

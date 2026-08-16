@@ -1,0 +1,105 @@
+types = {
+    type[scripted_diplomatic_objective] = {
+        path = "game/common/scripted_diplomatic_objectives"
+        path = "game/in_game/common/scripted_diplomatic_objectives"
+        path = "game/main_menu/common/scripted_diplomatic_objectives"
+        path = "game/loading_screen/common/scripted_diplomatic_objectives"
+        path_extension = .txt
+    }
+}
+
+## replace_scope = { root = country this = country }
+scripted_diplomatic_objective = {
+    ### How many days to wait before checking for new objectives again
+    ## cardinality = 0..1
+    days_between_checks = value_field
+    ### How many days to wait before checking for new objectives again
+    ## cardinality = 0..1
+    days_between_checks = single_alias_right[formula]
+
+    ### ROOT = actor
+    actor_trigger = single_alias_right[trigger_clause]
+
+    ### scope:recipient = potential country, scope:actor = actor
+    recipient_trigger = single_alias_right[trigger_clause]
+
+    ### scope:recipient = potential country, scope:actor = actor
+    ### Used when sorting which countries and objectives should be prioritized, is used to compare with other scripted objectives as well
+    ## cardinality = 0..1
+    recipient_priority = value_field
+    ### scope:recipient = potential country, scope:actor = actor
+    ### Used when sorting which countries and objectives should be prioritized, is used to compare with other scripted objectives as well
+    ## cardinality = 0..1
+    recipient_priority = single_alias_right[formula]
+
+    ### Used to narrow down potential countries, if not present all reachable countries will be used
+    ## cardinality = 0..1
+    recipient_list_builder = single_alias_right[list_builder_clause]
+
+    ### Used to check if an objective should be paused until the next check. Can be used to avoid deleting objectives in cancel_trigger
+    ### scope:recipient = potential country, scope:actor = actor
+    pause_trigger = single_alias_right[trigger_clause]
+
+    ### Used to check if an objective should be canceled prematurely
+    ### scope:recipient = potential country, scope:actor = actor
+    cancel_trigger = single_alias_right[trigger_clause]
+
+    ### Should the nations improve relations
+    ## cardinality = 0..1
+    improve_relation = bool
+
+    ### To which opinion should the country improve relations, optional, if not present AI will improve up to max
+    ## cardinality = 0..1
+    improve_relation_limit = value_field
+    ### To which opinion should the country improve relations, optional, if not present AI will improve up to max
+    ## cardinality = 0..1
+    improve_relation_limit = single_alias_right[formula]
+
+    ### Should the actor try to defend the recipient
+    ## cardinality = 0..1
+    defensive_support = bool
+
+    ### Should the actor use hostile country interactions/relations against the recipient
+    ## cardinality = 0..1
+    antagonise = bool
+
+    ### Should the actor try to destroy recipient
+    ## cardinality = 0..1
+    destroy = bool
+
+    ### Yes to encourage, No to disable
+    ## cardinality = 0..1
+    country_interactions = {
+        <country_interaction> = bool
+    }
+
+    ### Yes to encourage, No to disable and cancel if possible
+    ## cardinality = 0..1
+    country_relations = {
+        <scripted_relation> = bool
+    }
+
+    ### How much time does the actor have to complete an objective before cancelling, leave empty or 0 for unlimited time
+    ### scope:recipient = potential country, scope:actor = actor
+    ## cardinality = 0..1
+    time_limit = value_field
+    ### How much time does the actor have to complete an objective before cancelling, leave empty or 0 for unlimited time
+    ### scope:recipient = potential country, scope:actor = actor
+    ## cardinality = 0..1
+    time_limit = single_alias_right[formula]
+
+    ### How many objectives of the same type can a nation have at once. Leave 0 for unlimited. Default is unlimited.
+    ### ROOT = actor
+    ## cardinality = 0..1
+    max_allowed = value_field
+    ### How many objectives of the same type can a nation have at once. Leave 0 for unlimited. Default is unlimited.
+    ### ROOT = actor
+    ## cardinality = 0..1
+    max_allowed = single_alias_right[formula]
+
+    ## cardinality = 0..1
+    spy_network_target = value_field
+
+    ## cardinality = 0..1
+    fabricate_cb = <casus_belli>
+}
