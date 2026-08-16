@@ -18,7 +18,7 @@ Status summary:
 | 11 | Base location warscore cost 2 → 2.5 | Done | `7bb2b53` |
 | 16 | Cap gold transferable via sell/buy location | Done — flat 100 gold; a scaling cap is engine-locked | `cebd035` |
 | 17 | −10 prestige to both sides of a location sale | **Not done — engine-locked** | — |
-| 21 | Reduce AI willingness to buy art offered to them | Done — needs an in-game sanity check | pending |
+| 21 | Reduce AI willingness to buy art offered to them | Done — needs an in-game sanity check | `afd59c0` |
 
 ---
 
