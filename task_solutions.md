@@ -43,22 +43,51 @@ trigger. **No data change reaches it.**
 The `make_unit_available_for_hire` generic_action is a decoy: same name, same tooltip title
 (`MAKE_AVAILABLE_FOR_HIRE_TT_TITLE`), no connection to the window. Two attempts were spent on it.
 
-**Solution (the one that closes it).** `ShowCondottieriViewWithFilter` is called from exactly one
-place in the entire game — the "Become Mercenary" button in `in_game/gui/army_builder.gui` — and no
-hotkey reaches it. A same-name replacement of that file kills the button two ways:
+**Solution — four separate GUI surfaces.** There is no single choke point. Each is a same-name
+replacement listed in `replaced_files.txt`, and closing them one at a time is what cost three round
+trips with the reporter.
 
-- `blockoverride "right_widget_visible" { visible = no }` — restoring vanilla's own default.
-  `shared/windows.gui` declares `block "right_widget_visible" { visible = no }`, and vanilla's
-  army_builder *empties* the override to switch the button on. Putting the `visible = no` back is
-  the smallest possible edit.
-- `blockoverride "right_widget"{}` — the `header_button_right` widget is deleted outright, so there
-  is nothing left to render, hover or click. An empty blockoverride is vanilla's own idiom in this
-  same file.
+| File | Surface | Edit |
+|---|---|---|
+| `army_builder.gui` | the "Become Mercenary" header button — the only caller of `ShowCondottieriViewWithFilter` anywhere in the game, and no hotkey reaches it | restore `blockoverride "right_widget_visible" { visible = no }` and empty `blockoverride "right_widget"{}` |
+| `single_unit_window.gui` | **the individual army screen's action bar** (`SingleUnitWindow.GetAllActionItems`) — the one players actually use | exclusion ANDed onto all 7 `unit_action_category_block_visible` blockoverrides |
+| `multi_unit_window.gui` | the same action list for a multi-unit selection, plus the pinned quick-action row | exclusion on the `unit_action_item` instantiations |
+| `context_menu.gui` | the right-click unit menu (`QuickUnitActions.AccessList`) | exclusion on the `UnitContextMenuActionItem` instantiations |
+
+The `army_builder.gui` edit restores vanilla's own default: `shared/windows.gui` declares
+`block "right_widget_visible" { visible = no }` and vanilla's army_builder *empties* the override to
+switch the button on, so putting the `no` back is the smallest possible edit. The second half
+deletes the `header_button_right` widget outright — an empty blockoverride is vanilla's own idiom in
+that same file.
+
+**Filtering an engine `UnitActionItem`** — the shape used in the other three:
+
+```
+visible = "[Not(EqualTo_string(UnitActionItem.GetName, Localize('BECOME_MERCENARY')))]"
+```
+
+ANDed onto whatever `visible` vanilla already had, so pinning and category behaviour are untouched
+for every other action. `UnitActionItem.GetKey` exists and would be sturdier — vanilla uses it in
+`multi_unit_window.gui` for the pin collection — but the key's *value* for this action is not
+discoverable from the files, and a wrong guess fails silently, which is precisely how the first two
+attempts shipped broken. Both halves of the name comparison are verifiable in vanilla usage instead.
+
+In `single_unit_window.gui` the filter has to sit on each `unit_action_category`'s
+`unit_action_category_block_visible` blockoverride rather than on the item template: a blockoverride
+replaces the block wholesale, so a default set on the template is overwritten by every category.
+
+**Not closed, and why.** `setup_condottieri.gui` — the contract window itself — is left vanilla.
+Both of its openers are now gone, and gutting an engine-driven view risks the class of assert that
+crashed the economic-support picker (see Nr.6). It is the obvious next backstop if a fifth surface
+turns up.
 
 **What finally located it:** grepping the *player-visible strings* the user quoted — "Set Up The
-Mercenary Contract" → `SETUP_MERCENARY`, and the refusal text → `MERC_UNIT_HAS_MERCENARIES` — rather
-than the action key. A matching action name is not proof of the right mechanism. Ask for exact
-on-screen wording early when a removal "doesn't work".
+Mercenary Contract" → `SETUP_MERCENARY`, the refusal text → `MERC_UNIT_HAS_MERCENARIES`, and "Make
+available for hire" → `BECOME_MERCENARY` — rather than the action key. A matching action name is not
+proof of the right mechanism: the script action `make_unit_available_for_hire` and the engine action
+`BECOME_MERCENARY` share a display name and a tooltip title and are unrelated. Ask for exact
+on-screen wording early when a removal "doesn't work", and **enumerate every surface that renders
+the same item before shipping** rather than fixing the one that was reported.
 
 **The generic action is still disabled too**, as described below: it is on
 `generic_action_ai_lists/global_list.txt`, so it remains the AI and delegation-automation path even
