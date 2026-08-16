@@ -10,7 +10,7 @@ Status summary:
 
 | Nr. | Requirement | Status | Commit |
 |---|---|---|---|
-| 3 | Remove offering own troops as mercenaries | Done — `17a2076` shipped broken, refixed | `17a2076`, refixed in `d4775e2` |
+| 3 | Remove offering own troops as mercenaries | Done on the third attempt — the real path was a GUI button, not the action | `17a2076`, `d4775e2`, fixed in `pending` |
 | 6 | Economic Support amount based on receiver's tax base | Done | `14ec953` |
 | 7 | Personal Union call to arms must be declinable | Done | `293b9d3` |
 | 8 | Tributaries excluded from location/subject transfers | Done | `cdde1dc` |
@@ -31,6 +31,40 @@ seller keeps drawing the full hire price.
 **What the engine allowed.** `make_unit_available_for_hire` is a normal `generic_action`
 (`type = owncountry`) and is fully moddable. `delist_unit` sits in the same vanilla file as a
 separate key.
+
+**The mechanism, found on the third attempt.** What players actually use is the **"Set Up The
+Mercenary Contract"** window — `SETUP_MERCENARY`, the `setup_condottieri` lateralview — and it is
+engine-driven end to end. `SetupCondottieriView` / `CondottieriItem` with `OnAccept`,
+`OnCostModifierChanged`, `OnDurationChanged` and `DelistUnhiredMercenaries` are all engine
+functions, and its refusals come from engine loc keys (`MERC_UNIT_HAS_MERCENARIES` and siblings in
+`units_l_english.yml`, i.e. `NUnitUtilities::CanBecomeMercenary`) rather than from any script
+trigger. **No data change reaches it.**
+
+The `make_unit_available_for_hire` generic_action is a decoy: same name, same tooltip title
+(`MAKE_AVAILABLE_FOR_HIRE_TT_TITLE`), no connection to the window. Two attempts were spent on it.
+
+**Solution (the one that closes it).** `ShowCondottieriViewWithFilter` is called from exactly one
+place in the entire game — the "Become Mercenary" button in `in_game/gui/army_builder.gui` — and no
+hotkey reaches it. A same-name replacement of that file kills the button two ways:
+
+- `blockoverride "right_widget_visible" { visible = no }` — restoring vanilla's own default.
+  `shared/windows.gui` declares `block "right_widget_visible" { visible = no }`, and vanilla's
+  army_builder *empties* the override to switch the button on. Putting the `visible = no` back is
+  the smallest possible edit.
+- `blockoverride "right_widget"{}` — the `header_button_right` widget is deleted outright, so there
+  is nothing left to render, hover or click. An empty blockoverride is vanilla's own idiom in this
+  same file.
+
+**What finally located it:** grepping the *player-visible strings* the user quoted — "Set Up The
+Mercenary Contract" → `SETUP_MERCENARY`, and the refusal text → `MERC_UNIT_HAS_MERCENARIES` — rather
+than the action key. A matching action name is not proof of the right mechanism. Ask for exact
+on-screen wording early when a removal "doesn't work".
+
+**The generic action is still disabled too**, as described below: it is on
+`generic_action_ai_lists/global_list.txt`, so it remains the AI and delegation-automation path even
+though it was never the player's.
+
+---
 
 **First attempt, and why it shipped broken.** `ars_belli_no_mercenary_listing.txt` overrode the key
 with `REPLACE:` and set `potential = { always = no }` (plus `ai_prerequisite` and the unit
