@@ -10,7 +10,7 @@ Status summary:
 
 | Nr. | Requirement | Status | Commit |
 |---|---|---|---|
-| 3 | Remove offering own troops as mercenaries | Done — `17a2076` shipped broken, refixed | `17a2076`, refixed in `pending` |
+| 3 | Remove offering own troops as mercenaries | Done — `17a2076` shipped broken, refixed | `17a2076`, refixed in `d4775e2` |
 | 6 | Economic Support amount based on receiver's tax base | Done | `14ec953` |
 | 7 | Personal Union call to arms must be declinable | Done | `293b9d3` |
 | 8 | Tributaries excluded from location/subject transfers | Done | `cdde1dc` |
