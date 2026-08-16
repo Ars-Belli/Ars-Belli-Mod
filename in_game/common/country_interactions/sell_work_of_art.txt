@@ -15,7 +15,14 @@
 #
 # Everything above the `diplo_chance` block is vanilla and must be kept in sync with it - only
 # `diplo_chance` and `accept` carry mod changes.
-REPLACE:sell_work_of_art = {
+#
+# Same-name full-file replacement rather than a `REPLACE:` in a separately-named file. That was
+# the first shape this took, until `REPLACE:` was proven to silently do nothing in the
+# generic_actions database (see the mercenary listing removal): it works in some databases and
+# not others, and country_interactions had no precedent either way in this mod. Vanilla's
+# sell_work_of_art.txt holds this one key and nothing else, so replacing the file by name costs
+# only the re-sync on a vanilla update, which replaced_files.txt tracks.
+sell_work_of_art = {
 	category = CATEGORY_ECONOMY_ACTIONS
 	type = diplomacy
 
