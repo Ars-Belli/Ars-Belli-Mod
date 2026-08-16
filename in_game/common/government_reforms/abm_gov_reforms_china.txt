@@ -7,7 +7,7 @@ abm_wuu_people_granary_circuit_reform = {
 	unique = yes
 	age = age_3_discovery
 	potential = {
-		has_advance = abm_wuu_people_granary_circuit
+		has_advance = abm_wuu_government_innovation_edict
 	}
 	country_modifier = {
 		global_laborers_city_desired_pop_scaled = 0.01
@@ -51,9 +51,9 @@ abm_cfn_noble_board_regime = {
 
 abm_china_pirates = {
 	major = yes
-	government = republic
 
 	potential = {
+		government_type = government_type:republic
 		culture = { has_culture_group = culture_group:chinese_group }
 		capital = { sub_continent = sub_continent:east_asia }
 	}
@@ -81,9 +81,9 @@ abm_china_pirates = {
 
 abm_china_meritocratic_republic = {
 	major = yes
-	government = republic
 
 	potential = {
+		government_type = government_type:republic
 		culture = { has_culture_group = culture_group:chinese_group }
 		capital = { sub_continent = sub_continent:east_asia }
 	}
@@ -112,9 +112,9 @@ abm_china_meritocratic_republic = {
 abm_china_buddhist_order = {
 	age = age_1_traditions
 	major = yes
-	government = theocracy
 
 	potential = {
+		government_type = government_type:theocracy
 		religion.group = religion_group:buddhist
 		original_capital = { sub_continent = sub_continent:east_asia }
 	}
@@ -197,7 +197,7 @@ abm_china_ahimsa_code = {
 	}
 
 	country_modifier = {
-		can_declare_war = no
+		can_declare_war = { always = no }
 		global_monthly_development = 0.0025
 		global_monthly_prosperity = 0.0025
 		blocked_from_declaring_war = yes
