@@ -50,7 +50,7 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parent.parent
+BASE = Path(__file__).resolve().parent.parent.parent
 ADVANCE_DIR = BASE / "in_game/common/advances"
 DEFAULT_REF_DIR = BASE / ".tools/eu5/advances"
 
