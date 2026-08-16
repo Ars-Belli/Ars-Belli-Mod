@@ -10,7 +10,7 @@ Status summary:
 
 | Nr. | Requirement | Status | Commit |
 |---|---|---|---|
-| 3 | Remove offering own troops as mercenaries | Done | `17a2076` |
+| 3 | Remove offering own troops as mercenaries | Done — `17a2076` shipped broken, refixed | `17a2076`, refixed in `pending` |
 | 6 | Economic Support amount based on receiver's tax base | Done | `14ec953` |
 | 7 | Personal Union call to arms must be declinable | Done | `293b9d3` |
 | 8 | Tributaries excluded from location/subject transfers | Done | `cdde1dc` |
@@ -32,20 +32,50 @@ seller keeps drawing the full hire price.
 (`type = owncountry`) and is fully moddable. `delist_unit` sits in the same vanilla file as a
 separate key.
 
-**Solution.** `in_game/common/generic_actions/ars_belli_no_mercenary_listing.txt` overrides the
-key with `REPLACE:` and sets `potential = { always = no }`. The body is otherwise vanilla's,
-unchanged, so no field the engine expects is missing.
+**First attempt, and why it shipped broken.** `ars_belli_no_mercenary_listing.txt` overrode the key
+with `REPLACE:` and set `potential = { always = no }` (plus `ai_prerequisite` and the unit
+`select_trigger`'s `visible`). It **did nothing at all**. The action stayed in the game and players
+could still walk the whole flow and list armies, and it **logged no error of any kind** — the file
+parsed, the entry simply never bound and vanilla's stayed live. Reported by a player; it had been
+in a release for months.
 
-- The gate is in `potential`, not `allow`, so the action drops out of the action list entirely
-  instead of sitting there permanently greyed out. Player, delegation automation and AI
-  evaluation all pass that same gate.
-- `REPLACE:` rather than a same-name file copy specifically so `delist_unit` stays vanilla —
-  anyone who listed a unit before the change still needs a way to pull it back off the market.
+`REPLACE:` is not universally supported — it is **per-database**, and it fails silently where it is
+not. It provably *does* work in `building_types`: the mod's `REPLACE:order_commandery` is the live
+copy, which `error.log` shows by reporting `Building 'order_commandery' has want_foreign_pop_created
+= yes but no pop_size_created defined` — a property only the mod's version has, vanilla sets it to
+`no`. `generic_actions` is one where it does not take.
+
+**Solution.** A **same-name full-file replacement** of
+`in_game/common/generic_actions/make_unit_available_for_hire.txt`, registered in
+`replaced_files.txt`. That is a path-level override by the mod file system and depends on no
+`REPLACE:` support; the same folder already does it for `red_turban_rebellions.txt` and
+`rise_of_timur.txt`. `delist_unit` lives in the same vanilla file and is kept **byte-identical to
+vanilla** (verified by diff), so anyone who listed a unit before the change can still pull it back.
+
+The action is closed at every stage rather than one, because the first attempt gated three of them
+and still shipped working:
+
+| Gate | Effect |
+|---|---|
+| `show_in_gui_list = no` | keeps it out of the auto-generated action lists — **no `.gui` file references this action by name**, so the button the player was pressing is auto-generated and this is the flag aimed straight at it |
+| `potential = { always = no }` | drops it from the list rather than greying it out; player, AI and delegation automation share this gate |
+| `allow = { always = no }` | blocks anything that reaches it past `potential` |
+| `ai_prerequisite = { always = no }` | stops AI evaluation |
+| `automation_tick = never` | was `daily`; stops the delegation automation |
+| `select_trigger` `visible = { always = no }` | offers no unit to pick |
+| `effect = { }` | the listing call is removed — **nothing can be listed even if every gate above is bypassed** |
+
+Vanilla's dropped conditions are kept in the file as comments so a restore is mechanical.
 
 **Caveat.** Vanilla already carried `ai_tick = never` on this action, which per
 `country_interactions/readme.txt` marks behaviour "already handled in code". If AI countries
 list mercenaries through engine code rather than through this action, that path is not reachable
 from script and no data change closes it.
+
+**Lesson, recorded because it cost a shipped release.** A clean `error.log` is not evidence that an
+override took effect — this is the third silent-failure mode in this project after the GUI slider
+`max` and `FixedPointToFloat` (Nr.16). Verify an override by finding something the engine echoes
+back, or use the mechanism that cannot silently fail.
 
 ---
 
@@ -344,9 +374,12 @@ accept = {
 A wealthy AI at neutral opinion holding mid-quality art sits at `-30 + 30 = 0` — it buys. Nothing
 between quality 40 and 69 carried any penalty at all, which is most of what a court produces.
 
-**Solution.** `in_game/common/country_interactions/ars_belli_sell_work_of_art.txt`, a `REPLACE:`
-of the single key (not a same-name file copy, per the standing rule). Everything above
-`diplo_chance` is vanilla and has to be kept in sync on updates. The changes:
+**Solution.** `in_game/common/country_interactions/sell_work_of_art.txt`, a same-name full-file
+replacement (in `replaced_files.txt`). It was written as a `REPLACE:` in a separately-named file
+first, per the standing rule, and converted the moment Nr.3 proved `REPLACE:` binds in some
+databases and silently no-ops in others with `country_interactions` unverified either way. The
+vanilla file holds this one key and nothing else, so the only cost is the re-sync on a game update.
+Everything above `diplo_chance` is vanilla and has to be kept in sync. The changes:
 
 | Term | Vanilla | Ars Belli |
 |---|---|---|
