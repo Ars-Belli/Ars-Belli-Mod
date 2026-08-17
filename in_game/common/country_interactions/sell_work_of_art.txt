@@ -1,0 +1,206 @@
+﻿# Ars Belli: make countries much less willing to buy works of art offered to them.
+#
+# Vanilla's acceptance formula never looks at the price. The buyer pays `art_price` (engine
+# value, not moddable - no define, no price entry, only `price:sell_work_of_art = { gold = 1 }`
+# as a base that `price_modifier` then overwrites with the art's own worth), while its decision
+# is made purely on opinion, its own treasury, and the art's quality. So any AI sitting on a
+# large treasury with a neutral opinion would buy anything that was not outright junk, at
+# whatever the engine said it was worth - a repeatable gold faucet for a player with artists.
+#
+# Two changes fix that:
+#   1. the price now enters the buyer's own decision, scaled against its monthly income, so a
+#      valuable work is hard to offload on a small economy no matter how rich the buyer feels;
+#   2. the baseline, the wealth bonus and the quality bands are all pulled down, so only a
+#      genuine masterpiece going to a friendly buyer clears the bar.
+#
+# Everything above the `diplo_chance` block is vanilla and must be kept in sync with it - only
+# `diplo_chance` and `accept` carry mod changes.
+#
+# Same-name full-file replacement rather than a `REPLACE:` in a separately-named file. That was
+# the first shape this took, until `REPLACE:` was proven to silently do nothing in the
+# generic_actions database (see the mercenary listing removal): it works in some databases and
+# not others, and country_interactions had no precedent either way in this mod. Vanilla's
+# sell_work_of_art.txt holds this one key and nothing else, so replacing the file by name costs
+# only the re-sync on a vanilla update, which replaced_files.txt tracks.
+sell_work_of_art = {
+	category = CATEGORY_ECONOMY_ACTIONS
+	type = diplomacy
+
+	ai_tick = daily
+	ai_tick_frequency = 360
+
+	ai_prerequisite = {
+		exists = scope:actor
+		scope:actor = {
+			gold < { value = monthly_income_total multiply = 6 }
+		}
+	}
+
+	price = price:sell_work_of_art
+	price_modifier = {
+		if = {
+			limit = { exists = scope:target }
+			add = {
+				desc = "ART_SALE_VALUE"
+				value = scope:target.art_price
+			}
+		}
+		else = {
+			value = 1
+		}
+	}
+	payer = scope:recipient
+	payee = scope:actor
+
+	potential = {
+		scope:actor = {
+			has_sellable_art = yes
+		}
+	}
+
+	allow = {
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "choose_country"
+		column = {
+			data = name
+		}
+		visible = {
+			NOT = { this = scope:actor }
+		}
+		enabled = {
+			NOT = { is_enemy_of = scope:actor }
+			prestige >= scope:actor.prestige
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = work_of_art
+		source = actor
+		cache_targets = yes
+		target_flag = target
+		name = "sell_work_of_art_select_art"
+		none_available_msg_key = "sell_work_of_art_no_art"
+		column = {
+			data = name
+		}
+		visible = {
+			art_is_priceless = no
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = sell_work_of_art_move_art_tt
+			hidden_effect = {
+				scope:target = {
+					move_art_and_owner = { location = scope:recipient.capital country = scope:recipient }
+				}
+			}
+		}
+	}
+
+	ai_will_do = {
+		add = -100
+		# sell when treasury is below 6 months of income
+		if = {
+			limit = {
+				scope:actor = {
+					gold < { value = monthly_income_total multiply = 6 }
+				}
+			}
+			add = 100
+		}
+		if = {
+			limit = { scope:actor = { is_enemy_of = scope:recipient } }
+			multiply = 0
+		}
+	}
+
+	# Ars Belli: -30 -> -50. The baseline a sale has to climb out of.
+	diplo_chance = {
+		base = -50
+	}
+
+	accept = {
+		add = {
+			desc = "OUR_OPINION_TOOLTIP"
+			value = "scope:recipient.opinion(scope:actor)"
+			divide = 3
+		}
+		# Ars Belli: the buyer now weighs what it is being asked to pay. Eight points per month
+		# of its own income, the same rate the pay-for-access actions price offered gold at, so
+		# the two sit on one scale. `min = 1` on the divisor is the vanilla divide-by-zero guard
+		# (see script_values/diplomatic_values.txt); `max = 60` keeps a single absurdly valuable
+		# work from burying every other term, since `art_price` is engine-side and its range is
+		# not knowable from script.
+		if = {
+			limit = { exists = scope:target }
+			subtract = {
+				desc = "AB_ART_PRICE_VS_INCOME"
+				value = scope:target.art_price
+				divide = {
+					value = scope:recipient.monthly_income_total
+					min = 1
+				}
+				multiply = 8
+				max = 60
+			}
+		}
+		if = {
+			limit = { scope:recipient = { gold < { value = monthly_income_total multiply = 6 } } }
+			add = {
+				desc = "LOW_TREASURY"
+				value = -60
+			}
+		}
+		# Ars Belli: +30 above 24 months of income -> +15 above 36. A fat treasury was the single
+		# biggest reason AI bought art it had no interest in.
+		if = {
+			limit = { scope:recipient = { gold > { value = monthly_income_total multiply = 36 } } }
+			add = {
+				desc = "WEALTHY_BUYER"
+				value = 15
+			}
+		}
+		if = {
+			limit = { scope:target ?= { art_quality >= 70 } }
+			add = {
+				desc = "HIGH_QUALITY_ART"
+				value = 30
+			}
+		}
+		# Ars Belli: new middle band. Vanilla only punished art below 40, so anything from 40 to
+		# 69 - the bulk of what a court produces - was sold at no penalty at all.
+		if = {
+			limit = {
+				scope:target ?= {
+					art_quality >= 40
+					art_quality < 70
+				}
+			}
+			add = {
+				desc = "AB_MEDIOCRE_ART"
+				value = -25
+			}
+		}
+		# Ars Belli: -50 -> -90. Junk should not find a buyer at any price.
+		if = {
+			limit = { scope:target ?= { art_quality < 40 } }
+			add = {
+				desc = "LOW_QUALITY_ART"
+				value = -90
+			}
+		}
+		if = {
+			limit = { scope:recipient = { is_rival_of = scope:actor } }
+			add = {
+				desc = "game_concept_rival"
+				value = -100
+			}
+		}
+	}
+}
