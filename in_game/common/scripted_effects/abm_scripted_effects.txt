@@ -126,7 +126,7 @@ mp_limits_initialize_ranks_and_cleanup = {
 			remove_variable = mp_control_pop_score
 			remove_variable = mp_vassal_pop_score
 			remove_variable = mp_military_score
-			remove_country_modifier = mp_over_alliance_limit_penalty
+			remove_country_modifier = abm_mp_over_alliance_limit_penalty
 		}
 		else = {
 			# Force initialization to prevent unset errors
@@ -394,7 +394,7 @@ mp_limits_apply_alliance_limit_penalty = {
 			}
 		}
 		add_country_modifier = {
-			modifier = mp_over_alliance_limit_penalty
+			modifier = abm_mp_over_alliance_limit_penalty
 		}
 
 		# Pop up the warning event the first time the player crosses the limit,
@@ -411,7 +411,7 @@ mp_limits_apply_alliance_limit_penalty = {
 		set_variable = { name = mp_was_over_alliance_limit value = 1 }
 	}
 	else = {
-		remove_country_modifier = mp_over_alliance_limit_penalty
+		remove_country_modifier = abm_mp_over_alliance_limit_penalty
 		remove_variable = mp_was_over_alliance_limit
 	}
 }
@@ -442,7 +442,7 @@ mp_limits_rank_classification = {
 		remove_variable = mp_control_pop_score
 		remove_variable = mp_vassal_pop_score
 		remove_variable = mp_military_score
-		remove_country_modifier = mp_over_alliance_limit_penalty
+		remove_country_modifier = abm_mp_over_alliance_limit_penalty
 	}
 	else = {
 		# Local copy of global variables for easy access in UI/triggers if needed
