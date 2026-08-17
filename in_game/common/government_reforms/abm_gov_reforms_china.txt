@@ -56,6 +56,7 @@ abm_china_pirates = {
 		government_type = government_type:republic
 		culture = { has_culture_group = culture_group:chinese_group }
 		capital = { sub_continent = sub_continent:east_asia }
+		num_of_ports > 0
 	}
 
 	locked = {
@@ -183,7 +184,10 @@ abm_china_ahimsa_code = {
 	potential = {
 		religion.group = religion_group:buddhist
 		original_capital = { sub_continent = sub_continent:east_asia }
-		government_type = government_type:theocracy
+		OR = {
+			government_type = government_type:theocracy
+			government_type = government_type:republic
+		}
 	}
 
 	locked = {
@@ -209,6 +213,7 @@ abm_china_ahimsa_code = {
 		OR = {
 			has_or_had_tag = CNP
 			has_or_had_tag = CTW
+			has_or_had_tag = CXI
 		}
 		has_reform = government_reform:abm_china_ahimsa_crown_commitment
 		has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
