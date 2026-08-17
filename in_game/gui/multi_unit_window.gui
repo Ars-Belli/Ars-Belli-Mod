@@ -1,0 +1,464 @@
+lateralview_unattached = {
+	name = "multi_unit_window"
+
+	blockoverride "lateralview_topbuttons_extra" {
+		widget = {
+			parentanchor = vcenter
+			size = { 40 40 }
+			position = { 30 0 }
+
+			button_minimize = {
+				size = { 25 25 }
+				parentanchor = vcenter
+
+				blockoverride "button_texture" {
+					texture = "gfx/interface/buttons/flats/rename_new.dds"
+					texture_density = 2
+				}
+
+				action_tooltip = {
+					title = "RENAME_UNIT"
+					on_action = "[MultiUnitWindow.Vars.Toggle('edit_name')]"
+				}
+			}
+		}
+
+		widget = {
+			parentanchor = right|vcenter
+			size = { 40 40 }
+			position = { -30 0 }
+
+			button_minimize = {
+				visible = "[Not(MultiUnitWindow.IsCompactViewEnabled)]"
+				parentanchor = right|vcenter
+
+				action_tooltip = {
+					title = "COLLAPSE"
+					on_action = "[MultiUnitWindow.ToggleCompactView]"
+				}
+
+				input_action = "toggle_window_collapse"
+			}
+
+			button_minimize = {
+				visible = "[MultiUnitWindow.IsCompactViewEnabled]"
+				parentanchor = right|vcenter
+
+				blockoverride "button_texture" {
+					using = max_button_alt_texture
+				}
+
+				action_tooltip = {
+					title = "EXPAND"
+					on_action = "[MultiUnitWindow.ToggleCompactView]"
+				}
+
+				input_action = "toggle_window_collapse"
+			}
+		}
+	}
+
+	blockoverride "panel_header" {
+		window_header_alt = {
+			visible = "[MultiUnitWindow.HasOneUnitItem]"
+			using = bg_main_inner_alt
+			blockoverride "window_header_alt_color_texture"{
+				using = color_default_brown_texture
+			}
+			
+			blockoverride "header_text_object" {
+				hbox = {
+					button = {
+						using = layoutpolicy_expanding
+
+						action_tooltip = {
+							cursor = "text"
+							title = "RENAME_UNIT"
+							on_action = "[MultiUnitWindow.Vars.Toggle('edit_name')]"
+						}
+
+						tooltipwidget = {
+							ContextualTooltipType = {
+								blockoverride "title_icon" {
+									country_flag_mid = {
+										blockoverride "tooltip" {}
+										datacontext = "[MultiUnitWindow.AccessFirstUnitItem.AccessUnit.GetCountry]"
+									}
+								}
+
+								blockoverride "title_text" {
+									text = "[MultiUnitWindow.AccessFirstUnitItem.AccessUnit.GetNameWithNoTooltip]"
+								}
+
+								blockoverride "concept_link" {
+									text = "[unit|e]"
+								}
+
+								blockoverride "tooltip_content" {
+									TooltipTextBlock = {
+										blockoverride "text" {
+											text = "UNIT_NAME_TT"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				hbox = {
+					visible = "[Not(MultiUnitWindow.Vars.Exists('edit_name'))]"
+					spacing = 5
+					expand = {}
+
+					country_flag_small = {
+						datacontext = "[MultiUnitWindow.AccessFirstUnitItem.AccessUnit.GetCountry]"
+						blockoverride "tooltip" {}
+						
+						blockoverride "contextmenu" {}
+					}
+
+					header_title = {
+						layoutpolicy_horizontal = fixed
+						autoresize = yes
+						maximumsize = { 250 -1 }
+						text = "[MultiUnitWindow.AccessFirstUnitItem.AccessUnit.GetNameWithNoTooltip]"
+						alwaystransparent = yes
+					}
+
+					tooltipwidget = {
+						ContextualTooltipType = {
+							blockoverride "title_icon" {
+								country_flag_mid = {
+									blockoverride "tooltip" {}
+									datacontext = "[MultiUnitWindow.AccessFirstUnitItem.AccessUnit.GetCountry]"
+								}
+							}
+
+							blockoverride "title_text" {
+								text = "[MultiUnitWindow.AccessFirstUnitItem.AccessUnit.GetNameWithNoTooltip]"
+							}
+
+							blockoverride "concept_link" {
+								text = "[unit|e]"
+							}
+
+							blockoverride "tooltip_content" {
+								TooltipTextBlock = {
+									blockoverride "text" {
+										text = "UNIT_NAME_TT"
+									}
+								}
+								TooltipFunctionalBlock = {
+									using = tooltip_left_click_template
+
+									blockoverride "action_left_text" {
+										text = "RENAME_UNIT"
+									}
+								}
+							}
+						}
+					}
+
+					expand = {}
+				}
+
+				hbox = {
+					editbox = {
+						name = "unit_name"
+						using = layoutpolicy_expanding
+						default_format = "#high"
+						using = Font_Size_Medium
+						align = center|nobaseline
+
+						text = "[MultiUnitWindow.AccessFirstUnitItem.AccessUnit.GetNameWithNoTooltip]"
+
+						ontextedited = "[MultiUnitWindow.OnUnitNameEdited]"
+						oneditingfinished = "[MultiUnitWindow.RenameUnit]"
+						oneditingfinished = "[MultiUnitWindow.Vars.Clear('edit_name')]"
+						onfocusout = "[MultiUnitWindow.Vars.Clear('edit_name')]"
+
+						focus_on_visible = yes
+						focuspolicy = all
+						alwaystransparent = no
+
+						maxcharacters = 25
+
+						visible = "[And(MultiUnitWindow.CanRenameUnit, MultiUnitWindow.Vars.Exists('edit_name'))]"
+						multiline = no
+					}
+				}
+			}
+		}
+
+		window_header_alt = {
+			visible = "[Not(MultiUnitWindow.HasOneUnitItem)]"
+			using = bg_main_inner_alt
+			blockoverride "window_header_alt_color_texture"{
+				using = color_default_brown_texture
+			}
+			
+			blockoverride "header_text" {
+				text = "[MultiUnitWindow.GetInfo]"
+			}
+		}
+	}
+
+	blockoverride "panel_content" {
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			using = bg_main_inner_notabs_alt
+			using = window_main_tabs_margin_alt
+
+			vbox = {
+				layoutpolicy_horizontal = expanding
+				minimumsize = { -1 79 }
+				name = "multi_unit_main_content"
+
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					margin = {5 0}
+					margin_top = 10
+					name = "multi_unit_actions"
+
+					hbox = {
+						using = bg_market_card
+						using = bg_cabinet_card_frame
+						using = layoutpolicy_expanding
+
+						flowcontainer = {
+							wrap_count = 10
+							ignoreinvisible = yes
+							visible = "[Not(MultiUnitWindow.HasOneUnitItem)]"
+
+							spacing = 2
+							margin = {7 5}
+
+							datamodel = "[MultiUnitWindow.GetAllActionItems]"
+							item = {
+								# Ars Belli: same "Make available for hire" exclusion as
+								# single_unit_window.gui - this is the multi-selection copy of the
+								# same engine-built action list.
+								unit_action_item = {
+									visible = "[Not(EqualTo_string(UnitActionItem.GetName, Localize('BECOME_MERCENARY')))]"
+								}
+							}
+						}
+
+						flowcontainer = {
+							wrap_count = 10
+							ignoreinvisible = yes
+							
+							visible = "[MultiUnitWindow.HasOneUnitItem]"
+
+							spacing = 2
+							margin = {7 5}
+
+							datacontext = "[MultiUnitWindow.AccessFirstUnitItem.AccessUnit.GetQuickUnitActions]"
+							datacontext = "[Pin('unit_actions')]"
+							flowcontainer = {
+								spacing = 2
+								wrap_count = 10
+								ignoreinvisible = yes
+								datamodel = "[QuickUnitActions.AccessList]"
+								item = {
+									# Ars Belli: the exclusion is ANDed onto vanilla's pin check
+									# rather than replacing it, so pinning still behaves normally
+									# for every other action.
+									unit_action_item = {
+										visible = "[And(PinCollection.IsPinnedWithDefaultValue( UnitActionItem.GetKey, UnitActionItem.IsPinnedByDefault), Not(EqualTo_string(UnitActionItem.GetName, Localize('BECOME_MERCENARY'))))]"
+									}
+								}
+							}
+						}
+
+						expand = {}
+	
+						hbox = {
+							margin = {5 0}
+							layoutpolicy_vertical = expanding
+							using = bg_cabinet_card_frame
+					
+							# FILTER BUTTON
+							widget = {
+								size = { 25 40 }
+								filter_button_alt = {
+									size = { 25 25 }
+									parentanchor = center
+									blockoverride "filter_button_action" {
+										action_tooltip = {
+											click_type = left
+											click_mode = single
+											title = "TOGGLE_UNITS_SELECTION"
+											on_action = "[MultiUnitWindow.ToggleMultiUnitSelectUnit(PdxGuiWidget.FindParent('multi_unit_main_content').Self)]"
+										}
+									}
+									tooltipwidget = { BasicFunctionalTooltip = {} }
+									
+									blockoverride "glow_visible" {
+										visible = "[MultiUnitWindow.IsMultiUnitSelectUnitOpened(PdxGuiWidget.FindParent('multi_unit_main_content').Self)]"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			scroll_list = {
+				visible = "[MultiUnitWindow.IsCompactViewEnabled]"
+				layoutpolicy_horizontal = expanding
+
+				blockoverride "scroll_list_setup" {
+					name = "scroll_list_name"
+					layoutpolicy_horizontal = expanding
+					scrollbarpolicy_horizontal = always_off
+					scrollbar_vertical = {
+						using = Scrollbar_Vertical
+					}
+
+					autoresizescrollarea = yes
+					size = "[ToVector2f('(float)-1.0', PdxGuiWidget.GetRemainingHeightInParent('lateralview_container', '(float)10.0'))]"
+					max_height = "[PdxGuiWidget.GetRemainingHeightInParent('lateralview_container', '(float)10.0')]"
+				}
+
+				blockoverride "scroll_list_layout" {
+					vbox = {
+						#visible = "[Not(PdxGuiWidget.FindParent('scroll_list_name').HasMoveFromLastFrame)]"
+						set_parent_dimension_to_minimum = height
+						layoutpolicy_horizontal = expanding
+						spacing = 5
+
+						datamodel = "[MultiUnitWindow.AccessUnitItems]"
+						item = {
+							# UNIT CARD
+							widget = {
+								
+								layoutpolicy_horizontal = expanding
+								size = { -1 80 }
+								hbox = {
+									margin_right = 10
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										datacontext = "[UnitItem.AccessUnit]"
+										datacontext = "[UnitItem.AccessUnit.GetLocation]"
+										
+										using = bg_market_card
+										using = bg_cabinet_card_frame
+
+										unit_card = {}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			filtered_sorted_list = {
+				visible = "[Not(MultiUnitWindow.IsCompactViewEnabled)]"
+				layoutpolicy_horizontal = expanding
+				datacontext = "[MultiUnitWindow.GetUnitsSortSearch]"
+
+				blockoverride "scroll_list_is_empty" {
+					visible = "[IsDataModelEmpty(MultiUnitWindow.AccessUnitItems)]"
+				}
+
+				blockoverride "scroll_list_is_empty_text" {
+					text = "ARMY_SCROLL_LIST_EMPTY"
+				}
+
+				blockoverride "scroll_list_vbox" {
+					layoutpolicy_horizontal = expanding
+				}
+
+				blockoverride "scroll_list_setup" {
+					name = "scroll_list_name"
+					layoutpolicy_horizontal = expanding
+					scrollbarpolicy_horizontal = always_off
+					scrollbar_vertical = {
+						using = Scrollbar_Vertical
+					}
+
+					autoresizescrollarea = yes
+					size = "[ToVector2f('(float)-1.0', PdxGuiWidget.GetRemainingHeightInParent('lateralview_container', '(float)10.0'))]"
+					max_height = "[PdxGuiWidget.GetRemainingHeightInParent('lateralview_container', '(float)10.0')]"
+				}
+
+				blockoverride "scroll_list_layout" {
+					vbox = {
+						#visible = "[Not(PdxGuiWidget.FindParent('scroll_list_name').HasMoveFromLastFrame)]"
+						set_parent_dimension_to_minimum = height
+						layoutpolicy_horizontal = expanding
+						spacing = 5
+
+						datamodel = "[MultiUnitWindow.AccessFilteredUnitItems]"
+						item = {
+							# UNIT CARD
+							widget = {
+								
+								layoutpolicy_horizontal = expanding
+								size = { -1 80 }
+								hbox = {
+									margin_right = 10
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										datacontext = "[UnitItem.AccessUnit]"
+										datacontext = "[UnitItem.AccessUnit.GetLocation]"
+										
+										using = bg_market_card
+										using = bg_cabinet_card_frame
+
+										unit_card = {}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+select_menu_left = {
+	blockoverride "menu_setup" {
+		name = "multi_unit_select_unit"
+	}
+
+	blockoverride "close_on_action" { on_action = "[MultiUnitSelectUnit.OnClose]" }
+	blockoverride "select_content" {
+		select_menu_header = {
+			blockoverride "select_menu_header_extra" {
+				text_single = {
+					using = Font_Type_Headers
+					using = Font_Size_Small
+					align = nobaseline
+					text = "OWNED_UNITS_TT"
+				}
+			}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			spacing = 10
+
+			datamodel = "[AccessPlayerUnits]"
+			item = {
+				widget = {
+					size = { 485 70 }
+					visible = "[Or(And(MultiUnitSelectUnit.Parent.IsArmy, Unit.IsArmy), And(Not(MultiUnitSelectUnit.Parent.IsArmy), Unit.IsNavy))]"
+					
+					hbox = {
+						datacontext = "[Unit.GetLocation]"
+						
+						using = bg_market_card
+						using = bg_cabinet_card_frame
+	
+						unit_card = {}
+					}
+				}
+			}
+		}
+	}
+}

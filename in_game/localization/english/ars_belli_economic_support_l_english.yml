@@ -1,10 +1,10 @@
 ﻿l_english:
  ars_belli_economic_support_relation: "Economic Support"
- ars_belli_economic_support_relation_desc: "A wealthier [country|e] sends an agreed sum of [gold_i] to another every month. Both parties spend a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as the arrangement stands."
+ ars_belli_economic_support_relation_desc: "A wealthier [country|e] sends an agreed sum of [gold_i] to another every month. The sum is capped at the recipient's [tax_base|e], and can never exceed ten months of the sender's income. Both parties spend a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as the arrangement stands."
 
  # The interaction that starts the relation - this is what players click.
  ars_belli_send_economic_support: "Send $ars_belli_economic_support_relation$"
- ars_belli_send_economic_support_desc: "Send a country a sum of [gold_i] every month. It costs us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e], and costs them the same."
+ ars_belli_send_economic_support_desc: "Send a country a sum of [gold_i] every month. We may send at most their [tax_base|e] each month, and never more than ten months of our own income - a small economy cannot absorb a large [country|e]'s gold. It costs us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e], and costs them the same."
  CATEGORY_ECONOMY_ACTIONS_ars_belli_send_economic_support: "Send $ars_belli_economic_support_relation$"
  ars_belli_send_economic_support_act: "Offer $ars_belli_economic_support_relation$"
  INCOMING_OFFER_ars_belli_send_economic_support: "$ACTOR$ have offered to send us $ars_belli_economic_support_relation$. Accepting will cost us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as it lasts. Do we wish to accept?\n\n$INFO$"
@@ -33,7 +33,7 @@
  break_ars_belli_economic_support_cta: "Stop accepting $ars_belli_economic_support_relation$ from [TARGET_COUNTRY.GetName]."
  break_ars_belli_economic_support_desc: "We will refuse further gold, freeing the #H Defensive Point#! and the monthly [diplomats|e] it costs us."
 
- ars_belli_economic_support_select_amount: "Gold sent each month"
+ ars_belli_economic_support_select_amount: "Gold sent each month - limited by their [tax_base|e]"
  ars_belli_economic_support_one_patron_tt: "They must not already be receiving $ars_belli_economic_support_relation$ from another [country|e]"
  ars_belli_economic_support_points_tt: "We must not be over our #H Defensive Point#! limit"
  ars_belli_economic_support_recipient_points_tt: "They must not be over their #H Defensive Point#! limit"

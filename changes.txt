@@ -27,6 +27,7 @@ crusades and jihads now have a global cooldown of 100 years (one per religion)
 # Personal Unions:
 
 junior partners (and any member of a federal union) get a "Force Break Union" button in the union panel that generates a random new ruler for them, instantly breaking the union; costs 20 legitimacy and has a 50-year cooldown
+union partners are no longer dragged into each other's defensive wars automatically; they now get a call to arms they can accept or decline, like any other ally (the offensive side is unchanged and still depends on the union's Mutual Offense policy)
 
 # Access Diplomacy:
 
@@ -36,6 +37,11 @@ the "Pay for X" country pickers are now filtered to countries within diplomatic 
 Fleet Basing Rights and Alliance no longer cause institution spread between the parties (to prevent abuse via spammable instant access actions)
 Knowledge Sharing relation is disabled (its severe institution-spread payload was an MP exploit; UI entry points hidden, type kept for save compatibility)
 
+# Subjects:
+
+tributaries are excluded from "Transfer Location to Other Subject" on both ends: their land cannot be handed to another subject, and they cannot receive land taken from one
+tributaries are excluded from "Transfer Subject" on both ends: a tributary cannot be transferred to another country, and cannot be given somebody else's subject
+
 # Guarantees:
 
 new "Break Others' Guarantee" action lets you forcibly remove a guarantee placed on you (requires peace, creates a truce on use)
@@ -43,7 +49,8 @@ guarantee relation no longer grants +50 opinion
 
 # Opinion:
 
-new "Worsen Opinion" action: worsens YOUR opinion of another country by -100, decays over 10 years
+new "Worsen Opinion" action: worsens YOUR opinion of another country by -200 (twice the magnitude of vanilla Improve Relations), decays over 10 years
+Worsen Opinion costs one diplomat and is limited to one use per month, so it can no longer be spammed at another player
 alliances no longer break when opinion turns negative (opinion is no longer an alliance precondition)
 defensive leagues no longer require non-negative opinion between the parties, either to form one or to join one
 
@@ -66,6 +73,7 @@ coalition CB (superiority_coalition): attacker conquer/subjugate cost 0.75, defe
 take-down hegemon CB (take_capital_imperial): attacker and defender conquer/subjugate cost 0.60 (vanilla 0.25/0.25 — both sides were heavily discounted)
 Deus Vult crusade CB is usable from game start by every country: the CB is hardcoded to require the Deus Vult advance, so every country is granted that advance at game start (with a monthly catch-up for nations formed later)
 religious-war wargoals now use near-neutral conquer + subjugate cost (vanilla was +75% / +20% loaded): Religious Conquer Province is 1.0/1.0 on both sides; the Heretic wargoal charges the attacker a slightly higher 1.1 (defender stays 1.0)
+location warscore: base cost per location raised to 2.5 (vanilla 2) to make up for the cut tax-base term, keeping the early game close to vanilla while the late game still scales far more gently
 location warscore: tax-base contribution reduced to 20% of vanilla; lack-of-control impact on warscore scales 0.2/0.4/0.6/0.8/1.0/1.0 across ages 1-6 (vanilla 0.1/0.2/0.4/0.6/0.8/1.0), so unoccupied land is worth less and occupied land more
 
 # Enforce Peace:
@@ -77,15 +85,21 @@ the Enforce Peace button on the war view is always shown and greys out with a to
 the "a rival is at war" alert opens Enforce Peace instead of Intervene in War
 the HRE Emperor no longer gets the vanilla Enforce Peace and Intervene in War, and uses the same Enforce Peace as everyone else
 
+# Mercenaries:
+
+offering your own armies as mercenaries is removed: the "Become Mercenary" button in the army builder, which opened the "Set Up The Mercenary Contract" window, is gone, and the "Make available for hire" unit action no longer shows anywhere it used to render — the single-unit action bar, a multi-unit selection, the pinned quick-action row, and the right-click unit menu — nor is it reachable by the AI or by delegation automation. Renting your own regiments out put the mercenary modifiers on the hirer while the owner kept drawing the full hire price, which between two players was a gold transfer that paid a profit. Delisting a unit already on the market still works
+
 # Economy:
 
 destroy market price capped at 10
+selling or buying a location is capped at 100 gold, so a location sale can no longer be used as an unlimited money transfer between players (vanilla let the buyer pay out its entire treasury)
+countries are far less willing to buy a work of art offered to them: they now weigh the price against their own income, a full treasury tempts them much less, and anything short of a masterpiece is turned down. Vanilla ignored the price entirely, so any rich AI would buy almost anything at whatever the game valued it at
 Manden Kurufa reform (Mali traditions) is removable
 
 # Economic Support:
 
 new "Send Economic Support" action: choose a country and a monthly sum of gold, and they get an accept/decline popup before the arrangement starts
-the amount slider runs from 0 up to the sender's whole monthly income and opens at 10% of it
+the amount that can be sent is capped at the recipient's tax base, and never exceeds ten months of the sender's income (never below 1 gold); the slider opens at half of that cap
 costs both sides a Defensive Point and -0.10 monthly diplomats for as long as it runs
 a country can only receive Economic Support from one patron at a time
 breaks on war between the two parties and is annulled by a peace treaty; either side can end it early (Cancel for the sender, Refuse for the recipient)

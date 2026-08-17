@@ -1,0 +1,313 @@
+lateralview = {
+	name = "sell_location_action_view"
+
+	blockoverride "panel_header" {
+		window_header_alt = {
+			using = bg_main_inner_alt
+			blockoverride "window_header_alt_color_texture"{
+				using = color_default_brown_texture
+			}
+
+			blockoverride "header_text" {
+				text = "[Select_CString(SellLocationActionView.IsBuying, Localize('BUY_PROV_FROM_COUNTRY_TITLE'), Localize('SELL_PROV_FROM_COUNTRY_TITLE') )]"
+			}
+		}
+	}
+
+	blockoverride "panel_content" {
+		vbox = {
+			using = layoutpolicy_expanding
+			using = bg_main_inner_alt
+			using = window_main_tabs_margin_alt
+
+			vbox = {
+				using = layoutpolicy_expanding
+				margin = { 10 0 }
+				margin_bottom = 10
+				spacing = 10
+
+				filtered_sorted_list = {
+					datacontext = "[SellLocationActionView.GetLocationsSortSearch]"
+
+					blockoverride "scroll_list_is_empty" {
+						visible = "[IsDataModelEmpty(SellLocationActionView.GetPossibleLocations)]"
+					}
+
+					blockoverride "scroll_list_is_empty_text" {
+						text = "LOCATIONS_SCROLL_LIST_EMPTY"
+					}
+
+					blockoverride "sort_buttons_filtered_list" {
+						sort_by_key_button = {
+							name = "name"
+							using = layoutpolicy_expanding
+						}
+		
+						sort_by_key_button = {
+							name = "population"
+							layoutpolicy_vertical = expanding
+							size = { 105 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "tax"
+							layoutpolicy_vertical = expanding
+							size = { 80 -1 }
+						}
+
+						sort_by_key_button = {
+							name = "raw_material"
+							layoutpolicy_vertical = expanding
+							size = { 65 -1 }
+						}
+					}
+
+					blockoverride "scroll_list_content" {
+						addcolumn = 100%
+						addrow = 37
+
+						datamodel = "[SellLocationActionView.GetPossibleLocations]"
+						item = {
+							card_list_button = {
+								minimumsize = {510 37}
+								maximumsize = {510 37}
+								action_tooltip = {
+									click_type = left
+									click_mode = single
+									title = "SELECT_LOCATION"
+									on_action = "[SellLocationActionView.ToggleLocation(Location.Self)]"
+								}
+
+								using = layoutpolicy_expanding
+								using = bg_card_header_01
+
+								tooltipwidget = {
+									ContextualTooltipType = {
+										blockoverride "title_text" {
+											text = "SELECT_LOCATION"
+										}
+										blockoverride "title_icon" {
+											icon = {
+												using = tooltip_title_icon_size
+												texture = "gfx/interface/icons/map_subdivisons/location.dds"
+											}
+										}
+										blockoverride "concept_link" {
+											text = "[location|E]"
+										}
+										blockoverride "tooltip_content" {}
+									}
+								}
+
+								hbox = {
+									margin = {10 0}
+									spacing = 5
+
+									button_checkbox_alt = {
+										size = { 20 20 }
+										down = "[SellLocationActionView.IsSelected(Location.Self)]"
+										action_tooltip = {
+											title = "TOGGLE_SELECTION"
+											on_action = "[SellLocationActionView.ToggleLocation(Location.Self)]"
+										}
+										tooltipwidget = { BasicFunctionalTooltip = {} }
+										allow_outside = yes
+									}
+
+									hbox = {
+										layoutpolicy_horizontal = expanding
+										spacing = 25
+
+										hbox = {
+											minimumsize = { 200 32 }
+											margin = { 5 0 }
+											spacing = 10
+
+											icon = {
+												size = { 18 18 }
+												texture = "[Location.GetRankIcon]"
+												datacontext = "[Location.GetRank]"
+												tooltipwidget = { using = LocationRankTag_tooltip }
+											}
+
+											text_single = {
+												size = { 180 20 }
+												autoresize = no
+												text = "[Location.GetNameWithNoTooltip]"
+												default_format = "#yellow_titles"
+
+												sort_by_highlight = {
+													size = { 100% 100% }
+													name = "name"
+												}
+											}
+										}
+
+										hbox = {
+											size = { 100 32 }
+											margin = { 5 0 }
+											spacing = 10
+
+											tooltipwidget = {
+												using = population_location_tooltip
+											}
+
+											icon = {
+												size = { 20 20 }
+												layoutpolicy_vertical = fixed
+												layoutpolicy_horizontal = fixed
+												texture = "gfx/interface/icons/map_modes/population.dds"
+												glow = {
+													name = "drop_shadow"
+													glow_radius = 3
+													color = {0.0 0.0 0.0 1.0}
+													alpha = 0.3
+												}
+											}
+
+											text_single = {
+												size = { 42 20 }
+												autoresize = no
+												text = "[Location.GetTotalPopulation]"
+											}
+										}
+										
+										text_single = {
+											size = { 65 20 }
+											autoresize = no
+											raw_text = "[wealth_icon] [Location.GetTotalPossibleTaxBase|W2]"
+											tagtooltip_enabled = yes
+											tooltip = "[wealth|e]"
+										}
+
+										hbox = {
+											datacontext = "[Location.GetRawMaterial]"
+											tooltipwidget = {
+												using = location_rgo_button_tooltip
+											}
+
+											icon = {
+												size = { 20 20 }
+												layoutpolicy_vertical = fixed
+												layoutpolicy_horizontal = fixed
+												texture = "[GetGoodsIcon(Location.GetRawMaterial)]"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 10
+					using = bg_number_container_bckg
+					margin = { 5 10 }
+					text_single = { 
+						text = "sell_buy_location_price" 
+					}
+					hbox = {
+						spacing = 10
+						text_single = { 
+							minimumsize = { 50 20 }
+							maximumsize = { 50 20 }
+							align = right
+							text = "left_click_cost" 
+						}
+	
+						# Ars Belli: flat 100 gold ceiling on the sale price.
+						#
+						# Vanilla's GetMaxPrice is the buyer's whole treasury, which turned a
+						# location sale into an unlimited transfer of gold between two players -
+						# the thing the gift and economic support ceilings exist to stop. The
+						# action is otherwise entirely engine-implemented (no country_interaction,
+						# no price id, no diplomatic_costs entry, no on_action of its own), so
+						# this slider is the only place any ceiling can be applied at all.
+						#
+						# It must be a LITERAL. Proven in game with four otherwise-identical
+						# sliders differing only in max: a literal (9999) works, while
+						# Multiply_float(SellLocationActionView.GetMaxPrice, 0.5) - arithmetic
+						# over vanilla's own known-good source - does not, and neither does
+						# Player.GetTotalTaxBase raw or wrapped. The max property accepts only a
+						# literal or a bare getter on the view's own datacontext, and
+						# SellLocationActionView exposes no tax-base getter, so a scaling cap is
+						# not expressible here. Do not reintroduce one.
+						#
+						# A rejected max assignment silently falls back to a default of 100 and
+						# logs NOTHING, so a clean error.log is not evidence this took effect.
+						# The engine applies GetMaxPrice as a further clamp on top, so the
+						# effective ceiling is min(100, buyer's treasury).
+						economy_slider = {
+							size = { 350 10 }
+							min = "[SellLocationActionView.GetMinPrice]"
+							step = 1
+							max = 100
+							value = "[SellLocationActionView.GetTotalPrice]"
+							onvaluechanged = "[SellLocationActionView.SetTotalPrice]"
+						}
+	
+						text_single = {
+							minimumsize = { 80 20 }
+							maximumsize = { 80 20 }
+							raw_text = "[SellLocationActionView.GetTotalPrice|2]@gold!"
+						}
+					}
+					button_regular = {
+						layoutpolicy_horizontal = expanding
+						size = { -1 30 }
+						
+						text_single = {
+							parentanchor = center
+							text = "sell_buy_send_offer"
+						}
+						icon = {
+							position = { -5 0 }
+							framesize = { 46 46 }
+							size = { 23 23 }
+							parentanchor = right|vcenter
+				
+							texture = "gfx/interface/icons/diplomatic_status/ai_accept_decline_icon.dds"
+							frame = "[SellLocationActionView.GetAcceptanceFrame]"
+						}
+						
+						tooltipwidget = {
+							ContextualTooltipType = {
+								blockoverride "title_text" {
+									text = "[Select_CString(SellLocationActionView.IsBuying, Localize('BUY_PROV_FROM_COUNTRY_TITLE'), Localize('SELL_PROV_FROM_COUNTRY_TITLE') )]"
+								}
+								blockoverride "title_icon" {
+									icon = {
+										using = tooltip_title_icon_size
+										texture = "gfx/interface/icons/resources/diplo_actions.dds"
+									
+									}
+								}
+								blockoverride "concept_link" {
+									text = "[diplomatic_action|E]"
+								}
+								blockoverride "tooltip_content" {
+
+									TooltipBlockList = {
+										textcontext = "[SellLocationActionView.GetAcceptanceTooltip]"
+									}
+								}
+							}
+						}
+						action_tooltip = {
+							click_type = left
+							click_mode = confirm
+							title = "[Select_CString(SellLocationActionView.IsBuying, Localize('BUY_PROV_FROM_COUNTRY_TITLE'), Localize('SELL_PROV_FROM_COUNTRY_TITLE') )]"
+							description = "[SellLocationActionView.GetConfirmMessage]"
+							enabled = "[SellLocationActionView.CanSend]"
+							on_action = "[SellLocationActionView.OnSend]"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+

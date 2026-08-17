@@ -15,6 +15,9 @@
 	country_modifier = {
 		government_reform_slots = 1
 		monthly_towards_free_subjects = societal_value_huge_monthly_move
+		cossacks_estate_allowed_in_cabinet = yes
+		cossacks_estate_allowed_leading_military = yes
+		cossacks_estate_blocked_from_leading_military = no
 		global_nobles_estate_power = -0.10
 		global_cossacks_estate_power = 0.50
 	}
@@ -41,124 +44,4 @@
 	}
 
 	years = 3
-}
-
-abm_india_kshatra_heathen_war_code = {
-	major = yes
-	unique = yes
-	age = age_1_traditions
-	potential = {
-		has_culture_group = indian
-		religion = hindu
-		government = theocracy
-		societal_value:spiritualist_vs_humanist > 50
-	}
-	country_modifier = {
-		damage_done_versus_heathens_modifier = 0.10
-		damage_done_versus_heretics_modifier = 0.10
-		global_crown_estate_power = 0.20
-		tolerance_own = 2
-		tolerance_heretic = -2
-		tolerance_heathen = -2
-	}
-	years = 2
-}
-
-abm_india_bazaar_republic = {
-	major = yes
-	unique = yes
-	age = age_1_traditions
-	potential = {
-		has_culture_group = indian
-		government = republic
-		original_capital ?= {
-			OR = {
-				sub_continent = sub_continent:south_asia 
-				sub_continent = sub_continent:south_east_asia
-				sub_continent = sub_continent:east_africa
-			}
-		}
-	}
-	country_modifier = {
-		global_merchant_capacity_modifier = 0.20
-		trade_income = 0.10
-		merchant_maintenance_efficiency = 0.20
-		global_trades_per_burgher = 0.40
-
-		global_maritime_presence_modifier = 0.20
-
-		global_nobles_estate_power = -0.25
-		global_clergy_estate_power = -0.25
-
-		num_local_governors = -1
-		num_naval_governors = 1
-	}
-	years = 2
-}
-
-abm_india_hasshashun_branch = {
-	major = no
-	unique = yes
-	age = age_1_traditions
-	potential = {
-		religion = shia
-		government = theocracy
-		OR = {
-			has_or_had_tag = SND
-			has_or_had_tag = AHM
-		}
-		societal_value:spiritualist_vs_humanist > 50
-	}
-	country_modifier = {
-		damage_done_versus_heathens_modifier = 0.10
-		global_manpower_modifier = 0.10
-		global_monthly_control = 0.001
-		spy_network_construction = 0.25
-
-		global_crown_estate_power = -0.10
-	}
-	years = 2
-}
-
-abm_bengaleese_meritocracy = {
-	major = yes
-	unique = yes
-	age = age_1_traditions
-	potential = {
-		OR	=	{
-			has_culture = orissan
-			has_culture = bengali
-			has_culture = zo_culture
-			has_culture = tripuri
-			has_culture = burmese_culture
-			has_tag = BNG
-		}
-	}
-	country_modifier = {
-		monthly_towards_naval = societal_value_large_monthly_move
-		navy_galley_power = 0.15
-		own_coast_naval_combat_bonus = 0.15
-	}
-
-	on_activate = {
-		hidden_effect = {
-			if = {
-				limit = { exists = succession_law }
-				set_variable = { name = previous_heir_selection value = succession_law }
-			}
-		}
-		change_heir_selection = heir_selection:admiralty_regime_heir_selection
-	}
-	on_deactivate = {
-		if = {
-			limit = { has_variable = previous_heir_selection }
-			change_heir_selection = var:previous_heir_selection
-			remove_variable = previous_heir_selection
-		}
-		else = {
-			set_to_default_heir_selection = yes
-		}
-	}
-	
-	years = 2
 }

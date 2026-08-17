@@ -6,7 +6,6 @@
 	build_time_modifier = 0.5
 	# initiative = 2
 
-
 	strength_damage_done = 0.10
 	# morale_damage_done = 0.10
 	combat_speed = -0.50
@@ -36,7 +35,7 @@
 		OR = {
 			has_or_had_tag = GEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				OR = {
 					has_accepted_culture = culture:ligurian
 					has_accepted_culture = culture:corsican
@@ -56,10 +55,6 @@
 	mercenaries_per_location = {
 		pop_type = peasants
 		multiply = 0.01
-	}
-	mercenaries_per_location = {
-		pop_type = nobles
-		multiply = 0.1
 	}
 
 	gfx_tags = { crossbow_tag pavise_tag medium_tag }
@@ -85,8 +80,8 @@ a_abm_late_genoese_crossbowmen = {
 
 	buildable = yes
 
-	# maintenance_demand =  archer_infantry_maintenance
-	# construction_demand = archer_infantry_construction
+	maintenance_demand =  archer_infantry_maintenance
+	construction_demand = archer_infantry_construction
 
 	combat = {
 		hills = 0.15
@@ -105,7 +100,7 @@ a_abm_late_genoese_crossbowmen = {
 		OR = {
 			has_or_had_tag = GEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				OR = {
 					has_accepted_culture = culture:ligurian
 					has_accepted_culture = culture:corsican
@@ -125,10 +120,6 @@ a_abm_late_genoese_crossbowmen = {
 	mercenaries_per_location = {
 		pop_type = peasants
 		multiply = 0.01
-	}
-	mercenaries_per_location = {
-		pop_type = nobles
-		multiply = 0.1
 	}
 
 	gfx_tags = { crossbow_tag pavise_tag medium_tag }
@@ -169,7 +160,7 @@ a_abm_genoese_arquebusiers = {
 		OR = {
 			has_or_had_tag = GEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				OR = {
 					has_accepted_culture = culture:ligurian
 					has_accepted_culture = culture:corsican
@@ -189,10 +180,6 @@ a_abm_genoese_arquebusiers = {
 	mercenaries_per_location = {
 		pop_type = peasants
 		multiply = 0.01
-	}
-	mercenaries_per_location = {
-		pop_type = nobles
-		multiply = 0.1
 	}
 
 	gfx_tags = { musket_tag pavise_tag medium_tag }
@@ -233,7 +220,7 @@ a_abm_genoese_musketeers = {
 		OR = {
 			has_or_had_tag = GEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				OR = {
 					has_accepted_culture = culture:ligurian
 					has_accepted_culture = culture:corsican
@@ -287,7 +274,7 @@ a_abm_genoese_riflemen = {
 		OR = {
 			has_or_had_tag = GEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				OR = {
 					has_accepted_culture = culture:ligurian
 					has_accepted_culture = culture:corsican
@@ -401,10 +388,6 @@ a_abm_late_balestrieri = {
 		pop_type = peasants
 		multiply = 0.01
 	}
-	mercenaries_per_location = {
-		pop_type = nobles
-		multiply = 0.1
-	}
 
 	gfx_tags = { crossbow_tag pavise_tag medium_tag }
 }
@@ -413,11 +396,10 @@ a_abm_archibugieri = {
 	copy_from = a_age_4_reformation_heavy_infantry
 	is_special = yes
 	age = age_4_reformation
-	upgrades_to_only = a_musketeers
+	upgrades_to_only = a_abm_corazze
 
 	# build_time_modifier = 0.5
 	initiative = -0.25
-
 
 	strength_damage_done = 0.05
 	# morale_damage_done = 0.10
@@ -427,9 +409,6 @@ a_abm_archibugieri = {
 	#morale_damage_taken = -0.05
 
 	buildable = yes
-
-	maintenance_demand =  archer_infantry_maintenance
-	construction_demand = archer_infantry_construction
 
 	combat = {
 		hills = 0.10
@@ -448,13 +427,43 @@ a_abm_archibugieri = {
 		dominant_culture = { has_culture_group = culture_group:italian_group }
 	}
 
-	mercenaries_per_location = {
-		pop_type = peasants
-		multiply = 0.01
+	gfx_tags = { musket_tag pavise_tag medium_tag }
+}
+
+a_abm_corazze = {
+	copy_from = a_age_5_absolutism_heavy_infantry
+	is_special = yes
+	age = age_5_absolutism
+	upgrades_to = a_fusiliers
+
+	# build_time_modifier = 0.5
+	initiative = -0.25
+
+
+	strength_damage_done = 0.05
+	# morale_damage_done = 0.10
+	combat_speed = -0.25
+
+	strength_damage_taken = -0.10
+	#morale_damage_taken = -0.05
+
+	buildable = yes
+
+	combat = {
+		hills = 0.10
+		mountains = 0.10
+		#wetlands = -0.10
 	}
-	mercenaries_per_location = {
-		pop_type = nobles
-		multiply = 0.1
+	# impact = {
+	# 	wetlands = 0.10
+	# }
+
+	country_potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+	#root = location. Checks location_potential first so don't need that scripting in
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:italian_group }
 	}
 
 	gfx_tags = { musket_tag pavise_tag medium_tag }
@@ -486,7 +495,7 @@ a_abm_venettian_stradioti = {
 		OR = {
 			has_or_had_tag = VEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				has_accepted_culture = culture:venetian
 			}
 		}
@@ -529,7 +538,7 @@ a_abm_late_venettian_stradioti = {
 		OR = {
 			has_or_had_tag = VEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				has_accepted_culture = culture:venetian
 			}
 		}
@@ -572,7 +581,7 @@ a_abm_venettian_cappelletti = {
 		OR = {
 			has_or_had_tag = VEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				has_accepted_culture = culture:venetian
 			}
 		}
@@ -615,7 +624,7 @@ a_abm_venettian_cravates = {
 		OR = {
 			has_or_had_tag = VEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				has_accepted_culture = culture:venetian
 			}
 		}
@@ -657,7 +666,7 @@ a_abm_venettian_dragoons = {
 		OR = {
 			has_or_had_tag = VEN
 			AND = {
-				primary_culture = { has_culture_group = culture_group:italian_group }
+				culture = { has_culture_group = culture_group:italian_group }
 				has_accepted_culture = culture:venetian
 			}
 		}
@@ -741,7 +750,7 @@ a_abm_italian_cappelletti = {
 	copy_from = a_age_4_reformation_light_cavalry
 	is_special = yes
 	age = age_4_reformation
-	upgrades_to_only = a_age_5_absolutism_light_cavalry
+	upgrades_to = a_age_5_absolutism_light_cavalry
 	
 	buildable = yes
 	

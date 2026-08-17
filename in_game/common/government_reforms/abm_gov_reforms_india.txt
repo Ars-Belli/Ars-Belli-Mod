@@ -9,14 +9,14 @@ abm_india_maritime_league = {
 		culture = { has_culture_group = culture_group:indian_group }
 		num_of_ports > 2
 		OR = {
-			government = monarchy
-			government = republic
+			government_type = government_type:monarchy
+			government_type = government_type:republic
 		}
 	}
 	allow = {
 		num_of_ports > 3
-		societal_value:naval_vs_land > 50
-		societal_value:free_trade_vs_mercantilism > 50
+		societal_value:land_vs_naval > 50
+		societal_value:mercantilism_vs_free_trade > 50
 	}
 	country_modifier = {
 		global_merchant_capacity_modifier = 0.20
@@ -36,15 +36,15 @@ abm_india_kshatra_heathen_war_code = {
 	unique = yes
 	age = age_1_traditions
 	potential = {
-		has_culture_group = indian
-		religion = hindu
-		government = theocracy
+		culture = { has_culture_group = culture_group:indian_group }
+		religion = religion:hindu
+		government_type = government_type:theocracy
 		societal_value:spiritualist_vs_humanist > 50
 		original_capital ?= { sub_continent = sub_continent:south_asia }
 	}
 	allow = {
 		any_neighbor_country = {
-			NOT = { religion = hindu }
+			NOT = { religion = religion:hindu }
 		}
 		societal_value:traditionalist_vs_innovative > 50
 	}
@@ -67,14 +67,14 @@ abm_india_bazaar_republic = {
 	unique = yes
 	age = age_1_traditions
 	potential = {
-		has_culture_group = indian
-		government = republic
+		culture = { has_culture_group = culture_group:indian_group }
+		government_type = government_type:republic
 		num_of_ports > 1
 	}
 	allow = {
 		num_of_ports > 2
-		societal_value:naval_vs_land > 50
-		societal_value:free_trade_vs_mercantilism > 50
+		societal_value:land_vs_naval > 50
+		societal_value:mercantilism_vs_free_trade > 50
 	}
 	country_modifier = {
 		global_merchant_capacity_modifier = 0.20
@@ -99,8 +99,8 @@ abm_india_hasshashun_branch = {
 	unique = yes
 	age = age_1_traditions
 	potential = {
-		religion = shia
-		government = theocracy
+		religion = religion:shia
+		government_type = government_type:theocracy
 		OR = {
 			has_or_had_tag = SND
 			has_or_had_tag = AHM
@@ -134,21 +134,21 @@ abm_bengaleese_meritocracy = {
 	age = age_1_traditions
 	potential = {
 		OR	=	{
-			has_culture = orissan
-			has_culture = bengali
-			has_culture = zo_culture
-			has_culture = tripuri
-			has_culture = burmese_culture
-			has_tag = BNG
+			culture = culture:orissan
+			culture = culture:bengali
+			culture = culture:zo_culture
+			culture = culture:tripuri_culture
+			culture = culture:burmese_culture
+			has_or_had_tag = BNG
 		}
 		num_of_ports > 2
 		OR = {
-			government = monarchy
-			government = republic
+			government_type = government_type:monarchy
+			government_type = government_type:republic
 		}
 	}
 	allow = {
-		societal_value:naval_vs_land > 50
+		societal_value:land_vs_naval > 50
 	}
 	locked = {
 		always = yes

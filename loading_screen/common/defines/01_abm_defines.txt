@@ -1,4 +1,4 @@
-NDiplomacy = {
+﻿NDiplomacy = {
     DEFAULT_WARGOAL_TICKINGWARSCORE_BONUS = 2		# 2 means 1/month, as in vanilla
     WARGOAL_MAX_TICKING_WAR_SCORE = 36 # 25 in vanilla, reduced from 50 because occupations now give double warscore
 
@@ -12,6 +12,11 @@ NDiplomacy = {
 NWar = {
 	# less location warscore from taxbase:
 	WAR_WORTH_TAX_BASE_SCALE = 0.04 # vanilla 0.2
+
+	# ...and a higher flat floor per location to compensate for it. Together these keep the
+	# early game close to vanilla, where locations are cheap and the tax base term is small,
+	# while stopping late-game tax base from inflating peace deals the way it does in vanilla.
+	WAR_WORTH_BASE = 2.5 # vanilla 2
 }
 
 NUnit = {

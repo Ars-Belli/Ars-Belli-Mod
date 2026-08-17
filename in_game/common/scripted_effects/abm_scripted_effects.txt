@@ -175,10 +175,7 @@ mp_limits_game_start_effect = {
 		limit = {
 			global_var:mp_limits_players_only = 1
 		}
-		set_variable = {
-			name = mp_is_player_only_local
-			value = 1
-		}
+		set_global_variable = { name = mp_is_player_only_local value = 1 }
 		set_global_variable = { name = mp_limits_players_only value = 0 }
 	}
 
@@ -194,12 +191,9 @@ mp_limits_game_start_effect = {
 
 	if = {
 		limit = {
-			var:mp_is_player_only_local = 1
+			global_var:mp_is_player_only_local = 1
 		}
-		set_variable = {
-			name = mp_is_player_only_local
-			value = 0
-		}
+		set_global_variable = { name = mp_is_player_only_local value = 0 }
 		set_global_variable = { name = mp_limits_players_only value = 1 }
 	}
 }
@@ -787,5 +781,22 @@ mp_limits_calculate_diplo_weights = {
 		}
 
 		clear_variable_list = mp_dp_mates_buf
+	}
+}
+
+# New Colonial Nation Modifier
+REPLACE:setup_colonial_nation = {
+	change_government_type = government_type:republic
+	add_gold = 100
+	capital.province = { change_province_integration = integrated }
+	add_reform = government_reform:colonial_subject
+	every_owned_location = {
+		change_control = control_radical_bonus
+	}
+	
+	add_country_modifier = {
+		modifier = new_colonial_nation_founded
+		years = 50
+		#mode = add_and_extend
 	}
 }

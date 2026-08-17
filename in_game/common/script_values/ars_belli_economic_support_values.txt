@@ -1,23 +1,80 @@
 ﻿# --- tune here -------------------------------------------------------------
-# Where the amount slider starts, as a share of the sender's monthly income.
-ars_belli_economic_support_default_share = {
-	value = 0.1
+# Ceiling on the monthly sum, as a share of the RECIPIENT's tax base. How much
+# foreign gold a country can absorb is a property of its own economy, not of how
+# rich its patron happens to be, so this is the ceiling that matters when a large
+# country subsidises a small one.
+ars_belli_economic_support_recipient_taxbase_share = {
+	value = 1.0
 }
+
+# Second ceiling, as a share of the SENDER's monthly income. At 10.0 this is a
+# backstop rather than a working limit: it only bites once the recipient's tax
+# base is worth more than ten months of the sender's income, which takes a small
+# country bankrolling a much larger one. The tax base ceiling does the work.
+#
+# Scaling both shares by the same factor moves the ceiling without moving the
+# point at which the recipient's tax base takes over from the sender's income, so
+# they are the knob for how generous support is; their ratio is the knob for how
+# small a country has to be before its own economy is what limits the aid.
+ars_belli_economic_support_sender_income_share = {
+	value = 10.0
+}
+
+# Floor under both ceilings. The slider steps in whole gold, so without this the
+# action would be unusable towards a country whose share of tax base is under 1.
+ars_belli_economic_support_floor = {
+	value = 1
+}
+
+# Where the amount slider starts, as a share of the ceiling worked out below.
+ars_belli_economic_support_default_share = {
+	value = 0.5
+}
+#
+# The two ceiling shares above are spelled out in words in
+# localization/english/ars_belli_economic_support_l_english.yml - in
+# ars_belli_economic_support_relation_desc and ars_belli_send_economic_support_desc.
+# Retune those texts alongside.
 # ---------------------------------------------------------------------------
 
-# Upper bound of the slider: everything the sender earns in a month. There is no
-# artificial ceiling on top of that - to impose one, add a max here, e.g.
-#   max = 25
-# Keep any such ceiling on the slider rather than on the transfer value below, so the
-# player is stopped at selection time instead of having their figure silently rewritten.
-ars_belli_economic_support_slider_max = {
-	value = scope:actor.monthly_income_total
+# What the country being helped can absorb. Its own value rather than a block
+# inlined into the max below, because vanilla only ever passes max a plain number
+# or a single value reference.
+ars_belli_economic_support_recipient_cap = {
+	value = 0
+	if = {
+		limit = { exists = scope:recipient }
+		add = scope:recipient.country_tax_base
+		multiply = ars_belli_economic_support_recipient_taxbase_share
+	}
 	min = 0
 }
 
-# Slider default and the AI's choice when it offers. scope:actor is the sender.
-ars_belli_economic_support_default_amount = {
+# Upper bound of the slider: the lower of the two ceilings above, never below the
+# floor. Keep any ceiling here on the slider rather than on the transfer value at
+# the bottom of this file, so the player is stopped at selection time instead of
+# having their agreed figure silently rewritten later.
+ars_belli_economic_support_slider_max = {
+	# What the sender can spare...
 	value = scope:actor.monthly_income_total
+	multiply = ars_belli_economic_support_sender_income_share
+
+	# ...clamped to what the recipient can absorb. Guarded on exists so that the
+	# sender's ceiling still stands on its own in any context the engine evaluates
+	# this before a recipient has been picked, rather than collapsing to the floor.
+	if = {
+		limit = { exists = scope:recipient }
+		max = ars_belli_economic_support_recipient_cap
+	}
+
+	min = ars_belli_economic_support_floor
+}
+
+# Slider default and the AI's choice when it offers. A share of the ceiling rather
+# than of the sender's income, so a rich country offering to a small one opens at
+# half of what that country can take instead of pinned at the top of the slider.
+ars_belli_economic_support_default_amount = {
+	value = ars_belli_economic_support_slider_max
 	multiply = ars_belli_economic_support_default_share
 	min = 0
 	max = ars_belli_economic_support_slider_max

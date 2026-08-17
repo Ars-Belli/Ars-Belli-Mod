@@ -7,7 +7,7 @@ abm_wuu_people_granary_circuit_reform = {
 	unique = yes
 	age = age_3_discovery
 	potential = {
-		has_advance = abm_wuu_people_granary_circuit
+		has_advance = abm_wuu_government_innovation_edict
 	}
 	country_modifier = {
 		global_laborers_city_desired_pop_scaled = 0.01
@@ -51,11 +51,12 @@ abm_cfn_noble_board_regime = {
 
 abm_china_pirates = {
 	major = yes
-	government = republic
 
 	potential = {
+		government_type = government_type:republic
 		culture = { has_culture_group = culture_group:chinese_group }
 		capital = { sub_continent = sub_continent:east_asia }
+		num_of_ports > 0
 	}
 
 	locked = {
@@ -81,9 +82,9 @@ abm_china_pirates = {
 
 abm_china_meritocratic_republic = {
 	major = yes
-	government = republic
 
 	potential = {
+		government_type = government_type:republic
 		culture = { has_culture_group = culture_group:chinese_group }
 		capital = { sub_continent = sub_continent:east_asia }
 	}
@@ -112,9 +113,9 @@ abm_china_meritocratic_republic = {
 abm_china_buddhist_order = {
 	age = age_1_traditions
 	major = yes
-	government = theocracy
 
 	potential = {
+		government_type = government_type:theocracy
 		religion.group = religion_group:buddhist
 		original_capital = { sub_continent = sub_continent:east_asia }
 	}
@@ -129,7 +130,7 @@ abm_china_buddhist_order = {
 		clergy_estate_levy_size = 0.35
 		army_light_infantry_power = 0.10
 		damage_done_versus_heathens_modifier = 0.10
-		unlock_building = abm_buddhist_monastery_stronghold
+		#unlock_building = abm_buddhist_monastery_stronghold
 
 		monthly_towards_defensive = societal_value_monthly_move
 		monthly_towards_quality = societal_value_monthly_move
@@ -143,16 +144,20 @@ abm_china_buddhist_order = {
 }
 
 abm_china_ahimsa_crown_commitment = {
-	age = age_traditions
+	age = age_1_traditions
 
 	potential = {
 		OR = {
 			has_or_had_tag = CNP
 			has_or_had_tag = CTW
+			has_or_had_tag = CXI
 		}
 		religion.group = religion_group:buddhist
 		original_capital = { sub_continent = sub_continent:east_asia }
-		government_type = government_type:theocracy
+		OR	= {
+			government_type = government_type:theocracy
+			government_type = government_type:republic
+		}
 	}
 
 	locked = {
@@ -173,13 +178,16 @@ abm_china_ahimsa_crown_commitment = {
 
 abm_china_ahimsa_code = {
 	icon = "GFX_reform_icon_ahimsa"  # Replace with an actual icon or create one
-	age = age_traditions
+	age = age_1_traditions
 
 	# For China / East Asia Buddhist flavor
 	potential = {
 		religion.group = religion_group:buddhist
 		original_capital = { sub_continent = sub_continent:east_asia }
-		government_type = government_type:theocracy
+		OR = {
+			government_type = government_type:theocracy
+			government_type = government_type:republic
+		}
 	}
 
 	locked = {
@@ -193,7 +201,7 @@ abm_china_ahimsa_code = {
 	}
 
 	country_modifier = {
-		can_declare_war = no
+		can_declare_war = { always = no }
 		global_monthly_development = 0.0025
 		global_monthly_prosperity = 0.0025
 		blocked_from_declaring_war = yes
@@ -205,6 +213,7 @@ abm_china_ahimsa_code = {
 		OR = {
 			has_or_had_tag = CNP
 			has_or_had_tag = CTW
+			has_or_had_tag = CXI
 		}
 		has_reform = government_reform:abm_china_ahimsa_crown_commitment
 		has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
