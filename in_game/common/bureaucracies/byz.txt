@@ -1,0 +1,62 @@
+﻿REPLACE:magister_militum_bureaucracy = { #I would totally nerf the militart_tactics as well but I don't want to overdo it at once
+	implementation_price = price:implement_bureaucracy_price
+	maintenance_price = price:maintain_bureaucracy_price
+	removal_price = price:remove_bureaucracy_price
+	maintenance_price_modifier = {
+		value = country_economical_base
+		multiply = 0.003
+	}
+
+	potential = {
+		has_dlc = "d008_fate_of_the_phoenix"
+		OR = {
+			has_or_had_tag = BYZ
+			AND = {
+				has_or_had_tag = TRE
+				has_variable = tre_unlocked_byz_bureaucracies
+			}
+		}
+	}
+
+	allow = {
+		OR = {
+			custom_tooltip = {
+				text = has_unlocked_bureaucracy_via_flavor_byz_31_tt
+				has_reform = government_reform:modern_imperial_army
+			}
+		}
+	}
+
+	estates_that_like = {
+		crown_estate
+		burghers_estate
+	}
+	estates_that_dislike = {
+		nobles_estate
+	}
+
+	#neutral
+	neutral_modifier = {
+		monthly_army_tradition = 0.1 #was 0.2
+		monthly_navy_tradition = 0.1 #was 0.2
+	}
+
+	#positive
+	positive_modifier = {
+		scale = { value = scope:maintenance }
+
+		train_general_ability = 10 #was 25
+		train_admiral_ability = 10 #was 25
+		military_tactics = 0.2
+	}
+
+	#negative
+	negative_modifier = {
+		scale = {
+			value = 1
+			subtract = scope:maintenance
+		}
+		monthly_legitimacy = -0.2
+		global_nobles_estate_power = 0.5
+	}
+}

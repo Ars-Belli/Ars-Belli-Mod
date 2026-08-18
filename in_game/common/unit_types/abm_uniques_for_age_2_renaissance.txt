@@ -1,0 +1,253 @@
+﻿#####ArsBelliMod#####
+
+#Japan#
+
+a_abm_early_samurai_cavalry = {
+	copy_from = a_age_2_renaissance_heavy_cavalry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.20
+	morale_damage_taken = -0.3
+	initiative = 1
+
+	combat = { 
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { spear_tag heavy_tag }
+}
+
+a_abm_early_warrior_monks = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.050
+	morale_damage_taken = -0.25
+
+	combat = { 
+		hills = 0.1
+		mountains = 0.1
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { archer_tag medium_tag }
+}
+
+a_abm_early_samurai_retainers = {
+	copy_from = a_age_2_renaissance_heavy_infantry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.10
+	morale_damage_taken = -0.15
+	initiative = 1
+
+	combat = { 
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { sword_tag heavy_tag }
+}
+
+a_abm_early_bow_ashigaru = {
+	copy_from = a_age_2_renaissance_light_infantry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.050
+	morale_damage_taken = -0.100
+
+	combat = { 
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { archer_tag light_tag }
+}
+
+a_abm_early_yari_ashigaru = {
+	copy_from = a_age_2_renaissance_heavy_infantry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.050
+	morale_damage_taken = -0.100
+
+	combat = { 
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { spear_tag medium_tag }
+}
+
+#Steppe Horde#
+
+a_late_steppe_lancers = { 
+	copy_from = a_age_2_renaissance_heavy_cavalry
+	is_special = yes
+	upgrades_to = a_lancers
+
+	movement_speed = 0.5
+    morale_damage_done = 0.1
+
+	combat = {
+		grasslands = 0.2
+		sparse = 0.2
+		coastal = -0.10
+	}
+
+    maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+
+	gfx_tags = { spear_tag heavy_tag }
+}
+
+a_late_steppe_horse_archers = {
+	copy_from = a_age_2_renaissance_light_cavalry
+	is_special = yes
+	upgrades_to = a_light_lancers
+
+	initiative = 3
+	movement_speed = 1.0
+
+	combat = {
+		grasslands = 0.2
+		sparse = 0.2
+		coastal = -0.10 
+	}
+	
+	maintenance_demand =  steppe_horse_archers_maintenance
+	construction_demand = steppe_horse_archers_construction
+	
+
+	gfx_tags = { archer_tag light_tag }
+}
+
+a_late_steppe_horde = {
+	copy_from = a_age_2_renaissance_light_cavalry
+	is_special = yes
+
+	movement_speed = 1
+	initiative = 2
+	buildable = no
+	levy = yes
+
+	combat = {
+		grasslands = 0.20 
+		sparse = 0.20 
+		coastal = -0.10
+	}
+	
+	maintenance_demand =  steppe_horse_archers_maintenance
+	construction_demand = steppe_horse_archers_construction
+	
+
+	gfx_tags = { spear_tag light_tag }
+}
+
+a_late_a_urughs = {
+	copy_from = a_age_2_renaissance_auxiliary
+	is_special = yes
+	upgrades_to = a_supply_convoy
+
+	movement_speed = 1.0
+
+	combat = { 
+		grasslands = 0.2
+		sparse = 0.2
+		coastal = -0.10
+	}
+	
+	maintenance_demand =  steppe_horse_auxiliary_maintenance
+	construction_demand = steppe_auxiliary_construction
+	
+
+	gfx_tags = { spear_tag light_tag }
+}
+
+#####ArsBelliMod#####
+
+#####ChangedByABM#####
+
+#####ChangedByABM#####

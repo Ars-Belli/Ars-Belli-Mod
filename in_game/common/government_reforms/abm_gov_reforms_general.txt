@@ -1,0 +1,52 @@
+﻿REPLACE:merchant_republic = {
+	major = yes
+	government = republic
+
+	potential = {
+		OR = {
+			original_capital ?= { sub_continent = sub_continent:western_europe }
+			original_capital ?= { sub_continent = sub_continent:eastern_europe }
+			original_capital ?= { sub_continent = sub_continent:north_africa }
+			original_capital ?= { sub_continent = sub_continent:middle_east }
+		}
+	}
+
+	country_modifier = {
+		global_merchant_capacity_modifier = 0.50
+		trade_income = 0.20
+		global_foreign_build_buildings_efficiency = 1.0
+
+		merchant_maintenance_efficiency = 0.50
+		global_integration_speed_modifier = -0.25
+		court_language_is_market_language_importance_modifier = 15
+
+	}
+
+	years = 2
+}
+
+abm_eastern_christian_militant_church = {
+	major = yes
+	unique = yes
+	age = age_1_traditions
+	potential = {
+		government_type = government_type:theocracy
+		OR = {
+			religion = religion:orthodox
+			religion = religion:miaphysite
+			religion = religion:nestorianism
+		}
+	}
+	country_modifier = {
+		damage_done_versus_heathens_modifier = 0.10
+		global_population_capacity_modifier = 0.10
+		global_institution_growth_modifier = 0.10
+
+		tolerance_heathen = -2
+
+		monthly_towards_spiritualist = societal_value_monthly_move
+		monthly_towards_innovative = societal_value_monthly_move
+	}
+	years = 2
+}
+

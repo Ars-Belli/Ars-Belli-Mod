@@ -1,0 +1,2013 @@
+﻿namespace = flavor_maj
+
+flavor_maj.1 = {  #The Book of Kings
+	type = country_event
+	title = flavor_maj.1.title
+	desc = flavor_maj.1.desc
+	outcome = neutral
+	historical_info = flavor_maj.1.historical_info
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1500.1.1
+		to = 1600.6.1
+		monthly_chance = 1
+	}
+	trigger = {
+		at_war = no
+		is_during_bankruptcy = no
+		any_character = {
+			artist_type = writer
+			has_art_in_progress = no
+		}
+	}
+
+	immediate = {
+		ruler_or_regent = { save_scope_as = target_character }
+		random_character = {
+			limit = {
+				artist_type = writer
+			    has_art_in_progress = no
+			}
+			save_scope_as = target_artist
+		}
+	}
+
+	option = {
+		name = flavor_maj.1.a
+		historical_option = yes
+
+		capital = {
+			create_art = {
+				artist = scope:target_artist
+				quality = 77
+				type = work_of_art_type:chronicle
+				key = maj_pararaton_woa
+			}
+		}
+		change_gold_effect = { scale = -5 }
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_large_move_to_right }
+
+	}
+	option = {
+		name = flavor_maj.1.b
+
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_large_move_to_right }
+		culture = {
+			add_cultural_tradition = cultural_tradition_mild_penalty
+		}
+	}
+}
+
+flavor_maj.2 = {  #Gajah Mada's Sumpah Palapa
+	type = country_event
+	title = flavor_maj.2.title
+	desc = flavor_maj.2.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1337.1.1
+		to = 1350.6.1
+		monthly_chance = 5
+	}
+	trigger = {
+		exists = character:maj_gajah_mada
+		character:maj_gajah_mada = {
+			is_alive = yes
+			owner = root
+		}
+		at_war = no
+		is_during_bankruptcy = no
+	}
+
+	immediate = {
+		character:maj_gajah_mada = { save_scope_as = target_character }
+		ruler_or_regent = { save_scope_as = target_character2 }
+	}
+
+	option = {
+		name = flavor_maj.2.a
+
+		add_country_modifier = {
+			modifier = maj_sumpah_palapa_modifier
+			years = modifier_duration_years_long
+			mode = add_and_extend
+		}
+	}
+}
+
+flavor_maj.3 = {  #The Nagarakṛtāgama
+	type = country_event
+	title = flavor_maj.3.title
+	desc = flavor_maj.3.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1337.1.1
+		to = 1350.6.1
+		monthly_chance = 5
+	}
+	trigger = {
+		OR = {
+			character:maj_mpu_prapanca = {
+				owner = root
+				is_alive = yes
+			}
+			any_character = {
+				has_estate = estate_type:clergy_estate
+				is_ruler = no
+			}
+		}
+		at_war = no
+		is_during_bankruptcy = no
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				character:maj_mpu_prapanca = {
+					owner = root
+					is_alive = yes
+				}
+			}
+			character:maj_mpu_prapanca = {
+				save_scope_as = target_character
+			}
+		}
+		else = {
+			random_character = {
+				limit = {
+					has_estate = estate_type:clergy_estate
+					is_ruler = no
+				}
+				save_scope_as = target_character
+			}
+		}
+		ruler_or_regent = { save_scope_as = target_character2 }
+	}
+
+	option = {
+		name = flavor_maj.3.a
+
+		change_gold_effect = { scale = -3 }
+
+		capital = {
+			create_art = {
+				artist = scope:target_character
+				quality = 70
+				type = work_of_art_type:poem
+				key = maj_nagarakretagama_woa
+			}
+		}
+
+	}
+
+	option = {
+		name = flavor_maj.3.b
+
+
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+flavor_maj.4 = {  #Gajah Mada's Sumpah Palapa
+	type = country_event
+	title = flavor_maj.4.title
+	desc = flavor_maj.4.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1337.1.1
+		to = 1360.6.1
+		monthly_chance = 25
+	}
+	trigger = {
+		character:maj_hayam_wuruk = {
+			is_heir = yes
+			age_in_years >= 16
+		}
+		at_war = no
+	}
+
+	immediate = {
+		heir = { save_scope_as = target_character }
+		ruler_or_regent = { save_scope_as = target_character2 }
+	}
+
+	option = {
+		name = flavor_maj.4.a
+
+		set_new_ruler = scope:target_character
+
+		if = {
+			limit = {
+				scope:target_character.adm < 75
+			}
+			scope:target_character = {
+				add_adm = 20
+			}
+		}
+		if = {
+			limit = {
+				scope:target_character.dip < 75
+			}
+			scope:target_character = {
+				add_dip = 20
+			}
+		}
+		if = {
+			limit = {
+				scope:target_character.mil < 75
+			}
+			scope:target_character = {
+				add_mil = 20
+			}
+		}
+
+		add_stability = stability_extreme_bonus
+	}
+
+	option = {
+		name = flavor_maj.4.b
+
+		add_government_power = government_power_mild_bonus
+	}
+}
+
+flavor_maj.5 = {  #Securing the Western Borders
+	type = country_event
+	title = flavor_maj.5.title
+	desc = flavor_maj.5.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1345.1.1
+		to = 1389.6.1
+		monthly_chance = 5
+	}
+	trigger = {
+		country_exists = c:SUN
+		has_ruler = yes
+		ruler = {
+			is_married = no
+			is_female = no
+		}
+		c:SUN = {
+			has_ruler = yes
+			is_subject = no
+			at_war = no
+			ruler = { has_dynasty = yes }
+			any_character = {
+				owner = prev
+				dynasty ?= prev.ruler.dynasty
+				is_female = yes
+				is_alive = yes
+				is_married = no
+				age_in_years >= 16
+			}
+		}
+		at_war = no
+	}
+
+	immediate = {
+		save_scope_as = target_country
+		c:SUN = {
+			save_scope_as = target_country2
+			random_character = {
+				limit = {
+					owner = prev
+					OR = {
+						is_child_of = prev.ruler
+						is_close_relative = prev.ruler
+						dynasty = prev.ruler.dynasty
+					}
+					is_female = yes
+					is_alive = yes
+					is_married = no
+					age_in_years >= 16
+				}
+				save_scope_as = target_character
+			}
+			ruler_or_regent = { save_scope_as = target_character2 }
+		}
+		ruler_or_regent = { save_scope_as = target_character3 }
+	}
+
+	option = {
+		name = flavor_maj.5.a
+
+		c:SUN = {
+			trigger_event_non_silently = flavor_maj.6
+		}
+
+		custom_tooltip = {
+			text = press_for_subjugation_tt
+			set_variable = {
+				name = pressed_for_subjugation_variable
+				years = 5
+			}
+		}
+
+	}
+
+	option = {
+		name = flavor_maj.5.b
+
+		c:SUN = {
+			trigger_event_non_silently = flavor_maj.6
+		}
+
+		custom_tooltip = do_not_press_for_subjugation_tt
+	}
+
+	option = {
+		name = flavor_maj.5.c
+
+		add_government_power = government_power_mild_bonus
+	}
+}
+
+flavor_maj.6 = {  #Peace Through Marriage?
+	type = country_event
+	title = flavor_maj.6.title
+	desc = flavor_maj.6.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_maj.6.a
+
+		scope:target_character3 = {
+			marry_character = scope:target_character
+		}
+
+		hidden_effect = {
+			scope:target_country = {
+				set_variable = accepted_marriage_variable
+			}
+		}
+
+		custom_tooltip = they_may_demand_subjugation_tt
+	}
+
+	option = {
+		name = flavor_maj.6.b
+
+		add_opinion_mutual_effect = {
+			target = scope:target_country
+			modifier = refused_diplomatic_offer
+		}
+	}
+
+	after = {
+		c:MAJ = {
+			trigger_event_non_silently = flavor_maj.7
+		}
+	}
+}
+
+flavor_maj.7 = {  #Sunda's Response
+	type = country_event
+	title = flavor_maj.7.title
+	desc = flavor_maj.7.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_maj.7.a
+		trigger = {
+			has_variable = accepted_marriage_variable
+			has_variable = pressed_for_subjugation_variable
+		}
+
+		c:SUN = {
+			trigger_event_non_silently = {
+				id = flavor_maj.8
+				days = { 15 45 }
+			}
+		}
+		custom_tooltip = explain_options_flavor_maj.8
+	}
+
+	option = {
+		name = flavor_maj.7.b
+		trigger = {
+			has_variable = accepted_marriage_variable
+		}
+		add_government_power = government_power_mild_bonus
+		add_stability = stability_weak_bonus
+	}
+
+	option = {
+		name = flavor_maj.7.c
+		trigger = {
+			NOT = { has_variable = accepted_marriage_variable }
+		}
+		show_as_tooltip = {
+			add_opinion_mutual_effect = {
+				target = scope:target_country2
+				modifier = refused_diplomatic_offer
+			}
+		}
+	}
+
+	after = {
+		if = {
+			limit = { has_variable = accepted_marriage_variable }
+			remove_variable = accepted_marriage_variable
+		}
+		if = {
+			limit = { has_variable = pressed_for_subjugation_variable }
+			remove_variable = pressed_for_subjugation_variable
+		}
+	}
+}
+
+flavor_maj.8 = {  #The Demands of [target_country.GetNameWithNoTooltip]
+	type = country_event
+	title = flavor_maj.8.title
+	desc = flavor_maj.8.desc
+	outcome = neutral
+	fire_only_once = yes
+	historical_info = flavor_maj.8.historical_info
+	option = {
+		name = flavor_maj.8.a
+
+		historical_option = yes
+
+		make_subject_of = { target = scope:target_country type = subject_type:vassal }
+	}
+
+	option = {
+		name = flavor_maj.8.b
+
+		scope:target_country = {
+			add_casus_belli =  {
+				target = root
+				type = casus_belli:cb_subject_broke_free
+			}
+		}
+	}
+}
+
+flavor_maj.9 = {  #History of the [GetCountry('SUN').GetAdjectiveWithNoTooltip] Realm
+	hide_portraits = yes
+	type = country_event
+	title = flavor_maj.9.title
+	desc = flavor_maj.9.desc
+	outcome = neutral
+	historical_info = flavor_maj.9.historical_info
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1500.1.1
+		to = 1600.6.1
+		monthly_chance = 1
+	}
+	trigger = {
+		at_war = no
+		is_during_bankruptcy = no
+		NOT = { country_exists = c:SUN }
+		any_character = {
+			artist_type = writer
+			has_art_in_progress = no
+		}
+	}
+
+	immediate = {
+		save_scope_as = target_country
+		ruler_or_regent = { save_scope_as = target_character }
+		random_character = {
+			limit = {
+				artist_type = writer
+			    has_art_in_progress = no
+			}
+			save_scope_as = target_artist
+		}
+	}
+
+	option = {
+		name = flavor_maj.9.a
+		historical_option = yes
+
+		capital = {
+			create_art = {
+				artist = scope:target_artist
+				quality = 81
+				type = work_of_art_type:chronicle
+				key = maj_carita_parahyangan_woa
+			}
+		}
+		change_gold_effect = { scale = -6 }
+		add_government_power = government_power_extreme_bonus
+
+	}
+	option = {
+		name = flavor_maj.9.b
+
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_move_to_left }
+		add_government_power = government_power_extreme_penalty
+	}
+}
+
+flavor_maj.10 = {  #Popularization of the Kakawin Poems
+	type = country_event
+	title = flavor_maj.10.title
+	desc = flavor_maj.10.desc
+	outcome = neutral
+	historical_info = flavor_maj.10.historical_info
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1350.1.1
+		to = 1400.6.1
+		monthly_chance = 2
+	}
+	trigger = {
+		at_war = no
+		is_during_bankruptcy = no
+	}
+
+	immediate = {
+		save_scope_as = target_country
+		create_character = {
+			artist = writer
+			estate = estate_type:burghers_estate
+			save_scope_as = target_artist
+			create_in_limbo = yes
+		}
+		ruler_or_regent = { save_scope_as = target_character }
+
+	}
+
+	option = {
+		name = flavor_maj.10.a
+		historical_option = yes
+
+		change_gold_effect = { scale = -3 }
+		culture = {
+			add_cultural_influence = cultural_influence_mild_bonus
+		}
+		scope:target_artist = { move_country = root }
+
+	}
+	option = {
+		name = flavor_maj.10.b
+
+   		kill_character_silently = scope:target_artist
+		change_societal_value = { type = traditionalist_vs_innovative value = societal_value_move_to_left }
+	}
+}
+
+flavor_maj.11 = {  #The Dream of Nusantara
+	type = country_event
+	title = flavor_maj.11.title
+	desc = flavor_maj.11.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1350.1.1
+		to = 1400.6.1
+		monthly_chance = 5
+	}
+	trigger = {
+		is_subject = no
+		at_war = no
+		is_during_bankruptcy = no
+		OR = {
+			total_population > 5000
+			num_subjects > 10
+			prestige >= 50
+		}
+	}
+
+	immediate = {
+		ruler_or_regent = { save_scope_as = target_character }
+
+	}
+
+	#We will seize this opportunity.
+	option = {
+		name = flavor_maj.11.a
+
+		if = {
+			limit = { country_rank_level < 4 }
+			if = {
+				limit = { country_rank_level < 2 }
+				set_country_rank = country_rank:rank_duchy
+			}
+			else_if = {
+				limit = { country_rank_level < 3 }
+				set_country_rank = country_rank:rank_kingdom
+			}
+			else = { set_country_rank_effect = { rank = country_rank:rank_empire } }
+		}
+		else = { add_prestige = prestige_extreme_bonus }
+
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_large_move_to_left
+		}
+		custom_tooltip = such_a_proclamation_will_incur_the_following_penalty_tt
+		drop_antagonism_bomb = {
+			target = capital
+			modifier = antagonism_pushed_towards_belligerent
+			value = 2
+		}
+	}
+
+	#It is best to not rush.
+	option = {
+		name = flavor_maj.11.b
+
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_huge_move_to_right
+		}
+
+		add_government_power = government_power_mild_penalty
+	}
+}
+
+flavor_maj.12 = {  #New Temples
+	type = country_event
+	title = flavor_maj.12.title
+	desc = flavor_maj.12.desc
+	outcome = neutral
+	historical_info = flavor_maj.12.historical_info
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1350.1.1
+		to = 1402.6.1
+		monthly_chance = 5
+	}
+	trigger = {
+		at_war = no
+		is_during_bankruptcy = no
+		has_ruler = yes
+	}
+
+	immediate = {
+		ruler_or_regent = { save_scope_as = target_character }
+		set_variable = {
+			name = maj_had_temples_event_variable
+			years = 60
+		}
+	}
+
+	option = {
+		name = flavor_maj.12.a
+		historical_option = yes
+		ruler_or_regent = {
+			add_character_modifier = {
+				modifier = maj_works_of_faith_modifier
+				mode = add_and_extend
+				years = -1
+			}
+		}
+		add_estate_satisfaction = {
+			type = estate_type:clergy_estate
+			value = estate_satisfaction_extreme_bonus
+		}
+
+		change_societal_value = {
+			type = spiritualist_vs_humanist
+			value = societal_value_huge_move_to_right
+		}
+		custom_tooltip = maj_receive_events_about_important_temples_tt
+	}
+	option = {
+		name = flavor_maj.12.b
+
+		change_societal_value = {
+			type = spiritualist_vs_humanist
+			value = societal_value_huge_move_to_left
+		}
+	}
+}
+
+flavor_maj.13 = {  #Tikus Temple
+	hide_portraits = yes
+	type = country_event
+	title = flavor_maj.13.title
+	desc = flavor_maj.13.desc
+	outcome = neutral
+	historical_info = flavor_maj.13.historical_info
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1350.1.1
+		to = 1402.6.1
+		monthly_chance = 2
+	}
+	trigger = {
+		custom_tooltip = {
+			text = variable_maj_had_temples_event_variable_tt
+			has_variable = maj_had_temples_event_variable
+		}
+		at_war = no
+		is_during_bankruptcy = no
+		has_ruler = yes
+		location:trowulan = { has_building = building_type:temple }
+	}
+
+	immediate = {
+		save_scope_as = target_country
+		ruler_or_regent = { save_scope_as = target_character }
+		location:trowulan = { save_scope_as = target_location }
+	}
+
+	option = { #Continue as a temple
+		name = flavor_maj.13.a
+
+		location:trowulan = {
+			construct_building = { building_type = building_type:cathedral }
+			change_prosperity = prosperity_weak_bonus
+		}
+
+		add_prestige = prestige_mild_bonus
+	}
+
+	option = { #Use as a bath
+		name = flavor_maj.13.b
+
+		location:trowulan = {
+			every_pop = {
+				limit = {
+					owner = root
+				}
+				add_pop_satisfaction = pop_satisfaction_weak_bonus
+			}
+		}
+		change_societal_value = {
+			type = serfdom_vs_free_subjects
+			value = societal_value_move_to_right
+		}
+	}
+
+	option = { #No
+		name = flavor_maj.13.c
+
+		add_estate_satisfaction = {
+			type = estate_type:clergy_estate
+			value = estate_satisfaction_extreme_penalty
+		}
+
+		location:trowulan = {
+			every_pop = {
+				limit = {
+					owner = root
+				}
+				add_pop_satisfaction = pop_satisfaction_weak_penalty
+			}
+		}
+	}
+}
+
+flavor_maj.14 = {  #Candi Surawana
+	hide_portraits = yes
+	type = country_event
+	title = flavor_maj.14.title
+	desc = flavor_maj.14.desc
+	outcome = neutral
+	historical_info = flavor_maj.14.historical_info
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1350.1.1
+		to = 1402.6.1
+		monthly_chance = 10
+	}
+	trigger = {
+		custom_tooltip = {
+			text = variable_maj_had_temples_event_variable_tt
+			has_variable = maj_had_temples_event_variable
+		}
+		at_war = no
+		is_during_bankruptcy = no
+		has_ruler = yes
+		location:daha = {
+			has_building = building_type:temple
+			owner = c:MAJ
+		}
+	}
+
+	immediate = {
+		save_scope_as = target_country
+		ruler_or_regent = { save_scope_as = target_character }
+		location:daha = { save_scope_as = target_location }
+	}
+
+	option = { #Build it
+		name = flavor_maj.14.a
+
+		location:daha = {
+			construct_building = { building_type = building_type:cathedral }
+		}
+
+		add_prestige = prestige_mild_bonus
+	}
+
+	option = { #No
+		name = flavor_maj.14.b
+
+		add_estate_satisfaction = {
+			type = estate_type:clergy_estate
+			value = estate_satisfaction_extreme_penalty
+		}
+
+		location:daha = {
+			every_pop = {
+				limit = {
+					owner = root
+				}
+				add_pop_satisfaction = pop_satisfaction_weak_penalty
+			}
+		}
+	}
+}
+
+scripted_trigger sumpah_palapa_trigger = {
+	character:maj_gajah_mada = {
+		is_alive = yes
+		owner ?= ROOT
+		in_cabinet = yes
+	}
+	has_country_modifier = maj_sumpah_palapa_modifier
+}
+
+scripted_effect set_sumpah_palapa_scopes = {
+	character:maj_gajah_mada = {
+		save_scope_as = target_character
+	}
+}
+
+# The Eastern Campaign
+flavor_maj.15 = {
+	type = country_event
+	title = flavor_maj.15.title
+	desc = flavor_maj.15.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1340.1.1
+		to = 1350.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		sumpah_palapa_trigger = yes
+		country_exists = c:BLI
+		c:BLI ?= {
+			NOT = { is_at_war_with = ROOT }
+			is_subject = no
+		}
+	}
+
+	immediate = {
+		set_sumpah_palapa_scopes = yes
+		c:BLI = {
+			save_scope_as = target_country
+		}
+	}
+
+	option = {
+		name = flavor_maj.15.a
+		trigger = {
+			can_declare_legal_war_on = { target = scope:target_country }
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 0
+				trigger = {
+					scope:target_country = {
+						is_ai = no
+					}
+				}
+			}
+		}
+
+		add_casus_belli = {
+			target = scope:target_country
+			type = casus_belli:cb_annex
+		}
+		declare_war_with_cb = {
+			target = scope:target_country
+			type = casus_belli:cb_annex
+		}
+	}
+
+	option = {
+		name = flavor_maj.15.b
+
+		ai_chance = {
+			factor = 0
+		}
+
+		add_casus_belli = {
+			target = scope:target_country
+			type = casus_belli:cb_annex
+		}
+	}
+
+	option = {
+		name = flavor_maj.15.c
+
+		ai_chance = {
+			factor = 0.25
+		}
+
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_move_to_right
+		}
+
+		scope:target_country = {
+			add_opinion = {
+				modifier = maj_diplomatic_oath
+				target = ROOT
+			}
+		}
+	}
+}
+
+# Islamic Landfall
+flavor_maj.16 = {
+	type = country_event
+	title = flavor_maj.16.title
+	desc = flavor_maj.16.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1380.1.1
+		to = 1400.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		owns = location:gresik
+	}
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:gresik = {
+			save_scope_as = target_location
+			ordered_pop = {
+				order_by = pop_size
+				max = 1
+				check_range_bounds = yes
+				save_scope_as = target_pop
+			}
+			ordered_pop = {
+				order_by = pop_size
+				limit = {
+					pop_type = pop_type:burghers
+					owner ?= ROOT
+				}
+				max = 1
+				check_range_bounds = yes
+				save_scope_as = target_pop
+			}
+		}
+		religion:sunni = {
+			save_scope_as = target_religion
+		}
+	}
+
+	option = {
+		name = flavor_maj.16.a
+
+		ai_chance = {
+			factor = 0.75
+		}
+
+		scope:target_pop = {
+			split_pop = {
+				fraction = { 0.08 0.12 }
+				religion = religion:sunni
+			}
+		}
+
+		scope:target_location = {
+			change_development = development_weak_bonus
+			construct_building = {
+				building_type = building_type:sufi_mosque
+				cost_multiplier = 0
+				cost_multiplier_reason = game_concept_event
+				instant = yes
+			}
+		}
+	}
+
+	option = {
+		name = flavor_maj.16.b
+
+		ai_chance = {
+			factor = 0.25
+		}
+
+		scope:target_pop = {
+			split_pop = {
+				fraction = { 0.03 0.07 }
+				religion = religion:sunni
+			}
+		}
+
+		change_societal_value = {
+			type = spiritualist_vs_humanist
+			value = societal_value_minor_move_to_left
+		}
+	}
+}
+
+scripted_effect turn_into_wali_songo = {
+	custom_tooltip = {
+		text = wali_songo_tt
+		set_variable = wali_songo
+	}
+}
+
+# First Wali Songo
+flavor_maj.17 = {
+	type = country_event
+	title = flavor_maj.17.title
+	desc = flavor_maj.17.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1400.1.1
+		to = 1410.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = happy
+	}
+
+	immediate = {
+		location:kashan = {
+			save_scope_as = birth_location
+		}
+
+		create_character = {
+			estate = estate_type:burghers_estate
+			first_name = name_malik
+			last_name = name_abraham
+			birth_date = 1370.1.1
+			religion = religion:sunni
+			birth_location = location:kashan
+			adm = { 30 70 }
+			dip = { 30 70 }
+			mil = { 30 70 }
+			save_scope_as = target_character
+		}
+
+		religion:sunni = {
+			save_scope_as = target_religion
+		}
+
+		random_owned_location = {
+			save_scope_as = target_location
+		}
+		location:gresik = {
+			if = {
+				limit = {
+					owner ?= ROOT
+				}
+				save_scope_as = target_location
+			}
+		}
+
+		scope:target_location = {
+			random_pop = {
+				save_scope_as = target_pop
+			}
+
+			ordered_pop = {
+				order_by = pop_size
+				limit = {
+					pop_type = pop_type:peasants
+					religion.group != religion_group:muslim
+				}
+				save_scope_as = target_pop
+			}
+		}
+	}
+
+	option = {
+		name = flavor_maj.17.a
+
+		scope:target_character = {
+			move_country = ROOT
+		}
+
+		scope:target_pop = {
+			split_pop = {
+				fraction = 0.25
+				religion = religion:sunni
+			}
+		}
+
+		scope:target_character = {
+			turn_into_wali_songo = yes
+		}
+
+		set_variable = {
+			name = MAJ_wali_songo
+			value = 0
+		}
+	}
+}
+
+# Death of a Wali Songo
+flavor_maj.18 = {
+	type = country_event
+	title = flavor_maj.18.title
+	desc = flavor_maj.18.desc
+	outcome = neutral
+
+	trigger = {
+		any_owned_location = {
+			NOT = {
+				has_building_with_at_least_one_level = wali_songo_shrine
+			}
+		}
+	}
+
+	immediate = {
+		random_owned_location = {
+			limit = {
+				NOT = {
+					has_building_with_at_least_one_level = wali_songo_shrine
+				}
+			}
+			weight = {
+				base = 0
+				modifier = {
+					add = {
+						value = population
+						multiply = 100
+					}
+				}
+			}
+			save_scope_as = target_location
+		}
+
+		scope:target = {
+			save_scope_as = target_character
+		}
+		random_owned_location = {
+			limit = {
+				NOT = {
+					has_building_with_at_least_one_level = wali_songo_shrine
+				}
+				any_pop = {
+					religion = religion:sunni
+				}
+			}
+			weight = {
+				base = 0
+				modifier = {
+					add = {
+						value = "religion_population(religion:sunni)"
+						multiply = 100
+					}
+				}
+			}
+			save_scope_as = target_location
+		}
+
+		area:java_area = {
+			random_location_in_area = {
+				limit = {
+					NOT = {
+						has_building_with_at_least_one_level = wali_songo_shrine
+					}
+					owner ?= ROOT
+					any_pop = {
+						religion = religion:sunni
+					}
+				}
+				weight = {
+					base = 0
+					modifier = {
+						add = {
+							value = "religion_population(religion:sunni)"
+							multiply = 100
+						}
+					}
+				}
+				save_scope_as = target_location
+			}
+		}
+
+	}
+
+	option = {
+		name = flavor_maj.18.a
+
+		scope:target_location = {
+			construct_building = {
+				building_type = building_type:wali_songo_shrine
+				cost_multiplier = 0
+				cost_multiplier_reason = game_concept_event
+				instant = yes
+			}
+		}
+	}
+}
+
+# New Wali
+flavor_maj.19 = {
+	type = country_event
+	title = flavor_maj.19.title
+	desc = flavor_maj.19.desc
+	outcome = neutral
+
+	trigger = {
+		has_variable = MAJ_wali_songo
+		var:MAJ_wali_songo < 9
+	}
+
+	immediate = {
+		create_character = {
+			estate = estate_type:burghers_estate
+			religion = religion:sunni
+			culture = root.culture
+			min_age = 30
+			save_scope_as = target_character
+		}
+		religion:sunni = {
+			save_scope_as = target_religion
+		}
+		change_variable = {
+			name = MAJ_wali_songo
+			add = 1
+		}
+	}
+
+	option = {
+		name = flavor_maj.19.a
+
+		ai_chance = {
+			factor = 1
+		}
+
+		scope:target_character = {
+			turn_into_wali_songo = yes
+		}
+	}
+
+	option = {
+		name = flavor_maj.19.b
+
+		ai_chance = {
+			factor = 0
+		}
+
+		add_stability = stability_mild_penalty
+		hidden_effect = {
+			kill_character_silently = {
+				target = scope:target_character
+			}
+		}
+	}
+
+	after = {
+		if = {
+			limit = {
+				var:MAJ_wali_songo >= 9
+			}
+			remove_variable = MAJ_wali_songo
+		}
+	}
+}
+
+# Damarwulan
+flavor_maj.20 = {
+	type = country_event
+	title = flavor_maj.20.title
+	desc = flavor_maj.20.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	trigger = {
+		modifier:no_lowborn_leaders = no
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1430.1.1
+		to = 1500.1.1
+		monthly_chance = 1
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:peasants
+  background = pop_type:peasants }
+		create_character = {
+			estate = estate_type:peasants_estate
+			first_name = name_damarwulan
+			min_age = 16
+			culture = root.culture
+			religion = root.religion
+			create_in_limbo = yes
+			female = no
+			mil = { 60 70 }
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_maj.20.a
+
+		ai_chance = {
+			factor = 0.5
+		}
+
+		scope:target_character = {
+			move_country = ROOT
+			set_variable = {
+				name = damarwulan_var
+				value = 0
+			}
+		}
+		custom_tooltip = maj_winning_10_battles_with_damarwulan
+	}
+
+	option = {
+		name = flavor_maj.20.b
+
+		ai_chance = {
+			factor = 0.5
+		}
+
+		hidden_effect = {
+			kill_character_silently = {
+				target = scope:target_character
+			}
+		}
+
+		capital = {
+			create_art = {
+				key = damarwulan
+				quality = { 60 70 }
+				type = work_of_art_type:play
+			}
+		}
+
+		culture = {
+			add_cultural_influence = cultural_influence_mild_bonus
+		}
+	}
+}
+
+# Damarwulan wins battles
+flavor_maj.21 = {
+	type = country_event
+	title = flavor_maj.21.title
+	desc = flavor_maj.21.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = armed
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	option = {
+		name = flavor_maj.21.a
+
+		add_legitimacy = 25
+		scope:target_character = {
+			add_mil = 15
+		}
+	}
+}
+
+#####################################################################################################
+### This section contains events that spawn a second malacca tag, therefore it's all commented out###
+#####################################################################################################
+
+# Temasek Treachery
+#flavor_maj.22 = {
+#	type = country_event
+#	title = flavor_maj.22.title
+#	desc = flavor_maj.22.desc
+#	outcome = neutral
+#
+#	fire_only_once = yes
+#	dynamic_historical_event = {
+#		tag = MAJ
+#		from = 1390.1.1
+#		to = 1410.1.1
+#		monthly_chance = 10
+#	}
+#
+#	trigger = {
+#		location:malacca = {
+#			has_owner = yes
+#			owner = {
+#				this != ROOT
+#				at_war = no
+#				culture = culture:malay_culture
+#			}
+#		}
+#		c:SNG ?= {
+#			has_ruler = yes
+#		}
+#	}
+#
+#	immediate = {
+#		location:temasek = {
+#			save_scope_as = target_location
+#		}
+#		location:malacca = {
+#			save_scope_as = target_location2
+#			owner = {
+#				save_scope_as = target_country_to_interact_with
+#			}
+#		}
+#
+#		c:SNG = {
+#			save_scope_as = target_country
+#		}
+#
+#		c:SNG.ruler = {
+#			save_scope_as = target_character
+#		}
+#	}
+#
+#	option = {
+#		name = flavor_maj.22.a
+#
+#		add_prestige = prestige_weak_bonus
+#	}
+#
+#	option = {
+#		name = flavor_maj.22.b
+#		high_risk_option = yes
+#
+#		add_prestige = prestige_weak_bonus
+#		custom_tooltip = {
+#			text = MAJ_we_will_play_as_malacca
+#			ROOT = {
+#				save_scope_as = player_to_switch
+#			}
+#		}
+#	}
+#
+#	after = {
+#		hidden_effect = {
+#			scope:target_location2.owner = {
+#				trigger_event_non_silently = {
+#					id = flavor_maj.23
+#				}
+#			}
+#		}
+#	}
+#}
+#
+#scripted_effect create_malacca_tag_here = {
+#	create_country_from_location = {
+#		reforms = {
+#			mandala_system
+#		}
+#		change_religion = religion:sunni
+#		define_unique_country_tag = MLC
+#		change_country_flag = MLC
+#		change_country_adjective = MLC_ADJ
+#		change_country_color = map_MLC
+#		change_country_name = MLC
+#		set_new_ruler = scope:target_character
+#		save_scope_as = malacca_tag
+#		change_religion_for_ruler_and_family = { country = scope:malacca_tag religion = religion:sunni }
+#	}
+#	custom_tooltip = maj_get_trust_with_malacca
+#}
+#
+# Founding of Malacca - fires for owner
+#flavor_maj.23 = {
+#	type = country_event
+#	title = flavor_maj.23.title
+#	desc = flavor_maj.23.desc
+#	outcome = neutral
+#
+#	immediate = {
+#		save_scope_as = previous_owner
+#	}
+#
+#	option = {
+#		name = flavor_maj.23.a
+#
+#		ai_chance = {
+#			factor = 1
+#		}
+#
+#		scope:target_location2 = {
+#			create_malacca_tag_here = yes
+#		}
+#	}
+#
+#	option = {
+#		name = flavor_maj.23.b
+#		high_risk_option = yes
+#
+#		ai_chance = {
+#			factor = 0
+#		}
+#
+#		trigger = {
+#			NOT = { exists = scope:player_to_switch }
+#		}
+#
+#		scope:target_location2 = {
+#			create_malacca_tag_here = yes
+#		}
+#
+#		custom_tooltip = {
+#			text = MAJ_we_will_play_as_malacca
+#			ROOT = {
+#				save_scope_as = player_to_switch
+#			}
+#		}
+#	}
+#
+#	option = {
+#		name = flavor_maj.23.c
+#
+#		ai_chance = {
+#			factor = 0
+#		}
+#
+#		scope:target_location2 = {
+#			change_control = control_extreme_penalty
+#		}
+#		add_stability = stability_severe_penalty
+#	}
+#
+#	after = {
+#		if = {
+#			limit = {
+#				exists = scope:player_to_switch
+#				exists = scope:malacca_tag
+#			}
+#			scope:player_to_switch = {
+#				change_player = scope:malacca_tag
+#			}
+#		}
+#
+#		if = {
+#			limit = {
+#				exists = scope:malacca_tag
+#			}
+#			scope:malacca_tag = {
+#				trigger_event_non_silently = {
+#					id = flavor_maj.24
+#				}
+#			}
+#		}
+#	}
+#}
+#
+# Founding of Malacca - notification event
+#flavor_maj.24 = {
+#	type = country_event
+#	title = flavor_maj.24.title
+#	desc = flavor_maj.24.desc
+#	outcome = neutral
+#
+#	major = yes
+#
+#	immediate = {
+#		capital = {
+#			add_pop = {
+#				culture = ROOT.culture
+#				religion = ROOT.religion
+#				type = pop_type:burghers
+#				size = {
+#					value = population
+#					multiply = { 0.25 0.4 }
+#				}
+#			}
+#		}
+#	}
+#
+#	option = {
+#		name = flavor_maj.24.a
+#
+#		capital = {
+#			if = {
+#				limit = {
+#					location_rank = location_rank:rural_settlement
+#				}
+#				change_location_rank_effect = { location_rank = location_rank:town }
+#			}
+#		}
+#		add_gold = { 300 500 }
+#
+#		add_opinion_mutual_effect = {
+#			modifier = maj_mutual_trust_malacca
+#			target = scope:previous_owner
+#		}
+#	}
+#}
+
+scripted_trigger can_be_targetted_by_gajah_mada = {
+	NOT = { is_friendly_with = ROOT }
+	NOT = { has_truce_with = ROOT }
+	OR = {
+		is_neighbor_of = ROOT
+		AND = {
+			has_ports = yes
+			"border_distance_to(root)" < 500
+		}
+	}
+}
+
+# Palapa Oath - Targetting a country
+flavor_maj.25 = {
+	type = country_event
+	title = flavor_maj.25.title
+	desc = flavor_maj.25.desc
+	outcome = neutral
+
+	trigger = {
+		sumpah_palapa_trigger = yes
+		OR = {
+			region:indonesia_region = {
+				any_present_country = {
+					count >= 1
+					can_be_targetted_by_gajah_mada = yes
+				}
+			}
+			area:malay_peninsula_area = {
+				any_present_country = {
+					count >= 1
+					can_be_targetted_by_gajah_mada = yes
+				}
+			}
+		}
+	}
+
+	illustration_tags =  {
+		10 = exterior
+		10 = armed
+	}
+
+	immediate = {
+		set_sumpah_palapa_scopes = yes
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+
+		region:indonesia_region = {
+			every_present_country = {
+				limit = {
+					can_be_targetted_by_gajah_mada = yes
+				}
+				add_to_list = list_of_nations_to_target
+			}
+		}
+
+		area:malay_peninsula_area = {
+			every_present_country = {
+				limit = {
+					can_be_targetted_by_gajah_mada = yes
+				}
+				add_to_list = list_of_nations_to_target
+			}
+		}
+
+		random_in_list = {
+			list = list_of_nations_to_target
+			save_scope_as = target_country
+		}
+	}
+
+	option = {
+		name = flavor_maj.25.a
+
+		ai_chance = {
+			factor = 0.8
+			modifier = {
+				factor = 0
+				trigger = {
+					any_neighbor_country = {
+						antagonism = {
+							target = root
+							value >= 50
+						}
+					}
+				}
+			}
+		}
+
+		drop_antagonism_bomb = {
+			target = capital
+			modifier = antagonism_planned_invasion
+		}
+		add_casus_belli = {
+			target = scope:target_country
+			type = casus_belli:cb_annex
+		}
+	}
+
+	option = {
+		name = flavor_maj.25.b
+
+		ai_chance = {
+			factor = 0.2
+		}
+
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_move_to_right
+		}
+	}
+}
+
+# Adityawarman
+flavor_maj.26 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_maj.26.title
+	desc = flavor_maj.26.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1338.1.1
+		to = 1350.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		character:jmb_adityawarman = {
+			is_alive = yes
+			owner ?= {
+				OR = {
+					AND = {
+						this = ROOT
+						c:JMB ?= {
+							is_ai = yes
+						}
+					}
+					AND = {
+						is_subject_or_below_of = ROOT
+						is_ai = yes
+					}
+				}
+			}
+		}
+		country_exists = c:SGT
+		c:SGT = {
+			is_ai = yes
+		}
+
+		gold >= yearly_gold
+	}
+
+	immediate = {
+		save_scope_as = from
+		character:jmb_adityawarman = {
+			save_scope_as = target_character
+		}
+		if = {
+			limit = {
+				scope:target_character.owner = {
+					is_subject_or_below_of = ROOT
+					is_ai = yes
+				}
+			}
+			scope:target_character.owner = {
+				save_scope_as = target_country
+			}
+		}
+		else = {
+			c:JMB = {
+				save_scope_as = target_country
+			}
+		}
+
+		c:SGT = {
+			save_scope_as = target_country2
+		}
+
+		set_local_variable = {
+			name = expedition_cost
+			value = yearly_gold
+		}
+	}
+
+	option = {
+		name = flavor_maj.26.a
+
+		ai_chance = {
+			factor = 0.8
+		}
+
+		add_gold = {
+			value = local_var:expedition_cost
+			multiply = -1
+		}
+
+		scope:target_country = {
+			set_new_ruler = scope:target_character
+		}
+
+		scope:target_character = {
+			add_mil = { 10 15 }
+		}
+
+		scope:target_country2 = {
+			trigger_event_non_silently = {
+				id = flavor_maj.27
+				days = { 182 365 }
+			}
+		}
+		custom_tooltip = maj_fire_will_event_if_target_character_lives
+
+		every_subject = {
+			limit = {
+				exists = capital
+				capital = {
+					OR = {
+						area = area:north_sumatra_area
+						area = area:south_sumatra_area
+					}
+				}
+			}
+			add_liberty_desire = liberty_desire_severe_minus
+		}
+	}
+
+	option = {
+		name = flavor_maj.26.b
+
+		ai_chance = {
+			factor = 0.2
+		}
+
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+# Success of Adityawarman campaign - Pagarruyung
+flavor_maj.27 = {
+	type = country_event
+	title = flavor_maj.27.title
+	desc = flavor_maj.27.desc
+	outcome = neutral
+
+	major = yes
+	major_trigger = {
+		OR = {
+			this = scope:from
+			capital ?= {
+				OR = {
+					area = area:malay_peninsula_area
+					region = region:indonesia_region
+				}
+			}
+		}
+	}
+
+	trigger = {
+		scope:target_character = {
+			is_alive = yes
+		}
+	}
+
+	option = {
+		name = flavor_maj.27.a
+
+		set_new_ruler = scope:target_character
+		make_subject_of = {
+			target = scope:from
+			type = subject_type:vassal
+		}
+		form_country = formable_country:PGR_f
+	}
+}
+
+# Splendor Trowulan
+flavor_maj.28 = {
+	type = country_event
+	title = flavor_maj.28.title
+	desc = flavor_maj.28.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1400.1.1
+		to = 1821.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		owns = location:trowulan
+		location:trowulan = {
+			population >= 200
+			development >= 50
+			OR = { location_rank = location_rank:city  location_rank = location_rank:megalopolis }
+		}
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = happy
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:trowulan = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_maj.28.a
+
+		culture = {
+			add_cultural_tradition = cultural_tradition_extreme_bonus
+		}
+
+		add_prestige = prestige_severe_bonus
+	}
+}
+
+# Golden Age of Majapahit Art
+flavor_maj.29 = {
+	type = country_event
+	title = flavor_maj.29.title
+	desc = flavor_maj.29.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = MAJ
+		from = 1337.1.1
+		to = 1821.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = happy
+	}
+
+	trigger = {
+		has_embraced_institution = institution:renaissance
+		NOT = { has_any_active_disaster = yes }
+		num_artists >= 3
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+	}
+
+	option = {
+		name = flavor_maj.29.a
+
+		culture = {
+			add_cultural_tradition = cultural_tradition_extreme_bonus
+		}
+	}
+
+	option = {
+		name = flavor_maj.29.b
+
+		culture = {
+			add_cultural_influence = cultural_influence_severe_bonus
+		}
+	}
+}

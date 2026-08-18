@@ -1,0 +1,181 @@
+﻿#####ArsBelliMod#####
+
+#Japan#
+
+a_abm_samurai_retinue = {
+	copy_from = a_age_1_traditions_heavy_cavalry
+	is_special = yes
+	buildable = no
+	levy = yes
+
+	strength_damage_taken = -0.20
+	morale_damage_taken = -0.3
+	initiative = 1
+
+	combat = { 
+		coastal = 0.1
+	}
+	
+	country_potential = {
+		culture ?= { has_culture_group = culture_group:japanese_group }
+		country_type = location
+		has_presence_in = region:japan_region
+	}	
+
+	location_potential = {
+		OR = {
+			dominant_culture = culture:touhoku_culture
+			dominant_culture = culture:tougoku_culture
+			dominant_culture = culture:saigoku_culture
+			dominant_culture = culture:kyushu_culture
+		}
+	}
+	
+	gfx_tags = { archer_tag medium_tag }
+}
+
+#Steppe Horde#
+
+a_steppe_lancers = { 
+	copy_from = a_age_1_traditions_heavy_cavalry
+	is_special = yes
+	upgrades_to = a_heavy_cavalrymen
+
+	movement_speed = 0.5
+	morale_damage_done = 0.1
+
+	combat = {
+		grasslands = 0.2
+		sparse = 0.2
+		#inland = 0.10 #no...
+		coastal = -0.10 #was -0.15
+	}
+
+    maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+
+	gfx_tags = { spear_tag heavy_tag }
+}
+
+#####ArsBelliMod#####
+
+#####ChangedByABM#####
+
+#Steppe Horde#
+
+REPLACE:a_steppe_horse_archers = {
+	copy_from = a_age_1_traditions_light_cavalry
+	is_special = yes
+	upgrades_to = a_cavalrymen
+
+	#max_strength = 0.4
+	#morale_damage_done = 0.2
+	initiative = 3
+	movement_speed = 1.0
+
+	combat = {
+		grasslands = 0.2
+		sparse = 0.2
+		#inland = 0.10 #no...
+		coastal = -0.10 #was -0.15
+	}
+	
+	maintenance_demand =  steppe_horse_archers_maintenance
+	construction_demand = steppe_horse_archers_construction
+	
+
+	gfx_tags = { archer_tag light_tag }
+}
+
+REPLACE:a_steppe_horde = {
+	copy_from = a_age_1_traditions_light_cavalry
+	is_special = yes
+
+#	max_strength = 0.4
+	movement_speed = 1
+	initiative = 2
+	buildable = no
+	levy = yes
+
+	combat = {
+		grasslands = 0.20 #was 0.15
+		sparse = 0.20 #was 0.15
+		#inland = 0.10 #no...
+		coastal = -0.10
+	}
+	
+	maintenance_demand =  steppe_horse_archers_maintenance
+	construction_demand = steppe_horse_archers_construction
+	
+
+	gfx_tags = { spear_tag light_tag }
+}
+
+REPLACE:a_a_urughs = {
+	copy_from = a_age_1_traditions_auxiliary
+	is_special = yes
+	upgrades_to = a_supply_carts
+
+	movement_speed = 1.0
+
+	combat = { #Bonuses of Horse Archers applied
+		grasslands = 0.2
+		sparse = 0.2
+		coastal = -0.10
+	}
+	
+	maintenance_demand =  steppe_horse_auxiliary_maintenance
+	construction_demand = steppe_auxiliary_construction
+	
+
+	gfx_tags = { spear_tag light_tag }
+}
+
+#Byzantium#
+
+REPLACE:a_byzantine_cataphracts = {
+	content_priority = 400
+	copy_from = a_age_1_traditions_heavy_cavalry
+	is_special = yes
+	
+	upgrades_to_only = a_byzantine_cataphracts_2
+
+	limit = cataphracts_unit_limit
+
+	build_time_modifier = 1 #was 0.50
+	
+	construction_demand = expensive_heavy_cavalry_construction
+	maintenance_demand =  expensive_heavy_cavalry_maintenance
+	
+	buildable = yes
+
+	movement_speed = -0.25
+	combat_speed = -2 #new
+	initiative = -0.5 #new
+	strength_damage_taken = -0.25
+	morale_damage_done = 0.20 #was 0.33
+	
+	combat = {
+		wetlands = -0.1
+		hills = -0.1
+		mountains = -0.15
+		forest = -0.05 #new
+	}
+
+	impact = {
+		hills = 0.05
+		forest = 0.05
+	}
+
+	location_potential = {
+		unit_byzantine_cataphracts_location_trigger = yes
+	}
+
+	gfx_tags = { 
+		cataphract_tag 
+		spear_tag
+		heavy_tag 
+	}
+}
+
+#####ChangedByABM#####

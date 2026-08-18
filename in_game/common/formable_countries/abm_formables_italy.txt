@@ -1,0 +1,65 @@
+﻿
+ABLOM_f = { # Lombardia
+	level = 2
+	required_locations_fraction = 0.60
+	rule = historical
+
+	potential = {
+		capital = { region = region:italy_region }
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	allow = {
+		capital = { region = region:italy_region }
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	name = ABLOM
+	flag = ABLOM
+	adjective = ABLOM_ADJ
+	tag = ABLOM
+	color = map_ABLOM
+
+	areas = {
+		lombardy_area
+		piemonte_area
+		emilia_area
+		liguria_area
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+# ABKOG_f = { # Kingdom of God — commented out, use generic_action instead (papacy reform blocks forming)
+#	 level = 4
+#	 required_locations_fraction = 0.60
+#	 rule = historical
+#
+#	 potential = {
+#		 has_or_had_tag = PAP
+#	 }
+#
+#	 allow = {
+#		 owns = location:rome
+#	 }
+#
+#	 name = ABKOG
+#	 flag = PAP
+#	 adjective = ABKOG_ADJ
+#	 color = map_PAP
+#
+#	 regions = {
+#		 italy_region
+#	 }
+#	 form_effect = {
+#		 if = {
+#			 limit = { country_rank_level < 4 }
+#			 set_country_rank = country_rank:rank_empire
+#		 }
+#		 set_variable = { name = abm_is_kingdom_of_god value = 1 }
+#	 }
+# }

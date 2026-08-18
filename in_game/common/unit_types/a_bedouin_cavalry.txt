@@ -1,0 +1,119 @@
+﻿a_abm_early_bedouin_cavalry = {
+	is_special = yes
+		
+	
+	copy_from = a_age_1_traditions_light_cavalry
+
+
+	movement_speed = 0.25
+	build_time_modifier = 0.1
+
+	# some terrain and climate impacts
+	impact = {
+		desert = -0.25 #was -0.75
+		#arid = -0.75 #double stacking movement bonuses are too much
+		arctic = 0.25
+	}
+
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:arabian_group }
+		OR = {
+			sub_continent = sub_continent:north_africa
+			sub_continent = sub_continent:middle_east
+		}
+	}
+	
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = tribesmen
+		multiply = 0.3
+	}
+
+	combat = {
+		desert = 0.20 #was 0.1 - consider that inland and desert stacked for a combined 0.20 anyways, so this brings it back to where it was
+		sparse = 0.10 #new
+		#inland = 0.10 #this modifier should not exist in the game
+		#coastal = -0.10 #this makes more sense, but removed for symmetry
+	}
+	gfx_tags = { medium_tag }
+}
+
+a_bedouin_cavalry = {
+	is_special = yes
+		
+	
+	copy_from = a_age_2_renaissance_light_cavalry
+
+
+	movement_speed = 0.25
+	build_time_modifier = 0.1
+
+	# some terrain and climate impacts
+	impact = {
+		desert = -0.25 #was -0.75
+		#arid = -0.75 #double stacking movement bonuses are too much
+		arctic = 0.25
+	}
+
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:arabian_group }
+		OR = {
+			sub_continent = sub_continent:north_africa
+			sub_continent = sub_continent:middle_east
+		}
+	}
+	
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = tribesmen
+		multiply = 0.3
+	}
+
+	combat = {
+		desert = 0.20 #was 0.1 - consider that inland and desert stacked for a combined 0.20 anyways, so this brings it back to where it was
+		sparse = 0.10 #new
+		#inland = 0.10 #this modifier should not exist in the game
+		#coastal = -0.10 #this makes more sense, but removed for symmetry
+	}
+	gfx_tags = { medium_tag }
+}
+
+a_abm_late_bedouin_cavalry = {
+	is_special = yes
+		
+	
+	copy_from = a_age_3_discovery_light_cavalry
+
+
+	movement_speed = 0.25
+	build_time_modifier = 0.1
+
+	# some terrain and climate impacts
+	impact = {
+		desert = -0.25 #was -0.75
+		#arid = -0.75 #double stacking movement bonuses are too much
+		arctic = 0.25
+	}
+
+	location_potential = {
+		dominant_culture = { has_culture_group = culture_group:arabian_group }
+		OR = {
+			sub_continent = sub_continent:north_africa
+			sub_continent = sub_continent:middle_east
+		}
+	}
+	
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = tribesmen
+		multiply = 0.3
+	}
+
+	combat = {
+		desert = 0.20 #was 0.1 - consider that inland and desert stacked for a combined 0.20 anyways, so this brings it back to where it was
+		sparse = 0.10 #new
+		#inland = 0.10 #this modifier should not exist in the game
+		#coastal = -0.10 #this makes more sense, but removed for symmetry
+	}
+	gfx_tags = { medium_tag }
+}

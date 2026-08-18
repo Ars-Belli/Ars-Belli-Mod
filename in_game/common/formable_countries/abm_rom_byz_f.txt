@@ -1,0 +1,59 @@
+﻿REPLACE:ROM_BYZ_f = {
+	level = 5
+	required_locations_fraction = 0.80 #was 0.25 which is incredibly low considering the region it's applied to is only Italy
+	rule = historical
+
+	capital_required = no
+	potential_requires_own = no
+	
+	potential = {
+		OR = {
+			has_or_had_tag = BYZ
+			has_or_had_tag = TRE
+		}
+	}
+
+	allow = {
+		owns = location:rome
+		owns = location:constantinople
+		country_rank = country_rank:rank_empire
+
+		OR = {
+			has_or_had_tag = BYZ
+			NOT = { country_exists = c:BYZ }
+		}
+	}
+
+	name = ROM
+	flag = ROM
+	adjective = ROM_ADJ
+	tag = ROM
+	color = map_ROM
+
+	regions = {
+		italy_region
+	}
+	form_effect = {
+		if = {
+			limit = { NOT = { capital = location:rome } }
+			move_capital_event_effect = {
+				from = root.capital
+				to = location:rome
+			}
+		}
+		province_definition:marittima_province = {
+			every_ownable_location_in_province_definition = {
+				limit = { owner = root }
+				change_integration_level = integrated
+			}
+		}
+		if = {
+			limit = { has_societal_value = societal_value_type:latinization_vs_hellenization }
+			change_societal_value = { type = latinization_vs_hellenization value = societal_value_huge_move_to_left }
+		}
+		if = {
+			limit = { has_dlc = "d008_fate_of_the_phoenix" }
+			unlock_casus_belli_effect = { type = cb_restore_roman_borders }
+		}
+	}
+}

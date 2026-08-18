@@ -1,0 +1,194 @@
+﻿#Basegame Ilkhanate content file. Needs to be here so certain advances can be removed.
+
+abm_ilk_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = feudalism_advance
+
+	# cavalry_power = 0.2
+	prestige_from_land_battle = 1 #was army_heavy_cavalry_power = 0.10
+}
+
+abm_ilk_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = feudalism_advance
+
+	# cavalry_cost = -0.15
+	#army_light_cavalry_build_cost_modifier = -0.10
+	#army_heavy_cavalry_build_cost_modifier = -0.10
+	tribes_estate_levy_size = 0.25 #new
+}
+
+#abm_ilk_restored_ilkhanate = {
+#	age = age_2_renaissance
+#	icon = smooth_administration
+#	potential = {
+#		has_or_had_tag = ILK
+#	}
+#
+#	requires = renaissance_thought
+#
+#	# legitimacy = 1
+#	# devotion = 1
+#	# republican_tradition = 0.3
+#	# meritocracy = 1
+#	# horde_unity = 1
+#	monthly_legitimacy = 0.10
+#	monthly_devotion = 0.10
+#	monthly_republican_tradition = 0.10
+#	monthly_tribal_cohesion = 0.10
+#	monthly_horde_unity = 0.10
+#}
+
+#abm_ilk_favor_sufism = {
+#	age = age_2_renaissance
+#	icon = church_councils
+#	potential = {
+#		has_or_had_tag = ILK
+#	}
+#
+#	requires = legalism_advance
+#
+#	# tolerance_heretic = 2
+#	tolerance_heretic = 1
+#}
+
+ilk_restore_yam = {	#Restore the Yäm
+	age = age_2_renaissance
+	potential = { has_or_had_tag = ILK}
+	requires = diplomatic_range_age_1
+	icon = diplomatic_training
+
+	global_distance_from_capital_speed_propagation = 0.1
+}
+
+ilk_ilkhanate_resurgent = {
+	age = age_2_renaissance
+	potential = { has_or_had_tag = ILK}
+	requires = ilk_restore_yam
+	icon = horde_ardor
+
+	monthly_prestige = 0.15
+}
+
+abm_ilk_persian_language_at_court = {
+	age = age_3_discovery
+	icon = cultural_acceptance_advance
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = military_traditions
+
+	# num_accepted_cultures = 1
+	cultures_capacity = 1
+}
+
+#abm_ilk_yam_networks = {
+#	age = age_3_discovery
+#	icon = glorious_arms
+#	potential = {
+#		has_or_had_tag = ILK
+#	}
+#
+#	requires = paved_road_advance
+#
+#	# movement_speed = 0.15
+#	# envoy_travel_time = -0.25
+#	army_movement_speed = 0.10
+#	diplomatic_range_modifier = 0.10
+#}
+
+ilk_persian_arts_and_architecture = {
+	age = age_3_discovery
+	potential = { has_or_had_tag = ILK}
+	requires = hire_artist_cost_modifier_advance_disc
+	icon = ira_spread_of_persian_influence
+
+	research_speed_modifier = 0.05 #was 0.1
+	global_urban_build_buildings_efficiency = 0.1
+}
+
+#ilk_descendants_of_genghis_khan = {
+#	age = age_3_discovery
+#	potential = { has_or_had_tag = ILK}
+#	requires = pike_and_shot_advance
+#	icon = successors_of_genghis_khan
+#
+#	army_light_cavalry_power = 0.2
+#}
+
+abm_ilk_mongol_peace = {
+	age = age_4_reformation
+	icon = administrative_leadership
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# years_of_nationalism = -5
+	global_separatism = -0.1 #was pop_join_rebel_threshold = -0.05
+}
+
+#abm_ilk_patronize_observatories = {
+#	age = age_4_reformation
+#	icon = library_advance
+#	potential = {
+#		has_or_had_tag = ILK
+#	}
+#
+#	requires = global_trade_advance
+#
+#	# technology_cost = -0.05
+#	research_speed_modifier = 0.05
+#}
+
+ilk_new_roots = {	#They move away from being horde-like to a more reformed state, more stable and robust
+	age = age_4_reformation
+	potential = { has_or_had_tag = ILK}
+	#allow = {
+	#	NOT = { country_type = army }
+	#}
+	requires = early_modern_administation
+	icon = administrative_leadership
+
+	government_reform_slots = 1
+
+	#allow_children = no	
+}
+
+abm_ilk_recruit_turkoman_gunners = {
+	age = age_5_absolutism
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = absolutist_court
+
+	# fire_damage = 0.1
+	army_light_infantry_power = 0.15 #was army_fire_damage = 0.10 - non-functional
+}
+
+abm_ilk_ideas_ambition = {
+	age = age_6_revolutions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = napoleonic_warfare
+
+	# cavalry_flanking = 0.5
+	army_light_cavalry_power = 0.10
+}

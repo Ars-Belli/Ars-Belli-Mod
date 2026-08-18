@@ -1,0 +1,131 @@
+﻿# scope:actor ?= country, scope:recipient = religion
+
+#
+# Imperial Court
+#
+
+REPLACE:demand_extra_payment_from_shogun_court = {
+	icon = become_shogun_from_imperial_court
+	type = religiousfaction
+
+	sound = UI_action_religion_generic
+	
+	potential = {
+		scope:actor.religion = {
+			has_religious_factions = yes
+		}
+	}
+
+	allow = {
+		international_organization:japanese_shogunate ?= {
+			exists = leader_country
+		}
+		scope:actor ?= {
+			NOT = { is_leader_of_international_organization = international_organization:japanese_shogunate }
+			NOT = { is_at_war_with = international_organization:japanese_shogunate.leader_country }
+			OR = {
+				monthly_income_trade_and_tax > 0
+				monthly_manpower > 0
+			}
+		}
+		international_organization:japanese_shogunate.leader_country ?= {
+			opinion = { target = scope:actor value > 0 }
+		}
+	}
+
+	cooldown = {
+		type = demand_extra_payment_from_shogun_court
+		years = 5
+	}
+
+	automation_tick = never
+	automation_tick_frequency = 12
+	
+	ai_tick = monthly
+	ai_tick_frequency = 12
+
+	price = price:demand_extra_payment_from_shogun_court
+	
+	select_trigger = {
+		looking_for_a = religion
+		source = actor
+		target_flag = recipient
+		name = "choose_religion"
+		column = {
+			data = name
+		}
+	}
+
+	effect = {
+		scope:actor ?= {
+			if = {
+				limit = { monthly_income_trade_and_tax > 0 }
+				add_gold = { value = scope:actor.monthly_income_trade_and_tax multiply = 4 }
+			}
+			if = {
+				limit = { monthly_manpower > 0 }
+				add_manpower = { value = scope:actor.monthly_manpower multiply = 3 }
+			}
+		}
+		international_organization:japanese_shogunate.leader_country ?= {
+			add_opinion = { target = scope:actor modifier = opinion_demanded_extra_payment }
+		}
+	}
+
+	ai_will_do = {
+		add = {
+			desc = "IS_BANKRUPT_TOOLTIP"
+			if = {
+				limit = {	
+					scope:actor = { 
+						is_during_bankruptcy = yes
+						monthly_income_trade_and_tax > 0
+					}
+				}
+				value = 1000
+			}
+		}
+		add = {
+			desc = "IS_AT_WAR"
+			if = {
+				limit = {	
+					scope:actor = { 
+						at_war = yes
+					}
+				}
+				value = 25
+			}
+		}
+		add = {
+			desc = "NEEDS_MONEY"
+			if = {
+				limit = {
+					scope:actor = {
+						monthly_income_trade_and_tax > 0
+						gold <= {
+							value = scope:actor.monthly_income_trade_and_tax
+							multiply = 6
+						}
+					}
+				}
+				value = 50
+			}
+		}
+		add = {
+			desc = "NEEDS_MANPOWER"
+			if = {
+				limit = {
+					scope:actor = {
+						monthly_manpower > 0
+						gold <= {
+							value = scope:actor.monthly_manpower
+							multiply = 6
+						}
+					}
+				}
+				value = 50
+			}
+		}
+
+	}
+}

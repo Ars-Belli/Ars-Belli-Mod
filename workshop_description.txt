@@ -1,111 +1,36 @@
-[h1]Ars Belli Multiplayer  Mod[/h1]
+[h1]Ars Belli Mod[/h1]
 
-[i]A gameplay-focused mod for Europa Universalis V, built primarily for multiplayer sessions.[/i]
+The objective of the Mod is to make all aspects of gameplay more balanced and to create a more interesting starting setup for all areas of the world. Initially built to improve our experience playing MP games on the Ars Belli community server, now expanded with customizable rules to tailor the experience exactly to your needs - including full Single Player compatibility!
 
-Ars Belli adds a custom power-ranking system, diplomatic alliance limits, and an extensive military/diplomacy rebalance. Supports game version 1.3.*.
-Server link: https://discord.gg/ZxbBhu9W
-
-[hr][/hr]
-
-[h2]Pops & Setup[/h2]
-[list]
-[*]Rebalanced the starting setup for the Hundred Years War (more French vassals, Independent Burgundy and flanders, better Scotland, adjusted borders and castles), Spain (Castille nerf), Bohemia, Eastern Europe (Kyiv and Moscow boost), Mamluks.
-[*]Remade India and China setup for multiplayer balance.
-[*]Pop adjustments across Asia: Timurid, Delhi, Khmer, Ayutthaya, Ming (Middle Kingdom), and the Lordship of Pale.
-[/list]
-
-[h2]Multiplayer Power Ranking[/h2]
-[list]
-[*]New [b]"Ars Belli: Multiplayer Mechanics"[/b] game rule (top of the rules list, default [b]ON[/b]). Flip OFF to keep all other Ars Belli features but disable the MP ranking system, AP/DP/GR limits, and every UI element tied to them — useful for single-player.
-[*]Every country is classified into a tier: [b]Great Power, Major Power, Normal, Small, Minor[/b].
-[*]A country's "Power Score" is calculated from population, economy, trade income, manpower & military strength, navy, and controlled/vassal population.
-[*]The score is smoothed over a 12-month target so rankings don't swing wildly month to month; tooltips show the projected score.
-[*]Click the country rank label in the top bar to open a tier-list panel listing every country in each rank with flag, name, and power score. The panel toggle is per-player in MP (no longer opens for everyone when one player clicks).
-[*]The foreign country diplomacy panel shows the viewed country's MP rank, power score, and diplomatic point usage/limits.
-[*]Game rules adjust the number of GPs (up to 12), Majors (up to 12), Alliance Point limit, Defensive Point limits per tier, and alliance costs per tier.
-[/list]
-
-[h2]Diplomatic Limits[/h2]
-[list]
-[*]Alliance Points (AP) and Defensive Points (DP) cap how tangled the diplomatic web can get; exceeding the AP limit can apply a severe penalty (-90% tax income, -90% trade income, -90% research speed, -40% land morale, no war declarations) — penalty is now [b]OFF by default[/b] via game rule.
-[*]Default base AP limit raised from 6 to 7.
-[*]A country that is in both an alliance and a defensive league with you counts only once — defensive points take priority.
-[*]Personal unions count as defensive, [b]unless[/b] the union has an offensive policy active (Possible / Automatic / Assured Offense), in which case both members consume Alliance Points instead — defensive unions still cost DP.
-[*]Colonial nations and their overlord now consume Alliance Points on both sides (when both are players).
-[*]Only Great Powers and Majors get Guarantee Relations; everyone else gets 0. Each guarantee counts as 1 relation regardless of rank.
-[*][b]Two Great Powers cannot be allied[/b] — an alliance expires as soon as both partners are GPs. This replaces vanilla's hegemon-to-hegemon block, so two hegemons may ally provided they are not both GPs.
-[*]Economic Support costs a Defensive Point to both the sender and the recipient.
-[*]Toggleable alert when over the alliance limit (default OFF), enabled from the tier list UI.
-[/list]
-
-[h2]Diplomacy Changes[/h2]
-[list]
-[*][b]Break Others' Guarantee:[/b] forcibly remove a guarantee placed on you. Requires peace and creates a truce on use.
-[*][b]Worsen Opinion:[/b] new action that worsens YOUR opinion of another country by -100, decaying over 10 years.
-[*][b]New "Pay for" actions:[/b] military access, fleet basing, trade access, food access, fondaco rights with a gold slider to sweeten the offer. AI acceptance scales with the gold offered. Military Access and Fleet Basing Rights auto-accept unless the AI is a rival. Country picker is filtered to diplomatic range.
-[*][b]Unconditional Surrender[/b] action from Gekkarino's Grand EU5 Rebalance and Complete Overhaul Mod.
-[*][b]Vision Sharing:[/b] no longer requires non-negative opinion on either side — share vision with countries you dislike.
-[*][b]Institution-spread exploits closed:[/b] Knowledge Sharing is disabled outright, and Alliance + Fleet Basing Rights no longer spread institutions between the parties (they were a spammable instant-action vector in MP).
-[*][b]Send Economic Support:[/b] rebuilt so the recipient gets an accept/decline popup first. The sum is capped at the recipient's tax base (and at ten months of the sender's income), so a great power can no longer flood a minor with gold. It costs both sides a Defensive Point and -0.10 monthly diplomats, and a country can only have one patron at a time. The vanilla action can't be removed from the game, so it is flagged as against the rules.
-[*][b]Forgive Antagonism:[/b] two new friendly actions that write off antagonism you hold against another country — half of it, or a flat 200. Each needs at least 10 antagonism, each has its own 10-year cooldown, and using both is cumulative. Stealing maps now generates 1 antagonism instead of 10.
-[*][b]Rivals can be swapped freely:[/b] the 5-year lockout after dropping a rival is removed.
-[*][b]Defensive leagues[/b] no longer require non-negative opinion between the parties, to form or to join.
-[/list]
-
-[h2]Enforce Peace[/h2]
-[list]
-[*][b]Intervene in War is removed[/b] mod-wide — it resolved with no input from the countries actually at war — and the vanilla Enforce Peace is replaced by a new [b]Enforce Peace[/b] action covering every case Intervene used to.
-[*][b]The defender is asked first.[/b] Only if they accept is the demand put to the attacker: the attacker accepting ends the war in a white peace, the attacker refusing brings the enforcer into the war on the defender's side. This is the point of the ordering — it stops Enforce Peace being used to rescue a losing attacker over the defender's objection.
-[*]Usable by [b]Great Powers and Major Powers[/b] (Ars Belli ranks, not vanilla's), and by any country at all when either leader of the war is its rival.
-[*]The war-view button is always visible and greys out with a tooltip listing the unmet requirement, instead of disappearing. The "a rival is at war" alert opens Enforce Peace too.
-[*]The HRE Emperor no longer gets the vanilla Enforce Peace and Intervene in War, and uses the same action as everyone else.
-[/list]
-
-[h2]Personal Unions[/h2]
-[list]
-[*][b]Force Break Union:[/b] junior partners — and any member of a federal union — get a button in the union panel that generates a random new ruler and instantly breaks the union. Costs 20 legitimacy and has a 50-year cooldown.
-[/list]
-
-[h2]Characters & Cabinet[/h2]
-[list]
-[*][b]Dismiss Head of Cabinet:[/b] new character interaction. Returns your current Head to a regular cabinet seat for 5 government power.
-[/list]
-
-[h2]War & Military Rebalancing[/h2]
-[list]
-[*][b]Ticking warscore[/b] capped at 36 (up from 25 in vanilla).
-[*][b]Coalition CB:[/b] attacker conquer/subjugate cost reduced to 0.75, defender raised to 1.25 — coalition wars now make the attacker's gains cheaper and the defender's harder.
-[*][b]Take Down Hegemon CB:[/b] attacker and defender conquer/subjugate cost set to 0.60 (vanilla 0.25/0.25) — peace deals against a hegemon are closer to normal scale.
-[*][b]Religious-war wargoals neutralized:[/b] Heretic and Religious Conquer Province now use neutral 1.0 attacker/defender conquer + subjugate cost (vanilla loaded them +75% / +20%).
-[*][b]Location warscore tuning:[/b] a location's flat tax-base contribution is reduced to 20% of vanilla, and the increased warscore reduction of [i]control[/i] to 0.2/0.4/0.6/0.8/1.0/1.0 age-for-age from vanilla 0.1/0.2/0.4/0.6/0.8/1.0.
-[/list]
-
-[h3]Fort Rebalancing[/h3]
-[list]
-[*][b]Fort limit rebalance:[/b] significantly lowered fort limit to make wars less static, base limit of 5. Fort techs give a flat +3; locations give +0.05 each. Country rank, city count, and nobility power no longer grant fort limit.
-[*][b]Defensiveness:[/b] gives half as much % fort limit (25%). No longer gives a combat speed bonus or an army movement speed penalty — instead grants a scaling -10% siege ability.
-[*][b]Offensiveness:[/b] gives half (or less) as much defensiveness penalty (~20%). No longer grants army movement speed — instead grants a scaling 25% logistics distance, +20% assault ability, and +20% siege ability.
-[*]Being over your fort limit gives -2% fort defense per percentage point over, capped at -100%.
-[*]Toggleable popup alert when over the fort limit (default ON); mute from the tier list UI.
-[/list]
-
-[h2]Supply & Logistics[/h2]
-[list]
-[*]Supply depot capacity per advance bumped 100x (25 -> 2500); base capacity 50 -> 5000.
-[*]Transport ship food storage buffed to match logistic units age-for-age.
-[*]Logistic units (camp followers -> logistics corps) carry 2.5x vanilla food: displayed storage 250 / 500 / 750 / 1000 / 1250 / 1500 across ages 1-6.
-[*]"Deposit Food" button on an army now deposits 50% of the army's food fraction (vanilla 25%); supply depots themselves now stash a 50% share for armies (vanilla 10%).
-[*]"Perform Army Logistics" objective tooltip flags it as banned — the objective doesn't work in the current build.
-[/list]
-
-[h2]Crusades & Jihads[/h2]
-[list]
-[*]Valid crusade targets are now any heathen kingdom/empire whose capital lies in Europe, North Africa, or the Middle East — in addition to vanilla holders of Catholic holy sites.
-[*]Crusades and Jihads now share a global cooldown of 100 years (one per religion).
-[*][b]Deus Vult crusade CB[/b] is now available to every country from game start — every country is granted the Deus Vult advance that the CB requires.
-[/list]
-
+[b]A new campaign starts on Friday, 21 August 2026[/b] - sign up on our Discord!
+[b]Join the community:[/b] https://discord.gg/ZxbBhu9W
+Supports game version 1.3.*
+[b]Full changelog:[/b] https://docs.google.com/document/d/19thih-iu9gJ5U7drDDu41PD5In_rObTvTpubbNE1pCM/edit
 
 [hr][/hr]
 
-[i]Designed for multiplayer, but works fine in single-player too.[/i]
+[h2]The Starting Setup[/h2]
+[list]
+[*][b]India and China[/b] now have dozens of playable tags, many with full Unique Advancement sets based on the countries' original EU4 National Ideas.
+[*][b]Fully playable Japan[/b] with over 30 clans and a functional Shinto religion, loosely based on the Sengoku Jidai period.
+[*][b]Expanded West & East Africa[/b] with several tribal Societies of Pops now playable as settled countries, with their own Advances!
+[*][b]Reworked Middle East[/b] with a much less dominant Mamluks, and many formable tags in Arabia and Persia such as Hejaz, Najd, Fars, Khorasan and many more!
+[*][b]Central Asia[/b] gets many playable tags, hordes with proper Advancement sets, and formables such as Bukhara, Greater Khorasan and a reworked Mongol Empire.
+[*][b]Europe[/b] has seen reworks to make HRE minors more viable, France & Castile less overbearing, and a myriad of small tweaks to the starting balance to achieve a more dynamic experience.
+[/list]
+
+[h2]Diplomacy[/h2]
+[i]For the detailed list of changes, check the full changelog linked above![/i]
+[list]
+[*]A custom [b]Power Ranking and Alliance Point system[/b] to create more balanced diplomacy in MP through in-game mechanics - toggleable on/off through campaign settings!
+[*][b]Expanded diplomatic actions[/b] to give players more control over the relations between their countries. Antagonism and opinion should be player driven!
+[*][b]Player-to-player interaction and choice is prioritized[/b] over RNG and forced interactions: automatic calls to arms replaced with pop-ups, a new Enforce Peace mechanic, and control over participation in Personal Unions!
+[/list]
+
+[h2]Game Balance[/h2]
+[list]
+[*]Changes to [b]Fort Limits[/b] to make mid- to late-game warfare more dynamic and avoid devolving into early trench warfare.
+[*][b]Logistics rework[/b] to give meaningful options to supply armies in rough areas with proper investment and player interaction.
+[*][b]Full Horde Rework[/b] including new units, an emphasis on raiding, and some unavoidable nerfs to Horse Archers.
+[*]Various tweaks to outlier units where necessary. [b]New unit types[/b] instead of simple numerical buffs for countries and regions that need a leg up against stronger opponents!
+[/list]

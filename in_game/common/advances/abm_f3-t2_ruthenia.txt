@@ -1,0 +1,785 @@
+﻿############################
+# Ruthenian and Cossack Cultures
+############################
+REPLACE:flexible_loyalty = {
+	age = age_1_traditions
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	mercenary_maintenance_efficiency = 0.10
+	hire_mercenary_premium_cost_modifier  = -0.10
+
+	requires = feudalism_advance
+}
+
+REPLACE:heritage_of_the_rus = {
+	age = age_1_traditions
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	cultural_tradition_modifier = 0.1
+
+	requires = flexible_loyalty
+}
+
+REPLACE:mother_of_russian_cities = {
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	global_urban_build_buildings_efficiency = 0.1
+	global_devastation_recovery = 0.005
+
+	requires = power_projection_advance_2
+}
+
+REPLACE:united_faith = {
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	tolerance_own = 1
+	global_clergy_max_literacy = 5
+
+	requires = mother_of_russian_cities
+}
+
+REPLACE:ruthenia_commoner_education = {
+	age = age_3_discovery
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	global_peasants_max_literacy = 5
+	global_soldiers_max_literacy = 5
+	global_laborers_max_literacy = 5
+
+
+	requires = crown_power_advance_discovery
+}
+
+REPLACE:ruthenian_state_advance = {
+	age = age_3_discovery
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	stability_cost_efficiency = 0.2
+
+	requires = ruthenia_commoner_education
+}
+
+REPLACE:east_and_west = {
+	age = age_4_reformation
+	icon = court_accounting
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	global_merchant_power = 0.1
+
+	requires = construction_speed_reformation
+}
+
+
+REPLACE:ruthenian_rural_buildings = {
+	age = age_5_absolutism
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	global_rural_build_buildings_efficiency = 0.2
+
+	requires = the_constitution
+}
+
+REPLACE:international_influences = {
+	age = age_6_revolutions
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = culture:cossack_culture
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	tolerance_heretic = 1
+	non_rural_migration_attraction = 0.2
+
+	requires = enlightened_court
+}
+
+
+
+REPLACE:reuniting_rus = {
+	age = age_3_discovery
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			culture = { merged_culture_group_contains_culture = culture:ruthenian }
+		}
+	}
+	global_separatism = -0.1
+	monthly_legitimacy = 0.05
+
+	requires = enlightened_court
+}
+
+############################
+# Ruthenia/Ukraine (UKR) - Formable
+############################
+abm_ukr_ideas_tradition_1 = {
+	age = age_2_renaissance
+	icon = professional_armies_advance
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = professional_armies_advance
+
+	# manpower_recovery_speed = 0.2
+	possible_frontage_modifier = 0.10
+}
+
+abm_ukr_ideas_tradition_2 = {
+	age = age_2_renaissance
+	icon = gunpowder_advance
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = unlock_reformed_crusader_knights_advance
+
+	# morale_damage_received = -0.1
+	land_morale_modifier = 0.10
+}
+
+abm_mother_of_russian_cities = {
+	age = age_3_discovery
+	icon = genoese_banking_traditions
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = regulate_court_procedures
+
+	# prestige = 1, legitimacy = 1
+	monthly_prestige = 0.10
+	monthly_legitimacy = 0.10
+}
+
+abm_international_influences = {
+	age = age_3_discovery
+	icon = printing_press_advance
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = printing_press_advance
+
+	# num_accepted_cultures = 2, promote_culture_cost = -0.25
+	cultures_capacity = 2
+	add_accepted_culture_cost_modifier = -0.25
+}
+
+abm_zaporizhian_cossacks = {
+	age = age_3_discovery
+	icon = supply_depot_advance_age_3_discovery
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = supply_depot_advance_age_3_discovery
+
+	# cavalry_power = 0.15
+	army_light_infantry_power = 0.15
+}
+
+abm_east_and_west = {
+	age = age_4_reformation
+	icon = zmw_merchant_taxes
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = port_authority_advance
+
+	# global_trade_power = 0.1
+	global_merchant_power = 0.20
+}
+
+abm_legacy_of_ancient_rus = {
+	age = age_4_reformation
+	icon = bonded_by_loyalty
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = combined_arms_advance_reformation
+	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
+}
+
+abm_reuniting_rus = {
+	age = age_5_absolutism
+	icon = scholasticism
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = relations_absolutism_advance
+
+	# core_creation = -0.1, years_of_nationalism = -5
+	diplomatic_annexation_efficiency = 0.10
+	global_integration_speed_modifier = 0.10
+}
+
+abm_birth_of_russian_orthodoxy = {
+	age = age_5_absolutism
+	icon = bhakti_movement
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = pop_promotion_speed_age_5
+	# tolerance_own = 2
+	tolerance_own = 2
+}
+
+abm_ukr_ideas_ambition = {
+	age = age_6_revolutions
+	icon = levee_en_masse_advance
+	potential = {
+		has_or_had_tag = UKR
+	}
+	requires = unlock_bomb_ketch
+	# discipline = 0.05
+	army_maintenance_efficiency = 0.20
+}
+
+
+#############################
+# Kyiv - (KIE)
+#############################
+
+abm_kie_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = guilds
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = ledgers_double_checking
+
+	# global_unrest = -1
+	global_estate_target_satisfaction = small_permanent_target_satisfaction
+}
+
+abm_kie_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = meritocracy
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = educated_bureaucrats
+
+	# global_heretic_missionary_strength = 0.01
+	global_pop_conversion_speed_modifier = 0.20
+}
+
+abm_mother_of_all_cities = {
+	age = age_2_renaissance
+	icon = laws
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = recruitment_law_advance
+
+	# prestige = 1
+	monthly_prestige = 0.10
+	monthly_legitimacy = 0.10
+}
+
+abm_heritage_of_rus = {
+	age = age_2_renaissance
+	icon = zakah
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = rebellion_support
+
+	# diplomatic_reputation = 1
+	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	subject_loyalty = 5
+}
+
+abm_fending_off_the_invaders = {
+	age = age_3_discovery
+	icon = defensive_army_attrition
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = unlock_lancers_advance
+
+	# defensiveness = 0.15
+	global_defensive = 0.10
+	fort_limit_modifier = 0.10
+}
+
+abm_chernozem_land = {
+	age = age_3_discovery
+	icon = lumber_improvements_absolutism
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = saiger_process_discovery
+
+	# production_efficiency = 0.1
+	global_wheat_output_modifier = 0.20
+	global_monthly_food_modifier = 0.20
+}
+
+abm_center_of_orthodox_church = {
+	age = age_4_reformation
+	icon = pop_promotion_speed_age_4
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = pharmacology_advance
+
+	# global_missionary_strength = 0.01, tolerance_own = 1
+	global_monthly_prosperity = 0.001
+	tolerance_own = 1
+}
+
+abm_support_local_traders = {
+	age = age_4_reformation
+	icon = town_rights_advance
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = furniture_workshop_advance
+
+	# merchants = 1
+	trade_land_efficiency = medium_trade_land_efficiency_bonus
+}
+
+abm_centralized_rule = {
+	age = age_5_absolutism
+	icon = serbian_mining
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = construction_speed_absolutism
+
+	# global_tax_modifier = 0.1
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
+}
+
+abm_kie_ideas_ambition = {
+	age = age_5_absolutism
+	icon = letters_of_marque
+	potential = {
+		has_or_had_tag = KIE
+	}
+	requires = artillery_vs_fort_age_5_absolutism
+
+	# land_morale = 0.1
+	land_morale_modifier = 0.10
+}
+
+
+#############################
+# Chernihiv
+#############################
+abm_chr_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = expanded_supply_trains
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = unlock_footmen_advance
+
+	# land_morale = 0.1
+	army_initiative = 0.10
+}
+
+abm_chr_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = crown_power_advance_renaissance
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = unlock_feudal_levy_advance
+
+	# global_regiment_cost = -0.1
+	army_maintenance_efficiency = 0.10
+}
+
+abm_chr_legacy_of_the_old_principality = {
+	age = age_2_renaissance
+	icon = government_size
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = government_size_renaissance
+
+	# governing_capacity_modifier = 0.1
+	government_size = 1
+}
+
+abm_chr_cossack_regiments = {
+	age = age_2_renaissance
+	icon = elephant_cavalry
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = supply_depot_advance_age_2_renaissance
+
+	# cavalry_power = 0.15
+	army_light_cavalry_power = 0.15
+}
+
+abm_chr_regimental_barracks = {
+	age = age_3_discovery
+	icon = expansionism
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = unlock_baochuan
+
+	# global_manpower_modifier = 0.2
+	global_manpower_modifier = 0.10
+}
+
+abm_chr_konotop_fortress = {
+	age = age_3_discovery
+	icon = global_supply_limit_modifier_advance_5
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = unlock_caravel_advance
+
+	# defensiveness = 0.15
+	global_defensive = 0.15
+}
+
+abm_chr_local_councils = {
+	age = age_4_reformation
+	icon = renaissance_advance
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = early_modern_administation
+
+	# global_unrest = -2
+	government_size = 1
+}
+
+abm_chr_renovate_transfiguration_cathedral = {
+	age = age_4_reformation
+	icon = pop_promotion_speed_age_4
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = pharmacology_advance
+
+	# tolerance_own = 2
+	tolerance_own = 2
+}
+
+abm_chr_cultivate_the_east_dniepr = {
+	age = age_5_absolutism
+	icon = fla_cloth
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = lacquerware_manufactory_advance
+
+	# global_trade_goods_size_modifier = 0.1
+	global_max_rgo_size_modifier_in_non_rural = 0.10
+}
+
+abm_chr_ambition = {
+	age = age_5_absolutism
+	icon = global_trade_advance
+	potential = {
+		has_or_had_tag = CHR
+	}
+	requires = government_size_absolutism
+
+	# state_maintenance_modifier = -0.15
+	court_spending_efficiency = 0.15
+}
+
+
+#############################
+# Polotsk
+#############################
+
+abm_plt_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = defensive_army
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = unlock_archers_advance
+
+	# infantry_cost = -0.1
+	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.10
+}
+
+abm_plt_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = defensive_army_attrition
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = horse_riding_advance
+
+	# hostile_attrition = 1
+	global_hostile_attrition = 1
+}
+
+abm_legacy_of_the_werewolf_prince = {
+	age = age_2_renaissance
+	icon = zakah
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = diplomatic_range_age_1
+
+	# fabricate_claims_cost = -0.25
+	casus_belli_creation_speed_modifier = 0.25
+}
+
+abm_heritage_of_the_rus = {
+	age = age_2_renaissance
+	icon = bonded_by_loyalty
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = pop_promote_actions_advance
+
+	# legitimacy = 1, devotion = 1, etc.
+	monthly_prestige = 0.10
+	monthly_legitimacy = 0.10
+}
+
+abm_cultural_center = {
+	age = age_3_discovery
+	icon = send_people_to_the_colonies_advance
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = native_policy_advance
+
+	# idea_cost = -0.1
+	research_speed_modifier = 0.10
+}
+
+abm_land_of_strongholds = {
+	age = age_3_discovery
+	icon = maritime_advance_age_2
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = land_morale_movement_cost_advance_disc
+
+	# defensiveness = 0.1
+	fort_limit_modifier = 0.10
+}
+
+abm_trade_hub = {
+	age = age_4_reformation
+	icon = incense_trade_route
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = bole_smelting
+
+	# trade_efficiency = 0.1
+	global_trade_through_owned_territory_efficiency = 0.20
+}
+
+abm_diplomatic_initiative = {
+	age = age_4_reformation
+	icon = efficient_spies
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = spy_construction_reformation
+
+	# diplomatic_upkeep = 1
+	diplomatic_upkeep_efficiency = 0.10
+}
+
+abm_forest_of_europe = {
+	age = age_5_absolutism
+	icon = serbian_mining
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = hollander_beater
+
+	# build_cost = -0.1, development_cost = -0.1
+	global_build_buildings_efficiency = 0.10
+	global_monthly_development = 0.001
+}
+
+abm_plt_ideas_ambition = {
+	age = age_5_absolutism
+	icon = military_revolution_advance
+	potential = {
+		has_or_had_tag = PLT
+	}
+	requires = unlock_merchantman_advance
+
+	# infantry_power = 0.1
+	army_heavy_infantry_build_cost_modifier = -0.10
+	army_light_infantry_build_cost_modifier = -0.10
+}
+
+
+# Smolenst (SMO)
+
+
+abm_smo_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = efficient_spies
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = diplomatic_capacity_traditions
+
+	# prestige_decay = -0.01
+	monthly_prestige = 0.10
+}
+
+abm_smo_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = settle_the_frontier_advance
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = codified_laws
+
+	# advisor_cost = -0.15
+	court_spending_efficiency = 0.10
+	estate_power_from_cabinet = -0.10
+}
+
+abm_smo_smolenskian_resolve = {
+	age = age_2_renaissance
+	icon = buddhist_meditation
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = renaissance_court
+
+	# religious_unity = 0.15
+	tolerance_own = 1
+}
+
+abm_smo_armories_of_smolensk = {
+	age = age_2_renaissance
+	icon = professional_armies_advance
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = professional_armies_advance
+
+	# fire_damage = 0.1, artillery_shock = 2
+	army_artillery_power = 0.15
+}
+
+abm_smo_western_mercenaries = {
+	age = age_3_discovery
+	icon = expansionism
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = land_morale_attrition_cost_advance
+
+	# merc_maintenance_modifier = -0.15
+	mercenary_maintenance_efficiency = 0.15
+}
+
+abm_smo_the_great_foundry = {
+	age = age_3_discovery
+	icon = global_supply_limit_modifier_advance_5
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = regiment_reinforcement_speed_discovery
+
+	# artillery_cost = -0.2
+	army_artillery_build_cost_modifier = -0.1
+	army_artillery_maintenance_cost_modifier = -0.1
+}
+
+abm_smo_hold_the_line = {
+	age = age_4_reformation
+	icon = regiment_reinforcement_speed_renaissance
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = assault_ability_reformation
+
+	# leader_land_fire = 1
+	army_light_infantry_power = 0.10
+	army_light_cavalry_power = 0.10
+}
+
+abm_smo_artillery_before_all = {
+	age = age_4_reformation
+	icon = recruitment_improvements_renaissance
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = war_score_reformations_advance
+
+	# artillery_power = 0.1
+	assault_ability = 0.10
+}
+
+abm_smo_tsar_mortars = {
+	age = age_5_absolutism
+	icon = letters_of_marque
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = unlock_hunters_advance
+
+	# siege_ability = 0.10
+	siege_ability = 0.10
+}
+
+abm_smo_ideas_ambition = {
+	age = age_5_absolutism
+	icon = scholasticism
+	potential = {
+		has_or_had_tag = SMO
+	}
+	requires = spy_construction_absolutism
+
+	# prestige = 1
+	monthly_prestige = 0.10
+}

@@ -1,0 +1,32 @@
+﻿REPLACE:kingdom_of_god_reform = {
+	unique = yes
+	potential = {
+		has_unlocked_government_reform_trigger = { type = kingdom_of_god_reform }
+	}
+	country_modifier = {
+		prestige_decay = -0.005
+		damage_done_versus_heretics_modifier = 0.10
+		damage_done_versus_heathens_modifier = 0.10
+		government_reform_slots = 1
+	}
+	locked = {
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = kingdom_of_god_reform
+		}
+	}
+
+	on_deactivate = {
+		#If it somehow get unlocked
+		#If a modifier was provided to add the Gov reform through its event
+		#we need to remove it if the reform is removed
+		if = {
+			limit = {
+				has_country_modifier = kingdom_of_god_slot_modifier
+			}
+			remove_country_modifier = kingdom_of_god_slot_modifier
+		}
+	}
+
+	years = 2
+}

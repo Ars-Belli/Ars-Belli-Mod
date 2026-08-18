@@ -1,0 +1,766 @@
+﻿REPLACE:geo_legacy_of_saint_george = {
+	age = age_1_traditions
+	potential = {
+		has_or_had_tag = GEO
+	}
+
+	requires = scholasticism
+
+	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.10
+}
+
+REPLACE:geo_georgian_highlands = {
+	age = age_1_traditions
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:georgian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:georgian_culture
+		}
+	}
+
+	requires = agriculture_advance
+
+	global_defensive = 0.25
+}
+
+REPLACE:geo_georgian_isolation = {
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:georgian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:georgian_culture
+			culture = { merged_culture_group_contains_culture = culture:georgian_culture }
+		}
+	}
+
+	requires = renaissance_court
+
+	improve_relation_impact = 0.20
+}
+
+REPLACE:sme_independent_ambitions = {
+	age = age_3_discovery
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:georgian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:georgian_culture
+			has_or_had_tag = SME
+		}
+	}
+
+	requires = lumber_improvements_discovery
+	
+	military_tactics = 0.15
+	ai_weight = { add = 10 }
+}
+
+REPLACE:arm_legacy_of_hayk = {
+	age = age_1_traditions
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:armenian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:armenian_culture
+		}
+	}
+
+	requires = unlock_footmen_advance
+
+	land_morale_recovery = 0.05
+}
+
+REPLACE:arm_mount_ararat = {
+	age = age_1_traditions
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:armenian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:armenian_culture
+		}
+	}
+
+	requires = agriculture_advance
+
+	mountains_proximity_impact = -0.40
+	plateau_proximity_impact = -0.30
+	hills_proximity_impact = -0.30
+}
+
+REPLACE:arm_land_reclamation = {
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			AND = {
+				OR = {
+					has_or_had_tag = GEO
+					has_or_had_tag = ARM
+					has_or_had_tag = CIL
+					has_or_had_tag = CIR
+				}
+				culture = { has_culture_group = culture_group:caucasian_group }
+				has_accepted_culture = culture:armenian_culture
+			}
+			culture = culture:armenian_culture
+		}
+	}
+
+	requires = renaissance_thought
+
+	global_monthly_development = 0.001
+}
+
+REPLACE:cir_horsemen_of_the_steppe = {
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:circassian_culture
+		}
+	}
+	icon = merchants_and_trade
+	army_light_cavalry_power = 0.10
+	army_light_cavalry_build_cost_modifier = -0.10
+
+	requires = recruitment_improvements_renaissance
+}
+
+REPLACE:cir_grand_prince_of_circassia = {
+	age = age_3_discovery
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:circassian_culture
+		}
+	}
+	icon = supply_depot_advance_age_3_discovery
+	land_morale_modifier = 0.10
+	ai_weight = { add = 10 }
+
+	requires = paved_road_advance
+}
+
+
+# Caucasus Ideas - Avaria, Nah, etc
+
+# Caucasus Ideas
+# culture_group = caucasian OR primary_culture = azerbaijani
+abm_caucasus_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = defensive_army_attrition
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = unlock_dhow
+
+	# hostile_attrition = 1
+	#Auto: global_hostile_attrition = 1
+	global_hostile_attrition = 1
+}
+
+abm_caucasus_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = crown_power_advance_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = appointed_chain_of_command
+
+	# global_manpower_modifier = 0.15
+	#Auto: global_manpower_modifier = 0.10
+	global_manpower_modifier = 0.10
+}
+
+abm_crossroads_of_cultures = {
+	age = age_2_renaissance
+	icon = improved_foraging
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = renaissance_court
+
+	# num_accepted_cultures = 1
+	#Auto: cultures_capacity = 1
+	cultures_capacity_modifier = 0.35
+}
+
+abm_alan_mercenaries = {
+	age = age_2_renaissance
+	icon = professional_armies_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = unlock_handgonners_advance
+
+	# merc_maintenance_modifier = -0.10
+	# mercenary_manpower = 0.15
+	#Auto: mercenary_maintenance_cost = -0.10
+	#Auto: mercenary_manpower_modifier = 0.15
+	mercenary_maintenance_efficiency = 0.10
+	hire_mercenary_premium_cost_modifier = -0.15
+}
+
+abm_caucasus_hit_and_run = {
+	age = age_3_discovery
+	icon = global_supply_limit_modifier_advance_5
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = unlock_early_arquebusiers_advance
+
+	# leader_land_manuever = 1
+	#Auto: train_general_ability = 1
+	combat_speed_modifier = 0.10
+	army_movement_speed = 0.1
+}
+
+abm_persian_poetry = {
+	age = age_3_discovery
+	icon = safe_exploration_techniques_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = formalized_relations
+
+	# prestige = 1
+	#Auto: monthly_prestige = 0.10
+	monthly_prestige = 0.10
+}
+
+abm_highland_khans = {
+	age = age_4_reformation
+	icon = a_central_power
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = trade_companies_advance
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	#Auto: monthly_legitimacy = 0.10
+	#Auto: monthly_republican_tradition = 0.10
+	#Auto: monthly_devotion = 0.10
+	#Auto: monthly_horde_unity = 0.10
+	#Auto: monthly_tribal_cohesion = 0.10
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
+}
+
+abm_eastern_influence = {
+	age = age_4_reformation
+	icon = regiment_reinforcement_speed_renaissance
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:circassian_culture
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = italian_galleass
+
+	# army_tradition = 0.5
+	#Auto: monthly_army_tradition = 0.05
+	monthly_army_tradition = 0.10
+}
+
+abm_caucasus_cavalry_armies = {
+	age = age_5_absolutism
+	icon = military_revolution_advance
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = power_projection_advance_5
+
+	# cavalry_power = 0.1
+	#Auto: army_light_cavalry_power = 0.10
+	army_light_cavalry_power = 0.15
+}
+
+abm_caucasus_ideas_ambition = {
+	age = age_6_revolutions
+	icon = genoese_banking_traditions
+	potential = {
+		OR = {
+			has_or_had_tag = CPA
+			has_or_had_tag = HTY
+			has_or_had_tag = KIP
+			has_or_had_tag = HYT
+			has_or_had_tag = TEM
+			has_or_had_tag = KDA
+			has_or_had_tag = ALN
+			has_or_had_tag = DZK
+			has_or_had_tag = SMS
+			has_or_had_tag = AVR
+		}
+	}
+
+	requires = the_gold_standard
+
+	# global_tax_modifier = 0.10
+	#Auto: tax_income_efficiency = 0.10
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
+}
+
+# Shivan Ideas - SRV
+abm_srv_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = elephant_cavalry
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = unlock_armored_horsemen_advance
+
+	# leader_land_shock = 1
+	#Auto: army_initiative = 0.10
+	army_heavy_cavalry_power = 0.10
+	army_heavy_infantry_power = 0.10
+}
+
+abm_srv_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = city_building_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = chancery_advance
+
+	# global_prov_trade_power_modifier = 0.1
+	#Auto: global_merchant_power = 0.10
+	global_trade_through_owned_territory_efficiency = 0.10
+}
+
+abm_srv_khalwati_order = {
+	age = age_2_renaissance
+	icon = a_central_power
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = renaissance_thought
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	# monthly_piety = -0.001
+	#Auto: monthly_legitimacy = 0.10
+	#Auto: monthly_republican_tradition = 0.10
+	#Auto: monthly_devotion = 0.10
+	#Auto: monthly_horde_unity = 0.10
+	#Auto: monthly_tribal_cohesion = 0.10
+	monthly_legitimacy = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_devotion = 0.10
+	monthly_horde_unity = 0.10
+	monthly_tribal_cohesion = 0.10
+}
+
+abm_srv_fortresses_of_shirvan = {
+	age = age_2_renaissance
+	icon = gunpowder_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = fort_limit_2_advance
+
+	# defensiveness = 0.2
+	global_defensive = 0.20
+}
+
+abm_srv_tribesmen_of_the_caucasus = {
+	age = age_3_discovery
+	icon = drill_army_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = linked_armies_advance
+
+	# cavalry_power = 0.15
+	#Auto: army_light_cavalry_power = 0.15
+	army_light_cavalry_power = 0.15
+}
+
+abm_srv_persianate_patronage = {
+	age = age_3_discovery
+	icon = maritime_advance_age_2
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = linked_armies_advance
+
+	# same_culture_advisor_cost = -0.2
+	#Auto: hire_advisor_cost_modifier = -0.20
+	hire_advisor_cost_modifier = -0.20
+	train_general_cost_modifier = -0.20
+}
+
+abm_srv_caspian_trade = {
+	age = age_4_reformation
+	icon = free_merchants
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = fine_cloth_workshop_advance
+
+	# caravan_power = 0.2
+	#Auto: global_trade_center_power = 0.10
+	global_trade_center_power = 0.20
+}
+
+abm_srv_shirvani_architecture = {
+	age = age_4_reformation
+	icon = diplomatic_range_age_1
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = dyes_workshop_advance
+
+	# build_cost = -0.1
+	# prestige = 1
+	#Auto: global_build_buildings_cost = -0.10
+	#Auto: monthly_prestige = 0.10
+	global_urban_build_buildings_efficiency = 0.10
+	monthly_prestige = 0.10
+}
+
+abm_srv_merchants_of_baku = {
+	age = age_5_absolutism
+	icon = fla_cloth
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = brewery_manufactory_advance
+
+	# merchants = 1
+	#Auto: global_merchant_power = 0.20
+	global_merchant_power = 0.20
+}
+
+abm_srv_ideas_ambition = {
+	age = age_6_revolutions
+	icon = industrialization_advance
+	potential = {
+		OR = {
+			has_or_had_tag = SRV
+			has_or_had_tag = TRK
+		}
+	}
+
+	requires = steel_mill_advance
+
+	# global_trade_goods_size_modifier = 0.1
+	#Auto: global_max_rgo_size_modifier = 0.10
+	global_max_rgo_size_modifier = 0.10
+}
+
+# CIR_ideas — Circassia (CIR)
+abm_cir_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = codified_laws
+
+	# stability_cost_modifier = -0.1
+	stability_cost_efficiency = 0.10
+}
+
+abm_cir_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = crown_power_advance_renaissance
+	potential = {
+		OR = {
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = { has_culture_group = culture_group:caucasian_group }
+			}
+			culture = culture:circassian_culture
+			has_or_had_tag = CIR
+		}
+	}
+
+	requires = appointed_chain_of_command
+
+	# defensiveness = 0.2
+	fort_limit_modifier = 0.20
+}
+
+abm_horsemen_of_the_steppe = {
+	age = age_2_renaissance
+	icon = professional_armies_advance
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = land_morale_recovery_renaissance_advance
+
+	# cavalry_power = 0.05
+	# cavalry_cost = -0.1
+	army_heavy_cavalry_power=0.10
+	army_heavy_cavalry_build_cost_modifier=-0.10
+}
+
+abm_merchants_of_genoa = {
+	age = age_2_renaissance
+	icon = food_advance_renaissance
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = cannon_maker_advance
+
+	# global_prov_trade_power_modifier = 0.15
+	global_merchant_power = 0.15
+}
+
+abm_circassian_grain = {
+	age = age_3_discovery
+	icon = lumber_improvements_absolutism
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = merchant_power_from_maritime_discovery_advance
+
+	# trade_efficiency = 0.1
+	export_efficiency = 0.10
+}
+
+abm_franciscan_missionaries = {
+	age = age_3_discovery
+	icon = alchemy_advance
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = print_culture
+
+	# missionaries = 1
+	number_of_allowed_religious_figures = 1
+}
+
+abm_adyghe_beauty = {
+	age = age_4_reformation
+	icon = pop_promotion_speed_age_4
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = confessionalism_advance
+
+	# prestige_decay = -0.01
+	prestige_decay = -0.001
+}
+
+abm_steppe_diplomats = {
+	age = age_4_reformation
+	icon = efficient_spies
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = spy_construction_reformation
+
+	# diplomats = 1
+	monthly_diplomats = 0.10
+}
+
+abm_religious_flexibility = {
+	age = age_5_absolutism
+	icon = bhakti_movement
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = sanitation_advance
+
+	# tolerance_heathen = 1
+	# tolerance_heretic = 1
+	tolerance_heathen = 1
+	tolerance_heretic = 1
+}
+
+abm_cir_ideas_ambition = {
+	age = age_6_revolutions
+	icon = enlightenment_advance
+	potential = {
+		has_or_had_tag = CIR
+	}
+
+	requires = unlock_cuirassiers_advance
+
+	# land_morale = 0.10
+	land_morale_modifier = 0.10
+}
