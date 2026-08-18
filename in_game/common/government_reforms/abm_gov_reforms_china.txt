@@ -171,13 +171,17 @@ abm_china_ahimsa_crown_commitment = {
 
 	country_modifier = {
 		government_reform_slots = 1
+		morale_recovery_in_friendly = 0.03
+		land_morale_movement_cost = -0.0001
 	}
+
+
 
 	years = 2
 }
 
 abm_china_ahimsa_code = {
-	icon = "GFX_reform_icon_ahimsa"  # Replace with an actual icon or create one
+	icon = bhakti_movement
 	age = age_1_traditions
 
 	# For China / East Asia Buddhist flavor
@@ -192,7 +196,6 @@ abm_china_ahimsa_code = {
 
 	locked = {
 		OR = {
-			has_reform = government_reform:abm_china_ahimsa_crown_commitment
 			has_estate_privilege = estate_privilege:abm_china_ahimsa_nobles_commitment
 			has_estate_privilege = estate_privilege:abm_china_ahimsa_clergy_commitment
 			has_estate_privilege = estate_privilege:abm_china_ahimsa_burghers_commitment
@@ -201,7 +204,7 @@ abm_china_ahimsa_code = {
 	}
 
 	country_modifier = {
-		can_declare_war = { always = no }
+		#can_declare_war = { always = no }
 		global_monthly_development = 0.0025
 		global_monthly_prosperity = 0.0025
 		blocked_from_declaring_war = yes
