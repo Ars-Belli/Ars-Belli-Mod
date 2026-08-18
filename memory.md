@@ -172,3 +172,12 @@ Last updated: 2026-08-16 (economic support cap; union call to arms; tributary tr
 - `.metadata/metadata.json`: Mod ID, version, and supported game version.
 
 All files should have UTF-8 BOM encoding, especially localisation files
+
+## Indentation Convention
+- `.txt`/`.gui` script files use TABS (tab width 4). `.yml` = 1 space. `.md`/`.json`/`.ps1` = spaces.
+- Enforced in `.vscode/settings.json`.
+- Gotcha: the `paradox-highlight` extension's formatter reads TOP-LEVEL `editor.insertSpaces` (ignores language-scoped overrides). Top-level must be `false`, else formatOnSave silently rewrites tabs -> spaces.
+
+## Language Association
+- Repo uses EU5 syntax. `paradox-highlight` only auto-detects `eu5` under a game-named folder (Europa Universalis V/EU/EU5/3450310), which this repo is not, so it falls back to generic `paradox`.
+- Fixed via `files.associations` in `.vscode/settings.json`: `in_game/**`, `loading_screen/**`, `main_menu/**` `*.txt`/`*.gui` -> `eu5`.

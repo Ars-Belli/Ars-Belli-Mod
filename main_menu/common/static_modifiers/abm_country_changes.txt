@@ -1,0 +1,124 @@
+﻿# Auto-applied by the ars_belli_economic_support scripted relation. The engine matches
+# these by name: giving_<relation> goes on the sender, receiving_<relation> on the
+# recipient. Both sides pay the diplomat upkeep while the relation is active.
+giving_ars_belli_economic_support = {
+	game_data = {
+		category = country
+	}
+	monthly_diplomats = -0.1
+}
+
+receiving_ars_belli_economic_support = {
+	game_data = {
+		category = country
+	}
+	monthly_diplomats = -0.1
+}
+
+# remove parliament changes from scottish civil war
+REPLACE:sco_civil_war_aggressive = {
+	game_data = {
+		category = country
+	}
+	monthly_gold_income = 5
+	siege_ability = 0.25
+	army_movement_speed = 0.1
+}
+
+# remove parliament changes from scottish civil war
+REPLACE:sco_civil_war_defensive = {
+	game_data = {
+		category = country
+	}
+	monthly_gold_income = 5
+	global_defensive = 0.25
+	global_hostile_attrition = 1
+}
+
+REPLACE:is_great_power = {
+	game_data = {
+		category = country
+	}
+	diplomatic_capacity = 2
+	monthly_diplomats = 0.2
+	power_projection = 10
+	# court_spending_cost_modifier = 0.1
+	court_spending_efficiency = -0.10
+	monthly_prestige = 0.1
+
+
+	# Intervene in War is removed mod-wide: players consistently misread it as unfair
+	# because the target never gets a say. Enforce Peace covers every case it used to.
+	allowed_intervene_in_war = no
+	# The engine Enforce Peace is a single attacker-side accept/decline, which cannot
+	# express the defender-first flow. Replaced by ars_belli_enforce_peace.
+	allowed_enforce_peace = no
+	# disable threaten war until confirmed it's not bugged:
+	allowed_threaten_war = no
+}
+
+# Vanilla grants regional powers the same two actions; mirror the great power changes.
+REPLACE:is_regional_power = {
+	game_data = {
+		category = country
+	}
+	monthly_diplomats = 0.1
+	power_projection = 5
+	monthly_prestige = 0.05
+	mercenary_range_modifier = 0.25
+	creditworthiness_bonus = 0.1
+	max_bonds = 1
+
+	allowed_intervene_in_war = no
+	allowed_enforce_peace = no
+	allowed_threaten_war = yes
+
+	alliance_weight = 0.5
+	union_weight = 0.25
+}
+
+REPLACE:favoring_kami_worship = {
+	game_data = {
+		category = country
+	}
+	monthly_purity = 0.05 #was 0.2
+	monthly_honor = 0.05 #was 1
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+}
+
+REPLACE:favoring_buddhism_schools = {
+	game_data = {
+		category = country
+	}
+	favoring_buddhism = yes
+	global_clergy_estate_power = 0.3
+	monthly_purity = -0.20 # was -0.1
+	monthly_honor = -0.20 #was -0.5
+}
+
+REPLACE:restoration_of_the_mongol_empire = {
+	game_data = {
+		category = country
+	}
+	monthly_horde_unity = 0.1
+	amount_looted_modifier = 0.5
+	global_separatism = -0.05
+	army_reinforce_efficiency = 0.10 #was 0.66
+}
+
+# Make it stronger, last 20 years, and apply to capital region
+new_colonial_nation_founded = {
+	game_data = {
+		category = location
+		# decaying = yes
+	}
+
+	local_unrest = -1
+	local_pop_promotion_speed_modifier = 1.0
+	local_population_growth = 0.010
+	local_road_building_time = -0.50
+	local_masonry_output_modifier = 1
+	local_lumber_output_modifier = 1
+	local_sand_output_modifier = 1
+	local_iron_output_modifier = 1
+}

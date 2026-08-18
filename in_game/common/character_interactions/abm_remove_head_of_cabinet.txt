@@ -1,0 +1,51 @@
+﻿remove_head_of_cabinet = {
+	on_own_nation = yes
+	message = yes
+
+	potential = {
+		scope:actor = {
+			any_cabinet_character = {
+				has_character_modifier = head_of_the_cabinet_modifier
+			}
+		}
+	}
+
+	ai_tick = never
+
+	allow = {
+		scope:actor = {
+			government_power >= 5
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = character
+		source = actor
+		target_flag = recipient
+		name = "choose_character"
+		column = {
+			data = name
+		}
+		visible = {
+			is_alive = yes
+			in_cabinet = yes
+			has_character_modifier = head_of_the_cabinet_modifier
+		}
+		enabled = {
+			has_character_modifier = head_of_the_cabinet_modifier
+		}
+	}
+
+	effect = {
+		scope:actor = {
+			add_government_power = government_power_mild_penalty
+		}
+		scope:recipient = {
+			remove_head_of_cabinet_effect = yes
+		}
+	}
+
+	ai_will_do = {
+		add = -1000
+	}
+}

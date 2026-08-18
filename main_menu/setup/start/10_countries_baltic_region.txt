@@ -1,0 +1,2410 @@
+current_age = age_1_traditions
+
+# own_control_core
+# own_control_integrated
+# own_control_conquered
+# own_control_colony
+# own_core
+# own_conquered
+# own_integrated
+# own_colony
+# control_core
+# control
+# our_cores_conquered_by_others
+
+countries = {
+	countries = {
+	TEU = { #Teutonic Order
+		own_control_core = {
+			 balga   ostroda  dzierzgon elblag morag
+		}
+		own_control_integrated = {
+			ragnit tilsit mergentheim gumbinnen barten wegorzewo
+			gerdauen insterburg wehlau
+			labiau memel windenburg
+			elk nibork ryn_poland szczytno
+			malbork
+			konigsberg brandenburg_prussia
+		}
+
+		own_control_conquered = {
+			#Chełmno Land
+			brodnica grudziadz torun
+			#Pomerelia
+			gdansk gniew koscierzyna mirochowo puck tczew
+			tuchola bialobork czluchow nowe swiecie
+
+			bytow lebork
+		}
+
+		include = "catholic_military_order"
+		include = "expl_northern_europe"
+		include = "eastern_european_catholic"
+
+		government = {
+			type = theocracy
+			ruler = teu_dietrich_von_altenburg
+			ruler_term = { character = teu_werner_von_orseln start_date = 1324.7.6 end_date = 1331.2.17 regnal_number = 1	}
+			ruler_term = { character = teu_luther_von_braunschweig_grubenhagen start_date = 1331.2.17 end_date = 1335.4.18 regnal_number = 1 }
+			ruler_term = { character = teu_dietrich_von_altenburg start_date = 1335.4.18 regnal_number = 1	}
+			regnal_numbers = {
+				name_theodoric = 1
+				name_luther = 1
+				name_werner = 1
+			}
+
+			centralization_vs_decentralization = 20
+			aristocracy_vs_plutocracy = -95
+			serfdom_vs_free_subjects = -90
+			traditionalist_vs_innovative = -60
+			spiritualist_vs_humanist = -90
+			mercantilism_vs_free_trade = -30
+			offensive_vs_defensive = -40
+			land_vs_naval = -70
+			quality_vs_quantity = -60
+			belligerent_vs_conciliatory = -60
+			capital_economy_vs_traditional_economy = 100
+			individualism_vs_communalism = -20
+			outward_vs_inward = -70
+
+			privilege = {
+				kulm_law
+			}
+		}
+
+		tolerated_cultures = {
+			kashubian #pruthenian
+		}
+
+		country_rank = rank_duchy
+		capital = malbork
+
+		#Setup to accurately portray the starting situation
+		currency_data = {
+			war_exhaustion = 5
+		}
+	}
+	LIV = { #Livonian Order
+		own_control_core = {
+		}
+
+		own_control_integrated = {
+			parnu  valmiera viljandi kaina valjala
+			karksi poltsamaa  kandava dobele bauska sigulda cesis aluksne
+			rezekne daugavpils selpils kraslava jelgava  tukums
+			saarde suure_jaani makonkalns aizkraukle salaspils  saldus
+			paide
+			ventspils grobina kuldiga durbe
+		}
+
+		include = "catholic_military_order"
+		include = "expl_northern_europe"
+
+		government = {
+			type = theocracy
+			ruler = liv_eberhard_von_monheim
+			ruler_term = {	character = liv_eberhard_von_monheim start_date = 1328.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_everard = 1
+			}
+
+
+			centralization_vs_decentralization = 20
+			aristocracy_vs_plutocracy = -95
+			serfdom_vs_free_subjects = -90
+			traditionalist_vs_innovative = -20
+			spiritualist_vs_humanist = -90
+			mercantilism_vs_free_trade = -30
+			offensive_vs_defensive = 0
+			land_vs_naval = 0
+			quality_vs_quantity = -30
+			belligerent_vs_conciliatory = -30
+			capital_economy_vs_traditional_economy = 100
+			individualism_vs_communalism = -20
+			outward_vs_inward = -60
+
+		}
+
+		tolerated_cultures = {
+		}
+
+		country_rank = rank_duchy
+		capital = parnu
+	}
+	ERM = { #Ermland / Warmia
+		own_control_core = {
+			lidzbark olsztyn frombork
+		}
+
+		include = "catholic_bishopric"
+		include = "expl_northern_europe"
+		include = "eastern_european_catholic"
+
+		government = {
+			type = theocracy
+
+			ruler = erm_hermann_of_prague
+			ruler_term = {	character = erm_hermann_of_prague start_date = 1337.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_herman = 1
+			}
+		}
+		tolerated_cultures = { pruthenian }
+		capital = lidzbark
+	}
+	CHL = { #Kulm / Chełmno
+		own_control_core = {
+			lubawa chelmno
+		}
+
+		include = "catholic_bishopric_no_coast"
+		include = "expl_northern_europe"
+		include = "eastern_european_catholic"
+
+		government = {
+			type = theocracy
+
+			ruler = klm_otto
+			ruler_term = {	character = klm_otto start_date = 1323.12.23 regnal_number = 1	}
+			regnal_numbers = {
+				name_otto = 1
+			}
+		}
+
+		tolerated_cultures = {
+			greater_polish
+		}
+
+		country_rank = rank_county
+		capital = lubawa
+	}
+	PMS = { #Pomesania
+		own_control_core = {
+			kwidzyn
+		}
+
+		include = "catholic_bishopric_no_coast"
+		include = "expl_northern_europe"
+		include = "eastern_european_catholic"
+
+		government = {
+			type = theocracy
+
+			ruler = pms_bertold_von_riesenburg
+			ruler_term = {	character = pms_bertold_von_riesenburg start_date = 1332.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_berthold = 1
+			}
+		}
+		country_rank = rank_county
+		capital = kwidzyn
+	}
+	SMD = { #Samland / Samia
+		own_control_core = {
+			fischhausen
+		}
+
+		include = "catholic_bishopric"
+		include = "expl_northern_europe"
+		include = "eastern_european_catholic"
+
+		government = {
+			type = theocracy
+
+			ruler = sms_johann_clare
+			ruler_term = {	character = sms_johann_clare start_date = 1320.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_john = 1
+			}
+		}
+		tolerated_cultures = { pruthenian }
+		country_rank = rank_county
+		capital = fischhausen
+	}
+	RIG = { #Riga
+		own_control_core = {
+			riga
+		}
+
+		include = "catholic_republic"
+		include = "expl_northern_europe"
+		government = {
+			type = republic
+			heir_selection = oligarchic_elective
+			ruler = random
+		}
+
+		tolerated_cultures = {
+			latvian liv
+		}
+
+		country_rank = rank_duchy
+		capital = riga
+	}
+	ARR = { #Archbishopric of Riga https://en.wikipedia.org/wiki/Archbishopric_of_Riga
+		own_control_core = {
+			gulbene jekabpils koknese limbazi pietalava rauna straupe vilaka
+		}
+
+		include = "catholic_bishopric"
+		include = "expl_northern_europe"
+
+		government = {
+			type = theocracy
+
+			ruler = rig_friedrich_von_pernstein
+			ruler_term = {	character = rig_friedrich_von_pernstein start_date = 1304.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_frederick = 1
+			}
+		}
+
+		tolerated_cultures = {
+			latvian
+		}
+
+		capital = limbazi
+	}
+	KUR = { #Courland
+		own_control_core = {
+		}
+
+		own_control_integrated = {
+			dundaga piltene
+		}
+
+		include = "catholic_bishopric"
+		include = "expl_northern_europe"
+
+		government = {
+			type = theocracy
+
+			ruler = kur_johann_ii
+			ruler_term = {	character = kur_johann_ii start_date = 1332.1.1 regnal_number = 2	}
+			regnal_numbers = {
+				name_john = 1
+			}
+		}
+
+		tolerated_cultures = {
+		}
+
+		capital = piltene
+	}
+	BIO = {
+		own_control_core = {
+			hapsal lihula kuressaare st_martin
+		}
+
+		include = "catholic_bishopric"
+		include = "expl_northern_europe"
+
+		government = {
+			type = theocracy
+
+			ruler = bio_jakob_ii
+			ruler_term = {	character = bio_jakob_ii start_date = 1322.1.1 regnal_number = 2	}
+			regnal_numbers = {
+				name_james = 2
+			}
+		}
+
+		tolerated_cultures = {
+			estonian
+		}
+
+		capital = kuressaare
+	}
+	BID = {
+		own_control_core = {
+			tartu valka vastseliina vonnu
+		}
+
+		include = "catholic_bishopric_no_coast"
+		include = "expl_northern_europe"
+
+		government = {
+			type = theocracy
+
+			ruler = bid_engelbert_von_dolen
+			ruler_term = {	character = bid_engelbert_von_dolen start_date = 1323.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_engelbert = 1
+			}
+		}
+
+		tolerated_cultures = {
+			estonian
+		}
+
+		capital = tartu
+	}
+	ZAG = { #Zagan
+		own_control_core = {
+			zagan krosno_odrzanskie sulechow zary
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = zag_henryk_iv_wierny_piast
+			ruler_term = {	character = glg_henryk_iii_piast start_date = 1304.1.1 end_date = 1310.12.11 regnal_number = 3	}
+			ruler_term = {	character = zag_henryk_iv_wierny_piast start_date = 1310.12.11 regnal_number = 4	}
+
+			regnal_numbers = {
+				name_henry = 4
+				Przemko = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+			sorbian
+		}
+
+		capital = zagan
+		dynasty = piast_dynasty
+	}
+	LGC = { #Legnica
+		own_control_core = {
+			legnica zlotoryja #Duchy of Legnica
+			kluczbork #Duchy of Brzeg
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = lgc_boleslaw_iii_the_generous_piast
+			ruler_term = {	character = lgc_henryk_v_the_fat_piast start_date = 1278.1.1 end_date = 1296.2.22 regnal_number = 5	}
+			ruler_term = {	character = lgc_boleslaw_iii_the_generous_piast start_date = 1296.2.22 regnal_number = 3	}
+
+			regnal_numbers = {
+				name_henry = 5
+				name_boleslav = 3
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = legnica
+		dynasty = piast_dynasty
+	}
+	OEL = { #Oels
+		own_control_core = {
+			olesnica milicz sycow trzebnica
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = oel_konrad_i_piast
+			ruler_term = {	character = oel_konrad_i_piast start_date = 1321.1.1 regnal_number = 1	}
+
+			regnal_numbers = {
+				name_conrad = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = olesnica
+		dynasty = piast_dynasty
+	}
+	JAW = { #Jawor
+		own_control_core = {
+			jawor boleslawiec #Duchy of Jawor
+			zittau
+		}
+
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+
+			ruler = jaw_henryk_i_javorski
+
+			ruler_term = {	character = jaw_bolko_i_the_strict start_date = 1278.1.1 end_date = 1301.11.9 regnal_number = 1	}
+			ruler_term = {	character = jaw_henryk_i_javorski start_date = 1301.11.9 regnal_number = 1	}
+
+			regnal_numbers = {
+				Bolko = 1
+				name_henry = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+			sorbian
+		}
+
+		capital = jawor
+		dynasty = piast_dynasty
+	}
+	OPL = {	#Opole
+		own_control_core = {
+			opole olesno #Duchy of Opole
+			lubliniec #Duchy of Strzelce
+		}
+
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = opl_boleslaw_ii_piast
+			ruler_term = {	character = opl_boleslaw_i_piast start_date = 1281.5.14 end_date = 1313.5.14 regnal_number = 1	}
+			ruler_term = {	character = opl_boleslaw_ii_piast start_date = 1313.5.14 regnal_number = 2	}
+			regnal_numbers = {
+				Bolko = 2
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+			moravian
+		}
+
+		capital = opole
+		dynasty = piast_dynasty
+	}
+	PDK = {	#Prudnik
+		own_control_core = {
+			prudnik #Duchy of Prudnik
+		}
+
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = nmd_boleslaw_elder
+			ruler_term = {	character = opv_mikolaj_ii_premyslid start_date = 1318.1.1 end_date = 1337.1.1 regnal_number = 1	}
+			ruler_term = {	character = nmd_boleslaw_elder start_date = 1337.1.1 regnal_number = 1	}
+		}
+
+		capital = prudnik
+		dynasty = piast_dynasty
+	}
+	BYM = {	#Bytom
+		own_control_core = {
+			bytom kozle toszek
+		}
+
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = bym_wladislaw_i_piast
+			ruler_term = {	character = bym_kazimierz_i_piast start_date = 1281.5.14 end_date = 1312.3.10 regnal_number = 1	}
+			ruler_term = {	character = bym_wladislaw_i_piast start_date = 1313.5.14 regnal_number = 1	}
+			regnal_numbers = {
+				name_casimir = 1
+				name_vladislav = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = bytom
+		dynasty = piast_dynasty
+	}
+	OPV = {	#Opava
+		own_control_core = {
+			opava hlucin #Duchy of Opava
+			krnov glubczyce #Duchy of Krnov
+		}
+
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+
+			ruler = opv_mikolaj_ii_premyslid
+			ruler_term = {	character = opv_mikolaj_ii_premyslid start_date = 1318.2.22 regnal_number = 2	}
+
+			regnal_numbers = {
+				name_nicholas = 2
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+			moravian
+		}
+
+		capital = raciborz
+		dynasty = premyslid_dynasty
+	}
+	RCB = {	#Racibórz
+		own_control_core = {
+			raciborz #Duchy of Raciborz
+			pszczyna #Duchy of Pszczyna
+		}
+
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+
+			ruler = opv_mikolaj_ii_premyslid
+			ruler_term = {	character = opv_mikolaj_ii_premyslid start_date = 1318.2.22 regnal_number = 2	}
+
+			regnal_numbers = {
+				name_nicholas = 2
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = raciborz
+		dynasty = premyslid_dynasty
+	}
+	TES = {	#Tesin
+		own_control_core = {
+			tesin bielsko #Duchy of Cieszyn
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+
+			ruler = tes_kazimir_piast
+			ruler_term = {	character = tes_kazimir_piast start_date = 1315.1.1 regnal_number = 1	}
+
+			regnal_numbers = {
+				Miszko = 1
+				Kazimir = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+			moravian
+		}
+
+		capital = tesin
+		dynasty = piast_dynasty
+	}
+	OSW = {	#Oświęcim
+		own_control_core = {
+			oswiecim zywiec
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = osw_jan_piast
+			ruler_term = {	character = osw_wladyslaw_piast start_date = 1315.1.1 end_date = 1324.5.15 regnal_number = 1	}
+			ruler_term = {	character = osw_jan_piast start_date = 1324.5.15 regnal_number = 1	}
+			regnal_numbers = {
+				name_john = 1
+				name_vladislav = 1
+			}
+		}
+
+		tolerated_cultures = {
+			lesser_polish
+		}
+
+		capital = oswiecim
+		dynasty = piast_dynasty
+	}
+	SWD = {	#Świdnica
+		own_control_core = {
+			kamienna_gora swidnica rychbach
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = swd_bolko_ii_small
+
+			ruler_term = { character = swd_bernard_ii_swidnicki start_date = 1301.1.1 end_date = 1326.5.6 regnal_number = 2 }
+			ruler_term = { character = swd_bolko_ii_small start_date = 1326.5.6 regnal_number = 2 }
+
+			regnal_numbers = {
+				Bolko = 2
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = swidnica
+		dynasty = piast_dynasty
+	}
+	SCI = {	#Ścinawa
+		own_control_core = {
+			wolow gora
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = sci_jan_scinawski
+			ruler_term = {	character = sci_jan_scinawski start_date = 1324.5.15 regnal_number = 1	}
+			regnal_numbers = {
+				name_john = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = wolow
+		dynasty = piast_dynasty
+	}
+	ZIE = {	#Ziębice
+		own_control_core = {
+			ziebice
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = zie_bolko_ii_ziebice
+			ruler_term = { character = zie_bolko_ii_ziebice start_date = 1324.5.15 regnal_number = 2 }
+			regnal_numbers = {
+				Bolko = 2
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = ziebice
+		dynasty = piast_dynasty
+	}
+	BRZ = {	#Brzeg
+		own_control_core = {
+			brzeg olawa niemcza
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = lgc_boleslaw_iii_the_generous_piast
+			ruler_term = {	character = lgc_boleslaw_iii_the_generous_piast start_date = 1296.2.22 regnal_number = 1	}
+			regnal_numbers = {
+				name_boleslav = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = brzeg
+		dynasty = piast_dynasty
+	}
+	NMS = {	#Namysłów
+		own_control_core = {
+			namyslow
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = tes_kazimir_piast
+			ruler_term = {	character = tes_kazimir_piast start_date = 1321.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				Kazimir = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = namyslow
+		dynasty = piast_dynasty
+	}
+	STZ = {	#Strzelce
+		own_control_core = {
+			strzelce_opolskie
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = stz_albert_strzelce
+			ruler_term = {	character = stz_albert_strzelce start_date = 1323.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_albert = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = strzelce_opolskie
+		dynasty = piast_dynasty
+	}
+	NMD = {	#Niemodlin
+		own_control_core = {
+			niemodlin
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = nmd_boleslaw_elder
+			ruler_term = {	character = nmd_boleslaw_elder start_date = 1313.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_boleslav = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = niemodlin
+		dynasty = piast_dynasty
+	}
+	SIZ = {	#Siewierz
+		own_control_core = {
+			siewierz
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = tes_kazimir_piast
+			ruler_term = {	character = tes_kazimir_piast start_date = 1337.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				Kazimir = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+			lesser_polish
+		}
+
+		capital = siewierz
+		dynasty = piast_dynasty
+	}
+	WRC = {	#Wrocław
+		own_control_core = {
+			wroclaw sroda_slaska
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = boh_john_luxembourg
+			ruler_term = {	character = boh_john_luxembourg start_date = 1335.11.24 regnal_number = 1	}
+		}
+
+		tolerated_cultures = {
+			silesian
+		}
+
+		capital = wroclaw
+	}
+	NYS = {	#Nysa
+		own_control_core = {
+			nysa grodkow fryvaldov
+		}
+		starting_technology_level = 3
+		include = "catholic_german_bishopric_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = theocracy
+			ruler = nys_nanker
+			ruler_term = {	character = nys_nanker start_date = 1326.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_john = 1
+			}
+
+			laws = {
+				mining_law = nobles_mining_law
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+			moravian
+		}
+
+		capital = nysa
+		dynasty = piast_dynasty
+	}
+	GLO = {	#Głogów
+		own_control_core = {
+			glogow szprotawa kozuchow wschowa zielona_gora
+		}
+		starting_technology_level = 3
+		include = "catholic_monarchy_no_coast"
+		include = "expl_northern_europe"
+		country_rank = rank_duchy
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = jaw_henryk_i_javorski
+
+			ruler_term = {	character = glg_mechthild_von_braunschweig_luneburg start_date = 1310.12.11 end_date = 1318.4.26 regnal_number = 1 }
+			ruler_term = {	character = jaw_henryk_i_javorski start_date = 1337.1.1 regnal_number = 1	}
+
+			regnal_numbers = {
+				name_henry = 1
+			}
+		}
+
+		tolerated_cultures = {
+			german_silesian
+		}
+
+		capital = glogow
+		dynasty = piast_dynasty
+	}
+	POL = {	#Poland
+		own_control_core = {
+			#Lesser Poland
+			krakow chrzanow ksiaz_wielki proszowice
+			kielce opoczno przedborz zarnow
+			czestochowa lelow mstow
+			lublin janow_lubelski kazimierz lukow lubartow urzedow
+			nowy_sacz biecz czchow jaslo nowy_targ
+			pilzno busko_zdroj debica tarnow wislica
+			radom ilza stezyca szydlowiec zwolen
+			sandomierz kunow opatow rudnik_poland
+			wieliczka myslenice
+			#Greater Poland
+			gniezno mogilno trzemeszno
+			kalisz ostrow_wielkopolski pleszew
+			konin kolo lad_konin
+			koscian babimost grodzisk_wielkopolski rawicz srem
+			naklo wyrzysk zlotow
+			poznan buk czarnkow miedzyrzecz oborniki skwierzyna szamotuly wielen
+			pyzdry kozmin sroda_wielkopolska
+			znin chodziez szubin
+
+			# own_control_integrated, but culture accepted
+			#Wielun
+			wielun ostrzeszow wieruszow
+
+			#Actually Occupied
+			#Dobrzyń Land
+			dobrzyn lipno rypin
+			#Kujavia
+			wloclawek kowal radziejow
+		}
+		our_cores_conquered_by_others = {
+			#Chełmno Land
+			chelmno brodnica grudziadz lubawa torun
+			#Kuyavia
+			bydgoszcz inowroclaw
+			#Pomerelia
+			gdansk gniew koscierzyna mirochowo puck tczew
+			tuchola bialobork czluchow nowe swiecie
+		}
+		own_core = {
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		government = {
+			type = monarchy
+			heir_selection = semi_salic_law
+
+			ruler = pol_casimir_iii_piast
+			ruler_term = {	character = pol_wladislaw_i_piast start_date = 1320.1.20 end_date = 1333.3.2 regnal_number = 1	}
+			ruler_term = {	character = pol_casimir_iii_piast start_date = 1333.4.25 regnal_number = 3	}
+			regnal_numbers = {
+				name_vladislav = 1
+				name_casimir = 3
+			}
+
+			centralization_vs_decentralization = 80
+			traditionalist_vs_innovative = 20
+			spiritualist_vs_humanist = 10
+			aristocracy_vs_plutocracy = -90
+			serfdom_vs_free_subjects = -70
+			mercantilism_vs_free_trade = -70
+			belligerent_vs_conciliatory = 0
+			quality_vs_quantity = 0
+			offensive_vs_defensive = -70
+			land_vs_naval = -60
+			capital_economy_vs_traditional_economy = 90
+			individualism_vs_communalism = -20
+			outward_vs_inward = 0
+
+			reforms = {
+				feudal_nobility
+				agricultural_cultivation
+			}
+
+			laws = {
+				language_of_pleading = language_of_pleading_court
+			}
+
+			privilege = {
+
+				#Nobles
+				nobles_land_rights
+				noble_serfdom_rights
+				nobility_council
+
+				#Clergy
+				clergy_literacy_rights
+				clergy_powerful_dioceses
+				clergy_papal_emissary
+
+				#Burghers
+				polish_merchant_seal
+				novi_fori
+				urban_development_grants
+				building_rights
+				land_of_commerce
+
+				#Commoners
+				peasants_free_peasantry
+				peasants_allowed_weapons_privilege
+				no_labor_sunday
+			}
+
+		}
+		capital = krakow
+		dynasty = piast_dynasty
+		country_rank = rank_kingdom
+		court_language = church_dialect
+
+		timed_modifier = {
+			modifier = "interdict"
+			start_date = 1000.1.1
+			date = 1342.1.1
+			size = 1
+		}
+
+		accepted_cultures = {
+			greater_polish
+			silesian
+		}
+
+		tolerated_cultures = {
+			kashubian
+			ashkenazi
+		}
+
+		#Setup to accurately portray the starting situation
+		currency_data = {
+			war_exhaustion = 5
+		}
+
+	}
+	SDZ = {	#Sieradz - Vassal of Poland
+		own_control_core = {
+			sieradz szadek turek tuszyn uniejow
+			radomsko brzeznica piotrkow_trybunalski
+
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		government = {
+			type = monarchy
+			heir_selection = semi_salic_law
+
+			ruler = sdz_przemysl_i_piast
+			ruler_term = {	character = sdz_przemysl_i_piast start_date = 1327.4.25 regnal_number = 1	}
+			regnal_numbers = {
+				Przemysl = 1
+			}
+
+			centralization_vs_decentralization = 80
+			traditionalist_vs_innovative = 20
+			spiritualist_vs_humanist = 10
+			aristocracy_vs_plutocracy = -90
+			serfdom_vs_free_subjects = -70
+			mercantilism_vs_free_trade = -70
+			belligerent_vs_conciliatory = 0
+			quality_vs_quantity = 0
+			offensive_vs_defensive = -70
+			land_vs_naval = -60
+			capital_economy_vs_traditional_economy = 90
+			individualism_vs_communalism = -20
+			outward_vs_inward = 0
+
+			privilege = {
+				#Burghers
+				novi_fori
+				urban_development_grants
+
+				#Commoners
+				peasants_free_peasantry
+			}
+		}
+
+		tolerated_cultures = {
+			ruthenian
+		}
+
+		country_rank = rank_duchy
+		capital = sieradz
+		dynasty = piast_dynasty
+	}
+	LCZ = {	#ŝęczyca - Vassal of Poland
+		own_control_core = {
+			leczyca lodz zgierz orlow
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		government = {
+			type = monarchy
+			heir_selection = semi_salic_law
+
+			ruler = lcz_wladyslaw_i_piast
+			ruler_term = {	character = lcz_wladyslaw_i_piast start_date = 1312.1.1 regnal_number = 3	}
+			regnal_numbers = {
+				name_vladislav = 1
+				name_siemowit = 1
+			}
+
+			centralization_vs_decentralization = 80
+			traditionalist_vs_innovative = 20
+			spiritualist_vs_humanist = 10
+			aristocracy_vs_plutocracy = -90
+			serfdom_vs_free_subjects = -70
+			mercantilism_vs_free_trade = -70
+			belligerent_vs_conciliatory = 0
+			quality_vs_quantity = 0
+			offensive_vs_defensive = -70
+			land_vs_naval = -60
+			capital_economy_vs_traditional_economy = 90
+			individualism_vs_communalism = -20
+			outward_vs_inward = 0
+
+			privilege = {
+				#Burghers
+				novi_fori
+				urban_development_grants
+
+				#Commoners
+				peasants_free_peasantry
+			}
+		}
+
+		tolerated_cultures = {
+			mazovian
+		}
+
+		country_rank = rank_duchy
+		capital = leczyca
+		dynasty = piast_dynasty
+	}
+	PLK = {	#https://en.wikipedia.org/wiki/Duchy_of_Masovia
+		own_control_core = {
+			plock sierpc szrensk plonsk gostynin gabin
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		government = {
+			type = monarchy
+			heir_selection = semi_salic_law
+
+			regency = subject_regency
+			active_regent = raw_siemowit_ii_piast
+			start_regency_date = 1336.5.23
+			end_regency_date = 1340.1.1
+			heir = plk_boleslaw_iii_piast
+
+			ruler_term = {	character = czk_boleslaw_ii_piast start_date = 1275.1.20 end_date = 1313.4.20 regnal_number = 2	}
+			ruler_term = {	character = plk_waclaw_piast start_date = 1313.4.20 end_date = 1336.5.23 regnal_number = 1	}
+			regnal_numbers = {
+				name_boleslav = 2
+				name_siemowit = 1
+				name_wenceslas = 1
+			}
+
+			centralization_vs_decentralization = 80
+			traditionalist_vs_innovative = 20
+			spiritualist_vs_humanist = 10
+			aristocracy_vs_plutocracy = -90
+			serfdom_vs_free_subjects = -70
+			mercantilism_vs_free_trade = -70
+			belligerent_vs_conciliatory = 0
+			quality_vs_quantity = 0
+			offensive_vs_defensive = -70
+			land_vs_naval = -60
+			capital_economy_vs_traditional_economy = 90
+			individualism_vs_communalism = -20
+			outward_vs_inward = 0
+
+			privilege = {
+				#Burghers
+				novi_fori
+				urban_development_grants
+
+				#Commoners
+				peasants_free_peasantry
+			}
+		}
+		country_rank = rank_duchy
+		capital = plock
+		dynasty = piast_dynasty
+	}
+	RAW = {	#https://en.wikipedia.org/wiki/Duchy_of_Masovia
+		own_control_core = {
+			rawa sochaczew wizna goniadz zambrow ostroleka zakroczym przasnysz
+			rozan lomza kolno biala_rawska ciechanow tykocin
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		government = {
+			type = monarchy
+			heir_selection = youngest_son_of_ruler
+
+			ruler = raw_siemowit_ii_piast
+			ruler_term = {	character = czk_boleslaw_ii_piast start_date = 1275.1.20 end_date = 1313.4.20 regnal_number = 2	}
+			ruler_term = {	character = raw_siemowit_ii_piast start_date = 1313.4.20 regnal_number = 2	}
+			regnal_numbers = {
+				name_boleslav = 2
+				name_siemowit = 2
+			}
+
+			centralization_vs_decentralization = 80
+			traditionalist_vs_innovative = 20
+			spiritualist_vs_humanist = 10
+			aristocracy_vs_plutocracy = -90
+			serfdom_vs_free_subjects = -70
+			mercantilism_vs_free_trade = -70
+			belligerent_vs_conciliatory = 0
+			quality_vs_quantity = 0
+			offensive_vs_defensive = -70
+			land_vs_naval = -60
+			capital_economy_vs_traditional_economy = 90
+			individualism_vs_communalism = -20
+			outward_vs_inward = 0
+
+			privilege = {
+				#Burghers
+				novi_fori
+				urban_development_grants
+
+				#Commoners
+				peasants_free_peasantry
+			}
+		}
+
+		tolerated_cultures = {
+			westphalian
+			sudovian
+		}
+
+		country_rank = rank_duchy
+		capital = rawa
+		dynasty = piast_dynasty
+	}
+	CZK = {	#https://en.wikipedia.org/wiki/Duchy_of_Masovia
+		own_control_core = {
+			warsaw grojec czersk liw nur kamieniec garwolin tarczyn
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		government = {
+			type = monarchy
+			heir_selection = semi_salic_law
+
+			ruler = czk_trojden_i_piast
+			ruler_term = {	character = czk_boleslaw_ii_piast start_date = 1275.1.20 end_date = 1313.4.20 regnal_number = 2	}
+			ruler_term = {	character = czk_trojden_i_piast start_date = 1313.4.20 regnal_number = 1	}
+			regnal_numbers = {
+				name_boleslav = 2
+				Trojden = 1
+			}
+
+			centralization_vs_decentralization = 80
+			traditionalist_vs_innovative = 20
+			spiritualist_vs_humanist = 10
+			aristocracy_vs_plutocracy = -90
+			serfdom_vs_free_subjects = -70
+			mercantilism_vs_free_trade = -70
+			belligerent_vs_conciliatory = 0
+			quality_vs_quantity = 0
+			offensive_vs_defensive = -70
+			land_vs_naval = -60
+			capital_economy_vs_traditional_economy = 90
+			individualism_vs_communalism = -20
+			outward_vs_inward = 0
+
+			privilege = {
+				#Burghers
+				novi_fori
+				urban_development_grants
+
+				#Commoners
+				peasants_free_peasantry
+			}
+		}
+
+		tolerated_cultures = {
+			low_franconian
+		}
+
+		country_rank = rank_duchy
+		capital = warsaw
+		dynasty = piast_dynasty
+	}
+	INO = {	#Inowrocław - PU under Poland
+		own_control_core = { #Should actually be own_core
+			bydgoszcz inowroclaw
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_coast"
+		include = "eastern_european_catholic"
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = pol_casimir_iii_piast
+
+			ruler_term = {	character = pol_wladislaw_i_piast start_date = 1320.1.20 end_date = 1333.3.2 regnal_number = 1	}
+			ruler_term = {	character = pol_casimir_iii_piast start_date = 1333.4.25 regnal_number = 3	}
+		}
+
+		tolerated_cultures = {
+			prussian
+		}
+
+		country_rank = rank_duchy
+		capital = inowroclaw
+		dynasty = piast_dynasty
+	}
+	LIT = {	#Lithuania
+		own_control_core = {
+			#Lithuania
+			vilnius giedraiciai kernave medininkai_vilna
+			ashmyany halshany hieraniony kreva
+			braslaw drysvyaty ezerenai miory
+			kaunas alytus punia vilkaviskis
+			lida astrina eisiskes shchuchyn
+			suwalki lipsk veisiejai
+			trakai lazdijai onushkis merkine
+			svir dokshytsy hlybokaye myadzyel svencionys vileyka
+			upyte birzai linkava panevezys pasvalys
+			vilkmerge anyksciai maleisiai rokiskis utena
+			#Black Ruthenia
+			grodno bershty masty sokolka
+			nyasvizh
+			babruysk luchin rahachow svietlahorsk
+			#Polesia
+			brest_litowsk biala_podlaska chernyany malaryta wlodawa
+			kobryn dabuchyn hajnowka kamyenyets
+			#Samogitia
+			medininkai
+			raseiniai jurbarkas kedainiai panemune tendziogala
+			siauliai kraziai papile zagare
+			#White Ruthenia
+			barysaw klichaw krupki lukolm lyubashany
+			lahoysk begoml byerazino ilya krasnoe smalyavichy
+			minsk chervyen koidanova marjina_horka rakau stowbtsy svislach
+			mogilev bykhaw
+			palanga rietavas silale skuodas taurage
+			mazeikiai
+		}
+		own_control_integrated = {
+			grodek
+			#Podlasie
+			drohiczyn bielsk_podlaski mielnik sokolow suraz
+		}
+
+		include = "expl_eastern_europe"
+		include = "lithuanian_monarchy"
+		government = {
+
+			outward_vs_inward = -90
+
+			ruler = lit_gediminas_gediminids
+			ruler_term = {	character = lit_butigeidis_gediminids start_date = 1285.1.1 end_date = 1291.1.1 regnal_number = 1	}
+			ruler_term = {	character = lit_butvydas start_date = 1291.1.1 end_date = 1295.1.1 regnal_number = 1	}
+			ruler_term = {	character = lit_vytenis_gediminids start_date = 1295.1.1 end_date = 1316.1.1 regnal_number = 1	}
+			ruler_term = {	character = lit_gediminas_gediminids start_date = 1316.1.1 regnal_number = 1	}
+			regnal_numbers = {
+				name_vytenis = 1
+				name_gediminas = 1
+			}
+
+			reforms = {
+				patrimonialism
+			}
+		}
+
+		accepted_cultures = {
+			samogitian
+			sudovian
+			latvian
+			pruthenian
+			curonian
+		}
+
+		tolerated_cultures = {
+			polatskian_culture
+		}
+
+		capital = vilnius
+		dynasty = gediminid_dynasty
+		country_rank = rank_duchy
+		#Setup to accurately portray the starting situation
+		currency_data = {
+			war_exhaustion = 5
+		}
+	}
+	SXM = {	#Samogitia - Revolter of LIT
+		our_cores_conquered_by_others = {
+			medininkai palanga rietavas silale skuodas taurage
+			raseiniai jurbarkas kedainiai panemune tendziogala
+			siauliai kraziai mazeikiai papile zagare
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_not_present"
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = random
+		}
+		capital = raseiniai
+		country_rank = rank_duchy
+	}
+	
+#	MSH = { #Mishmi
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			siang dibang
+#		}
+#
+#
+#		discovered_regions = {
+#			bengal_region
+#			tibet_region
+#		}
+#
+#
+#		include = "asia_tribe"
+#
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	SIB = { #Sibe
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			tongliao boduna zhaozhou_jurchen changchun taizhou_jurchen buteha chol hurle talaha dalaiketun
+#			sart zhalong qiqihar arun bila nuomin chaghankhot gorlos huolin taluhe tuliemao wafang
+#			zhengjiatun kailu xinkai buir_nuur khalkh dalai_nuur hailar	bayan_ula hulun xuguit yimin
+#		}
+#
+#		include = "expl_manchurian_tribe"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	KAD = { #Kam
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			yongping tianzhu zhenyuan_sizhou taipengruodong
+#			tixi huaihua
+#			luyang tongdao huaiyuan_rongzhou tongren qiongshui liping tonggu_liping yongcong
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	TUJ = { #Tujia
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			yuanling madi_yuanling luxi bomoping xinhua_guizhou badong cili shimen tianping
+#			dayong shizhou datian_shizhou lichuan rongmei sanmao zhonglu
+#			shinan changyang yongshun_yongshun guzhang shangxi baojing wuzhai
+#			wuchuan_sinan longquanping yinjiang tixi jianshi pengshui qianjiang_shaoqing youyang xiushan
+#			zhenzhou shizhu
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	MIO = { #Miao (Hmong)
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			luxi xinhua_guizhou badong yongping suining_jing tianzhu datian_shizhou lichuan
+#			rongmei sanmao zhonglu shinan chengbu yongshun_yongshun guzhang shangxi baojing wuzhai
+#			mayang xilong ceheng machang zhenfeng libo rongshui tongdao_rongzhou wangmu luodian
+#			annan xinxing_annan xincheng_annan puding guangsuoling dingnan_anshun kangzuo xibao zhenning duyun
+#			bazhai_duyun dushan pingzhu lantu guizhou_guizhou jinzhu xintian bafan suidong
+#			longli weiqing liping xiajiang guzhou qingjiang_liping tonggu_liping taigong
+#			yongcong pingyue kaili maxia puan_puan huangcaoba anlong lemin wuchuan_sinan longquanping
+#			shiqian yinjiang taipengruodong qiongshui panqiao zhenyuan_sizhou dizhai caoni
+#			cengtai dafang dagu_shunyuan shuixi longchang jinji tongren wuluo tixi shuicheng
+#			pingba zhijin huozhu shizong xisha xisa luoxiong zhanyi
+#			youdian yiliang fumin luquan bozhou wujiang_bozhou shaxi luoji yunlian
+#			rongxian zhehai muli pengshui daguan yongshan wusa zhaoban heizhang huangping
+#			baini wengshui rongshan yongning gulin luojiao mangbu guihua youyang xiushan
+#			zhengan zhenzhou suiyang bochuan
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	HQQ = { #Hani
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			guangxi mile zheledian jianshui ami shiping mengzi
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	YII = { #Yi
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			xibao puan_puan lemin caoni cengtai dafang dagu_shunyuan shuixi jinji shuicheng
+#			zhijin huozhu beisheng langqu jinshajiang yongning_baisheng ningfan
+#			heyang jiangchuan lunan xinxing weichu dingyuan_chuxiong zhennan midu dingbian_shunning nanan menghua
+#			binchuan yangbei yunnan guangxi shizong qiubei mile wucao nalou situo luokong
+#			heqing kainan baodian zheledian kunyang anning chenggong
+#			yimen jianshui ami xisha tonghai shiping pingdian malongtalang xie
+#			gengma mengmeng yinshaluo mengzi lihua jiaha mengding_mengzi jiaohua weimo nanning
+#			kedu luoxiong zhanyi malong_qujing luoshan_qujing luliang shunning baotong youdian
+#			sime niuwu puri_simao yaozhou dayao juque yongchang_yongchang zhenkang shidian rouyuan
+#			 yuanjiang_yuanjiang talang tongguan_yuanjiang kunming lufeng yiliang songming fumin
+#			 weiyuan mengtong mengban_weiyuan hequ_wuding luquan rende yuanmou runyan mala
+#			 pingchuan zuosuo bozhou zizhou shaxi yunlian qijiang dechang
+#			 huili huichuan_dechang mingyi dongchuan qiaojia tangdan zhehai emei muli kheong waerhdje
+#			 hanyuan suzhou lugu qiongbu shimian zhenxi_lizhou mahu lizhou_mahu
+#			 leibo mabian muchuan jianchang_sichuan kuozhou puge beishe wumeng daguan luozuoguan
+#			 yongshan wusa zhaoban heizhang baurang yongning gulin luojiao mangbu guihua
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	DDI = { #Dai
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			mala ningfan langqu beisheng jinshajiang
+#			muong_te phong_tho luokong mengding_mengzi nalou
+#			ky_son son_la muang_et muang_kham muang_lang muong_luan lai_chau
+#			thuan_chau muong_cha
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+###SOUTHEAST ASIA###
+#	WAS = { #Wa
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			musuo mengdong kengtung
+#			nam_thing matman pangyang mong_yang
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	JGP = { #Jingpo
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			chibwe putao suamprabon injangyang
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	MUO = { #Muong
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			mang_viet muang_sam_tai quy_chau mat_chau da_giang muong thang_long thai_binh thien_quan
+#			thanh_hoa co_dang nga_lac quan_da_chau trang_an
+#		}
+#		capital = mang_viet
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	ASL = { #Orang Asli
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			beruas manjung satingpura singgora trang gerik bera jerantut kuala_lipis pulai klang kajang
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	ZHU = { #Zhuang
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			anyuan_lianzhou ruxi xiaodong baishan anding_mashan duyang yongshun lingfang shanglin qianjiang_binzhou
+#			yining yongfu guishun xiaozhenan zhenan_guishun ningpu yongning_hengzhou qianlong xilong
+#			bada ceheng machang zhenfeng maping liucheng wuxian_liuzhou yangshou laibin luorong dayaoshan
+#			lipu yangshuo nandan bama donglan zhishan nadi liuzhai
+#			xuanhua_nanning langning wuyuan_nanning yishan anhua_huanjiang hechi sien
+#			xincheng_xincheng libo rongshui changan luocheng tongdao_rongzhou sicheng xilin
+#			wangmu lucheng luodian tongle siming pingxiang_pingxiang shangsi qianlong_siming
+#			chongshan longzhou_longzhou mingying doukang guwan laian_tianzhou baise sienzhou
+#			tianzhou tangxing guizhou_xunzhou watang annan xinxing_annan xincheng_annan puding guangsuoling
+#			dingnan_anshun kangzuo xibao zhenning dushan guizhou_guizhou jinzhu xintian bafan suidong
+#			longli weiqing pingyue maxia puan_puan huangcaoba anlong shuixi shuicheng pingba
+#			zhijin guangnan bangban boai fuzhou_guangnan zhehong shizong
+#			qiubei wucao bazhai lihua jiaha jiaohua nanlang weimo xisa luoxiong
+#			shaxi wengshui van_don lang_son loc_chau quang_uyen that_nguyen van_kiep quy_hoa
+#			thuy_vi van_ban thai_nguyen bac_thai_nguyen cam_hoa tuyen_hoa vo_nhai tuyen_quang bao_lac
+#			binh_lam binh_nguyen dai_man thu_vat
+#		}
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	BHN = { #Bahnar
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			apui ia kon_tum samriddhipuri
+#			ban_don  dak_lak
+#			aryaru bang_keng ha_va_nguon
+#			doh_kromum lumphat
+#		}
+#		capital = apui
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	SED = { #Sedang
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			kon_klor kon_tum samxay
+#			banlung idkabue tonle_kong
+#		}
+#		capital = kon_klor
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	KMU = { #Khmu
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			nong_bua_lamphu phu_wiang loei chiang_khan dan_sai nong_khay udon_thani muang_nakhon
+#			kut_ling muang_nong_han_luang mukdahan pak_huei_lang that_phanom thoulakhom roi_et
+#			kham_muang khon_kaen muang_khemarat mueng_fa_daet yasothon savannakhet thuan_binh
+#			nong_bok vientiane ban_khon phon_hong sayniabuli vang_vieng
+#		}
+#		capital = ban_khon
+#
+#		include = "expl_china"
+#		include = "asia_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+###WEST AFRICA###
+#	TRG = {
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			walata gotheye boubon ouallam goudel hamdallaye tondikandia koure loga dongondoutchi kaouara
+#			birni_ader tahoua kalfou abalak marandet aderbissinat ollelewa zinder guidimouni kelle in_gall agadez
+#			takedda assode iferouane abalessa djanet ghat in_amenas
+#			tadmekka
+#		}
+#
+#		include = "expl_west_africa_muslim"
+#		include = "subsaharan_muslim_tribe"
+#
+#		religious_school = maliki_school
+#		government = { mysticism_vs_jurisprudence = -5 }
+#		government = {
+#			ruler = random
+#
+#			laws = {
+#				sharia_law = maliki_policy
+#			}
+#		}
+#	}
+
+#	KOT = {
+#		type = pop
+#		add_pops_from_locations = {
+#			gaoui logone_birni moito dourbali bokoro gubio keraoua makary marte mubi potiskum wuro_yolde
+#			afade bakka binder biriri biu daima damaturu kalam_hill mandaragirau mora_cam pouss yo
+#			daniski dikwa gambaru garandoili goudooumaria goulfey konduga maroua mser ngazargamu
+#		}
+#
+#
+#		starting_technology_level = 0
+#		include = "expl_west_africa"
+#		include = "subsaharan_tribe"
+#
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	ZGW = { #Zaghawa
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			kabsoru bodou_sailay djedaa guereda manan moussoro njimi ouara
+#			ain_galaka ounianga
+#		}
+#
+#		starting_technology_level = 0
+#		include = "subsaharan_tribe"
+#		discovered_areas = {
+#			kanem_area
+#			bornu_area
+#			logone_area
+#			wadai_area
+#		}
+#		discovered_regions = {
+#			nubia_region
+#		}
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+###HORN OF AFRICA###
+#	#Afre - AFR (Future Confederation)
+#	AFR = {
+#		type = pop
+#		add_pops_from_locations = {
+#			tulu_nama_dun goba
+#		}
+#
+#		include = "expl_horn_of_africa"
+#		include = "subsaharan_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	#Sadaqa - SDQ (Future Confederation)
+#	SDQ = {
+#		type = pop
+#		add_pops_from_locations = {
+#			tulu_walal mormor
+#		}
+#
+#		include = "expl_horn_of_africa"
+#		include = "subsaharan_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+#	#Kunama - KUN
+#	KUN = {
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			bazin tembesha tesenei
+#		}
+#
+#		include = "expl_horn_of_africa"
+#		include = "subsaharan_tribe"
+#		government = {
+#			ruler = random
+#		}
+#	}
+
+###East Africa###
+#	SIK = { #shilluk_culture
+#		type = pop
+#		add_pops_from_locations = {
+#			meshra_er_req rumbek wau
+#		}
+#
+#		include = "subsaharan_tribe"
+#		include = "expl_east_africa"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	#Maasai - MAA
+#	MAA = {
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			maasai deloraine ilchamu samburu
+#		}
+#
+#		starting_technology_level = 0
+#		include = "expl_central_africa"
+#		include = "expl_horn_of_africa"
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#
+#		capital = maasai
+#	}
+
+#	TNA = { # Tonga
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			dambwe abutua ingombe_ilede
+#		}
+#
+#		discovered_areas = {
+#			limpopo_area
+#			zambezi_area
+#			kalahari_area
+#			save_area
+#			mozambique_area
+#			maligo_area
+#			moshiko_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	ZEZ = { # Zezuru
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			tsindi ruanga chisvingo zvongombe
+#			hondosaka chikowa tete
+#		}
+#
+#		discovered_areas = {
+#			limpopo_area
+#			zambezi_area
+#			kalahari_area
+#			save_area
+#			mozambique_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	#CEW - Chewa
+#	CEW = { # https://en.wikipedia.org/wiki/Chewa_people
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			msinja kasungu mchinji mankhamba nyani matengo nyanja matope mbewe nyangu massanza muchena tembue kaphirintiwa
+#		}
+#
+#		discovered_areas = {
+#			zambezi_area
+#			save_area
+#			mozambique_area
+#			kasongo_area
+#			moshiko_area
+#			malawi_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	NBY = { # Nambya
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			bumbuzi khami zinjanja dhlo_dhlo muyove
+#			sebakwe chedzurgwe nembudziya rimuka
+#			matanda_aChiwawa angwa chitomborwizi nyarinde
+#		}
+#
+#		discovered_areas = {
+#			limpopo_area
+#			zambezi_area
+#			kalahari_area
+#			save_area
+#			mozambique_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	#Vazimba - VAZ - Madagascar
+#	VAZ = {
+#		type = pop
+#		add_pops_from_locations = {
+#			vohimasina
+#			ambositra ikalamavony
+#		}
+#
+#		include = "expl_east_africa"
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	TSG = { # Tsonga
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			maputo djonga xai_xai phalaborwa tzaneen nwalungu south_hlanganu north_hlanganu
+#			east_shangana west_shangana malumba
+#		}
+#
+#		discovered_areas = {
+#			limpopo_area
+#			zambezi_area
+#			kalahari_area
+#			save_area
+#			mozambique_area
+#			umgungundlovu_area
+#			tzaneen_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+	
+###Kongo###
+#	CHO = {
+#		type = pop
+#		add_pops_from_locations = {
+#			jaggas makunda mumbos tala_mugongo lubalo mulunda saurimo muconda kisenge sakambunje nguff kassai difunda
+#			kalala_kazemba kisenga nana_kahinga nana_kandungu kifumaji sekkosi fundeku
+#			chioata kafuta sesheke mecumba minungo kajenje luquemba shanfana kioko kusike mbwela_kabango kanjamba lwena bacuma moena_kalengo kangamba
+#			kueshi ngongoa_moelo tongwe_ambwela matumbo kimbundu
+#		}
+#
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	OVI = {
+#		type = pop
+#		add_pops_from_locations = {
+#			labolo ngololo quibala katobe_a_mubebe mussende amboim libolo kulembe tende oacco bailundo sumbis longa tamba samba_kongo kuemgo egito karia
+#			kuido kuilembi ovimbundu_kongo mani_kikongo lobito kolonbelle huambo sambo mbegela kuimbondos katumbele cuima mani_kinsomba
+#		}
+#
+#		discovered_regions = { kongo_region	}
+#
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	LND = {
+#		type = pop
+#		add_pops_from_locations = {
+#			kiluata lucapa sainiambu muata_musembo chamuhongo kabebe kadinga mussumba umballa lualaba kazaidi cuoim kalengue olohose muana kabinda katanga
+#			kua_luziga kafaila kinyama mulilimu kushita kitungula ntenke shana_bukanda
+#		}
+#
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	LBA = {
+#		type = pop
+#		add_pops_from_locations = {
+#			pimpu molundu lubudi msassa kirira songye_kongo nyangwe mweru mlungo kazembe tchafolonguta garengaze mongoffa kuzinde kagoma mukurru_bunkela
+#			kikongoluka kaluba
+#		}
+#
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	KUB = {
+#		type = pop
+#		add_pops_from_locations = {
+#			ikongo_boa tetela_boa kassali kitete dumbi dibue kusu_mangbetu nguera lukulunga
+#		}
+#
+#		discovered_areas = {
+#			east_kongo_area
+#			victoria_area
+#		}
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	LEG = {
+#		type = pop
+#		add_pops_from_locations = {
+#			miketo lambo kibanga baraka bembe_buyu
+#		}
+#
+#		include = "subsaharan_tribe"
+#		include = "expl_central_africa"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	#Soyo
+#	SOY = {
+#		type = pop
+#		add_pops_from_locations = {
+#			mbanza_soyo soyo mbaba ambrizete nbengo bumbe nsolu
+#		}
+#
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+	
+#	#Vili - VIL
+#	VIL = { #https://en.wikipedia.org/wiki/Vili_people#The_origins
+#		type = pop
+#		add_pops_from_locations = {
+#			kwilu nyanga sette loeme gabun massabo mayumba yumba bramas buali
+#		}
+#
+#		discovered_areas = {
+#			north_gabun_area
+#		}
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	#Cabinda - CBD
+#	CBD = {
+#		type = pop
+#		add_pops_from_locations = {
+#			loango piri malemba cabinda_kongo chiloango
+#		}
+#
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	#Bateke - TKE
+#	TKE = { #https://en.wikipedia.org/wiki/Teke_people
+#		type = pop
+#		add_pops_from_locations = {
+#			makaka lefini sanga_pumbo monsol ubangi
+#		}
+#
+#		discovered_areas = {
+#			south_gabun_area
+#		}
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	#Ambundu - ABD
+#	ABD = { #https://en.wikipedia.org/wiki/Ambundu
+#		type = pop
+#		add_pops_from_locations = {
+#			luanda ambaca calumbo dondo muxima muxima_ayo demba pove icalo
+#			cahenda bondo ayo aco gunza_anbamba nanboa_angonga ndalatando mbangala lucala
+#			kuneni pungo_ndongo kabafa malanji mbondo ndembo matamba
+#		}
+#
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	#Yaka - YAK
+#	YAK = { #https://en.wikipedia.org/wiki/Yaka_people
+#		type = pop
+#		add_pops_from_locations = {
+#			wambu popocabaca inzia kisakaba
+#		}
+#
+#		discovered_regions = { kongo_region	}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+###South Africa###
+#	XHO = { # Xhosa
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			thembu karee ixesi umncumuba umsobomvu gariep thembelihle emthanjeni kwezi
+#		}
+#
+#		discovered_areas = {
+#			karoo_area
+#			thaba_bosiu_area
+#			umgungundlovu_area
+#			goringhaikona_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	NGU = { # Nguni
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			umngazi dedesi mpondo ethekwini umhlanga ntshekane ukhahlamba buthelezi ndwandwe ngwane umgungundlovu
+#			ntsoana_tsatsi konde mthethwa swazi zombodze bokoni mapulana mbombela mashishing mghumbhani kaditshwene
+#		}
+#
+#		discovered_areas = {
+#			umgungundlovu_area
+#			thaba_bosiu_area
+#			tzaneen_area
+#			limpopo_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	TWA = { # Tswana
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			lotsane bamangwato modipe bakgatla egabeni mosega hlahlandlela em_dinaneni kungwini mooi kweneng lejweleputswa
+#		}
+#
+#		discovered_areas = {
+#			tzaneen_area
+#			thaba_bosiu_area
+#			limpopo_area
+#			kalahari_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	SOT = { # Sotho
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			qwaqwa butha_buthe eiland dithakwaneng taung ka_aub bataung thaba_nchu thaba_bosiu sinqu
+#		}
+#
+#		discovered_areas = {
+#			thaba_bosiu_area
+#			karoo_area
+#			umgungundlovu_area
+#			kalahari_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	VED = { # Venda
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			thulamela dzata mapungubwe mtetengwe mapela
+#		}
+#
+#		discovered_areas = {
+#			limpopo_area
+#			tzaneen_area
+#			save_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+#	KLG = { # Kalanga https://en.wikipedia.org/wiki/Kingdom_of_Butua
+#		type = pop
+#
+#		add_pops_from_locations = {
+#			leshongwane bosutswe mupanipani domboshaba mtoli
+#			impakwe
+#		}
+#
+#		discovered_areas = {
+#			limpopo_area
+#			zambezi_area
+#			save_area
+#			okavango_area
+#			kalahari_area
+#		}
+#
+#		include = "subsaharan_tribe"
+#		government = {
+#			type = tribe
+#			heir_selection = tribal_oldest_male
+#			ruler = random
+#		}
+#	}
+
+	
+}
+}

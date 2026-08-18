@@ -1,0 +1,302 @@
+﻿REPLACE:MAL_f = { #Mali
+	level = 4 #was 2
+	required_locations_fraction = 0.65 #was 0.75
+	rule = historical
+
+	potential = {
+		culture.language = language:mande_language
+	}
+	allow = {
+        is_subject = no
+		owns = location:niani
+        capital = { 
+            OR = { 
+            area = area:mali_area
+            area = area:ghana_area
+            area = area:south_manding_area
+            } 
+        }
+	}
+
+	name = MAL
+	flag = MAL	
+	adjective = MAL_ADJ
+	tag = MAL
+	color = map_mali
+
+	areas = {
+		mali_area
+		ghana_area
+        south_manding_area #new
+	}
+
+	form_effect = {
+		set_country_rank_effect = { rank = country_rank:rank_empire }
+	}
+}
+
+SON_f = { #Songhai
+	level = 3
+	required_locations_fraction = 0.70
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:west_african_group
+		}
+	}
+	allow = {
+        is_subject = no
+		culture = culture:songhai
+        capital = { 
+            OR = { 
+            area = area:gao_area
+            area = area:timbuktu_area
+            } 
+        }
+	}
+
+	name = SON
+	flag = SON	
+	adjective = SON_ADJ
+	tag = SON
+	color = map_songhai
+
+	areas = {
+		gao_area
+		timbuktu_area
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+KBO_f = { #Kanem
+	level = 4
+	required_locations_fraction = 0.65
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:west_african_group
+		}
+	}
+	allow = {
+		is_subject = no
+        culture = culture:kanembu_culture
+        capital = { 
+            OR = { 
+            area = area:kanem_area
+            area = area:bornu_area
+            } 
+        }
+	}
+
+	name = KBO
+	flag = KBO	
+	adjective = KBO_ADJ
+	tag = KBO
+	color = map_kanembu
+
+	areas = {
+		kanem_area
+		bornu_area
+	}
+
+	form_effect = {
+		set_country_rank_effect = { rank = country_rank:rank_empire }
+	}
+}
+
+OYO_f = { #Oyo
+	level = 3
+	required_locations_fraction = 0.80
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:volta_niger_group
+		}
+	}
+	allow = {
+        is_subject = no
+		culture = culture:yoruba
+        capital = { 
+            area = area:yoruba_area
+        }
+	}
+
+	name = OYO
+	flag = OYO	
+	adjective = OYO_ADJ
+	tag = OYO
+	color = map_oyo
+
+	areas = {
+		yoruba_area
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+BEN_f = { #Benin
+	level = 3
+	required_locations_fraction = 0.80
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:volta_niger_group
+		}
+	}
+	allow = {
+        is_subject = no
+		OR = {
+			culture = culture:edo
+			culture = culture:igbo
+            culture = culture:ijaw
+		}
+        capital = { 
+            area = area:benin_area
+        }
+	}
+
+	name = BEN
+	flag = BEN	
+	adjective = BEN_ADJ
+	tag = BEN
+	color = map_BEN
+
+	areas = {
+		benin_area
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+BON_f = { #Bonoman
+	level = 3
+	required_locations_fraction = 0.80
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:kwa_group
+		}
+	}
+	allow = {
+        is_subject = no
+		culture = culture:akan
+        capital = { 
+            area = area:akan_area
+        }
+	}
+
+	name = BON
+	flag = BON	
+	adjective = BON_ADJ
+	tag = BON
+	color = map_BON
+
+	areas = {
+		akan_area
+	}
+
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+REPLACE:AIR_f = { #Air - needed fixing
+	level = 3 #was 1
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:amazigh_group
+		}
+	}
+
+	allow = {
+        is_subject = no
+        culture = culture:tuareg
+        capital = { 
+            area = area:air_area
+        }
+	}
+
+	name = AIR
+	flag = AIR
+	adjective = AIR_ADJ
+	tag = AIR # the '#' removed from in front so this is no longer formable by itself...
+	color = map_AIR
+
+	areas = {
+		air_area
+	}
+	form_effect = {
+        if = { #new
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}
+
+REPLACE:MSI_f = { #Mossi
+
+	level = 3 #was 1
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = {
+			has_culture_group = culture_group:west_african_group
+		}
+	}
+
+	allow = {
+        is_subject = no
+        culture = culture:mossi
+        capital = { 
+           OR = { 
+            area = area:east_mossi_area
+            area = area:west_mossi_area
+            } 
+        }
+	}
+	
+	name = MSI
+	flag = MSI
+	adjective = MSI_ADJ
+	tag = MSI
+	color = map_mossi
+	
+	areas = {
+		east_mossi_area
+		west_mossi_area
+	}
+	form_effect = {
+        if = { #new
+			limit = { country_rank_level < 2 }
+			set_country_rank = country_rank:rank_duchy
+		}
+	}
+}

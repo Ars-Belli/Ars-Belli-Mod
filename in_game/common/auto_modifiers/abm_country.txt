@@ -1,0 +1,222 @@
+﻿
+REPLACE:positive_stability_impact = {
+	potential_trigger = {
+		stability > 0
+	}	
+
+	scales_with = {
+		value = stability
+		multiply = 0.01
+	}
+
+		
+	global_estate_target_satisfaction = positive_stability_satisfaction_scale
+	global_pop_promotion_speed_modifier = 1.0
+	global_mercenaries_modifier = -0.5
+	monthly_doom = -0.1
+	monthly_righteousness = 0.1
+}
+
+INJECT:country_base_values = {
+	fort_limit = 4 # 4 + 1 from vanilla = 5
+	mercenary_range = 250
+	supply_depot_capacity = 4950 # 4950 + 50 from vanilla = 5000 (100x)
+}
+
+REPLACE:num_locations_impact = {
+	scales_with = {
+		value = num_locations
+		divide = 20
+	}
+
+	fort_limit = 1
+}
+
+# INJECT:over_fort_limit = {
+# 	# need to be capped at -50%
+# 	global_defensive = -1.0
+# }
+@max_over_fort_limit_penalty = 1.5
+
+ars_belli_over_fort_limit_under_50 = {
+	potential_trigger = {
+		used_fort_limit_percentage > 1.0
+		used_fort_limit_percentage < @max_over_fort_limit_penalty
+	}
+
+	scales_with = {
+		value = used_fort_limit_percentage
+		subtract = 1.0
+	}
+
+	# capped at -100% (hits the cap at 50% over the fort limit)
+	global_defensive = -2.0
+}
+
+ars_belli_over_fort_limit_over_50 = {
+	potential_trigger = {
+		used_fort_limit_percentage >= @max_over_fort_limit_penalty
+	}
+
+	# capped at -100%
+	global_defensive = -1.0
+}
+
+REPLACE:high_purity = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_purity = yes }
+	}
+	limit = {
+		purity > 75
+	}
+	scales_with = {
+		value = purity
+		subtract = 75
+		multiply = 0.04
+	}
+
+	monthly_honor = 0.20
+}
+
+REPLACE:low_purity = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_purity = yes }
+	}
+	limit = {
+		purity < 25
+	}
+	scales_with = {
+		value = purity
+		multiply = -0.04
+		add = 1
+	}
+
+	monthly_honor = -0.20
+	army_initiative = 0.2
+
+	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	peasants_estate_target_satisfaction = huge_permanent_target_satisfaction
+}
+
+ars_belli_base_purity = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_purity = yes }
+	}
+
+
+
+	monthly_purity = 0.20
+}
+
+REPLACE:high_honor = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_honor = yes }
+	}
+	limit = {
+		honor > 75
+	}
+	scales_with = {
+		value = honor
+		subtract = 75
+		multiply = 0.04
+	}
+
+	monthly_purity = 0.20
+}
+
+REPLACE:low_honor = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_honor = yes }
+	}
+	limit = {
+		honor < 25
+	}
+	scales_with = {
+		value = honor
+		multiply = -0.04
+		add = 1
+	}
+
+	monthly_purity = -0.20
+
+	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	burghers_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+	peasants_estate_target_satisfaction = huge_permanent_target_satisfaction
+}
+
+ars_belli_base_honor = {
+	potential_trigger = {
+		exists = religion
+		religion = { has_honor = yes }
+	}
+	monthly_honor = 0.25
+}
+
+REPLACE:horde_army_expectation = { #Hordes are already too volatile
+	potential_trigger = { 
+		government_type ?= government_type:steppe_horde
+	}
+
+	scales_with = {
+		value = 1
+		subtract = army_size_percentage
+		min = 0
+	}
+
+	stability_cost_efficiency = -2
+	land_morale_modifier = -0.1 #was -0.5
+}
+
+REPLACE:high_horde_unity = { #Hordes are already too volatile
+	potential_trigger = {
+		uses_government_power = horde_unity
+	}
+	scales_with = {
+		value = horde_unity
+		multiply = 0.01
+	}
+
+	discipline = 0.05 #was 0.10
+	pop_leave_rebels_threshold = -0.05
+}
+
+# abm_china_ahimsa_clergy_defensive_war = {
+# 	potential_trigger = {
+# 		has_estate_privilege = estate_privilege:abm_china_ahimsa_clergy_commitment
+# 		any_current_war = {
+# 			NOT = { is_an_attacker = root }
+# 		}
+# 	}
+
+# 	army_maintenance_efficiency = 0.10
+# }
+
+# abm_china_ahimsa_burghers_defensive_war = {
+# 	potential_trigger = {
+# 		has_estate_privilege = estate_privilege:abm_china_ahimsa_burghers_commitment
+# 		any_current_war = {
+# 			NOT = { is_an_attacker = root }
+# 		}
+# 	}
+
+# 	morale_recovery_in_friendly = 0.05
+# }
+
+# abm_china_ahimsa_commoners_defensive_war = {
+# 	potential_trigger = {
+# 		has_estate_privilege = estate_privilege:abm_china_ahimsa_commoners_commitment
+# 		any_current_war = {
+# 			NOT = { is_an_attacker = root }
+# 		}
+# 	}
+
+# 	fort_maintenance_efficiency = 0.50
+# }

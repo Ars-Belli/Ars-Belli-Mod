@@ -1,0 +1,172 @@
+﻿REPLACE:jesuit_college = {
+	audio_tier = 2
+	is_special = yes
+	is_foreign = no
+	pop_type = clergy
+	max_levels = 1
+
+	category = cultural_category
+	employment_size = religious_building_employment
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+
+	build_time = large_religious_building_time
+
+	country_potential = {
+		has_unlocked_building_trigger = { type = jesuit_college }
+	}
+	allow = {
+		owner = {
+			has_policy = jesuits_allowed
+		}
+	}
+
+	remove_if = {
+		NOT = {
+			owner = {
+				has_policy = jesuits_allowed
+			}
+		}
+	}
+	graphical_tags = { medium_religious }
+
+	modifier = {
+		local_cultural_influence = 0.2
+		local_nobles_max_literacy = 5
+		local_clergy_max_literacy = 5
+		local_burghers_max_literacy = 5
+		local_max_literacy = 0.05
+		local_lutheranism_movement_growth_modifier = -0.4
+		local_calvinism_movement_growth_modifier = -0.4
+	}
+
+	unique_production_methods = {
+
+		jesuit_college_maintenance = {
+			paper = 0.5
+			books = 1.0
+			fine_cloth = 0.2
+			beeswax = 0.1
+
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = university_construction
+}
+
+abm_church_school = {
+	audio_tier = 2
+	is_special = yes
+	is_foreign = no
+	pop_type = clergy
+	max_levels = 1
+
+	category = cultural_category
+	employment_size = religious_building_employment
+
+	rural_settlement = yes
+	# town = yes
+	# city = yes
+	# megalopolis = yes
+
+	#expensive = yes
+
+	build_time = cultural_building_time
+
+	country_potential = {
+		has_unlocked_building_trigger = { type = jesuit_college }
+	}
+	allow = {
+		owner = {
+			has_advance = baptism_books
+		}
+	}
+
+	remove_if = {
+		owner = {
+			religion != religion:catholic
+		}
+	}
+	graphical_tags = { medium_religious }
+
+	modifier = {
+		local_max_literacy = 0.05
+		local_monthly_literacy = 0.1
+		local_pop_conversion_speed = 0.01
+	}
+
+	possible_production_methods = {
+		library_maintenance
+	}
+
+	construction_demand = library_construction
+}
+
+matenadaran = {
+	audio_tier = 1
+	is_foreign = no
+	max_levels = 1
+	pop_type = clergy
+
+	employment_size = religious_building_employment
+
+	category = religious_category
+
+	allow = {
+		owner = {
+			has_reform = government_reform:abm_eastern_christian_militant_church
+		}
+
+	}
+
+	location_potential = {
+		dominant_religion = religion:miaphysite
+	}
+
+	rural_settlement = yes
+	# town = yes
+	# city = yes
+	# megalopolis = yes
+
+	build_time = religious_building_time
+	graphical_tags = { medium_religious }
+
+
+	country_potential = {
+		OR = {
+			religion = religion:orthodox
+			religion = religion:nestorianism
+			religion = religion:miaphysite
+		}
+	}
+
+	possible_production_methods = {
+		library_maintenance
+	}
+
+	remove_if = {
+		owner = {
+			NOR = {
+				religion = religion:orthodox
+				religion = religion:nestorianism
+				religion = religion:miaphysite
+			}
+		}
+	}
+
+	construction_demand = library_construction
+
+	modifier = {
+		local_soldiers_max_literacy = 5
+		local_laborers_max_literacy = 5
+		local_peasants_max_literacy = 5
+		local_pop_conversion_speed_modifier = 0.10
+		local_pop_assimilation_speed_modifier = 0.01
+		local_crown_estate_power = 0.10
+	}
+}

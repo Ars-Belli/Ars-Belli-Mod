@@ -1,0 +1,3400 @@
+﻿namespace = flavor_kor
+#The Mongol Control
+flavor_kor.1 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_kor.1.title
+	desc = flavor_kor.1.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1340.1.1
+		to = 1380.1.1
+		monthly_chance = 10
+	}
+	trigger = {
+		country_exists = c:CHI
+		is_subject_of = c:CHI
+		c:CHI = { culture.language = language:mongolian_language }	#Making sure it is Yuán who is currently at the power
+	}
+	
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+	
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		hidden_effect = {
+			capital = {
+				add_pop = {
+					culture = culture:mongolian_culture
+					religion = root.religion
+					type = pop_type:nobles
+					size = { value = 0.05 }
+				}
+			}
+			random_list = {
+				10 = { set_variable = { name = kor_mongol_characters value = 5 } }
+				20 = { set_variable = { name = kor_mongol_characters value = 6 } }
+				30 = { set_variable = { name = kor_mongol_characters value = 8 } }
+				40 = { set_variable = { name = kor_mongol_characters value = 9 } }
+			}
+			set_variable = { name = kor_mongol_aristocrats value = 0 }
+			while = {
+				limit = { var:kor_mongol_characters > 0 }
+				change_variable = { name = kor_mongol_characters subtract = 1 }
+				change_variable = { name = kor_mongol_aristocrats add = 1 }
+				create_character = {
+					estate = estate_type:nobles_estate
+					birth_location = root.capital
+					culture = culture:mongolian_culture
+					save_scope_as = mongol_aristocrat
+					set_variable = { name = kor_is_mongol_aristocrat value = yes }
+				}
+				scope:mongol_aristocrat = {
+					set_to_limited_random_stats = {
+						max_adm = 66
+						min_adm = 0
+						max_dip = 66
+						min_dip = 0
+						max_mil = 66
+						min_mil = 0
+					}
+				}
+			}
+		}
+	}
+	#We shall break free from their barbaric rule!
+	option = {
+		name = flavor_kor.1.a
+		custom_tooltip = {
+			text = flavor_kor.1.a.at
+			set_variable = { name = kor_is_influenced_by_mongols value = -2 }
+			add_opinion_mutual_effect = {
+				modifier = kor_hostile_attitude
+				target = c:CHI
+			}
+		}
+		custom_tooltip = flavor_kor.1.a.tt
+		custom_tooltip = flavor_kor.1.a.TIP
+	}
+	#What will happen without the Mongol guidance?
+	option = {
+		name = flavor_kor.1.b
+		custom_tooltip = {
+			text = flavor_kor.1.a.at
+			set_variable = { name = kor_is_influenced_by_mongols value = 0 }
+			add_opinion_mutual_effect = {
+				modifier = kor_friendly_attitude
+				target = c:CHI
+			}
+		}
+		custom_tooltip = flavor_kor.1.b.tt
+	}
+}
+
+scripted_trigger is_joseon_dynasty = {
+	has_variable = KOR_joseon_dynasty
+}
+
+scripted_trigger kor_freed_from_mongol_influence = {
+	has_variable = kor_is_influenced_by_mongols
+	OR = {
+		NOT = { has_variable = kor_mongol_aristocrats }
+		AND = {
+			has_variable = kor_mongol_aristocrats
+			var:kor_is_influenced_by_mongols <= 0
+		}
+	}
+	NOT = { any_character = { has_variable = kor_is_mongol_aristocrat } }
+	at_war = no
+	OR = {
+		is_subject = no
+		AND = {
+			is_subject = yes
+			overlord = {
+				OR = {
+					NOT = { tag = CHI }
+					AND = {
+						tag = CHI
+						NOT = { culture = culture:mongolian_culture }
+					}
+				}
+			}
+		}
+	}
+}
+scripted_trigger kor_tied_to_mongol_influence = {
+	has_variable = kor_is_influenced_by_mongols
+	var:kor_is_influenced_by_mongols >= 5
+	at_war = no
+	is_subject = yes
+	overlord = {
+		tag = CHI
+		culture = culture:mongolian_culture
+	}
+}
+scripted_effect kor_get_mongol_aristocrat_count = {
+	hidden_effect = {
+		set_variable = { name = kor_mongol_aristocrats value = 0 }
+		every_character = {
+			limit = { has_variable = kor_is_mongol_aristocrat }
+			PREV = { change_variable = { name = kor_mongol_aristocrats add = 1 } }
+		}
+	}
+}
+scripted_effect kor_setup_mongol_aristocrat_demand_gold = {
+	set_variable = { name = kor_mongol_gold_to_pay value = var:kor_mongol_aristocrats }
+	change_variable = { name = kor_mongol_gold_to_pay multiply = root.monthly_income_trade_and_tax }
+	change_variable = { name = kor_mongol_gold_to_pay multiply = -1 }
+	limit_variable = { name = kor_mongol_gold_to_pay value = -6 mode = min }
+	set_variable = { name = kor_mongol_gold_to_transfer value = var:kor_mongol_gold_to_pay }
+	change_variable = { name = kor_mongol_gold_to_transfer multiply = -1 }
+}
+scripted_effect kor_setup_mongol_aristocrat_demand_prestige = {
+	set_variable = { name = kor_mongol_prestige_to_pay value = var:kor_mongol_aristocrats }
+	change_variable = { name = kor_mongol_prestige_to_pay multiply = -2 }
+	limit_variable = { name = kor_mongol_prestige_to_pay value = -20 mode = min }
+	set_variable = { name = kor_mongol_prestige_to_transfer value = var:kor_mongol_prestige_to_pay }
+	change_variable = { name = kor_mongol_prestige_to_transfer multiply = -1 }
+}
+scripted_effect kor_setup_mongol_aristocrat_demand_diplomats = {
+	set_variable = { name = kor_mongol_diplomats_to_pay value = var:kor_mongol_aristocrats }
+	change_variable = { name = kor_mongol_diplomats_to_pay multiply = -0.5 }
+	limit_variable = { name = kor_mongol_diplomats_to_pay value = -4 mode = min }
+	set_variable = { name = kor_mongol_diplomats_to_transfer value = var:kor_mongol_diplomats_to_pay }
+	change_variable = { name = kor_mongol_diplomats_to_transfer multiply = -1 }
+}
+scripted_effect kor_setup_mongol_aristocrat_demand_estate_satisfaction = {
+	set_variable = { name = kor_mongol_estate_satisfaction_to_pay value = var:kor_mongol_aristocrats }
+	change_variable = { name = kor_mongol_estate_satisfaction_to_pay multiply = -0.02 }
+	limit_variable = { name = kor_mongol_estate_satisfaction_to_pay value = -0.30 mode = min }
+	set_variable = { name = kor_mongol_estate_satisfaction_to_transfer value = var:kor_mongol_estate_satisfaction_to_pay }
+	change_variable = { name = kor_mongol_estate_satisfaction_to_transfer multiply = -1 }
+}
+scripted_effect kor_setup_mongol_aristocrat_demand_government_power = {
+	set_variable = { name = kor_mongol_government_power_to_pay value = var:kor_mongol_aristocrats }
+	change_variable = { name = kor_mongol_government_power_to_pay multiply = -1.5 }
+	limit_variable = { name = kor_mongol_government_power_to_pay value = -10 mode = min }
+	set_variable = { name = kor_mongol_government_power_to_transfer value = var:kor_mongol_government_power_to_pay }
+	change_variable = { name = kor_mongol_government_power_to_transfer multiply = -1 }
+}
+scripted_effect kor_setup_mongol_aristocrat_demand = {
+	hidden_effect = {
+		kor_setup_mongol_aristocrat_demand_$type$ = yes
+	}
+}
+scripted_effect kor_mongol_transfer_demand = {
+	if = {
+		limit = {
+			exists = $target$
+			country_exists = $target$
+		}
+		$target$ = { add_$type$ = root.var:kor_mongol_$type$_to_transfer }
+	}
+}
+scripted_effect kor_mongol_aristocrat_demand_gold = {
+	add_gold = var:kor_mongol_gold_to_pay
+	kor_mongol_transfer_demand = { type = gold target = $target$ }
+}
+scripted_effect kor_mongol_aristocrat_demand_prestige = {
+	add_prestige = var:kor_mongol_prestige_to_pay
+	kor_mongol_transfer_demand = { type = prestige target = $target$ }
+}
+scripted_effect kor_mongol_aristocrat_demand_diplomats = {
+	add_diplomats = var:kor_mongol_diplomats_to_pay
+	kor_mongol_transfer_demand = { type = diplomats target = $target$ }
+}
+scripted_effect kor_mongol_aristocrat_demand_estate_satisfaction = {
+	add_estate_satisfaction = { type = estate_type:burghers_estate value = var:kor_mongol_estate_satisfaction_to_pay }
+	add_estate_satisfaction = { type = estate_type:clergy_estate value = var:kor_mongol_estate_satisfaction_to_pay }
+	add_estate_satisfaction = { type = estate_type:peasants_estate value = var:kor_mongol_estate_satisfaction_to_pay }
+	if = {
+		limit = {
+			exists = $target$
+			country_exists = $target$
+		}
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = root.var:kor_mongol_estate_satisfaction_to_transfer }
+	}
+}
+scripted_effect kor_mongol_aristocrat_demand_government_power = {
+	add_government_power = var:kor_mongol_government_power_to_pay
+	kor_mongol_transfer_demand = { type = government_power target = $target$ }
+}
+scripted_effect kor_mongol_aristocrat_demand = {
+	kor_mongol_aristocrat_demand_$type$ = { target = $target$ }
+}
+scripted_effect kor_mongol_clean_up_variables = {
+	remove_variable = kor_mongol_gold_to_pay
+	remove_variable = kor_mongol_prestige_to_pay
+	remove_variable = kor_mongol_diplomats_to_pay
+	remove_variable = kor_mongol_estate_satisfaction_to_pay
+	remove_variable = kor_mongol_government_power_to_pay
+	remove_variable = kor_mongol_gold_to_transfer
+	remove_variable = kor_mongol_prestige_to_transfer
+	remove_variable = kor_mongol_diplomats_to_transfer
+	remove_variable = kor_mongol_estate_satisfaction_to_transfer
+	remove_variable = kor_mongol_government_power_to_transfer
+}
+
+#Demands of the Mongol Aristocracy
+flavor_kor.2 = {
+	type = country_event
+	title = flavor_kor.2.title
+	desc = {
+		first_valid = {
+			triggered_desc = { trigger = { has_variable =  kor_mongol_gold_to_pay }					desc = flavor_kor.2.desc.gold }
+			triggered_desc = { trigger = { has_variable =  kor_mongol_prestige_to_pay }				desc = flavor_kor.2.desc.prestige }
+			triggered_desc = { trigger = { has_variable =  kor_mongol_diplomats_to_pay }			desc = flavor_kor.2.desc.diplomatic_actions }
+			triggered_desc = { trigger = { has_variable =  kor_mongol_estate_satisfaction_to_pay }	desc = flavor_kor.2.desc.estate_satisfaction }
+			triggered_desc = { trigger = { has_variable =  kor_mongol_government_power_to_pay }		desc = flavor_kor.2.desc.government_power }
+			triggered_desc = { trigger = { always = yes } 											desc = flavor_kor.2.desc }
+		}
+	}
+	outcome = neutral
+	trigger = {
+		kor_has_mongol_aristocrats = yes
+	}
+	
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_character = {
+			limit = { has_variable = kor_is_mongol_aristocrat }
+			save_scope_as = target_character
+		}
+		if = {
+			limit = {
+				country_exists = c:CHI
+				c:CHI = { culture = culture:mongolian_culture }
+			}
+			c:CHI = { save_scope_as = target_country }
+		}
+		kor_get_mongol_aristocrat_count = yes
+		random_list = {
+			20 = { kor_setup_mongol_aristocrat_demand = { type = gold } }
+			20 = { kor_setup_mongol_aristocrat_demand = { type = prestige } }
+			20 = { kor_setup_mongol_aristocrat_demand = { type = diplomats } }
+			20 = { kor_setup_mongol_aristocrat_demand = { type = estate_satisfaction } }
+			20 = { kor_setup_mongol_aristocrat_demand = { type = government_power } }
+		}
+	}
+	option = {
+		name = flavor_kor.2.a
+		switch = {
+			trigger = has_variable
+			kor_mongol_gold_to_pay = {					kor_mongol_aristocrat_demand = { type = gold target = scope:target_country } }
+			kor_mongol_prestige_to_pay = {				kor_mongol_aristocrat_demand = { type = prestige target = scope:target_country } }
+			kor_mongol_diplomats_to_pay = {	kor_mongol_aristocrat_demand = { type = diplomats target = scope:target_country } }
+			kor_mongol_estate_satisfaction_to_pay = {	kor_mongol_aristocrat_demand = { type = estate_satisfaction target = scope:target_country } }
+			kor_mongol_government_power_to_pay = {		kor_mongol_aristocrat_demand = { type = government_power target = scope:target_country } }
+		}
+		hidden_effect = { change_variable = { name = kor_is_influenced_by_mongols add = 1 } }
+	}
+	option = {
+		name = flavor_kor.2.b
+		trigger = { exists = scope:target_country }
+		reverse_add_opinion = { modifier = kor_acted_against_yuan target = scope:target_country }
+		hidden_effect = { change_variable = { name = kor_is_influenced_by_mongols add = -2 } }
+		add_stability = stability_extreme_penalty
+	}
+}
+
+#New Mongolian Noble join the country
+flavor_kor.3 = {
+	type = country_event
+	title = flavor_kor.3.title
+	desc = flavor_kor.3.desc
+	outcome = neutral
+	fire_only_once = yes
+	trigger = {
+		kor_has_mongol_aristocrats = yes
+		NOT = { has_variable = had_new_mongolian_aristocrat_in_the_last_10_years }
+	}
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		hidden_effect = {
+			set_variable = { name = had_new_mongolian_aristocrat_in_the_last_10_years value = yes days = 3650 }
+			change_variable = { name = kor_mongol_aristocrats add = 1 }
+			create_character = {
+				estate = estate_type:nobles_estate
+				culture = culture:mongolian_culture
+				save_scope_as = mongol_aristocrat
+				create_in_limbo = yes
+				set_variable = { name = kor_is_mongol_aristocrat value = yes }
+			}
+			scope:mongol_aristocrat = {
+				set_to_limited_random_stats = {
+					max_adm = 66
+					min_adm = 0
+					max_dip = 66
+					min_dip = 0
+					max_mil = 66
+					min_mil = 0
+				}
+			}
+			c:CHI = { save_scope_as = target_country }
+		}
+	}
+	option = {
+		name = flavor_kor.3.a
+		scope:mongol_aristocrat = { move_country = root }
+		add_government_power = government_power_mild_penalty
+		hidden_effect = { change_variable = { name = kor_is_influenced_by_mongols add = 1 } }
+	}
+	option = {
+		name = flavor_kor.3.b
+		scope:mongol_aristocrat = { move_country = scope:target_country }
+		scope:target_country = {
+			add_opinion = { modifier = kor_acted_against_yuan target = ROOT }
+		}
+		hidden_effect = { change_variable = { name = kor_is_influenced_by_mongols add = -2 } }
+	}
+}
+
+#Free from Mongol Shackles
+flavor_kor.4 = {
+	type = country_event
+	title = flavor_kor.4.title
+	desc = flavor_kor.4.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1337.1.1
+		to = 1837.1.1
+		monthly_chance = 100	#Should always happen
+	}
+	trigger = {
+		custom_tooltip = {
+			text = kor_freed_from_mongol_influence_tt
+			kor_freed_from_mongol_influence = yes
+		}
+		has_ruler = yes
+	}
+	illustration_tags = {
+        10 = happy
+        10 = exterior
+    }
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+		remove_variable = kor_is_influenced_by_mongols
+		if = { limit = { has_variable = kor_mongol_aristocrats } remove_variable = kor_mongol_aristocrats }
+		ruler = { save_scope_as = target_character }
+	}
+	after = {
+		kor_mongol_clean_up_variables = yes
+	}
+	option = {
+		name = flavor_kor.4.a
+		if = {
+			limit = { has_reform = government_reform:son_in_law_rule }
+			remove_reform = government_reform:son_in_law_rule
+		}
+		add_prestige = prestige_extreme_bonus
+		add_government_power = government_power_extreme_bonus
+		add_stability = stability_extreme_bonus
+		remove_opinion_mutual_effect = { target = c:CHI modifier = kor_hostile_attitude }
+		remove_opinion_mutual_effect = { target = c:CHI modifier = kor_friendly_attitude }
+	}
+}
+
+#Tied fate to the Mongols
+flavor_kor.5 = {
+	type = country_event
+	title = flavor_kor.5.title
+	desc = flavor_kor.5.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1337.1.1
+		to = 1837.1.1
+		monthly_chance = 1
+	}
+	trigger = {
+		custom_tooltip = {
+			text = kor_tied_to_mongol_influence_tt
+			kor_tied_to_mongol_influence = yes
+		}
+	}
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		remove_variable = kor_is_influenced_by_mongols
+		if = { limit = { has_variable = kor_mongol_aristocrats } remove_variable = kor_mongol_aristocrats }
+		c:CHI = { save_scope_as = target_country }
+	}
+	after = {
+		kor_mongol_clean_up_variables = yes
+	}
+	option = {
+		name = flavor_kor.5.a
+		culture:korean_culture = {
+			change_cultural_view = {
+				target = culture:mongolian_culture
+				change = 1
+			}
+		}
+		culture:mongolian_culture = {
+			change_cultural_view = {
+				target = culture:korean_culture
+				change = 1
+			}
+		}
+		add_opinion_mutual_effect = { modifier = kor_mongol_mutual_historical_friends target = scope:target_country }
+
+		custom_tooltip = {
+			text = kor_upgrade_son_in_law
+			set_variable = kor_upgraded_son_in_law
+		}
+	}
+}
+
+#Gi Haengju's on the Yuán throne
+flavor_kor.6 = {
+	type = country_event
+	title = flavor_kor.6.title
+	desc = flavor_kor.6.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1337.1.1
+		to = 1360.1.1
+		monthly_chance = 10
+	}
+	trigger = {
+		country_exists = c:CHI
+		c:CHI = {
+			culture = culture:mongolian_culture
+			OR = {
+				regent ?= { this = character:yua_gi }
+				ruler ?= { this = character:yua_gi }
+			}
+		}
+	}
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		c:CHI = { save_scope_as = target_country }
+		character:yua_gi = { save_scope_as = target_character }
+		save_scope_as = from_country
+	}
+	option = {
+		name = flavor_kor.6.a
+		historical_option = yes
+		scope:target_country = {
+			trigger_event_non_silently = { id = flavor_kor.7 days = 14 }
+		}
+	}
+	option = {
+		name = flavor_kor.6.b
+		add_prestige = prestige_mild_bonus
+	}
+	historical_info = flavor_kor.6.historical_info
+}
+
+#The Korean homeland
+scripted_effect kor_setup_potential_gifts = {
+	set_variable = { name = kor_chi_gold_gift value = -3 }
+	change_variable = { name = kor_chi_gold_gift multiply = c:KOR.monthly_income_trade_and_tax }
+	set_variable = { name = kor_chi_prestige_gift value = -20 }
+	set_variable = { name = kor_chi_diplomats_gift value = -5 }
+}
+scripted_effect kor_cleanup_gifts = {
+	if = { limit = { has_variable = kor_chi_gold_gift } remove_variable = kor_chi_gold_gift }
+	if = { limit = { has_variable = kor_chi_prestige_gift } remove_variable = kor_chi_prestige_gift }
+	if = { limit = { has_variable = kor_chi_diplomats_gift } remove_variable = kor_chi_diplomats_gift }
+	if = { limit = { has_variable = kor_chi_gift_of_gold } remove_variable = kor_chi_gift_of_gold }
+	if = { limit = { has_variable = kor_chi_gift_of_prestige } remove_variable = kor_chi_gift_of_prestige }
+}
+scripted_effect kor_set_gift_to_make = {
+	add_$type$ = var:kor_chi_$type$_gift
+	hidden_effect = {
+		change_variable = { name = kor_chi_$type$_gift multiply = -1 }
+	}
+	$target$ = {
+		hidden_effect = { set_variable = kor_chi_gift_of_$type$ }
+		trigger_event_non_silently = { id = flavor_kor.8 days = 14 }
+	}
+}
+scripted_trigger kor_get_gift_of_type = {
+	has_variable = kor_chi_gift_of_$type$
+}
+scripted_effect kor_give_gift_effect = {
+	switch = {
+		trigger = has_variable
+		kor_chi_gift_of_gold = { add_gold = scope:target_country.var:kor_chi_gold_gift }
+		kor_chi_gift_of_prestige = { add_prestige = scope:target_country.var:kor_chi_prestige_gift }
+	}
+}
+flavor_kor.7 = {
+	type = country_event
+	title = flavor_kor.7.title
+	desc = flavor_kor.7.desc
+	outcome = neutral
+	immediate = { kor_setup_potential_gifts = yes }
+	option = {
+		name = flavor_kor.7.a
+		historical_option = yes
+		kor_set_gift_to_make = { target = scope:from_country type = gold }
+		custom_tooltip = flavor_kor.7.a.tt
+	}
+	option = {
+		name = flavor_kor.7.b
+		kor_set_gift_to_make = { target = scope:from_country type = prestige }
+		custom_tooltip = flavor_kor.7.b.tt
+	}
+	option = {
+		name = flavor_kor.7.zzz
+		scope:from_country = { trigger_event_non_silently = { id = flavor_kor.9 days = 14 } }
+	}
+	historical_info = flavor_kor.6.historical_info
+}
+
+#Gift from Yuán
+flavor_kor.8 = {
+	type = country_event
+	title = flavor_kor.8.title
+	desc = {
+		first_valid = {
+			triggered_desc = { trigger = { kor_get_gift_of_type = { type = gold } }					desc = flavor_kor.8.desc.gold }
+			triggered_desc = { trigger = { kor_get_gift_of_type = { type = prestige } }				desc = flavor_kor.8.desc.prestige }
+			triggered_desc = { trigger = { always = yes } 											desc = flavor_kor.8.desc }
+		}
+	}
+	outcome = neutral
+	
+	illustration_tags = {
+        10 = happy
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	
+	after = {
+		scope:target_country = { kor_cleanup_gifts = yes }
+		kor_cleanup_gifts = yes
+	}
+	option = {
+		name = flavor_kor.8.a
+		kor_give_gift_effect = yes
+	}
+}
+
+#Empress turns her back on us
+flavor_kor.9 = {
+	type = country_event
+	title = flavor_kor.9.title
+	desc = flavor_kor.9.desc
+	outcome = neutral
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	option = {
+		name = flavor_kor.9.a
+		historical_option = yes
+
+		add_opinion_mutual_effect = {
+			modifier = kor_mongol_soured_relations
+			target = scope:target_country
+		}
+	}
+
+	after = {
+		scope:target_country = { kor_cleanup_gifts = yes }
+		kor_cleanup_gifts = yes
+	}
+}
+
+#Long Awaited Opportunity
+flavor_kor.10 = {
+	type = country_event
+	title = flavor_kor.10.title
+	desc = flavor_kor.10.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1337.1.1
+		to = 1400.1.1
+		monthly_chance = 5
+	}
+	trigger = {
+		NOT = { own_entire_province = province_definition:hwaju_province }
+		country_exists = c:SSG
+		c:SSG = {
+			owns = location:hwaju
+			OR = {
+				at_war = no
+				any_current_war = {
+					any_war_participant = {
+						OR = {
+							NOT = { this = ROOT }
+							is_at_war_with = c:SSG
+						}
+						count = all
+					}
+				}
+			}
+		}
+	}
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		c:SSG = { save_scope_as = target_country }
+	}
+	option = {
+		name = flavor_kor.10.a
+		historical_option = yes
+		if = {
+			limit = {
+				can_declare_legal_war_on = { target = scope:target_country }
+			}
+			declare_war_with_cb = {
+				target = scope:target_country
+				type = casus_belli:cb_conquer_province
+				target_province = location:hwaju.province
+			}
+		}
+		else = {
+			add_casus_belli = {
+				target = scope:target_country
+				type = casus_belli:cb_conquer_province
+				province = location:hwaju.province
+			}
+		}
+		
+	}
+	option = {
+		name = flavor_kor.10.b
+		add_truce_with = { target = scope:target_country }
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+#The North Reconquered
+flavor_kor.11 = {
+	type = country_event
+	title = flavor_kor.11.title
+	desc = flavor_kor.11.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1337.1.1
+		to = 1837.1.1
+		monthly_chance = 1
+	}
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:peasants }
+	}
+	trigger = {
+		own_entire_province = province_definition:hwaju_province
+		NOT = { country_exists = c:SSG }
+	}
+	option = {
+		name = flavor_kor.11.a
+		historical_option = yes
+		add_army_tradition = army_tradition_mild_bonus
+		region:korea_region = {
+			every_location_in_region = {
+				limit = {
+					is_ownable = yes
+					NOT = { is_core_of = root }
+					OR = {
+						owner = root
+						dominant_culture = root.culture
+					}
+				}
+				add_core = root
+				if = {
+					limit = {
+						owner = root
+						NOT = { integration_level = core }
+					}
+					change_integration_level = core
+				}
+			}
+		}
+	}
+}
+
+#The Recipe for Black Powder
+flavor_kor.12 = {
+	type = country_event
+	title = flavor_kor.12.title
+	desc = flavor_kor.12.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1360.1.1
+		to = 1400.1.1
+		monthly_chance = 5
+	}
+	trigger = {
+		any_port_in_country = {
+			sea_zone = {
+				area = {
+					any_privateer_in_area = {
+						NOT = { owner = root }
+						privateer_power > 0.5
+					}
+				}
+			}
+			location_tax_base > 0
+		}
+	}
+	image = "gfx/interface/illustrations/institutions/scientific_revolution.dds"
+	immediate = {
+		random_port_in_country = {
+			limit = {
+				sea_zone = {
+					area = {
+						any_privateer_in_area = {
+							NOT = { owner = root }
+							privateer_power > 0.5
+						}
+					}
+				}
+				location_tax_base > 0
+			}
+			save_scope_as = target_location
+			sea_zone = {
+				area = {
+					random_privateer_in_area = {
+						limit = {
+							NOT = { owner = root }
+							privateer_power > 0.5
+						}
+						owner = {
+							save_scope_as = target_country
+						}
+					}
+				}
+			}
+		}
+		create_character = {
+			first_name = name_museon
+			last_name = choe
+			estate = estate_type:burghers_estate
+			culture = culture:korean_culture
+			adm = 21
+			dip = 73
+			mil = 65
+			birth_date = 1320.2.4
+			birth_location = location:taegu
+			save_scope_as = choe_scope
+			create_in_limbo = yes
+		}
+	}
+	option = {
+		name = flavor_kor.12.a
+		historical_option = yes
+		scope:choe_scope = { move_country = root }
+		change_gold_effect = { scale = -5 }
+		capital = {
+			change_building_level_in_location = {
+				building = building_type:gun_smith
+				value = 1
+			}
+		}
+		if = {
+			limit = { NOT = { has_advance = kor_gunpowder_engines } }
+			research_advance = advance_type:kor_gunpowder_engines
+			add_research_progress = research_progress_mild_bonus
+		}
+		else = {
+			add_research_progress = research_progress_severe_bonus
+		}
+	}
+	option = {
+		name = flavor_kor.12.b
+		c:CHI ?= { add_opinion = { target = root modifier = turned_away_inventor } }
+		scope:choe_scope = {
+			banish_character = yes
+		}
+	}
+}
+
+#Spread of Confucianism
+flavor_kor.13 = {
+	type = country_event
+	title = flavor_kor.13.title
+	desc = flavor_kor.13.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1360.1.1
+		to = 1460.1.1
+		monthly_chance = 5
+	}
+	
+	trigger = {
+		is_country_buddhist = yes
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:nobles_estate }
+	}
+
+	option = {
+		name = flavor_kor.13.a
+		historical_option = yes
+		custom_tooltip = {
+			text = flavor_kor.13.a.tt
+			set_variable = { name = kor_has_confucianism_active value = yes }
+		}
+		add_stability = stability_weak_penalty
+	}
+}
+
+#Neo-Confucianism
+flavor_kor.14 = {
+	type = country_event
+	title = flavor_kor.14.title
+	desc = flavor_kor.14.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1400.1.1
+		to = 1550.1.1
+		monthly_chance = 10
+	}
+	
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:clergy_estate }
+	}
+	
+	trigger = {
+		custom_tooltip = {
+			text = variable_tt_kor_has_confucianism_active
+			has_variable = kor_has_confucianism_active
+		}
+	}
+	option = {
+		name = flavor_kor.14.a
+		historical_option = yes
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+		if = {
+			limit = {
+				NOT = { culture = { has_culture_group = culture_group:confucian_group } }
+				NOT = {
+					any_international_organizations_member_of = {
+						international_organization_type = international_organization_type:sect
+						international_organization_has_policy = policy:confucianism_policy
+					}
+				}
+				NOT = { is_member_of_international_organization = international_organization:middle_kingdom }
+			}
+			custom_tooltip = flavor_kor.14.a.tt
+		}
+		hidden_effect = {
+			set_variable = { name = has_neo_confucianism value = yes }
+		}
+	}
+}
+
+#Rise of joseon
+flavor_kor.15 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_kor.15.title
+	desc = flavor_kor.15.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1337.1.1
+		to = 1837.1.1
+		monthly_chance = 15
+	}
+	trigger = {
+		OR = {
+			is_subject = no
+			AND = {
+				is_subject = yes
+				overlord = {
+					NOT = { culture = culture:mongolian_culture }
+				}
+			}
+		}
+		at_war = no
+		custom_tooltip = {
+			text = variable_tt_had_successful_coup
+			has_variable = had_successful_coup
+		}
+		government_power < 20
+		stability < 10
+		exists = ruler
+	}
+	
+	illustration_tags = {
+        10 = armed
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		capital = {
+			save_scope_as = target_location
+			if = {
+				limit = {
+					NOT = {
+						dynasty_exists = yi_dynasty
+					}
+				}
+				create_dynasty_from_location = yi_dynasty
+			}
+		}
+		create_character = {
+			first_name = name_seong_gye
+			dynasty = dynasty:yi_dynasty
+			estate = estate_type:peasants_estate
+			adm = 80
+			dip = 70
+			mil = 90
+			age = 30
+			script = yi_seong_gye
+			save_scope_as = target_character
+		}
+		create_rebel = {
+			category = pretender
+			name = joseon_pretender
+			save_scope_as = joseon_pretender_scope
+		}
+		ruler = { save_scope_as = old_ruler }
+	}
+	option = {
+		name = flavor_kor.15.a
+		historical_option = yes
+		set_new_ruler = scope:target_character
+		kill_character = {
+			target = scope:old_ruler
+			reason = execution
+			killer = scope:target_character
+		}
+		change_country_name = JOE
+		change_country_adjective = JOE_ADJ
+		change_country_flag = JOE
+		set_variable = KOR_joseon_dynasty
+		add_government_power = government_power_extreme_penalty
+	}
+	#We must fight against him!
+	option = {
+		name = flavor_kor.15.b
+		custom_tooltip = flavor_kor.15.b.tt
+		show_as_tooltip = {
+			random_owned_location = {
+				random_pop = {
+					limit = {
+						owner = root
+					}
+					add_pop_satisfaction = pop_satisfaction_ultimate_penalty
+					change_pop_allegiance = scope:joseon_pretender_scope
+				}
+			}
+		}
+		hidden_effect = {
+			every_owned_location = {
+				limit = {
+					local_cultural_unity > 0.75
+				}
+				every_pop = {
+					limit = {
+						owner = root
+						pop_type = pop_type:nobles
+					}
+					add_pop_satisfaction = pop_satisfaction_ultimate_penalty
+					change_pop_allegiance = scope:joseon_pretender_scope
+				}
+			}
+		}
+
+		scope:target_character = { change_character_allegiance = scope:joseon_pretender_scope }
+		scope:joseon_pretender_scope = {
+			add_rebel_progress = 0.3
+		}
+	}
+}
+
+#The Gyeongguk Daejon
+flavor_kor.16 = {
+	type = country_event
+	title = flavor_kor.16.title
+	desc = flavor_kor.16.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1460.1.1
+		to = 1500.1.1
+		monthly_chance = 5
+	}
+	trigger = {
+		stability > 20
+		custom_tooltip = {
+			text = is_joseon_dynasty_tt
+			is_joseon_dynasty = yes
+		}
+	}
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+	option = {
+		name = flavor_kor.16.a
+		historical_option = yes
+		unlock_policy_effect = { type = joseon_code_policy }
+		change_gold_effect = { scale = -6 }
+	}
+	option = {
+		name = flavor_kor.16.b
+		add_prestige = prestige_weak_penalty
+	}
+}
+
+#Samsa System
+flavor_kor.17 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_kor.17.title
+	desc = flavor_kor.17.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1400.1.1
+		to = 1600.1.1
+		monthly_chance = 10
+	}
+	trigger = {
+		custom_tooltip = {
+			text = has_neo_confucianism_tt
+			has_variable = has_neo_confucianism
+		}
+		at_war = no
+		stability > 10
+	}
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:nobles_estate }
+		select_insignificant_gov_reform = { save_scope_as = target_reform }
+	}
+	option = {
+		name = flavor_kor.17.a
+		historical_option = yes
+		if = {
+			limit = { exists = scope:target_reform }
+			remove_reform = scope:target_reform
+		}
+		unlock_government_reform_effect = { type = samsa_system }
+		add_reform = government_reform:samsa_system
+		add_stability = stability_mild_penalty
+		change_gold_effect = { scale = -6 }
+	}
+	option = {
+		name = flavor_kor.17.b
+		add_prestige = prestige_weak_penalty
+	}
+}
+
+##################################################################################
+### This event can be abused to spawn units multiple times, removal is easiest ###
+##################################################################################
+
+# Righteous Army
+#flavor_kor.18 = {
+#	type = country_event
+#	title = flavor_kor.18.title
+#	desc = flavor_kor.18.desc
+#	outcome = neutral
+#
+#	trigger = {
+#		tag = KOR
+#		any_current_war = {
+#			NOT = { has_variable = received_righteous_army }
+#			any_defender = {
+#				this = ROOT
+#			}
+#		}
+#	}
+#
+#	illustration_tags = {
+#		10 = armed
+#		10 = exterior
+#	}
+#
+#	immediate = {
+#		event_illustration_poptype_effect = { foreground = pop_type:peasants   background = pop_type:soldiers }
+#		random_war = {
+#			limit = {
+#				NOT = { has_variable = received_righteous_army }
+#				any_defender = {
+#					this = ROOT
+#				}
+#			}
+#			save_scope_as = target_war
+#		}
+#		scope:target_war = {
+#			set_variable = received_righteous_army
+#		}
+#
+#		random_core_location = {
+#			save_scope_as = target_location
+#		}
+#
+#		random_core_location = {
+#			limit = {
+#				controller ?= ROOT
+#			}
+#			save_scope_as = target_location
+#		}
+#	}
+#
+#	option = {
+#		name = flavor_kor.18.a
+#
+#		add_war_exhaustion = war_exhaustion_severe_penalty
+#
+#		add_yearly_manpower = 2
+#
+#		scope:target_location = {
+#			while = {
+#				count = 5
+#				create_sub_unit_of_category = sub_unit_category:army_heavy_infantry
+#			}
+#		}
+#	}
+#
+#	option = {
+#		name = flavor_kor.18.b
+#
+#		change_societal_value = {
+#			type = individualism_vs_communalism
+#			value = societal_value_move_to_left
+#		}
+#	}
+#}
+
+# Cotton Seeds
+flavor_kor.19 = {
+	type = country_event
+	title = flavor_kor.19.title
+	desc = flavor_kor.19.desc
+	outcome = neutral
+
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_cotton.dds"
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1375.4.1
+		to = 1410.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		country_exists = c:CHI
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:burghers   background = pop_type:burghers }
+		c:CHI = {
+			save_scope_as = target_country
+		}
+		create_character = {
+			estate = estate_type:clergy_estate
+			first_name = name_ik_jeon
+			last_name = Mun
+			birth_location = location:jinju
+			birth_date = 1329.2.8
+			adm = { 60 80 }
+			dip = { 80 90 }
+			mil = { 30 40 }
+			save_scope_as = target_character
+			create_in_limbo = yes
+		}
+		location:jinju = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_kor.19.a
+
+		change_societal_value = {
+			type = capital_economy_vs_traditional_economy
+			value = societal_value_minor_move_to_right
+		}
+
+		every_owned_location = {
+			limit = {
+				raw_material = goods:cotton
+				region = region:korea_region
+			}
+			change_max_raw_material_workers = 1
+			add_location_modifier = {
+				mode = add_and_extend
+				modifier = kor_cotton_seed
+				years = 20
+			}
+		}
+		scope:target_character = { move_country = root }
+	}
+
+	option = {
+		name = flavor_kor.19.b
+
+		reverse_add_opinion = {
+			modifier = kor_persecuted_cotton_theft
+			target = scope:target_country
+		}
+		scope:target_character = { move_country = root }
+	}
+}
+
+# Korean Factionalism
+# Factions:
+# sarim
+# hungu
+# gwan_hak
+# jeol_eui
+
+scripted_trigger has_korean_factionalism = {
+	has_variable = kor_bungdang
+}
+
+scripted_trigger has_sarim_hungu_factions = {
+	has_variable = kor_later_bungdang
+}
+
+scripted_effect clear_modifier_for_faction = {
+	if = {
+		limit = {
+			has_country_modifier = kor_support_$faction$_modifier
+		}
+		remove_country_modifier = kor_support_$faction$_modifier
+	}
+}
+
+scripted_effect clear_factionalism_flags_and_modifiers = {
+	clear_modifier_for_faction = { faction = sarim }
+	clear_modifier_for_faction = { faction = hungu }
+	clear_modifier_for_faction = { faction = gwan_hak }
+	clear_modifier_for_faction = { faction = jeol_eui }
+}
+
+scripted_effect support_faction_sarim = {
+	change_societal_value = {
+		type = spiritualist_vs_humanist
+		value = societal_value_minor_move_to_left
+	}
+}
+
+scripted_effect support_faction_hungu = {
+	change_societal_value = {
+		type = centralization_vs_decentralization
+		value = societal_value_minor_move_to_left
+	}
+}
+
+scripted_effect support_faction_gwan_hak = {
+	add_stability = stability_mild_bonus
+}
+
+scripted_effect support_faction_jeol_eui = {
+	change_societal_value = {
+		type = traditionalist_vs_innovative
+		value = societal_value_minor_move_to_left
+	}
+}
+
+scripted_effect support_faction = {
+	add_country_modifier = {
+		modifier = kor_support_$faction$_modifier
+		years = -1
+		desc = kor_until_ruler_death
+	}
+
+	support_faction_$faction$ = yes
+}
+
+# Pick between factions - fired on every ruler as well as by events
+flavor_kor.20 = {
+	type = country_event
+	title = flavor_kor.20.title
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_sarim_hungu_factions = yes
+				}
+				desc = flavor_kor.20.desc_sarim_hungu
+			}
+			triggered_desc = {
+				desc = flavor_kor.20.desc_gwan_hak_jeol_eui
+			}
+		}
+	}
+	outcome = neutral
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	immediate = {
+		clear_factionalism_flags_and_modifiers = yes
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	trigger = {
+		has_korean_factionalism = yes
+	}
+
+	# Support Sarim
+	option = {
+		name = flavor_kor.20.a
+
+		if = {
+			limit = {
+				has_sarim_hungu_factions = yes
+			}
+			support_faction = { faction = sarim }
+		}
+		else = {
+			support_faction = {
+				faction = gwan_hak
+			}
+		}
+	}
+
+	# Support Hungu
+	option = {
+		name = flavor_kor.20.b
+
+		if = {
+			limit = {
+				has_sarim_hungu_factions = yes
+			}
+			support_faction = { faction = hungu }
+		}
+		else = {
+			support_faction = {
+				faction = jeol_eui
+			}
+		}
+	}
+}
+
+# Formation of the first factions
+flavor_kor.21 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_kor.21.title
+	desc = flavor_kor.21.desc
+	outcome = neutral
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		set_variable = kor_bungdang
+		ruler = {
+			save_scope_as = new_ruler
+		}
+	}
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	trigger = {
+		has_ruler = yes
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1380.1.1
+		to = 1821.1.1
+		monthly_chance = 10
+	}
+
+	option = {
+		name = flavor_kor.21.a
+
+		trigger_event_non_silently = {
+			id = flavor_kor.20
+		}
+	}
+}
+
+# Formation of Sarim and Hungu
+flavor_kor.22 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_kor.22.title
+	desc = flavor_kor.22.desc
+	outcome = neutral
+
+	immediate = {
+		set_variable = kor_later_bungdang
+		ruler = {
+			save_scope_as = new_ruler
+		}
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	trigger = {
+		custom_tooltip = {
+			text = has_korean_factionalism_tt
+			has_korean_factionalism = yes
+		}
+		has_ruler = yes
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1455.8.3 # Coup of https://en.wikipedia.org/wiki/Sejo_of_Joseon
+		to = 1600.1.1
+		monthly_chance = 25
+	}
+
+	option = {
+		name = flavor_kor.22.a
+
+		trigger_event_non_silently = {
+			id = flavor_kor.20
+		}
+	}
+}
+
+# Moving Capital to Hanseong (Seoul)
+flavor_kor.23 = {
+	type = country_event
+	title = flavor_kor.23.title
+	desc = flavor_kor.23.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1390.1.1
+		to = 1450.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = exterior
+	}
+
+	trigger = {
+		owns = location:namgyeong
+		capital != location:namgyeong
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		location:namgyeong = {
+			save_scope_as = target_location
+		}
+
+		capital = {
+			save_scope_as = current_capital
+		}
+	}
+
+	option = {
+		name = flavor_kor.23.a
+
+		move_capital_event_effect = {
+			from = scope:current_capital
+			to = scope:target_location
+		}
+
+		scope:target_location = {
+			rename_location = hanseong
+		}
+	}
+
+	option = {
+		name = flavor_kor.23.b
+
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+# Campaign against the Jurchens
+flavor_kor.24 = {
+	type = country_event
+	title = flavor_kor.24.title
+	desc = flavor_kor.24.desc
+	outcome = neutral
+
+	trigger = {
+		tag = KOR
+		NOT = { has_variable = flavor_kor_24_cooldown }
+		is_free_or_tributary_trigger = yes
+		region:korea_region = {
+			any_area_in_region = {
+				any_province_in_area = {
+					owner ?= {
+						culture ?= { has_culture_group = culture_group:jurchen_group }
+						is_rebel_country = no
+					}
+					any_location_in_province = {
+						any_neighbor_location = {
+							owner ?= ROOT
+						}
+					}
+				}
+			}
+		}
+	}
+
+	illustration_tags = {
+		10 = armed
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		region:korea_region = {
+			random_area_in_region = {
+				limit = {
+					any_province_in_area = {
+						owner ?= {
+							culture ?= { has_culture_group = culture_group:jurchen_group }
+							is_rebel_country = no
+						}
+						any_location_in_province = {
+							any_neighbor_location = {
+								owner ?= ROOT
+							}
+						}
+					}
+				}
+				random_province_in_area = {
+					limit = {
+						owner ?= {
+							culture ?= { has_culture_group = culture_group:jurchen_group }
+							is_rebel_country = no
+						}
+						any_location_in_province = {
+							any_neighbor_location = {
+								owner ?= ROOT
+							}
+						}
+					}
+					save_scope_as = target_province
+				}
+			}
+		}
+		set_variable = {
+			name = flavor_kor_24_cooldown
+			years = 10
+		}
+		scope:target_province.owner = {
+			save_scope_as = target_country
+		}
+	}
+
+	#Then we will have to expel them!
+	option = {
+		name = flavor_kor.24.a
+
+		add_casus_belli = {
+			target = scope:target_province.owner
+			type = casus_belli:cb_conquer_province
+			province = scope:target_province
+		}
+
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_minor_move_to_left
+		}
+
+		drop_antagonism_bomb = {
+			target = scope:target_province.capital
+			modifier = antagonism_pushed_towards_belligerent
+			value = 5
+		}
+	}
+
+	#Such a war will only lead to the misery of the [ROOT.GetCountry.GetGovernment.GetEstateNameWithNoTooltip('peasants_estate')].
+	option = {
+		name = flavor_kor.24.b
+
+		add_estate_satisfaction = {
+			type = estate_type:peasants_estate
+			value = estate_satisfaction_weak_bonus
+		}
+	}
+}
+
+# https://en.wikipedia.org/wiki/Heo_Nanseolheon
+flavor_kor.25 = {
+	type = country_event
+	title = flavor_kor.25.title
+	desc = flavor_kor.25.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1581.1.1
+		to = 1590.1.1
+		monthly_chance = 10
+	}
+
+	image = "gfx/interface/illustrations/institutions/renaissance.dds"
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						dynasty_exists = yangcheon_heo_dynasty
+					}
+				}
+				location:namgyeong = { create_dynasty_from_location = yangcheon_heo_dynasty }
+			}
+		}
+		create_character = {
+			estate = estate_type:nobles_estate
+			first_name = name_nanseolheon
+			dynasty = dynasty:yangcheon_heo_dynasty
+			artist = writer
+			artist_skill = { 0.7 0.80 }
+			birth_date = 1563.6.1
+			birth_location = location:myeongju #Old name for Gangneung
+			create_in_limbo = yes
+			female = yes
+			save_scope_as = target_character
+ 		}
+	}
+
+	option = {
+		name = flavor_kor.25.a
+
+		scope:target_character = {
+			move_country = ROOT
+		}
+
+		add_yearly_gold = -0.33
+	}
+
+	option = {
+		name = flavor_kor.25.b
+
+		add_prestige = prestige_weak_bonus
+		hidden_effect = {
+			kill_character_silently = {
+				target = scope:target_character
+			}
+		}
+	}
+}
+
+# Uniform Land Tax
+flavor_kor.26 = {
+	type = country_event
+	title = flavor_kor.26.title
+	desc = flavor_kor.26.desc
+	outcome = neutral
+	historical_info = flavor_kor.26.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1608.1.1
+		to = 1633.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = angry
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:peasants_estate background = estate_type:peasants_estate }
+		set_local_variable = {
+			name = tax_gold_amount
+			value = {
+				value = estate_tax_base:peasants_estate
+				multiply = 1
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.26.a
+
+		unlock_government_reform_effect = {
+			type = kor_daedongbeob
+		}
+
+		add_reform = government_reform:kor_daedongbeob
+
+		add_gold = {
+			value = local_var:tax_gold_amount
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:nobles_estate
+			value = estate_satisfaction_severe_penalty
+		}
+	}
+
+	option = {
+		name = flavor_kor.26.b
+
+		unlock_government_reform_effect = {
+			type = kor_daedongbeob
+		}
+	}
+}
+
+# Establishing Coinage
+flavor_kor.27 = {
+	type = country_event
+	title = flavor_kor.27.title
+	desc = flavor_kor.27.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1380.4.1
+		to = 1440.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:nobles_estate }
+		unlock_law_effect = {
+			type = kor_currency
+		}
+	}
+
+	option = {
+		name = flavor_kor.27.a
+
+		change_societal_value = {
+			type = capital_economy_vs_traditional_economy
+			value = societal_value_move_to_left
+		}
+
+		add_inflation = inflation_mild_penalty
+
+		add_policy = policy:kor_metal_coinage
+	}
+
+	option = {
+		name = flavor_kor.27.b
+
+		trigger = {
+			opinion = {
+				target = c:CHI
+				value >= 0
+			}
+		}
+
+		add_stability = stability_mild_bonus
+		add_policy = policy:kor_chinese_currency
+	}
+
+	option = {
+		name = flavor_kor.27.c
+
+		change_societal_value = {
+			type = capital_economy_vs_traditional_economy
+			value = societal_value_large_move_to_left
+		}
+
+		add_policy = policy:kor_jeohwa
+	}
+
+	option = {
+		name = flavor_kor.27.d
+
+		add_policy = policy:kor_barter_economy
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+# Hall of Worthies
+flavor_kor.28 = {
+	type = country_event
+	title = flavor_kor.28.title
+	desc = flavor_kor.28.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1420.1.1
+		to = 1450.1.1
+		monthly_chance = 20
+	}
+
+	trigger = {
+		has_ruler = yes
+	}
+
+	image = "gfx/interface/illustrations/institutions/renaissance.dds"
+
+	immediate = {
+
+		ruler = { save_scope_as = target_character }
+		set_local_variable = {
+			name = cost_of_worthies
+			value = {
+				value = root.yearly_gold
+				multiply = -2
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.28.a
+
+		add_research_progress = research_progress_extreme_bonus
+
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = kor_hall_of_worthies_modifier
+			years = -1
+		}
+
+		add_gold = local_var:cost_of_worthies
+	}
+
+	option = {
+		name = flavor_kor.28.b
+
+		change_societal_value = {
+			type = traditionalist_vs_innovative
+			value = societal_value_move_to_left
+		}
+	}
+}
+
+# Veritable Records of the Joseon Dynasty
+flavor_kor.29 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_kor.29.title
+	desc = flavor_kor.29.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1337.1.1
+		to = 1837.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		custom_tooltip = {
+			text = is_joseon_dynasty_tt
+			is_joseon_dynasty = yes
+		}
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:burghers_estate }
+		ordered_artist = {
+			limit = {
+				artist_type = writer
+			}
+			save_scope_as = target_artist #only for the illustration
+		}
+	}
+
+	option = {
+		name = flavor_kor.29.a
+
+		historical_option = yes
+
+		ai_chance = {
+			factor = 0.8
+		}
+
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = kor_veritable_record_maintenance
+			years = 25
+		}
+		capital = {
+			create_art = {
+				key = veritable_records_of_joseon
+				quality = 80
+				type = work_of_art_type:chronicle
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.29.b
+
+		ai_chance = {
+			factor = 0.2
+			modifier = {
+				factor = 0
+				OR = {
+					prestige <= 25
+					government_power <= 50
+				}
+			}
+		}
+
+		add_prestige = prestige_mild_penalty
+		add_government_power = government_power_extreme_penalty
+	}
+}
+
+# Ruler Falls of Horse
+flavor_kor.30 = {
+	type = country_event
+	title = flavor_kor.30.title
+	desc = flavor_kor.30.desc
+	outcome = neutral
+
+	trigger = {
+		exists = work_of_art:veritable_records_of_joseon
+		has_ruler = yes
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1460.1.1
+		to = 1560.1.1
+		monthly_chance = 1
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:burghers_estate }
+		work_of_art:veritable_records_of_joseon = {
+			save_scope_as = target_work_of_art
+		}
+		ruler = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_kor.30.a
+
+		ai_chance = {
+			factor = 0.8
+			modifier = {
+				factor = 0
+				OR = {
+					prestige <= 25
+					government_power <= 50
+				}
+			}
+		}
+
+		scope:target_work_of_art = {
+			change_art_quality = 10
+		}
+
+		add_prestige = prestige_mild_penalty
+		add_government_power = government_power_mild_penalty
+	}
+
+	option = {
+		name = flavor_kor.30.b
+
+		ai_chance = {
+			factor = 0.2
+		}
+
+		change_societal_value = {
+			type = centralization_vs_decentralization
+			value = societal_value_move_to_left
+		}
+	}
+}
+
+# Sungkyunkwan
+flavor_kor.31 = {
+	type = country_event
+	title = flavor_kor.31.title
+	desc = flavor_kor.31.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1395.1.1
+		to = 1410.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:nobles_estate }
+		capital = {
+			save_scope_as = target_location
+		}
+	}
+
+	option = {
+		name = flavor_kor.31.a
+
+		ai_chance = {
+			factor = 0.75
+		}
+
+		scope:target_location = {
+			if = {
+				limit = {
+					has_building = building_type:university
+				}
+				ROOT = {
+					add_research_progress = research_progress_extreme_bonus
+				}
+			}
+			else = {
+				construct_building = {
+					building_type = building_type:university
+					cost_multiplier = 0.25
+					cost_multiplier_reason = game_concept_event
+				}
+			}
+		}
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = kor_sungkyunkwan
+			years = 100
+		}
+
+		change_gold_effect = { scale = -12 }
+	}
+
+	option = {
+		name = flavor_kor.31.b
+
+		ai_chance = {
+			factor = 0.25
+		}
+
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+# Yi Kwal's Rebellion
+flavor_kor.32 = {
+	type = country_event
+	title = flavor_kor.32.title
+	desc = flavor_kor.32.desc
+	outcome = neutral
+
+	trigger = {
+		any_character = {
+			is_general = yes
+			unit.unit_location.owner ?= ROOT
+		}
+		has_ruler = yes
+
+		army_size >= 2
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = armed
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_character = {
+			limit = {
+				is_general = yes
+				unit.unit_location.owner ?= ROOT
+			}
+			save_scope_as = target_character
+		}
+		create_rebel = {
+			category = pretender
+			name = korean_pretender_mutiny
+			save_scope_as = target_rebels
+		}
+		scope:target_character = {
+			change_character_allegiance = scope:target_rebels
+			unit = {
+				save_scope_as = target_unit
+				unit_location = {
+					save_scope_as = target_location
+					province = {
+						every_location_in_province = {
+							every_pop = {
+								change_pop_allegiance = scope:target_rebels
+							}
+						}
+					}
+				}
+			}
+		}
+		scope:target_rebels = {
+			start_civil_war = {
+				save_scope_as = target_country
+				set_variable = {
+					name = will_not_surrender
+					years = 3
+				}
+			}
+		}
+		scope:target_unit = {
+			change_unit_owner = scope:target_country
+		}
+		ruler_or_regent ?= {
+			save_scope_as = our_ruler
+		}
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1600.1.1
+		to = 1625.1.1
+		monthly_chance = 10
+	}
+
+	option = {
+		name = flavor_kor.32.a
+
+		add_government_power = government_power_mild_penalty
+		custom_tooltip = kor_mutiny
+	}
+}
+
+# Dongguk Tonggam
+flavor_kor.33 = {
+	type = country_event
+	title = flavor_kor.33.title
+	desc = flavor_kor.33.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1420.1.1
+		to = 1510.1.1
+		monthly_chance = 10
+	}
+
+	trigger = {
+		any_artist = {
+			artist_type = writer
+		}
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		random_artist = {
+			limit = {
+				artist_type = writer
+			}
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_kor.33.a
+
+		ai_chance = {
+			factor = 0.75
+		}
+
+		change_gold_effect = { scale = -6 }
+
+		capital = {
+			create_art = {
+				artist = scope:target_character
+				key = tongguk_tonggam
+				quality = { 70 80 }
+				type = work_of_art_type:chronicle
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.33.b
+
+		ai_chance = {
+			factor = 0.25
+		}
+
+		add_all_estate_satisfaction = {
+			value = estate_satisfaction_mild_bonus
+		}
+	}
+}
+
+# Disturbance of Three Ports
+flavor_kor.34 = {
+	type = country_event
+	title = flavor_kor.34.title
+	desc = flavor_kor.34.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1500.1.1
+		to = 1821.1.1
+		monthly_chance = 2
+	}
+
+	trigger = {
+		owns = location:dongnae
+		societal_value:outward_vs_inward <= 0.15
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = angry
+	}
+
+	immediate = {
+		location:dongnae = {
+			save_scope_as = target_location
+			random_pop = {
+				save_scope_as = target_pop
+			}
+			random_pop = {
+				limit = {
+					pop_type = pop_type:burghers
+				}
+				save_scope_as = target_pop
+			}
+		}
+		if = {
+			limit = {
+				scope:target_location.market.location.owner = ROOT
+			}
+			scope:target_location.market = {
+				save_scope_as = target_market
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.34.a
+
+		ai_chance = {
+			factor = 0.5
+		}
+
+		historical_option = yes
+
+		change_societal_value = {
+			type = outward_vs_inward
+			value = societal_value_large_move_to_left
+		}
+
+		if = {
+			limit = {
+				current_age_or_later = { age = age_4_reformation }
+			}
+			change_societal_value = {
+				type = mercantilism_vs_free_trade
+				value = societal_value_large_move_to_left
+			}
+		}
+
+		scope:target_market ?= {
+			every_export = {
+				limit = {
+					owner.culture = {
+						has_culture_group = culture_group:japanese_group
+					}
+				}
+				owner = {
+					add_opinion = {
+						modifier = kor_japanese_riot
+						target = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.34.b
+
+		ai_chance = {
+			factor = 0.5
+			modifier = {
+				factor = 0.25
+				estate_satisfaction:burghers_estate < 0.3
+			}
+		}
+
+		add_prestige = prestige_severe_penalty
+
+		scope:target_location = {
+			every_pop = {
+				limit = {
+					OR = {
+						pop_type = pop_type:burghers
+						pop_type = pop_type:laborers
+					}
+				}
+				add_pop_satisfaction = pop_satisfaction_extreme_penalty
+			}
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:burghers_estate
+			value = estate_satisfaction_mild_penalty
+		}
+	}
+}
+
+# Cloud Dream of Nine
+flavor_kor.35 = {
+	type = country_event
+	title = flavor_kor.35.title
+	desc = flavor_kor.35.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1670.1.1
+		to = 1720.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = happy
+		10 = interior
+	}
+
+	trigger = {
+		any_artist = {
+			artist_type = writer
+			artist_skill >= 0.1
+		}
+		has_advance = kor_hangeul_alphabet
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:burghers_estate }
+		random_artist = {
+			limit = {
+				artist_type = writer
+				artist_skill >= 0.1
+			}
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_kor.35.a
+
+		ai_chance = {
+			factor = 0.8
+		}
+
+		culture = {
+			add_cultural_influence = cultural_influence_mild_bonus
+		}
+		capital = {
+			create_work_of_art_with_artist_input = {
+				artist = scope:target_character
+				base_quality = 0.5
+				key = kor_cloud_dream_of_nine
+				type = work_of_art_type:novel
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.35.b
+
+		ai_chance = {
+			factor = 0.2
+		}
+
+		add_prestige = prestige_mild_penalty
+		scope:target_character = {
+			add_artist_skill = -0.1
+		}
+		culture = {
+			add_cultural_tradition = cultural_tradition_extreme_bonus
+		}
+	}
+}
+
+# Bureau of Interpreters
+flavor_kor.36 = {
+	type = country_event
+	title = flavor_kor.36.title
+	desc = flavor_kor.36.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1390.1.1
+		to = 1450.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:burghers_estate background = estate_type:nobles_estate }
+	}
+
+	trigger = {
+		culture.language = language:korean_language
+	}
+
+	option = {
+		name = flavor_kor.36.a
+
+		ai_chance = {
+			factor = 1
+		}
+
+		historical_option = yes
+
+		add_country_modifier = {
+			mode = add_and_extend
+			modifier = kor_sayeogwon
+			years = 40
+		}
+
+		change_gold_effect = { scale = -6 }
+
+		if = {
+			limit = {
+				is_subject = yes
+			}
+			add_liberty_desire = liberty_desire_severe_minus
+		}
+	}
+
+	option = {
+		name = flavor_kor.36.b
+
+		ai_chance = {
+			factor = 0
+		}
+
+		add_country_modifier = {
+			mode = replace
+			modifier = kor_diplomatic_issues
+			years = 25
+		}
+	}
+}
+
+# Bulssi Japbyeon
+flavor_kor.37 = {
+	type = country_event
+	title = flavor_kor.37.title
+	desc = flavor_kor.37.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1390.1.1
+		to = 1821.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = interior
+	}
+
+	trigger = {
+		any_international_organizations_member_of = {
+			international_organization_has_policy = policy:vajrayana_policy
+		}
+		any_international_organizations_member_of = {
+			international_organization_has_policy = policy:confucianism_policy
+		}
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+
+		random_international_organizations_member_of = {
+			limit = {
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			save_scope_as = target_international_organization
+		}
+	}
+
+	option = {
+		name = flavor_kor.37.a
+
+		ai_chance = {
+			factor = 0.75
+		}
+
+		every_international_organizations_member_of = {
+			limit = {
+				international_organization_has_policy = policy:vajrayana_policy
+			}
+			remove_country_from_international_organization = ROOT
+		}
+
+
+		custom_tooltip = {
+			text = KOR_increase_favor_of_confucianism
+			scope:target_international_organization = {
+				change_variable = {
+					name = sect_favor
+					add = 5
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.37.b
+
+		ai_chance = {
+			factor = 0.25
+		}
+
+		change_societal_value = {
+			type = spiritualist_vs_humanist
+			value = societal_value_move_to_left
+		}
+	}
+}
+
+# First Strife of Princes
+flavor_kor.38 = {
+	type = country_event
+	title = flavor_kor.38.title
+	desc = flavor_kor.38.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1390.1.1
+		to = 1425.1.1
+		monthly_chance = 5
+	}
+
+	illustration_tags = {
+		10 = regular
+		10 = interior
+	}
+
+	trigger = {
+		ruler ?= {
+			has_dynasty = yes
+		}
+		heir ?= {
+			age_in_years >= 18
+		}
+		any_character = {
+			dynasty ?= root.ruler.dynasty
+			age_in_years >= 18
+			is_female = no
+			is_heir = no
+			is_ruler = no
+		}
+		stability <= 50
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		random_character = {
+			limit = {
+				dynasty ?= root.ruler.dynasty
+				age_in_years >= 18
+				is_female = no
+				is_heir = no
+				is_ruler = no
+			}
+			save_scope_as = target_character
+		}
+		heir = {
+			save_scope_as = target_character2
+		}
+	}
+
+	option = {
+		name = flavor_kor.38.a
+
+		ai_chance = {
+			factor = 0.5
+		}
+
+		add_stability = stability_severe_penalty
+
+		scope:target_character2 = {
+			add_character_modifier = {
+				mode = replace
+				modifier = blocked_from_being_ruler
+				years = -1
+			}
+		}
+		scope:target_character = {
+			add_character_modifier = {
+				mode = replace
+				modifier = kor_ambitious_heir
+				years = -1
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.38.b
+
+		ai_chance = {
+			factor = 0.5
+		}
+
+		scope:target_character = {
+			add_character_modifier = {
+				mode = replace
+				modifier = blocked_from_being_ruler
+				years = -1
+			}
+		}
+		scope:target_character2 = {
+			add_character_modifier = {
+				mode = replace
+				modifier = kor_rightful_heir
+				years = -1
+			}
+		}
+	}
+}
+
+# Sadae
+flavor_kor.39 = {
+	type = country_event
+	title = flavor_kor.39.title
+	desc = flavor_kor.39.desc
+	outcome = neutral
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	trigger = {
+		NOT = { has_reform = government_reform:son_in_law_rule }
+		exists = international_organization:middle_kingdom.leader_country
+		international_organization:middle_kingdom.leader_country != ROOT
+		is_member_of_international_organization = international_organization:middle_kingdom
+		is_subject_or_below_of = international_organization:middle_kingdom.leader_country
+	}
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1350.1.1
+		to = 1550.1.1
+		monthly_chance = 5
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:burghers_estate }
+	}
+
+	option = {
+		name = flavor_kor.39.a
+
+		ai_chance = {
+			factor = 0.9
+		}
+
+		historical_option = yes
+		unlock_government_reform_effect = {
+			type = kor_sadae_reform
+		}
+		remove_current_major_government_reform = yes
+		add_reform = government_reform:kor_sadae_reform
+	}
+
+	option = {
+		name = flavor_kor.39.b
+
+		ai_chance = {
+			factor = 0.1
+		}
+
+		add_casus_belli = {
+			target = international_organization:middle_kingdom.leader_country
+			type = casus_belli:cb_border_war
+		}
+
+		change_societal_value = {
+			type = belligerent_vs_conciliatory
+			value = societal_value_huge_move_to_left
+		}
+	}
+}
+
+# Forbidding Private Armies
+flavor_kor.40 = {
+	type = country_event
+	title = flavor_kor.40.title
+	desc = flavor_kor.40.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1395.1.1
+		to = 1420.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	trigger = {
+		has_estate_privilege = estate_privilege:noble_armies
+		has_ruler = yes
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		ruler = {
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_kor.40.a
+
+		revoke_estate_privilege = estate_privilege:noble_armies
+
+		ai_chance = {
+			factor = 0.75
+			modifier = {
+				factor = 0
+				estate_satisfaction:nobles_estate < 0.25
+			}
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:nobles_estate
+			value = estate_satisfaction_mild_penalty
+		}
+
+		change_societal_value = {
+			type = centralization_vs_decentralization
+			value = societal_value_huge_move_to_left
+		}
+	}
+
+	option = {
+		name = flavor_kor.40.b
+
+		ai_chance = {
+			factor = 0.25
+		}
+
+		add_army_tradition = army_tradition_severe_bonus
+	}
+}
+
+# Pushback against Hangul
+flavor_kor.41 = {
+	type = country_event
+	title = flavor_kor.41.title
+	desc = flavor_kor.41.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1400.1.1
+		to = 1550.1.1
+		monthly_chance = 3
+	}
+
+	illustration_tags = {
+		10 = angry
+		10 = interior
+	}
+
+	trigger = {
+		has_advance = kor_hangeul_alphabet
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+	}
+
+	option = {
+		name = flavor_kor.41.a
+
+		ai_chance = {
+			factor = 0.5
+			modifier = {
+				factor = 0.25
+				estate_satisfaction:nobles_estate < 0.3
+			}
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:nobles_estate
+			value = estate_satisfaction_mild_penalty
+		}
+
+		change_societal_value = {
+			type = individualism_vs_communalism
+			value = societal_value_large_move_to_right
+		}
+
+		culture = {
+			add_cultural_influence = cultural_influence_weak_bonus
+		}
+	}
+
+	option = {
+		name = flavor_kor.41.b
+
+		ai_chance = {
+			factor = 0.5
+			modifier = {
+				factor = 0.25
+				estate_satisfaction:peasants_estate < 0.3
+			}
+		}
+
+		add_estate_satisfaction = {
+			type = estate_type:peasants_estate
+			value = estate_satisfaction_mild_penalty
+		}
+
+		change_societal_value = {
+			type = aristocracy_vs_plutocracy
+			value = societal_value_large_move_to_left
+		}
+
+		add_government_power = government_power_mild_bonus
+
+		add_country_modifier = {
+			mode = replace
+			modifier = kor_hangul_spread_halted
+			years = 30
+		}
+	}
+}
+
+#[ROOT.GetCountry.GetGovernment.GetRuler.GetNameWithNoTooltip]'s Northern Expedition
+flavor_kor.100 = {
+	hide_portraits = yes
+	type = country_event
+	title = flavor_kor.100.title
+	desc = flavor_kor.100.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1600.1.1
+		to = 1700.1.1
+		monthly_chance = 2
+	}
+	trigger = {
+		at_war = no
+		is_subject = no
+		government_type = government_type:monarchy
+		has_ruler = yes
+		any_neighbor_country = {
+			culture ?= { has_culture_group = culture_group:jurchen_group }
+			is_rebel_country = no
+		}
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		ruler = {
+			save_scope_as = korRuler
+		}
+		ordered_neighbor_country = {
+			limit = {
+				culture ?= { has_culture_group = culture_group:jurchen_group }
+				is_rebel_country = no
+			}
+			order_by = total_population
+			max = 1
+			save_scope_as = target_country
+			random_owned_location = {
+				limit = {
+					any_neighbor_location = {
+						owner ?= root
+					}
+				}
+				save_scope_as = target_location
+			}
+		}
+	}
+	option = {
+		name = flavor_kor.100.a
+		change_gold_effect = { scale = 12 }
+		add_casus_belli = {	target = scope:target_country type = casus_belli:cb_conquer_province province = scope:target_location.province }
+	}
+}
+
+#First Literati Purge
+flavor_kor.101 = {
+	type = country_event
+	title = flavor_kor.101.title
+	desc = flavor_kor.101.desc
+	outcome = neutral
+	fire_only_once = yes
+	trigger = {
+		custom_tooltip = {
+			text = kor_no_literati_purges_yet_tt
+			OR = {
+				NOT = { has_variable = literati_purges }
+				var:literati_purges = 0
+			}
+		}
+	}
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1497.1.1
+		to = 1499.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		set_variable = { name = literati_purges value = 1 }
+		create_character = { #https://ko.wikipedia.org/wiki/%EA%B9%80%EC%9D%BC%EC%86%90
+			first_name = name_il_son
+			last_name = name_kim
+			birth_date = 1464.2.13
+			birth_location = location:taegu
+			script = kim_il_son
+			save_scope_as = target_character
+		}
+		scope:target_character = {
+			set_to_limited_random_stats = {
+				max_adm = 80
+				min_adm = 55
+				max_dip = 80
+				min_dip = 55
+				max_mil = 80
+				min_mil = 55
+			}
+		}
+	}
+
+	option = {
+		name = flavor_kor.101.a
+		add_government_power = government_power_extreme_penalty
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_penalty }
+		kill_character = {
+			target = scope:target_character
+			reason = execution
+		}
+	}
+	option = {
+		name = flavor_kor.101.b
+		add_government_power = government_power_extreme_penalty
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_penalty }
+	}
+	option = {
+		name = flavor_kor.101.c
+		add_stability = stability_extreme_penalty
+	}
+}
+
+#Second Literati Purge
+flavor_kor.102 = {
+	type = country_event
+	title = flavor_kor.102.title
+	desc = flavor_kor.102.desc
+	outcome = neutral
+	fire_only_once = yes
+	trigger = {
+		custom_tooltip = {
+			text = kor_one_literati_purge_passed_tt
+			has_variable = literati_purges
+			var:literati_purges = 1
+		}
+	}
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1502.1.1
+		to = 1505.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		change_variable = { name = literati_purges add = 1 }
+		create_character = { #https://ko.wikipedia.org/wiki/%EC%9D%B4%EC%84%B8%EC%A2%8C
+			first_name = name_se_jwa
+			last_name = name_lee
+			birth_date = 1445.1.1
+			birth_location = location:gwangju
+			script = lee_se_jwa
+			save_scope_as = target_character
+		}
+	}
+
+	option = {
+		name = flavor_kor.102.a
+		add_government_power = government_power_extreme_penalty
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_penalty }
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_penalty }
+		kill_character_silently = scope:target_character
+	}
+	option = {
+		name = flavor_kor.102.b
+		add_stability = stability_extreme_penalty
+	}
+}
+
+#Third Literati Purge
+flavor_kor.103 = {
+	type = country_event
+	title = flavor_kor.103.title
+	desc = flavor_kor.103.desc
+	outcome = neutral
+	fire_only_once = yes
+	trigger = {
+		custom_tooltip = {
+			text = kor_two_literati_purges_passed_tt
+			has_variable = literati_purges
+			var:literati_purges = 2
+		}
+	}
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1518.1.1
+		to = 1520.1.1
+		monthly_chance = 10
+	}
+
+	illustration_tags = {
+        10 = angry
+        10 = interior
+    }
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		remove_variable = literati_purges
+		create_character = { #https://en.wikipedia.org/wiki/Jo_Gwang-jo
+			first_name = name_gwang_jo
+			last_name = name_jo
+			birth_date = 1482.8.23
+			birth_location = location:namgyeong
+			script = kor_jo_gwang_jo
+			save_scope_as = jo_gwang_jo
+		}
+	}
+	option = {
+		name = flavor_kor.103.a
+		add_government_power = government_power_extreme_penalty
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_penalty }
+		kill_character_silently = scope:jo_gwang_jo
+	}
+	option = {
+		name = flavor_kor.103.b
+		add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_mild_bonus }
+		add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_mild_penalty }
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_penalty }
+	}
+}
+
+#Yi Sun-sin
+flavor_kor.104 = {
+	type = country_event
+	title = flavor_kor.104.title
+	desc = flavor_kor.104.desc
+	outcome = neutral
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1580.1.1
+		to = 1582.1.1
+		monthly_chance = 20
+	}
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		create_character = {
+			first_name = name_sun_sin
+			last_name = Yi
+			adm = 85
+			dip = 88
+			mil = 99
+			birth_date = 1545.4.28
+			birth_location = location:namgyeong
+			add_trait = trait:ironside
+			script = yi_sun_sin
+			save_scope_as = yi_sun_sin
+			create_in_limbo = yes
+		}
+	}
+
+	option = {
+		name = flavor_kor.104.a
+		historical_option = yes
+		add_prestige = prestige_weak_bonus
+		scope:target_character = { move_country = root }
+	}
+	option = {
+		name = flavor_kor.104.b
+		add_stability = stability_extreme_bonus
+		hidden_effect = {
+			kill_character_silently = character:yi_sun_sin
+		}
+	}
+}
+
+#The Commander-Poet
+flavor_kor.200 = {
+	type = country_event
+
+	title = flavor_kor.200.title
+	desc = flavor_kor.200.desc
+	outcome = neutral
+
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1411.1.1
+		to = 1433.1.1
+		monthly_chance = 5
+	}
+	trigger = {
+		owns = location:gongju
+	}
+
+	illustration_tags = {
+        10 = regular
+        10 = exterior
+    }
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		#Kim Jong-seo https://en.wikipedia.org/wiki/Kim_Jong-seo_(general)
+		create_character = {
+			first_name = name_jong_seo
+			last_name = name_kim
+			culture = culture:korean_culture
+			religion = root.religion
+			adm = 72 dip = 58 mil = 91
+			female = no
+			birth_date = 1383.1.1
+			birth_location = location:gongju
+			estate = estate_type:burghers_estate
+			artist = writer
+			artist_skill = 0.80
+			script = kor_kim_jong_seo
+			save_scope_as = jong_seo
+			create_in_limbo = yes
+		}
+	}
+
+	option = {
+		name = flavor_kor.200.a
+		historical_option = yes
+
+		change_gold_effect = { scale = -1 }
+		scope:jong_seo = { move_country = root }
+	}
+
+	option = {
+		name = flavor_kor.200.b
+		hidden_effect = {
+			kill_character_silently = scope:jong_seo
+		}
+	}
+
+}
+
+flavor_kor.201 = { #The Goryeosa
+	type = country_event
+
+	title = flavor_kor.201.title
+	desc = flavor_kor.201.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = KOR
+		from = 1450.1.1
+		to = 1455.1.1
+		monthly_chance = 10
+	}
+	trigger = {
+		character:kor_kim_jong_seo ?= {
+			is_alive = yes
+			owner = root
+		}
+	}
+
+	image = "gfx/interface/illustrations/institutions/scientific_revolution.dds"
+
+	immediate = {
+
+		character:kor_kim_jong_seo = {
+			save_scope_as = jong_seo
+		}
+	}
+
+	option = {
+		name = flavor_kor.201.a
+		historical_option = yes
+
+		change_gold_effect = { scale = -5 }
+
+		capital = {
+			create_art = { #https://en.wikipedia.org/wiki/Goryeosa
+				artist = scope:jong_seo
+				quality = 84
+				type = work_of_art_type:chronicle
+				key = goryeosa
+			}
+		}
+
+	}
+
+	option = {
+		name = flavor_kor.201.b
+	}
+
+}
