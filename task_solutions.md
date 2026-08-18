@@ -22,7 +22,6 @@ Status summary:
 
 ---
 
-
 ## HIGH Nr.3 — remove the ability to offer troops as mercenaries
 
 **Request.** Remove "Make Available For Hire" for players, and for the AI if possible. Renting
