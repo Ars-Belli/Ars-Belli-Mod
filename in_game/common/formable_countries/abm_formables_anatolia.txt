@@ -1,0 +1,47 @@
+﻿REPLACE:PON_f = {
+
+	level = 3	
+	required_locations_fraction = 0.75
+	rule = plausible
+
+	potential = {
+		OR = {			
+			culture = culture:pontic_greek_culture
+			owns = location:trebizond
+		}
+		
+	}
+	
+	allow = {
+		AND = {
+			culture = culture:pontic_greek_culture
+			owns = location:trebizond
+		}
+	}
+	
+	name = PON
+	flag = PON
+	adjective = PON_ADJ
+	tag = PON
+	color = map_pontus
+	
+	
+	areas = {
+		pontus_area
+		crimea_area
+	}
+
+	provinces = {
+		taman_province
+		samegrelo_province
+		abkhazia_province
+
+		amasya_province
+		tokat_province
+		erzurum_province
+	}
+
+	form_effect = {
+		set_country_rank_effect = { rank = country_rank:rank_kingdom }
+	}
+}
