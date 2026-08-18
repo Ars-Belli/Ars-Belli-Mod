@@ -1,0 +1,64 @@
+﻿REPLACE:petty_bureaucracy = { #https://en.wikipedia.org/wiki/Jungin
+	estate = burghers_estate
+
+	potential = {
+		OR = {
+			culture ?= { ars_belli_has_confucian_culture_access = yes }
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			has_variable = has_neo_confucianism
+			is_member_of_international_organization = international_organization:middle_kingdom
+		}
+	}
+	allow = {
+		has_imperial_examinations = yes
+	}
+
+	can_revoke = {
+		not = { has_imperial_examinations = yes }
+	}
+
+	country_modifier = {
+		burghers_estate_max_tax = -0.05
+		global_burghers_estate_power = 0.33
+
+		global_burghers_max_literacy = 5
+		country_cabinet_efficiency = 0.1
+		monthly_towards_centralization = societal_value_large_monthly_move
+	}
+}
+
+REPLACE:scholar_officials = { #https://en.wikipedia.org/wiki/Scholar-official
+	estate = nobles_estate
+
+	potential = {
+		OR = {
+			culture ?= { ars_belli_has_confucian_culture_access = yes }
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			has_variable = has_neo_confucianism
+			is_member_of_international_organization = international_organization:middle_kingdom
+		}
+	}
+	allow = {
+		has_imperial_examinations = yes
+	}
+
+	can_revoke = {
+		not = { has_imperial_examinations = yes }
+	}
+
+	country_modifier = {
+		nobles_estate_max_tax = -0.05
+		global_nobles_estate_power = 0.33
+
+		global_nobles_max_literacy = 5
+		research_speed_modifier = 0.1
+
+		monthly_towards_innovative = societal_value_large_monthly_move
+	}
+}

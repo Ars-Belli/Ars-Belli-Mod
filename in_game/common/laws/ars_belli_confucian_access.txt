@@ -1,0 +1,62 @@
+﻿REPLACE:imperial_examination_law = {
+	unique = yes
+	law_category = administrative
+	potential = {
+		OR = {
+			culture ?= { ars_belli_has_confucian_culture_access = yes }
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			custom_tooltip = {
+				text = has_neo_confucianism_tt
+				has_variable = has_neo_confucianism
+			}
+			AND = {
+				exists = international_organization:middle_kingdom
+				is_member_of_international_organization = international_organization:middle_kingdom
+				NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+			}
+		}
+	}
+
+	continue_the_imperial_examination = {
+		on_activate = {
+			if = {
+				limit = {
+					not = { has_variable = year_of_start_of_examination_system }
+				}
+				set_variable = {
+					name = year_of_start_of_examination_system
+					value = current_year
+					days = 8000 #Giving it a expiring date to avoid shaenanigans
+				}
+			}
+		}
+		estate_preferences = {
+			burghers_estate
+			clergy_estate
+			peasants_estate
+		}
+		years = 2
+
+		country_modifier = {
+			government_size = 1
+			country_cabinet_efficiency = 0.05
+		}
+	}
+
+	abolish_imperial_examination = {
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+
+		country_modifier = {
+			global_pop_promotion_speed_modifier = -0.25
+			nobles_estate_target_satisfaction = large_permanent_target_satisfaction
+			monthly_towards_centralization = societal_value_monthly_move
+			hire_advisor_cost_modifier = -0.25
+		}
+	}
+}

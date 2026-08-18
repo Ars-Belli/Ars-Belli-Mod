@@ -1,0 +1,46 @@
+﻿REPLACE:confucian_school_advance = {
+	age = age_1_traditions
+
+	requires = scriptorium_advance
+	potential = {
+		OR =  {
+			culture = { ars_belli_has_confucian_culture_access = yes }
+			religion = religion:sanjiao
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			custom_tooltip = {
+				text = has_neo_confucianism_tt
+				has_variable = has_neo_confucianism
+			}
+			is_member_of_international_organization = international_organization:middle_kingdom
+		}
+	}
+
+	unlock_building = confucian_school
+}
+
+REPLACE:confucian_academy_advance = {
+	age = age_2_renaissance
+
+	requires = government_size_renaissance
+
+	potential = {
+		OR =  {
+			culture = { ars_belli_has_confucian_culture_access = yes }
+			religion = religion:sanjiao
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			custom_tooltip = {
+				text = has_neo_confucianism_tt
+				has_variable = has_neo_confucianism
+			}
+			is_member_of_international_organization = international_organization:middle_kingdom
+		}
+	}
+
+	unlock_building = confucian_academy
+}

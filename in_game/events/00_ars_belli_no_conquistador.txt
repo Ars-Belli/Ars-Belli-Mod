@@ -1,0 +1,64 @@
+﻿namespace = flavor_cas
+
+# Events use first-definition-wins. A root event file loads before DHE/, so this
+# keeps the Cortes flavor event while preventing its direct start_conquistador bypass.
+flavor_cas.36 = { #Hernan Cortes
+	type = country_event
+	title = flavor_cas.36.title
+	desc = flavor_cas.36.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+	fire_only_once = yes
+
+	historical_info = flavor_cas.36.historical_info
+
+	dynamic_historical_event = {
+		tag = CAS
+		from = 1519.1.1
+		to = 1530.1.1
+		monthly_chance = 1
+	}
+
+	trigger = {
+		has_presence_in = region:caribbean_region
+	}
+
+	immediate = {
+		create_character = {
+			first_name = Hernan
+			dynasty = dynasty:cortes_dynasty
+			adm = { 50 70 }
+			dip = { 50 70 }
+			mil = 100
+			birth_date = 1485.12.1
+			birth_location = location:medellin
+			culture = culture:castilian
+			estate = estate_type:nobles_estate
+			script = cas_cortes
+			save_scope_as = target_character
+			create_in_limbo = yes
+		}
+	}
+
+	option = {
+		name = flavor_cas.36.a
+		historical_option = yes
+		scope:target_character = {
+			move_country = root
+			add_random_trait_from_category = general
+			add_character_modifier = {
+				modifier = refuses_to_serve_in_cabinet
+				years = -1
+				mode = add_and_extend
+			}
+		}
+	}
+
+	option = {
+		name = flavor_cas.36.b
+		add_prestige = prestige_mild_penalty
+		hidden_effect = {
+			kill_character_silently = scope:target_character
+		}
+	}
+}

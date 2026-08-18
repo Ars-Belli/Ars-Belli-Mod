@@ -127,6 +127,16 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **`divide = { value = X min = 1 }` is the vanilla divide-by-zero guard** (`script_values\diplomatic_values.txt`), and `max = N` as a sibling of `value`/`multiply` clamps the finished term. Both are worth reaching for whenever an acceptance term divides by another country's income.
 - **Estates and "the bank" are the same thing in EU5's own vocabulary** — `generic_actions\take_bank_loan.txt` defines `take_estate_loan`, whose message log reads "We took a loan from the bank". Expect player reports about "banks" to mean either the estates or a counterparty country; ask which.
 
+### 3k. Culture-group isolation and Confucian compatibility
+- The overlap cleanup uses `REPLACE:` culture entries rather than changing the base culture files. `abm_indian_tibeto_burman_cultures.txt` removes Tibeto-Burman membership from Dimasa, Bodo, Garo, Rabha, Deori, Tiwa, Koch, Chutia, Tripuri, Karbi, Newar and Chakma; Newar retains both Indian and Nepali membership. `abm_east_asia_cultures.txt` makes Yi and Bai Tibeto-Burman only, the four Japanese cultures Japanese only, and Korean, Tamna and She group-less. `abm_south_east_asia_cultures.txt` makes Vietnamese and Muong Austroasiatic only. `abm_scandinavian_cultures.txt` makes Norn Scottish only.
+- `ars_belli_has_confucian_culture_access` is the single compatibility trigger for cultures that keep former Confucian mechanics: the remaining Confucian group, the Japanese group, Korean, Tamna, Vietnamese, Muong, Bai and She. The Confucian School building and advance, Confucian Academy advance, Imperial Examination law, Petty Bureaucracy and Scholar Officials all call this trigger; update the list once here if culture membership changes again.
+- Ars Belli intentionally ships empty same-name replacements for `common\international_organizations\middle_kingdom.txt` and `common\casus_belli\unify_china.txt`. Do not restore the Middle Kingdom or its mandate casus belli while maintaining Confucian compatibility; those removals predate this work and are separate design decisions.
+
+### 3l. Conquistadors removed
+- The Conquistador advance, generic action, AI action list and government reform are all disabled. The generic action and its AI list are **same-name full-file replacements** recorded in `replaced_files.txt`, because `REPLACE:` is proven unreliable for `generic_actions`; the action is gated at player, AI, automation, selection and effect layers.
+- `events\00_ars_belli_no_conquistador.txt` shadows `flavor_cas.36` from the later-loaded `events\dhe\flavor_CAS.txt`. It preserves both choices and Hernán Cortés as a character/general but omits the effect that creates a Conquistador country. Keep this root event ahead of the DHE file rather than copying the entire vanilla flavor file.
+- The replacement reform has no occupation modifier and cannot be selected. This neutralizes the exploit for existing or already queued cases without deleting existing subject countries. The inactive vanilla GUI surface is intentionally left in place; gameplay creation is blocked without maintaining a large GUI override.
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
@@ -164,7 +174,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-08-16 (economic support cap; union call to arms; tributary transfer bans; sell/buy location capped at a flat 100 gold in the GUI; mercenary listing removed; art-sale acceptance tightened).
+Last updated: 2026-08-19 (culture-group isolation with preserved Confucian access; Conquistador creation disabled; economic support cap; union call to arms; tributary transfer bans; sell/buy location capped at a flat 100 gold in the GUI; mercenary listing removed; art-sale acceptance tightened).
 
 ## Important Files
 - `README.md`: Basic mod title.
