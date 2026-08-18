@@ -9,7 +9,11 @@ Generate the user-facing patch notes for the Ars Belli mod. Output is for **play
 
 ## Scope rules
 
-Version tags follow `game.<gv>.mod.<n>` (e.g. `game.1.2.2.mod.4`). The current version is in `.metadata/metadata.json`. The per-release log is `versionsChangelog.md` at repo root; the cumulative state-of-mod doc is `Ars Belli - Complete Changelog.md` (also published as a Google Doc for players).
+Version tags follow `game.<gv>.mod.<n>` (e.g. `game.1.2.2.mod.4`). The current version is in `.metadata/metadata.json`. Three documents live at repo root:
+
+- `versionsChangelog.md` — the per-release log, and the source of the GitHub release notes.
+- `Ars Belli - Complete Changelog.md` — the cumulative state-of-mod document. **This is the one you edit.**
+- `Ars Belli Mod - List of Changes - google docs.md` — a verbatim Markdown export of the published Google Doc, kept as a snapshot of what players currently see. **Never hand-edit it**; it is replaced wholesale by the next download from Docs, and it lags the file above until the user re-publishes. Read it to recover edits the user made inside the Doc.
 
 The skill has three outputs and you should produce **all three** unless the user asks for only one:
 
