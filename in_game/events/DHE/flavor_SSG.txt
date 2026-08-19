@@ -1,10 +1,11 @@
-namespace = flavor_ssg
+﻿namespace = flavor_ssg
 
 # The Jo house can abandon its hereditary Yuan office and claim a northern Goryeo restoration.
 flavor_ssg.1 = {
 	type = country_event
 	title = flavor_ssg.1.title
 	desc = flavor_ssg.1.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	dynamic_historical_event = {
@@ -15,8 +16,13 @@ flavor_ssg.1 = {
 	}
 
 	trigger = {
-		NOT = { has_variable = ssg_jo_restoration_path }
-		NOT = { has_variable = ssg_jo_restoration_rejected }
+		custom_tooltip = {
+			text = ssg_jo_restoration_undecided_tt
+			NOR = {
+				has_variable = ssg_jo_restoration_path
+				has_variable = ssg_jo_restoration_rejected
+			}
+		}
 	}
 
 	option = {
@@ -53,6 +59,7 @@ flavor_ssg.10 = {
 	type = country_event
 	title = flavor_ssg.10.title
 	desc = flavor_ssg.10.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	immediate = {
@@ -62,14 +69,12 @@ flavor_ssg.10 = {
 
 	option = {
 		name = flavor_ssg.10.a
-		set_variable = ssg_economy_crown_path
 		add_country_modifier = { modifier = ssg_crown_granaries years = -1 mode = replace }
 		add_legitimacy = legitimacy_mild_bonus
 		ai_chance = { base = 50 }
 	}
 	option = {
 		name = flavor_ssg.10.b
-		set_variable = ssg_economy_market_path
 		add_country_modifier = { modifier = ssg_chartered_frontier_markets years = -1 mode = replace }
 		add_gold = { value = monthly_income_total multiply = 3 }
 		ai_chance = { base = 50 }
@@ -80,6 +85,7 @@ flavor_ssg.11 = {
 	type = country_event
 	title = flavor_ssg.11.title
 	desc = flavor_ssg.11.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	option = {
@@ -87,11 +93,14 @@ flavor_ssg.11 = {
 		remove_variable = ssg_active_project
 		set_variable = ssg_economy_stage_2
 		add_country_modifier = { modifier = ssg_economy_roads years = -1 mode = replace }
-		location:hwaju.province = {
-			every_location_in_province = {
-				limit = { owner ?= root }
-				change_prosperity = prosperity_mild_bonus
-				change_control = control_mild_bonus
+		custom_tooltip = {
+			text = flavor_ssg.11.infrastructure_tt
+			location:hwaju.province = {
+				every_location_in_province = {
+					limit = { owner ?= root }
+					change_prosperity = prosperity_mild_bonus
+					change_control = control_mild_bonus
+				}
 			}
 		}
 	}
@@ -101,6 +110,7 @@ flavor_ssg.12 = {
 	type = country_event
 	title = flavor_ssg.12.title
 	desc = flavor_ssg.12.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	option = {
@@ -118,6 +128,7 @@ flavor_ssg.20 = {
 	type = country_event
 	title = flavor_ssg.20.title
 	desc = flavor_ssg.20.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	immediate = {
@@ -127,14 +138,12 @@ flavor_ssg.20 = {
 
 	option = {
 		name = flavor_ssg.20.a
-		set_variable = ssg_military_retainers_path
 		add_country_modifier = { modifier = ssg_household_retainers years = -1 mode = replace }
 		add_army_tradition = army_tradition_mild_bonus
 		ai_chance = { base = 50 }
 	}
 	option = {
 		name = flavor_ssg.20.b
-		set_variable = ssg_military_levies_path
 		add_country_modifier = { modifier = ssg_village_levies years = -1 mode = replace }
 		add_manpower = { value = max_manpower multiply = 0.10 }
 		ai_chance = { base = 50 }
@@ -145,6 +154,7 @@ flavor_ssg.21 = {
 	type = country_event
 	title = flavor_ssg.21.title
 	desc = flavor_ssg.21.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	option = {
@@ -160,6 +170,7 @@ flavor_ssg.22 = {
 	type = country_event
 	title = flavor_ssg.22.title
 	desc = flavor_ssg.22.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	option = {
@@ -177,6 +188,7 @@ flavor_ssg.30 = {
 	type = country_event
 	title = flavor_ssg.30.title
 	desc = flavor_ssg.30.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	immediate = {
@@ -186,14 +198,12 @@ flavor_ssg.30 = {
 
 	option = {
 		name = flavor_ssg.30.a
-		set_variable = ssg_research_clerks_path
 		add_country_modifier = { modifier = ssg_bribed_manuscript_clerks years = -1 mode = replace }
 		add_legitimacy = legitimacy_mild_penalty
 		ai_chance = { base = 50 }
 	}
 	option = {
 		name = flavor_ssg.30.b
-		set_variable = ssg_research_artisans_path
 		add_country_modifier = { modifier = ssg_foreign_artisans years = -1 mode = replace }
 		add_gold = { value = monthly_income_total multiply = -2 }
 		ai_chance = { base = 50 }
@@ -204,6 +214,7 @@ flavor_ssg.31 = {
 	type = country_event
 	title = flavor_ssg.31.title
 	desc = flavor_ssg.31.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	option = {
@@ -219,6 +230,7 @@ flavor_ssg.32 = {
 	type = country_event
 	title = flavor_ssg.32.title
 	desc = flavor_ssg.32.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	option = {
@@ -237,6 +249,7 @@ flavor_ssg.40 = {
 	type = country_event
 	title = flavor_ssg.40.title
 	desc = flavor_ssg.40.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	immediate = {
@@ -246,14 +259,12 @@ flavor_ssg.40 = {
 
 	option = {
 		name = flavor_ssg.40.a
-		set_variable = ssg_diplomacy_isolation_path
 		add_country_modifier = { modifier = ssg_controlled_isolation years = -1 mode = replace }
 		add_stability = stability_mild_bonus
 		ai_chance = { base = 50 }
 	}
 	option = {
 		name = flavor_ssg.40.b
-		set_variable = ssg_diplomacy_opening_path
 		add_country_modifier = { modifier = ssg_measured_opening years = -1 mode = replace }
 		if = {
 			limit = { country_exists = c:CHI }
@@ -271,6 +282,7 @@ flavor_ssg.41 = {
 	type = country_event
 	title = flavor_ssg.41.title
 	desc = flavor_ssg.41.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	option = {
@@ -286,6 +298,7 @@ flavor_ssg.42 = {
 	type = country_event
 	title = flavor_ssg.42.title
 	desc = flavor_ssg.42.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	option = {
@@ -308,6 +321,7 @@ flavor_ssg.50 = {
 	type = country_event
 	title = flavor_ssg.50.title
 	desc = flavor_ssg.50.desc
+	outcome = neutral
 	fire_only_once = yes
 
 	option = {
@@ -316,17 +330,20 @@ flavor_ssg.50 = {
 		change_country_name = KOR
 		change_country_adjective = KOR_ADJ
 		change_country_flag = KOR
-		change_country_color = map_KOR
+		hidden_effect = { change_country_color = map_KOR }
 		if = {
 			limit = { country_rank_level < 3 }
 			set_country_rank = country_rank:rank_kingdom
 		}
 		remove_country_modifier = ssg_contested_royal_claim
 		add_country_modifier = { modifier = ssg_reunification_burdens years = 20 mode = replace }
-		region:korea_region = {
-			every_location_in_region = {
-				limit = { owner ?= root }
-				change_control = control_mild_penalty
+		custom_tooltip = {
+			text = flavor_ssg.50.integration_tt
+			region:korea_region = {
+				every_location_in_region = {
+					limit = { owner ?= root }
+					change_control = control_mild_penalty
+				}
 			}
 		}
 		add_prestige = prestige_severe_bonus
