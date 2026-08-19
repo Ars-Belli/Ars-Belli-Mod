@@ -1,0 +1,60 @@
+﻿# Same-name replacement: REPLACE: is not honored by the generic_actions database.
+
+create_conquistador = {
+	type = owncountry
+	show_in_gui_list = no
+
+	ai_tick = never
+	automation_tick = never
+
+	potential = {
+		always = no
+	}
+	ai_prerequisite = {
+		always = no
+	}
+	allow = {
+		always = no
+	}
+
+	# Keep the vanilla price and selection shape so the explicit expansion-view
+	# button still has every field it expects, even though every entry point is gated.
+	should_execute_price = no
+	price = price:recruit_conquistador
+
+	select_trigger = {
+		looking_for_a = character
+		source = actor
+		target_flag = target
+		name = "recruit_conquistador_select_char_title"
+		none_available_msg_key = "create_conquistador_no_characters"
+		column = {
+			data = character_explorer
+		}
+		visible = {
+			always = no
+		}
+	}
+
+	select_trigger = {
+		top_widget = conquistador_character_top
+		looking_for_a = area
+		target_flag = target_1
+		cache_targets = yes
+		name = "recruit_conquistador_select_area_title"
+		none_available_msg_key = "create_conquistador_no_areas"
+		column = {
+			data = name
+		}
+		visible = {
+			always = no
+		}
+	}
+
+	effect = {
+	}
+
+	ai_will_do = {
+		add = -1000
+	}
+}
