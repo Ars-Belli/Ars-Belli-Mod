@@ -127,8 +127,12 @@ ars_belli_enforce_peace = {
 
 	block_when_at_war = no
 
-	ai_tick = monthly
-	ai_tick_frequency = 6
+	# Player-only. The AI must never start an Enforce Peace itself: a refusal by the
+	# attacker drags the enforcer into the war, which is not a commitment the AI can
+	# judge. ai_tick = never is what actually bans it (same as vanilla
+	# ask_for_access_for_war_side / invite_settlers / request_loan); a negative
+	# ai_will_do is not enough, so that block is gone.
+	ai_tick = never
 
 	diplo_chance = {
 		base = 0
@@ -161,35 +165,6 @@ ars_belli_enforce_peace = {
 			subtract = {
 				desc = "game_concept_rival"
 				value = 50
-			}
-		}
-	}
-
-	# Deliberately conservative: a refusal by the attacker drags us into the war, so the
-	# AI should only reach for this when it clearly outweighs the attacker.
-	ai_will_do = {
-		add = {
-			desc = "BASE_VALUE"
-			value = 10
-		}
-		if = {
-			limit = {
-				scope:actor = { is_mp_gp = yes }
-			}
-			add = {
-				desc = "ars_belli_ep_reason_standing"
-				value = 20
-			}
-		}
-		if = {
-			limit = {
-				exists = scope:target
-				scope:target.attacker_leader = { is_mp_gp = yes }
-				scope:actor = { NOT = { is_mp_gp = yes } }
-			}
-			subtract = {
-				desc = "ars_belli_ep_reason_outmatched"
-				value = 100
 			}
 		}
 	}
