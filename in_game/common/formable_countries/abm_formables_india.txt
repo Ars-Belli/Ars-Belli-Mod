@@ -1,7 +1,33 @@
-﻿# India - Bengal
+﻿# Hindustan
+REPLACE:HIN_f = {
+	level = 5
+	required_locations_fraction = 0.80
+	rule = plausible
+	potential = {
+		original_capital.sub_continent = sub_continent:south_asia
+		culture = { has_culture_group = culture_group:indian_group }
+	}
+	allow = {
+		original_capital.sub_continent = sub_continent:south_asia
+		culture = { has_culture_group = culture_group:indian_group }
+	}
+	name = HIN
+	flag = HIN
+	adjective = HIN_ADJ
+	tag = HIN
+	color = map_HIN	
+	sub_continents = {
+		south_asia
+	}
+	form_effect = {
+	}
+}
+
+
+# India - Bengal
 
 REPLACE:BNG_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.70
 	rule = historical
 	
@@ -35,7 +61,7 @@ REPLACE:BNG_f = {
 # India - Western
 
 REPLACE:GUJ_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.6
 	rule = historical
 
@@ -77,7 +103,7 @@ REPLACE:GUJ_f = {
 }
 
 REPLACE:RJP_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.8
 	rule = historical
 
@@ -110,7 +136,7 @@ REPLACE:RJP_f = {
 
 # Rajastan - Muslim version of Raj
 ABRJS_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.8
 	rule = historical
 
@@ -149,7 +175,7 @@ ABRJS_f = {
 # INDIA - Hindustan
 
 REPLACE:NPL_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.90
 	rule = historical
 	potential = {
@@ -177,7 +203,7 @@ REPLACE:NPL_f = {
 }
 
 REPLACE:PUN_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.65
 	rule = historical
 
@@ -213,7 +239,7 @@ REPLACE:PUN_f = {
 }
 
 REPLACE:MUG_f = {
-	level = 4
+	level = 5
 	required_locations_fraction = 0.8
 	rule = historical
 	
@@ -252,7 +278,7 @@ REPLACE:MUG_f = {
 }
 
 ABBHS_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.65
 	rule = historical
 
@@ -290,7 +316,7 @@ ABBHS_f = {
 # India - Deccan
 
 REPLACE:DEC_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.65
 	rule = historical
 
@@ -326,7 +352,7 @@ REPLACE:DEC_f = {
 }
 
 REPLACE:MHR_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.5
 	rule = historical
 
@@ -364,7 +390,7 @@ REPLACE:MHR_f = {
 # India - Central
 
 ABNGA_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.65
 	rule = historical
 
@@ -404,7 +430,7 @@ ABNGA_f = {
 }
 
 ABCEY_f = {
-	level = 3
+	level = 4
 	required_locations_fraction = 0.75
 	rule = historical
 
@@ -441,6 +467,70 @@ ABCEY_f = {
 		if = {
 			limit = { country_rank_level < 3 }
 			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+VIJ_f = {
+	level = 4
+	required_locations_fraction = 1
+	rule = fantasy
+
+	potential = {
+		always = no
+	}
+
+	allow = {
+		always = no
+	}
+	
+	name = VIJ
+	flag = VIJ
+	adjective = VIJ_ADJ
+	tag = VIJ
+	color = map_VIJ
+
+	areas = {
+	}
+	form_effect = {
+	}
+}
+
+REPLACE:DLH_f = {
+	level = 4
+	required_locations_fraction = 1
+	rule = historical
+	
+	potential = {
+	}
+	allow = {
+		religion.group = religion_group:muslim
+		OR = {
+			culture = { has_culture_group = culture_group:indian_group }
+			culture = { has_culture_group = culture_group:iranian_group }
+			culture = { has_culture_group = culture_group:mongolian_group }
+			culture = { has_culture_group = culture_group:turkic_group }
+		}
+		owns = location:delhi
+	}
+
+
+	name = DLH
+	flag = DLH
+	adjective = DLH_ADJ
+	tag = DLH
+	color = map_delhi
+	regions = {
+		hindustan_region
+	}
+	form_effect = {
+		if = {
+			limit = { 
+				NOT = { 
+					capital = location:delhi
+				} 
+			}
+			set_capital = location:delhi
 		}
 	}
 }
