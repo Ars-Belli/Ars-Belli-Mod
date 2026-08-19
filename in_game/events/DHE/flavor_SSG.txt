@@ -638,6 +638,222 @@ flavor_ssg.142 = {
 	}
 }
 
+# The restoration court can prepare a specifically northern response to the Black Death.
+flavor_ssg.200 = {
+	type = country_event
+	title = flavor_ssg.200.title
+	desc = flavor_ssg.200.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/situation/ssg_hanyang_jo_restoration.dds"
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SSG
+		from = 1340.1.1
+		to = 1400.1.1
+		monthly_chance = 100
+	}
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		disease_is_active = disease:bubonic_plague
+		NOT = { has_variable = ssg_plague_preparations_set }
+	}
+
+	immediate = {
+		set_variable = ssg_plague_preparations_set
+	}
+
+	option = {
+		name = flavor_ssg.200.a
+		set_variable = ssg_plague_policy_cordons
+		add_gold = { value = monthly_income_total multiply = -4 }
+		add_stability = stability_mild_penalty
+		add_country_modifier = { modifier = ssg_mountain_cordons years = 10 mode = replace }
+		if = {
+			limit = { has_variable = ssg_economy_stage_1 }
+			add_country_modifier = { modifier = ssg_granary_quarantine_reserves years = 10 mode = replace }
+		}
+		hidden_effect = { trigger_event_silently = { id = flavor_ssg.201 months = 12 } }
+		ai_chance = { base = 65 }
+	}
+
+	option = {
+		name = flavor_ssg.200.b
+		set_variable = ssg_plague_policy_guarded_roads
+		add_gold = { value = monthly_income_total multiply = -2 }
+		add_prestige = prestige_weak_bonus
+		add_country_modifier = { modifier = ssg_guarded_caravan_stations years = 10 mode = replace }
+		if = {
+			limit = { has_variable = ssg_research_stage_1 }
+			add_country_modifier = { modifier = ssg_court_remedy_network years = 10 mode = replace }
+		}
+		hidden_effect = { trigger_event_silently = { id = flavor_ssg.201 months = 12 } }
+		ai_chance = { base = 35 }
+	}
+}
+
+flavor_ssg.201 = {
+	type = country_event
+	title = flavor_ssg.201.title
+	desc = flavor_ssg.201.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/situation/ssg_hanyang_jo_restoration.dds"
+	fire_only_once = yes
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		has_variable = ssg_plague_preparations_set
+		disease_is_active = disease:bubonic_plague
+	}
+
+	option = {
+		name = flavor_ssg.201.a
+		add_legitimacy = legitimacy_mild_penalty
+		add_country_modifier = { modifier = ssg_village_cordon_network years = 8 mode = replace }
+		ai_chance = { base = 60 }
+	}
+
+	option = {
+		name = flavor_ssg.201.b
+		add_gold = { value = monthly_income_total multiply = -3 }
+		add_stability = stability_weak_bonus
+		add_country_modifier = { modifier = ssg_temple_relief_network years = 8 mode = replace }
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.202 = {
+	type = country_event
+	title = flavor_ssg.202.title
+	desc = flavor_ssg.202.desc
+	outcome = negative
+	image = "gfx/interface/illustrations/situation/black_death.dds"
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SSG
+		from = 1340.1.1
+		to = 1420.1.1
+		monthly_chance = 100
+	}
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		has_variable = ssg_plague_preparations_set
+		country_has_disease = disease:bubonic_plague
+		NOT = { has_variable = ssg_black_death_reached_realm }
+	}
+
+	immediate = {
+		set_variable = ssg_black_death_reached_realm
+	}
+
+	option = {
+		name = flavor_ssg.202.a
+		add_gold = { value = monthly_income_total multiply = -4 }
+		custom_tooltip = flavor_ssg.202.a.tt
+		hidden_effect = {
+			if = {
+				limit = { has_variable = ssg_economy_stage_1 }
+				every_owned_location = {
+					limit = { disease_presence = { disease = disease:bubonic_plague value > 0 } }
+					change_disease_presence = { disease = disease:bubonic_plague value = -0.15 }
+				}
+			}
+			else = {
+				every_owned_location = {
+					limit = { disease_presence = { disease = disease:bubonic_plague value > 0 } }
+					change_disease_presence = { disease = disease:bubonic_plague value = -0.05 }
+				}
+			}
+		}
+		add_stability = stability_weak_bonus
+		ai_chance = { base = 70 }
+	}
+
+	option = {
+		name = flavor_ssg.202.b
+		add_country_modifier = { modifier = ssg_sheltered_royal_court years = 5 mode = replace }
+		if = {
+			limit = {
+				owns = location:hwaju
+				location:hwaju = { disease_presence = { disease = disease:bubonic_plague value > 0 } }
+			}
+			location:hwaju = {
+				change_disease_presence = { disease = disease:bubonic_plague value = -0.25 }
+			}
+		}
+		add_legitimacy = legitimacy_weak_bonus
+		ai_chance = { base = 30 }
+	}
+}
+
+flavor_ssg.203 = {
+	type = country_event
+	title = flavor_ssg.203.title
+	desc = flavor_ssg.203.desc
+	outcome = positive
+	image = "gfx/interface/illustrations/situation/ssg_hanyang_jo_restoration.dds"
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SSG
+		from = 1347.1.1
+		to = 1425.1.1
+		monthly_chance = 100
+	}
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		has_variable = ssg_plague_preparations_set
+		NOT = { has_variable = ssg_plague_outcome_recorded }
+		situation:black_death = {
+			situation_is_active = no
+			situation_has_ended = yes
+		}
+	}
+
+	immediate = {
+		set_variable = ssg_plague_outcome_recorded
+		remove_country_modifier = ssg_mountain_cordons
+		remove_country_modifier = ssg_guarded_caravan_stations
+		remove_country_modifier = ssg_granary_quarantine_reserves
+		remove_country_modifier = ssg_court_remedy_network
+		remove_country_modifier = ssg_village_cordon_network
+		remove_country_modifier = ssg_temple_relief_network
+		remove_country_modifier = ssg_sheltered_royal_court
+	}
+
+	option = {
+		name = flavor_ssg.203.a
+		trigger = {
+			NOR = {
+				has_variable = ssg_black_death_reached_realm
+				has_variable = had_black_death
+			}
+		}
+		add_prestige = prestige_severe_bonus
+		add_legitimacy = legitimacy_mild_bonus
+		add_stability = stability_mild_bonus
+		ai_chance = { base = 100 }
+	}
+
+	option = {
+		name = flavor_ssg.203.b
+		trigger = {
+			OR = {
+				has_variable = ssg_black_death_reached_realm
+				has_variable = had_black_death
+			}
+		}
+		add_gold = { value = monthly_income_total multiply = -3 }
+		add_country_modifier = { modifier = ssg_post_plague_restoration years = 10 mode = replace }
+		add_stability = stability_weak_bonus
+		ai_chance = { base = 100 }
+	}
+}
+
 # Reunification changes presentation, not the internal tag, so existing KOR DHEs remain coherent.
 flavor_ssg.50 = {
 	type = country_event
