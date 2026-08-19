@@ -85,12 +85,6 @@
     will_expire_trigger = {
         OR = {
             scope:first = {
-                is_rival_of = scope:second
-            }
-            scope:first = {
-                modifier:allowed_guarantee = no
-            }
-            scope:first = {
                 OR = {
                     is_mp_normal = yes
                     is_mp_small = yes
@@ -103,41 +97,17 @@
                     is_mp_major = yes
                 }
             }
-            scope:second = {
-                is_rival_of = scope:first
-            }
         }
     }
 
     cancel_effect = {
-        scope:actor = {
-            add_truce_with = { target = scope:recipient }
-        }
     }
 
     break_effect = {
-        scope:actor = {
-            add_truce_with = { target = scope:recipient }
-        }
     }
 
     # Auto-fired on expiry; same scope rules as will_expire_trigger — use first/second.
     expire_effect = {
-        if = {
-            limit = {
-                scope:first = {
-                    country_rank_level = scope:second.country_rank_level
-                }
-            }
-            scope:first = {
-                #upgrade to an alliance
-                create_relation = {
-                    first = scope:first
-                    second = scope:second
-                    type = relation_type:alliance
-                }
-            }
-        }
     }
 
     wants_to_give_diplo_chance = {
