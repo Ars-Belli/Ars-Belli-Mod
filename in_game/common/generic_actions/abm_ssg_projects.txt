@@ -1,0 +1,372 @@
+# Economy projects
+ssg_restore_royal_granaries = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			NOT = { has_variable = ssg_economy_stage_1 }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_standard
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_standard multiply = -1 }
+			set_variable = { name = ssg_active_project years = 2 }
+			trigger_event_silently = { id = flavor_ssg.10 years = 2 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+ssg_link_the_mountain_valleys = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			has_variable = ssg_economy_stage_1
+			NOT = { has_variable = ssg_economy_stage_2 }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_standard
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_standard multiply = -1 }
+			set_variable = { name = ssg_active_project years = 3 }
+			trigger_event_silently = { id = flavor_ssg.11 years = 3 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+ssg_establish_frontier_workshops = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			has_variable = ssg_economy_stage_2
+			has_advance = ssg_frontier_waterworks
+			NOT = { has_variable = ssg_economy_complete }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_major
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_major multiply = -1 }
+			set_variable = { name = ssg_active_project years = 4 }
+			trigger_event_silently = { id = flavor_ssg.12 years = 4 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+# Military projects
+ssg_organize_frontier_musters = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			NOT = { has_variable = ssg_military_stage_1 }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_standard
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_standard multiply = -1 }
+			set_variable = { name = ssg_active_project years = 2 }
+			trigger_event_silently = { id = flavor_ssg.20 years = 2 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+ssg_raise_beacons_and_forts = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			has_variable = ssg_military_stage_1
+			NOT = { has_variable = ssg_military_stage_2 }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_standard
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_standard multiply = -1 }
+			set_variable = { name = ssg_active_project years = 3 }
+			trigger_event_silently = { id = flavor_ssg.21 years = 3 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+ssg_build_the_royal_arsenal = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			has_variable = ssg_military_stage_2
+			has_advance = ssg_mountain_logistics
+			NOT = { has_variable = ssg_military_complete }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_major
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_major multiply = -1 }
+			set_variable = { name = ssg_active_project years = 4 }
+			trigger_event_silently = { id = flavor_ssg.22 years = 4 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+# Research projects
+ssg_acquire_foreign_manuscripts = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			NOT = { has_variable = ssg_research_stage_1 }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_standard
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_standard multiply = -1 }
+			set_variable = { name = ssg_active_project years = 2 }
+			trigger_event_silently = { id = flavor_ssg.30 years = 2 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+ssg_found_experimental_workshops = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			has_variable = ssg_research_stage_1
+			NOT = { has_variable = ssg_research_stage_2 }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_standard
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_standard multiply = -1 }
+			set_variable = { name = ssg_active_project years = 3 }
+			trigger_event_silently = { id = flavor_ssg.31 years = 3 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+ssg_open_the_court_academy = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			has_variable = ssg_research_stage_2
+			has_advance = ssg_court_metallurgy
+			NOT = { has_variable = ssg_research_complete }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_major
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_major multiply = -1 }
+			set_variable = { name = ssg_active_project years = 4 }
+			trigger_event_silently = { id = flavor_ssg.32 years = 4 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+# Diplomacy projects
+ssg_choose_the_frontier_posture = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			NOT = { has_variable = ssg_diplomacy_stage_1 }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_standard
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_standard multiply = -1 }
+			set_variable = { name = ssg_active_project years = 2 }
+			trigger_event_silently = { id = flavor_ssg.40 years = 2 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+ssg_authorize_privy_merchants = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			has_variable = ssg_diplomacy_stage_1
+			NOT = { has_variable = ssg_diplomacy_stage_2 }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_standard
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_standard multiply = -1 }
+			set_variable = { name = ssg_active_project years = 3 }
+			trigger_event_silently = { id = flavor_ssg.41 years = 3 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+ssg_press_restoration_claims = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			has_variable = ssg_diplomacy_stage_2
+			has_advance = ssg_ciphered_couriers
+			NOT = { has_variable = ssg_diplomacy_complete }
+		}
+	}
+	allow = {
+		scope:actor = {
+			custom_tooltip = { text = ssg_no_active_project_tt NOT = { has_variable = ssg_active_project } }
+			gold >= ssg_project_cost_major
+		}
+	}
+	effect = {
+		scope:actor = {
+			add_gold = { value = ssg_project_cost_major multiply = -1 }
+			set_variable = { name = ssg_active_project years = 4 }
+			trigger_event_silently = { id = flavor_ssg.42 years = 4 }
+		}
+	}
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
+
+# Reunification requires the four project capstones and effective control of Korea.
+ssg_proclaim_reunited_goryeo = {
+	type = owncountry
+	potential = {
+		scope:actor = {
+			has_variable = ssg_jo_restoration_path
+			has_variable = ssg_economy_complete
+			has_variable = ssg_military_complete
+			has_variable = ssg_research_complete
+			has_variable = ssg_diplomacy_complete
+			NOT = { has_variable = ssg_reunited_goryeo }
+		}
+	}
+	allow = {
+		scope:actor = {
+			is_subject = no
+			NOT = { has_variable = ssg_active_project }
+			NOT = { country_exists = c:KOR }
+			region:korea_region = {
+				any_location_in_region = {
+					owner ?= scope:actor
+					percent >= 0.95
+				}
+			}
+		}
+	}
+	effect = { scope:actor = { trigger_event_non_silently = flavor_ssg.50 } }
+	ai_tick = monthly
+	ai_tick_frequency = 12
+	ai_prerequisite = { NOT = { has_game_rule = historical_ai_choices } }
+	ai_will_do = { add = 100 }
+}
