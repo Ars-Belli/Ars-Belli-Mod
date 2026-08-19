@@ -34,45 +34,38 @@
 							text = "SSG_NO_ACTIVE_PROJECT"
 						}
 
-						flowcontainer = {
-							layoutpolicy_horizontal = expanding
-							ignoreinvisible = yes
-							visible = "[Player.MakeScope.GetVariable('ssg_active_project').IsSet]"
-							datamodel = "[Player.GetTimedModifiers]"
-							item = {
-								hbox = {
-									datacontext = "[TimedModifier]"
-									layoutpolicy_horizontal = expanding
-									spacing = 8
-									visible = "[EqualTo_string(Localize('STATIC_MODIFIER_NAME_ssg_national_project_underway'), TimedModifier.GetModifier.GetName)]"
-
-									timed_modifier_icon = {
-										datacontext = "[TimedModifier]"
-										size = { 32 32 }
-									}
-
-									vbox = {
-										layoutpolicy_horizontal = expanding
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_restore_royal_granaries').IsSet]" text = "ssg_restore_royal_granaries" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_link_the_mountain_valleys').IsSet]" text = "ssg_link_the_mountain_valleys" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_establish_frontier_workshops').IsSet]" text = "ssg_establish_frontier_workshops" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_organize_frontier_musters').IsSet]" text = "ssg_organize_frontier_musters" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_raise_beacons_and_forts').IsSet]" text = "ssg_raise_beacons_and_forts" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_build_the_royal_arsenal').IsSet]" text = "ssg_build_the_royal_arsenal" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_acquire_foreign_manuscripts').IsSet]" text = "ssg_acquire_foreign_manuscripts" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_found_experimental_workshops').IsSet]" text = "ssg_found_experimental_workshops" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_open_the_court_academy').IsSet]" text = "ssg_open_the_court_academy" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_choose_the_frontier_posture').IsSet]" text = "ssg_choose_the_frontier_posture" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_authorize_privy_merchants').IsSet]" text = "ssg_authorize_privy_merchants" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_press_restoration_claims').IsSet]" text = "ssg_press_restoration_claims" }
-										text_single = { visible = "[Not(Player.MakeScope.GetVariable('ssg_project_midpoint').IsSet)]" text = "SSG_PROJECT_PHASE_EARLY" }
-										text_single = { visible = "[Player.MakeScope.GetVariable('ssg_project_midpoint').IsSet]" text = "SSG_PROJECT_PHASE_LATE" }
-										text_single = { text = "[TimedModifier.GetDuration]" }
-										text_single = { text = "SSG_PROJECT_TIMER_HINT" }
-									}
-								}
-							}
-						}
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						visible = "[Player.MakeScope.GetVariable('ssg_active_project').IsSet]"
+						spacing = 2
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_restore_royal_granaries').IsSet]" text = "ssg_restore_royal_granaries" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_link_the_mountain_valleys').IsSet]" text = "ssg_link_the_mountain_valleys" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_establish_frontier_workshops').IsSet]" text = "ssg_establish_frontier_workshops" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_organize_frontier_musters').IsSet]" text = "ssg_organize_frontier_musters" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_raise_beacons_and_forts').IsSet]" text = "ssg_raise_beacons_and_forts" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_build_the_royal_arsenal').IsSet]" text = "ssg_build_the_royal_arsenal" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_acquire_foreign_manuscripts').IsSet]" text = "ssg_acquire_foreign_manuscripts" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_found_experimental_workshops').IsSet]" text = "ssg_found_experimental_workshops" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_open_the_court_academy').IsSet]" text = "ssg_open_the_court_academy" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_choose_the_frontier_posture').IsSet]" text = "ssg_choose_the_frontier_posture" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_authorize_privy_merchants').IsSet]" text = "ssg_authorize_privy_merchants" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_press_restoration_claims').IsSet]" text = "ssg_press_restoration_claims" }
+						text_single = { visible = "[Not(Player.MakeScope.GetVariable('ssg_project_midpoint').IsSet)]" text = "SSG_PROJECT_PHASE_EARLY" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_project_midpoint').IsSet]" text = "SSG_PROJECT_PHASE_LATE" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_restore_royal_granaries').IsSet]" text = "SSG_PROJECT_DURATION_TWO_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_organize_frontier_musters').IsSet]" text = "SSG_PROJECT_DURATION_TWO_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_acquire_foreign_manuscripts').IsSet]" text = "SSG_PROJECT_DURATION_TWO_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_choose_the_frontier_posture').IsSet]" text = "SSG_PROJECT_DURATION_TWO_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_link_the_mountain_valleys').IsSet]" text = "SSG_PROJECT_DURATION_THREE_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_raise_beacons_and_forts').IsSet]" text = "SSG_PROJECT_DURATION_THREE_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_found_experimental_workshops').IsSet]" text = "SSG_PROJECT_DURATION_THREE_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_authorize_privy_merchants').IsSet]" text = "SSG_PROJECT_DURATION_THREE_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_establish_frontier_workshops').IsSet]" text = "SSG_PROJECT_DURATION_FOUR_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_build_the_royal_arsenal').IsSet]" text = "SSG_PROJECT_DURATION_FOUR_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_open_the_court_academy').IsSet]" text = "SSG_PROJECT_DURATION_FOUR_YEARS" }
+						text_single = { visible = "[Player.MakeScope.GetVariable('ssg_active_press_restoration_claims').IsSet]" text = "SSG_PROJECT_DURATION_FOUR_YEARS" }
+						text_single = { text = "SSG_PROJECT_TIMER_HINT" }
+					}
 					}
 
 					hbox = {
