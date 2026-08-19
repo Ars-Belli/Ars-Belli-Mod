@@ -51,6 +51,16 @@ flavor_ssg.1 = {
 			years = -1
 			mode = replace
 		}
+		set_variable = {
+			name = ssg_chief_minister_next_election_year
+			value = current_year
+		}
+		hidden_effect = {
+			trigger_event_non_silently = {
+				id = flavor_ssg.60
+				days = 7
+			}
+		}
 		ai_chance = { base = 10 }
 	}
 
@@ -60,6 +70,127 @@ flavor_ssg.1 = {
 		set_variable = ssg_jo_restoration_rejected
 		add_legitimacy = legitimacy_mild_bonus
 		ai_chance = { base = 90 }
+	}
+}
+
+# The Hanyang Jo king remains hereditary while the court elects its chief minister.
+flavor_ssg.60 = {
+	type = country_event
+	title = flavor_ssg.60.title
+	desc = flavor_ssg.60.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/situation/ssg_hanyang_jo_restoration.dds"
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		has_variable = ssg_chief_minister_next_election_year
+		current_year >= var:ssg_chief_minister_next_election_year
+	}
+
+	immediate = {
+		ssg_ensure_chief_minister_candidates = yes
+		var:ssg_administrative_candidate ?= { save_scope_as = ssg_administrative_candidate }
+		var:ssg_diplomatic_candidate ?= { save_scope_as = ssg_diplomatic_candidate }
+		var:ssg_military_candidate ?= { save_scope_as = ssg_military_candidate }
+		var:ssg_balanced_candidate ?= { save_scope_as = ssg_balanced_candidate }
+	}
+
+	option = {
+		name = flavor_ssg.60.a
+		trigger = { exists = scope:ssg_administrative_candidate }
+		ssg_elect_chief_minister = {
+			target = scope:ssg_administrative_candidate
+			archetype = administrative
+		}
+		ai_chance = {
+			base = 25
+			modifier = { factor = 2 stability < 0 }
+			modifier = { factor = 2 num_loans > 0 }
+			modifier = {
+				factor = 1.5
+				has_variable = ssg_elected_chief_minister
+				var:ssg_elected_chief_minister = scope:ssg_administrative_candidate
+			}
+		}
+	}
+
+	option = {
+		name = flavor_ssg.60.b
+		trigger = { exists = scope:ssg_diplomatic_candidate }
+		ssg_elect_chief_minister = {
+			target = scope:ssg_diplomatic_candidate
+			archetype = diplomatic
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 2
+				OR = {
+					has_country_modifier = ssg_contested_royal_claim
+					has_country_modifier = ssg_measured_opening
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_variable = ssg_elected_chief_minister
+				var:ssg_elected_chief_minister = scope:ssg_diplomatic_candidate
+			}
+		}
+	}
+
+	option = {
+		name = flavor_ssg.60.c
+		trigger = { exists = scope:ssg_military_candidate }
+		ssg_elect_chief_minister = {
+			target = scope:ssg_military_candidate
+			archetype = military
+		}
+		ai_chance = {
+			base = 25
+			modifier = { factor = 3 at_war = yes }
+			modifier = {
+				factor = 1.5
+				has_variable = ssg_elected_chief_minister
+				var:ssg_elected_chief_minister = scope:ssg_military_candidate
+			}
+		}
+	}
+
+	option = {
+		name = flavor_ssg.60.d
+		trigger = { exists = scope:ssg_balanced_candidate }
+		ssg_elect_chief_minister = {
+			target = scope:ssg_balanced_candidate
+			archetype = balanced
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 2
+				at_war = no
+				stability >= 0
+				num_loans <= 0
+			}
+			modifier = {
+				factor = 1.5
+				has_variable = ssg_elected_chief_minister
+				var:ssg_elected_chief_minister = scope:ssg_balanced_candidate
+			}
+		}
+	}
+
+	after = {
+		set_variable = {
+			name = ssg_chief_minister_next_election_year
+			value = {
+				value = current_year
+				add = 4
+			}
+		}
+		trigger_event_non_silently = {
+			id = flavor_ssg.60
+			years = 4
+		}
 	}
 }
 
