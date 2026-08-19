@@ -1,0 +1,119 @@
+﻿situation_panel = {
+	blockoverride "situation_panel_main_content" {
+		situation_card_common = {
+			blockoverride "common_header_icon_texture" {
+				texture = "[SituationView.GetActiveSituation.GetIcon]"
+			}
+			blockoverride "common_header_text_full" {
+				text_single = {
+					text = "SSG_RESTORATION_PILLARS"
+				}
+			}
+			blockoverride "common_bottom_content" {
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 5
+
+					text_multi = {
+						layoutpolicy_horizontal = expanding
+						max_width = 400
+						autoresize = yes
+						text = "ssg_hanyang_jo_restoration_desc"
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						minimumsize = { -1 24 }
+						text_single = { text = "SSG_ECONOMY_PILLAR" }
+						expand = {}
+						text_single = {
+							visible = "[Not(Player.MakeScope.GetVariable('ssg_economy_stage_1').IsSet)]"
+							text = "SSG_PILLAR_NOT_STARTED"
+						}
+						text_single = {
+							visible = "[And(Player.MakeScope.GetVariable('ssg_economy_stage_1').IsSet, Not(Player.MakeScope.GetVariable('ssg_economy_stage_2').IsSet))]"
+							text = "SSG_PILLAR_STAGE_1"
+						}
+						text_single = {
+							visible = "[And(Player.MakeScope.GetVariable('ssg_economy_stage_2').IsSet, Not(Player.MakeScope.GetVariable('ssg_economy_complete').IsSet))]"
+							text = "SSG_ECONOMY_PILLAR_STAGE_2"
+						}
+						text_single = {
+							visible = "[Player.MakeScope.GetVariable('ssg_economy_complete').IsSet]"
+							text = "SSG_PILLAR_COMPLETE"
+						}
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						minimumsize = { -1 24 }
+						text_single = { text = "SSG_MILITARY_PILLAR" }
+						expand = {}
+						text_single = {
+							visible = "[Not(Player.MakeScope.GetVariable('ssg_military_stage_1').IsSet)]"
+							text = "SSG_PILLAR_NOT_STARTED"
+						}
+						text_single = {
+							visible = "[And(Player.MakeScope.GetVariable('ssg_military_stage_1').IsSet, Not(Player.MakeScope.GetVariable('ssg_military_stage_2').IsSet))]"
+							text = "SSG_PILLAR_STAGE_1"
+						}
+						text_single = {
+							visible = "[And(Player.MakeScope.GetVariable('ssg_military_stage_2').IsSet, Not(Player.MakeScope.GetVariable('ssg_military_complete').IsSet))]"
+							text = "SSG_MILITARY_PILLAR_STAGE_2"
+						}
+						text_single = {
+							visible = "[Player.MakeScope.GetVariable('ssg_military_complete').IsSet]"
+							text = "SSG_PILLAR_COMPLETE"
+						}
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						minimumsize = { -1 24 }
+						text_single = { text = "SSG_RESEARCH_PILLAR" }
+						expand = {}
+						text_single = {
+							visible = "[Not(Player.MakeScope.GetVariable('ssg_research_stage_1').IsSet)]"
+							text = "SSG_PILLAR_NOT_STARTED"
+						}
+						text_single = {
+							visible = "[And(Player.MakeScope.GetVariable('ssg_research_stage_1').IsSet, Not(Player.MakeScope.GetVariable('ssg_research_stage_2').IsSet))]"
+							text = "SSG_PILLAR_STAGE_1"
+						}
+						text_single = {
+							visible = "[And(Player.MakeScope.GetVariable('ssg_research_stage_2').IsSet, Not(Player.MakeScope.GetVariable('ssg_research_complete').IsSet))]"
+							text = "SSG_RESEARCH_PILLAR_STAGE_2"
+						}
+						text_single = {
+							visible = "[Player.MakeScope.GetVariable('ssg_research_complete').IsSet]"
+							text = "SSG_PILLAR_COMPLETE"
+						}
+					}
+
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						minimumsize = { -1 24 }
+						text_single = { text = "SSG_DIPLOMACY_PILLAR" }
+						expand = {}
+						text_single = {
+							visible = "[Not(Player.MakeScope.GetVariable('ssg_diplomacy_stage_1').IsSet)]"
+							text = "SSG_PILLAR_NOT_STARTED"
+						}
+						text_single = {
+							visible = "[And(Player.MakeScope.GetVariable('ssg_diplomacy_stage_1').IsSet, Not(Player.MakeScope.GetVariable('ssg_diplomacy_stage_2').IsSet))]"
+							text = "SSG_PILLAR_STAGE_1"
+						}
+						text_single = {
+							visible = "[And(Player.MakeScope.GetVariable('ssg_diplomacy_stage_2').IsSet, Not(Player.MakeScope.GetVariable('ssg_diplomacy_complete').IsSet))]"
+							text = "SSG_DIPLOMACY_PILLAR_STAGE_2"
+						}
+						text_single = {
+							visible = "[Player.MakeScope.GetVariable('ssg_diplomacy_complete').IsSet]"
+							text = "SSG_PILLAR_COMPLETE"
+						}
+					}
+				}
+			}
+		}
+	}
+}

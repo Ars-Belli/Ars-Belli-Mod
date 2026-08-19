@@ -28,6 +28,15 @@ flavor_ssg.1 = {
 	option = {
 		name = flavor_ssg.1.a
 		set_variable = ssg_jo_restoration_path
+		if = {
+			limit = {
+				situation:ssg_hanyang_jo_restoration = {
+					situation_is_active = no
+					situation_has_ended = no
+				}
+			}
+			activate_situation = situation:ssg_hanyang_jo_restoration
+		}
 		change_country_name = SSG_NORTHERN_GORYEO
 		change_country_adjective = SSG_NORTHERN_GORYEO_ADJ
 		change_country_flag = SSG_NORTHERN_GORYEO
@@ -327,6 +336,12 @@ flavor_ssg.50 = {
 	option = {
 		name = flavor_ssg.50.a
 		set_variable = ssg_reunited_goryeo
+		if = {
+			limit = {
+				is_situation_active = situation:ssg_hanyang_jo_restoration
+			}
+			end_situation = situation:ssg_hanyang_jo_restoration
+		}
 		change_country_name = KOR
 		change_country_adjective = KOR_ADJ
 		change_country_flag = KOR
