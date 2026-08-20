@@ -4,6 +4,74 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.14
+
+Since game.1.3.11.mod.13 → game.1.3.11.mod.14:
+
+> The Black Sea gets the attention this time — Gazaria, the Crimean Horde, Circassia and the
+> Zaporozhian steppe are rebuilt from the ground up — and the Indian and Chinese formable tiers are
+> sorted out.
+
+### Formables
+
+- **Hindustan** is formable by any Indian-culture country of South Asia: the whole subcontinent at
+  80% ownership, tier 5
+- **Delhi** is formable by any Muslim country of Indian, Iranian, Mongolian or Turkic culture that
+  owns Delhi, and moves its capital there on forming
+- **Circassia, Georgia and Armenia** added as Caucasus formables
+- Indian regional formables — Bengal, Gujarat, Rajputana, Rajastan, Nepal, Punjab, Bahmanis, Deccan,
+  Maratha, Nagavanshi and Ceylon — all moved to tier 4; Hindustan and the Mughals sit at tier 5
+- **China** raised to tier 5 and 80% of its locations; the four split-empires (Southern Song, Cao
+  Wei, Shu Han, Eastern Wu) moved to tier 4
+- **Pontus** moved to tier 4, opened to Gothic culture, and always requires owning Trebizond; forming
+  it no longer demotes a country that is already above kingdom rank
+- **Sun Quan** renamed **Southern Song**
+- **Vijayanagar** is explicitly disabled and says so in its tooltip, instead of sitting in the list as
+  an unformable entry
+
+### Pops, Map and Campaign Setup
+
+- **the Zaporozhian steppe is Cossack**: the Tatar peasants and tribesmen across the Dnieper and
+  Donets steppe are replaced by Orthodox Cossack pops, and the Ruthenians living there are peasants
+  rather than slaves
+- **Kaffa rebuilt** as the Genoese emporium of the Black Sea, around 33,500 people — Ligurian, Greek,
+  Armenian and Tatar burghers, an Armenian, Greek and Latin clergy, and a Caucasian and steppe slave
+  population
+- **Bakhchysarai (Qirq Yer)** grown into a proper town and made the Crimean Horde's capital, replacing
+  Enice
+- new towns for the Crimean Horde (Qirq Yer, Domakha, Enice, Oleshia, Teligol, Khadjibey) and
+  Circassia (Taman, Copa, Susaco)
+- **Gazaria** starts as a merchant republic at duchy rank, with trade offices across its Black Sea and
+  Caspian network — Taman, Susaco, Copa, Theodoro, Qirq Yer, Oleshia, Teligol, Khadjibey, Domakha,
+  Enice, Astrakhan and Sarayjuk — and a galley barracks in Kaffa
+- **Zaporozhia** starts at duchy rank
+- Ashikaga, Occitania, Benin and Bonoman use their proper map colours again
+
+### National Flavour
+
+- the **Genoese Galley** advance is available to any Ligurian country, not just Genoa
+- Gazaria's two trade advances now require Ship Building instead of Abacus and Lieutenancy
+- **Consiglio Maggiore** (Italian republics) now pushes centralization and carries a small peasant
+  satisfaction penalty, instead of +10% nobles and burghers estate power, a tiny satisfaction penalty
+  and −2.5% peasant max tax
+- **Cossack Black Sea Raids** grants +2.5% desired soldier pops instead of −25% privateer maintenance
+- the South China Yi and Fuzhou culture advances have their pop bonuses halved to 0.005, and Gentry
+  Town Residence has its city soldier bonus cut from 0.025 to 0.010
+
+### Enforce Peace
+
+- **Enforce Peace is player-only.** The AI no longer starts one itself: a refusal by the attacker
+  drags the enforcer into the war, which is not a commitment the AI can judge
+
+### Changes to Vanilla Diplomatic Actions
+
+- **guarantees** no longer add a truce when cancelled or broken, no longer upgrade into an alliance
+  when they expire between equals, and no longer expire because the two countries are rivals
+
+### New Diplomatic Actions
+
+- **Unconditional Surrender is removed** — the base game now provides its own
+
 ## game.1.3.11.mod.13
 
 Since game.1.3.11.mod.12 → game.1.3.11.mod.13:
