@@ -1,7 +1,8 @@
 # Ars Belli — Changelog
 
-Player-facing changes per release, newest first. For the full current state of every
-mod system (not just what changed), see `changes.txt`.
+Player-facing changes per release, newest first. This file is the source for the GitHub
+release notes. For the full current state of every mod system (not just what changed), see
+`Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
 ## game.1.3.11.mod.13
 

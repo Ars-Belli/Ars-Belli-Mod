@@ -16,14 +16,14 @@ Every existing release (e.g. `game.1.2.4.mod.6`) shares this shape:
 - **Asset =** the versioned ZIP `ArsBelliMod_<version>.zip`, produced by `release.ps1`. ZIPs are gitignored, so the release asset is the only published copy.
 - Not a prerelease. GitHub auto-marks the newest as **Latest**.
 
-The matching git commit is titled exactly the version string (e.g. commit subject `game.1.2.4.mod.6`) and touches `.metadata/metadata.json` + `changes.txt` (plus `workshop_description.txt` when wording changed).
+The matching git commit is titled exactly the version string (e.g. commit subject `game.1.2.4.mod.6`) and touches `.metadata/metadata.json` + `versionsChangelog.md` (plus `workshop_description.txt` when wording changed).
 
 ## Steps (full cut-a-release)
 
 1. **Pre-flight.** `git status -sb` — be on `main`, up to date, with all the code/balance changes you intend to ship already committed. Note the version currently in `.metadata/metadata.json`; that is the *previous, already-tagged* release (confirm with `git tag -l <that-version>`).
-2. **Bump version + build ZIP.** Run `./release.ps1`. It bumps the trailing integer in `metadata.json` (`…mod.N` → `…mod.N+1`) and writes `ArsBelliMod_<new_version>.zip` to the repo root. It only bumps `.mod.<n>` — for a base-game bump (e.g. `1.2.4` → `1.2.5`) edit `version` and `supported_game_version` in `metadata.json` by hand *before* running it. (Neither `changes.txt` nor `workshop_description.txt` is bundled in the ZIP, so editing them before or after this step is fine.)
-3. **Changelog.** Invoke the `changelog` skill. With `metadata.json` now holding the new (untagged) version, it picks `prev_tag` = the highest `game.*.mod.*` tag below it (the previous release), folds player-facing changes into `changes.txt`, and prints the `Since <prev_tag> → <version>:` blurb. Keep that blurb — it becomes the release body. Update `workshop_description.txt` too if any of its lines changed meaning.
-4. **Commit.** Stage `.metadata/metadata.json`, `changes.txt`, and any `workshop_description.txt` edits; commit with the title set to the bare version string (no prefix), e.g. `git commit -m "game.1.2.4.mod.7"`, matching prior release commits.
+2. **Bump version + build ZIP.** Run `./release.ps1`. It bumps the trailing integer in `metadata.json` (`…mod.N` → `…mod.N+1`) and writes `ArsBelliMod_<new_version>.zip` to the repo root. It only bumps `.mod.<n>` — for a base-game bump (e.g. `1.2.4` → `1.2.5`) edit `version` and `supported_game_version` in `metadata.json` by hand *before* running it. (Neither `versionsChangelog.md` nor `workshop_description.txt` is bundled in the ZIP, so editing them before or after this step is fine.)
+3. **Changelog.** Invoke the `changelog` skill. With `metadata.json` now holding the new (untagged) version, it picks `prev_tag` = the highest `game.*.mod.*` tag below it (the previous release), folds player-facing changes into `versionsChangelog.md`, and prints the `Since <prev_tag> → <version>:` blurb. Keep that blurb — it becomes the release body. Update `workshop_description.txt` too if any of its lines changed meaning.
+4. **Commit.** Stage `.metadata/metadata.json`, `versionsChangelog.md`, `Ars Belli - Complete Changelog.md`, and any `workshop_description.txt` edits; commit with the title set to the bare version string (no prefix), e.g. `git commit -m "game.1.2.4.mod.7"`, matching prior release commits.
 5. **Tag + push.** `git tag <version>` then `git push origin main && git push origin <version>`.
 6. **Create the GitHub release.** Reformat the blurb to the published body shape (2-space-indented `# Heading` / `- bullet`), then:
    ```
@@ -36,7 +36,7 @@ The matching git commit is titled exactly the version string (e.g. commit subjec
 
 ## Release-only (version already bumped, committed, tagged, pushed)
 
-If `release.ps1` already ran and the tagged commit is pushed (you only owe the GitHub release), skip steps 2–5 and do 6–7. Build the body from the version's `changes.txt` entries / the blurb, or re-derive it by diffing `git log <prev_tag>..<version> --oneline` and classifying with the `changelog` skill's rules. Confirm `ArsBelliMod_<version>.zip` still sits in the repo root (it is left there by step 2 and gitignored); if it was deleted, build a ZIP at the current version matching `release.ps1`'s include list — do **not** just re-run `release.ps1`, which would bump the version again.
+If `release.ps1` already ran and the tagged commit is pushed (you only owe the GitHub release), skip steps 2–5 and do 6–7. Build the body from the version's `versionsChangelog.md` entries / the blurb, or re-derive it by diffing `git log <prev_tag>..<version> --oneline` and classifying with the `changelog` skill's rules. Confirm `ArsBelliMod_<version>.zip` still sits in the repo root (it is left there by step 2 and gitignored); if it was deleted, build a ZIP at the current version matching `release.ps1`'s include list — do **not** just re-run `release.ps1`, which would bump the version again.
 
 ## Cautions
 
