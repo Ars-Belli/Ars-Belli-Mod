@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.13 | **Supported game version:** 1.3.\*
-**Compiled:** 18 August 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.14 | **Supported game version:** 1.3.\*
+**Compiled:** 21 August 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -35,7 +35,8 @@ here in full, but these can be easily seen in-game on the world map.
 
 **[Release History (Patchnotes)](#release-history-patchnotes)**
 
-- [game.1.3.11.mod.13](#game1311mod13-current)
+- [game.1.3.11.mod.14](#game1311mod14-current)
+- [game.1.3.11.mod.13](#game1311mod13)
 - [game.1.3.11.mod.12](#game1311mod12)
 - [game.1.3.11.mod.11](#game1311mod11)
 - [game.1.2.5.mod.10](#game125mod10)
@@ -184,13 +185,6 @@ Alliance, Defensive and Guarantee points.
 - Each requires at least 10 antagonism toward that country, each has its own 10-year cooldown, and
   using both is cumulative.
 
-### Unconditional Surrender
-
-From Gekkarino's Grand EU5 Rebalance and Complete Overhaul Mod.
-
-- Instantly hands control of all your locations, and all of your subjects' locations, to an enemy war
-  leader of your choice. Player-only, requires being at war.
-
 ### Dismiss Head of Cabinet (character interaction)
 
 - Returns your current Head of Cabinet to a regular cabinet seat for 5 government power.
@@ -215,8 +209,10 @@ From Gekkarino's Grand EU5 Rebalance and Complete Overhaul Mod.
 - Only Great Powers and Major Powers can offer a guarantee; only Normal, Small and Minor countries
   can be guaranteed or request one. [vanilla used the in-game country rank levels]
 - The +50 opinion requirement on the guaranteed country is removed.
-- A guarantee expires if the guarantor drops to Normal or below, if the guaranteed country rises to
-  Major or Great Power, or on rivalry.
+- A guarantee expires if the guarantor drops to Normal or below, or if the guaranteed country rises
+  to Major or Great Power. Rivalry between the two no longer ends it.
+- Cancelling or breaking a guarantee no longer adds a truce, and a guarantee that expires between
+  two countries of equal rank no longer upgrades itself into an alliance.
 
 ### Rivals
 
@@ -279,6 +275,8 @@ Rebuilt from scratch.
 
   Asking the defender first is the point: it stops Enforce Peace being used to rescue a losing
   attacker over the defender's objection.
+- **Player-only.** The AI never starts an Enforce Peace itself: a refusal by the attacker drags the
+  enforcer into the war, which is not a commitment the AI can judge.
 - Usable by Great Powers and Major Powers (Ars Belli ranks, not vanilla's), and by any country at all
   when either leader of the war is its rival.
 - The Enforce Peace button on the war view is always shown; when a requirement is unmet it greys out
@@ -465,6 +463,12 @@ in-game.
   infantry power on top of its +15% land morale, and the Scottish civil war modifiers no longer
   abolish parliament or cut parliament support.
 - **Ilkhanate:** its own actions and casus belli.
+- **Genoa and Gazaria:** the Genoese Galley advance is open to any Ligurian country, not just Genoa,
+  and Gazaria's two trade advances require Ship Building rather than Abacus and Lieutenancy.
+- **Italian republics:** the Consiglio Maggiore law pushes centralization and carries a small peasant
+  satisfaction penalty, in place of estate-power bonuses.
+- **Cossacks:** the Cossack Black Sea Raids privilege grants privateering, slave raiding, double
+  loot and +2.5% desired soldier pops.
 
 ## 16. Pops, Map and Campaign Setup
 
@@ -492,6 +496,26 @@ in-game.
 - Around 215 new road connections, mostly in Burma and Southeast Asia, and around 180 regional
   development adjustments.
 - Custom building setups per culture and region, and map colour and country-name changes.
+- **The Black Sea and the Pontic steppe** are rebuilt: Kaffa is the Genoese emporium it was (around
+  33,500 people, Ligurian, Greek, Armenian and Tatar burghers, and a Caucasian and steppe slave
+  population), Gazaria is a merchant republic at duchy rank with trade offices across its Black Sea
+  and Caspian network and a galley barracks in Kaffa, Bakhchysarai (Qirq Yer) is the Crimean Horde's
+  capital, and the Dnieper and Donets steppe is Cossack rather than Tatar. Zaporozhia is a duchy, and
+  the Crimean Horde and Circassia get towns of their own.
+
+### Formables
+
+- **Hindustan** — any Indian-culture country of South Asia, the whole subcontinent at 80% ownership,
+  tier 5. **Delhi** — any Muslim country of Indian, Iranian, Mongolian or Turkic culture that owns
+  Delhi; forming it moves the capital there.
+- **Circassia, Georgia and Armenia** are formable in the Caucasus.
+- Indian regional formables sit at tier 4 (Bengal, Gujarat, Rajputana, Rajastan, Nepal, Punjab,
+  Bahmanis, Deccan, Maratha, Nagavanshi, Ceylon), with Hindustan and the Mughals at tier 5.
+- **China** is tier 5 at 80% of its locations; the four split-empires — Southern Song, Cao Wei, Shu
+  Han and Eastern Wu — are tier 4.
+- **Pontus** is tier 4, open to Pontic Greek and Gothic culture, and always requires owning
+  Trebizond. Forming it never demotes a country already above kingdom rank.
+- **Vijayanagar** is deliberately not formable, and its tooltip says so.
 
 ## 17. UI and Quality of Life
 
@@ -508,7 +532,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.13).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.14).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -519,7 +543,67 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.13 (current)
+## game.1.3.11.mod.14 (current)
+
+The Black Sea gets the attention this time — Gazaria, the Crimean Horde, Circassia and the
+Zaporozhian steppe are rebuilt from the ground up — and the Indian and Chinese formable tiers are
+sorted out.
+
+**Formables**
+
+- Hindustan is formable by any Indian-culture country of South Asia: the whole subcontinent at 80%
+  ownership, tier 5
+- Delhi is formable by any Muslim country of Indian, Iranian, Mongolian or Turkic culture that owns
+  Delhi, and moves its capital there on forming
+- Circassia, Georgia and Armenia added as Caucasus formables
+- Indian regional formables — Bengal, Gujarat, Rajputana, Rajastan, Nepal, Punjab, Bahmanis, Deccan,
+  Maratha, Nagavanshi and Ceylon — all moved to tier 4; Hindustan and the Mughals sit at tier 5
+- China raised to tier 5 and 80% of its locations; the four split-empires (Southern Song, Cao Wei,
+  Shu Han, Eastern Wu) moved to tier 4
+- Pontus moved to tier 4, opened to Gothic culture, and always requires owning Trebizond; forming it
+  no longer demotes a country that is already above kingdom rank
+- Sun Quan renamed Southern Song
+- Vijayanagar is explicitly disabled and says so in its tooltip, instead of sitting in the list as an
+  unformable entry
+
+**Pops, Map and Campaign Setup**
+
+- the Zaporozhian steppe is Cossack: the Tatar peasants and tribesmen across the Dnieper and Donets
+  steppe are replaced by Orthodox Cossack pops, and the Ruthenians living there are peasants rather
+  than slaves
+- Kaffa rebuilt as the Genoese emporium of the Black Sea, around 33,500 people — Ligurian, Greek,
+  Armenian and Tatar burghers, an Armenian, Greek and Latin clergy, and a Caucasian and steppe slave
+  population
+- Bakhchysarai (Qirq Yer) grown into a proper town and made the Crimean Horde's capital, replacing
+  Enice
+- new towns for the Crimean Horde (Qirq Yer, Domakha, Enice, Oleshia, Teligol, Khadjibey) and
+  Circassia (Taman, Copa, Susaco)
+- Gazaria starts as a merchant republic at duchy rank, with trade offices across its Black Sea and
+  Caspian network — Taman, Susaco, Copa, Theodoro, Qirq Yer, Oleshia, Teligol, Khadjibey, Domakha,
+  Enice, Astrakhan and Sarayjuk — and a galley barracks in Kaffa
+- Zaporozhia starts at duchy rank
+- Ashikaga, Occitania, Benin and Bonoman use their proper map colours again
+
+**National Flavour**
+
+- the Genoese Galley advance is available to any Ligurian country, not just Genoa
+- Gazaria's two trade advances now require Ship Building instead of Abacus and Lieutenancy
+- Consiglio Maggiore (Italian republics) now pushes centralization and carries a small peasant
+  satisfaction penalty, instead of +10% nobles and burghers estate power, a tiny satisfaction penalty
+  and −2.5% peasant max tax
+- Cossack Black Sea Raids grants +2.5% desired soldier pops instead of −25% privateer maintenance
+- the South China Yi and Fuzhou culture advances have their pop bonuses halved to 0.005, and Gentry
+  Town Residence has its city soldier bonus cut from 0.025 to 0.010
+
+**Diplomacy**
+
+- Enforce Peace is player-only. The AI no longer starts one itself: a refusal by the attacker drags
+  the enforcer into the war, which is not a commitment the AI can judge
+- guarantees no longer add a truce when cancelled or broken, no longer upgrade into an alliance when
+  they expire between equals, and no longer expire because the two countries are rivals
+- Unconditional Surrender is removed — the base game now provides its own
+
+## game.1.3.11.mod.13
 
 One large content merge. The starting setup is the headline: the world outside Europe is built out
 into playable countries with their own advances, and several nations are reworked.
