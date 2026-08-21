@@ -4,6 +4,18 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.15
+
+Since game.1.3.11.mod.14 → game.1.3.11.mod.15:
+
+### National Flavour
+
+- **Byzantium and Trebizond get their bureaucracies back.** The mod's Byzantine bureaucracy file
+  shared a name with the base game's, so it replaced that file wholesale and deleted nine of the ten
+  Byzantine bureaucracies — Honorary Titles, Court Eunuchs, Ritualistic Court, Sixty Books of the
+  Basilika, Romanitas, Imperial Senate, Kephalai, Themata and Allelengyon. All ten are available
+  again, and only the Magister Militum rebalance is applied on top
+
 ## game.1.3.11.mod.14
 
 Since game.1.3.11.mod.13 → game.1.3.11.mod.14:

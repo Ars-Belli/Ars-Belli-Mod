@@ -4,7 +4,7 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.14 | **Supported game version:** 1.3.\*
+**Mod version:** game.1.3.11.mod.15 | **Supported game version:** 1.3.\*
 **Compiled:** 21 August 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
@@ -35,7 +35,8 @@ here in full, but these can be easily seen in-game on the world map.
 
 **[Release History (Patchnotes)](#release-history-patchnotes)**
 
-- [game.1.3.11.mod.14](#game1311mod14-current)
+- [game.1.3.11.mod.15](#game1311mod15-current)
+- [game.1.3.11.mod.14](#game1311mod14)
 - [game.1.3.11.mod.13](#game1311mod13)
 - [game.1.3.11.mod.12](#game1311mod12)
 - [game.1.3.11.mod.11](#game1311mod11)
@@ -469,6 +470,10 @@ in-game.
   satisfaction penalty, in place of estate-power bonuses.
 - **Cossacks:** the Cossack Black Sea Raids privilege grants privateering, slave raiding, double
   loot and +2.5% desired soldier pops.
+- **Byzantium:** the Magister Militum bureaucracy is toned down — +0.1 monthly army and navy
+  tradition (was +0.2) and +10 general and admiral training (was +25). Its military tactics bonus and
+  its legitimacy and noble-power drawbacks are unchanged, and the other nine Byzantine bureaucracies
+  are left as the base game has them.
 
 ## 16. Pops, Map and Campaign Setup
 
@@ -532,7 +537,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.14).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.15).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -543,7 +548,17 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.14 (current)
+## game.1.3.11.mod.15 (current)
+
+**National Flavour**
+
+- Byzantium and Trebizond get their bureaucracies back. The mod's Byzantine bureaucracy file shared a
+  name with the base game's, so it replaced that file wholesale and deleted nine of the ten Byzantine
+  bureaucracies — Honorary Titles, Court Eunuchs, Ritualistic Court, Sixty Books of the Basilika,
+  Romanitas, Imperial Senate, Kephalai, Themata and Allelengyon. All ten are available again, and
+  only the Magister Militum rebalance is applied on top
+
+## game.1.3.11.mod.14
 
 The Black Sea gets the attention this time — Gazaria, the Crimean Horde, Circassia and the
 Zaporozhian steppe are rebuilt from the ground up — and the Indian and Chinese formable tiers are
