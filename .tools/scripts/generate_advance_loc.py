@@ -20,7 +20,7 @@ import argparse
 import re
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parent.parent
+BASE = Path(__file__).resolve().parent.parent.parent
 ADVANCE_DIR = BASE / "in_game/common/advances"
 LOC_DIRS = [
     BASE / "main_menu/localization/english",

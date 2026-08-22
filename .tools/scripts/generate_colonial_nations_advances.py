@@ -34,6 +34,7 @@ COLONIAL_GROUPS = (
     ("ABWSI", "WSI_ideas"),
     ("ABAUS", "AUS_ideas"),
     ("NZL", "NZL_ideas"),
+    ("ABEIC", "EIC_ideas"),
 )
 
 # The generic colonial-nation idea set applies to every colonial-nation subject,
@@ -239,6 +240,8 @@ CONVERSIONS: dict[str, tuple[str, ...]] = {
     "disengagement_chance": ("naval_damage_taken = -0.05",),  # no EU5 equivalent; naval survivability stand-in
     "auto_explore_adjacent_to_colony": ("can_colonize = yes",),  # no EU5 equivalent; colonization capability stand-in
     "free_leader_pool": ("train_general_cost_modifier = -0.10",),  # no EU5 equivalent; free leaders ~ cheaper training
+    "governing_capacity_modifier": ("court_spending_cost_modifier = -0.10",),  # EU5 removed states; court cost stand-in
+    "placed_merchant_power": ("global_merchant_power = 0.10",),  # no EU5 equivalent; trade advantage stand-in
 }
 
 # Hand-fixes for idea slots the EU4 parser cannot read (nested effects) or that
@@ -486,8 +489,8 @@ def render_group(
             raise ValueError(f"duplicate generated advance key: {key}")
         generated_keys.add(key)
         advance_parts.extend(["", render_advance(key, index, potential_lines, assignments)])
-        name = localization_value(localization, source_key) + suffix
-        description = localization.get(source_key + "_desc") or name
+        name = (localization_value(localization, source_key) + suffix).replace('"', "'")
+        description = (localization.get(source_key + "_desc") or name).replace('"', "'")
         loc_lines.append(f' {key}: "{name}"')
         loc_lines.append(f' {key}_desc: "{description}"')
     return advance_parts, loc_lines

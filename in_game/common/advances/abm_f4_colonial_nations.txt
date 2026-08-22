@@ -1801,6 +1801,150 @@ abm_nzl_ideas_ambition = {
 	can_colonize = yes
 }
 
+# ABEIC
+
+abm_eic_ideas_tradition_1 = {
+	age = age_3_discovery
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = military_traditions
+
+	# global_prov_trade_power_modifier = 0.2
+	global_trade_through_owned_territory_efficiency = 0.20
+}
+
+abm_eic_ideas_tradition_2 = {
+	age = age_3_discovery
+	icon = church_councils
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = paved_road_advance
+
+	# no_religion_penalty = yes
+	tolerance_heretic = 2
+	tolerance_heathen = 2
+}
+
+abm_eic_governors_general = {
+	age = age_4_reformation
+	icon = court_accounting
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# global_unrest = -1
+	# governing_capacity_modifier = 0.1
+	pop_join_rebel_threshold = -0.05
+	global_monthly_control = 0.001
+}
+
+abm_eic_indian_trade = {
+	age = age_4_reformation
+	icon = abacus_advance
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = global_trade_advance
+
+	# global_trade_goods_size_modifier = 0.15
+	global_max_rgo_size_modifier = 0.10
+}
+
+abm_eic_chartered_merchants = {
+	age = age_4_reformation
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = trade_envoys
+
+	# merchants = 1
+	# placed_merchant_power = 10
+	global_merchant_capacity_modifier = 0.10
+	global_merchant_power = 0.10
+	global_trades_per_burgher = 0.10
+}
+
+abm_eic_presidency_armies = {
+	age = age_4_reformation
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = pharmacology_advance
+
+	# global_manpower_modifier = 0.1
+	# global_sailors_modifier = 0.2
+	global_manpower_modifier = 0.10
+	global_sailors_modifier = 0.10
+}
+
+abm_eic_intercontinental_trade = {
+	age = age_5_absolutism
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = absolutist_court
+
+	# trade_steering = 0.25
+	# trade_range_modifier = 0.1
+	global_trade_center_power = 0.10
+	trade_range_modifier = 0.10
+}
+
+abm_eic_colonial_monopoly = {
+	age = age_5_absolutism
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = absolute_rulership
+
+	# trade_efficiency = 0.1
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+}
+
+abm_eic_colonial_exploitation = {
+	age = age_5_absolutism
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = national_sovereignty
+
+	# trade_company_investment_cost = -0.1
+	# build_cost = -0.1
+	global_merchant_capacity_modifier = 0.10
+	global_build_buildings_efficiency = 0.10
+}
+
+abm_eic_ideas_ambition = {
+	age = age_6_revolutions
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = ABEIC
+	}
+
+	requires = modern_bureaucracy
+
+	# global_trade_power = 0.15
+	global_merchant_power = 0.10
+}
+
 # colonial_ideas (generic)
 
 abm_colonial_ideas_tradition_1 = {
@@ -1826,8 +1970,7 @@ abm_colonial_ideas_tradition_2 = {
 	requires = paved_road_advance
 
 	# no_religion_penalty = yes
-	tolerance_heretic = 2
-	tolerance_heathen = 2
+	tolerance_heretic = 1
 }
 
 abm_founding_fathers = {
@@ -1861,7 +2004,7 @@ abm_continental_trade = {
 	requires = global_trade_advance
 
 	# global_prov_trade_power_modifier = 0.25
-	lobal_trade_through_owned_territory_efficiency = 0.20
+	global_merchant_power = 0.10
 }
 
 abm_manufacturing_center = {
@@ -1874,7 +2017,7 @@ abm_manufacturing_center = {
 	requires = trade_envoys
 
 	# build_cost = -0.1
-	building_upkeep_efficiency = 0.10
+	global_build_buildings_efficiency = 0.10
 }
 
 abm_free_thinkers = {
@@ -1914,6 +2057,7 @@ abm_new_frontiers = {
 
 	# auto_explore_adjacent_to_colony = yes
 	# global_colonial_growth = 20
+	can_colonize = yes
 	colonial_migration_size_modifier = 0.25
 }
 
@@ -1928,8 +2072,8 @@ abm_liberty_heroes = {
 
 	# global_unrest = -1
 	# free_leader_pool = 1
-	pop_join_rebel_threshold = -0.03
-	train_general_ability = 10
+	pop_join_rebel_threshold = -0.05
+	train_general_cost_modifier = -0.10
 }
 
 abm_colonial_ideas_ambition = {
