@@ -36,6 +36,10 @@ COLONIAL_GROUPS = (
     ("NZL", "NZL_ideas"),
 )
 
+# The generic colonial-nation idea set applies to every colonial-nation subject,
+# so its potential gate is a subject check rather than a tag.
+GENERIC_GROUP = "colonial_ideas"
+
 OUTPUT = Path("in_game/common/advances/abm_f4_colonial_nations.txt")
 LOC_OUTPUT = Path("main_menu/localization/english/abm_advances_colonial_l_english.yml")
 
@@ -233,6 +237,8 @@ CONVERSIONS: dict[str, tuple[str, ...]] = {
     "global_sailors_modifier": ("global_sailors_modifier = 0.10",),
     "global_ship_recruit_speed": ("ship_build_speed = 0.10",),  # EU4 negative = faster, EU5 speed positive = faster
     "disengagement_chance": ("naval_damage_taken = -0.05",),  # no EU5 equivalent; naval survivability stand-in
+    "auto_explore_adjacent_to_colony": ("can_colonize = yes",),  # no EU5 equivalent; colonization capability stand-in
+    "free_leader_pool": ("train_general_cost_modifier = -0.10",),  # no EU5 equivalent; free leaders ~ cheaper training
 }
 
 # Hand-fixes for idea slots the EU4 parser cannot read (nested effects) or that
@@ -421,7 +427,7 @@ def choose_icon(converted: list[str], index: int) -> str:
 def render_advance(
     key: str,
     index: int,
-    tag: str,
+    potential_lines: list[str],
     assignments: tuple[tuple[str, str], ...],
 ) -> str:
     comments, converted = convert_assignments(assignments)
@@ -430,7 +436,7 @@ def render_advance(
         f"\tage = {AGES[index]}",
         f"\ticon = {choose_icon(converted, index)}",
         "\tpotential = {",
-        f"\t\thas_or_had_tag = {tag}",
+        *potential_lines,
         "\t}",
         "",
         f"\trequires = {REQUIRES[index]}",
@@ -440,6 +446,51 @@ def render_advance(
         "}",
     ]
     return "\n".join(lines)
+
+
+def render_group(
+    group: IdeaGroup,
+    header: str,
+    potential_lines: list[str],
+    generated_keys: set[str],
+    localization: dict[str, str],
+) -> tuple[list[str], list[str]]:
+    """Render one idea group into a list of advance blocks and loc lines."""
+    if not len(group.ideas) == 7:
+        raise ValueError(f"{group.key} has {len(group.ideas)} idea slots, expected 7")
+    split_traditions(group.start)
+
+    base = sanitize_key(group.key.removesuffix("_ideas"))
+    advance_parts = ["", header]
+    loc_lines = []
+    traditions = split_traditions(group.start)
+    entries = [
+        (f"abm_{base}_ideas_tradition_1", traditions[0], group.key + "_start", " I"),
+        (f"abm_{base}_ideas_tradition_2", traditions[1], group.key + "_start", " II"),
+    ]
+    for idea in group.ideas:
+        name = sanitize_key(idea.key)
+        key = f"abm_{name}"
+        # The Hudson Bay Company idea is shared by Canada and Cascadia in EU4;
+        # keep the bare advance_name for the first owner and only add the tag
+        # prefix when a bare key has already been taken.
+        if key in generated_keys:
+            key = f"abm_{base}_{name}"
+        entries.append((key, idea.assignments, idea.key, ""))
+    entries.append(
+        (f"abm_{base}_ideas_ambition", group.bonus, group.key + "_bonus", "")
+    )
+
+    for index, (key, assignments, source_key, suffix) in enumerate(entries):
+        if key in generated_keys:
+            raise ValueError(f"duplicate generated advance key: {key}")
+        generated_keys.add(key)
+        advance_parts.extend(["", render_advance(key, index, potential_lines, assignments)])
+        name = localization_value(localization, source_key) + suffix
+        description = localization.get(source_key + "_desc") or name
+        loc_lines.append(f' {key}: "{name}"')
+        loc_lines.append(f' {key}_desc: "{description}"')
+    return advance_parts, loc_lines
 
 
 def localization_value(localization: dict[str, str], key: str) -> str:
@@ -495,40 +546,26 @@ def render_outputs(
     generated_keys = set()
 
     for tag, group_key in COLONIAL_GROUPS:
-        group = groups[group_key]
-        if not len(group.ideas) == 7:
-            raise ValueError(f"{group_key} has {len(group.ideas)} idea slots, expected 7")
-        split_traditions(group.start)
-
-        base = sanitize_key(group.key.removesuffix("_ideas"))
-        advance_parts.extend(["", f"# {tag}"])
-        traditions = split_traditions(group.start)
-        entries = [
-            (f"abm_{base}_ideas_tradition_1", traditions[0], group.key + "_start", " I"),
-            (f"abm_{base}_ideas_tradition_2", traditions[1], group.key + "_start", " II"),
-        ]
-        for idea in group.ideas:
-            name = sanitize_key(idea.key)
-            key = f"abm_{name}"
-            # The Hudson Bay Company idea is shared by Canada and Cascadia in
-            # EU4; keep the bare advance_name for the first owner and only add
-            # the tag prefix when a bare key has already been taken.
-            if key in generated_keys:
-                key = f"abm_{base}_{name}"
-            entries.append((key, idea.assignments, idea.key, ""))
-        entries.append(
-            (f"abm_{base}_ideas_ambition", group.bonus, group.key + "_bonus", "")
+        blocks, locs = render_group(
+            groups[group_key],
+            f"# {tag}",
+            [f"\t\thas_or_had_tag = {tag}"],
+            generated_keys,
+            localization,
         )
+        advance_parts.extend(blocks)
+        loc_lines.extend(locs)
 
-        for index, (key, assignments, source_key, suffix) in enumerate(entries):
-            if key in generated_keys:
-                raise ValueError(f"duplicate generated advance key: {key}")
-            generated_keys.add(key)
-            advance_parts.extend(["", render_advance(key, index, tag, assignments)])
-            name = localization_value(localization, source_key) + suffix
-            description = localization.get(source_key + "_desc") or name
-            loc_lines.append(f' {key}: "{name}"')
-            loc_lines.append(f' {key}_desc: "{description}"')
+    # Generic colonial-nation idea set (applies to any colonial-nation subject).
+    blocks, locs = render_group(
+        groups[GENERIC_GROUP],
+        f"# {GENERIC_GROUP} (generic)",
+        ["\t\tis_subject_type = colonial_nation"],
+        generated_keys,
+        localization,
+    )
+    advance_parts.extend(blocks)
+    loc_lines.extend(locs)
 
     preamble = read_preamble(Path(OUTPUT))
     advances = (
@@ -548,7 +585,8 @@ def write_bom_crlf(path: Path, text: str) -> None:
 
 def conversion_gaps(groups: dict[str, IdeaGroup]) -> dict[str, set[str]]:
     gaps: dict[str, set[str]] = defaultdict(set)
-    for tag, group_key in COLONIAL_GROUPS:
+    group_keys = [group_key for _, group_key in COLONIAL_GROUPS] + [GENERIC_GROUP]
+    for group_key in group_keys:
         group = groups[group_key]
         assignments = group.start + group.bonus
         for idea in group.ideas:
@@ -567,6 +605,8 @@ def main() -> int:
     groups = read_idea_groups(eu4_root / "ideas")
 
     missing = [g for _, g in COLONIAL_GROUPS if g not in groups]
+    if GENERIC_GROUP not in groups:
+        missing.append(GENERIC_GROUP)
     if missing:
         print(f"Missing EU4 idea groups: {', '.join(missing)}")
         return 1
