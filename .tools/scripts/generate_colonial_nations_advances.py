@@ -35,29 +35,35 @@ COLONIAL_GROUPS = (
 OUTPUT = Path("in_game/common/advances/abm_f4_colonial_nations.txt")
 LOC_OUTPUT = Path("main_menu/localization/english/abm_advances_colonial_l_english.yml")
 
+# Colonial nations only appear in the Age of Discovery, so their idea line
+# starts at age 3 instead of age 1:
+#   age 3: tradition_1, tradition_2
+#   age 4: idea1, idea2, idea3, idea4
+#   age 5: idea5, idea6, idea7
+#   age 6: ambition
 AGES = (
-    "age_1_traditions",
-    "age_1_traditions",
-    "age_2_renaissance",
-    "age_2_renaissance",
     "age_3_discovery",
     "age_3_discovery",
     "age_4_reformation",
     "age_4_reformation",
+    "age_4_reformation",
+    "age_4_reformation",
+    "age_5_absolutism",
+    "age_5_absolutism",
     "age_5_absolutism",
     "age_6_revolutions",
 )
 REQUIRES = (
-    "feudalism_advance",
-    "feudalism_advance",
-    "renaissance_thought",
-    "legalism_advance",
     "military_traditions",
     "paved_road_advance",
     "supply_depot_advance_age_4_reformation",
     "global_trade_advance",
+    "trade_envoys",
+    "pharmacology_advance",
     "absolutist_court",
-    "imperial_ambitions",
+    "absolute_rulership",
+    "national_sovereignty",
+    "modern_bureaucracy",
 )
 
 # EU4 modifier -> EU5 modifier templates. {value} preserves the source
