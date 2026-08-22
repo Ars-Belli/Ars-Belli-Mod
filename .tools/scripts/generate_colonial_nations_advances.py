@@ -16,19 +16,23 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-# Each colonial-nation EU4 idea group maps directly to one EU5 tag.
+# Each colonial-nation EU4 idea group maps to one EU5 tag. EU5 uses the
+# five-character ABxxx convention for dynamically-created colonial tags; the
+# EU4 three-character tags that already belong to a different vanilla EU5
+# country (ALA = Albaamaha, BRZ = Brzeg) must be prefixed.
 COLONIAL_GROUPS = (
-    ("ALA", "ALA_ideas"),
-    ("BRZ", "BRZ_ideas"),
+    ("ABALA", "ALA_ideas"),
+    ("ABBRZ", "BRZ_ideas"),
     ("CAN", "CAN_ideas"),
-    ("CSC", "CSC_ideas"),
+    ("ABCSC", "CSC_ideas"),
     ("MEX", "MEX_ideas"),
-    ("QUE", "QUE_ideas"),
+    ("ABQUE", "QUE_ideas"),
     ("SNA", "SNA_ideas"),
     ("TEX", "TEX_ideas"),
-    ("VRM", "VRM_ideas"),
+    ("ABVRM", "VRM_ideas"),
     ("USA", "USA_ideas"),
-    ("WSI", "WSI_ideas"),
+    ("ABWSI", "WSI_ideas"),
+    ("ABAUS", "AUS_ideas"),
     ("NZL", "NZL_ideas"),
 )
 
@@ -227,6 +231,8 @@ CONVERSIONS: dict[str, tuple[str, ...]] = {
     "shock_damage": ("army_heavy_infantry_power = 0.10",),
     "heavy_ship_power": ("navy_heavy_ship_power = 0.10",),
     "global_sailors_modifier": ("global_sailors_modifier = 0.10",),
+    "global_ship_recruit_speed": ("ship_build_speed = 0.10",),  # EU4 negative = faster, EU5 speed positive = faster
+    "disengagement_chance": ("naval_damage_taken = -0.05",),  # no EU5 equivalent; naval survivability stand-in
 }
 
 # Hand-fixes for idea slots the EU4 parser cannot read (nested effects) or that
