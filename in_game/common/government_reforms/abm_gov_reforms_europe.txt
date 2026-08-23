@@ -30,3 +30,35 @@
 
 	years = 2
 }
+
+abm_ligurian_development = {
+	age = age_1_traditions
+
+	potential = {
+		OR = {
+			has_or_had_tag = GEN
+			has_or_had_tag = GAZ
+		}
+		government_type = government_type:republic
+		culture = culture:ligurian
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			region = region:italy_region
+			province = {
+				any_location_in_province = {
+					is_port = yes
+				}
+			}
+		}
+		local_monthly_development = 0.001
+		local_monthly_prosperity = 0.001
+	}
+
+	years = 2
+}

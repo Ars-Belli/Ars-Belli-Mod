@@ -15,3 +15,31 @@
 		global_burghers_estate_power = 0.25
 	}
 }
+
+abm_pontic_steppes_development = {
+	estate = burghers_estate
+
+	potential = {
+		# OR = {
+		# 	has_or_had_tag = GEN
+		# 	has_or_had_tag = GAZ
+		# }
+		government_type = government_type:republic
+		OR = {
+			culture = culture:ligurian
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+	}
+
+	country_modifier = {
+		global_burghers_estate_power = 0.25
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			region = region:steppes_region
+		}
+		local_monthly_development = 0.001
+	}
+}
