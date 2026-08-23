@@ -2,6 +2,54 @@
 ### Western Steppes ###
 #######################
 
+ABTAU_f = {
+
+	level = 3	
+	required_locations_fraction = 50
+	rule = historical
+
+	potential = {
+		OR = {
+			culture = culture:ligurian
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+			culture = culture:cossack_culture
+		}
+		original_capital ?= { continent = continent:europe }
+	}
+	
+	allow = {
+		owns = area:crimea_area
+		owns = location:qalancak
+		owns = location:melitopol
+		owns = location:domakha
+		owns = location:tana
+		owns = location:taman
+		owns = location:susaco
+
+	}
+	
+	name = ABTAU
+	flag = ABTAU
+	adjective = ABTAU_ADJ
+	tag = ABTAU
+	color = map_ABTAU
+	
+	areas = {
+		yedisan_area
+		crimea_area
+		pryazovia_area
+		azov_area
+		matrega_area
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
 GLH_f = { #Golden Horde formable
 	level = 4
 	required_locations_fraction = 0.6
