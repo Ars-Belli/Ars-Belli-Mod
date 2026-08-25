@@ -144,6 +144,7 @@ The repository mirrors the EU5 file structure:
 - **Monthly Pulse:** The `mp_limits_monthly_pulse` on-action triggers the recalculation of scores and ranks.
 - **Localization:** Multiplayer-specific rules and settings are localized in `main_menu\localization\english\ars_belli_rules_l_english.yml`.
 - **REPLACE: prefix:** EU5 supports `REPLACE:key = { ... }` in mod files to override a single vanilla definition without copying the whole vanilla file. Use a separately-named mod file (convention: `ars_belli_<topic>.txt`); avoid same-name file replacement so future vanilla additions in that file still load. Works for resolutions, generic_actions, scripted_triggers, static_modifiers, auto_modifiers, prices, diplomatic_costs, advances. Only fall back to whole-file replacement (and `replaced_files.txt`) for non-keyed files like GUI.
+- **Load-phase gotcha:** static modifiers are loaded ONLY from `main_menu/common/static_modifiers/` — a file under `in_game/common/static_modifiers/` is ignored (unknown-directory), so a `REPLACE:` there never applies. Likewise, scripted-trigger `custom_description` text keys (`text = key` inside a trigger's `custom_description`) must live in `main_menu/localization/english/`: scripted triggers are validated before `in_game` loc loads, else the log reports `No trigger loc`. Runtime-only loc keys can stay in `in_game/localization/english/`.
 
 ## GUI File Update Procedure
 The mod overrides two vanilla `.gui` files with mod-specific additions on top:
@@ -164,7 +165,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-08-16 (economic support cap; union call to arms; tributary transfer bans; sell/buy location capped at a flat 100 gold in the GUI; mercenary listing removed; art-sale acceptance tightened).
+Last updated: 2026-08-25 (mp_limits loc fixes + tier-panel tooltips; enforce-peace trigger marker; moved religion static-modifier override + crusade trigger-loc to main_menu phase).
 
 ## Important Files
 - `README.md`: Basic mod title.
