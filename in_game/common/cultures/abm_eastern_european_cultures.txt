@@ -1,0 +1,64 @@
+﻿### Steppes ###
+
+# New - Gazarian culture, represents a synergy with Greek, Pontic, Gothic, and Crimean cultures
+gazarian = { 
+	language = ligurian_dialect
+	
+	color = map_ligurian
+	
+	tags = { north_italian_gfx west_mediterranean_gfx mediterranean_gfx western_european_gfx european_gfx }
+
+	opinions = {
+		pontic_greek_culture = positive
+		gothic_culture = positive
+		ruthenian = positive
+		cossack_culture = positive
+		crimean = positive
+	}
+	
+	culture_groups = {
+		italian_group
+	}
+}
+
+REPLACE:crimean = { #https://en.wikipedia.org/wiki/Crimean_Tatars
+	language = kipchak_language
+	color = map_CRI
+	tags = { central_asian_gfx middle_east_gfx }
+
+	opinions = {
+		cuman_culture = kindred
+		gazarian = positive
+		cossack_culture = positive
+	}
+	culture_groups = {
+		tatar_group
+		turkic_group
+		steppe_group
+	}
+}
+
+REPLACE:cossack_culture = {
+	language = ukrainian_dialect
+	color = map_cossack
+	
+	tags = { cossack_gfx ukrainian_gfx ruthenian_gfx east_slavic_gfx slavic_gfx eastern_european_gfx european_gfx }
+	
+	opinions = {
+		ruthenian = kindred
+		severian = positive
+		polesian_culture = positive
+		halychian_culture = positive
+		volhynian_culture = positive
+		crimean = positive
+		mishar = enemy
+		astrakhani = enemy
+		mongolian_culture = enemy
+		gazarian = positive
+	}
+
+	culture_groups = {
+		russian_group
+		slavic_group
+	}
+}
