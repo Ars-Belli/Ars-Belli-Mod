@@ -419,7 +419,7 @@ abm_pap_ideas_ambition = {
 	siege_ability = 0.20
 }
 
-genoese_galley = {
+REPLACE:genoese_galley = {
 	content_priority = 1100
 	age = age_1_traditions
 	icon = expanded_arsenale
@@ -435,4 +435,128 @@ genoese_galley = {
 	requires = ship_building_advance
 
 	unlock_unit = n_genoese_galley
+}
+
+REPLACE:ligurian_coastal_seafarers = {
+	content_priority = 300
+	age = age_1_traditions
+	icon = ship_building_advance
+
+	potential = {
+		OR = {
+			culture = culture:ligurian
+			culture = { merged_culture_group_contains_culture = culture:ligurian }
+		}
+	}
+
+	navy_galley_power = 0.15
+	cultures_capacity = 2
+
+	requires = trade_advance_age_of_trad
+}
+
+
+REPLACE:ligurian_merchant_diaspora = {
+	content_priority = 300
+	age = age_2_renaissance
+	icon = river_trade
+
+	potential = {
+		OR = {
+			culture = culture:ligurian
+			culture = { merged_culture_group_contains_culture = culture:ligurian }
+		}
+	}
+
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+	global_monthly_development = 0.001
+
+	requires = banking_advance
+}
+
+
+REPLACE:ligurian_spirit_of_navigation = {
+	content_priority = 300
+	age = age_3_discovery
+	icon = maritime_advance_age_4
+
+	potential = {
+		OR = {
+			culture = culture:ligurian
+			culture = { merged_culture_group_contains_culture = culture:ligurian }
+		}
+	}
+
+	export_efficiency = small_trade_efficiency_bonus
+	global_merchant_power = 0.1
+
+	requires = diplomatic_training
+}
+
+
+REPLACE:ligurian_artisan_craft = {
+	content_priority = 300
+	age = age_4_reformation
+	icon = artists_advance
+
+	potential = {
+		OR = {
+			culture = culture:ligurian
+			culture = { merged_culture_group_contains_culture = culture:ligurian }
+		}
+	}
+
+	building_upkeep_efficiency = 0.10
+	
+	requires = artists_advance_reformations
+}
+
+REPLACE:ligurian_communal_councils = {
+	content_priority = 300
+	age = age_5_absolutism
+	icon = administrative_leadership
+
+	potential = {
+		OR = {
+			culture = culture:ligurian
+			culture = { merged_culture_group_contains_culture = culture:ligurian }
+		}
+	}
+
+	global_max_literacy = 10
+
+	requires = scientific_revolution_advance
+}
+
+
+ligurian_enlightenment = {
+	content_priority = 300
+	age = age_6_revolutions
+	icon = city_building_advance
+
+	potential = {
+		OR = {
+			culture = culture:ligurian
+			culture = { merged_culture_group_contains_culture = culture:ligurian }
+		}
+	}
+
+	legislative_efficiency = 0.1
+	stability_cost_efficiency = 0.1
+
+	requires = modern_bureaucracy
+}
+
+gen_free_port = {
+	age = age_6_revolutions
+	icon = port_customs
+
+	potential = {
+		has_or_had_tag = GEN
+	}
+
+	global_trade_through_owned_territory_efficiency = 0.20
+	global_trade_center_power = 0.10
+
+	requires = industrialization_advance
 }
