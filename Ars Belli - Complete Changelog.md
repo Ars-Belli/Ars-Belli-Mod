@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.15 | **Supported game version:** 1.3.\*
-**Compiled:** 21 August 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.16 | **Supported game version:** 1.3.\*
+**Compiled:** 27 August 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -430,6 +430,8 @@ Cut hard, to make wars less static.
   sect actions are retuned — claims 40 [50] and marriages 25 [40] from the imperial court get
   cheaper, while appeasing the nobles, raising levies, raising tax income and demanding extra payment
   from the shogun court cost 25 to 100 [10].
+- **Age of Discovery** grants +50% colonial maintenance efficiency, in place of vanilla's −25%
+  colonial maintenance cost.
 
 ## 14. Buildings and Reforms
 
@@ -439,6 +441,8 @@ Cut hard, to make wars less static.
   no longer buildable in towns or cities. Existing ones in cities keep working.
 - **Order Commandery:** local manpower nerfed to 2 (from 5), employed clergy to 200 (from 400), and
   no longer buildable in rural settlements. Existing rural ones keep working.
+- **Church School:** +5 maximum literacy for burghers, laborers, soldiers and peasants, +0.1 monthly
+  literacy and +1% local pop conversion speed.
 - **Manden Kurufa reform** (Mali traditions) is removable.
 - **Form China (CHI):** requires 70% of the listed locations across the four Chinese regions, forms
   as an empire-rank monarchy. Dead Middle Kingdom / Red Turban gating removed.
@@ -474,6 +478,12 @@ in-game.
   tradition (was +0.2) and +10 general and admiral training (was +25). Its military tactics bonus and
   its legitimacy and noble-power drawbacks are unchanged, and the other nine Byzantine bureaucracies
   are left as the base game has them.
+- **Miaphysite and Nestorian churches** have two religious aspects of their own. *Martyrs' Shield*
+  gives +10% military tactics, +5% morale recovery in friendly territory and monthly progress toward
+  Quality; *Universal Learning*, available to theocracies, gives +5 maximum literacy for burghers,
+  laborers, soldiers and peasants and monthly progress toward Innovative.
+- **Christiana Pietas** (Catholic) gives +1 heathen tolerance and +0.01 monthly literacy. [vanilla +2
+  heathen tolerance and no literacy]
 
 ## 16. Pops, Map and Campaign Setup
 
@@ -537,7 +547,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.15).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.16).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -548,7 +558,41 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.15 (current)
+## game.1.3.11.mod.16 (current)
+
+**National Flavour**
+
+- The Miaphysite and Nestorian churches finally get their two religious aspects. Martyrs' Shield —
+  +10% military tactics, +5% morale recovery in friendly territory and monthly progress toward
+  Quality — and Universal Learning, for theocracies — +5 maximum literacy for burghers, laborers,
+  soldiers and peasants, and monthly progress toward Innovative. Both were already named and
+  described in-game but were never defined, so neither religion could actually take them
+- Christiana Pietas now also grants +0.01 monthly literacy, and its heathen tolerance is cut to 1 [2]
+- Genoese Crossbowmen upgrade into Late Genoese Crossbowmen again — the upgrade path pointed at a
+  unit that does not exist, so the line dead-ended
+
+**Buildings and Reforms**
+
+- Church School: its literacy bonus was written on the wrong scale and did effectively nothing. It
+  now gives +5 maximum literacy to burghers, laborers, soldiers and peasants, alongside its existing
+  +0.1 monthly literacy and conversion speed
+
+**Economy and Gold-Transfers**
+
+- Age of Discovery grants +50% colonial maintenance efficiency in place of −25% colonial maintenance
+  cost
+
+**Crusades and Jihads**
+
+- The Crusade and Jihad buttons now spell out the 100-year global cooldown instead of showing a raw
+  text key
+
+**UI and Quality of Life**
+
+- The power rank tooltip is no longer cut off part-way through its last line
+- The tier-list panel's open and close buttons have tooltips
+
+## game.1.3.11.mod.15
 
 **National Flavour**
 
