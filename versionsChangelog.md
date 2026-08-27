@@ -4,6 +4,43 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.16
+
+Since game.1.3.11.mod.15 → game.1.3.11.mod.16:
+
+### National Flavour
+
+- **The Miaphysite and Nestorian churches finally get their two religious aspects.** *Martyrs' Shield*
+  — +10% military tactics, +5% morale recovery in friendly territory and monthly progress toward
+  Quality — and *Universal Learning*, for theocracies — +5 maximum literacy for burghers, laborers,
+  soldiers and peasants, and monthly progress toward Innovative. Both were already named and described
+  in-game but were never defined, so neither religion could actually take them
+- **Christiana Pietas** now also grants +0.01 monthly literacy, and its heathen tolerance is cut to 1
+  [2]
+- **Genoese Crossbowmen** upgrade into Late Genoese Crossbowmen again — the upgrade path pointed at a
+  unit that does not exist, so the line dead-ended
+
+### Buildings and Reforms
+
+- **Church School:** its literacy bonus was written on the wrong scale and did effectively nothing. It
+  now gives +5 maximum literacy to burghers, laborers, soldiers and peasants, alongside its existing
+  +0.1 monthly literacy and conversion speed
+
+### Economy and Gold-Transfers
+
+- **Age of Discovery** grants +50% colonial maintenance efficiency in place of −25% colonial
+  maintenance cost
+
+### Crusades and Jihads
+
+- The Crusade and Jihad buttons now spell out the 100-year global cooldown instead of showing a raw
+  text key
+
+### UI and Quality of Life
+
+- The power rank tooltip is no longer cut off part-way through its last line
+- The tier-list panel's open and close buttons have tooltips
+
 ## game.1.3.11.mod.15
 
 Since game.1.3.11.mod.14 → game.1.3.11.mod.15:
