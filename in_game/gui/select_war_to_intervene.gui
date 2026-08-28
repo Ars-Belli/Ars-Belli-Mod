@@ -1,0 +1,49 @@
+# ARS BELLI: Intervene in War is removed. This window is the engine's war picker for
+# that action and it is the last gate every path to it has to pass through, so it is
+# deliberately left with nothing to pick.
+#
+# Why it is done here and not only with modifiers: allowed_intervene_in_war = no (see
+# main_menu/common/static_modifiers/abm_country_changes.txt and the HRE leader_modifier)
+# only stops the rank-based path. The engine still lets ANY country intervene in a war
+# against one of its rivals - vanilla says so itself in INTERVENE_IN_WAR_NOT_POWERFUL_ENOUGH,
+# "We are not powerful enough to intervene in the wars that countries that are not our
+# rivals". There is no data-side flag for that path, so the picker is emptied instead:
+# with no war selectable the action cannot be completed by anyone, rival or not.
+#
+# The list of wars (dynamicgridbox over SelectInterveneWindow.GetWars) is replaced by a
+# message pointing at Enforce Peace, and the Cancel button is kept as the only way out.
+#
+# The engine still lists Intervene in the diplomacy panel and that row is deliberately
+# left alone - taking it out means replacing the 2400-line
+# diplomacy_macrobuilder_lateralview.gui every patch, which is not worth it. The loc
+# override relabels it "Intervene in War (Removed)" and clicking it lands here.
+basic_priority_dialog = {
+	name = "select_intervene_window"
+	parentanchor = center
+	blockoverride "header_text" {
+		text = "INTERVENE_IN_WARTITLE"
+	}
+	blockoverride "content" {
+		textbox = {
+			maximumsize = { 500 -1 }
+			minimumsize = { 500 -1 }
+			margin = { 20 20 }
+			autoresize = yes
+			multiline = yes
+			align = center
+			text = "ars_belli_intervene_removed_popup"
+			using = Font_Type_Standard
+			using = Font_Size_Small
+			default_format = "#medium"
+		}
+	}
+	blockoverride "bottom_buttons" {
+		button_regular = {
+			size = {120 30}
+			name = "decline_button"
+			text = "CANCEL_BUTTON"
+			tooltip_enabled = no
+			onclick = "[SelectInterveneWindow.OnClose]"
+		}
+	}
+}
