@@ -561,12 +561,7 @@ The same notes ship with each GitHub release; `versionsChangelog.md` in the repo
 
 ## game.1.3.11.mod.17 (current)
 
-**Changes to Vanilla Diplomatic Actions**
-
-- Guarantees no longer disappear on their own. The automatic expiry check was ending guarantees
-  between countries that were still perfectly eligible for one, so a guarantee could evaporate
-  shortly after it was signed. A guarantee now lasts until it is cancelled, broken, or ended by war,
-  subjugation or a peace treaty
+Maintenance release — internal fixes only, no player-facing changes.
 
 ## game.1.3.11.mod.16
 
