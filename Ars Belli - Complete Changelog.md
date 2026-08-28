@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.16 | **Supported game version:** 1.3.\*
-**Compiled:** 27 August 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.17 | **Supported game version:** 1.3.\*
+**Compiled:** 28 August 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -210,9 +210,10 @@ Alliance, Defensive and Guarantee points.
 - Only Great Powers and Major Powers can offer a guarantee; only Normal, Small and Minor countries
   can be guaranteed or request one. [vanilla used the in-game country rank levels]
 - The +50 opinion requirement on the guaranteed country is removed.
-- A guarantee expires if the guarantor drops to Normal or below, or if the guaranteed country rises
-  to Major or Great Power. Rivalry between the two no longer ends it.
-- Cancelling or breaking a guarantee no longer adds a truce, and a guarantee that expires between
+- A guarantee never expires on its own: neither a change in either side's power rank nor a rivalry
+  between them ends it. It lasts until it is cancelled, broken, or ended by war, subjugation or a
+  peace treaty. [vanilla expired it on rank changes and rivalry]
+- Cancelling or breaking a guarantee no longer adds a truce, and a guarantee that ends between
   two countries of equal rank no longer upgrades itself into an alliance.
 
 ### Rivals
@@ -558,7 +559,16 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.16 (current)
+## game.1.3.11.mod.17 (current)
+
+**Changes to Vanilla Diplomatic Actions**
+
+- Guarantees no longer disappear on their own. The automatic expiry check was ending guarantees
+  between countries that were still perfectly eligible for one, so a guarantee could evaporate
+  shortly after it was signed. A guarantee now lasts until it is cancelled, broken, or ended by war,
+  subjugation or a peace treaty
+
+## game.1.3.11.mod.16
 
 **National Flavour**
 

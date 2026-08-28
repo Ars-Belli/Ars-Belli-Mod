@@ -4,6 +4,17 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.17
+
+Since game.1.3.11.mod.16 → game.1.3.11.mod.17:
+
+### Changes to Vanilla Diplomatic Actions
+
+- **Guarantees no longer disappear on their own.** The automatic expiry check was ending guarantees
+  between countries that were still perfectly eligible for one, so a guarantee could evaporate
+  shortly after it was signed. A guarantee now lasts until it is cancelled, broken, or ended by war,
+  subjugation or a peace treaty
+
 ## game.1.3.11.mod.16
 
 Since game.1.3.11.mod.15 → game.1.3.11.mod.16:
