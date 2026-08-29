@@ -4,6 +4,21 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.18
+
+Since game.1.3.11.mod.17 → game.1.3.11.mod.18:
+
+### Changes to Vanilla Diplomatic Actions
+
+- **Intervene in War** is now actually gone for everyone. Taking it off Great Power and Regional
+  Power status was never enough — the base game lets any country intervene in a war involving one of
+  its rivals whatever its rank, so it stayed reachable through that back door. There is no longer a
+  war to pick, so nobody can complete it: no rank, not the HRE Emperor, and not against a rival
+- Where the base game still lists it, the action is relabelled **Intervene in War (Removed)**, and
+  opening it explains that **Enforce Peace** replaces it
+- **Threaten War** is removed for **Regional Powers** and the **HRE Emperor**. Great Powers had
+  already lost it, so no country can threaten war any more
+
 ## game.1.3.11.mod.17
 
 Since game.1.3.11.mod.16 → game.1.3.11.mod.17:
