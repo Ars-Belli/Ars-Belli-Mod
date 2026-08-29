@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.17 | **Supported game version:** 1.3.\*
-**Compiled:** 28 August 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.18 | **Supported game version:** 1.3.\*
+**Compiled:** 29 August 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -235,9 +235,9 @@ Alliance, Defensive and Guarantee points.
 - **Sow Discontent** is disabled.
 - **Scutage** is hidden and disabled.
 - **Red Turban Rebellions "Demand Annexation"** is disabled.
-- **Intervene in War** is removed mod-wide (see [section 6](#6-enforce-peace)).
-- **Threaten War** is removed for Great Powers, pending confirmation that it is not bugged. Regional
-  powers keep it.
+- **Intervene in War** is removed for every country (see [section 6](#6-enforce-peace)).
+- **Threaten War** is removed for every country — Great Powers, Regional Powers and the HRE Emperor
+  alike. Where the base game still lists it, it is relabelled and cannot be used.
 
 ### Great Power and Regional Power status
 
@@ -247,7 +247,8 @@ These are vanilla's own rank modifiers, rewritten.
   +0.1 monthly prestige, +10% court spending cost. It no longer grants vanilla's +50% mercenary
   range, +10% creditworthiness, +2 max bonds, or the AI alliance/union weighting; and it no longer
   grants Enforce Peace, Intervene in War or Threaten War.
-- **Regional Power** keeps its vanilla bonuses but loses Enforce Peace and Intervene in War.
+- **Regional Power** keeps its vanilla bonuses but loses Enforce Peace, Intervene in War and
+  Threaten War.
 
 ### Espionage
 
@@ -267,8 +268,12 @@ These are vanilla's own rank modifiers, rewritten.
 
 Rebuilt from scratch.
 
-- **Intervene in War is removed mod-wide** — it resolved with no input from the countries actually at
-  war.
+- **Intervene in War is removed for every country** — it resolved with no input from the countries
+  actually at war. Stripping it from the Great Power and Regional Power ranks does not do this on its
+  own: the base game lets any country intervene in a war involving one of its rivals whatever its
+  rank. The action's war picker is therefore empty, so it cannot be completed by anyone — no rank,
+  not the HRE Emperor, and not against a rival. Where the base game still lists the action it is
+  relabelled **Intervene in War (Removed)** and opening it points at Enforce Peace.
 - Vanilla Enforce Peace is replaced by a new Enforce Peace action that covers every case Intervene
   used to.
 - **The defender is asked first.** Only if the defender accepts is the demand put to the attacker:
@@ -284,8 +289,8 @@ Rebuilt from scratch.
 - The Enforce Peace button on the war view is always shown; when a requirement is unmet it greys out
   with a tooltip naming what is missing, instead of disappearing.
 - The "a rival is at war" alert opens Enforce Peace instead of Intervene in War.
-- The HRE Emperor no longer gets the vanilla Enforce Peace and Intervene in War, and uses the same
-  Enforce Peace as everyone else.
+- The HRE Emperor no longer gets the vanilla Enforce Peace, Intervene in War or Threaten War, and
+  uses the same Enforce Peace as everyone else.
 - The prestige penalty for refusing an enforced peace was removed.
 - The vanilla Enforce Peace tooltip is relabelled to warn that ending a war without the defender's
   approval is against the rules.
@@ -559,7 +564,20 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.17 (current)
+## game.1.3.11.mod.18 (current)
+
+**Changes to Vanilla Diplomatic Actions**
+
+- Intervene in War is now actually gone for everyone. Taking it off Great Power and Regional Power
+  status was never enough — the base game lets any country intervene in a war involving one of its
+  rivals whatever its rank, so it stayed reachable through that back door. There is no longer a war
+  to pick, so nobody can complete it: no rank, not the HRE Emperor, and not against a rival
+- Where the base game still lists it, the action is relabelled Intervene in War (Removed), and
+  opening it explains that Enforce Peace replaces it
+- Threaten War is removed for Regional Powers and the HRE Emperor. Great Powers had already lost it,
+  so no country can threaten war any more
+
+## game.1.3.11.mod.17
 
 Maintenance release — internal fixes only, no player-facing changes.
 
