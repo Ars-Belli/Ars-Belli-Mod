@@ -1,7 +1,7 @@
-﻿namespace = ars_belli_enforce_peace
+﻿namespace = abm_enforce_peace
 
 # Step 2 of the Enforce Peace chain. The defender has already agreed to a white peace;
-# this asks the attacker. Fired from common/country_interactions/ars_belli_enforce_peace.txt
+# this asks the attacker. Fired from common/country_interactions/abm_enforce_peace.txt
 #
 # The interaction cannot hand scopes over directly - anything saved with save_scope_as in
 # a country_interaction effect comes back as "Undefined event target" here - so it passes
@@ -10,30 +10,30 @@
 # from the options, because event-to-event propagation does work.
 #
 # root = attacker leader (this country)
-ars_belli_enforce_peace.1 = {
+abm_enforce_peace.1 = {
 	type = country_event
-	title = ars_belli_enforce_peace.1.title
-	desc = ars_belli_enforce_peace.1.desc
+	title = abm_enforce_peace.1.title
+	desc = abm_enforce_peace.1.desc
 	outcome = neutral
 
 	immediate = {
-		var:ab_ep_enforcer = { save_scope_as = ep_enforcer }
-		var:ab_ep_defender = { save_scope_as = ep_defender }
-		var:ab_ep_war = { save_scope_as = ep_war }
+		var:abm_ep_enforcer = { save_scope_as = ep_enforcer }
+		var:abm_ep_defender = { save_scope_as = ep_defender }
+		var:abm_ep_war = { save_scope_as = ep_war }
 	}
 
 	# Accept the white peace.
 	option = {
-		name = ars_belli_enforce_peace.1.a
+		name = abm_enforce_peace.1.a
 		white_peace = scope:ep_war
 
 		scope:ep_enforcer = {
-			trigger_event_silently = ars_belli_enforce_peace.2
+			trigger_event_silently = abm_enforce_peace.2
 		}
 
-		remove_variable = ab_ep_enforcer
-		remove_variable = ab_ep_defender
-		remove_variable = ab_ep_war
+		remove_variable = abm_ep_enforcer
+		remove_variable = abm_ep_defender
+		remove_variable = abm_ep_war
 
 		ai_chance = {
 			factor = 2
@@ -57,7 +57,7 @@ ars_belli_enforce_peace.1 = {
 
 	# Refuse, and take the enforcer into the war against us.
 	option = {
-		name = ars_belli_enforce_peace.1.b
+		name = abm_enforce_peace.1.b
 
 		scope:ep_enforcer = {
 			join_war_with = {
@@ -66,12 +66,12 @@ ars_belli_enforce_peace.1 = {
 				call_in_subjects = yes
 				notify_opposing_side = yes
 			}
-			trigger_event_silently = ars_belli_enforce_peace.3
+			trigger_event_silently = abm_enforce_peace.3
 		}
 
-		remove_variable = ab_ep_enforcer
-		remove_variable = ab_ep_defender
-		remove_variable = ab_ep_war
+		remove_variable = abm_ep_enforcer
+		remove_variable = abm_ep_defender
+		remove_variable = abm_ep_war
 
 		ai_chance = {
 			factor = 2
@@ -94,25 +94,25 @@ ars_belli_enforce_peace.1 = {
 }
 
 # Notification to the enforcer: the attacker took the white peace.
-ars_belli_enforce_peace.2 = {
+abm_enforce_peace.2 = {
 	type = country_event
-	title = ars_belli_enforce_peace.2.title
-	desc = ars_belli_enforce_peace.2.desc
+	title = abm_enforce_peace.2.title
+	desc = abm_enforce_peace.2.desc
 	outcome = positive
 
 	option = {
-		name = ars_belli_enforce_peace.2.a
+		name = abm_enforce_peace.2.a
 	}
 }
 
 # Notification to the enforcer: the attacker refused, so we are now in the war.
-ars_belli_enforce_peace.3 = {
+abm_enforce_peace.3 = {
 	type = country_event
-	title = ars_belli_enforce_peace.3.title
-	desc = ars_belli_enforce_peace.3.desc
+	title = abm_enforce_peace.3.title
+	desc = abm_enforce_peace.3.desc
 	outcome = negative
 
 	option = {
-		name = ars_belli_enforce_peace.3.a
+		name = abm_enforce_peace.3.a
 	}
 }

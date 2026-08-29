@@ -695,10 +695,10 @@ lateralview_full = {
 														layoutpolicy_horizontal = expanding
 														size = { -1 40 }
 														action_tooltip = {
-															title = "ars_belli_enforce_peace"
-															on_action = "[OpenDiploAction('ars_belli_enforce_peace')]"
+															title = "abm_enforce_peace"
+															on_action = "[OpenDiploAction('abm_enforce_peace')]"
 														}
-														using = ars_belli_enforce_peace_tooltip
+														using = abm_enforce_peace_tooltip
 														# Ars Belli: greyed out rather than hidden when the player is ineligible,
 														# so the tooltip above can explain which requirement is unmet.
 														enabled = "[And(Not(WarLateralView.IsPlayerInWar), Or4(Player.MakeScope.GetVariable('mp_is_gp').IsSet, Player.MakeScope.GetVariable('mp_is_major').IsSet, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)))]"
@@ -713,7 +713,7 @@ lateralview_full = {
 														}
 									
 														text_single = {
-															text = "ars_belli_enforce_peace"
+															text = "abm_enforce_peace"
 															align = nobaseline
 															using = Font_Type_Headers
 														}
@@ -863,10 +863,10 @@ lateralview_full = {
 														layoutpolicy_horizontal = expanding
 														size = { -1 40 }
 														action_tooltip = {
-															title = "ars_belli_enforce_peace"
-															on_action = "[OpenDiploAction('ars_belli_enforce_peace')]"
+															title = "abm_enforce_peace"
+															on_action = "[OpenDiploAction('abm_enforce_peace')]"
 														}
-														using = ars_belli_enforce_peace_tooltip
+														using = abm_enforce_peace_tooltip
 														# Ars Belli: greyed out rather than hidden when the player is ineligible,
 														# so the tooltip above can explain which requirement is unmet.
 														enabled = "[And(Not(WarLateralView.IsPlayerInWar), Or4(Player.MakeScope.GetVariable('mp_is_gp').IsSet, Player.MakeScope.GetVariable('mp_is_major').IsSet, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)))]"
@@ -881,7 +881,7 @@ lateralview_full = {
 															}
 										
 															text_single = {
-																text = "ars_belli_enforce_peace"
+																text = "abm_enforce_peace"
 																align = nobaseline
 																using = Font_Type_Headers
 															}
@@ -2571,7 +2571,7 @@ template sue_for_peace_action_tooltip {
 # Ars Belli: tooltip for the Enforce Peace button. Each requirement resolves to a
 # passed or failed loc line so a player who cannot use the action is told why,
 # rather than the button simply disappearing.
-template ars_belli_enforce_peace_tooltip {
+template abm_enforce_peace_tooltip {
 	tooltipwidget = {
 		ContextualTooltipType = {
 			blockoverride "title_icon_texture" {
@@ -2579,7 +2579,7 @@ template ars_belli_enforce_peace_tooltip {
 			}
 
 			blockoverride "title_text" {
-				text = "ars_belli_enforce_peace"
+				text = "abm_enforce_peace"
 			}
 
 			blockoverride "concept_link" {
@@ -2589,17 +2589,17 @@ template ars_belli_enforce_peace_tooltip {
 			blockoverride "tooltip_content" {
 				TooltipTextBlock = {
 					blockoverride "text" {
-						text = "ars_belli_enforce_peace_desc"
+						text = "abm_enforce_peace_desc"
 					}
 				}
 				TooltipTextBlock = {
 					blockoverride "text" {
-						text = "[SelectLocalization(Not(WarLateralView.IsPlayerInWar), 'ars_belli_ep_req_not_participant_met', 'ars_belli_ep_req_not_participant_unmet')]"
+						text = "[SelectLocalization(Not(WarLateralView.IsPlayerInWar), 'abm_ep_req_not_participant_met', 'abm_ep_req_not_participant_unmet')]"
 					}
 				}
 				TooltipTextBlock = {
 					blockoverride "text" {
-						text = "[SelectLocalization(Or4(Player.MakeScope.GetVariable('mp_is_gp').IsSet, Player.MakeScope.GetVariable('mp_is_major').IsSet, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)), 'ars_belli_ep_req_standing_met', 'ars_belli_ep_req_standing_unmet')]"
+						text = "[SelectLocalization(Or4(Player.MakeScope.GetVariable('mp_is_gp').IsSet, Player.MakeScope.GetVariable('mp_is_major').IsSet, Player.GetDiplomacy.IsRival(WarLateralView.GetEnemyLeader), Player.GetDiplomacy.IsRival(WarLateralView.GetFriendlyLeader)), 'abm_ep_req_standing_met', 'abm_ep_req_standing_unmet')]"
 					}
 				}
 			}
