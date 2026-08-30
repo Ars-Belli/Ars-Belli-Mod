@@ -50,3 +50,27 @@ abm_eastern_christian_militant_church = {
 	years = 2
 }
 
+abm_colonial_republic = {
+	# major = yes
+
+	potential = {
+		OR = {
+			capital ?= { continent = continent:america }
+			capital ?= { continent = continent:oceania }
+		}
+	}
+
+	allow = {
+		government_type = government_type:republic
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+		global_maritime_presence_modifier = 0.20
+		sea_cost_on_distance_from_capital_when_maritime = -0.5
+		port_cost_distance_from_capital = -2
+		road_cost_on_distance_from_capital = -1
+	}
+
+	years = 2
+}
