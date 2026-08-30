@@ -12,7 +12,10 @@
 		}
 	}
 	locked = {
-		has_reform = government_reform:diarchy_republic
+		OR = {
+			has_reform = government_reform:diarchy_republic
+			has_or_had_tag = GEN
+		}
 	}
 
 	calc = {
@@ -102,6 +105,120 @@
 			add = {
 				desc = "HEIR_SELECTION_WAS_PREVIOUS_CO_RULER"
 				value = 200
+			}
+		}
+	}
+
+	modifier = {
+		care_about_producing_heirs = yes
+	}
+}
+
+REPLACE:doge_election = {
+	use_election = yes
+	term_duration = 0	#0 = until ruler death
+	max_possible_candidates = 3
+	allowed_estates = { nobles_estate burghers_estate }
+	heir_is_allowed = {
+	}
+	potential = {
+		has_reform = government_reform:merchant_republic
+		# Genoa uses the diarchic election instead (see diarchic_election).
+		NOT = { has_or_had_tag = GEN }
+	}
+	locked = {
+		has_reform = government_reform:merchant_republic
+		NOT = { has_or_had_tag = GEN }
+	}
+	calc = {
+		if = {
+			limit = {
+				exists = root
+			}
+			add = {
+				desc = "HEIR_SELECTION_ADM_DESC"
+				value = root.adm
+			}
+			add = {
+				desc = "HEIR_SELECTION_DIP_DESC"
+				value = root.dip
+			}
+			add = {
+				desc = "HEIR_SELECTION_MIL_DESC"
+				value = root.mil
+			}
+			add = {
+				desc = "HEIR_SELECTION_OLDER_HEIR_DESC"
+				value = root.age_in_years
+			}
+			if = {
+				limit = {
+					any_trait = { has_tag = economical }
+				}
+				add = {
+					desc = "HEIR_SELECTION_ECONOMICAL_TRAITS"
+					value = 50
+				}
+			}
+			if = {
+				limit = {
+					any_trait = { has_tag = social }
+				}
+				add = {
+					desc = "HEIR_SELECTION_SOCIAL_TRAITS"
+					value = 50
+				}
+			}
+			if = {
+				limit = {
+					any_trait = { has_tag = tolerant }
+				}
+				add = {
+					desc = "HEIR_SELECTION_TOLERANT_TRAITS"
+					value = 50
+				}
+			}
+			if = { 
+				limit = { modifier:blocked_from_being_ruler = yes }
+				add = {
+					desc = "HEIR_SELECTION_IS_UNSUITED_TO_RULE_DESC"
+					value = -1000 
+				}
+			}
+		}
+
+		# Here it goes the description for explaining the lottery election
+		if = {
+			limit = {
+				not = { exists = root }
+			}
+			add = {
+				desc = "HEIR_SELECTION_ADM_DESC"
+				value = 1
+			}
+			add = {
+				desc = "HEIR_SELECTION_DIP_DESC"
+				value = 1
+			}
+			add = {
+				desc = "HEIR_SELECTION_MIL_DESC"
+				value = 1
+			}
+			add = {
+				desc = "HEIR_SELECTION_OLDER_HEIR_DESC"
+				value = 1
+			}
+			add = {
+				desc = "HEIR_SELECTION_ECONOMICAL_TRAITS"
+				value = 50
+			}
+			add = {
+				desc = "HEIR_SELECTION_SOCIAL_TRAITS"
+				value = 50
+			}
+			add = {
+				desc = "HEIR_SELECTION_TOLERANT_TRAITS"
+				value = 50
 			}
 		}
 	}
