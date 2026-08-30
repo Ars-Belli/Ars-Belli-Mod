@@ -83,21 +83,6 @@
 
     # Auto-evaluated by the engine; only scope:first (guarantor) and scope:second (guaranteed) are bound here, not actor/recipient.
     will_expire_trigger = {
-        OR = {
-            scope:first = {
-                OR = {
-                    is_mp_normal = yes
-                    is_mp_small = yes
-                    is_mp_minor = yes
-                }
-            }
-            scope:second = {
-                OR = {
-                    is_mp_gp = yes
-                    is_mp_major = yes
-                }
-            }
-        }
     }
 
     cancel_effect = {

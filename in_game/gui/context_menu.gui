@@ -201,7 +201,9 @@ types ContextMenuSpecificTypes
 				datamodel = "[QuickDiplomaticActions.GetList]"
 				item = {
 					ContextMenuEntry = {
-						visible = "[PinCollection.IsPinned( DiplomaticActionItem.GetTag )]"
+						# Ars Belli: Intervene in War is removed, so it never shows here even if a
+						# player pinned it. The tag is the loc key prefix - INTERVENE_IN_WARTITLE.
+						visible = "[And(Not(EqualTo_string(DiplomaticActionItem.GetTag, 'INTERVENE_IN_WAR')), PinCollection.IsPinned( DiplomaticActionItem.GetTag ))]"
 						enabled = "[DiplomaticActionItem.IsEnabled]"
 
 						blockoverride "entry_button" {
