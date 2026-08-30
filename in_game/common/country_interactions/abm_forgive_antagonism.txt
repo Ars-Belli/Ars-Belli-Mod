@@ -7,7 +7,7 @@
 # action re-measures against the current pool instead of stacking on itself; the two
 # actions use different biases, so using both is cumulative.
 
-ars_belli_forgive_half_antagonism = {
+abm_forgive_half_antagonism = {
 	type = diplomacy
 	category = CATEGORY_FRIENDLY_ACTIONS
 
@@ -21,7 +21,7 @@ ars_belli_forgive_half_antagonism = {
 		# Overridden: the auto-generated line renders this in the third person and reads
 		# as if THEY need antagonism towards US. It is our antagonism towards them.
 		custom_tooltip = {
-			text = ars_belli_forgive_antagonism_requirement_tt
+			text = abm_forgive_antagonism_requirement_tt
 			scope:actor = {
 				antagonism = {
 					target = scope:recipient
@@ -32,7 +32,7 @@ ars_belli_forgive_half_antagonism = {
 	}
 
 	cooldown = {
-		type = ars_belli_forgive_half_antagonism
+		type = abm_forgive_half_antagonism
 		years = 10
 	}
 
@@ -48,7 +48,7 @@ ars_belli_forgive_half_antagonism = {
 		}
 		enabled = {
 			custom_tooltip = {
-				text = ars_belli_forgive_antagonism_requirement_tt
+				text = abm_forgive_antagonism_requirement_tt
 				scope:actor = {
 					antagonism = {
 						target = root
@@ -63,13 +63,13 @@ ars_belli_forgive_half_antagonism = {
 		scope:actor = {
 			# Drop this action's earlier pardon so the scale below reads the current pool.
 			remove_antagonism = {
-				modifier = ars_belli_antagonism_forgiven_half
+				modifier = abm_antagonism_forgiven_half
 				target = scope:recipient
 			}
 			add_antagonism = {
-				modifier = ars_belli_antagonism_forgiven_half
+				modifier = abm_antagonism_forgiven_half
 				target = scope:recipient
-				scale = ars_belli_antagonism_forgive_half
+				scale = abm_antagonism_forgive_half
 			}
 		}
 	}
@@ -91,7 +91,7 @@ ars_belli_forgive_half_antagonism = {
 	}
 }
 
-ars_belli_forgive_200_antagonism = {
+abm_forgive_200_antagonism = {
 	type = diplomacy
 	category = CATEGORY_FRIENDLY_ACTIONS
 
@@ -105,7 +105,7 @@ ars_belli_forgive_200_antagonism = {
 		# Overridden: the auto-generated line renders this in the third person and reads
 		# as if THEY need antagonism towards US. It is our antagonism towards them.
 		custom_tooltip = {
-			text = ars_belli_forgive_antagonism_requirement_tt
+			text = abm_forgive_antagonism_requirement_tt
 			scope:actor = {
 				antagonism = {
 					target = scope:recipient
@@ -116,7 +116,7 @@ ars_belli_forgive_200_antagonism = {
 	}
 
 	cooldown = {
-		type = ars_belli_forgive_200_antagonism
+		type = abm_forgive_200_antagonism
 		years = 10
 	}
 
@@ -132,7 +132,7 @@ ars_belli_forgive_200_antagonism = {
 		}
 		enabled = {
 			custom_tooltip = {
-				text = ars_belli_forgive_antagonism_requirement_tt
+				text = abm_forgive_antagonism_requirement_tt
 				scope:actor = {
 					antagonism = {
 						target = root
@@ -146,13 +146,13 @@ ars_belli_forgive_200_antagonism = {
 	effect = {
 		scope:actor = {
 			remove_antagonism = {
-				modifier = ars_belli_antagonism_forgiven_flat
+				modifier = abm_antagonism_forgiven_flat
 				target = scope:recipient
 			}
 			add_antagonism = {
-				modifier = ars_belli_antagonism_forgiven_flat
+				modifier = abm_antagonism_forgiven_flat
 				target = scope:recipient
-				scale = ars_belli_antagonism_forgive_200
+				scale = abm_antagonism_forgive_200
 			}
 		}
 	}

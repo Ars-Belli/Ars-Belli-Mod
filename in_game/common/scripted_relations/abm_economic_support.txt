@@ -9,18 +9,18 @@
 #
 #   Nr.3  the recipient gets an accept/decline popup
 #   Nr.4  giving OR receiving costs a Defensive Point (see the mp weight recompute in
-#         scripted_effects/ars_belli_scripted_effects.txt, which spills into Alliance
+#         scripted_effects/abm_scripted_effects.txt, which spills into Alliance
 #         Points via the existing overflow rules)
 #   Nr.5  -0.10 monthly diplomats on BOTH sides via the giving_/receiving_ auto-modifiers
-#         in static_modifiers/ars_belli_country_changes.txt
+#         in static_modifiers/abm_country_changes.txt
 #
 # This file is only the ongoing half of the mechanic. Starting it lives in
-# country_interactions/ars_belli_send_economic_support.txt, which carries the amount
+# country_interactions/abm_send_economic_support.txt, which carries the amount
 # slider and the accept/decline popup - see offer_visible below for why.
 #
 # first = the country sending gold, second = the country receiving it.
 
-ars_belli_economic_support = {
+abm_economic_support = {
 	type = diplomacy
 	relation_type = oneway
 
@@ -37,7 +37,7 @@ ars_belli_economic_support = {
 	# The agreed monthly sum, stored on the RECIPIENT by the interaction that starts the
 	# relation. The interaction allows a country only one patron at a time, which is what
 	# makes a single variable on the recipient unambiguous.
-	gold_to_second = ars_belli_economic_support_amount
+	gold_to_second = abm_economic_support_amount
 
 	visible = {
 		scope:actor = {
@@ -45,7 +45,7 @@ ars_belli_economic_support = {
 		}
 	}
 
-	# Started through ars_belli_send_economic_support instead of from the relation panel.
+	# Started through abm_send_economic_support instead of from the relation panel.
 	# A relation's own select_trigger is the only selection stage in its flow, so a
 	# value-type one leaves the picker with no attribute columns and the game asserts on
 	# (AttributeColumns.GetSize() > 0) and dies. The interaction has a country stage
@@ -57,15 +57,15 @@ ars_belli_economic_support = {
 	# the actor, on a break the receiver is; expiry is engine-evaluated and uses
 	# first/second instead. Each clears the variable on whichever side is the receiver.
 	cancel_effect = {
-		scope:recipient = { remove_variable = ab_ecosupport_amount }
+		scope:recipient = { remove_variable = abm_ecosupport_amount }
 	}
 
 	break_effect = {
-		scope:actor = { remove_variable = ab_ecosupport_amount }
+		scope:actor = { remove_variable = abm_ecosupport_amount }
 	}
 
 	expire_effect = {
-		scope:second = { remove_variable = ab_ecosupport_amount }
+		scope:second = { remove_variable = abm_ecosupport_amount }
 	}
 
 	# Keep it unless it starts costing points we cannot afford.
@@ -79,7 +79,7 @@ ars_belli_economic_support = {
 				scope:actor = { is_over_alliance_limit = 1 }
 			}
 			subtract = {
-				desc = ars_belli_economic_support_points_tt
+				desc = abm_economic_support_points_tt
 				value = 500
 			}
 		}

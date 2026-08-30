@@ -236,7 +236,7 @@ mp_limits_once_per_month_calculations = {
 }
 
 # Store countries per tier in score-descending lists. Iterated in GUI via
-# `datamodel = "[GetGlobalList('mp_<tier>_list')]"` (see ars_belli_tier_list_panel).
+# `datamodel = "[GetGlobalList('mp_<tier>_list')]"` (see abm_tier_list_panel).
 # Two-pass: every_country has no order guarantee, so we collect into a temp list
 # and re-iterate via ordered_in_list to get score-desc order.
 mp_limits_store_tier_lists = {
@@ -379,7 +379,7 @@ mp_limits_apply_fort_limit_alert = {
 			used_fort_limit_percentage > 1.0
 			not = { has_variable = mp_fort_alert_muted }
 		}
-		trigger_event_non_silently = ars_belli_mp_limits.2
+		trigger_event_non_silently = abm_mp_limits.2
 	}
 }
 
@@ -406,7 +406,7 @@ mp_limits_apply_alliance_limit_penalty = {
 				NOT = { has_variable = mp_was_over_alliance_limit }
 				has_variable = mp_alliance_alert_enabled
 			}
-			trigger_event_non_silently = ars_belli_mp_limits.1
+			trigger_event_non_silently = abm_mp_limits.1
 		}
 		set_variable = { name = mp_was_over_alliance_limit value = 1 }
 	}
@@ -743,11 +743,11 @@ mp_limits_calculate_diplo_weights = {
 			limit = {
 				OR = {
 					giving_scripted_relation = {
-						type = relation_type:ars_belli_economic_support
+						type = relation_type:abm_economic_support
 						target = scope:mp_dw_p
 					}
 					receiving_scripted_relation = {
-						type = relation_type:ars_belli_economic_support
+						type = relation_type:abm_economic_support
 						target = scope:mp_dw_p
 					}
 				}
