@@ -1,4 +1,9 @@
-﻿REPLACE:USA_f = {
+﻿####################################
+# North America
+####################################
+
+# USA - USA
+REPLACE:USA_f = {
 	level = 4
 	required_locations_fraction = 0.65
 	rule = historical
@@ -30,6 +35,7 @@
 	}
 }
 
+# Mexica - MEX
 REPLACE:MEX_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -62,6 +68,7 @@ REPLACE:MEX_f = {
 	}
 }
 
+# Canada - CAN
 REPLACE:CAN_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -94,6 +101,7 @@ REPLACE:CAN_f = {
 	}
 }
 
+# Alaska - ABALA
 ABALA_f = {
 	level = 4
 	required_locations_fraction = 0.90
@@ -126,70 +134,7 @@ ABALA_f = {
 	}
 }
 
-ABBRZ_f = {
-	level = 4
-	required_locations_fraction = 0.65
-	rule = historical
-
-	capital_required = yes
-
-	potential = {
-		culture ?= { is_culture_native_american = no }
-		original_capital ?= { sub_continent = sub_continent:north_america }
-	}
-
-	allow = {
-	}
-	
-	name = ABBRZ
-	flag = ABBRZ
-	adjective = ABBRZ_ADJ
-	tag = ABBRZ
-	color = map_ABBRZ
-
-	regions = {
-		brazil_region
-	}
-	form_effect = {
-		if = {
-			limit = { country_rank_level < 3 }
-			set_country_rank_effect = { rank = country_rank:rank_kingdom }
-		}
-	}
-}
-
-ABAUS_f = {
-	level = 4
-	required_locations_fraction = 0.55
-	rule = historical
-
-	capital_required = yes
-
-	potential = {
-		culture ?= { is_culture_native_american = no }
-		original_capital ?= { sub_continent = sub_continent:australasia }
-	}
-
-	allow = {
-	}
-	
-	name = ABAUS
-	flag = ABAUS
-	adjective = ABAUS_ADJ
-	tag = ABAUS
-	color = map_ABAUS
-
-	regions = {
-		australia_region
-	}
-	form_effect = {
-		if = {
-			limit = { country_rank_level < 3 }
-			set_country_rank_effect = { rank = country_rank:rank_kingdom }
-		}
-	}
-}
-
+# Cascadia - ABCSC
 ABCSC_f = {
 	level = 4
 	required_locations_fraction = 0.55
@@ -223,70 +168,7 @@ ABCSC_f = {
 	}
 }
 
-ABEIC_f = {
-	level = 4
-	required_locations_fraction = 0.20
-	rule = historical
-
-	capital_required = yes
-
-	potential = {
-		original_capital ?= { sub_continent = sub_continent:south_asia }
-		scope:actor = { is_colonial_subject = yes }
-	}
-
-	allow = {
-	}
-	
-	name = ABEIC
-	flag = ABEIC
-	adjective = ABEIC_ADJ
-	tag = ABEIC
-	color = map_ABEIC
-
-	sub_continents = {
-		south_asia
-	}
-	form_effect = {
-		if = {
-			limit = { country_rank_level < 3 }
-			set_country_rank_effect = { rank = country_rank:rank_kingdom }
-		}
-	}
-}
-
-ABNZL_f = {
-	level = 4
-	required_locations_fraction = 0.65
-	rule = historical
-
-	capital_required = yes
-
-	potential = {
-		culture ?= { is_culture_native_american = no }
-		original_capital ?= { sub_continent = sub_continent:australasia }
-	}
-
-	allow = {
-	}
-	
-	name = ABNZL
-	flag = ABNZL
-	adjective = ABNZL_ADJ
-	tag = ABNZL
-	color = map_ABNZL
-
-	regions = {
-		new_zealand_region
-	}
-	form_effect = {
-		if = {
-			limit = { country_rank_level < 3 }
-			set_country_rank_effect = { rank = country_rank:rank_kingdom }
-		}
-	}
-}
-
+# Quebeck - ABQUE
 ABQUE_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -320,6 +202,7 @@ ABQUE_f = {
 	}
 }
 
+# Sonora / California - ABSNA
 ABSNA_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -352,6 +235,7 @@ ABSNA_f = {
 	}
 }
 
+# Texas - ABTEX
 ABTEX_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -384,6 +268,7 @@ ABTEX_f = {
 	}
 }
 
+# Vermont - ABVRM
 ABVRM_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -416,6 +301,7 @@ ABVRM_f = {
 	}
 }
 
+# West Indies / Caribbeans - ABWSI
 ABWSI_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -448,8 +334,44 @@ ABWSI_f = {
 	}
 }
 
-# Peru - ABPER
+####################################
+# South America
+####################################
 
+# Brazil - ABBRZ
+ABBRZ_f = {
+	level = 4
+	required_locations_fraction = 0.65
+	rule = historical
+
+	capital_required = yes
+
+	potential = {
+		culture ?= { is_culture_native_american = no }
+		original_capital ?= { sub_continent = sub_continent:north_america }
+	}
+
+	allow = {
+	}
+	
+	name = ABBRZ
+	flag = ABBRZ
+	adjective = ABBRZ_ADJ
+	tag = ABBRZ
+	color = map_ABBRZ
+
+	regions = {
+		brazil_region
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank_effect = { rank = country_rank:rank_kingdom }
+		}
+	}
+}
+
+# Peru - ABPER
 ABPER_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -483,7 +405,6 @@ ABPER_f = {
 }
 
 # Colombia - ABCOL
-
 ABCOL_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -517,7 +438,6 @@ ABCOL_f = {
 }
 
 # Argentina - ABARG
-
 ABARG_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -551,7 +471,6 @@ ABARG_f = {
 }
 
 # Bolivia - ABBOL
-
 ABBOL_f = {
 	level = 4
 	required_locations_fraction = 0.65
@@ -584,3 +503,109 @@ ABBOL_f = {
 	}
 }
 
+####################################
+# Australia
+####################################
+
+# Australia - ABAUS
+ABAUS_f = {
+	level = 4
+	required_locations_fraction = 0.55
+	rule = historical
+
+	capital_required = yes
+
+	potential = {
+		culture ?= { is_culture_native_american = no }
+		original_capital ?= { sub_continent = sub_continent:australasia }
+	}
+
+	allow = {
+	}
+	
+	name = ABAUS
+	flag = ABAUS
+	adjective = ABAUS_ADJ
+	tag = ABAUS
+	color = map_ABAUS
+
+	regions = {
+		australia_region
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank_effect = { rank = country_rank:rank_kingdom }
+		}
+	}
+}
+
+# New Zealand - ABNZL
+ABNZL_f = {
+	level = 4
+	required_locations_fraction = 0.65
+	rule = historical
+
+	capital_required = yes
+
+	potential = {
+		culture ?= { is_culture_native_american = no }
+		original_capital ?= { sub_continent = sub_continent:australasia }
+	}
+
+	allow = {
+	}
+	
+	name = ABNZL
+	flag = ABNZL
+	adjective = ABNZL_ADJ
+	tag = ABNZL
+	color = map_ABNZL
+
+	regions = {
+		new_zealand_region
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank_effect = { rank = country_rank:rank_kingdom }
+		}
+	}
+}
+
+####################################
+# India (!!!)
+####################################
+
+# East India Company - ABEIC
+ABEIC_f = {
+	level = 4
+	required_locations_fraction = 0.20
+	rule = historical
+
+	capital_required = yes
+
+	potential = {
+		original_capital ?= { sub_continent = sub_continent:south_asia }
+		scope:actor = { is_colonial_subject = yes }
+	}
+
+	allow = {
+	}
+	
+	name = ABEIC
+	flag = ABEIC
+	adjective = ABEIC_ADJ
+	tag = ABEIC
+	color = map_ABEIC
+
+	sub_continents = {
+		south_asia
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank_effect = { rank = country_rank:rank_kingdom }
+		}
+	}
+}
