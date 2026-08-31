@@ -39,7 +39,10 @@
     }
 
 	offer_enabled = {
-        alliance_can_exist = yes
+        alliance_can_exist = {
+            first = scope:actor
+            second = scope:recipient
+        }
                custom_description = {
                        text = "MP_GP_CANNOT_ALLY_GP"
                        subject = scope:actor
@@ -66,7 +69,12 @@
     }
 
     will_expire_trigger = {
-        alliance_can_exist = no
+        not = {
+            alliance_can_exist = {
+                first = scope:first
+                second = scope:second
+            }
+        }
     }
 
 	offer_declined_effect = {
