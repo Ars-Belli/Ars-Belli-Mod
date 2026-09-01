@@ -1,0 +1,80 @@
+﻿# Ars Belli: step a location down ONE rank instead of razing it to countryside.
+#
+# The vanilla "Downgrade Location" button is engine-side end to end
+# (Location.CanDowngradeRank / GetDowngradeRankPrice / DowngradeLocationRank in
+# location_window.gui, price:rural_settlement_downgrade) and always drops straight
+# to a rural settlement - there is no data hook to pick the target rank. So this is
+# a scripted action next to it: megalopolis -> city -> town -> rural settlement,
+# one step per use. change_location_rank is the same effect vanilla uses in
+# scripted_effects\location_effects.txt.
+#
+# type = owncountry, not location: no vanilla action uses type = location, and an
+# owncountry action with a location select_trigger is the well-trodden shape
+# (generic_actions\international_organizations.txt). The button lives in the
+# location right-click menu, see gui\context_menu.gui.
+
+abm_downgrade_location_rank = {
+	type = owncountry
+
+	# Nothing about this is something the AI should be doing on its own, and the
+	# automation has no notion of wanting fewer towns.
+	ai_tick = never
+	automation_tick = never
+
+	price = price:abm_downgrade_location_rank
+
+	# The action already needs a click-and-hold on the button; a message on top of
+	# that is noise, and skipping it keeps us out of gui\messagetypes.txt.
+	show_message = no
+
+	select_trigger = {
+		looking_for_a = location
+		target_flag = target
+		source = actor
+		source_flags = only_actual_locations
+		name = "abm_downgrade_location_rank_select_location"
+		none_available_msg_key = "abm_downgrade_location_rank_no_locations"
+		column = {
+			data = name
+		}
+		column = {
+			data = population
+		}
+
+		visible = {
+			owner = scope:actor
+			NOT = { location_rank = location_rank:rural_settlement }
+		}
+
+		enabled = {
+			custom_tooltip = {
+				text = abm_downgrade_location_rank_not_occupied_tt
+				controller ?= scope:actor
+			}
+			custom_tooltip = {
+				text = abm_downgrade_location_rank_no_siege_tt
+				has_siege = no
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = { exists = scope:target }
+			scope:target = {
+				if = {
+					limit = { location_rank = location_rank:megalopolis }
+					change_location_rank = location_rank:city
+				}
+				else_if = {
+					limit = { location_rank = location_rank:city }
+					change_location_rank = location_rank:town
+				}
+				else_if = {
+					limit = { location_rank = location_rank:town }
+					change_location_rank = location_rank:rural_settlement
+				}
+			}
+		}
+	}
+}

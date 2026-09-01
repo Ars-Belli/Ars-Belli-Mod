@@ -1,0 +1,15 @@
+﻿# Ars Belli urbanisation limit - country scope.
+#
+# Town points: town = 1, city = 2, megalopolis = 4. Both sides of the sum are
+# country modifiers, so this is a cheap read and never iterates locations:
+#   abm_urbanisation_used  is summed by the engine from the location_ranks
+#                          country_modifier blocks (in_game\common\location_ranks).
+#   abm_urbanisation_limit is base + locations + advances (auto_modifiers\abm_country.txt).
+
+# How many more town points we can take on. Can go negative after conquest -
+# nothing punishes that, it just blocks founding and upgrading until we are back
+# under the limit (or downgrade something, see generic_actions\abm_downgrade_location_rank.txt).
+abm_urbanisation_free_points = {
+	value = modifier:abm_urbanisation_limit
+	subtract = modifier:abm_urbanisation_used
+}

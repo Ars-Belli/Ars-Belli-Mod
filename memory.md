@@ -145,6 +145,22 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
 
+### 4b. Urbanisation Limit ("Urban Capacity")
+A cap on towns/cities/megalopolises, built the same shape as the fort limit. **Town points:** town = 1, city = 2, megalopolis = 4.
+- **Two custom country modifier types** in `main_menu\common\modifier_type_definitions\abm_urbanisation.txt` (icons in `main_menu\common\modifier_icons\abm_urbanisation.txt`). `modifier_type_definitions` is a normal multi-file database (vanilla ships `00`/`01_byz`/`02_generic_bureaucracies`) so mods can add types; they have no engine meaning and are read back through `modifier:<name>`.
+  - `abm_urbanisation_limit` = the cap. Base 10 (`INJECT:country_base_values`) + 1 per 10 locations (`abm_urbanisation_locations_impact`, both in `auto_modifiers\abm_country.txt`) + 5 per advance x 6 ages (`advances\abm_urbanisation_advances.txt`, hung off each age's town-rights/city advance).
+  - `abm_urbanisation_used` = the count. **Granted per location by the `country_modifier` blocks in `location_ranks\00_default.txt`** (1/2/4). The engine sums these itself, so the total is exact the instant a rank changes and nothing has to iterate locations. Same trick vanilla uses for `monthly_doom` and city `fort_limit`.
+- `abm_urbanisation_free_points` (`script_values\abm_urbanisation_values.txt`) = limit - used. Script values work as a trigger left-hand side (vanilla precedent: `strength_ratio_for_garrison_sortie` in `generic_actions\siege.txt`).
+- **The gate is the `allow` block of each rank** in `location_ranks\00_default.txt`: town and city need 1 free point, megalopolis needs 2. Each check sits inside `trigger_if = { limit = { owner ?= { modifier:abm_urbanisation_limit > 0 } } ... }` so it **fails open** - if the modifier type ever stops registering, founding still works instead of being locked forever.
+- **`location_ranks\00_default.txt` is now a same-name full-file replacement** (in `replaced_files.txt`), replacing the old `abm_location_ranks.txt` INJECT. `INJECT:` merges *numbers* in modifier blocks (the old file relied on `fort_limit = -1` + vanilla 1 = 0), but its behaviour on a **trigger** block like `allow` is unverified, and a silent no-op there would kill the whole feature. The city `fort_limit = 0` edit is folded into the replacement.
+- Going over the cap by conquest is allowed and carries **no penalty** - it only blocks founding/upgrading until you are back under. **Known hole:** the check reads completed ranks only, so several upgrades queued in the same tick can overshoot.
+
+### 4c. Reduce Location (one-rank downgrade)
+- Vanilla "Downgrade Location" (right-click the rank icon in `location_window.gui`) is **engine-side end to end** - `Location.CanDowngradeRank` / `GetDowngradeRankPrice` / `DowngradeLocationRank`, priced by `prices\01_buildings.txt` -> `rural_settlement_downgrade` - and always drops straight to a rural settlement. There is **no data hook to choose the target rank**; only the price and the loc are moddable.
+- Replacement: `generic_actions\abm_downgrade_location_rank.txt`, one step per use (megalopolis -> city -> town -> rural), 100 gold (`price:abm_downgrade_location_rank` in `prices\abm_prices.txt`). Uses the scriptable `change_location_rank` effect.
+- **`type = owncountry` with a location `select_trigger`, not `type = location`.** The generic_actions readme lists `location` as a type but **no vanilla action uses it**; the well-trodden shape is owncountry + `looking_for_a = location` (`generic_actions\international_organizations.txt`).
+- **Button lives in the location right-click menu** (`gui\context_menu.gui`, already a mod-replaced file - search `# Ars Belli: step a location down one rank`). `ContextMenuActionEntry` is `action_button_regular`, so a generic action drops straight in; `parameter = { parameter_name = "target" parameter_value = "[Location.MakeScope]" }` pre-fills the target and skips the map picker. Copied from vanilla's `add_location_to_international_organization` entry in the same menu. **`location_window.gui` is 10.5k lines - do not replace it for a button.**
+
 ## Project Structure
 The repository mirrors the EU5 file structure:
 - `in_game/`: Contains gameplay logic (advances, effects, triggers, setup).
@@ -179,7 +195,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-08-29 (Intervene in War fully removed incl. the engine rival path; Threaten War removed from Regional Powers and the HRE Emperor; ars_belli_enforce_peace confirmed as the replacement).
+Last updated: 2026-08-30 (Urbanisation Limit added: custom country modifier types + location_ranks allow gate; Reduce Location one-rank downgrade action in the location context menu).
 
 ## Important Files
 - `README.md`: Basic mod title.

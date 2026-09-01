@@ -1,0 +1,67 @@
+﻿# Ars Belli urbanisation limit - the research term, one advance per age.
+# Mirrors advances\3_fort_level.txt: a flat bump per age, hung off the age's
+# existing urban/town-rights advance so it sits with the rest of that line.
+#
+# Base 10 + 6 x 5 = 40 town points from base and research at full tech, plus
+# 1 per 10 locations. See auto_modifiers\abm_country.txt for the other two terms.
+
+@abm_urbanisation_limit_increase = 5
+
+abm_urbanisation_1_advance = {
+	age = age_1_traditions
+	icon = town_rights_advance
+
+	requires = city_building_advance
+
+	abm_urbanisation_limit = @abm_urbanisation_limit_increase
+}
+
+
+abm_urbanisation_2_advance = {
+	age = age_2_renaissance
+	icon = town_rights_advance
+
+	requires = renaissance_city_rights
+
+	abm_urbanisation_limit = @abm_urbanisation_limit_increase
+}
+
+
+abm_urbanisation_3_advance = {
+	age = age_3_discovery
+	icon = town_rights_advance
+
+	requires = town_rights_aod_advance
+
+	abm_urbanisation_limit = @abm_urbanisation_limit_increase
+}
+
+
+abm_urbanisation_4_advance = {
+	age = age_4_reformation
+	icon = town_rights_advance
+
+	requires = town_rights_ref_advance
+
+	abm_urbanisation_limit = @abm_urbanisation_limit_increase
+}
+
+
+abm_urbanisation_5_advance = {
+	age = age_5_absolutism
+	icon = town_rights_advance
+
+	requires = town_rights_abs_advance
+
+	abm_urbanisation_limit = @abm_urbanisation_limit_increase
+}
+
+
+abm_urbanisation_6_advance = {
+	age = age_6_revolutions
+	icon = town_rights_advance
+
+	requires = town_rights_rev_advance
+
+	abm_urbanisation_limit = @abm_urbanisation_limit_increase
+}
