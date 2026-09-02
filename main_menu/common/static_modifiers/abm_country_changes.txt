@@ -1,14 +1,14 @@
-﻿# Auto-applied by the ars_belli_economic_support scripted relation. The engine matches
+﻿# Auto-applied by the abm_economic_support scripted relation. The engine matches
 # these by name: giving_<relation> goes on the sender, receiving_<relation> on the
 # recipient. Both sides pay the diplomat upkeep while the relation is active.
-giving_ars_belli_economic_support = {
+giving_abm_economic_support = {
 	game_data = {
 		category = country
 	}
 	monthly_diplomats = -0.1
 }
 
-receiving_ars_belli_economic_support = {
+receiving_abm_economic_support = {
 	game_data = {
 		category = country
 	}
@@ -49,11 +49,17 @@ REPLACE:is_great_power = {
 
 	# Intervene in War is removed mod-wide: players consistently misread it as unfair
 	# because the target never gets a say. Enforce Peace covers every case it used to.
+	# NOTE: this modifier is only half the removal. The engine lets ANY country intervene
+	# in a war against one of its rivals no matter what this flag says - see the vanilla
+	# string INTERVENE_IN_WAR_NOT_POWERFUL_ENOUGH. The war picker itself is neutered in
+	# in_game/gui/select_war_to_intervene.gui, which is the choke point every path runs
+	# through. Keep both: this line on its own leaves the rival path wide open.
 	allowed_intervene_in_war = no
 	# The engine Enforce Peace is a single attacker-side accept/decline, which cannot
-	# express the defender-first flow. Replaced by ars_belli_enforce_peace.
+	# express the defender-first flow. Replaced by abm_enforce_peace.
 	allowed_enforce_peace = no
-	# disable threaten war until confirmed it's not bugged:
+	# Threaten War is removed for every rank: it takes a location off the target with
+	# no war fought and no answer to it beyond letting the declaration come.
 	allowed_threaten_war = no
 }
 
@@ -71,7 +77,8 @@ REPLACE:is_regional_power = {
 
 	allowed_intervene_in_war = no
 	allowed_enforce_peace = no
-	allowed_threaten_war = yes
+	# Was yes. Regional Powers lose Threaten War alongside Great Powers.
+	allowed_threaten_war = no
 
 	alliance_weight = 0.5
 	union_weight = 0.25
@@ -107,7 +114,7 @@ REPLACE:restoration_of_the_mongol_empire = {
 }
 
 # Make it stronger, last 20 years, and apply to capital region
-new_colonial_nation_founded = {
+REPLACE:new_colonial_nation_founded = {
 	game_data = {
 		category = location
 		# decaying = yes

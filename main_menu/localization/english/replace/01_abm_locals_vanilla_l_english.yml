@@ -1,3 +1,42 @@
 ﻿l_english:
- ENFORCE_PEACETITLE: "Enforce Peace: Read tooltip!"
- ENFORCE_PEACE_WAR_DESC: "Enforce Peace on them, with the threat that we will join their enemies.\nATTENTION! Ars Belli: Abusing this to end a war without the defender's approval is considered an exploit and against the rules!"
+ # ===================================================================
+ # ARS BELLI - overrides of vanilla diplomacy strings.
+ # ===================================================================
+
+ # --- Intervene in War: removed -------------------------------------
+ # Dead two ways: allowed_intervene_in_war = no on every rank and on the HRE
+ # leader (main_menu/common/static_modifiers/abm_country_changes.txt and
+ # in_game/common/international_organizations/hre.txt), plus an emptied war
+ # picker (in_game/gui/select_war_to_intervene.gui) which is what closes the
+ # rival path - the engine hands that one out regardless of rank. The action
+ # is engine-side and cannot be taken off the diplomacy list, so it says so.
+ INTERVENE_IN_WARTITLE: "Intervene in War (Removed)"
+ INTERVENE_IN_WAR_DESC: "#R Removed in Ars Belli.#! Use Enforce Peace instead."
+ INTERVENE_IN_WAR_AGAINST_DESC: "#R Removed in Ars Belli.#! Use Enforce Peace instead."
+ INTERVENE_IN_WAR_TOOLTIP_HEADER: "Intervene in War (#R Removed#!)"
+ INTERVENE_IN_WAR_TOOLTIP_HEADER_NO_TARGET: "Intervene in War (#R Removed#!)"
+ INTERVENE_IN_WAR_FLAVOR: "#R Ars Belli has removed Intervene in War.#! It dragged one country into another's [war|e] with no say from either side. No rank grants it, the HRE Emperor does not get it, and being someone's [rival|e] does not bring it back.\n\nUse #Y Enforce Peace#! instead: the defender is asked for a [white_peace|e] first, and only if they accept is the demand put to the attacker."
+ INTERVENE_IN_WAR_NOT_POWERFUL_ENOUGH: "@trigger_no! #R Ars Belli has removed Intervene in War.#! Use Enforce Peace instead."
+ CRANK_CAN_INTERVENE: " - #R Intervene in Wars: removed in Ars Belli.#!\n"
+
+ # --- Threaten War: removed -----------------------------------------
+ # allowed_threaten_war = no on Great Powers, Regional Powers and the HRE
+ # leader. That modifier is the engine's only gate on the action (see the
+ # vanilla THREATEN_WAR_NOT_POWERFUL_ENOUGH), so with it off everywhere the
+ # action can never fire - unlike Intervene, there is no rival back door.
+ THREATEN_WARTITLE: "Threaten War (Removed)"
+ THREATEN_WAR_DESC: "#R Removed in Ars Belli.#! No country can use this."
+ THREATEN_WAR_TOOLTIP_HEADER: "Threaten War (#R Removed#!)"
+ THREATEN_WAR_TOOLTIP_HEADER_NO_TARGET: "Threaten War (#R Removed#!)"
+ THREATEN_WAR_FLAVOR: "#R Ars Belli has removed Threaten War.#! Taking a location off another country without fighting for it left the target no answer but to eat the loss or accept a declaration of [war|e]. No rank grants it any more - Great Powers, Regional Powers and the HRE Emperor included."
+ THREATEN_WAR_NOT_POWERFUL_ENOUGH: "@trigger_no! #R Ars Belli has removed Threaten War.#! No country, rank or Emperor can use it."
+ CRANK_CAN_THREATEN_WAR: " - #R Threaten War: removed in Ars Belli.#!\n"
+
+ # --- Enforce Peace (vanilla, engine) -------------------------------
+ # allowed_enforce_peace = no on every rank and on the HRE leader; the Ars
+ # Belli country_interaction abm_enforce_peace replaces it. It survives
+ # only on a handful of situation league leaders that vanilla grants it to
+ # directly (foreign_league_* / italian_league_*), which is why the warning
+ # about using it over the defender's head still stands.
+ ENFORCE_PEACETITLE: "Enforce Peace (Vanilla): Read tooltip!"
+ ENFORCE_PEACE_WAR_DESC: "Enforce Peace on them, with the threat that we will join their enemies.\nATTENTION! Ars Belli: this is the #R vanilla#! action, replaced by the Ars Belli #Y Enforce Peace#!, which asks the defender first. Abusing this one to end a war without the defender's approval is considered an exploit and against the rules!"

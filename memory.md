@@ -49,7 +49,7 @@ The mod implements a custom ranking system that classifies countries into tiers 
 ### 3. War & Military Rebalancing
 - **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
 - **Unconditional Surrender:** Removed (base game now has one). Previously in `in_game\common\country_interactions\unconditional_surrender.txt`.
-- **Enforce Peace Warning:** Removed (base game now asks both defender and attacker to accept). Previously in `main_menu\localization\english\replace\01_ars_belli_locals_vanilla_l_english.yml`.
+- **Intervene in War / Threaten War / engine Enforce Peace:** all three removed, replaced by the scripted `ars_belli_enforce_peace`. See 3j.
 
 ### 3b. Fort Rebalancing
 Significant changes to siege mechanics and fort limits (documented in `changes.txt` and `loading_screen\common\defines\01_ars_belli_defines.txt`):
@@ -127,6 +127,20 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **`divide = { value = X min = 1 }` is the vanilla divide-by-zero guard** (`script_values\diplomatic_values.txt`), and `max = N` as a sibling of `value`/`multiply` clamps the finished term. Both are worth reaching for whenever an acceptance term divides by another country's income.
 - **Estates and "the bank" are the same thing in EU5's own vocabulary** — `generic_actions\take_bank_loan.txt` defines `take_estate_loan`, whose message log reads "We took a loan from the bank". Expect player reports about "banks" to mean either the estates or a counterparty country; ask which.
 
+### 3k. Intervene in War & Threaten War removed; Enforce Peace is the replacement
+- **Both are engine actions.** No `country_interactions` file, no `prices` entry, no `on_action`. `intervene_in_war` is only ever named in GUI as `[OpenDiploAction('intervene_in_war')]`; `threaten_war` only as an `ai_diplochance` weight. The moddable surface is: the `allowed_*` country modifiers, the loc, and the GUI.
+- **Threaten War is a clean kill** — `allowed_threaten_war` is the engine's only gate (vanilla `THREATEN_WAR_NOT_POWERFUL_ENOUGH` says exactly that: "We do not have the [allowed_threaten_war] modifier"). Set `no` on `REPLACE:is_great_power` **and** `REPLACE:is_regional_power` (`main_menu\common\static_modifiers\abm_country_changes.txt`) and on the HRE `leader_modifier` (`in_game\common\international_organizations\hre.txt`). Those are the only three grants in the whole game.
+- **Intervene in War is NOT.** `allowed_intervene_in_war = no` closes only the rank path. The engine hands the action to **any** country whose rival is in the war, whatever the modifier says — vanilla admits it in `INTERVENE_IN_WAR_NOT_POWERFUL_ENOUGH`: *"We are not powerful enough to intervene in the wars that countries that are not our rivals."* There is no data-side flag for the rival path. **If a report says Intervene is still usable, this is why.**
+- **The rival path is closed in the GUI instead** (same-name replacements in `replaced_files.txt`):
+  1. `in_game\gui\select_war_to_intervene.gui` — the engine's war picker (`SelectInterveneWindow.GetWars`), rewritten with **no list at all**, just a message and Cancel. **This is the whole removal**: it is the choke point every remaining path runs through, so no war can be selected and the action can never complete, rival or not. 44 lines, and the reason no bigger GUI file has to be replaced.
+  2. `in_game\gui\context_menu.gui` — tag guard `Not(EqualTo_string(DiplomaticActionItem.GetTag, 'INTERVENE_IN_WAR'))` on the pinned quick-action entry, plus `in_game\gui\war_lateralview.gui` where both Intervene buttons are `visible = no`.
+- **`DiplomaticActionItem.GetTag` is the loc key prefix in caps**, i.e. `INTERVENE_IN_WARTITLE` → tag `INTERVENE_IN_WAR` (same for `UNCONDITIONALSURRENDER`, `IMPROVE_RELATION`, …). `EqualTo_string` against a wrong tag is harmless (just false), unlike `IsType`, whose accepted strings are a different, lowercase set (`declarewar`, `requestpeace`, `create_casus_belli`).
+- **The row is left in the diplomacy list on purpose — do not "fix" it by replacing `diplomacy_macrobuilder_lateralview.gui`.** Gating it there works (`type ui_diplomatic_action_button`, the template behind both the quick actions and the categorised list `foreign_country_lateralview.gui` renders via `GetCategoryItems` → `diplomatic_actions`), but that is a 2400-line vanilla file to re-merge on every patch and it was **explicitly rejected as not worth the maintenance**. The row stays, reads "Intervene in War (Removed)" from the loc override, and opens the dead picker. Hiding it is not an option either: `diplomatic_actions` is a `fixedgridbox`, so an invisible item still eats its grid cell and leaves a hole in Hostile Actions.
+- **Loc overrides live in `main_menu\localization\english\replace\01_abm_locals_vanilla_l_english.yml`** — the engine keeps listing both actions, so `INTERVENE_IN_WARTITLE` / `THREATEN_WARTITLE` read "(Removed)", the `_DESC` / `_FLAVOR` / `_TOOLTIP_HEADER*` / `_NOT_POWERFUL_ENOUGH` keys say what replaced them, and `CRANK_CAN_INTERVENE` / `CRANK_CAN_THREATEN_WAR` (the rank-tooltip bullets) no longer advertise them.
+- **Engine Enforce Peace is off too** (`allowed_enforce_peace = no` on both ranks and the HRE leader) because it is a single attacker-side accept/decline. **It still survives on vanilla situation league leaders** — `foreign_league_balkan/france/hre/iberia` and `italian_league_1/2/3` each set `allowed_enforce_peace = yes` in their own `leader_modifier`, and those files are not replaced. That is why the `ENFORCE_PEACETITLE` override still carries the against-the-rules warning. Unions have a separate `union_allowed_enforce_peace` modifier + `union_enforce_peace` country_interaction, untouched.
+- **The replacement is `ars_belli_enforce_peace`** (`in_game\common\country_interactions\`, events in `in_game\events\ars_belli_enforce_peace_events.txt`, loc in `in_game\localization\english\ars_belli_enforce_peace_l_english.yml`). Defender is asked first; only on their acceptance does the attacker get `ars_belli_enforce_peace.1`; refusal drags the enforcer into the war on the defender's side. Standing: `is_mp_gp`, `is_mp_major`, or rival to either war leader — deliberately the same reach Intervene had. The vanilla rival-war alert (`can_intervene_in_rival_war`) is retargeted to it in `alertmanager.gui` with the `ALERT_INTERVENE_RIVAL_WAR_*` keys rewritten.
+- **Italian Wars `iw_intervene_in_war` is a different mechanic** (a situation generic_action for joining the Italian Wars, `generic_actions\italian_wars.txt`). Untouched — do not confuse the two when grepping for "intervene".
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
@@ -165,7 +179,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-08-25 (mp_limits loc fixes + tier-panel tooltips; enforce-peace trigger marker; moved religion static-modifier override + crusade trigger-loc to main_menu phase).
+Last updated: 2026-08-29 (Intervene in War fully removed incl. the engine rival path; Threaten War removed from Regional Powers and the HRE Emperor; ars_belli_enforce_peace confirmed as the replacement).
 
 ## Important Files
 - `README.md`: Basic mod title.

@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.15 | **Supported game version:** 1.3.\*
-**Compiled:** 21 August 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.19 | **Supported game version:** 1.3.\*
+**Compiled:** 2 September 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -210,9 +210,10 @@ Alliance, Defensive and Guarantee points.
 - Only Great Powers and Major Powers can offer a guarantee; only Normal, Small and Minor countries
   can be guaranteed or request one. [vanilla used the in-game country rank levels]
 - The +50 opinion requirement on the guaranteed country is removed.
-- A guarantee expires if the guarantor drops to Normal or below, or if the guaranteed country rises
-  to Major or Great Power. Rivalry between the two no longer ends it.
-- Cancelling or breaking a guarantee no longer adds a truce, and a guarantee that expires between
+- A guarantee never expires on its own: neither a change in either side's power rank nor a rivalry
+  between them ends it. It lasts until it is cancelled, broken, or ended by war, subjugation or a
+  peace treaty. [vanilla expired it on rank changes and rivalry]
+- Cancelling or breaking a guarantee no longer adds a truce, and a guarantee that ends between
   two countries of equal rank no longer upgrades itself into an alliance.
 
 ### Rivals
@@ -234,9 +235,9 @@ Alliance, Defensive and Guarantee points.
 - **Sow Discontent** is disabled.
 - **Scutage** is hidden and disabled.
 - **Red Turban Rebellions "Demand Annexation"** is disabled.
-- **Intervene in War** is removed mod-wide (see [section 6](#6-enforce-peace)).
-- **Threaten War** is removed for Great Powers, pending confirmation that it is not bugged. Regional
-  powers keep it.
+- **Intervene in War** is removed for every country (see [section 6](#6-enforce-peace)).
+- **Threaten War** is removed for every country — Great Powers, Regional Powers and the HRE Emperor
+  alike. Where the base game still lists it, it is relabelled and cannot be used.
 
 ### Great Power and Regional Power status
 
@@ -246,7 +247,8 @@ These are vanilla's own rank modifiers, rewritten.
   +0.1 monthly prestige, +10% court spending cost. It no longer grants vanilla's +50% mercenary
   range, +10% creditworthiness, +2 max bonds, or the AI alliance/union weighting; and it no longer
   grants Enforce Peace, Intervene in War or Threaten War.
-- **Regional Power** keeps its vanilla bonuses but loses Enforce Peace and Intervene in War.
+- **Regional Power** keeps its vanilla bonuses but loses Enforce Peace, Intervene in War and
+  Threaten War.
 
 ### Espionage
 
@@ -266,8 +268,12 @@ These are vanilla's own rank modifiers, rewritten.
 
 Rebuilt from scratch.
 
-- **Intervene in War is removed mod-wide** — it resolved with no input from the countries actually at
-  war.
+- **Intervene in War is removed for every country** — it resolved with no input from the countries
+  actually at war. Stripping it from the Great Power and Regional Power ranks does not do this on its
+  own: the base game lets any country intervene in a war involving one of its rivals whatever its
+  rank. The action's war picker is therefore empty, so it cannot be completed by anyone — no rank,
+  not the HRE Emperor, and not against a rival. Where the base game still lists the action it is
+  relabelled **Intervene in War (Removed)** and opening it points at Enforce Peace.
 - Vanilla Enforce Peace is replaced by a new Enforce Peace action that covers every case Intervene
   used to.
 - **The defender is asked first.** Only if the defender accepts is the demand put to the attacker:
@@ -283,8 +289,8 @@ Rebuilt from scratch.
 - The Enforce Peace button on the war view is always shown; when a requirement is unmet it greys out
   with a tooltip naming what is missing, instead of disappearing.
 - The "a rival is at war" alert opens Enforce Peace instead of Intervene in War.
-- The HRE Emperor no longer gets the vanilla Enforce Peace and Intervene in War, and uses the same
-  Enforce Peace as everyone else.
+- The HRE Emperor no longer gets the vanilla Enforce Peace, Intervene in War or Threaten War, and
+  uses the same Enforce Peace as everyone else.
 - The prestige penalty for refusing an enforced peace was removed.
 - The vanilla Enforce Peace tooltip is relabelled to warn that ending a war without the defender's
   approval is against the rules.
@@ -430,6 +436,8 @@ Cut hard, to make wars less static.
   sect actions are retuned — claims 40 [50] and marriages 25 [40] from the imperial court get
   cheaper, while appeasing the nobles, raising levies, raising tax income and demanding extra payment
   from the shogun court cost 25 to 100 [10].
+- **Age of Discovery** grants +50% colonial maintenance efficiency, in place of vanilla's −25%
+  colonial maintenance cost.
 
 ## 14. Buildings and Reforms
 
@@ -439,7 +447,17 @@ Cut hard, to make wars less static.
   no longer buildable in towns or cities. Existing ones in cities keep working.
 - **Order Commandery:** local manpower nerfed to 2 (from 5), employed clergy to 200 (from 400), and
   no longer buildable in rural settlements. Existing rural ones keep working.
+- **Church School:** +5 maximum literacy for burghers, laborers, soldiers and peasants, +0.1 monthly
+  literacy and +1% local pop conversion speed.
 - **Manden Kurufa reform** (Mali traditions) is removable.
+- **Colonial Republic:** a government reform for republics with a capital in the Americas or Oceania.
+  +1 government reform slot, +20% maritime presence, and sharply reduced sea, port, road and land
+  costs over distance from the capital.
+- **Trade Emporium:** a major government reform for republics and monarchies whose original capital
+  lies in West Africa, East Africa, Southeast Asia or the Middle East. +20% merchant capacity,
+  merchant power and trades per burgher, +50% foreign construction efficiency and sea trade
+  efficiency, +15 court-language importance, −5% crown estate power and −2.5% noble satisfaction, and
+  a push toward capital economy, innovation and naval focus.
 - **Form China (CHI):** requires 70% of the listed locations across the four Chinese regions, forms
   as an empire-rank monarchy. Dead Middle Kingdom / Red Turban gating removed.
 - New culture buildings and event-only buildings, plus a set of vanilla unique buildings marked
@@ -465,7 +483,14 @@ in-game.
   abolish parliament or cut parliament support.
 - **Ilkhanate:** its own actions and casus belli.
 - **Genoa and Gazaria:** the Genoese Galley advance is open to any Ligurian country, not just Genoa,
-  and Gazaria's two trade advances require Ship Building rather than Abacus and Lieutenancy.
+  and Gazaria's two trade advances require Ship Building rather than Abacus and Lieutenancy. Genoa
+  elects its Doge through the diarchic election rather than the standard merchant republic one.
+- **Colonial nations** have eleven shared advances of their own, two per age from the Age of
+  Traditions to the Age of Revolutions: Colonial Tradition, Colonial Heritage, Founding Fathers,
+  Colonial Militia, New Frontiers, Continental Trade, Free Thinkers, Manufacturing Center, Colonial
+  Assembly, Liberty Heroes and Colonial Ambition, plus a Colonial Representation Law from the Age of
+  Discovery. Each of the 18 colonial formables also has its own advancement set, built from that
+  country's original EU4 national ideas.
 - **Italian republics:** the Consiglio Maggiore law pushes centralization and carries a small peasant
   satisfaction penalty, in place of estate-power bonuses.
 - **Cossacks:** the Cossack Black Sea Raids privilege grants privateering, slave raiding, double
@@ -474,6 +499,12 @@ in-game.
   tradition (was +0.2) and +10 general and admiral training (was +25). Its military tactics bonus and
   its legitimacy and noble-power drawbacks are unchanged, and the other nine Byzantine bureaucracies
   are left as the base game has them.
+- **Miaphysite and Nestorian churches** have two religious aspects of their own. *Martyrs' Shield*
+  gives +10% military tactics, +5% morale recovery in friendly territory and monthly progress toward
+  Quality; *Universal Learning*, available to theocracies, gives +5 maximum literacy for burghers,
+  laborers, soldiers and peasants and monthly progress toward Innovative.
+- **Christiana Pietas** (Catholic) gives +1 heathen tolerance and +0.01 monthly literacy. [vanilla +2
+  heathen tolerance and no literacy]
 
 ## 16. Pops, Map and Campaign Setup
 
@@ -521,6 +552,11 @@ in-game.
 - **Pontus** is tier 4, open to Pontic Greek and Gothic culture, and always requires owning
   Trebizond. Forming it never demotes a country already above kingdom rank.
 - **Vijayanagar** is deliberately not formable, and its tooltip says so.
+- **Colonial and New World formables**, 18 in all, each with its own flag, map colour and country
+  name, and each raised to at least kingdom rank on formation. North America: the USA, Mexica,
+  Canada, Alaska, Cascadia, Quebec, Sonora, Texas, Vermont and the West Indies. South America:
+  Brazil, Peru, Colombia, Argentina and Bolivia. Oceania: Australia and New Zealand. India: the East
+  India Company.
 
 ## 17. UI and Quality of Life
 
@@ -534,10 +570,13 @@ in-game.
   unavailable.
 - Vanilla actions that are against the house rules are relabelled in-game (Send Economic Support,
   Perform Army Logistics, Enforce Peace tooltip).
+- The mod's own diplomatic actions — Enforce Peace, Send Economic Support, Forgive Half Antagonism
+  and the rest — produce proper message-log entries and notifications, with their own toggles in the
+  message settings.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.15).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.19).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -548,7 +587,121 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.15 (current)
+## game.1.3.11.mod.19 (current)
+
+**Colonial Nations**
+
+- 18 New World and colonial formables, each with its own flag, map colour and country name, and each
+  raised to at least kingdom rank on formation. North America: the USA, Mexica, Canada, Alaska,
+  Cascadia, Quebec, Sonora, Texas, Vermont and the West Indies. South America: Brazil, Peru,
+  Colombia, Argentina and Bolivia. Oceania: Australia and New Zealand. India: the East India Company
+- Every one of them has its own advancement set, built from that country's EU4 national ideas — 18
+  sets in all, spanning the Age of Discovery onward
+- Eleven advances shared by every colonial nation, two per age: Colonial Tradition (+0.2% population
+  growth) and Colonial Heritage (+0.5% monthly development); Founding Fathers (+0.05 monthly
+  republican tradition) and Colonial Militia (+10% levy size); New Frontiers (+25% colonial migration
+  size, +20% colonial maintenance efficiency) and Continental Trade (+25% trade protection); Free
+  Thinkers (+5 maximum literacy) and Manufacturing Center (+production efficiency); Colonial Assembly
+  (+1 government size) and Liberty Heroes (+20% combat speed); and Colonial Ambition (+10% land
+  morale) in the Age of Revolutions
+- Colonial nations can take a Colonial Representation Law advance from the Age of Discovery
+
+**Buildings and Reforms**
+
+- Colonial Republic, a new government reform for republics with a capital in the Americas or Oceania:
+  +1 government reform slot, +20% maritime presence, and much cheaper sea, port, road and land costs
+  over distance from the capital
+- Trade Emporium, a new major government reform for republics and monarchies whose original capital
+  lies in West Africa, East Africa, Southeast Asia or the Middle East: +20% merchant capacity,
+  merchant power and trades per burgher, +50% foreign construction efficiency and sea trade
+  efficiency, and +15 court-language importance, against −5% crown estate power and −2.5% noble
+  satisfaction. It pushes the country toward capital economy, innovation and naval focus
+
+**Diplomatic Limits**
+
+- Alliance eligibility is actually checked again. The mod's alliance rule — opinion at or above 0, no
+  rivals, no coalition partners, no subjects, and the block on two Great Powers allying — was being
+  called in a form the engine could not evaluate, so none of it applied. It now gates both offering
+  an alliance and the automatic expiry of one, and the alliance screen says plainly when two Great
+  Powers cannot ally
+
+**National Flavour**
+
+- Genoa now elects its Doge through the diarchic election rather than the standard merchant republic
+  doge election
+- The Arabia formable required provinces the game does not recognise, so its land requirement never
+  resolved; it now reads the correct areas and provinces
+
+**Pops, Map and Campaign Setup**
+
+- Starting setup fixes across India, Africa and Japan: corrected culture names for Ruthenian and
+  Betsimisaraka pops, a country tag that collided with one of the new colonial tags, a malformed
+  accepted-cultures list, and a set of laws, reforms, tributary relations and IO memberships that
+  pointed at content which does not exist
+- Dead Middle Kingdom references removed: the Provincial Garrison is now open to countries of Chinese
+  culture, and the Korean Sadae event, which could never fire, is gone
+
+**UI and Quality of Life**
+
+- The mod's diplomatic actions now report themselves properly. Enforce Peace, Send Economic Support,
+  Forgive Half Antagonism and the rest produce real message-log entries and notifications, with their
+  own toggles in the message settings, instead of raw text keys
+- Text that showed as raw keys now reads properly: the Religious War casus belli, the Vision Sharing
+  relation, the confirmation prompts for Break Their Guarantee and Worsen Opinion, the crusade and
+  jihad cooldown notices, and the maintenance goods for the Kurultai, Stockade and Order Headquarters
+
+## game.1.3.11.mod.18
+
+**Changes to Vanilla Diplomatic Actions**
+
+- Intervene in War is now actually gone for everyone. Taking it off Great Power and Regional Power
+  status was never enough — the base game lets any country intervene in a war involving one of its
+  rivals whatever its rank, so it stayed reachable through that back door. There is no longer a war
+  to pick, so nobody can complete it: no rank, not the HRE Emperor, and not against a rival
+- Where the base game still lists it, the action is relabelled Intervene in War (Removed), and
+  opening it explains that Enforce Peace replaces it
+- Threaten War is removed for Regional Powers and the HRE Emperor. Great Powers had already lost it,
+  so no country can threaten war any more
+
+## game.1.3.11.mod.17
+
+Maintenance release — internal fixes only, no player-facing changes.
+
+## game.1.3.11.mod.16
+
+**National Flavour**
+
+- The Miaphysite and Nestorian churches finally get their two religious aspects. Martyrs' Shield —
+  +10% military tactics, +5% morale recovery in friendly territory and monthly progress toward
+  Quality — and Universal Learning, for theocracies — +5 maximum literacy for burghers, laborers,
+  soldiers and peasants, and monthly progress toward Innovative. Both were already named and
+  described in-game but were never defined, so neither religion could actually take them
+- Christiana Pietas now also grants +0.01 monthly literacy, and its heathen tolerance is cut to 1 [2]
+- Genoese Crossbowmen upgrade into Late Genoese Crossbowmen again — the upgrade path pointed at a
+  unit that does not exist, so the line dead-ended
+
+**Buildings and Reforms**
+
+- Church School: its literacy bonus was written on the wrong scale and did effectively nothing. It
+  now gives +5 maximum literacy to burghers, laborers, soldiers and peasants, alongside its existing
+  +0.1 monthly literacy and conversion speed
+
+**Economy and Gold-Transfers**
+
+- Age of Discovery grants +50% colonial maintenance efficiency in place of −25% colonial maintenance
+  cost
+
+**Crusades and Jihads**
+
+- The Crusade and Jihad buttons now spell out the 100-year global cooldown instead of showing a raw
+  text key
+
+**UI and Quality of Life**
+
+- The power rank tooltip is no longer cut off part-way through its last line
+- The tier-list panel's open and close buttons have tooltips
+
+## game.1.3.11.mod.15
 
 **National Flavour**
 

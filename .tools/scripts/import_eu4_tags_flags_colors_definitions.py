@@ -280,10 +280,21 @@ def decode_tga_bytes(data: bytes, source: str = "<data>") -> list[tuple[int, int
 
 def dominant_flag_colors(flag_file: Path) -> tuple[tuple[int, int, int], ...]:
     if flag_file.suffix.lower() == ".tga":
-        pixels = decode_tga_pixels(flag_file)
+        try:
+            pixels = decode_tga_pixels(flag_file)
+        except ValueError:
+            # Some EU4 flags (e.g. EIC.tga) are 16-bit TGAs the decoder can't
+            # read, and ImageMagick's default TGA output for them is corrupt
+            # RLE; force a truecolor 8-bit/channel TGA instead.
+            converted = subprocess.run(
+                ["magick", str(flag_file), "-type", "truecolor", "-depth", "8", "tga:-"],
+                check=True,
+                capture_output=True,
+            ).stdout
+            pixels = decode_tga_bytes(converted, str(flag_file))
     else:
         converted = subprocess.run(
-            ["magick", str(flag_file), "tga:-"],
+            ["magick", str(flag_file), "-type", "truecolor", "-depth", "8", "tga:-"],
             check=True,
             capture_output=True,
         ).stdout

@@ -13,14 +13,16 @@ whether the advance already has localization, and verifies it:
   * MISMATCH  existing entry differs     -> reported
 
 By default the script only prints a report plus the changed entries. Use
---out FILE to write the full localization file for the selected advances.
+--out FILE to write the selected advances' localization to FILE: if FILE
+already exists the new entries are appended, skipping keys that already
+exist there (never duplicates); otherwise a fresh file is created.
 """
 
 import argparse
 import re
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parent.parent
+BASE = Path(__file__).resolve().parent.parent.parent
 ADVANCE_DIR = BASE / "in_game/common/advances"
 LOC_DIRS = [
     BASE / "main_menu/localization/english",
@@ -348,8 +350,9 @@ def main(argv=None):
     )
     parser.add_argument(
         "--out", metavar="FILE",
-        help="write the full localization file for the selected advances "
-             "(default: print report and changed entries to stdout)",
+        help="write/append the selected advances' localization to FILE "
+             "(appends missing keys if FILE exists, otherwise creates it "
+             "fresh) (default: print report and changed entries to stdout)",
     )
     parser.add_argument(
         "--eu4-loc", default=str(EU4_LOC_DIR),
@@ -477,15 +480,43 @@ def main(argv=None):
         return
 
     if args.out:
-        lines = ["l_english:"]
-        for key, name, desc in all_entries:
-            lines.append(f' {key}: "{name}"')
-            lines.append(f' {key}_desc: "{desc}"')
-            lines.append("")
         outpath = Path(args.out)
-        with open(outpath, "w", encoding="utf-8-sig", newline="\r\n") as f:
-            f.write("\n".join(lines))
-        print(f"Wrote {len(all_entries)} entries to {outpath}")
+
+        if not outpath.exists():
+            # Fresh file: write the full localization file, as before.
+            lines = ["l_english:"]
+            for key, name, desc in all_entries:
+                lines.append(f' {key}: "{name}"')
+                lines.append(f' {key}_desc: "{desc}"')
+                lines.append("")
+            with open(outpath, "w", encoding="utf-8-sig", newline="\r\n") as f:
+                f.write("\n".join(lines))
+            print(f"Wrote {len(all_entries)} entries to {outpath}")
+        else:
+            # Existing file: append only keys that are not already present.
+            existing_keys = set()
+            with open(outpath, encoding="utf-8-sig") as fh:
+                for line in fh:
+                    m = re.match(r'^\s*([a-zA-Z_][a-zA-Z_0-9]*):', line)
+                    if m:
+                        existing_keys.add(m.group(1))
+
+            missing = [
+                (key, name, desc)
+                for key, name, desc in all_entries
+                if key not in existing_keys
+            ]
+            if not missing:
+                print(f"No new entries to append to {outpath} "
+                      f"(all {len(all_entries)} already present)")
+            else:
+                with open(outpath, "a", encoding="utf-8-sig", newline="\r\n") as f:
+                    for key, name, desc in missing:
+                        f.write(f' {key}: "{name}"\r\n')
+                        f.write(f' {key}_desc: "{desc}"\r\n')
+                        f.write("\r\n")
+                print(f"Appended {len(missing)} new entries to {outpath} "
+                      f"({len(existing_keys)} existing keys skipped)")
     elif changed:
         print("\n--- changed entries ---")
         for key, name, desc in changed:
