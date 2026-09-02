@@ -51,3 +51,149 @@ REPLACE:order_headquarters = {
 
 	construction_demand = early_capital_building_construction
 }
+
+abm_genoese_arsenal = { # https://www.museidigenova.it/en/darsena-dockyard
+	audio_tier = 6
+	is_special = yes
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = 1
+	employment_size = dry_dock_employment
+	category = military_category
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	expensive = yes
+	location_potential = {
+		is_capital = yes
+		is_port = yes
+	}
+	country_potential = {
+		# has_advance = ven_stato_da_mar
+	}
+	build_time = huge_port_building_time
+	modifier = {
+		max_ships_built_at_same_time = 2
+		local_sailors = 0.020
+		can_build_ships_in_this_location = yes
+		harbor_suitability = 0.25
+	}
+	
+	capital_country_modifier = {
+		sea_cost_on_distance_from_capital_when_maritime = -0.5
+	}
+
+	
+	unique_production_methods = {
+		genoese_arsenal_maintenance = {
+			tar = 0.3
+			naval_supplies = 0.5
+			tools = 0.5
+			lumber = 1.0
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = port_building_construction
+}
+
+abm_gazarian_arsenal = {
+	audio_tier = 6
+	is_special = yes
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = 3
+	employment_size = dock_employment
+	category = military_category
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	expensive = yes
+	location_potential = {
+		is_capital = yes
+		is_port = yes
+	}
+	country_potential = {
+		has_advance = abm_the_genoese_arsenal
+	}
+	build_time = medium_port_building_time
+	modifier = {
+		can_build_ships_in_this_location = yes
+		max_ships_built_at_same_time = 1
+		harbor_suitability = 0.05
+		local_sailors_modifier = 0.10
+		local_ship_build_speed = 0.10
+	}
+	
+	capital_country_modifier = {
+		global_maritime_presence_modifier = 0.05
+	}
+
+	
+	unique_production_methods = {
+		genoese_arsenal_maintenance = {
+			tar = 0.20
+			naval_supplies = 0.20
+			tools = 0.20
+			lumber = 0.20
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = port_building_construction
+}
+
+abm_gazarian_headquarters = {
+	audio_tier = 2
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = 1
+	
+	category = military_category
+	
+	employment_size = manpower_employment
+	
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	expensive = yes
+	build_time = large_capital_build_time
+	
+	location_potential = {
+		is_capital = yes
+	}
+
+
+	country_potential = {
+		has_or_had_tag = GAZ
+	}
+	
+	capital_modifier = {
+		local_manpower = 0.030
+		local_manpower_modifier = 0.10
+		local_defensive = 0.10
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	
+	unique_production_methods = {
+		order_headquarters_requirements = {
+			lumber = 0.1
+			tools = 0.1
+			glass = 0.1
+			fine_cloth = 0.1
+			beeswax = 0.05
+			books = 0.05
+			weaponry = 0.1
+			category = building_maintenance
+		}
+	}
+
+	graphical_tags = { palace }
+
+	construction_demand = early_capital_building_construction
+}
