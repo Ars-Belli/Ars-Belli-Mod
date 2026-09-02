@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.18 | **Supported game version:** 1.3.\*
-**Compiled:** 29 August 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.19 | **Supported game version:** 1.3.\*
+**Compiled:** 2 September 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -450,6 +450,14 @@ Cut hard, to make wars less static.
 - **Church School:** +5 maximum literacy for burghers, laborers, soldiers and peasants, +0.1 monthly
   literacy and +1% local pop conversion speed.
 - **Manden Kurufa reform** (Mali traditions) is removable.
+- **Colonial Republic:** a government reform for republics with a capital in the Americas or Oceania.
+  +1 government reform slot, +20% maritime presence, and sharply reduced sea, port, road and land
+  costs over distance from the capital.
+- **Trade Emporium:** a major government reform for republics and monarchies whose original capital
+  lies in West Africa, East Africa, Southeast Asia or the Middle East. +20% merchant capacity,
+  merchant power and trades per burgher, +50% foreign construction efficiency and sea trade
+  efficiency, +15 court-language importance, −5% crown estate power and −2.5% noble satisfaction, and
+  a push toward capital economy, innovation and naval focus.
 - **Form China (CHI):** requires 70% of the listed locations across the four Chinese regions, forms
   as an empire-rank monarchy. Dead Middle Kingdom / Red Turban gating removed.
 - New culture buildings and event-only buildings, plus a set of vanilla unique buildings marked
@@ -475,7 +483,14 @@ in-game.
   abolish parliament or cut parliament support.
 - **Ilkhanate:** its own actions and casus belli.
 - **Genoa and Gazaria:** the Genoese Galley advance is open to any Ligurian country, not just Genoa,
-  and Gazaria's two trade advances require Ship Building rather than Abacus and Lieutenancy.
+  and Gazaria's two trade advances require Ship Building rather than Abacus and Lieutenancy. Genoa
+  elects its Doge through the diarchic election rather than the standard merchant republic one.
+- **Colonial nations** have eleven shared advances of their own, two per age from the Age of
+  Traditions to the Age of Revolutions: Colonial Tradition, Colonial Heritage, Founding Fathers,
+  Colonial Militia, New Frontiers, Continental Trade, Free Thinkers, Manufacturing Center, Colonial
+  Assembly, Liberty Heroes and Colonial Ambition, plus a Colonial Representation Law from the Age of
+  Discovery. Each of the 18 colonial formables also has its own advancement set, built from that
+  country's original EU4 national ideas.
 - **Italian republics:** the Consiglio Maggiore law pushes centralization and carries a small peasant
   satisfaction penalty, in place of estate-power bonuses.
 - **Cossacks:** the Cossack Black Sea Raids privilege grants privateering, slave raiding, double
@@ -537,6 +552,11 @@ in-game.
 - **Pontus** is tier 4, open to Pontic Greek and Gothic culture, and always requires owning
   Trebizond. Forming it never demotes a country already above kingdom rank.
 - **Vijayanagar** is deliberately not formable, and its tooltip says so.
+- **Colonial and New World formables**, 18 in all, each with its own flag, map colour and country
+  name, and each raised to at least kingdom rank on formation. North America: the USA, Mexica,
+  Canada, Alaska, Cascadia, Quebec, Sonora, Texas, Vermont and the West Indies. South America:
+  Brazil, Peru, Colombia, Argentina and Bolivia. Oceania: Australia and New Zealand. India: the East
+  India Company.
 
 ## 17. UI and Quality of Life
 
@@ -550,10 +570,13 @@ in-game.
   unavailable.
 - Vanilla actions that are against the house rules are relabelled in-game (Send Economic Support,
   Perform Army Logistics, Enforce Peace tooltip).
+- The mod's own diplomatic actions — Enforce Peace, Send Economic Support, Forgive Half Antagonism
+  and the rest — produce proper message-log entries and notifications, with their own toggles in the
+  message settings.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.16).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.19).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -564,7 +587,70 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.18 (current)
+## game.1.3.11.mod.19 (current)
+
+**Colonial Nations**
+
+- 18 New World and colonial formables, each with its own flag, map colour and country name, and each
+  raised to at least kingdom rank on formation. North America: the USA, Mexica, Canada, Alaska,
+  Cascadia, Quebec, Sonora, Texas, Vermont and the West Indies. South America: Brazil, Peru,
+  Colombia, Argentina and Bolivia. Oceania: Australia and New Zealand. India: the East India Company
+- Every one of them has its own advancement set, built from that country's EU4 national ideas — 18
+  sets in all, spanning the Age of Discovery onward
+- Eleven advances shared by every colonial nation, two per age: Colonial Tradition (+0.2% population
+  growth) and Colonial Heritage (+0.5% monthly development); Founding Fathers (+0.05 monthly
+  republican tradition) and Colonial Militia (+10% levy size); New Frontiers (+25% colonial migration
+  size, +20% colonial maintenance efficiency) and Continental Trade (+25% trade protection); Free
+  Thinkers (+5 maximum literacy) and Manufacturing Center (+production efficiency); Colonial Assembly
+  (+1 government size) and Liberty Heroes (+20% combat speed); and Colonial Ambition (+10% land
+  morale) in the Age of Revolutions
+- Colonial nations can take a Colonial Representation Law advance from the Age of Discovery
+
+**Buildings and Reforms**
+
+- Colonial Republic, a new government reform for republics with a capital in the Americas or Oceania:
+  +1 government reform slot, +20% maritime presence, and much cheaper sea, port, road and land costs
+  over distance from the capital
+- Trade Emporium, a new major government reform for republics and monarchies whose original capital
+  lies in West Africa, East Africa, Southeast Asia or the Middle East: +20% merchant capacity,
+  merchant power and trades per burgher, +50% foreign construction efficiency and sea trade
+  efficiency, and +15 court-language importance, against −5% crown estate power and −2.5% noble
+  satisfaction. It pushes the country toward capital economy, innovation and naval focus
+
+**Diplomatic Limits**
+
+- Alliance eligibility is actually checked again. The mod's alliance rule — opinion at or above 0, no
+  rivals, no coalition partners, no subjects, and the block on two Great Powers allying — was being
+  called in a form the engine could not evaluate, so none of it applied. It now gates both offering
+  an alliance and the automatic expiry of one, and the alliance screen says plainly when two Great
+  Powers cannot ally
+
+**National Flavour**
+
+- Genoa now elects its Doge through the diarchic election rather than the standard merchant republic
+  doge election
+- The Arabia formable required provinces the game does not recognise, so its land requirement never
+  resolved; it now reads the correct areas and provinces
+
+**Pops, Map and Campaign Setup**
+
+- Starting setup fixes across India, Africa and Japan: corrected culture names for Ruthenian and
+  Betsimisaraka pops, a country tag that collided with one of the new colonial tags, a malformed
+  accepted-cultures list, and a set of laws, reforms, tributary relations and IO memberships that
+  pointed at content which does not exist
+- Dead Middle Kingdom references removed: the Provincial Garrison is now open to countries of Chinese
+  culture, and the Korean Sadae event, which could never fire, is gone
+
+**UI and Quality of Life**
+
+- The mod's diplomatic actions now report themselves properly. Enforce Peace, Send Economic Support,
+  Forgive Half Antagonism and the rest produce real message-log entries and notifications, with their
+  own toggles in the message settings, instead of raw text keys
+- Text that showed as raw keys now reads properly: the Religious War casus belli, the Vision Sharing
+  relation, the confirmation prompts for Break Their Guarantee and Worsen Opinion, the crusade and
+  jihad cooldown notices, and the maintenance goods for the Kurultai, Stockade and Order Headquarters
+
+## game.1.3.11.mod.18
 
 **Changes to Vanilla Diplomatic Actions**
 
