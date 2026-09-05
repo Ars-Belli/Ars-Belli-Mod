@@ -58,6 +58,7 @@ abm_genoese_arsenal = { # https://www.museidigenova.it/en/darsena-dockyard
 	is_foreign = no
 	pop_type = soldiers
 	max_levels = 1
+	icon = grand_shipyard # placeholder — replace with custom abm_genoese_arsenal.dds when ready
 	employment_size = dry_dock_employment
 	category = military_category
 	rural_settlement = no
@@ -70,7 +71,7 @@ abm_genoese_arsenal = { # https://www.museidigenova.it/en/darsena-dockyard
 		is_port = yes
 	}
 	country_potential = {
-		# has_advance = ven_stato_da_mar
+		has_advance = genoese_flexibility
 	}
 	build_time = huge_port_building_time
 	modifier = {
@@ -82,6 +83,7 @@ abm_genoese_arsenal = { # https://www.museidigenova.it/en/darsena-dockyard
 	
 	capital_country_modifier = {
 		sea_cost_on_distance_from_capital_when_maritime = -0.5
+		can_convert_galleys_to_light = yes
 	}
 
 	
@@ -103,7 +105,8 @@ abm_gazarian_arsenal = {
 	is_special = yes
 	is_foreign = no
 	pop_type = soldiers
-	max_levels = 3
+	max_levels = 1
+	icon = grand_shipyard # placeholder — replace with custom abm_gazarian_arsenal.dds when ready
 	employment_size = dock_employment
 	category = military_category
 	rural_settlement = no
@@ -121,14 +124,14 @@ abm_gazarian_arsenal = {
 	build_time = medium_port_building_time
 	modifier = {
 		can_build_ships_in_this_location = yes
-		max_ships_built_at_same_time = 1
-		harbor_suitability = 0.05
-		local_sailors_modifier = 0.10
-		local_ship_build_speed = 0.10
+		max_ships_built_at_same_time = 3
+		harbor_suitability = 0.15
+		local_sailors_modifier = 0.30
 	}
 	
 	capital_country_modifier = {
-		global_maritime_presence_modifier = 0.05
+		global_maritime_presence_modifier = 0.15
+		can_convert_galleys_to_light = yes
 	}
 
 	
@@ -150,6 +153,7 @@ abm_gazarian_headquarters = {
 	is_foreign = no
 	pop_type = soldiers
 	max_levels = 1
+	icon = order_headquarters # placeholder — replace with custom abm_gazarian_headquarters.dds when ready
 	
 	category = military_category
 	
@@ -169,7 +173,7 @@ abm_gazarian_headquarters = {
 
 
 	country_potential = {
-		has_or_had_tag = GAZ
+		has_advance = abm_the_genoese_arsenal
 	}
 	
 	capital_modifier = {
@@ -179,6 +183,9 @@ abm_gazarian_headquarters = {
 		can_recruit_regiment_in_this_location = yes
 	}
 	
+	capital_country_modifier = {
+		possible_frontage_modifier = 0.10
+	}
 	
 	unique_production_methods = {
 		order_headquarters_requirements = {
