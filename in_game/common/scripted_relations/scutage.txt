@@ -23,7 +23,9 @@
 	}
 
 	will_expire_trigger = {
-		scope:recipient = {
+		# NB: engine binds only scope:first/second here (not actor/recipient) -
+		# see guarantee.txt. scope:second = the subject.
+		scope:second = {
 			subject_loyalty < MIN_SUBJECT_LOYALTY_FOR_ACTION
 		}
 	}

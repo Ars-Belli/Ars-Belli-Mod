@@ -17,7 +17,9 @@
     mutual_color = define:NMapColors|DIPLOMACY_ALLIANCE_COLOR
     category = {
         offer = CATEGORY_FRIENDLY_ACTIONS
+        request = CATEGORY_FRIENDLY_ACTIONS
         cancellation = CATEGORY_HOSTILE_ACTIONS
+        break = CATEGORY_HOSTILE_ACTIONS
     }
 
     relation_type_for_ai = friendly
@@ -152,32 +154,34 @@
 
     expire_effect = {
         #downgrade to guarantee
+        # NB: engine binds only scope:first/second here (not actor/recipient) -
+        # see guarantee.txt comment and abm_economic_support.txt expire_effect.
         if = {
             limit = {
-                scope:actor = {
+                scope:first = {
                     modifier:allowed_guarantee = yes
-                    country_rank_level > scope:recipient.country_rank_level
+                    country_rank_level > scope:second.country_rank_level
                 }
             }
-            scope:actor = {
+            scope:first = {
                 create_relation = {
-                    first = scope:actor
-                    second = scope:recipient
+                    first = scope:first
+                    second = scope:second
                     type = relation_type:guarantee
                 }
             }
         }
         else_if = {
             limit = {
-                scope:recipient = {
+                scope:second = {
                     modifier:allowed_guarantee = yes
-                    country_rank_level > scope:actor.country_rank_level
+                    country_rank_level > scope:first.country_rank_level
                 }
             }
-            scope:actor = {
+            scope:first = {
                 create_relation = {
-                    first = scope:recipient
-                    second = scope:actor
+                    first = scope:second
+                    second = scope:first
                     type = relation_type:guarantee
                 }
             }
