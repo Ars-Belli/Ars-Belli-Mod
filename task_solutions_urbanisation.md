@@ -45,7 +45,7 @@ of three data mechanisms that do exist:
 |---|---|---|
 | Base | `INJECT:country_base_values`, `in_game/common/auto_modifiers/abm_country.txt` | **10** |
 | Locations | new `abm_urbanisation_locations_impact`, same file | **+1 per 20 locations** |
-| Population | new `abm_urbanisation_population_impact`, same file | **+1 per 250k people** (`total_population` is in thousands, so `divide = 250`) |
+| Population | new `abm_urbanisation_population_impact`, same file | **+1 per 400k people** (`total_population` is in thousands, so `divide = 400`) |
 | Research | `in_game/common/advances/abm_urbanisation_advances.txt` | **+5 per age × 6 ages = +30** |
 
 Files:
@@ -95,24 +95,26 @@ If a mod-added modifier type ever fails to register, `abm_urbanisation_limit` re
 `trigger_if` is skipped and founding works exactly as in vanilla. The alternative wiring would
 have locked every town, city and megalopolis upgrade in the game permanently.
 
-**Calibration.** The size term was retuned after the first in-game load, from +1 per 10
-locations to **+1 per 20 locations plus +1 per 250k people**. Counting the `own_*` lists in
+**Calibration.** The size term has been retuned twice after in-game loads: from +1 per 10
+locations, to +1 per 20 locations plus +1 per 250k people, and then — 250k being too generous —
+to **+1 per 20 locations plus +1 per 400k people**. Counting the `own_*` lists in
 `setup/start/10_countries.txt` against `06_pops.txt`, England starts with 138 locations, 3.0M
-people, 12 towns and London — 14 points used against a limit of 10 + 6.9 + 12.1 ≈ 29 (≈ 24 under
-the old term; an earlier count of 155 locations gave 25). Globally the start has 884 towns, 312
-cities and 3 megalopolises.
+people, 12 towns and London — 14 points used against a limit of 10 + 6.9 + 7.5 ≈ 24 (also ≈ 24
+under the original term; an earlier count of 155 locations gave 25). Globally the start has 884
+towns, 312 cities and 3 megalopolises.
 
-The retune is **not** capacity-neutral. An average location holds 18.9k people (median 8.2k), so
-+1 per 250k is worth about +0.75 per 10 locations on its own, and summed over every country the
-size term grows ×1.54 (1,358 → 2,097). It also shifts capacity to dense countries and away from
-sparse ones: China 166 → 414, Delhi 37 → 177, Japan 34 → 56, France 16 → 30, while the Golden
-Horde drops 74 → 50. A like-for-like swap would be about +1 per 500k.
+At 400k the retune is close to neutral overall but still redistributes. An average location holds
+18.9k people (median 8.2k), so +1 per 400k is worth about +0.47 per 10 locations on its own, and
+summed over every country the size term grows ×1.15 (1,358 → 1,565; it was ×1.54 at 250k, and
+~520k would be exactly neutral). Capacity still moves to dense countries and away from sparse ones:
+China 166 → 290, Delhi 37 → 118, Japan 34 → 42, France 16 → 22, while the Golden Horde drops
+74 → 45.
 
 The tunables are one line each: the `10` in `country_base_values`, the `divide = 20` in
-`abm_urbanisation_locations_impact`, the `divide = 250` in `abm_urbanisation_population_impact`,
+`abm_urbanisation_locations_impact`, the `divide = 400` in `abm_urbanisation_population_impact`,
 and `@abm_urbanisation_limit_increase` at the top of the advances file. Both divisors are also
 written into the auto-modifiers' loc names ("1 Urban Capacity every 20 locations" / "… every
-250k people"), which is what the breakdown tooltip shows, so a retune has to change those too.
+400k people"), which is what the breakdown tooltip shows, so a retune has to change those too.
 
 **Left open.**
 
@@ -335,8 +337,8 @@ its `is_over_fort_limit` engine alert. That part is inferred from the data; see 
    engine's modifier breakdown (base, the two size terms, each advance).
 9. **Does the population term register?** `error.log` should have nothing for
    `abm_urbanisation_population_impact`, and the Capacity breakdown should list both size lines,
-   "1 Urban Capacity every 20 locations" and "1 Urban Capacity every 250k people". England at the
-   start should total about 29.
+   "1 Urban Capacity every 20 locations" and "1 Urban Capacity every 400k people". England at the
+   start should total about 24.
 10. **Do the penalty and the alerts work?** Push a country over the cap:
     - Tax Efficiency's breakdown shows "Over Urban Capacity" at −5% per whole point over.
     - The "Urban Capacity Exceeded" popup fires at the next monthly tick, and the Tier List
@@ -344,4 +346,4 @@ its `is_over_fort_limit` engine alert. That part is inferred from the data; see 
     - The red "Penalties active" alert lists it. If it doesn't, `alert = yes` does not route to
       `static_modifier_active` — the popup still covers the warning.
 
-Last deployed with `.\deploy.ps1` after the over-limit penalty.
+Last deployed with `.\deploy.ps1` after the 400k population retune.
