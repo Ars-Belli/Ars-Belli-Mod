@@ -1,0 +1,26 @@
+﻿# Ars Belli urbanisation limit - the top-right readout.
+#
+# Same shape as mp_limits_custom_loc.txt: one entry that picks a coloured
+# localization key from a trigger, so the counter in panels\right_panel\right_panel.gui
+# turns yellow at the cap and red past it without any GUI-side branching.
+#
+# First matching text wins, so the order here is over -> at -> under.
+
+abm_urbanisation_display = {
+	type = country
+	text = {
+		localization_key = ABM_URBAN_CAPACITY_OVER
+		trigger = {
+			abm_urbanisation_free_points < 0
+		}
+	}
+	text = {
+		localization_key = ABM_URBAN_CAPACITY_FULL
+		trigger = {
+			abm_urbanisation_free_points < 1
+		}
+	}
+	text = {
+		localization_key = ABM_URBAN_CAPACITY_NORMAL
+	}
+}

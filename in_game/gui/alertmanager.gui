@@ -576,6 +576,50 @@ types AlertManager {
 		bottomtotop = no #right side
 
 		datacontext = "[InGameTopbar.AccessAlertManager]"
+
+		# Ars Belli urbanisation limit: over Urban Capacity.
+		#
+		# Alerts proper are engine-keyed - alert_banner takes the name of an alert the
+		# engine fires (is_over_fort_limit and the rest), and alert_descriptions only
+		# skins those, so a mod-defined condition cannot become a real AlertEntry.
+		# This is instead a static banner parented to the alert strip, dressed in the
+		# same red alert art and reading the two modifiers straight off the player.
+		#
+		# limit < used is the same test as abm_urbanisation_free_points < 0. If the
+		# mod-added modifier types never register, both read 0, the test is false and
+		# no banner appears - the same fail-open behaviour as the location_rank gates.
+		button = {
+			name = "abm_over_urbanisation_limit"
+			visible = "[LessThan_CFixedPoint(GetPlayer.GetModifierValueNoFormat('abm_urbanisation_limit'), GetPlayer.GetModifierValueNoFormat('abm_urbanisation_used'))]"
+
+			using = alert_banner_setup
+			using = alert_banner_anim
+
+			blockoverride "alert_banner_priority" {
+				button = {
+					size = { 100% 100% }
+					alwaystransparent = yes
+					using = red_alert
+				}
+			}
+
+			blockoverride "icon_texture" {
+				texture = "gfx/interface/icons/modifier_types/city_upgrade_cost_modifier.dds"
+			}
+
+			# No AlertEntry behind this one, so the "new alert" padding has nothing to
+			# read and is dropped rather than left pointing at a missing scope.
+			blockoverride "alert_is_new_padding" {}
+
+			tooltip = "ABM_ALERT_OVER_URBAN_CAPACITY"
+
+			action_tooltip = {
+				click_type = left
+				title = "ALERT_CTA_LEFT_CLICK"
+				using = snd_UI_alert_openAndCycle
+				on_action = "[OpenLateralView('player_modifiers')]"
+			}
+		}
 	}
 }
 

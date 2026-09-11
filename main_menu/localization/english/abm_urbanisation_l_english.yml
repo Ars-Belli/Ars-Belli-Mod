@@ -36,3 +36,17 @@
  abm_urbanisation_5_advance_desc: "Surveyors lay out streets, squares and water before the first house goes up, and the crown's intendants inspect what is built. Towns founded to a plan need a fraction of the attention that towns founded by accident demand."
  abm_urbanisation_6_advance: "Municipal Reform"
  abm_urbanisation_6_advance_desc: "Uniform corporations, elected councils and audited accounts replace the tangle of ancient charters. A single statute now governs every borough in the realm, and the realm can afford a great many more of them."
+
+ # ---------------------------------------------------------------------------
+ # Top-right readout - in_game/gui/panels/right_panel/right_panel.gui,
+ # coloured by in_game/common/customizable_localization/abm_urbanisation_custom_loc.txt
+ # ---------------------------------------------------------------------------
+ ABM_URBAN_CAPACITY_NORMAL: "Urban: [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0] / [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]"
+ ABM_URBAN_CAPACITY_FULL: "#Y Urban: [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0] / [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]#!"
+ ABM_URBAN_CAPACITY_OVER: "#R Urban: [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0] / [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]#!"
+ ABM_URBAN_CAPACITY_TOOLTIP: "#H Urban Capacity#!\nHow much urban settlement our administration can hold together, counted in town points. A town costs #H 1#!, a city #H 2#! and a megalopolis #H 4#!.\n\nIn use: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0]#!\nCapacity: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]#!\nFree: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_free_points')|0]#!\n\nCapacity comes from a flat base, the extent of the realm and research. With no room left we cannot found a [town_or_city|e] or raise one to the next rank, though conquest may still carry us past the limit.\n\nClick to open the modifier ledger."
+
+ # ---------------------------------------------------------------------------
+ # Over-capacity banner - in_game/gui/alertmanager.gui
+ # ---------------------------------------------------------------------------
+ ABM_ALERT_OVER_URBAN_CAPACITY: "#H Over Urban Capacity#!\nWe hold #R [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0]#! town points against a capacity of #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]#!.\n\nNothing punishes this directly, but we can found no new [town_or_city|e] and raise none to a higher rank until we are back under the limit. Research, more locations, or reducing a location's rank will close the gap."

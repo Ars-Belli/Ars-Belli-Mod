@@ -45,11 +45,50 @@ types RightPanelTypes
  				using = non_clickable_color_gold_texture
 				}
 
-				# Ars Belli multiplayer limits display:
+				# Ars Belli left-hand readouts. Wrapped in one vertical stack so the
+				# always-on urbanisation counter and the multiplayer-only point
+				# counters below it cannot land on top of each other.
 				flowcontainer = {
 					direction = vertical
 					spacing = 5
 					parentanchor = vcenter
+
+				# Ars Belli urbanisation limit: town points used out of the limit.
+				# Fails open the same way the location_rank gates do - if the mod-added
+				# modifier types never register, abm_urbanisation_limit reads 0 and the
+				# readout hides itself rather than showing a meaningless "0 / 0".
+				button = {
+					size = { 130 20 }
+					margin_left = 5
+					visible = "[GreaterThan_CFixedPoint(GetPlayer.GetModifierValueNoFormat('abm_urbanisation_limit'), '(CFixedPoint)0')]"
+					tooltip = "ABM_URBAN_CAPACITY_TOOLTIP"
+					onclick = "[OpenLateralView('player_modifiers')]"
+
+					flowcontainer = {
+						parentanchor = left|vcenter
+						direction = horizontal
+						spacing = 3
+						alwaystransparent = yes
+
+						icon = {
+							size = { 16 16 }
+							texture = "gfx/interface/icons/modifier_types/city_upgrade_cost_modifier.dds"
+							texture_density = 2
+						}
+
+						text_single = {
+							text = "[GetPlayer.Custom('abm_urbanisation_display')]"
+							using = Font_Size_Small
+							align = left|nobaseline
+							autoresize = yes
+						}
+					}
+				}
+
+				# Ars Belli multiplayer limits display:
+				flowcontainer = {
+					direction = vertical
+					spacing = 5
 					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
 
 					# text_single = {
@@ -144,6 +183,7 @@ types RightPanelTypes
 						}
 					}
 				}
+				} # end Ars Belli left-hand readouts
 
 				flowcontainer = {
 					parentanchor = center

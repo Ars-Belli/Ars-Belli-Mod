@@ -13,6 +13,7 @@ Status summary:
 |---|---|---|
 | 1 | Cap the number of towns/cities/megalopolises like the fort limit | Done — needs one in-game load check, see Open items |
 | 2 | Make "Downgrade Location" step down one rank instead of razing to rural | **Not possible on the vanilla action — engine-locked.** Built a parallel action instead |
+| 3 | Show the limit to the player, and warn when over it | Done — the alert-strip banner needs an in-game look, see Open items |
 
 ---
 
@@ -50,7 +51,9 @@ Files:
 - `main_menu/common/modifier_type_definitions/abm_urbanisation.txt` — the two country modifier
   types, `abm_urbanisation_limit` (the cap) and `abm_urbanisation_used` (the count). Icons in
   `main_menu/common/modifier_icons/abm_urbanisation.txt`, reusing existing vanilla textures. Both
-  appear in the government modifiers tab, so the player can always see limit vs. used.
+  appear as rows in the **Ledger → Modifiers tab** (`in_game/gui/player_modifiers_lateralview.gui`,
+  opened by the `MODIFIERS_TEXT` tab in `ledger_tabs_template`), which is where every country
+  modifier is listed. **Not** the government panel — that has no modifier list.
 - `in_game/common/location_ranks/00_default.txt` — `abm_urbanisation_used = 1 / 2 / 4` in the
   `country_modifier` of town / city / megalopolis, and the gate in each `allow`: town and city
   need 1 free point, megalopolis needs 2.
@@ -156,6 +159,74 @@ way to countryside; the new action's description says so. Hiding it would mean r
 
 ---
 
+## Nr.3 — show the limit where the player can see it
+
+**Request.** After Nr.1 landed, the only readout was the two modifier rows in the Ledger's
+Modifiers tab — a sortable list of several hundred entries, which is not where anyone looks
+before pressing "Found Town". Add a permanent readout, and a warning when over the cap.
+
+**What the engine allows.** Two different answers for the two halves.
+
+The readout is unremarkable: the mod already replaces
+`in_game/gui/panels/right_panel/right_panel.gui`, and already draws its multiplayer point
+counters there out of `customizable_localization` + named `script_values`. The urbanisation
+counter is the same shape, so it cost no new mechanism.
+
+The warning is **not** an alert, because alerts cannot be added from data. `alert_banner` takes
+the *name of an alert the engine fires* (`is_over_fort_limit`, `has_weather_system`, …) and looks
+it up in the `AlertEntry` data model that `alerts_layout` is fed from
+`[InGameTopbar.AccessAlertManager]`. `common/alert_descriptions` only supplies each engine alert's
+title, icon, priority and hint — adding a key there for a condition the engine does not evaluate
+does nothing. So there is no way to make "over Urban Capacity" a real alert.
+
+What *is* possible is a **static banner parented into the alert strip**: `type alert_manager` is
+defined in `alertmanager.gui` (which the mod already replaces) even though it is instantiated in
+`ingame_topbar.gui` (which it does not), so a child added to the type body renders inside the
+alert row. It is dressed in the same `alert_banner_setup` + `red_alert` art as a real alert and
+reads its condition straight off the two modifiers.
+
+The near-miss worth recording: `common/scriptable_hints` *is* a fully moddable, script-triggered
+database — `hint_cultural_capacity` fires on `used_cultures_capacity > modifier:cultures_capacity`,
+exactly the shape needed here. It was not used because hints surface in the Hints lateral view,
+which is a separate 300-line file the mod does not replace and whose per-hint icon blocks are
+hardcoded `EqualTo_string` comparisons. If the static banner turns out not to render, this is the
+fallback.
+
+**What was built.**
+
+| Piece | File |
+|---|---|
+| `abm_urbanisation_used_points`, `abm_urbanisation_limit_points` — named values so the GUI and loc can read the two modifiers back | `in_game/common/script_values/abm_urbanisation_values.txt` |
+| `abm_urbanisation_display` — picks a normal / yellow / red loc key from `abm_urbanisation_free_points` | `in_game/common/customizable_localization/abm_urbanisation_custom_loc.txt` (new) |
+| The counter itself, top-right next to the Age indicator | `in_game/gui/panels/right_panel/right_panel.gui` |
+| The over-capacity banner in the alert strip | `in_game/gui/alertmanager.gui` |
+| `ABM_URBAN_CAPACITY_*`, `ABM_ALERT_OVER_URBAN_CAPACITY` | `main_menu/localization/english/abm_urbanisation_l_english.yml` |
+
+The counter reads `Urban: 14 / 25`, turns **yellow** with no free points and **red** past the cap,
+carries a tooltip with the used / capacity / free breakdown and what the capacity is made of, and
+opens the Ledger's Modifiers tab on click. The banner uses the same click target.
+
+Three shape decisions:
+
+- **The left-hand readouts are now one wrapper.** The existing multiplayer counters were anchored
+  `parentanchor = vcenter` and the new counter is always visible, so two independently anchored
+  stacks would have drawn on top of each other in multiplayer. They are wrapped in a single
+  vertical flowcontainer instead; the multiplayer block keeps its own `visible` and its original
+  indentation, so the diff stays at the two lines that actually changed.
+- **Conditions are datatype math, not script.** `visible` uses
+  `LessThan_CFixedPoint(GetPlayer.GetModifierValueNoFormat('abm_urbanisation_limit'), …_used)` —
+  `GetModifierValueNoFormat` has ~20 vanilla uses and `LessThan_CFixedPoint` is used a dozen times
+  inside `alertmanager.gui` itself. No monthly pulse, no country variable, nothing to keep in sync.
+- **Both surfaces fail open the same way the gates do.** The readout hides itself unless
+  `abm_urbanisation_limit > 0` and the banner needs `limit < used`, so if the mod-added modifier
+  types never register, both read 0 and neither element appears — rather than the game showing a
+  permanent, meaningless "0 / 0".
+
+**Left open.** The banner cannot be right-click dismissed or muted the way real alerts can, since
+it is not an `AlertEntry`. It disappears on its own once back under the cap.
+
+---
+
 ## Open items to check on the first in-game load
 
 1. **Do the two mod-added modifier types register?** This is the one piece that could not be
@@ -173,5 +244,18 @@ way to countryside; the new action's description says so. Hiding it would mean r
 4. **Do the six advances appear in the right ages** and not orphaned off their parents.
 5. **Does the Reduce Location entry appear** on right-clicking an owned town, and is it absent on
    rural settlements and foreign locations.
+6. **Does the top-right counter draw?** It sits on the left of the panel bar that carries the
+   "Age of …" label, always visible. If it is missing, the suspect is the modifier types not
+   registering (item 1) — the counter hides itself when `abm_urbanisation_limit` reads 0. If it
+   draws but reads `Urban:  / `, the `[GetPlayer.MakeScope.ScriptValue('…')]` calls failed and the
+   fix is `[GetPlayer.GetModifierValueNoFormat('…')|0]` instead.
+7. **Does the over-capacity banner render?** This is the one genuinely unverified mechanism:
+   `alerts_layout` is an engine widget and it is not certain it lays out static children alongside
+   the alerts it generates itself. Push a country over the cap and look at the alert row. A silent
+   no-op is the expected failure, and the fallback is a `scriptable_hints` entry
+   (`priority = { abm_urbanisation_free_points < 0 }`), which is a supported data mechanism but
+   surfaces only in the Hints lateral view.
+8. **Does the counter turn yellow at the cap and red past it,** and does clicking either it or the
+   banner open the Ledger's Modifiers tab.
 
 Nothing has been deployed — run `.\deploy.ps1` to push the working tree to the mod folder.
