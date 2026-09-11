@@ -45,50 +45,11 @@ types RightPanelTypes
  				using = non_clickable_color_gold_texture
 				}
 
-				# Ars Belli left-hand readouts. Wrapped in one vertical stack so the
-				# always-on urbanisation counter and the multiplayer-only point
-				# counters below it cannot land on top of each other.
-				flowcontainer = {
-					direction = vertical
-					spacing = 5
-					parentanchor = vcenter
-
-				# Ars Belli urbanisation limit: town points used out of the limit.
-				# Fails open the same way the location_rank gates do - if the mod-added
-				# modifier types never register, abm_urbanisation_limit reads 0 and the
-				# readout hides itself rather than showing a meaningless "0 / 0".
-				button = {
-					size = { 130 20 }
-					margin_left = 5
-					visible = "[GreaterThan_CFixedPoint(GetPlayer.GetModifierValueNoFormat('abm_urbanisation_limit'), '(CFixedPoint)0')]"
-					tooltip = "ABM_URBAN_CAPACITY_TOOLTIP"
-					onclick = "[OpenLateralView('player_modifiers')]"
-
-					flowcontainer = {
-						parentanchor = left|vcenter
-						direction = horizontal
-						spacing = 3
-						alwaystransparent = yes
-
-						icon = {
-							size = { 16 16 }
-							texture = "gfx/interface/icons/modifier_types/city_upgrade_cost_modifier.dds"
-							texture_density = 2
-						}
-
-						text_single = {
-							text = "[GetPlayer.Custom('abm_urbanisation_display')]"
-							using = Font_Size_Small
-							align = left|nobaseline
-							autoresize = yes
-						}
-					}
-				}
-
 				# Ars Belli multiplayer limits display:
 				flowcontainer = {
 					direction = vertical
 					spacing = 5
+					parentanchor = vcenter
 					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
 
 					# text_single = {
@@ -183,10 +144,10 @@ types RightPanelTypes
 						}
 					}
 				}
-				} # end Ars Belli left-hand readouts
 
 				flowcontainer = {
 					parentanchor = center
+					position = { -25 0 } # Ars Belli: nudged left of centre, into the room the short left-hand MP rows leave
 					spacing = 5
 					datacontext = "[GetCurrentAge]"
 					alwaystransparent = no
@@ -196,14 +157,14 @@ types RightPanelTypes
 					text_single = {
 						allow_outside = yes
 						text = "[Age.GetNameWithNoTooltip]"
-						using = Font_Size_Medium
+						using = Font_Size_Small # Ars Belli: was Font_Size_Medium, shrunk to make room for the right-hand readouts
 						using = Font_Type_Headers
 						align = center
 						autoresize = yes
 						default_format = "#yellow_titles"
 
 						widget = {
-							size = { 40 40 }
+							size = { 30 30 } # Ars Belli: was 40x40
 							position = { -5 0 }
 
 							datacontext = "[GetCurrentAge]"
@@ -286,26 +247,67 @@ types RightPanelTypes
 					}
 				}
 
-				# Ars Belli Current country Rank:
+				# Ars Belli right-hand readouts: MP rank label, urbanisation counter, Tier
+				# List button, in one stack so they can never overlap. The two MP rows carry
+				# their own visible, so in single-player only the counter shows and centres.
+				# The bar above the tabs is only ~55px tall, hence spacing 1 and the same -4
+				# vertical text margin the left-hand MP counters use:
+				# 15 (rank label) + 1 + 16 (urban) + 1 + 22 (tier button) = 55.
 				flowcontainer = {
 					direction = vertical
-					spacing = 2
-					parentanchor = right
-					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
+					spacing = 1
+					parentanchor = right|vcenter
+					ignoreinvisible = yes
 
-					datacontext = "[GetPlayer]"
-					tooltip = "MP_RANK_TOOLTIP"
-
+					# Ars Belli Current country Rank:
 					text_single = {
+						visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
+						datacontext = "[GetPlayer]"
+						tooltip = "MP_RANK_TOOLTIP"
 						text = "MP_RANK_LABEL"
 						using = Font_Size_Small
 						align = right
 						autoresize = yes
-						margin = { 5 0 }
+						margin = { 5 -4 }
 						parentanchor = right
 					}
 
+					# Ars Belli urbanisation limit: town points used out of the limit.
+					# Yellow at the cap, red past it - see
+					# customizable_localization\abm_urbanisation_custom_loc.txt.
+					# No visibility guard: GetModifierValueNoFormat is not a CFixedPoint, so
+					# GreaterThan_CFixedPoint on it fails FetchData every frame.
+					button = {
+						size = { 130 16 }
+						parentanchor = right
+						tooltip = "ABM_URBAN_CAPACITY_TOOLTIP"
+						onclick = "[OpenLateralView('player_modifiers')]"
+
+						flowcontainer = {
+							parentanchor = right|vcenter
+							direction = horizontal
+							spacing = 3
+							alwaystransparent = yes
+
+							icon = {
+								size = { 16 16 }
+								texture = "gfx/interface/icons/modifier_types/city_upgrade_cost_modifier.dds"
+								texture_density = 2
+							}
+
+							text_single = {
+								text = "[GetPlayer.Custom('abm_urbanisation_display')]"
+								using = Font_Size_Small
+								align = right|nobaseline
+								autoresize = yes
+								margin = { 5 -4 }
+							}
+						}
+					}
+
+					# Ars Belli tier list toggle:
 					button_regular = {
+						visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
 						text = "ABM_TIER_PANEL_TOGGLE"
 						tooltip = "ABM_TIER_PANEL_TOGGLE_TOOLTIP"
 						onclick = "[GetVariableSystem.Toggle('mp_tier_panel_open')]"

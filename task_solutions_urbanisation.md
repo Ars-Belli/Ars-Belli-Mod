@@ -13,7 +13,7 @@ Status summary:
 |---|---|---|
 | 1 | Cap the number of towns/cities/megalopolises like the fort limit | Done — needs one in-game load check, see Open items |
 | 2 | Make "Downgrade Location" step down one rank instead of razing to rural | **Not possible on the vanilla action — engine-locked.** Built a parallel action instead |
-| 3 | Show the limit to the player, and warn when over it | Done — the alert-strip banner needs an in-game look, see Open items |
+| 3 | Show the limit to the player, and warn when over it | Done — counter top-right, red past the cap. **A real alert is not possible** (the engine never builds a static alert banner). Layout needs one re-check, see Open items |
 
 ---
 
@@ -172,58 +172,68 @@ The readout is unremarkable: the mod already replaces
 counters there out of `customizable_localization` + named `script_values`. The urbanisation
 counter is the same shape, so it cost no new mechanism.
 
-The warning is **not** an alert, because alerts cannot be added from data. `alert_banner` takes
-the *name of an alert the engine fires* (`is_over_fort_limit`, `has_weather_system`, …) and looks
-it up in the `AlertEntry` data model that `alerts_layout` is fed from
-`[InGameTopbar.AccessAlertManager]`. `common/alert_descriptions` only supplies each engine alert's
-title, icon, priority and hint — adding a key there for a condition the engine does not evaluate
-does nothing. So there is no way to make "over Urban Capacity" a real alert.
+The warning **cannot be an alert**. `alert_banner` takes the *name of an alert the engine fires*
+(`is_over_fort_limit`, `has_weather_system`, …) and looks it up in the `AlertEntry` data model
+that `alerts_layout` is fed from `[InGameTopbar.AccessAlertManager]`; `common/alert_descriptions`
+only supplies each engine alert's title, icon, priority and hint.
 
-What *is* possible is a **static banner parented into the alert strip**: `type alert_manager` is
-defined in `alertmanager.gui` (which the mod already replaces) even though it is instantiated in
-`ingame_topbar.gui` (which it does not), so a child added to the type body renders inside the
-alert row. It is dressed in the same `alert_banner_setup` + `red_alert` art as a real alert and
-reads its condition straight off the two modifiers.
+A static banner parented into `type alert_manager` in `alertmanager.gui` was tried and **does not
+work — the engine never builds it.** The proof is in the log: its `visible` used the same
+`GetModifierValueNoFormat` → `*_CFixedPoint` comparison that spammed `FetchData failed` from the
+right panel every frame (see below), yet it logged nothing at all, so it was never evaluated. It
+was removed, and `alertmanager.gui` is back to its pre-Nr.3 state. The over-cap warning is now
+the counter itself turning red.
 
-The near-miss worth recording: `common/scriptable_hints` *is* a fully moddable, script-triggered
-database — `hint_cultural_capacity` fires on `used_cultures_capacity > modifier:cultures_capacity`,
-exactly the shape needed here. It was not used because hints surface in the Hints lateral view,
-which is a separate 300-line file the mod does not replace and whose per-hint icon blocks are
-hardcoded `EqualTo_string` comparisons. If the static banner turns out not to render, this is the
-fallback.
+The remaining fallback, not built: `common/scriptable_hints` is a genuinely moddable,
+script-triggered database — `hint_cultural_capacity` fires on
+`used_cultures_capacity > modifier:cultures_capacity`, exactly this shape — but it surfaces only
+in the Hints lateral view, which the mod does not replace and whose per-hint icon blocks are
+hardcoded `EqualTo_string` comparisons.
 
 **What was built.**
 
 | Piece | File |
 |---|---|
-| `abm_urbanisation_used_points`, `abm_urbanisation_limit_points` — named values so the GUI and loc can read the two modifiers back | `in_game/common/script_values/abm_urbanisation_values.txt` |
-| `abm_urbanisation_display` — picks a normal / yellow / red loc key from `abm_urbanisation_free_points` | `in_game/common/customizable_localization/abm_urbanisation_custom_loc.txt` (new) |
-| The counter itself, top-right next to the Age indicator | `in_game/gui/panels/right_panel/right_panel.gui` |
-| The over-capacity banner in the alert strip | `in_game/gui/alertmanager.gui` |
-| `ABM_URBAN_CAPACITY_*`, `ABM_ALERT_OVER_URBAN_CAPACITY` | `main_menu/localization/english/abm_urbanisation_l_english.yml` |
+| `abm_urbanisation_used_points`, `abm_urbanisation_limit_points` — named values so loc can read the two modifiers back | `in_game/common/script_values/abm_urbanisation_values.txt` |
+| `abm_urbanisation_display` — picks a normal / yellow / red loc key from `abm_urbanisation_free_points` | `in_game/common/customizable_localization/abm_urbanisation_custom_loc.txt` |
+| The counter, top of the right-hand stack on the panel bar; the Age label and icon shrunk to make room | `in_game/gui/panels/right_panel/right_panel.gui` |
+| `ABM_URBAN_CAPACITY_*` | `main_menu/localization/english/abm_urbanisation_l_english.yml` |
 
 The counter reads `Urban: 14 / 25`, turns **yellow** with no free points and **red** past the cap,
 carries a tooltip with the used / capacity / free breakdown and what the capacity is made of, and
-opens the Ledger's Modifiers tab on click. The banner uses the same click target.
+opens the Ledger's Modifiers tab on click. The capacity figure in that tooltip is
+`[GetPlayer.GetModifierValue('abm_urbanisation_limit')]` rather than the script value, so
+hovering it opens the engine's own modifier breakdown — base, Extent of the Realm, each advance —
+the same one the Ledger shows. That is the vanilla idiom (`local_governor_tt` in
+`buildings_l_english.yml`); `GetModifierValueWithNoTooltipNoSign` exists precisely to suppress it.
 
-Three shape decisions:
+Layout, as revised after the first in-game load:
 
-- **The left-hand readouts are now one wrapper.** The existing multiplayer counters were anchored
-  `parentanchor = vcenter` and the new counter is always visible, so two independently anchored
-  stacks would have drawn on top of each other in multiplayer. They are wrapped in a single
-  vertical flowcontainer instead; the multiplayer block keeps its own `visible` and its original
-  indentation, so the diff stays at the two lines that actually changed.
-- **Conditions are datatype math, not script.** `visible` uses
-  `LessThan_CFixedPoint(GetPlayer.GetModifierValueNoFormat('abm_urbanisation_limit'), …_used)` —
-  `GetModifierValueNoFormat` has ~20 vanilla uses and `LessThan_CFixedPoint` is used a dozen times
-  inside `alertmanager.gui` itself. No monthly pulse, no country variable, nothing to keep in sync.
-- **Both surfaces fail open the same way the gates do.** The readout hides itself unless
-  `abm_urbanisation_limit > 0` and the banner needs `limit < used`, so if the mod-added modifier
-  types never register, both read 0 and neither element appears — rather than the game showing a
-  permanent, meaningless "0 / 0".
+- **The counter lives on the right, not the left.** The first version stacked it above the three
+  MP point counters on the left, but the bar above the tabs is only ~55px tall and AP / DP / GR
+  already fill it exactly (3 × 15 + 2 × 5), so the guarantee row was pushed out. It now sits in the
+  right-hand stack between the MP rank label and the Tier List button:
+  15 + 1 + 16 + 1 + 22 = 55. The rank block was split into two separately-`visible` rows to make
+  room for it, with `MP_RANK_TOOLTIP` and the `GetPlayer` datacontext moved onto the label. To
+  fit, the rank label went from `margin = { 5 0 }` to `{ 5 -4 }` —
+  the same compaction the left-hand counters use — and the spacing from 2 to 1. In single-player
+  the MP rows are hidden (`ignoreinvisible = yes`) and the counter centres vertically on its own.
+- **The Age label is smaller** — `Font_Size_Medium` (18px) → `Font_Size_Small` (15px), icon
+  40×40 → 30×30 — because the right-hand stack is up to ~150px wide in multiplayer
+  ("MP Rank: 3 Great Power") and long age names were already running into it. It is also nudged
+  25px left of centre (`position = { -25 0 }` on its flowcontainer), into the room the short
+  AP / DP / GR rows leave on the left; that is the one number to tune if it now crowds them.
+- **No visibility guard on the counter.** The first version hid it unless
+  `abm_urbanisation_limit > 0`, written as
+  `GreaterThan_CFixedPoint(GetPlayer.GetModifierValueNoFormat(...), '(CFixedPoint)0')`.
+  `GetModifierValueNoFormat` is not a CFixedPoint, so every frame logged
+  `pdx_gui_data_manager.cpp:233: FetchData failed … right_panel.gui:60`. The guard only existed
+  for the case where the modifier types fail to register, and the same log shows no registration
+  errors, so it was dropped rather than re-guessed. All colour logic stays in
+  customizable_localization, where the triggers are typed script.
 
-**Left open.** The banner cannot be right-click dismissed or muted the way real alerts can, since
-it is not an `AlertEntry`. It disappears on its own once back under the cap.
+**Left open.** No alert — see above. If the red counter isn't enough, the scriptable hint is the
+next step.
 
 ---
 
@@ -235,6 +245,7 @@ it is not an `AlertEntry`. It disappears on its own once back under the cap.
    broken game — see the fail-open wiring above — and the fallback is to compute "used" from
    `num_of_non_rural` plus `num_location_rank:city` and `num_location_rank:megalopolis`
    (`T + C + 3M` on top of `T + C + M` gives the same `T + 2C + 4M`).
+   *First load: no registration errors in `error.log`.*
 2. **Does the `allow` gate actually bite?** Take a country at its cap and confirm the Found Town
    button greys out with the "Urban Capacity" tooltip rather than staying live.
 3. **Do the tooltips resolve their numbers?** They use `[GetPlayer.GetModifierValue('...')]`, which
@@ -244,18 +255,15 @@ it is not an `AlertEntry`. It disappears on its own once back under the cap.
 4. **Do the six advances appear in the right ages** and not orphaned off their parents.
 5. **Does the Reduce Location entry appear** on right-clicking an owned town, and is it absent on
    rural settlements and foreign locations.
-6. **Does the top-right counter draw?** It sits on the left of the panel bar that carries the
-   "Age of …" label, always visible. If it is missing, the suspect is the modifier types not
-   registering (item 1) — the counter hides itself when `abm_urbanisation_limit` reads 0. If it
-   draws but reads `Urban:  / `, the `[GetPlayer.MakeScope.ScriptValue('…')]` calls failed and the
-   fix is `[GetPlayer.GetModifierValueNoFormat('…')|0]` instead.
-7. **Does the over-capacity banner render?** This is the one genuinely unverified mechanism:
-   `alerts_layout` is an engine widget and it is not certain it lays out static children alongside
-   the alerts it generates itself. Push a country over the cap and look at the alert row. A silent
-   no-op is the expected failure, and the fallback is a `scriptable_hints` entry
-   (`priority = { abm_urbanisation_free_points < 0 }`), which is a supported data mechanism but
-   surfaces only in the Hints lateral view.
-8. **Does the counter turn yellow at the cap and red past it,** and does clicking either it or the
-   banner open the Ledger's Modifiers tab.
+6. **Does the right-hand stack fit?** In multiplayer: the MP rank label, then the counter, then the
+   Tier List button, all above the tabs without clipping, and AP / DP / GR fit on the left again.
+   In single-player: the counter alone, vertically centred. The Age label, nudged 25px left,
+   should clear both the rank label and the left-hand counters on the longest age names.
+7. ~~Does the over-capacity banner render?~~ **Answered on the first load: no** — the engine never
+   builds a static child of `alerts_layout`. Removed; see Nr.3.
+8. **Does the counter turn yellow at the cap and red past it,** and does clicking it open the
+   Ledger's Modifiers tab. `error.log` should have no `FetchData failed` lines from
+   `right_panel.gui`. In the counter's tooltip, hovering the **Capacity** number should open the
+   engine's modifier breakdown (base, Extent of the Realm, each advance).
 
-Nothing has been deployed — run `.\deploy.ps1` to push the working tree to the mod folder.
+Last deployed with `.\deploy.ps1` after the layout fix.
