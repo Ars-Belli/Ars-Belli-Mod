@@ -46,6 +46,7 @@ of three data mechanisms that do exist:
 | Base | `INJECT:country_base_values`, `in_game/common/auto_modifiers/abm_country.txt` | **10** |
 | Locations | new `abm_urbanisation_locations_impact`, same file | **+1 per 20 locations** |
 | Population | new `abm_urbanisation_population_impact`, same file | **+1 per 400k people** (`total_population` is in thousands, so `divide = 400`) |
+| Rank | `INJECT:rank_*` in `in_game/common/country_ranks/abm_country_ranks.txt` | **+1 duchy, +2 kingdom, +4 empire** (county +0) |
 | Research | `in_game/common/advances/abm_urbanisation_advances.txt` | **+5 per age × 6 ages = +30** |
 
 Files:
@@ -99,8 +100,8 @@ have locked every town, city and megalopolis upgrade in the game permanently.
 locations, to +1 per 20 locations plus +1 per 250k people, and then — 250k being too generous —
 to **+1 per 20 locations plus +1 per 400k people**. Counting the `own_*` lists in
 `setup/start/10_countries.txt` against `06_pops.txt`, England starts with 138 locations, 3.0M
-people, 12 towns and London — 14 points used against a limit of 10 + 6.9 + 7.5 ≈ 24 (also ≈ 24
-under the original term; an earlier count of 155 locations gave 25). Globally the start has 884
+people, 12 towns and London — 14 points used against a limit of 10 + 2 (kingdom rank) + 6.9 + 7.5 ≈ 26 (≈ 24 without the rank
+bonus, which is also what the original term gave; an earlier count of 155 locations gave 25). Globally the start has 884
 towns, 312 cities and 3 megalopolises.
 
 At 400k the retune is close to neutral overall but still redistributes. An average location holds
@@ -112,7 +113,8 @@ China 166 → 290, Delhi 37 → 118, Japan 34 → 42, France 16 → 22, while th
 
 The tunables are one line each: the `10` in `country_base_values`, the `divide = 20` in
 `abm_urbanisation_locations_impact`, the `divide = 400` in `abm_urbanisation_population_impact`,
-and `@abm_urbanisation_limit_increase` at the top of the advances file. Both divisors are also
+the three rank values in `country_ranks/abm_country_ranks.txt`, and
+`@abm_urbanisation_limit_increase` at the top of the advances file. Both divisors are also
 written into the auto-modifiers' loc names ("1 Urban Capacity every 20 locations" / "… every
 400k people"), which is what the breakdown tooltip shows, so a retune has to change those too.
 
@@ -338,7 +340,7 @@ its `is_over_fort_limit` engine alert. That part is inferred from the data; see 
 9. **Does the population term register?** `error.log` should have nothing for
    `abm_urbanisation_population_impact`, and the Capacity breakdown should list both size lines,
    "1 Urban Capacity every 20 locations" and "1 Urban Capacity every 400k people". England at the
-   start should total about 24.
+   start should total about 26 (24, plus 2 for its kingdom rank).
 10. **Do the penalty and the alerts work?** Push a country over the cap:
     - Tax Efficiency's breakdown shows "Over Urban Capacity" at −5% per whole point over.
     - The "Urban Capacity Exceeded" popup fires at the next monthly tick, and the Tier List
@@ -346,4 +348,4 @@ its `is_over_fort_limit` engine alert. That part is inferred from the data; see 
     - The red "Penalties active" alert lists it. If it doesn't, `alert = yes` does not route to
       `static_modifier_active` — the popup still covers the warning.
 
-Last deployed with `.\deploy.ps1` after the 400k population retune.
+Last deployed with `.\deploy.ps1` after the rank bonus.

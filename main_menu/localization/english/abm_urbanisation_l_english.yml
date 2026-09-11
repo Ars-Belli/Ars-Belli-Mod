@@ -5,7 +5,7 @@
  # main_menu/common/modifier_type_definitions/abm_urbanisation.txt
  # ---------------------------------------------------------------------------
  MODIFIER_TYPE_NAME_abm_urbanisation_limit: "Urban Capacity"
- MODIFIER_TYPE_DESC_abm_urbanisation_limit: "How much urban settlement our administration can hold together, counted in town points. Founding a [town_or_city|e] or upgrading one is blocked once we have no room left, and every point held beyond it costs 5% Tax Efficiency. Grows with the extent and population of the realm, and with research."
+ MODIFIER_TYPE_DESC_abm_urbanisation_limit: "How much urban settlement our administration can hold together, counted in town points. Founding a [town_or_city|e] or upgrading one is blocked once we have no room left, and every point held beyond it costs 5% Tax Efficiency. Grows with our rank, the extent and population of the realm, and research."
  MODIFIER_TYPE_NAME_abm_urbanisation_used: "Urban Capacity Used"
  MODIFIER_TYPE_DESC_abm_urbanisation_used: "Town points we are already spending. A town costs 1, a city 2 and a megalopolis 4."
 
@@ -48,7 +48,7 @@
  ABM_URBAN_CAPACITY_NORMAL: "Urban: [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0] / [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]"
  ABM_URBAN_CAPACITY_FULL: "#Y Urban: [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0] / [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]#!"
  ABM_URBAN_CAPACITY_OVER: "#R Urban: [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0] / [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]#!"
- ABM_URBAN_CAPACITY_TOOLTIP: "#H Urban Capacity#!\nHow much urban settlement our administration can hold together, counted in town points. A town costs #H 1#!, a city #H 2#! and a megalopolis #H 4#!.\n\nIn use: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0]#!\nCapacity: [GetPlayer.GetModifierValue('abm_urbanisation_limit')]\nFree: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_free_points')|0]#!\n\nCapacity comes from a flat base, the extent and population of the realm, and research; hover the number above for the exact breakdown. With no room left we cannot found a [town_or_city|e] or raise one to the next rank. Conquest can still carry us past the limit, and every point over it costs #R 5%#! Tax Efficiency.\n\nClick to open the modifier ledger."
+ ABM_URBAN_CAPACITY_TOOLTIP: "#H Urban Capacity#!\nHow much urban settlement our administration can hold together, counted in town points. A town costs #H 1#!, a city #H 2#! and a megalopolis #H 4#!.\n\nIn use: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0]#!\nCapacity: [GetPlayer.GetModifierValue('abm_urbanisation_limit')]\nFree: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_free_points')|0]#!\n\nCapacity comes from a flat base, our rank, the extent and population of the realm, and research; hover the number above for the exact breakdown. With no room left we cannot found a [town_or_city|e] or raise one to the next rank. Conquest can still carry us past the limit, and every point over it costs #R 5%#! Tax Efficiency.\n\nClick to open the modifier ledger."
 
  # ---------------------------------------------------------------------------
  # Over-limit popup and its tier-panel toggle
