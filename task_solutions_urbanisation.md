@@ -14,6 +14,7 @@ Status summary:
 | 1 | Cap the number of towns/cities/megalopolises like the fort limit | Done — needs one in-game load check, see Open items |
 | 2 | Make "Downgrade Location" step down one rank instead of razing to rural | **Not possible on the vanilla action — engine-locked.** Built a parallel action instead |
 | 3 | Show the limit to the player, and warn when over it | Done — counter top-right, red past the cap. **A real alert is not possible** (the engine never builds a static alert banner). Layout needs one re-check, see Open items |
+| 4 | −5% tax efficiency per point over the limit, and a mutable alert | Done — penalty as an auto_modifier; the alert is a monthly popup muted from the Tier List panel, mirroring the fort-limit one. Needs an in-game check, see Open items |
 
 ---
 
@@ -119,9 +120,8 @@ written into the auto-modifiers' loc names ("1 Urban Capacity every 20 locations
   overshoot the cap. Each still costs its gold, goods and a year of build time, so it is expensive
   rather than free, but it is a hole. There is no country-scope "rank upgrades in progress" trigger
   to close it with — `num_civil_constructions` is per location and counts buildings too.
-- Being over the cap after conquest is allowed and carries **no penalty**; it only blocks founding
-  and upgrading until you are back under. If a penalty is wanted, the shape to copy is
-  `abm_over_fort_limit_under_50` / `_over_50` in `auto_modifiers/abm_country.txt`.
+- Being over the cap after conquest is allowed. It blocks founding and upgrading until you are
+  back under, and since Nr.4 it also costs 5% tax efficiency per point over.
 - Subjects have their own limit, so a large subject network is a legitimate way to hold more towns
   than the cap. That mirrors vanilla, where the overlord may upgrade a subject's location.
 
@@ -251,6 +251,60 @@ next step.
 
 ---
 
+## Nr.4 — a penalty for being over the limit, with an alert
+
+**Request.** Like the fort limit: −5% tax efficiency for every point over Urban Capacity, and an
+alert that can be muted like the fort-limit one.
+
+**The penalty** is an ordinary auto_modifier, the same shape as the mod's `abm_over_fort_limit_*`:
+
+- `abm_over_urbanisation_limit` in `in_game/common/auto_modifiers/abm_country.txt`:
+  `potential_trigger = { abm_urbanisation_points_over > 0 }`,
+  `scales_with = { value = abm_urbanisation_points_over }`, `tax_income_efficiency = -0.05`.
+  Named "Over Urban Capacity".
+- `abm_urbanisation_points_over` in `script_values/abm_urbanisation_values.txt` — whole points
+  over the limit, floored at 0. A named script value in `scales_with` has vanilla precedent
+  (`byz_greek_traders_count`).
+- **The limit is now rounded** before anything compares against it (`round = yes` in
+  `abm_urbanisation_free_points` and `abm_urbanisation_limit_points`). Since the Nr.1 retune the
+  size terms are fractional, so without this a 28.7 limit with 29 used read "29 / 29" in red and
+  took a −1.35% penalty for being 0.3 over. Now the gates, the colour, the penalty and the counter
+  all agree on the displayed whole number. The side effect runs the other way too: at 28.6 the
+  gate treats the limit as 29, so rounding can allow one founding the raw value would have refused.
+
+**The alert** copies the mod's own fort-limit popup piece for piece — that is the fort-limit alert
+with a mute; vanilla's engine alert has no equivalent a mod can add (Nr.3):
+
+| Fort limit (existing) | Urban Capacity (new) |
+|---|---|
+| `mp_limits_apply_fort_limit_alert` in `scripted_effects/abm_scripted_effects.txt` | `abm_urbanisation_apply_alert` in `scripted_effects/abm_urbanisation_effects.txt` |
+| called from `mp_limits_monthly_pulse` in `on_action/mp_limits_on_actions.txt` | called from the same pulse, right after it |
+| event `abm_mp_limits.2` | event `abm_urbanisation.1` in `events/abm_urbanisation_events.txt` |
+| muted by `mp_fort_alert_muted` | muted by `abm_urban_alert_muted` |
+| toggle `mp_limits_toggle_fort_alert` in `scripted_guis/abm_tier_panel_gui.txt` | toggle `abm_toggle_urban_alert`, same file |
+| label `mp_fort_alert_toggle_label` | label `abm_urban_alert_toggle_label` in `abm_urbanisation_custom_loc.txt` |
+| button in the Tier List panel | button directly under it |
+
+So: a popup every month a human player is over the limit, on by default, switched off and on from
+the Tier List panel.
+
+On top of that the penalty carries `alert = yes`, the one data route to an *engine* alert
+(`auto_modifiers/readme.txt`: *"should this modifier show in the alerts when it is active?"*).
+Vanilla uses it once, on `ruler_is_not_a_commander_during_war`, and the only generic modifier alert
+in `alert_descriptions` is `static_modifier_active` — red, titled "Penalties active", with a list
+tooltip. So the penalty should also be listed there, the way vanilla's own fort penalty sits beside
+its `is_over_fort_limit` engine alert. That part is inferred from the data; see open item 10.
+
+**Left open.**
+
+- The penalty is **uncapped**: 10 points over is −50% tax efficiency, 20 is −100%, and one conquest
+  of a city-heavy region can get there. The fort-limit version is capped (`_under_50` /
+  `_over_50`); `max = N` on `abm_urbanisation_points_over` is the one-line change.
+- The Tier List panel only exists with multiplayer mechanics on, so in single-player the popup
+  cannot be muted — the same gap the fort-limit popup has.
+
+---
+
 ## Open items to check on the first in-game load
 
 1. **Do the two mod-added modifier types register?** This is the one piece that could not be
@@ -283,5 +337,11 @@ next step.
    `abm_urbanisation_population_impact`, and the Capacity breakdown should list both size lines,
    "1 Urban Capacity every 20 locations" and "1 Urban Capacity every 250k people". England at the
    start should total about 29.
+10. **Do the penalty and the alerts work?** Push a country over the cap:
+    - Tax Efficiency's breakdown shows "Over Urban Capacity" at −5% per whole point over.
+    - The "Urban Capacity Exceeded" popup fires at the next monthly tick, and the Tier List
+      panel's "Urban Capacity Popup: ON / OFF" button stops and restarts it.
+    - The red "Penalties active" alert lists it. If it doesn't, `alert = yes` does not route to
+      `static_modifier_active` — the popup still covers the warning.
 
-Last deployed with `.\deploy.ps1` after the capacity retune.
+Last deployed with `.\deploy.ps1` after the over-limit penalty.

@@ -5,7 +5,7 @@
  # main_menu/common/modifier_type_definitions/abm_urbanisation.txt
  # ---------------------------------------------------------------------------
  MODIFIER_TYPE_NAME_abm_urbanisation_limit: "Urban Capacity"
- MODIFIER_TYPE_DESC_abm_urbanisation_limit: "How much urban settlement our administration can hold together, counted in town points. Founding a [town_or_city|e] or upgrading one is blocked once we have no room left. Grows with the extent and population of the realm, and with research."
+ MODIFIER_TYPE_DESC_abm_urbanisation_limit: "How much urban settlement our administration can hold together, counted in town points. Founding a [town_or_city|e] or upgrading one is blocked once we have no room left, and every point held beyond it costs 5% Tax Efficiency. Grows with the extent and population of the realm, and with research."
  MODIFIER_TYPE_NAME_abm_urbanisation_used: "Urban Capacity Used"
  MODIFIER_TYPE_DESC_abm_urbanisation_used: "Town points we are already spending. A town costs 1, a city 2 and a megalopolis 4."
 
@@ -14,6 +14,8 @@
  AUTO_MODIFIER_DESC_abm_urbanisation_locations_impact: "A wider realm has more places worth building a town in, and more revenue to administer them with."
  AUTO_MODIFIER_NAME_abm_urbanisation_population_impact: "1 Urban Capacity every 250k people"
  AUTO_MODIFIER_DESC_abm_urbanisation_population_impact: "More subjects means more craftsmen, traders and taxpayers to fill new towns, and more hands to govern them with."
+ AUTO_MODIFIER_NAME_abm_over_urbanisation_limit: "Over Urban Capacity"
+ AUTO_MODIFIER_DESC_abm_over_urbanisation_limit: "Our towns and cities have outgrown what our administration can keep in order. Every town point held beyond our Urban Capacity costs 5% Tax Efficiency, until research, a larger realm or a reduced settlement brings us back under."
 
  # ---------------------------------------------------------------------------
  # Conditions on founding and upgrading
@@ -46,4 +48,15 @@
  ABM_URBAN_CAPACITY_NORMAL: "Urban: [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0] / [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]"
  ABM_URBAN_CAPACITY_FULL: "#Y Urban: [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0] / [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]#!"
  ABM_URBAN_CAPACITY_OVER: "#R Urban: [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0] / [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]#!"
- ABM_URBAN_CAPACITY_TOOLTIP: "#H Urban Capacity#!\nHow much urban settlement our administration can hold together, counted in town points. A town costs #H 1#!, a city #H 2#! and a megalopolis #H 4#!.\n\nIn use: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0]#!\nCapacity: [GetPlayer.GetModifierValue('abm_urbanisation_limit')]\nFree: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_free_points')|0]#!\n\nCapacity comes from a flat base, the extent and population of the realm, and research; hover the number above for the exact breakdown. With no room left we cannot found a [town_or_city|e] or raise one to the next rank, though conquest may still carry us past the limit.\n\nClick to open the modifier ledger."
+ ABM_URBAN_CAPACITY_TOOLTIP: "#H Urban Capacity#!\nHow much urban settlement our administration can hold together, counted in town points. A town costs #H 1#!, a city #H 2#! and a megalopolis #H 4#!.\n\nIn use: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0]#!\nCapacity: [GetPlayer.GetModifierValue('abm_urbanisation_limit')]\nFree: #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_free_points')|0]#!\n\nCapacity comes from a flat base, the extent and population of the realm, and research; hover the number above for the exact breakdown. With no room left we cannot found a [town_or_city|e] or raise one to the next rank. Conquest can still carry us past the limit, and every point over it costs #R 5%#! Tax Efficiency.\n\nClick to open the modifier ledger."
+
+ # ---------------------------------------------------------------------------
+ # Over-limit popup and its tier-panel toggle
+ # in_game/events/abm_urbanisation_events.txt, in_game/gui/panels/right_panel/right_panel.gui
+ # ---------------------------------------------------------------------------
+ abm_urbanisation.1.title: "Urban Capacity Exceeded"
+ abm_urbanisation.1.desc: "Our towns and cities have outgrown what our administration can keep in order. We hold #R [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_used_points')|0]#! town points against an Urban Capacity of #H [GetPlayer.MakeScope.ScriptValue('abm_urbanisation_limit_points')|0]#!, and every point over costs #R 5%#! Tax Efficiency. No [town_or_city|e] can be founded or raised to a higher rank until we are back under.\n\nThis warning repeats every month while we are over the limit. It can be switched off from the Tier List panel."
+ abm_urbanisation.1.a: "Acknowledge"
+ ABM_URBAN_ALERT_TOGGLE_ON: "Urban Capacity Popup: #G ON#!"
+ ABM_URBAN_ALERT_TOGGLE_OFF: "Urban Capacity Popup: #R OFF#!"
+ ABM_URBAN_ALERT_TOGGLE_TOOLTIP: "Switch the monthly popup warning on or off for while we hold more town points than our Urban Capacity. The Tax Efficiency penalty applies either way."

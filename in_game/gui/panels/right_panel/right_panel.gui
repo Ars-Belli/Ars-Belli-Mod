@@ -385,6 +385,21 @@ types RightPanelTypes
 							}
 						}
 
+						# Ars Belli urbanisation limit: per-country toggle for the over-Urban-Capacity
+						# popup warning (abm_urbanisation.1), the same shape as the fort-limit one above.
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							datacontext = "[GetPlayer]"
+
+							button_regular = {
+								text = "[Country.Custom('abm_urban_alert_toggle_label')]"
+								tooltip = "ABM_URBAN_ALERT_TOGGLE_TOOLTIP"
+								onclick = "[GetScriptedGui('abm_toggle_urban_alert').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								size = { -1 26 }
+								layoutpolicy_horizontal = expanding
+							}
+						}
+
 						# Scrollable list of tier sections
 						scrollarea = {
 							layoutpolicy_horizontal = expanding

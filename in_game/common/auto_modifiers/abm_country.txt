@@ -62,6 +62,27 @@ abm_urbanisation_population_impact = {
 	abm_urbanisation_limit = 1
 }
 
+# Ars Belli urbanisation limit - over-limit penalty: -5% tax efficiency for every
+# whole town point held beyond the (rounded) limit. Uncapped, unlike the fort-limit
+# penalty below; add max = N to abm_urbanisation_points_over to cap it.
+# alert = yes is the one data route to a real engine alert: it surfaces in the shared
+# red "Penalties active" alert (alert_descriptions: static_modifier_active), which can
+# be hidden and muted like any other. Mod-defined alert types are not possible - see
+# task_solutions_urbanisation.md, Nr.3 and Nr.4.
+abm_over_urbanisation_limit = {
+	potential_trigger = {
+		abm_urbanisation_points_over > 0
+	}
+
+	scales_with = {
+		value = abm_urbanisation_points_over
+	}
+
+	alert = yes
+
+	tax_income_efficiency = -0.05
+}
+
 # INJECT:over_fort_limit = {
 # 	# need to be capped at -50%
 # 	global_defensive = -1.0
