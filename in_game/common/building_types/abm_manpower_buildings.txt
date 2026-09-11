@@ -1,0 +1,82 @@
+﻿# Ars Belli: rural manpower nerf. Training Fields and Regimental Camp - the two rural-only
+# tiers of the Training Fields -> Regimental Camp -> Conscription Center chain - give 40% of
+# their vanilla manpower, and their upkeep goods are cut to 40% as well, so the goods paid per
+# man stay where vanilla had them.
+# Conscription Center (age 6) is deliberately left at vanilla: it also replaces Barracks in
+# towns and cities, so cutting it would nerf urban manpower too.
+# The upkeep lives in standalone production methods (abm_manpower_building_inputs.txt):
+# redefining a vanilla production method name inline inside REPLACE: logs
+# "duplicated production method name" (building_type.cpp) - the new_kurultai_maintenance approach.
+REPLACE:training_fields = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = manpower_max_level
+	
+	category = military_category
+	forbidden_for_estates = yes
+	
+	employment_size = manpower_employment
+	
+	rural_settlement = yes
+
+	build_time = soldier_building
+	important_for_AI = yes
+	AI_ignore_available_worker_flag = yes #more important than some random RGO
+
+	allow = {
+		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+	}
+	remove_if = {
+		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+	}
+	
+	modifier = {
+		local_manpower = 0.004 #was 0.01
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	possible_production_methods = {
+		abm_training_fields_maintenance # was inline training_fields_maintenance, see production_methodsbm_manpower_building_inputs.txt
+	}
+
+	construction_demand = soldier_building_construction
+}
+
+REPLACE:regimental_camp = {
+	audio_tier = 2
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = manpower_max_level
+	
+	category = military_category
+	forbidden_for_estates = yes
+	important_for_AI = yes
+	AI_ignore_available_worker_flag = yes #more important than some random RGO
+
+	employment_size = manpower_employment
+	
+	obsolete = training_fields
+	
+	rural_settlement = yes
+
+	build_time = soldier_building
+	
+	allow = {
+		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+	}
+	remove_if = {
+		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+	}	
+
+	modifier = {
+		local_manpower = 0.008 #was 0.02
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	possible_production_methods = {
+		abm_regimental_camp_maintenance # was inline regimental_camp_maintenance, see production_methodsbm_manpower_building_inputs.txt
+	}
+
+	construction_demand = soldier_building_construction
+}

@@ -1,0 +1,24 @@
+﻿# Ars Belli: upkeep for the rural manpower buildings in building_types\abm_manpower_buildings.txt,
+# cut to 40% of vanilla along with their manpower so the goods paid per man are unchanged.
+# Standalone instead of inline unique_production_methods, because redefining a vanilla
+# production method name inside a REPLACE: block logs "duplicated production method name"
+# (building_type.cpp) - the same approach as new_kurultai_maintenance.
+abm_training_fields_maintenance = { # vanilla training_fields_maintenance x0.4
+	firearms = 0.2
+	leather = 0.2
+	cloth = 0.04
+	paper = 0.08
+	weaponry = 0.2
+
+	category = building_maintenance
+}
+
+abm_regimental_camp_maintenance = { # vanilla regimental_camp_maintenance x0.4
+	firearms = 0.4
+	leather = 0.4
+	cloth = 0.08
+	paper = 0.16
+	weaponry = 0.4
+
+	category = building_maintenance
+}
