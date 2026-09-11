@@ -25,7 +25,7 @@ INJECT:country_base_values = {
 	# Ars Belli urbanisation limit - the flat part every country gets.
 	# Town = 1 point, city = 2, megalopolis = 4, so this alone is ten towns,
 	# or five towns and a large one. Built like the fort limit: base here,
-	# a per-location term below, and advances in advances\abm_urbanisation_advances.txt.
+	# location and population terms below, and advances in advances\abm_urbanisation_advances.txt.
 	abm_urbanisation_limit = 10
 }
 
@@ -38,14 +38,25 @@ REPLACE:num_locations_impact = {
 	fort_limit = 1
 }
 
-# Ars Belli urbanisation limit - the size term. +1 town point per 10 locations,
-# so a 150-location England gets +15 on top of the base 10. Kept as its own
-# auto_modifier rather than folded into num_locations_impact so the fort limit
-# and the urbanisation limit can be retuned independently.
+# Ars Belli urbanisation limit - the size terms, one auto_modifier each so they can be
+# retuned independently of each other and of the fort limit in num_locations_impact:
+#   +1 town point per 20 locations, and
+#   +1 town point per 250k people (total_population is in thousands, hence divide = 250).
+# Both divisors are also spelled out in the AUTO_MODIFIER_NAME_* loc keys in
+# abm_urbanisation_l_english.yml, so the breakdown states the rule - change them together.
 abm_urbanisation_locations_impact = {
 	scales_with = {
 		value = num_locations
-		divide = 10
+		divide = 20
+	}
+
+	abm_urbanisation_limit = 1
+}
+
+abm_urbanisation_population_impact = {
+	scales_with = {
+		value = total_population
+		divide = 250
 	}
 
 	abm_urbanisation_limit = 1
