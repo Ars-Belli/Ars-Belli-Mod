@@ -1,67 +1,42 @@
-﻿# Ars Belli urbanisation limit - the research term, one advance per age.
-# Mirrors advances\3_fort_level.txt: a flat bump per age, hung off the age's
-# existing urban/town-rights advance so it sits with the rest of that line.
+﻿# Ars Belli urbanisation limit - the research term. +5 Urban Capacity rides on one root
+# advance (depth = 0) of each age instead of on a standalone advance, so it comes with
+# a technology the country takes anyway:
 #
-# Base 10 + 6 x 5 = 40 town points from base and research at full tech, plus
-# 1 per 20 locations, 1 per 400k people, and +1 / +2 / +4 for duchy / kingdom / empire rank.
+#   age 1  agriculture_advance        Agriculture          starting_technology_level = 1, so most countries start with it
+#   age 2  renaissance_development    Scholarly Treatises  no institution needed
+#   age 3  printing_press_advance     Printing Press       needs the Printing Press institution embraced
+#   age 4  global_trade_advance       Global Trade         needs the Global Trade institution embraced
+#   age 5  manufactories_advance      Manufactories        needs the Manufactories institution embraced
+#   age 6  industrialization_advance  Industrialization    needs the Industrialization institution embraced
+#
+# INJECT: adds the one line to each vanilla definition (advances\0_age_of_*.txt) and leaves
+# the rest of the advance to vanilla, so a game update needs no re-sync here.
+#
+# Base 10 + 6 x 5 = 40 town points from base and research at full tech, plus 1 per 20
+# locations, 1 per 400k people, and +1 / +2 / +4 for duchy / kingdom / empire rank.
 
 @abm_urbanisation_limit_increase = 5
 
-abm_urbanisation_1_advance = {
-	age = age_1_traditions
-	icon = town_rights_advance
-
-	requires = city_building_advance
-
+INJECT:agriculture_advance = {
 	abm_urbanisation_limit = @abm_urbanisation_limit_increase
 }
 
-
-abm_urbanisation_2_advance = {
-	age = age_2_renaissance
-	icon = town_rights_advance
-
-	requires = renaissance_city_rights
-
+INJECT:renaissance_development = {
 	abm_urbanisation_limit = @abm_urbanisation_limit_increase
 }
 
-
-abm_urbanisation_3_advance = {
-	age = age_3_discovery
-	icon = town_rights_advance
-
-	requires = town_rights_aod_advance
-
+INJECT:printing_press_advance = {
 	abm_urbanisation_limit = @abm_urbanisation_limit_increase
 }
 
-
-abm_urbanisation_4_advance = {
-	age = age_4_reformation
-	icon = town_rights_advance
-
-	requires = town_rights_ref_advance
-
+INJECT:global_trade_advance = {
 	abm_urbanisation_limit = @abm_urbanisation_limit_increase
 }
 
-
-abm_urbanisation_5_advance = {
-	age = age_5_absolutism
-	icon = town_rights_advance
-
-	requires = town_rights_abs_advance
-
+INJECT:manufactories_advance = {
 	abm_urbanisation_limit = @abm_urbanisation_limit_increase
 }
 
-
-abm_urbanisation_6_advance = {
-	age = age_6_revolutions
-	icon = town_rights_advance
-
-	requires = town_rights_rev_advance
-
+INJECT:industrialization_advance = {
 	abm_urbanisation_limit = @abm_urbanisation_limit_increase
 }

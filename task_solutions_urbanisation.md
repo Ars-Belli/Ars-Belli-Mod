@@ -15,6 +15,7 @@ Status summary:
 | 2 | Make "Downgrade Location" step down one rank instead of razing to rural | **Not possible on the vanilla action — engine-locked.** Built a parallel action instead |
 | 3 | Show the limit to the player, and warn when over it | Done — counter top-right, red past the cap. **A real alert is not possible** (the engine never builds a static alert banner). Layout needs one re-check, see Open items |
 | 4 | −5% tax efficiency per point over the limit, and a mutable alert | Done — penalty as an auto_modifier; the alert is a monthly popup muted from the Tier List panel, mirroring the fort-limit one. Needs an in-game check, see Open items |
+| 5 | Put the research term on each age's root advances instead of standalone advances | Done — `INJECT:` into six vanilla root advances. Needs an in-game check, see Open items |
 
 ---
 
@@ -47,7 +48,7 @@ of three data mechanisms that do exist:
 | Locations | new `abm_urbanisation_locations_impact`, same file | **+1 per 20 locations** |
 | Population | new `abm_urbanisation_population_impact`, same file | **+1 per 400k people** (`total_population` is in thousands, so `divide = 400`) |
 | Rank | `INJECT:rank_*` in `in_game/common/country_ranks/abm_country_ranks.txt` | **+1 duchy, +2 kingdom, +4 empire** (county +0) |
-| Research | `in_game/common/advances/abm_urbanisation_advances.txt` | **+5 per age × 6 ages = +30** |
+| Research | `INJECT:` into one root advance per age, `in_game/common/advances/abm_urbanisation_advances.txt` (Nr.5) | **+5 per age × 6 ages = +30** |
 
 Files:
 
@@ -63,13 +64,12 @@ Files:
 - `in_game/common/script_values/abm_urbanisation_values.txt` — `abm_urbanisation_free_points`,
   i.e. limit − used. A named script value works as a trigger left-hand side; vanilla precedent is
   `strength_ratio_for_garrison_sortie` in `generic_actions/siege.txt`.
-- `in_game/common/advances/abm_urbanisation_advances.txt` — six advances, one per age, each hung
-  off that age's existing urban/town-rights advance (`city_building_advance`,
-  `renaissance_city_rights`, `town_rights_aod/ref/abs/rev_advance`). The mod already parents its
-  own advances to three of those, so multiple children are fine.
+- `in_game/common/advances/abm_urbanisation_advances.txt` — the research term. Originally six
+  standalone advances, one per age, each hung off that age's town-rights/city advance; since Nr.5
+  an `INJECT:` of the +5 into one vanilla root advance per age.
 - `main_menu/localization/english/abm_urbanisation_l_english.yml` — modifier type names and
-  descriptions, the auto-modifier name, the three condition tooltips, and the six advance
-  names/descriptions.
+  descriptions, the auto-modifier name and the three condition tooltips. (The six standalone
+  advances' names and descriptions went with them in Nr.5.)
 
 **Two decisions worth recording.**
 
@@ -309,6 +309,59 @@ its `is_over_fort_limit` engine alert. That part is inferred from the data; see 
 
 ---
 
+## Nr.5 — the research term moves onto each age's root advances
+
+**Request.** Drop the six standalone advances and put the +5 Urban Capacity on a root advance of
+each age instead: Agriculture in age 1, Scholarly Treatises in age 2, Printing Press in age 3, and
+whichever root fits thematically in ages 4–6.
+
+**What the engine allows.** Each age tree has several roots — the advances with `depth = 0` in
+`advances/0_age_of_*.txt`: six in age 1, four in every later age. From age 2 on, all but one root
+per age need their institution embraced (`allow = { has_embraced_institution = ... }`); the
+exception is the health advance in ages 3–6 and Scholarly Treatises in age 2. Agriculture and
+Scholarly Treatises happen to be the roots each age's town-rights branch grows from, but from
+age 3 on that branch starts at the health advance (Surgery, Pharmacology, Sanitation,
+Vaccination), not at Printing Press — so "the root above town rights" is not the rule behind the
+picks, and ages 4–6 were chosen by theme instead: the urban-economy institutions.
+
+**What was built.** `in_game/common/advances/abm_urbanisation_advances.txt` now holds six
+`INJECT:` blocks, each adding only
+`abm_urbanisation_limit = @abm_urbanisation_limit_increase` (still 5) to a vanilla root:
+
+| Age | Root | Key | Gate |
+|---|---|---|---|
+| 1 | Agriculture | `agriculture_advance` | none — `starting_technology_level = 1` |
+| 2 | Scholarly Treatises | `renaissance_development` | none |
+| 3 | Printing Press | `printing_press_advance` | Printing Press institution |
+| 4 | Global Trade | `global_trade_advance` | Global Trade institution |
+| 5 | Manufactories | `manufactories_advance` | Manufactories institution |
+| 6 | Industrialization | `industrialization_advance` | Industrialization institution |
+
+The six `abm_urbanisation_N_advance` advances and their twelve loc keys are gone.
+
+`INJECT:`, not `REPLACE:`: it adds the one line and leaves everything else in each advance to
+vanilla, so a game update that changes these advances needs no re-sync. It is the mod's first
+`INJECT:` in `advances`, and prefixes are per-database and fail silently where unsupported (the
+`generic_actions` lesson in Nr.1), so confirm it took on load — open item 4. No DLC and no other
+mod file defines these six advances.
+
+**Consequences.**
+
+- **Agriculture is a starting advance** (`starting_technology_level = 1`). Of the 1,010 countries
+  that set a level in `setup/start/10_countries.txt`, 931 start at 1 or higher (915 at 3), so they
+  should open with Agriculture — and the age-1 +5 — already researched, where the old age-1 advance
+  had to be researched. England should start at about 31 instead of 26 (14 used). The 79 countries
+  at level 0 do not get it. If the start should stay where it was, lower the base from 10 to 5.
+- **Ages 3–6 arrive with the institution.** A country that has not embraced Printing Press, Global
+  Trade, Manufactories or Industrialization cannot take that root and gets no capacity from that
+  age, however much else it has researched — a bigger gap between leaders and laggards than the
+  old town-rights parents gave.
+- The +30 at full tech is unchanged.
+- Saves that researched an `abm_urbanisation_N_advance` reference advances that no longer exist;
+  start a new campaign.
+
+---
+
 ## Open items to check on the first in-game load
 
 1. **Do the two mod-added modifier types register?** This is the one piece that could not be
@@ -324,7 +377,12 @@ its `is_over_fort_limit` engine alert. That part is inferred from the data; see 
    is valid in localization (vanilla precedent in `diplomacy_l_english.yml` and
    `hints_l_english.yml`), but the location-rank `allow` has no named scope so `GetPlayer` is the
    only handle available. A failure shows as an unresolved token in the tooltip, not in the log.
-4. **Do the six advances appear in the right ages** and not orphaned off their parents.
+4. **Did the six `INJECT:`s take?** (Nr.5) The tooltips of Agriculture, Scholarly Treatises,
+   Printing Press, Global Trade, Manufactories and Industrialization should each show +5 Urban
+   Capacity beside their vanilla effects, and `error.log` should have nothing for
+   `abm_urbanisation_advances.txt`. A silent no-op shows as the plain vanilla tooltip; the fallback
+   is `REPLACE:` with a verbatim copy of each root plus the line, as `abm_supply_depot_advances.txt`
+   does.
 5. **Does the Reduce Location entry appear** on right-clicking an owned town, and is it absent on
    rural settlements and foreign locations.
 6. **Does the right-hand stack fit?** In multiplayer: the MP rank label, then the counter, then the
@@ -340,7 +398,7 @@ its `is_over_fort_limit` engine alert. That part is inferred from the data; see 
 9. **Does the population term register?** `error.log` should have nothing for
    `abm_urbanisation_population_impact`, and the Capacity breakdown should list both size lines,
    "1 Urban Capacity every 20 locations" and "1 Urban Capacity every 400k people". England at the
-   start should total about 26 (24, plus 2 for its kingdom rank).
+   start should total about 31 (24, plus 2 for its kingdom rank, plus 5 from Agriculture — Nr.5).
 10. **Do the penalty and the alerts work?** Push a country over the cap:
     - Tax Efficiency's breakdown shows "Over Urban Capacity" at −5% per whole point over.
     - The "Urban Capacity Exceeded" popup fires at the next monthly tick, and the Tier List

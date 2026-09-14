@@ -153,8 +153,8 @@ A cap on towns/cities/megalopolises, built the same shape as the fort limit. **T
     - rank **+1 duchy / +2 kingdom / +4 empire** (county 0) - `INJECT:rank_*` in `country_ranks\abm_country_ranks.txt`.
     - **+1 per 20 locations** - auto_modifier `abm_urbanisation_locations_impact` in `auto_modifiers\abm_country.txt`.
     - **+1 per 400k people** - auto_modifier `abm_urbanisation_population_impact`, same file (`total_population` is in thousands, hence `divide = 400`).
-    - **+5 per age x 6 ages** - standalone advances `abm_urbanisation_1..6_advance` in `advances\abm_urbanisation_advances.txt`, each `requires` that age's town-rights/city advance.
-  - Both size divisors are also written into the `AUTO_MODIFIER_NAME_*` loc keys (the modifier breakdown shows them) - retune both together. Calibration: England starts ~26 (10 + 2 kingdom + 6.9 locations + 7.5 pop) against 14 used.
+    - **+5 per age x 6 ages** - `INJECT:` into one vanilla root advance (`depth = 0`) per age, in `advances\abm_urbanisation_advances.txt`: Agriculture and Scholarly Treatises (ungated), then Printing Press, Global Trade, Manufactories, Industrialization (each needs its institution embraced). Agriculture has `starting_technology_level = 1`, so most countries start with its +5.
+  - Both size divisors are also written into the `AUTO_MODIFIER_NAME_*` loc keys (the modifier breakdown shows them) - retune both together. Calibration: England starts ~31 (10 + 2 kingdom + 6.9 locations + 7.5 pop + 5 Agriculture) against 14 used.
   - `abm_urbanisation_used` = the count. **Granted per location by the `country_modifier` blocks in `location_ranks\00_default.txt`** (1/2/4). The engine sums these itself, so the total is exact the instant a rank changes and nothing has to iterate locations. Same trick vanilla uses for `monthly_doom` and city `fort_limit`.
 - **Script values** in `script_values\abm_urbanisation_values.txt`: `abm_urbanisation_free_points` = **rounded** limit - used; `abm_urbanisation_limit_points` / `_used_points` = display wrappers; `abm_urbanisation_points_over` = whole points over, min 0. Rounding is deliberate: the size terms are fractional, and unrounded, 29 used vs 28.7 showed "29 / 29" yet counted as over. Rounded, the gate, the counter colour and the penalty all agree with the displayed "X / Y". Script values work as a trigger left-hand side (vanilla precedent: `strength_ratio_for_garrison_sortie` in `generic_actions\siege.txt`).
 - **The gate is the `allow` block of each rank** in `location_ranks\00_default.txt`: town and city need 1 free point, megalopolis needs 2. Each check sits inside `trigger_if = { limit = { owner ?= { modifier:abm_urbanisation_limit > 0 } } ... }` so it **fails open** - if the modifier type ever stops registering, founding still works instead of being locked forever.
@@ -210,7 +210,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-09-14 (Urbanisation Limit section brought up to date: rank and population terms, rounding, over-limit penalty/popup/mute, top-bar counter; right_panel.gui update procedure rewritten; rural manpower nerf added as 4d).
+Last updated: 2026-09-14 (Urbanisation Limit section brought up to date: rank and population terms, rounding, over-limit penalty/popup/mute, top-bar counter; right_panel.gui update procedure rewritten; rural manpower nerf added as 4d; research term moved onto the age-root advances via INJECT).
 
 ## Important Files
 - `README.md`: Basic mod title.
