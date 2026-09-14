@@ -146,20 +146,35 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Tweaks to prices and societal values.
 
 ### 4b. Urbanisation Limit ("Urban Capacity")
-A cap on towns/cities/megalopolises, built the same shape as the fort limit. **Town points:** town = 1, city = 2, megalopolis = 4.
+A cap on towns/cities/megalopolises, built the same shape as the fort limit. **Town points:** town = 1, city = 2, megalopolis = 4. Design + calibration log: `task_solutions_urbanisation.md`.
 - **Two custom country modifier types** in `main_menu\common\modifier_type_definitions\abm_urbanisation.txt` (icons in `main_menu\common\modifier_icons\abm_urbanisation.txt`). `modifier_type_definitions` is a normal multi-file database (vanilla ships `00`/`01_byz`/`02_generic_bureaucracies`) so mods can add types; they have no engine meaning and are read back through `modifier:<name>`.
-  - `abm_urbanisation_limit` = the cap. Base 10 (`INJECT:country_base_values`) + 1 per 10 locations (`abm_urbanisation_locations_impact`, both in `auto_modifiers\abm_country.txt`) + 5 per advance x 6 ages (`advances\abm_urbanisation_advances.txt`, hung off each age's town-rights/city advance).
+  - `abm_urbanisation_limit` = the cap, five terms:
+    - base **10** - `INJECT:country_base_values` in `auto_modifiers\abm_country.txt`.
+    - rank **+1 duchy / +2 kingdom / +4 empire** (county 0) - `INJECT:rank_*` in `country_ranks\abm_country_ranks.txt`.
+    - **+1 per 20 locations** - auto_modifier `abm_urbanisation_locations_impact` in `auto_modifiers\abm_country.txt`.
+    - **+1 per 400k people** - auto_modifier `abm_urbanisation_population_impact`, same file (`total_population` is in thousands, hence `divide = 400`).
+    - **+5 per age x 6 ages** - standalone advances `abm_urbanisation_1..6_advance` in `advances\abm_urbanisation_advances.txt`, each `requires` that age's town-rights/city advance.
+  - Both size divisors are also written into the `AUTO_MODIFIER_NAME_*` loc keys (the modifier breakdown shows them) - retune both together. Calibration: England starts ~26 (10 + 2 kingdom + 6.9 locations + 7.5 pop) against 14 used.
   - `abm_urbanisation_used` = the count. **Granted per location by the `country_modifier` blocks in `location_ranks\00_default.txt`** (1/2/4). The engine sums these itself, so the total is exact the instant a rank changes and nothing has to iterate locations. Same trick vanilla uses for `monthly_doom` and city `fort_limit`.
-- `abm_urbanisation_free_points` (`script_values\abm_urbanisation_values.txt`) = limit - used. Script values work as a trigger left-hand side (vanilla precedent: `strength_ratio_for_garrison_sortie` in `generic_actions\siege.txt`).
+- **Script values** in `script_values\abm_urbanisation_values.txt`: `abm_urbanisation_free_points` = **rounded** limit - used; `abm_urbanisation_limit_points` / `_used_points` = display wrappers; `abm_urbanisation_points_over` = whole points over, min 0. Rounding is deliberate: the size terms are fractional, and unrounded, 29 used vs 28.7 showed "29 / 29" yet counted as over. Rounded, the gate, the counter colour and the penalty all agree with the displayed "X / Y". Script values work as a trigger left-hand side (vanilla precedent: `strength_ratio_for_garrison_sortie` in `generic_actions\siege.txt`).
 - **The gate is the `allow` block of each rank** in `location_ranks\00_default.txt`: town and city need 1 free point, megalopolis needs 2. Each check sits inside `trigger_if = { limit = { owner ?= { modifier:abm_urbanisation_limit > 0 } } ... }` so it **fails open** - if the modifier type ever stops registering, founding still works instead of being locked forever.
 - **`location_ranks\00_default.txt` is now a same-name full-file replacement** (in `replaced_files.txt`), replacing the old `abm_location_ranks.txt` INJECT. `INJECT:` merges *numbers* in modifier blocks (the old file relied on `fort_limit = -1` + vanilla 1 = 0), but its behaviour on a **trigger** block like `allow` is unverified, and a silent no-op there would kill the whole feature. The city `fort_limit = 0` edit is folded into the replacement.
-- Going over the cap by conquest is allowed and carries **no penalty** - it only blocks founding/upgrading until you are back under. **Known hole:** the check reads completed ranks only, so several upgrades queued in the same tick can overshoot.
+- **Over the limit** is reachable by conquest. Founding/upgrading stays blocked until back under, and:
+  - **penalty** - auto_modifier `abm_over_urbanisation_limit` (`auto_modifiers\abm_country.txt`): -5% `tax_income_efficiency` per whole point over (`scales_with = abm_urbanisation_points_over`), uncapped. `alert = yes` should surface it in the engine's shared red "Penalties active" alert - inferred, not yet confirmed in game. Mod-defined alert types are not possible.
+  - **popup** - event `abm_urbanisation.1` (`events\abm_urbanisation_events.txt`), fired monthly for human players by `abm_urbanisation_apply_alert` (`scripted_effects\abm_urbanisation_effects.txt`), called from `mp_limits_monthly_pulse`. Same shape as the fort-limit popup `abm_mp_limits.2`.
+  - **mute** - country var `abm_urban_alert_muted`, flipped by scripted_gui `abm_toggle_urban_alert` (`scripted_guis\abm_tier_panel_gui.txt`) from a button in the Tier List panel; label via custom loc `abm_urban_alert_toggle_label`. Mutes the popup only; the penalty stays.
+  - **Known hole:** the gate reads completed ranks only, so several upgrades queued in the same tick can overshoot.
+- **Top-bar counter** in `right_panel.gui` (block 3 of the GUI File Update Procedure): "Urban: used / limit", text picked by custom loc `abm_urbanisation_display` (`customizable_localization\abm_urbanisation_custom_loc.txt`) - plain, yellow at 0 free, red below 0. Click opens the modifier ledger (`OpenLateralView('player_modifiers')`). Deliberately **no `visible` guard**: `GetModifierValueNoFormat` is not a CFixedPoint, so a `GreaterThan_CFixedPoint` test on it fails FetchData every frame; the colour logic lives in custom loc + ScriptValue instead. Shows in single-player too.
 
 ### 4c. Reduce Location (one-rank downgrade)
 - Vanilla "Downgrade Location" (right-click the rank icon in `location_window.gui`) is **engine-side end to end** - `Location.CanDowngradeRank` / `GetDowngradeRankPrice` / `DowngradeLocationRank`, priced by `prices\01_buildings.txt` -> `rural_settlement_downgrade` - and always drops straight to a rural settlement. There is **no data hook to choose the target rank**; only the price and the loc are moddable.
 - Replacement: `generic_actions\abm_downgrade_location_rank.txt`, one step per use (megalopolis -> city -> town -> rural), 100 gold (`price:abm_downgrade_location_rank` in `prices\abm_prices.txt`). Uses the scriptable `change_location_rank` effect.
 - **`type = owncountry` with a location `select_trigger`, not `type = location`.** The generic_actions readme lists `location` as a type but **no vanilla action uses it**; the well-trodden shape is owncountry + `looking_for_a = location` (`generic_actions\international_organizations.txt`).
 - **Button lives in the location right-click menu** (`gui\context_menu.gui`, already a mod-replaced file - search `# Ars Belli: step a location down one rank`). `ContextMenuActionEntry` is `action_button_regular`, so a generic action drops straight in; `parameter = { parameter_name = "target" parameter_value = "[Location.MakeScope]" }` pre-fills the target and skips the map picker. Copied from vanilla's `add_location_to_international_organization` entry in the same menu. **`location_window.gui` is 10.5k lines - do not replace it for a button.**
+
+### 4d. Rural manpower nerf
+- Training Fields and Regimental Camp (the rural-only tiers of Training Fields -> Regimental Camp -> Conscription Center) give 40% of vanilla manpower (`local_manpower` 0.01 -> 0.004 and 0.02 -> 0.008), and their upkeep goods are cut to 40% too, so goods paid per man are unchanged. Conscription Center stays vanilla - it also replaces Barracks in towns and cities, so cutting it would nerf urban manpower.
+- `REPLACE:` in `building_types\abm_manpower_buildings.txt`. Upkeep moved to standalone PMs in `production_methods\abm_manpower_building_inputs.txt`, referenced via `possible_production_methods` (the `new_kurultai_maintenance` approach): redefining a vanilla PM name inline inside `REPLACE:` logs "duplicated production method name".
 
 ## Project Structure
 The repository mirrors the EU5 file structure:
@@ -177,17 +192,17 @@ The repository mirrors the EU5 file structure:
 - **Load-phase gotcha:** static modifiers are loaded ONLY from `main_menu/common/static_modifiers/` — a file under `in_game/common/static_modifiers/` is ignored (unknown-directory), so a `REPLACE:` there never applies. Likewise, scripted-trigger `custom_description` text keys (`text = key` inside a trigger's `custom_description`) must live in `main_menu/localization/english/`: scripted triggers are validated before `in_game` loc loads, else the log reports `No trigger loc`. Runtime-only loc keys can stay in `in_game/localization/english/`.
 
 ## GUI File Update Procedure
-The mod overrides two vanilla `.gui` files with mod-specific additions on top:
+The mod replaces many vanilla `.gui` files (full list in `replaced_files.txt`); these two carry the most mod-specific additions on top:
 - `in_game\gui\panels\right_panel\right_panel.gui`
 - `in_game\gui\foreign_country_lateralview.gui`
 
 When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\common\Europa Universalis V\game\in_game\gui\` and reapply the mod blocks:
 
-**right_panel.gui** mod additions (4 blocks):
+**right_panel.gui** mod additions (4 blocks; every one is marked with a `# Ars Belli` comment):
 1. **Alliance/Defensive/Guarantee points display** — a `flowcontainer` with `# Ars Belli multiplayer limits display:` comment, inserted after the `non_clickable_color_gold_texture` corner icon, before the age `flowcontainer`.
-2. **Remove `max_width = 200`** from the age name `text_single`.
-3. **Country rank display (clickable)** — a `flowcontainer` with `# Ars Belli Current country Rank:` comment, inserted after the age tooltip block, before `### CORNER2`. Inner `button` with onclick → `mp_limits_toggle_tier_panel` scripted_gui.
-4. **Tier list panel** — a `widget` with `# Ars Belli tier list panel` comment, inserted right after the rank flowcontainer, before `### CORNER2`. Toggled by global var `mp_tier_panel_open`. Contains 5 `dynamicgridbox` sections iterating `GetGlobalList('mp_<tier>_list')`.
+2. **Age block tweaks** (inline `# Ars Belli:` comments) — remove `max_width = 200` from the age name `text_single`; age `flowcontainer` gets `position = { -25 0 }`; age name `Font_Size_Small` (was Medium); age icon widget `30x30` (was 40x40). The shrink makes room for block 3.
+3. **Right-hand readouts stack** — a vertical `flowcontainer` with `# Ars Belli right-hand readouts:` comment, inserted after the age tooltip block, before `### CORNER2`. Three rows: the MP rank label (`# Ars Belli Current country Rank:`, tooltip `MP_RANK_TOOLTIP`), the Urban Capacity counter button (`# Ars Belli urbanisation limit:`, see 4b), and the Tier List toggle (`# Ars Belli tier list toggle:`, `GetVariableSystem.Toggle('mp_tier_panel_open')`). The two MP rows carry their own `visible` on `mp_mechanics_enabled` and the stack has `ignoreinvisible = yes`, so single-player shows only the counter.
+4. **Tier list panel** — a `widget` with `# Ars Belli tier list panel` comment, inserted right after block 3, before `### CORNER2`. Visible on `mp_mechanics_enabled` AND client-side `GetVariableSystem.Exists('mp_tier_panel_open')` (see 2). Holds the fort-limit and Urban Capacity popup toggles (`# Ars Belli urbanisation limit: per-country toggle ...`), then 5 `dynamicgridbox` sections iterating `GetGlobalList('mp_<tier>_list')`.
 
 **foreign_country_lateralview.gui** mod additions (2 blocks):
 1. **MP Rank and Power Score hbox** — with `# MP Rank and Power Score` comment, inserted after the country rank icon's `glow` block (around the `GetCountryRankIcon` section), inside the same parent container.
@@ -195,7 +210,7 @@ When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\
 
 To identify mod blocks, search for comments starting with `# Ars Belli` or `# MP Rank`.
 
-Last updated: 2026-08-30 (Urbanisation Limit added: custom country modifier types + location_ranks allow gate; Reduce Location one-rank downgrade action in the location context menu).
+Last updated: 2026-09-14 (Urbanisation Limit section brought up to date: rank and population terms, rounding, over-limit penalty/popup/mute, top-bar counter; right_panel.gui update procedure rewritten; rural manpower nerf added as 4d).
 
 ## Important Files
 - `README.md`: Basic mod title.
