@@ -4,6 +4,48 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.20
+
+Since game.1.3.11.mod.19 → game.1.3.11.mod.20:
+
+### Diplomatic Limits
+
+- **Alliances that lapse downgrade into a guarantee again.** When an alliance expires on its own and
+  one side outranks the other and is allowed to guarantee it, the guarantee is created as intended —
+  the downgrade was written in a form the engine cannot evaluate when it ends an alliance by itself,
+  so it never ran
+
+### War, Wargoals and Peace
+
+- **Dissolving the Hanseatic League** now costs the full 100 warscore cap instead of 90
+
+### National Flavour
+
+- **Cathar** countries gain the **Monasticism** and **Sola Scriptura** religious aspects, which the
+  base game reserves for other faiths
+
+### Pops, Map and Campaign Setup
+
+- **Western and Eastern Japan** now have map colours of their own
+- **The imperial Mongol tag now reads "Mongol Empire"** instead of being displayed as "Mongolia"
+  alongside the Mongolia tag
+- **Ireland is formable again** — its requirements referred to the Lordship of Ireland, which the mod
+  removes, so they could never resolve. The separate Lord of Ireland formable, which needs that
+  organisation to exist, is disabled
+- **Pontus** is now also formable by Ligurian countries
+
+### UI and Quality of Life
+
+- Maintenance costs on the **Sofa Stockade, Jesuit College, Mamluk Barracks and Monastery
+  Stronghold** read as proper names instead of raw text keys
+- The right-panel buttons — **Ledger, Find Location, Europedia, Automation, Hints and Menu** — have
+  their tooltips back instead of raw text keys
+- Requesting an **alliance** or **Vision Sharing**, and breaking either, now sort under the correct
+  friendly and hostile headings in the diplomacy list
+- Leftovers of removed content are no longer offered: the **Reform Taxation System** cabinet action,
+  tied to the cut Chinese dynasty crisis, and the Delhi-only **Seize Opposition Leadership** peace
+  demand
+
 ## game.1.3.11.mod.19
 
 Since game.1.3.11.mod.18 → game.1.3.11.mod.19:

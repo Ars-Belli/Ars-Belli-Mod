@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.19 | **Supported game version:** 1.3.\*
-**Compiled:** 2 September 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.20 | **Supported game version:** 1.3.\*
+**Compiled:** 18 September 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -35,7 +35,12 @@ here in full, but these can be easily seen in-game on the world map.
 
 **[Release History (Patchnotes)](#release-history-patchnotes)**
 
-- [game.1.3.11.mod.15](#game1311mod15-current)
+- [game.1.3.11.mod.20](#game1311mod20-current)
+- [game.1.3.11.mod.19](#game1311mod19)
+- [game.1.3.11.mod.18](#game1311mod18)
+- [game.1.3.11.mod.17](#game1311mod17)
+- [game.1.3.11.mod.16](#game1311mod16)
+- [game.1.3.11.mod.15](#game1311mod15)
 - [game.1.3.11.mod.14](#game1311mod14)
 - [game.1.3.11.mod.13](#game1311mod13)
 - [game.1.3.11.mod.12](#game1311mod12)
@@ -215,6 +220,8 @@ Alliance, Defensive and Guarantee points.
   peace treaty. [vanilla expired it on rank changes and rivalry]
 - Cancelling or breaking a guarantee no longer adds a truce, and a guarantee that ends between
   two countries of equal rank no longer upgrades itself into an alliance.
+- When an alliance lapses on its own and one side outranks the other and is allowed to guarantee, the
+  alliance downgrades into a guarantee as intended.
 
 ### Rivals
 
@@ -337,6 +344,7 @@ Rebuilt from scratch.
 - **Deus Vult crusade CB** is usable from game start by every country. The CB is hardcoded to require
   the Deus Vult advance, so every country is granted that advance at game start, with a monthly
   catch-up for nations formed later.
+- **Dissolve the Hanseatic League** costs the full 100 warscore cap. [vanilla 90]
 
 ## 9. Forts and Sieges
 
@@ -503,6 +511,8 @@ in-game.
   gives +10% military tactics, +5% morale recovery in friendly territory and monthly progress toward
   Quality; *Universal Learning*, available to theocracies, gives +5 maximum literacy for burghers,
   laborers, soldiers and peasants and monthly progress toward Innovative.
+- **Cathar** countries can take the **Monasticism** and **Sola Scriptura** religious aspects, which
+  the base game reserves for other faiths.
 - **Christiana Pietas** (Catholic) gives +1 heathen tolerance and +0.01 monthly literacy. [vanilla +2
   heathen tolerance and no literacy]
 
@@ -531,7 +541,9 @@ in-game.
   proper town setups.
 - Around 215 new road connections, mostly in Burma and Southeast Asia, and around 180 regional
   development adjustments.
-- Custom building setups per culture and region, and map colour and country-name changes.
+- Custom building setups per culture and region, and map colour and country-name changes. Western and
+  Eastern Japan have map colours of their own, and the imperial Mongol tag is named **Mongol Empire**
+  so that it is no longer displayed as "Mongolia" alongside the Mongolia tag.
 - **The Black Sea and the Pontic steppe** are rebuilt: Kaffa is the Genoese emporium it was (around
   33,500 people, Ligurian, Greek, Armenian and Tatar burghers, and a Caucasian and steppe slave
   population), Gazaria is a merchant republic at duchy rank with trade offices across its Black Sea
@@ -549,9 +561,12 @@ in-game.
   Bahmanis, Deccan, Maratha, Nagavanshi, Ceylon), with Hindustan and the Mughals at tier 5.
 - **China** is tier 5 at 80% of its locations; the four split-empires — Southern Song, Cao Wei, Shu
   Han and Eastern Wu — are tier 4.
-- **Pontus** is tier 4, open to Pontic Greek and Gothic culture, and always requires owning
+- **Pontus** is tier 4, open to Pontic Greek, Gothic and Ligurian culture, and always requires owning
   Trebizond. Forming it never demotes a country already above kingdom rank.
 - **Vijayanagar** is deliberately not formable, and its tooltip says so.
+- **Ireland** is formable again: its requirements referred to the Lordship of Ireland, which the mod
+  removes, so they could never resolve. The separate Lord of Ireland formable, which needs that
+  organisation to exist, is disabled.
 - **Colonial and New World formables**, 18 in all, each with its own flag, map colour and country
   name, and each raised to at least kingdom rank on formation. North America: the USA, Mexica,
   Canada, Alaska, Cascadia, Quebec, Sonora, Texas, Vermont and the West Indies. South America:
@@ -573,10 +588,16 @@ in-game.
 - The mod's own diplomatic actions — Enforce Peace, Send Economic Support, Forgive Half Antagonism
   and the rest — produce proper message-log entries and notifications, with their own toggles in the
   message settings.
+- Requesting an alliance or Vision Sharing, and breaking either, sort under the correct friendly and
+  hostile headings in the diplomacy list.
+- Maintenance costs on the Sofa Stockade, Jesuit College, Mamluk Barracks and Monastery Stronghold
+  read as proper names instead of raw text keys.
+- The right-panel buttons — Ledger, Find Location, Europedia, Automation, Hints and Menu — have
+  tooltips instead of raw text keys.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.19).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.20).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -587,7 +608,49 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.19 (current)
+## game.1.3.11.mod.20 (current)
+
+Since game.1.3.11.mod.19 → game.1.3.11.mod.20:
+
+### Diplomatic Limits
+
+- **Alliances that lapse downgrade into a guarantee again.** When an alliance expires on its own and
+  one side outranks the other and is allowed to guarantee it, the guarantee is created as intended —
+  the downgrade was written in a form the engine cannot evaluate when it ends an alliance by itself,
+  so it never ran
+
+### War, Wargoals and Peace
+
+- **Dissolving the Hanseatic League** now costs the full 100 warscore cap instead of 90
+
+### National Flavour
+
+- **Cathar** countries gain the **Monasticism** and **Sola Scriptura** religious aspects, which the
+  base game reserves for other faiths
+
+### Pops, Map and Campaign Setup
+
+- **Western and Eastern Japan** now have map colours of their own
+- **The imperial Mongol tag now reads "Mongol Empire"** instead of being displayed as "Mongolia"
+  alongside the Mongolia tag
+- **Ireland is formable again** — its requirements referred to the Lordship of Ireland, which the mod
+  removes, so they could never resolve. The separate Lord of Ireland formable, which needs that
+  organisation to exist, is disabled
+- **Pontus** is now also formable by Ligurian countries
+
+### UI and Quality of Life
+
+- Maintenance costs on the **Sofa Stockade, Jesuit College, Mamluk Barracks and Monastery
+  Stronghold** read as proper names instead of raw text keys
+- The right-panel buttons — **Ledger, Find Location, Europedia, Automation, Hints and Menu** — have
+  their tooltips back instead of raw text keys
+- Requesting an **alliance** or **Vision Sharing**, and breaking either, now sort under the correct
+  friendly and hostile headings in the diplomacy list
+- Leftovers of removed content are no longer offered: the **Reform Taxation System** cabinet action,
+  tied to the cut Chinese dynasty crisis, and the Delhi-only **Seize Opposition Leadership** peace
+  demand
+
+## game.1.3.11.mod.19
 
 **Colonial Nations**
 
