@@ -1,0 +1,64 @@
+﻿# Ars Belli — British Isles / Ireland formable overrides.
+# The Lordship of Ireland IO is removed (international_organizations/lordship_of_ireland.txt
+# is an empty placeholder), so the vanilla Ireland formables that referenced it are excised here.
+
+# Generic Irish formable. Vanilla referenced the removed Lordship of Ireland IO in its
+# mutual-exclusion checks; those references are dropped, keeping only the High Kingship variant.
+REPLACE:IRE_f = {
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		OR = {
+			culture = { has_culture_group = culture_group:hibernian_group }
+			tag = PLE
+		}
+		NOT = { is_member_of_international_organization_of_type = { type = high_kingship } }
+	}
+
+	allow = {
+		custom_tooltip = {
+			text = neither_highkingship_nor_lordship_exist_tt
+			NOT = {
+				any_international_organization = {
+					international_organization_type = international_organization_type:high_kingship
+				}
+			}
+		}
+	}
+
+	name = IRE
+	flag = IRE
+	adjective = IRE_ADJ
+	tag = IRE
+	color = map_IRE
+
+	regions = {
+		ireland_region
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank_effect = { rank = country_rank:rank_kingdom }
+		}
+	}
+}
+
+# Anglo-Norman "Lord of Ireland" IO path — cannot occur without the Lordship of Ireland
+# IO, so it is disabled.
+REPLACE:IRE_lordship_of_ireland_f = {
+	level = 2
+	required_locations_fraction = 0.5
+	rule = historical
+	potential = { always = no }
+	allow = { }
+	name = IRE
+	flag = IRE
+	adjective = IRE_ADJ
+	tag = IRE
+	color = map_IRE
+	regions = {
+		ireland_region
+	}
+}
