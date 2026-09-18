@@ -1,0 +1,179 @@
+﻿ssg_create_administrative_candidate = {
+	create_character = {
+		culture = root.culture
+		religion = root.religion
+		birth_location = capital
+		estate = estate_type:nobles_estate
+		age = { 30 45 }
+		adm = { 82 92 }
+		dip = { 38 48 }
+		mil = { 38 48 }
+		save_scope_as = ssg_new_chief_minister_candidate
+	}
+	set_variable = {
+		name = ssg_administrative_candidate
+		value = scope:ssg_new_chief_minister_candidate
+	}
+}
+
+ssg_create_diplomatic_candidate = {
+	create_character = {
+		culture = root.culture
+		religion = root.religion
+		birth_location = capital
+		estate = estate_type:nobles_estate
+		age = { 30 45 }
+		adm = { 38 48 }
+		dip = { 82 92 }
+		mil = { 38 48 }
+		save_scope_as = ssg_new_chief_minister_candidate
+	}
+	set_variable = {
+		name = ssg_diplomatic_candidate
+		value = scope:ssg_new_chief_minister_candidate
+	}
+}
+
+ssg_create_military_candidate = {
+	create_character = {
+		culture = root.culture
+		religion = root.religion
+		birth_location = capital
+		estate = estate_type:nobles_estate
+		age = { 30 45 }
+		adm = { 38 48 }
+		dip = { 38 48 }
+		mil = { 82 92 }
+		save_scope_as = ssg_new_chief_minister_candidate
+	}
+	set_variable = {
+		name = ssg_military_candidate
+		value = scope:ssg_new_chief_minister_candidate
+	}
+}
+
+ssg_create_balanced_candidate = {
+	create_character = {
+		culture = root.culture
+		religion = root.religion
+		birth_location = capital
+		estate = estate_type:nobles_estate
+		age = { 30 45 }
+		adm = { 56 62 }
+		dip = { 56 62 }
+		mil = { 56 62 }
+		save_scope_as = ssg_new_chief_minister_candidate
+	}
+	set_variable = {
+		name = ssg_balanced_candidate
+		value = scope:ssg_new_chief_minister_candidate
+	}
+}
+
+# Replace a dead member of the pool with a new courtier of the same archetype.
+ssg_ensure_chief_minister_candidates = {
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = ssg_administrative_candidate }
+				var:ssg_administrative_candidate ?= { is_alive = no }
+			}
+		}
+		ssg_create_administrative_candidate = yes
+	}
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = ssg_diplomatic_candidate }
+				var:ssg_diplomatic_candidate ?= { is_alive = no }
+			}
+		}
+		ssg_create_diplomatic_candidate = yes
+	}
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = ssg_military_candidate }
+				var:ssg_military_candidate ?= { is_alive = no }
+			}
+		}
+		ssg_create_military_candidate = yes
+	}
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_variable = ssg_balanced_candidate }
+				var:ssg_balanced_candidate ?= { is_alive = no }
+			}
+		}
+		ssg_create_balanced_candidate = yes
+	}
+}
+
+# Appoint the chosen courtier while leaving the Hanyang Jo ruler and succession intact.
+ssg_elect_chief_minister = {
+	if = {
+		limit = {
+			has_variable = ssg_elected_chief_minister
+			var:ssg_elected_chief_minister = $target$
+		}
+		custom_tooltip = ssg_chief_minister_reelected_tt
+		hidden_effect = {
+			$target$ = {
+				add_adm = 3
+				add_dip = 3
+				add_mil = 3
+			}
+		}
+	}
+	else = {
+		custom_tooltip = ssg_chief_minister_elected_tt
+	}
+
+	hidden_effect = {
+		if = {
+			limit = {
+				$target$ = { in_cabinet = no }
+				NOT = {
+					any_cabinet = {
+						NOT = { exists = cabinet_member }
+					}
+				}
+			}
+			ordered_cabinet_character = {
+				limit = { has_character_modifier = head_of_the_cabinet_modifier }
+				max = 1
+				check_range_bounds = no
+				save_scope_as = ssg_displaced_cabinet_member
+			}
+			if = {
+				limit = { NOT = { exists = scope:ssg_displaced_cabinet_member } }
+				ordered_cabinet_character = {
+					max = 1
+					check_range_bounds = no
+					save_scope_as = ssg_displaced_cabinet_member
+				}
+			}
+			if = {
+				limit = { exists = scope:ssg_displaced_cabinet_member }
+				remove_from_cabinet = scope:ssg_displaced_cabinet_member
+			}
+		}
+
+		if = {
+			limit = { $target$ = { in_cabinet = no } }
+			add_character_to_first_open_cabinet = { target = $target$ }
+		}
+		promote_to_head_of_cabinet_effect_base = { target = $target$ }
+
+		set_variable = {
+			name = ssg_elected_chief_minister
+			value = $target$
+		}
+		remove_variable = ssg_chief_minister_administrative
+		remove_variable = ssg_chief_minister_diplomatic
+		remove_variable = ssg_chief_minister_military
+		remove_variable = ssg_chief_minister_balanced
+		set_variable = ssg_chief_minister_$archetype$
+	}
+}

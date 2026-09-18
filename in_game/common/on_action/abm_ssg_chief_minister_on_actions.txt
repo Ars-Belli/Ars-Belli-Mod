@@ -1,0 +1,30 @@
+﻿on_character_death = {
+	on_actions = {
+		ssg_chief_minister_death
+	}
+}
+
+# An incumbent's death brings the council back to the ballot instead of changing the king.
+ssg_chief_minister_death = {
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		has_variable = ssg_elected_chief_minister
+		var:ssg_elected_chief_minister = scope:target
+	}
+
+	effect = {
+		remove_variable = ssg_elected_chief_minister
+		remove_variable = ssg_chief_minister_administrative
+		remove_variable = ssg_chief_minister_diplomatic
+		remove_variable = ssg_chief_minister_military
+		remove_variable = ssg_chief_minister_balanced
+		set_variable = {
+			name = ssg_chief_minister_next_election_year
+			value = current_year
+		}
+		trigger_event_non_silently = {
+			id = flavor_ssg.60
+			days = 30
+		}
+	}
+}
