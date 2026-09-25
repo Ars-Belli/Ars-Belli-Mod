@@ -121,9 +121,14 @@ namespace = abm_focus_picks
 # A pick sets the country variable abm_focus_<branch>; the advances of that branch gate on it
 # (see in_game/common/advances/abm_focus_picks_*.txt). Variables are never cleared, so picks
 # from earlier ages stay researchable.
+#
+# Both are country_event, NOT age_event: the age event window (eventwindow.gui AgeEventWindow)
+# has exactly three cards bound via EventWindow.AccessOptionItemWithKey('adm'/'dip'/'mil') with
+# hardcoded Administrative/Diplomatic/Military tooltips. Options without those keys all fall back
+# to the first option (every card showed the same focus in game), so it can't list our branches.
 
 ages_of_eu.1 = {
-	type = age_event
+	type = country_event
 
 	title = ages_of_eu.1.title
 	desc = abm_focus_picks.economic.desc
@@ -142,7 +147,7 @@ ${eventOptions('eco', 'abm_focus_picks.1')}
 }
 
 abm_focus_picks.1 = {
-	type = age_event
+	type = country_event
 
 	title = abm_focus_picks.1.title
 	desc = abm_focus_picks.1.desc
