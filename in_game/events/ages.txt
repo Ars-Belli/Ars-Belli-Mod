@@ -8,7 +8,8 @@ namespace = abm_focus_picks
 # set_age_preference. That engine slot allows a single pick, so it is dropped entirely.
 # Every age from the Renaissance on has two focus slots (Economic, Military), 3 branches each.
 # Players pick in the Focus Picks panel (gui/shared/abm_focus_picks_panel.gui ->
-# scripted_guis/abm_focus_picks_gui.txt); AI countries pick here. A pick sets the country
+# scripted_guis/abm_focus_picks_gui.txt). AI countries never pick, by design: a player who
+# disconnects must not have the AI choose for them. A pick sets the country
 # variable abm_focus_<branch>, which the branch advances use as potential.
 #
 # abm_focus_picks.1 is a country_event, NOT age_event: the age event window has exactly three
@@ -25,89 +26,7 @@ ages_of_eu.1 = {
 
 	immediate = {
 		if = {
-			limit = { is_ai = yes }
-			if = {
-				limit = { current_age = age_2_renaissance NOT = { OR = { has_variable = abm_focus_court has_variable = abm_focus_trade has_variable = abm_focus_influence } } }
-				random_list = {
-					100 = { set_variable = abm_focus_court }
-					100 = { set_variable = abm_focus_trade }
-					100 = { set_variable = abm_focus_influence }
-				}
-			}
-			if = {
-				limit = { current_age = age_2_renaissance NOT = { OR = { has_variable = abm_focus_levy has_variable = abm_focus_mercenary has_variable = abm_focus_maritime } } }
-				random_list = {
-					100 = { set_variable = abm_focus_levy }
-					100 = { set_variable = abm_focus_mercenary }
-					50 = { set_variable = abm_focus_maritime }
-				}
-			}
-			if = {
-				limit = { current_age = age_3_discovery NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_diplomatic } } }
-				random_list = {
-					100 = { set_variable = abm_focus_infrastructure }
-					100 = { set_variable = abm_focus_exploration }
-					100 = { set_variable = abm_focus_diplomatic }
-				}
-			}
-			if = {
-				limit = { current_age = age_3_discovery NOT = { OR = { has_variable = abm_focus_quality has_variable = abm_focus_quantity has_variable = abm_focus_naval } } }
-				random_list = {
-					100 = { set_variable = abm_focus_quality }
-					100 = { set_variable = abm_focus_quantity }
-					50 = { set_variable = abm_focus_naval }
-				}
-			}
-			if = {
-				limit = { current_age = age_4_reformation NOT = { OR = { has_variable = abm_focus_religion has_variable = abm_focus_expansion has_variable = abm_focus_humanism } } }
-				random_list = {
-					100 = { set_variable = abm_focus_religion }
-					100 = { set_variable = abm_focus_expansion }
-					100 = { set_variable = abm_focus_humanism }
-				}
-			}
-			if = {
-				limit = { current_age = age_4_reformation NOT = { OR = { has_variable = abm_focus_offense has_variable = abm_focus_defense has_variable = abm_focus_littoral_fleet } } }
-				random_list = {
-					100 = { set_variable = abm_focus_offense }
-					100 = { set_variable = abm_focus_defense }
-					50 = { set_variable = abm_focus_littoral_fleet }
-				}
-			}
-			if = {
-				limit = { current_age = age_5_absolutism NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_espionage } } }
-				random_list = {
-					100 = { set_variable = abm_focus_administration }
-					100 = { set_variable = abm_focus_commerce }
-					100 = { set_variable = abm_focus_espionage }
-				}
-			}
-			if = {
-				limit = { current_age = age_5_absolutism NOT = { OR = { has_variable = abm_focus_maneuver has_variable = abm_focus_logistics has_variable = abm_focus_highseas_fleet } } }
-				random_list = {
-					100 = { set_variable = abm_focus_maneuver }
-					100 = { set_variable = abm_focus_logistics }
-					50 = { set_variable = abm_focus_highseas_fleet }
-				}
-			}
-			if = {
-				limit = { current_age = age_6_revolutions NOT = { OR = { has_variable = abm_focus_industry has_variable = abm_focus_empire has_variable = abm_focus_innovation } } }
-				random_list = {
-					100 = { set_variable = abm_focus_industry }
-					100 = { set_variable = abm_focus_empire }
-					100 = { set_variable = abm_focus_innovation }
-				}
-			}
-			if = {
-				limit = { current_age = age_6_revolutions NOT = { OR = { has_variable = abm_focus_voluntary_service has_variable = abm_focus_conscription has_variable = abm_focus_insurrection } } }
-				random_list = {
-					100 = { set_variable = abm_focus_voluntary_service }
-					100 = { set_variable = abm_focus_conscription }
-					100 = { set_variable = abm_focus_insurrection }
-				}
-			}
-		}
-		else = {
+			limit = { is_ai = no }
 			trigger_event_non_silently = { id = abm_focus_picks.1 }
 		}
 	}
