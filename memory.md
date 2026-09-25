@@ -183,11 +183,12 @@ The mod overrides two vanilla `.gui` files with mod-specific additions on top:
 
 When the base game updates, copy the new vanilla files from `E:\Steam\steamapps\common\Europa Universalis V\game\in_game\gui\` and reapply the mod blocks:
 
-**right_panel.gui** mod additions (4 blocks):
+**right_panel.gui** mod additions (5 blocks):
 1. **Alliance/Defensive/Guarantee points display** — a `flowcontainer` with `# Ars Belli multiplayer limits display:` comment, inserted after the `non_clickable_color_gold_texture` corner icon, before the age `flowcontainer`.
 2. **Remove `max_width = 200`** from the age name `text_single`.
 3. **Country rank display (clickable)** — a `flowcontainer` with `# Ars Belli Current country Rank:` comment, inserted after the age tooltip block, before `### CORNER2`. Inner `button` with onclick → `mp_limits_toggle_tier_panel` scripted_gui.
 4. **Tier list panel** — a `widget` with `# Ars Belli tier list panel` comment, inserted right after the rank flowcontainer, before `### CORNER2`. Toggled by global var `mp_tier_panel_open`. Contains 5 `dynamicgridbox` sections iterating `GetGlobalList('mp_<tier>_list')`.
+5. **Focus picks panel** — `abm_focus_picks_panel = {}` with `# Ars Belli focus picks panel` comment, right before the tier list panel; plus a `# Ars Belli focus picks` "Focus Picks" button hbox inside the tier panel (above the alliance-alert toggle). The panel TYPE lives in generated `in_game/gui/shared/abm_focus_picks_panel.gui` (not a vanilla file, no re-merge). Client-side toggle `GetVariableSystem('abm_focus_panel_open')`. Advances listed via loc `[ShowAdvanceName('key')]` -> hover = real advance tooltip w/ effects. Picked marker: `GetPlayer.MakeScope.GetVariable('abm_focus_<branch>').IsSet`.
 
 **foreign_country_lateralview.gui** mod additions (2 blocks):
 1. **MP Rank and Power Score hbox** — with `# MP Rank and Power Score` comment, inserted after the country rank icon's `glow` block (around the `GetCountryRankIcon` section), inside the same parent container.
