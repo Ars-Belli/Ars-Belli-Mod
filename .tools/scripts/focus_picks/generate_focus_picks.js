@@ -216,10 +216,13 @@ function locFile() {
 // Focus Picks panel: a GUI type placed in right_panel.gui next to the Tier List panel and toggled
 // client-side via GetVariableSystem('abm_focus_panel_open') (per-player UI state, not a script var).
 function guiFile() {
-	const CARD_W = 230;
+	// 3 cards + 2 x 6 spacing = 744 = panel inner width (780 - 2 x 8 margin - scrollbar).
+	const CARD_W = 244;
+	const TEXT_W = CARD_W - 10; // card margin 4 + frame
 	const card = br => `
 					vbox = {
-						layoutpolicy_horizontal = expanding
+						minimumsize = { ${CARD_W} -1 }
+						maximumsize = { ${CARD_W} -1 }
 						layoutpolicy_vertical = expanding
 						spacing = 2
 						margin = { 4 4 }
@@ -244,13 +247,17 @@ function guiFile() {
 							text = "abm_focus_picks.${br.id}.tt"
 							using = Font_Size_Small
 							autoresize = yes
-							max_width = ${CARD_W}
+							align = left|nobaseline
+							minimumsize = { ${TEXT_W} -1 }
+							maximumsize = { ${TEXT_W} -1 }
 						}
 						text_multi = {
 							text = "abm_focus_panel.${br.id}.advances"
 							using = Font_Size_Small
 							autoresize = yes
-							max_width = ${CARD_W}
+							align = left|nobaseline
+							minimumsize = { ${TEXT_W} -1 }
+							maximumsize = { ${TEXT_W} -1 }
 						}
 						expand = {}
 					}`;
