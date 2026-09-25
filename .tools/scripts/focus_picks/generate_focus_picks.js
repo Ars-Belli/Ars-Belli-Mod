@@ -263,9 +263,9 @@ function locFile() {
 	L.push('');
 	L.push(' # Focus panel');
 	L.push(' ABM_FOCUS_PANEL_TOGGLE: "Focus Picks"');
-	L.push(' ABM_FOCUS_PANEL_TOGGLE_TOOLTIP: "Open the Focus Picks panel: every [age|e]\'s Economic and Military focus branches, the [advances|e] each one unlocks, and where we pick them."');
+	L.push(' ABM_FOCUS_PANEL_TOGGLE_TOOLTIP: "#T Focus Picks#!\\nOpen the Focus Picks panel: every [age|e]\'s Economic and Military focus branches, the [advances|e] each one unlocks, and where we pick them."');
 	L.push(' ABM_FOCUS_PANEL_TOGGLE_PENDING: "#Y Focus Picks (!)#!"');
-	L.push(' ABM_FOCUS_PANEL_TOGGLE_PENDING_TOOLTIP: "#Y We have not picked all our focuses for this [age|e] yet.#!\\n\\nOpen the Focus Picks panel to choose one Economic and one Military focus."');
+	L.push(' ABM_FOCUS_PANEL_TOGGLE_PENDING_TOOLTIP: "#T Focus Picks#!\\n#Y We have not picked all our focuses for this [age|e] yet.#!\\n\\nOpen the Focus Picks panel to choose one Economic and one Military focus."');
 	L.push(' ABM_FOCUS_PANEL_TITLE: "Focus Picks"');
 	L.push(' ABM_FOCUS_PANEL_CLOSE: "Close"');
 	L.push(' ABM_FOCUS_PANEL_CLOSE_TOOLTIP: "Close the Focus Picks panel"');
@@ -415,22 +415,35 @@ types AbmFocusPicksTypes
 	# the Tier List panel). Swaps to a highlighted "(!)" button while this age still has an empty slot.
 	# Placed in right_panel.gui inside the rank block next to Tier List (a copy below the bar was
 	# clipped and never showed), plus a standalone copy for games without the MP mechanics rule.
+	# Icon-only: a text button next to Tier List covered the age name. ignoreinvisible stops the
+	# hidden twin from reserving space (it pushed the visible button over the age name).
 	type abm_focus_picks_button = flowcontainer {
 		direction = horizontal
+		ignoreinvisible = yes
 
 		button_regular = {
-			text = "ABM_FOCUS_PANEL_TOGGLE"
 			tooltip = "ABM_FOCUS_PANEL_TOGGLE_TOOLTIP"
 			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
-			size = { 100 22 }
+			size = { 30 22 }
 			visible = "[Not(GetScriptedGui('abm_focus_pending').IsShown(${SGUI_SCOPE}))]"
+
+			icon = {
+				texture = "gfx/interface/icons/flat_icons/ages.dds"
+				size = { 18 18 }
+				parentanchor = center
+			}
 		}
 		button_regular = {
-			text = "ABM_FOCUS_PANEL_TOGGLE_PENDING"
 			tooltip = "ABM_FOCUS_PANEL_TOGGLE_PENDING_TOOLTIP"
 			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
-			size = { 120 22 }
+			size = { 30 22 }
 			visible = "[GetScriptedGui('abm_focus_pending').IsShown(${SGUI_SCOPE})]"
+
+			icon = {
+				texture = "gfx/interface/icons/alerts_icons/advances.dds"
+				size = { 20 20 }
+				parentanchor = center
+			}
 		}
 	}
 
