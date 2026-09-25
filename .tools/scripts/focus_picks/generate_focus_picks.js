@@ -50,7 +50,10 @@ function advanceBlock(ageKey, branch, idx) {
 	lines.push(`${replace ? 'REPLACE:' : ''}${key} = {`);
 	lines.push(`\tage = ${ageKey}`);
 	if (icon) lines.push(`\ticon = ${icon}`);
-	if (PARENT[idx] !== null) lines.push(`\trequires = ${branch.adv[PARENT[idx]][0]}`);
+	// Branch roots must be explicit roots (depth = 0, like vanilla age roots): an advance with neither
+	// requires nor depth gets auto-attached under another node by the engine (Mercenary landed under Court).
+	if (PARENT[idx] === null) lines.push('\tdepth = 0');
+	else lines.push(`\trequires = ${branch.adv[PARENT[idx]][0]}`);
 	lines.push('');
 	lines.push('\tallow = {');
 	lines.push('\t\tcustom_tooltip = {');
@@ -91,10 +94,12 @@ function eventOptions(kind, next) {
 		for (const br of a[kind]) {
 			const naval = /maritime|naval|fleet/.test(br.id);
 			out.push('\toption = {');
-			out.push(`\t\tname = abm_focus_pick_${br.id}`);
+			// Dotted option names like every vanilla option (undotted ones showed a raw key in the tooltip).
+			out.push(`\t\tname = abm_focus_picks.${br.id}`);
 			out.push(`\t\ttrigger = { current_age = ${a.age} }`);
 			out.push(`\t\thidden_effect = { set_variable = ${focusVar(br.id)} }`);
-			out.push(`\t\tcustom_tooltip = abm_focus_pick_${br.id}_effect_tt`);
+			out.push(`\t\tcustom_tooltip = abm_focus_picks.${br.id}.tt`);
+			out.push(`\t\tcustom_tooltip = abm_focus_picks.${br.id}.unlocks_tt`);
 			if (next) out.push(`\t\ttrigger_event_non_silently = { id = ${next} }`);
 			out.push('');
 			out.push('\t\tai_will_select = {');
@@ -180,9 +185,11 @@ function locFile() {
 			for (const br of a[kind]) {
 				L.push('');
 				L.push(` # ${a.age} - ${kind === 'eco' ? 'Economic' : 'Military'} - ${br.name}`);
-				L.push(` abm_focus_pick_${br.id}: "${q(br.name)} Focus"`);
+				L.push(` abm_focus_picks.${br.id}: "${q(br.name)} Focus"`);
 				const names = br.adv.map(x => `$${x[0]}$`).join(', ');
-				L.push(` abm_focus_pick_${br.id}_effect_tt: "${q(br.desc)}\\nUnlocks the #Y ${q(br.name)}#! [advances|e]: ${names}"`);
+				// Single-line tooltips (no \n), like vanilla option .tt keys.
+				L.push(` abm_focus_picks.${br.id}.tt: "${q(br.desc)}"`);
+				L.push(` abm_focus_picks.${br.id}.unlocks_tt: "Unlocks the #Y ${q(br.name)}#! [advances|e]: ${names}"`);
 				L.push(` ${focusVar(br.id)}_tt: "Chose the #Y ${q(br.name)} Focus#! in the Age of $${a.age}$"`);
 				for (const [key, , extra = {}] of br.adv) {
 					if (!extra.name) continue;
