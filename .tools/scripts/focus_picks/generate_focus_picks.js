@@ -54,16 +54,11 @@ function advanceBlock(ageKey, branch, idx) {
 	// requires nor depth gets auto-attached under another node by the engine (Mercenary landed under Court).
 	if (PARENT[idx] === null) lines.push('\tdepth = 0');
 	else lines.push(`\trequires = ${branch.adv[PARENT[idx]][0]}`);
-	// Leaves of each chain: stop the engine hanging unparented vanilla/country advances under a
-	// focus branch (seen: National Assemblies under Court Accounting, NOR advances under Levy/Mercenary).
-	if (!PARENT.includes(idx)) lines.push('\tallow_children = no');
 	lines.push('');
-	lines.push('\tallow = {');
-	lines.push('\t\tcustom_tooltip = {');
-	lines.push(`\t\t\ttext = ${focusVar(branch.id)}_tt`);
-	lines.push(`\t\t\thas_variable = ${focusVar(branch.id)}`);
-	lines.push('\t\t}');
-	lines.push('\t}');
+	// potential (not allow): branches not picked stay hidden, like vanilla `for = X` focus advances.
+	// potential IS re-checked in game, so a branch appears once its pick sets the variable. Hidden
+	// branches also stop unparented vanilla/country advances being auto-attached under them.
+	lines.push(`\tpotential = { has_variable = ${focusVar(branch.id)} }`);
 	if (mods) { lines.push(''); lines.push(indent(mods, 1)); }
 	if (extra.raw) { lines.push(''); lines.push(indent(extra.raw, 1)); }
 	lines.push('}');
@@ -193,7 +188,6 @@ function locFile() {
 				// Single-line tooltips (no \n), like vanilla option .tt keys.
 				L.push(` abm_focus_picks.${br.id}.tt: "${q(br.desc)}"`);
 				L.push(` abm_focus_picks.${br.id}.unlocks_tt: "Unlocks the #Y ${q(br.name)}#! [advances|e]: ${names}"`);
-				L.push(` ${focusVar(br.id)}_tt: "Chose the #Y ${q(br.name)} Focus#! in the Age of $${a.age}$"`);
 				for (const [key, , extra = {}] of br.adv) {
 					if (!extra.name) continue;
 					L.push(` ${key}: "${q(extra.name)}"`);

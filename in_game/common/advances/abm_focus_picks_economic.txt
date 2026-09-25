@@ -14,12 +14,7 @@ innovativeness = {
 	icon = scholasticism
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_court_tt
-			has_variable = abm_focus_court
-		}
-	}
+	potential = { has_variable = abm_focus_court }
 
 	global_max_literacy = 5
 }
@@ -29,12 +24,7 @@ state_efficiency = {
 	icon = road_building
 	requires = innovativeness
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_court_tt
-			has_variable = abm_focus_court
-		}
-	}
+	potential = { has_variable = abm_focus_court }
 
 	global_distance_from_capital_speed_propagation = 0.1
 }
@@ -43,14 +33,8 @@ court_accounting = {
 	age = age_2_renaissance
 	icon = court_accounting
 	requires = state_efficiency
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_court_tt
-			has_variable = abm_focus_court
-		}
-	}
+	potential = { has_variable = abm_focus_court }
 
 	court_spending_efficiency = 0.1
 }
@@ -60,12 +44,7 @@ dynamic_court = {
 	icon = scholasticism
 	requires = innovativeness
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_court_tt
-			has_variable = abm_focus_court
-		}
-	}
+	potential = { has_variable = abm_focus_court }
 
 	country_cabinet_efficiency = 0.10
 }
@@ -75,12 +54,7 @@ church_attendance_duty = {
 	icon = smooth_administration
 	requires = dynamic_court
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_court_tt
-			has_variable = abm_focus_court
-		}
-	}
+	potential = { has_variable = abm_focus_court }
 
 	stability_investment = small_stability_investment
 }
@@ -89,14 +63,8 @@ empiricism = {
 	age = age_2_renaissance
 	icon = scholasticism
 	requires = church_attendance_duty
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_court_tt
-			has_variable = abm_focus_court
-		}
-	}
+	potential = { has_variable = abm_focus_court }
 
 	legislative_efficiency = 0.20
 	set_policy_cost_modifier = -0.66
@@ -112,12 +80,7 @@ shrewd_commerce_practice = {
 	icon = zmw_merchant_taxes
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_trade_tt
-			has_variable = abm_focus_trade
-		}
-	}
+	potential = { has_variable = abm_focus_trade }
 
 	global_trade_center_power = 0.10
 }
@@ -127,12 +90,7 @@ merchant_traditions = {
 	icon = merchant_power_from_maritime_reformation_advance
 	requires = shrewd_commerce_practice
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_trade_tt
-			has_variable = abm_focus_trade
-		}
-	}
+	potential = { has_variable = abm_focus_trade }
 
 	merchant_power_from_maritime_modifier = 0.1
 }
@@ -141,14 +99,8 @@ additional_merchants = {
 	age = age_2_renaissance
 	icon = merchant_power_from_maritime_reformation_advance
 	requires = merchant_traditions
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_trade_tt
-			has_variable = abm_focus_trade
-		}
-	}
+	potential = { has_variable = abm_focus_trade }
 
 	global_merchant_capacity_modifier = 0.25
 }
@@ -158,12 +110,7 @@ merchant_adventures = {
 	icon = global_trade_routes_advance
 	requires = shrewd_commerce_practice
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_trade_tt
-			has_variable = abm_focus_trade
-		}
-	}
+	potential = { has_variable = abm_focus_trade }
 
 	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
 }
@@ -173,12 +120,7 @@ debt_and_loans = {
 	icon = debt_and_loans
 	requires = merchant_adventures
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_trade_tt
-			has_variable = abm_focus_trade
-		}
-	}
+	potential = { has_variable = abm_focus_trade }
 
 	bank_interest = -0.01
 	max_bonds = 1
@@ -188,14 +130,8 @@ abm_protected_trade_caravans = {
 	age = age_2_renaissance
 	icon = expanded_supply_trains
 	requires = debt_and_loans
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_trade_tt
-			has_variable = abm_focus_trade
-		}
-	}
+	potential = { has_variable = abm_focus_trade }
 
 	trade_land_efficiency = medium_trade_land_efficiency_bonus
 }
@@ -209,12 +145,7 @@ integrated_elites = {
 	icon = diplomatic_range_age_1
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_influence_tt
-			has_variable = abm_focus_influence
-		}
-	}
+	potential = { has_variable = abm_focus_influence }
 
 	monthly_diplomats = 0.2
 	max_diplomats = 1
@@ -225,12 +156,7 @@ tribute_system = {
 	icon = debt_and_loans
 	requires = integrated_elites
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_influence_tt
-			has_variable = abm_focus_influence
-		}
-	}
+	potential = { has_variable = abm_focus_influence }
 
 	subject_income_modifier = 0.025
 	subject_loyalty = 5
@@ -241,14 +167,8 @@ marcher_lords = {
 	age = age_2_renaissance
 	icon = diplomatic_influence
 	requires = tribute_system
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_influence_tt
-			has_variable = abm_focus_influence
-		}
-	}
+	potential = { has_variable = abm_focus_influence }
 
 	unlock_subject_type = march
 }
@@ -258,12 +178,7 @@ buffer_states = {
 	icon = diplomatic_range_age_1
 	requires = integrated_elites
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_influence_tt
-			has_variable = abm_focus_influence
-		}
-	}
+	potential = { has_variable = abm_focus_influence }
 
 	diplomatic_capacity = 1
 	diplomatic_reputation = diplomatic_reputation_mild_bonus
@@ -274,12 +189,7 @@ benign_diplomats = {
 	icon = cultural_acceptance_advance
 	requires = buffer_states
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_influence_tt
-			has_variable = abm_focus_influence
-		}
-	}
+	potential = { has_variable = abm_focus_influence }
 
 	improve_relation_impact = 0.25
 	subject_opinions = 10
@@ -289,14 +199,8 @@ additional_loyalist_recruitment = {
 	age = age_2_renaissance
 	icon = crown_power_advance_renaissance
 	requires = benign_diplomats
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_influence_tt
-			has_variable = abm_focus_influence
-		}
-	}
+	potential = { has_variable = abm_focus_influence }
 
 	subject_loyalty = 5
 }
@@ -310,12 +214,7 @@ organised_construction = {
 	icon = renaissance_development
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_infrastructure_tt
-			has_variable = abm_focus_infrastructure
-		}
-	}
+	potential = { has_variable = abm_focus_infrastructure }
 
 	global_build_buildings_efficiency = 0.2
 }
@@ -324,12 +223,7 @@ efficient_construction_plans = {
 	age = age_3_discovery
 	requires = organised_construction
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_infrastructure_tt
-			has_variable = abm_focus_infrastructure
-		}
-	}
+	potential = { has_variable = abm_focus_infrastructure }
 
 	global_urban_build_buildings_efficiency = 0.2
 }
@@ -338,14 +232,8 @@ expanded_infrastructure_network = {
 	age = age_3_discovery
 	icon = road_building
 	requires = efficient_construction_plans
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_infrastructure_tt
-			has_variable = abm_focus_infrastructure
-		}
-	}
+	potential = { has_variable = abm_focus_infrastructure }
 
 	global_road_building_time = -0.1
 	build_gravel_road_cost_modifier = -0.1
@@ -358,12 +246,7 @@ efficient_mining = {
 	icon = efficient_mining
 	requires = organised_construction
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_infrastructure_tt
-			has_variable = abm_focus_infrastructure
-		}
-	}
+	potential = { has_variable = abm_focus_infrastructure }
 
 	expand_rgo_mining_cost_modifier = -0.1
 	global_iron_output_modifier = 0.1
@@ -374,12 +257,7 @@ rgo_logistics_mil_choice = {
 	age = age_3_discovery
 	requires = efficient_mining
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_infrastructure_tt
-			has_variable = abm_focus_infrastructure
-		}
-	}
+	potential = { has_variable = abm_focus_infrastructure }
 
 	raw_material_in_province_impact = 0.025
 }
@@ -388,14 +266,8 @@ advanced_bureaucracy = {
 	age = age_3_discovery
 	icon = genoese_banking_traditions
 	requires = rgo_logistics_mil_choice
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_infrastructure_tt
-			has_variable = abm_focus_infrastructure
-		}
-	}
+	potential = { has_variable = abm_focus_infrastructure }
 
 	tax_income_efficiency = small_tax_income_efficiency_bonus
 	global_bureaucracy_maintenance_efficiency = 0.04
@@ -410,12 +282,7 @@ quest_for_the_new_world = {
 	icon = nav_fearless_seamen
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_exploration_tt
-			has_variable = abm_focus_exploration
-		}
-	}
+	potential = { has_variable = abm_focus_exploration }
 
 	exploration_preparation_time_modifier = -0.25
 	exploration_mission_speed = 0.1
@@ -429,12 +296,7 @@ exploration = {
 	age = age_3_discovery
 	requires = quest_for_the_new_world
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_exploration_tt
-			has_variable = abm_focus_exploration
-		}
-	}
+	potential = { has_variable = abm_focus_exploration }
 
 	colonial_range = 500
 
@@ -449,14 +311,8 @@ overseas_exploration = {
 	age = age_3_discovery
 	icon = ship_building_advance
 	requires = exploration
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_exploration_tt
-			has_variable = abm_focus_exploration
-		}
-	}
+	potential = { has_variable = abm_focus_exploration }
 
 	colonial_range_modifier = 0.5
 
@@ -470,12 +326,7 @@ faster_colonists = {
 	icon = colonies
 	requires = quest_for_the_new_world
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_exploration_tt
-			has_variable = abm_focus_exploration
-		}
-	}
+	potential = { has_variable = abm_focus_exploration }
 
 	colonial_migration_size_modifier = 0.25
 
@@ -489,12 +340,7 @@ colonial_ventures = {
 	icon = colonies
 	requires = faster_colonists
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_exploration_tt
-			has_variable = abm_focus_exploration
-		}
-	}
+	potential = { has_variable = abm_focus_exploration }
 
 	colonial_migration_size_modifier = 0.25
 
@@ -506,14 +352,8 @@ colonial_ventures = {
 overseas_trade = {
 	age = age_3_discovery
 	requires = colonial_ventures
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_exploration_tt
-			has_variable = abm_focus_exploration
-		}
-	}
+	potential = { has_variable = abm_focus_exploration }
 
 	trade_range_modifier = 0.5
 }
@@ -527,12 +367,7 @@ flexible_negotiation = {
 	icon = scholasticism
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_diplomatic_tt
-			has_variable = abm_focus_diplomatic
-		}
-	}
+	potential = { has_variable = abm_focus_diplomatic }
 
 	global_war_score_efficiency = 0.2
 }
@@ -542,12 +377,7 @@ formal_diplomacy = {
 	icon = glorious_arms
 	requires = flexible_negotiation
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_diplomatic_tt
-			has_variable = abm_focus_diplomatic
-		}
-	}
+	potential = { has_variable = abm_focus_diplomatic }
 
 	diplomatic_reputation = diplomatic_reputation_mild_bonus
 	improve_relation_impact = 0.30
@@ -557,14 +387,8 @@ diplomatic_influence = {
 	age = age_3_discovery
 	icon = diplomatic_influence
 	requires = formal_diplomacy
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_diplomatic_tt
-			has_variable = abm_focus_diplomatic
-		}
-	}
+	potential = { has_variable = abm_focus_diplomatic }
 
 	diplomatic_reputation = diplomatic_reputation_mild_bonus
 	diplomatic_capacity = 1
@@ -575,12 +399,7 @@ adaptability = {
 	icon = diplomatic_range_age_1
 	requires = flexible_negotiation
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_diplomatic_tt
-			has_variable = abm_focus_diplomatic
-		}
-	}
+	potential = { has_variable = abm_focus_diplomatic }
 
 	antagonism_received_modifier = -0.3
 }
@@ -590,12 +409,7 @@ diplomatic_corps = {
 	icon = diplomatic_range_age_1
 	requires = adaptability
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_diplomatic_tt
-			has_variable = abm_focus_diplomatic
-		}
-	}
+	potential = { has_variable = abm_focus_diplomatic }
 
 	monthly_diplomats = 0.1
 	casus_belli_creation_speed_modifier = 0.25
@@ -605,14 +419,8 @@ indirect_rule = {
 	age = age_3_discovery
 	icon = genoese_banking_traditions
 	requires = diplomatic_corps
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_diplomatic_tt
-			has_variable = abm_focus_diplomatic
-		}
-	}
+	potential = { has_variable = abm_focus_diplomatic }
 
 	global_separatism = -0.1
 	global_integration_speed_modifier = 0.1
@@ -627,12 +435,7 @@ devoutness = {
 	icon = cultural_acceptance_advance
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_religion_tt
-			has_variable = abm_focus_religion
-		}
-	}
+	potential = { has_variable = abm_focus_religion }
 
 	tolerance_own = 1
 }
@@ -642,12 +445,7 @@ religious_tradition = {
 	icon = glorious_arms
 	requires = devoutness
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_religion_tt
-			has_variable = abm_focus_religion
-		}
-	}
+	potential = { has_variable = abm_focus_religion }
 
 	monthly_prestige = 0.1
 	cultural_tradition_modifier = 0.2
@@ -657,14 +455,8 @@ abm_cultural_unity = {
 	age = age_4_reformation
 	icon = cultural_ties
 	requires = religious_tradition
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_religion_tt
-			has_variable = abm_focus_religion
-		}
-	}
+	potential = { has_variable = abm_focus_religion }
 
 	global_pop_assimilation_speed_modifier = 0.2
 }
@@ -674,12 +466,7 @@ preaching_missions = {
 	icon = scholasticism
 	requires = devoutness
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_religion_tt
-			has_variable = abm_focus_religion
-		}
-	}
+	potential = { has_variable = abm_focus_religion }
 
 	global_pop_assimilation_speed_modifier = 0.1
 	global_pop_conversion_speed_modifier = 0.1
@@ -689,12 +476,7 @@ divine_supremacy = {
 	age = age_4_reformation
 	requires = preaching_missions
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_religion_tt
-			has_variable = abm_focus_religion
-		}
-	}
+	potential = { has_variable = abm_focus_religion }
 
 	global_pop_conversion_speed_modifier = 0.20
 }
@@ -702,14 +484,8 @@ divine_supremacy = {
 missionary_schools = {
 	age = age_4_reformation
 	requires = divine_supremacy
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_religion_tt
-			has_variable = abm_focus_religion
-		}
-	}
+	potential = { has_variable = abm_focus_religion }
 
 	global_pop_conversion_speed = 0.01
 }
@@ -723,12 +499,7 @@ free_colonies = {
 	icon = scholasticism
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_expansion_tt
-			has_variable = abm_focus_expansion
-		}
-	}
+	potential = { has_variable = abm_focus_expansion }
 
 	colonial_maintenance_efficiency = 0.40
 }
@@ -738,12 +509,7 @@ land_of_opportunity = {
 	icon = court_accounting
 	requires = free_colonies
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_expansion_tt
-			has_variable = abm_focus_expansion
-		}
-	}
+	potential = { has_variable = abm_focus_expansion }
 
 	colonial_migration_size_modifier = 0.25
 }
@@ -752,14 +518,8 @@ additional_colonists = {
 	age = age_4_reformation
 	icon = colonies
 	requires = land_of_opportunity
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_expansion_tt
-			has_variable = abm_focus_expansion
-		}
-	}
+	potential = { has_variable = abm_focus_expansion }
 
 	colonial_migration_size_modifier = 0.25
 }
@@ -768,12 +528,7 @@ vice_roys = {
 	age = age_4_reformation
 	requires = free_colonies
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_expansion_tt
-			has_variable = abm_focus_expansion
-		}
-	}
+	potential = { has_variable = abm_focus_expansion }
 
 	subject_pays_colonial_cost_modifier = 0.50
 	diplomatic_range_modifier = 0.25
@@ -783,12 +538,7 @@ merchant_power_from_maritime_rev_dip_choice = {
 	age = age_4_reformation
 	requires = vice_roys
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_expansion_tt
-			has_variable = abm_focus_expansion
-		}
-	}
+	potential = { has_variable = abm_focus_expansion }
 
 	merchant_power_from_maritime_modifier = 0.1
 }
@@ -797,14 +547,8 @@ overseas_merchants = {
 	age = age_4_reformation
 	icon = merchant_power_from_maritime_reformation_advance
 	requires = merchant_power_from_maritime_rev_dip_choice
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_expansion_tt
-			has_variable = abm_focus_expansion
-		}
-	}
+	potential = { has_variable = abm_focus_expansion }
 
 	trade_range_modifier = 0.5
 }
@@ -818,12 +562,7 @@ ecumenism = {
 	icon = cultural_acceptance_advance
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_humanism_tt
-			has_variable = abm_focus_humanism
-		}
-	}
+	potential = { has_variable = abm_focus_humanism }
 
 	tolerance_heretic = 1.5
 }
@@ -833,12 +572,7 @@ humanist_tolerance = {
 	icon = cultural_acceptance_advance
 	requires = ecumenism
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_humanism_tt
-			has_variable = abm_focus_humanism
-		}
-	}
+	potential = { has_variable = abm_focus_humanism }
 
 	tolerance_heathen = 1.5
 }
@@ -847,14 +581,8 @@ abm_integration_of_cultures = {
 	age = age_4_reformation
 	icon = cultural_ties
 	requires = humanist_tolerance
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_humanism_tt
-			has_variable = abm_focus_humanism
-		}
-	}
+	potential = { has_variable = abm_focus_humanism }
 
 	add_accepted_culture_cost_modifier = -0.5
 	change_primary_culture_cost_modifier = -0.5
@@ -864,12 +592,7 @@ cultural_ties = {
 	age = age_4_reformation
 	requires = ecumenism
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_humanism_tt
-			has_variable = abm_focus_humanism
-		}
-	}
+	potential = { has_variable = abm_focus_humanism }
 
 	cultures_capacity = 2
 }
@@ -879,12 +602,7 @@ abm_compromise = {
 	icon = cultural_acceptance_advance
 	requires = cultural_ties
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_humanism_tt
-			has_variable = abm_focus_humanism
-		}
-	}
+	potential = { has_variable = abm_focus_humanism }
 
 	monthly_rebel_growth = -0.001
 	monthly_religious_rebel_growth = -0.001
@@ -894,14 +612,8 @@ abm_compromise = {
 cultures_capacity_mil_choice = {
 	age = age_4_reformation
 	requires = abm_compromise
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_humanism_tt
-			has_variable = abm_focus_humanism
-		}
-	}
+	potential = { has_variable = abm_focus_humanism }
 
 	cultures_capacity_modifier = 0.25
 }
@@ -915,12 +627,7 @@ cabinet = {
 	icon = scholasticism
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_administration_tt
-			has_variable = abm_focus_administration
-		}
-	}
+	potential = { has_variable = abm_focus_administration }
 
 	country_cabinet_efficiency = 0.20
 }
@@ -930,12 +637,7 @@ national_bank = {
 	icon = debt_and_loans
 	requires = cabinet
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_administration_tt
-			has_variable = abm_focus_administration
-		}
-	}
+	potential = { has_variable = abm_focus_administration }
 
 	minting_income_factor = 0.10
 	max_bonds = 1
@@ -945,14 +647,8 @@ civil_servants = {
 	age = age_5_absolutism
 	icon = scholasticism
 	requires = national_bank
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_administration_tt
-			has_variable = abm_focus_administration
-		}
-	}
+	potential = { has_variable = abm_focus_administration }
 
 	global_monthly_control = 0.001
 	global_monthly_control_decline = -0.002
@@ -963,12 +659,7 @@ legislative_efficiency_idea = {
 	icon = scholasticism
 	requires = cabinet
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_administration_tt
-			has_variable = abm_focus_administration
-		}
-	}
+	potential = { has_variable = abm_focus_administration }
 
 	legislative_efficiency = 0.25
 	change_policy_cost_modifier = -0.25
@@ -979,12 +670,7 @@ centralized_government = {
 	icon = road_building
 	requires = legislative_efficiency_idea
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_administration_tt
-			has_variable = abm_focus_administration
-		}
-	}
+	potential = { has_variable = abm_focus_administration }
 
 	global_distance_from_capital_speed_propagation = 0.1
 }
@@ -993,14 +679,8 @@ economic_ideas = {
 	age = age_5_absolutism
 	icon = expanded_supply_trains
 	requires = centralized_government
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_administration_tt
-			has_variable = abm_focus_administration
-		}
-	}
+	potential = { has_variable = abm_focus_administration }
 
 	global_monthly_development = 0.001
 }
@@ -1013,12 +693,7 @@ competetive_merchants = {
 	age = age_5_absolutism
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_commerce_tt
-			has_variable = abm_focus_commerce
-		}
-	}
+	potential = { has_variable = abm_focus_commerce }
 
 	global_merchant_power = 0.2
 }
@@ -1028,12 +703,7 @@ national_trade_policy = {
 	icon = merchant_power_from_maritime_reformation_advance
 	requires = competetive_merchants
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_commerce_tt
-			has_variable = abm_focus_commerce
-		}
-	}
+	potential = { has_variable = abm_focus_commerce }
 
 	selling_efficiency = small_trade_efficiency_bonus
 }
@@ -1042,14 +712,8 @@ fast_negotiations = {
 	age = age_5_absolutism
 	icon = merchant_power_from_maritime_reformation_advance
 	requires = national_trade_policy
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_commerce_tt
-			has_variable = abm_focus_commerce
-		}
-	}
+	potential = { has_variable = abm_focus_commerce }
 
 	merchant_maintenance_efficiency = 0.20
 }
@@ -1058,12 +722,7 @@ free_trade = {
 	age = age_5_absolutism
 	requires = competetive_merchants
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_commerce_tt
-			has_variable = abm_focus_commerce
-		}
-	}
+	potential = { has_variable = abm_focus_commerce }
 
 	global_merchant_capacity_modifier = 0.20
 }
@@ -1073,12 +732,7 @@ trade_manipulation = {
 	icon = global_supply_limit_modifier_advance_5
 	requires = free_trade
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_commerce_tt
-			has_variable = abm_focus_commerce
-		}
-	}
+	potential = { has_variable = abm_focus_commerce }
 
 	global_trade_center_power = 0.10
 }
@@ -1087,14 +741,8 @@ bookkeeping = {
 	age = age_5_absolutism
 	icon = debt_and_loans
 	requires = trade_manipulation
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_commerce_tt
-			has_variable = abm_focus_commerce
-		}
-	}
+	potential = { has_variable = abm_focus_commerce }
 
 	bank_interest = -0.01
 	max_bonds = 1
@@ -1109,12 +757,7 @@ vetting = {
 	icon = debt_and_loans
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_espionage_tt
-			has_variable = abm_focus_espionage
-		}
-	}
+	potential = { has_variable = abm_focus_espionage }
 
 	counter_espionage = 0.33
 }
@@ -1124,12 +767,7 @@ efficient_spies = {
 	icon = efficient_spies
 	requires = vetting
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_espionage_tt
-			has_variable = abm_focus_espionage
-		}
-	}
+	potential = { has_variable = abm_focus_espionage }
 
 	spy_network_construction = 0.5
 }
@@ -1138,14 +776,8 @@ REPLACE:infiltrate_administration_advance = {
 	age = age_5_absolutism
 	icon = efficient_spies
 	requires = efficient_spies
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_espionage_tt
-			has_variable = abm_focus_espionage
-		}
-	}
+	potential = { has_variable = abm_focus_espionage }
 
 	unlock_diplomacy = { infiltrate_administration }
 }
@@ -1155,12 +787,7 @@ foreign_embassies = {
 	icon = diplomatic_influence
 	requires = vetting
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_espionage_tt
-			has_variable = abm_focus_espionage
-		}
-	}
+	potential = { has_variable = abm_focus_espionage }
 
 	monthly_diplomats = 0.1
 	max_diplomats = 1
@@ -1171,12 +798,7 @@ abm_global_networks = {
 	icon = diplomatic_influence
 	requires = foreign_embassies
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_espionage_tt
-			has_variable = abm_focus_espionage
-		}
-	}
+	potential = { has_variable = abm_focus_espionage }
 
 	diplomatic_range_modifier = 0.5
 	diplomatic_range = 500
@@ -1186,14 +808,8 @@ abm_industrial_espionage = {
 	age = age_5_absolutism
 	icon = efficient_spies
 	requires = abm_global_networks
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_espionage_tt
-			has_variable = abm_focus_espionage
-		}
-	}
+	potential = { has_variable = abm_focus_espionage }
 
 	unlock_country_interaction = steal_technology
 }
@@ -1207,12 +823,7 @@ audit_checks = {
 	icon = genoese_banking_traditions
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_industry_tt
-			has_variable = abm_focus_industry
-		}
-	}
+	potential = { has_variable = abm_focus_industry }
 
 	tax_income_efficiency = large_tax_income_efficiency_bonus
 }
@@ -1222,12 +833,7 @@ formal_administration = {
 	icon = crown_power_advance_renaissance
 	requires = audit_checks
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_industry_tt
-			has_variable = abm_focus_industry
-		}
-	}
+	potential = { has_variable = abm_focus_industry }
 
 	government_size = 1
 }
@@ -1236,14 +842,8 @@ smithian_economics = {
 	age = age_6_revolutions
 	icon = efficient_mining
 	requires = formal_administration
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_industry_tt
-			has_variable = abm_focus_industry
-		}
-	}
+	potential = { has_variable = abm_focus_industry }
 
 	global_production_efficiency = medium_production_efficiency_bonus
 	global_monthly_development = 0.002
@@ -1254,12 +854,7 @@ regulation_bureau = {
 	icon = debt_and_loans
 	requires = audit_checks
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_industry_tt
-			has_variable = abm_focus_industry
-		}
-	}
+	potential = { has_variable = abm_focus_industry }
 
 	minting_inflation_threshold = 0.02
 }
@@ -1269,12 +864,7 @@ abm_industrial_scale_extraction = {
 	icon = efficient_mining
 	requires = regulation_bureau
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_industry_tt
-			has_variable = abm_focus_industry
-		}
-	}
+	potential = { has_variable = abm_focus_industry }
 
 	global_max_rgo_size_modifier = 0.20
 }
@@ -1283,14 +873,8 @@ abm_modern_extraction_methods = {
 	age = age_6_revolutions
 	icon = efficient_mining
 	requires = abm_industrial_scale_extraction
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_industry_tt
-			has_variable = abm_focus_industry
-		}
-	}
+	potential = { has_variable = abm_focus_industry }
 
 	global_raw_material_output = 0.20
 }
@@ -1304,12 +888,7 @@ global_empire = {
 	icon = genoese_banking_traditions
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_empire_tt
-			has_variable = abm_focus_empire
-		}
-	}
+	potential = { has_variable = abm_focus_empire }
 
 	subject_income_modifier = 0.05
 	tax_income_efficiency = medium_tax_income_efficiency_bonus
@@ -1320,12 +899,7 @@ local_traditions = {
 	icon = grand_banquets
 	requires = global_empire
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_empire_tt
-			has_variable = abm_focus_empire
-		}
-	}
+	potential = { has_variable = abm_focus_empire }
 
 	global_estate_target_satisfaction = small_permanent_target_satisfaction
 }
@@ -1334,14 +908,8 @@ postal_service = {
 	age = age_6_revolutions
 	icon = road_building
 	requires = local_traditions
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_empire_tt
-			has_variable = abm_focus_empire
-		}
-	}
+	potential = { has_variable = abm_focus_empire }
 
 	road_cost_on_distance_from_capital = -2
 	sea_cost_on_distance_from_capital_when_maritime = -1
@@ -1351,12 +919,7 @@ port_cost_distance_from_capital_choice_mil = {
 	age = age_6_revolutions
 	requires = global_empire
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_empire_tt
-			has_variable = abm_focus_empire
-		}
-	}
+	potential = { has_variable = abm_focus_empire }
 
 	port_cost_distance_from_capital = -5
 }
@@ -1366,12 +929,7 @@ abm_imperial_administration = {
 	icon = court_accounting
 	requires = port_cost_distance_from_capital_choice_mil
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_empire_tt
-			has_variable = abm_focus_empire
-		}
-	}
+	potential = { has_variable = abm_focus_empire }
 
 	num_local_governors = 1
 }
@@ -1380,14 +938,8 @@ abm_overseas_holdings = {
 	age = age_6_revolutions
 	icon = expansionism
 	requires = abm_imperial_administration
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_empire_tt
-			has_variable = abm_focus_empire
-		}
-	}
+	potential = { has_variable = abm_focus_empire }
 
 	num_naval_governors = 1
 }
@@ -1401,12 +953,7 @@ abm_national_academy_of_sciences = {
 	icon = scholasticism
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_innovation_tt
-			has_variable = abm_focus_innovation
-		}
-	}
+	potential = { has_variable = abm_focus_innovation }
 
 	research_speed = 0.05
 }
@@ -1416,12 +963,7 @@ abm_the_scientific_method = {
 	icon = scholasticism
 	requires = abm_national_academy_of_sciences
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_innovation_tt
-			has_variable = abm_focus_innovation
-		}
-	}
+	potential = { has_variable = abm_focus_innovation }
 
 	research_speed_modifier = 0.25
 }
@@ -1430,14 +972,8 @@ abm_belle_epoque = {
 	age = age_6_revolutions
 	icon = scholasticism
 	requires = abm_the_scientific_method
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_innovation_tt
-			has_variable = abm_focus_innovation
-		}
-	}
+	potential = { has_variable = abm_focus_innovation }
 
 	cultural_influence_modifier = 0.5
 	work_of_art_quality_modifier = 0.5
@@ -1451,12 +987,7 @@ humanism = {
 	icon = scholasticism
 	requires = abm_national_academy_of_sciences
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_innovation_tt
-			has_variable = abm_focus_innovation
-		}
-	}
+	potential = { has_variable = abm_focus_innovation }
 
 	global_max_literacy = 10
 }
@@ -1466,12 +997,7 @@ abm_universal_literacy = {
 	icon = scholasticism
 	requires = humanism
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_innovation_tt
-			has_variable = abm_focus_innovation
-		}
-	}
+	potential = { has_variable = abm_focus_innovation }
 
 	global_monthly_literacy = 0.1
 }
@@ -1480,14 +1006,8 @@ optimism = {
 	age = age_6_revolutions
 	icon = printing_press_advance
 	requires = abm_universal_literacy
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_innovation_tt
-			has_variable = abm_focus_innovation
-		}
-	}
+	potential = { has_variable = abm_focus_innovation }
 
 	monthly_war_exhaustion = -0.05
 }

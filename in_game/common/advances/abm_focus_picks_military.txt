@@ -14,12 +14,7 @@ enforced_service = {
 	icon = offensive_army
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_levy_tt
-			has_variable = abm_focus_levy
-		}
-	}
+	potential = { has_variable = abm_focus_levy }
 
 	global_levy_size_modifier = 0.1
 }
@@ -29,12 +24,7 @@ open_levy_standards = {
 	icon = regiment_reinforcement_speed_renaissance
 	requires = enforced_service
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_levy_tt
-			has_variable = abm_focus_levy
-		}
-	}
+	potential = { has_variable = abm_focus_levy }
 
 	wrong_culture_levy_size = 0.25
 }
@@ -43,14 +33,8 @@ regular_levy_training = {
 	age = age_2_renaissance
 	icon = drill_army_advance
 	requires = open_levy_standards
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_levy_tt
-			has_variable = abm_focus_levy
-		}
-	}
+	potential = { has_variable = abm_focus_levy }
 
 	levy_combat_efficiency_modifier = 0.10
 }
@@ -60,12 +44,7 @@ battlefield_commisions = {
 	icon = expansionism
 	requires = enforced_service
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_levy_tt
-			has_variable = abm_focus_levy
-		}
-	}
+	potential = { has_variable = abm_focus_levy }
 
 	army_tradition_from_battle = 1.0
 }
@@ -75,12 +54,7 @@ abm_local_militias = {
 	icon = regimental_system
 	requires = battlefield_commisions
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_levy_tt
-			has_variable = abm_focus_levy
-		}
-	}
+	potential = { has_variable = abm_focus_levy }
 
 	global_levy_recruitment_speed_modifier = 0.33
 	levy_maintenance_modifier = -0.5
@@ -90,14 +64,8 @@ abm_feudal_obligations = {
 	age = age_2_renaissance
 	icon = defensive_army
 	requires = abm_local_militias
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_levy_tt
-			has_variable = abm_focus_levy
-		}
-	}
+	potential = { has_variable = abm_focus_levy }
 
 	levy_recovery_modifier = 0.10
 }
@@ -111,12 +79,7 @@ benefits_for_mercenaries = {
 	icon = regimental_system
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_mercenary_tt
-			has_variable = abm_focus_mercenary
-		}
-	}
+	potential = { has_variable = abm_focus_mercenary }
 
 	mercenary_maintenance_efficiency = 0.1
 }
@@ -126,12 +89,7 @@ organised_mercenary_recruitment = {
 	icon = regimental_system
 	requires = benefits_for_mercenaries
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_mercenary_tt
-			has_variable = abm_focus_mercenary
-		}
-	}
+	potential = { has_variable = abm_focus_mercenary }
 
 	mercenary_range_modifier = 0.5
 }
@@ -140,14 +98,8 @@ organised_mercenary_payment = {
 	age = age_2_renaissance
 	icon = regimental_system
 	requires = organised_mercenary_recruitment
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_mercenary_tt
-			has_variable = abm_focus_mercenary
-		}
-	}
+	potential = { has_variable = abm_focus_mercenary }
 
 	hire_mercenary_premium_cost_modifier = -0.2
 }
@@ -157,12 +109,7 @@ glorious_arms = {
 	icon = glorious_arms
 	requires = benefits_for_mercenaries
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_mercenary_tt
-			has_variable = abm_focus_mercenary
-		}
-	}
+	potential = { has_variable = abm_focus_mercenary }
 
 	prestige_from_land_battle = 1.0
 }
@@ -172,12 +119,7 @@ abm_ensure_mercenary_payments = {
 	icon = regimental_system
 	requires = glorious_arms
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_mercenary_tt
-			has_variable = abm_focus_mercenary
-		}
-	}
+	potential = { has_variable = abm_focus_mercenary }
 
 	hire_mercenary_leader_cost_modifier = -0.75
 }
@@ -186,14 +128,8 @@ tolerance_idea = {
 	age = age_2_renaissance
 	icon = cultural_acceptance_advance
 	requires = abm_ensure_mercenary_payments
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_mercenary_tt
-			has_variable = abm_focus_mercenary
-		}
-	}
+	potential = { has_variable = abm_focus_mercenary }
 
 	tolerance_heretic = 0.5
 	tolerance_heathen = 0.5
@@ -208,12 +144,7 @@ improved_rams = {
 	icon = global_trade_routes_advance
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maritime_tt
-			has_variable = abm_focus_maritime
-		}
-	}
+	potential = { has_variable = abm_focus_maritime }
 
 	navy_galley_power = 0.15
 	navy_galley_maintenance_cost_modifier = -0.10
@@ -224,12 +155,7 @@ boarding_parties = {
 	icon = gunpowder_advance
 	requires = improved_rams
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maritime_tt
-			has_variable = abm_focus_maritime
-		}
-	}
+	potential = { has_variable = abm_focus_maritime }
 
 	naval_damage_done = 0.1
 }
@@ -238,14 +164,8 @@ marine_regiments = {
 	age = age_2_renaissance
 	icon = global_trade_routes_advance
 	requires = boarding_parties
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maritime_tt
-			has_variable = abm_focus_maritime
-		}
-	}
+	potential = { has_variable = abm_focus_maritime }
 
 	army_disembark_speed = 0.33
 }
@@ -255,12 +175,7 @@ naval_glory = {
 	icon = ship_building_advance
 	requires = improved_rams
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maritime_tt
-			has_variable = abm_focus_maritime
-		}
-	}
+	potential = { has_variable = abm_focus_maritime }
 
 	navy_tradition_from_battle = 1.0
 	prestige_from_naval_battle = 1.0
@@ -271,12 +186,7 @@ privateers = {
 	icon = letters_of_marque
 	requires = naval_glory
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maritime_tt
-			has_variable = abm_focus_maritime
-		}
-	}
+	potential = { has_variable = abm_focus_maritime }
 
 	can_hire_privateers = yes
 	anti_piracy_warfare_modifier = 0.25
@@ -286,14 +196,8 @@ ships_penny = {
 	age = age_2_renaissance
 	icon = rudimentary_coastal_ship_repair
 	requires = privateers
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maritime_tt
-			has_variable = abm_focus_maritime
-		}
-	}
+	potential = { has_variable = abm_focus_maritime }
 
 	ship_build_speed = 0.25
 }
@@ -307,12 +211,7 @@ formalized_officer_corps = {
 	icon = expansionism
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quality_tt
-			has_variable = abm_focus_quality
-		}
-	}
+	potential = { has_variable = abm_focus_quality }
 
 	army_initiative = 0.25
 }
@@ -321,12 +220,7 @@ administrative_leadership = {
 	age = age_3_discovery
 	requires = formalized_officer_corps
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quality_tt
-			has_variable = abm_focus_quality
-		}
-	}
+	potential = { has_variable = abm_focus_quality }
 
 	hire_advisor_cost_modifier = -0.25
 	train_general_cost_modifier = -0.25
@@ -337,14 +231,8 @@ quality_education = {
 	age = age_3_discovery
 	icon = diplomatic_influence
 	requires = administrative_leadership
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quality_tt
-			has_variable = abm_focus_quality
-		}
-	}
+	potential = { has_variable = abm_focus_quality }
 
 	monthly_army_tradition = 0.1
 }
@@ -354,12 +242,7 @@ abm_drill_sergeants = {
 	icon = offensive_army
 	requires = formalized_officer_corps
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quality_tt
-			has_variable = abm_focus_quality
-		}
-	}
+	potential = { has_variable = abm_focus_quality }
 
 	monthly_experience_gain = 0.5
 }
@@ -369,12 +252,7 @@ abm_trained_march = {
 	icon = expanded_supply_trains
 	requires = abm_drill_sergeants
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quality_tt
-			has_variable = abm_focus_quality
-		}
-	}
+	potential = { has_variable = abm_focus_quality }
 
 	land_morale_movement_cost = -0.0002
 }
@@ -383,14 +261,8 @@ military_drill = {
 	age = age_3_discovery
 	icon = recruitment_improvements_renaissance
 	requires = abm_trained_march
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quality_tt
-			has_variable = abm_focus_quality
-		}
-	}
+	potential = { has_variable = abm_focus_quality }
 
 	land_morale_modifier = 0.10
 
@@ -406,12 +278,7 @@ abm_rapid_reinforcement = {
 	icon = regimental_system
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quantity_tt
-			has_variable = abm_focus_quantity
-		}
-	}
+	potential = { has_variable = abm_focus_quantity }
 
 	combat_speed_modifier = 0.10
 }
@@ -421,12 +288,7 @@ camp_followers = {
 	icon = global_supply_limit_modifier_advance_5
 	requires = abm_rapid_reinforcement
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quantity_tt
-			has_variable = abm_focus_quantity
-		}
-	}
+	potential = { has_variable = abm_focus_quantity }
 
 	global_supply_limit_modifier = 0.1
 }
@@ -435,14 +297,8 @@ the_old_and_infirm = {
 	age = age_3_discovery
 	icon = improved_foraging
 	requires = camp_followers
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quantity_tt
-			has_variable = abm_focus_quantity
-		}
-	}
+	potential = { has_variable = abm_focus_quantity }
 
 	army_maintenance_efficiency = 0.1
 }
@@ -452,12 +308,7 @@ abm_deep_reserves = {
 	icon = defensive_army
 	requires = abm_rapid_reinforcement
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quantity_tt
-			has_variable = abm_focus_quantity
-		}
-	}
+	potential = { has_variable = abm_focus_quantity }
 
 	army_reinforce_efficiency = 0.2
 }
@@ -466,12 +317,7 @@ supply_trains = {
 	age = age_3_discovery
 	requires = abm_deep_reserves
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quantity_tt
-			has_variable = abm_focus_quantity
-		}
-	}
+	potential = { has_variable = abm_focus_quantity }
 
 	food_consumption_modifier = -0.10
 }
@@ -480,14 +326,8 @@ grand_army = {
 	age = age_3_discovery
 	icon = regiment_reinforcement_speed_renaissance
 	requires = supply_trains
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_quantity_tt
-			has_variable = abm_focus_quantity
-		}
-	}
+	potential = { has_variable = abm_focus_quantity }
 
 	global_manpower_modifier = 0.10
 }
@@ -501,12 +341,7 @@ oak_forests_for_ships = {
 	icon = rudimentary_coastal_ship_repair
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_naval_tt
-			has_variable = abm_focus_naval
-		}
-	}
+	potential = { has_variable = abm_focus_naval }
 
 	navy_heavy_ship_power = 0.10
 	navy_heavy_ship_maintenance_cost_modifier = -0.10
@@ -517,12 +352,7 @@ abm_patrol_vessels = {
 	icon = naval_morale_advance_1
 	requires = oak_forests_for_ships
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_naval_tt
-			has_variable = abm_focus_naval
-		}
-	}
+	potential = { has_variable = abm_focus_naval }
 
 	navy_light_ship_power = 0.10
 	navy_light_ship_build_cost_modifier = -0.20
@@ -533,14 +363,8 @@ abm_naval_education = {
 	age = age_3_discovery
 	icon = naval_morale_advance_1
 	requires = abm_patrol_vessels
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_naval_tt
-			has_variable = abm_focus_naval
-		}
-	}
+	potential = { has_variable = abm_focus_naval }
 
 	monthly_navy_tradition = 0.1
 }
@@ -550,12 +374,7 @@ copper_bottoms = {
 	icon = ship_building_advance
 	requires = oak_forests_for_ships
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_naval_tt
-			has_variable = abm_focus_naval
-		}
-	}
+	potential = { has_variable = abm_focus_naval }
 
 	naval_unit_attrition = -0.25
 }
@@ -565,12 +384,7 @@ naval_drill = {
 	icon = offensive_army
 	requires = copper_bottoms
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_naval_tt
-			has_variable = abm_focus_naval
-		}
-	}
+	potential = { has_variable = abm_focus_naval }
 
 	naval_morale_modifier = 0.10
 }
@@ -579,14 +393,8 @@ grand_navy = {
 	age = age_3_discovery
 	icon = maritime_advance_age_2
 	requires = naval_drill
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_naval_tt
-			has_variable = abm_focus_naval
-		}
-	}
+	potential = { has_variable = abm_focus_naval }
 
 	navy_maintenance_efficiency = 0.1
 }
@@ -600,12 +408,7 @@ expanded_supply_trains = {
 	icon = expanded_supply_trains
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_offense_tt
-			has_variable = abm_focus_offense
-		}
-	}
+	potential = { has_variable = abm_focus_offense }
 
 	land_unit_attrition = -0.15
 }
@@ -615,12 +418,7 @@ abm_night_assaults = {
 	icon = offensive_army
 	requires = expanded_supply_trains
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_offense_tt
-			has_variable = abm_focus_offense
-		}
-	}
+	potential = { has_variable = abm_focus_offense }
 
 	assault_ability = 0.20
 }
@@ -629,14 +427,8 @@ engineer_corps = {
 	age = age_4_reformation
 	icon = gunpowder_advance
 	requires = abm_night_assaults
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_offense_tt
-			has_variable = abm_focus_offense
-		}
-	}
+	potential = { has_variable = abm_focus_offense }
 
 	siege_ability = 0.20
 }
@@ -646,12 +438,7 @@ abm_standardized_barrels = {
 	icon = efficient_mining
 	requires = expanded_supply_trains
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_offense_tt
-			has_variable = abm_focus_offense
-		}
-	}
+	potential = { has_variable = abm_focus_offense }
 
 	army_artillery_build_cost_modifier = -0.10
 	global_cannons_output_modifier = 0.05
@@ -662,12 +449,7 @@ superior_firepower = {
 	icon = gunpowder_advance
 	requires = abm_standardized_barrels
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_offense_tt
-			has_variable = abm_focus_offense
-		}
-	}
+	potential = { has_variable = abm_focus_offense }
 
 	army_artillery_power = 0.1
 }
@@ -676,14 +458,8 @@ abm_siege_artillery = {
 	age = age_4_reformation
 	icon = offensive_army
 	requires = superior_firepower
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_offense_tt
-			has_variable = abm_focus_offense
-		}
-	}
+	potential = { has_variable = abm_focus_offense }
 
 	artillery_bonus_vs_fort = 1
 }
@@ -697,12 +473,7 @@ defensive_army = {
 	icon = artillery_institution_advance
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_defense_tt
-			has_variable = abm_focus_defense
-		}
-	}
+	potential = { has_variable = abm_focus_defense }
 
 	global_hostile_attrition = 1
 }
@@ -712,12 +483,7 @@ garrison_conscription = {
 	icon = regiment_reinforcement_speed_renaissance
 	requires = defensive_army
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_defense_tt
-			has_variable = abm_focus_defense
-		}
-	}
+	potential = { has_variable = abm_focus_defense }
 
 	global_garrison_size_modifier = 0.20
 	global_garrison_growth = 0.025
@@ -726,14 +492,8 @@ garrison_conscription = {
 defensive_mentality = {
 	age = age_4_reformation
 	requires = garrison_conscription
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_defense_tt
-			has_variable = abm_focus_defense
-		}
-	}
+	potential = { has_variable = abm_focus_defense }
 
 	global_defensive = 0.2
 }
@@ -743,12 +503,7 @@ abm_earthworks = {
 	icon = defensive_mentality
 	requires = defensive_army
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_defense_tt
-			has_variable = abm_focus_defense
-		}
-	}
+	potential = { has_variable = abm_focus_defense }
 
 	global_fort_build_buildings_efficiency = 0.4
 }
@@ -758,12 +513,7 @@ fort_logistics = {
 	icon = renaissance_development
 	requires = abm_earthworks
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_defense_tt
-			has_variable = abm_focus_defense
-		}
-	}
+	potential = { has_variable = abm_focus_defense }
 
 	fort_maintenance_efficiency = 0.2
 }
@@ -772,14 +522,8 @@ abm_fortified_cities_focus = {
 	age = age_4_reformation
 	icon = defensive_mentality
 	requires = fort_logistics
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_defense_tt
-			has_variable = abm_focus_defense
-		}
-	}
+	potential = { has_variable = abm_focus_defense }
 
 	fort_limit_modifier = 0.10
 	fort_limit = 8
@@ -794,12 +538,7 @@ abm_gun_galleys = {
 	icon = naval_morale_advance_1
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_littoral_fleet_tt
-			has_variable = abm_focus_littoral_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_littoral_fleet }
 
 	navy_galley_power = 0.10
 	navy_galley_build_cost_modifier = -0.20
@@ -810,12 +549,7 @@ naval_cadets = {
 	icon = safe_exploration_techniques_advance
 	requires = abm_gun_galleys
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_littoral_fleet_tt
-			has_variable = abm_focus_littoral_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_littoral_fleet }
 
 	navy_initiative = 0.75
 }
@@ -824,14 +558,8 @@ merchant_marine = {
 	age = age_4_reformation
 	icon = maritime_advance_age_2
 	requires = naval_cadets
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_littoral_fleet_tt
-			has_variable = abm_focus_littoral_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_littoral_fleet }
 
 	global_sailors_modifier = 0.20
 }
@@ -841,12 +569,7 @@ improved_shipyards = {
 	icon = rudimentary_coastal_ship_repair
 	requires = abm_gun_galleys
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_littoral_fleet_tt
-			has_variable = abm_focus_littoral_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_littoral_fleet }
 
 	ship_build_speed = 0.50
 }
@@ -856,12 +579,7 @@ abm_home_fleet = {
 	icon = naval_morale_advance_1
 	requires = improved_shipyards
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_littoral_fleet_tt
-			has_variable = abm_focus_littoral_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_littoral_fleet }
 
 	own_coast_naval_combat_bonus = 0.15
 }
@@ -870,14 +588,8 @@ sheltered_ports = {
 	age = age_4_reformation
 	icon = rudimentary_coastal_ship_repair
 	requires = abm_home_fleet
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_littoral_fleet_tt
-			has_variable = abm_focus_littoral_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_littoral_fleet }
 
 	navy_repair_efficiency = 0.3
 }
@@ -891,12 +603,7 @@ improved_manuever = {
 	icon = regimental_system
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maneuver_tt
-			has_variable = abm_focus_maneuver
-		}
-	}
+	potential = { has_variable = abm_focus_maneuver }
 
 	combat_speed_modifier = 0.10
 }
@@ -906,12 +613,7 @@ abm_forced_march = {
 	icon = expanded_supply_trains
 	requires = improved_manuever
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maneuver_tt
-			has_variable = abm_focus_maneuver
-		}
-	}
+	potential = { has_variable = abm_focus_maneuver }
 
 	army_movement_speed = 0.10
 }
@@ -919,14 +621,8 @@ abm_forced_march = {
 land_morale_movement_cost_rev_choice_mil = {
 	age = age_5_absolutism
 	requires = abm_forced_march
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maneuver_tt
-			has_variable = abm_focus_maneuver
-		}
-	}
+	potential = { has_variable = abm_focus_maneuver }
 
 	land_morale_movement_cost = -0.0002
 }
@@ -936,12 +632,7 @@ abm_bold_maneuvers = {
 	icon = offensive_army
 	requires = improved_manuever
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maneuver_tt
-			has_variable = abm_focus_maneuver
-		}
-	}
+	potential = { has_variable = abm_focus_maneuver }
 
 	movement_speed_if_no_road = 0.20
 }
@@ -951,12 +642,7 @@ abm_limbers = {
 	icon = offensive_army
 	requires = abm_bold_maneuvers
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maneuver_tt
-			has_variable = abm_focus_maneuver
-		}
-	}
+	potential = { has_variable = abm_focus_maneuver }
 
 	army_movement_speed = 0.05
 }
@@ -965,14 +651,8 @@ offensive_army = {
 	age = age_5_absolutism
 	icon = offensive_army
 	requires = abm_limbers
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_maneuver_tt
-			has_variable = abm_focus_maneuver
-		}
-	}
+	potential = { has_variable = abm_focus_maneuver }
 
 	land_morale_recovery = 0.02
 }
@@ -986,12 +666,7 @@ abm_enduring_hardships = {
 	icon = improved_foraging
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_logistics_tt
-			has_variable = abm_focus_logistics
-		}
-	}
+	potential = { has_variable = abm_focus_logistics }
 
 	land_morale_attrition_cost = -0.25
 }
@@ -1001,12 +676,7 @@ improved_foraging = {
 	icon = improved_foraging
 	requires = abm_enduring_hardships
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_logistics_tt
-			has_variable = abm_focus_logistics
-		}
-	}
+	potential = { has_variable = abm_focus_logistics }
 
 	land_unit_attrition = -0.20
 }
@@ -1015,14 +685,8 @@ abm_prepared_camps = {
 	age = age_5_absolutism
 	icon = expanded_supply_trains
 	requires = improved_foraging
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_logistics_tt
-			has_variable = abm_focus_logistics
-		}
-	}
+	potential = { has_variable = abm_focus_logistics }
 
 	global_supply_limit_modifier = 0.10
 }
@@ -1032,12 +696,7 @@ improved_logistics = {
 	icon = glorious_arms
 	requires = abm_enduring_hardships
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_logistics_tt
-			has_variable = abm_focus_logistics
-		}
-	}
+	potential = { has_variable = abm_focus_logistics }
 
 	army_logistics_distance_modifier = 0.10
 }
@@ -1047,12 +706,7 @@ abm_logistics_corps = {
 	icon = expanded_supply_trains
 	requires = improved_logistics
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_logistics_tt
-			has_variable = abm_focus_logistics
-		}
-	}
+	potential = { has_variable = abm_focus_logistics }
 
 	army_auxiliary_power = 0.50
 	army_auxiliary_build_cost_modifier = -0.20
@@ -1063,14 +717,8 @@ abm_trained_reserves = {
 	age = age_5_absolutism
 	icon = defensive_army
 	requires = abm_logistics_corps
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_logistics_tt
-			has_variable = abm_focus_logistics
-		}
-	}
+	potential = { has_variable = abm_focus_logistics }
 
 	regiment_reinforcement_speed = 0.10
 }
@@ -1084,12 +732,7 @@ abm_ships_of_the_line = {
 	icon = naval_morale_advance_1
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_highseas_fleet_tt
-			has_variable = abm_focus_highseas_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_highseas_fleet }
 
 	navy_heavy_ship_power = 0.10
 	navy_heavy_ship_build_cost_modifier = -0.20
@@ -1100,12 +743,7 @@ sea_hawks = {
 	icon = safe_exploration_techniques_advance
 	requires = abm_ships_of_the_line
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_highseas_fleet_tt
-			has_variable = abm_focus_highseas_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_highseas_fleet }
 
 	navy_initiative = 0.75
 }
@@ -1114,14 +752,8 @@ escort_ships = {
 	age = age_5_absolutism
 	icon = global_trade_routes_advance
 	requires = sea_hawks
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_highseas_fleet_tt
-			has_variable = abm_focus_highseas_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_highseas_fleet }
 
 	naval_damage_taken = -0.1
 }
@@ -1131,12 +763,7 @@ superior_seamanship = {
 	icon = global_trade_routes_advance
 	requires = abm_ships_of_the_line
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_highseas_fleet_tt
-			has_variable = abm_focus_highseas_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_highseas_fleet }
 
 	naval_morale_modifier = 0.1
 }
@@ -1146,12 +773,7 @@ naval_fighting_instruction = {
 	icon = gunpowder_advance
 	requires = superior_seamanship
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_highseas_fleet_tt
-			has_variable = abm_focus_highseas_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_highseas_fleet }
 
 	blockade_efficiency = 0.5
 	ship_repair_at_sea = 0.025
@@ -1161,14 +783,8 @@ press_gangs = {
 	age = age_5_absolutism
 	icon = rudimentary_coastal_ship_repair
 	requires = naval_fighting_instruction
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_highseas_fleet_tt
-			has_variable = abm_focus_highseas_fleet
-		}
-	}
+	potential = { has_variable = abm_focus_highseas_fleet }
 
 	navy_repair_efficiency = 0.3
 }
@@ -1182,12 +798,7 @@ discipline_drills = {
 	icon = glorious_arms
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_voluntary_service_tt
-			has_variable = abm_focus_voluntary_service
-		}
-	}
+	potential = { has_variable = abm_focus_voluntary_service }
 
 	discipline = 0.05
 }
@@ -1197,12 +808,7 @@ abm_thorough_training = {
 	icon = offensive_army
 	requires = discipline_drills
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_voluntary_service_tt
-			has_variable = abm_focus_voluntary_service
-		}
-	}
+	potential = { has_variable = abm_focus_voluntary_service }
 
 	regiment_recruit_speed = -0.50
 	monthly_experience_gain = 0.25
@@ -1212,14 +818,8 @@ regimental_system = {
 	age = age_6_revolutions
 	icon = regimental_system
 	requires = abm_thorough_training
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_voluntary_service_tt
-			has_variable = abm_focus_voluntary_service
-		}
-	}
+	potential = { has_variable = abm_focus_voluntary_service }
 
 	army_maintenance_efficiency = 0.1
 	army_initiative = 0.25
@@ -1230,12 +830,7 @@ abm_skirmish_line = {
 	icon = offensive_army
 	requires = discipline_drills
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_voluntary_service_tt
-			has_variable = abm_focus_voluntary_service
-		}
-	}
+	potential = { has_variable = abm_focus_voluntary_service }
 
 	military_tactics = 0.10
 }
@@ -1245,12 +840,7 @@ finest_of_horses = {
 	icon = finest_of_horses
 	requires = abm_skirmish_line
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_voluntary_service_tt
-			has_variable = abm_focus_voluntary_service
-		}
-	}
+	potential = { has_variable = abm_focus_voluntary_service }
 
 	army_heavy_cavalry_power = 0.1
 	army_light_cavalry_power = 0.1
@@ -1262,14 +852,8 @@ bayonet_leaders = {
 	age = age_6_revolutions
 	icon = expansionism
 	requires = finest_of_horses
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_voluntary_service_tt
-			has_variable = abm_focus_voluntary_service
-		}
-	}
+	potential = { has_variable = abm_focus_voluntary_service }
 
 	army_heavy_infantry_power = 0.1
 	army_light_infantry_power = 0.1
@@ -1284,12 +868,7 @@ mass_army = {
 	icon = offensive_army
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_conscription_tt
-			has_variable = abm_focus_conscription
-		}
-	}
+	potential = { has_variable = abm_focus_conscription }
 
 	global_manpower_modifier = 0.20
 	global_levy_size_modifier = 0.10
@@ -1300,12 +879,7 @@ national_conscripts = {
 	icon = regiment_reinforcement_speed_renaissance
 	requires = mass_army
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_conscription_tt
-			has_variable = abm_focus_conscription
-		}
-	}
+	potential = { has_variable = abm_focus_conscription }
 
 	regiment_recruit_speed = 0.5
 	levy_maintenance_modifier = -0.5
@@ -1315,14 +889,8 @@ nationalistic_enthusiasm = {
 	age = age_6_revolutions
 	icon = regimental_system
 	requires = national_conscripts
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_conscription_tt
-			has_variable = abm_focus_conscription
-		}
-	}
+	potential = { has_variable = abm_focus_conscription }
 
 	army_maintenance_efficiency = 0.1
 	levy_combat_efficiency_modifier = 0.10
@@ -1333,12 +901,7 @@ the_young_can_serve = {
 	icon = regimental_system
 	requires = mass_army
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_conscription_tt
-			has_variable = abm_focus_conscription
-		}
-	}
+	potential = { has_variable = abm_focus_conscription }
 
 	army_reinforce_efficiency = 0.10
 	levy_recovery_modifier = 0.10
@@ -1349,12 +912,7 @@ massed_battery = {
 	icon = gunpowder_advance
 	requires = the_young_can_serve
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_conscription_tt
-			has_variable = abm_focus_conscription
-		}
-	}
+	potential = { has_variable = abm_focus_conscription }
 
 	army_artillery_power = 0.1
 	army_artillery_build_cost_modifier = -0.10
@@ -1364,14 +922,8 @@ private_to_marshal = {
 	age = age_6_revolutions
 	icon = military_revolution_advance
 	requires = massed_battery
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_conscription_tt
-			has_variable = abm_focus_conscription
-		}
-	}
+	potential = { has_variable = abm_focus_conscription }
 
 	army_heavy_infantry_build_cost_modifier = -0.20
 	army_light_infantry_build_cost_modifier = -0.20
@@ -1390,12 +942,7 @@ abm_guerillas = {
 	icon = defensive_army
 	depth = 0
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_insurrection_tt
-			has_variable = abm_focus_insurrection
-		}
-	}
+	potential = { has_variable = abm_focus_insurrection }
 
 	max_manpower = 1
 	occupation_time = 1.0
@@ -1405,12 +952,7 @@ morale_recovery_rev_dip_choice = {
 	age = age_6_revolutions
 	requires = abm_guerillas
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_insurrection_tt
-			has_variable = abm_focus_insurrection
-		}
-	}
+	potential = { has_variable = abm_focus_insurrection }
 
 	morale_recovery_in_friendly = 0.05
 }
@@ -1419,14 +961,8 @@ abm_peoples_war = {
 	age = age_6_revolutions
 	icon = defensive_army
 	requires = morale_recovery_rev_dip_choice
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_insurrection_tt
-			has_variable = abm_focus_insurrection
-		}
-	}
+	potential = { has_variable = abm_focus_insurrection }
 
 	global_hostile_attrition = 1
 	global_devastation_recovery = 0.01
@@ -1437,12 +973,7 @@ abm_last_stand = {
 	icon = defensive_mentality
 	requires = abm_guerillas
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_insurrection_tt
-			has_variable = abm_focus_insurrection
-		}
-	}
+	potential = { has_variable = abm_focus_insurrection }
 
 	global_garrison_size_modifier = 0.15
 	global_defensive = 0.15
@@ -1453,12 +984,7 @@ abm_national_resistance = {
 	icon = cultural_ties
 	requires = abm_last_stand
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_insurrection_tt
-			has_variable = abm_focus_insurrection
-		}
-	}
+	potential = { has_variable = abm_focus_insurrection }
 
 	monthly_war_exhaustion = -0.05
 	cultural_tradition_modifier = 10
@@ -1468,14 +994,8 @@ abm_foreign_fighters = {
 	age = age_6_revolutions
 	icon = regimental_system
 	requires = abm_national_resistance
-	allow_children = no
 
-	allow = {
-		custom_tooltip = {
-			text = abm_focus_insurrection_tt
-			has_variable = abm_focus_insurrection
-		}
-	}
+	potential = { has_variable = abm_focus_insurrection }
 
 	mercenary_maintenance_efficiency = 0.5
 	mercenary_range_modifier = 1.0
