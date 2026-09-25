@@ -209,6 +209,12 @@ function sguiFile() {
 				out.push('\t\t\t\tvar:abm_focus_changes_used < ' + MAX_CHANGES);
 				out.push('\t\t\t}');
 				out.push('\t\t}');
+				// Researched advances can't be removed by script (no un-research effect) and keep their
+				// bonuses, so a pick is only changeable before any of its advances is researched.
+				out.push('\t\tcustom_tooltip = {');
+				out.push('\t\t\ttext = ABM_FOCUS_NOTHING_RESEARCHED_TT');
+				out.push('\t\t\tNOT = { OR = { ' + others.flatMap(o => o.adv.map(x => 'has_advance = ' + x[0])).join(' ') + ' } }');
+				out.push('\t\t}');
 				out.push('\t}');
 				out.push('\teffect = {');
 				for (const o of others) out.push('\t\tif = { limit = { has_variable = ' + focusVar(o.id) + ' } remove_variable = ' + focusVar(o.id) + ' }');
@@ -282,18 +288,19 @@ function locFile() {
 	L.push(' ABM_FOCUS_PANEL_TITLE: "Focus Picks"');
 	L.push(' ABM_FOCUS_PANEL_CLOSE: "Close"');
 	L.push(' ABM_FOCUS_PANEL_CLOSE_TOOLTIP: "Close the Focus Picks panel"');
-	L.push(` ABM_FOCUS_PANEL_INTRO: "From the Renaissance on, each [age|e] we pick one #Y Economic#! and one #Y Military#! focus here, once that age has begun. Only the chosen branches appear in the [advances|e] tree, and picks from earlier ages stay researchable. Hover an advance to see its effects. A pick can be changed later, ${MAX_CHANGES} times per campaign; the advances of the replaced branch are lost."`);
+	L.push(` ABM_FOCUS_PANEL_INTRO: "From the Renaissance on, each [age|e] we pick one #Y Economic#! and one #Y Military#! focus here, once that age has begun. Only the chosen branches appear in the [advances|e] tree, and picks from earlier ages stay researchable. Hover an advance to see its effects. A pick can be changed until one of its advances is researched, at most ${MAX_CHANGES} times per campaign."`);
 	L.push(' ABM_FOCUS_PANEL_CHANGES: "Focus changes left: [Country.Custom(\'abm_focus_changes_left\')]"');
 	for (let n = 0; n <= MAX_CHANGES; n++) L.push(` ABM_FOCUS_CHANGES_LEFT_${n}: "${n === 0 ? '#R 0#!' : '#G ' + n + '#!'}"`);
 	L.push(` ABM_FOCUS_CHANGES_NONE_TT: "We have focus changes left (at most ${MAX_CHANGES} per campaign)"`);
+	L.push(` ABM_FOCUS_NOTHING_RESEARCHED_TT: "None of the current pick's [advances|e] in this row has been researched yet"`);
 	L.push(' ABM_FOCUS_PANEL_ECONOMIC: "#Y Economic Focus#!"');
 	L.push(' ABM_FOCUS_PANEL_MILITARY: "#Y Military Focus#!"');
 	L.push(' ABM_FOCUS_PANEL_PICKED: "#G Picked#!"');
 	L.push(' ABM_FOCUS_PICK: "Pick"');
 	L.push(' ABM_FOCUS_PICK_TT: "Pick this focus. Its six [advances|e] appear in the tree and can be researched."');
 	L.push(' ABM_FOCUS_SWITCH: "Change to this"');
-	L.push(` ABM_FOCUS_SWITCH_NONE_TT: "#R No focus changes left.#! A picked focus can be changed at most ${MAX_CHANGES} times per campaign."`);
-	L.push(` ABM_FOCUS_SWITCH_TT: "Replace this [age|e]'s current pick in this row with this focus.\\n\\n#R Uses 1 of our ${MAX_CHANGES} focus changes.#! The replaced branch disappears from the tree, together with any of its [advances|e] already researched."`);
+	L.push(` ABM_FOCUS_SWITCH_NONE_TT: "#R This focus can't be picked now.#! A pick can only be changed before any of its [advances|e] is researched, and at most ${MAX_CHANGES} times per campaign."`);
+	L.push(` ABM_FOCUS_SWITCH_TT: "Replace this [age|e]'s current pick in this row with this focus.\\n\\n#R Uses 1 of our ${MAX_CHANGES} focus changes.#! Only possible while none of the current pick's [advances|e] is researched."`);
 	for (const a of ages) {
 		L.push(` abm_focus_panel.${a.age}: "Age of $${a.age}$"`);
 		L.push(` abm_focus_panel.${a.age}.reached_tt: "The Age of $${a.age}$ has begun"`);

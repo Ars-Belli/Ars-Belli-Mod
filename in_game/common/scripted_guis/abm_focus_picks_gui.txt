@@ -28,6 +28,10 @@ abm_focus_switch_court = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = shrewd_commerce_practice has_advance = merchant_traditions has_advance = additional_merchants has_advance = merchant_adventures has_advance = debt_and_loans has_advance = abm_protected_trade_caravans has_advance = integrated_elites has_advance = tribute_system has_advance = marcher_lords has_advance = buffer_states has_advance = benign_diplomats has_advance = additional_loyalist_recruitment } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_trade } remove_variable = abm_focus_trade }
@@ -66,6 +70,10 @@ abm_focus_switch_trade = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = innovativeness has_advance = state_efficiency has_advance = court_accounting has_advance = dynamic_court has_advance = church_attendance_duty has_advance = empiricism has_advance = integrated_elites has_advance = tribute_system has_advance = marcher_lords has_advance = buffer_states has_advance = benign_diplomats has_advance = additional_loyalist_recruitment } }
 		}
 	}
 	effect = {
@@ -106,6 +114,10 @@ abm_focus_switch_influence = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = innovativeness has_advance = state_efficiency has_advance = court_accounting has_advance = dynamic_court has_advance = church_attendance_duty has_advance = empiricism has_advance = shrewd_commerce_practice has_advance = merchant_traditions has_advance = additional_merchants has_advance = merchant_adventures has_advance = debt_and_loans has_advance = abm_protected_trade_caravans } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_court } remove_variable = abm_focus_court }
@@ -144,6 +156,10 @@ abm_focus_switch_levy = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = benefits_for_mercenaries has_advance = organised_mercenary_recruitment has_advance = organised_mercenary_payment has_advance = glorious_arms has_advance = abm_ensure_mercenary_payments has_advance = tolerance_idea has_advance = improved_rams has_advance = boarding_parties has_advance = marine_regiments has_advance = naval_glory has_advance = privateers has_advance = ships_penny } }
 		}
 	}
 	effect = {
@@ -184,6 +200,10 @@ abm_focus_switch_mercenary = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = enforced_service has_advance = open_levy_standards has_advance = regular_levy_training has_advance = battlefield_commisions has_advance = abm_local_militias has_advance = abm_feudal_obligations has_advance = improved_rams has_advance = boarding_parties has_advance = marine_regiments has_advance = naval_glory has_advance = privateers has_advance = ships_penny } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_levy } remove_variable = abm_focus_levy }
@@ -222,6 +242,10 @@ abm_focus_switch_maritime = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = enforced_service has_advance = open_levy_standards has_advance = regular_levy_training has_advance = battlefield_commisions has_advance = abm_local_militias has_advance = abm_feudal_obligations has_advance = benefits_for_mercenaries has_advance = organised_mercenary_recruitment has_advance = organised_mercenary_payment has_advance = glorious_arms has_advance = abm_ensure_mercenary_payments has_advance = tolerance_idea } }
 		}
 	}
 	effect = {
@@ -262,6 +286,10 @@ abm_focus_switch_infrastructure = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = quest_for_the_new_world has_advance = exploration has_advance = overseas_exploration has_advance = faster_colonists has_advance = colonial_ventures has_advance = overseas_trade has_advance = flexible_negotiation has_advance = formal_diplomacy has_advance = diplomatic_influence has_advance = adaptability has_advance = diplomatic_corps has_advance = indirect_rule } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_exploration } remove_variable = abm_focus_exploration }
@@ -300,6 +328,10 @@ abm_focus_switch_exploration = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = organised_construction has_advance = efficient_construction_plans has_advance = expanded_infrastructure_network has_advance = efficient_mining has_advance = rgo_logistics_mil_choice has_advance = advanced_bureaucracy has_advance = flexible_negotiation has_advance = formal_diplomacy has_advance = diplomatic_influence has_advance = adaptability has_advance = diplomatic_corps has_advance = indirect_rule } }
 		}
 	}
 	effect = {
@@ -340,6 +372,10 @@ abm_focus_switch_diplomatic = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = organised_construction has_advance = efficient_construction_plans has_advance = expanded_infrastructure_network has_advance = efficient_mining has_advance = rgo_logistics_mil_choice has_advance = advanced_bureaucracy has_advance = quest_for_the_new_world has_advance = exploration has_advance = overseas_exploration has_advance = faster_colonists has_advance = colonial_ventures has_advance = overseas_trade } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_infrastructure } remove_variable = abm_focus_infrastructure }
@@ -378,6 +414,10 @@ abm_focus_switch_quality = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = abm_rapid_reinforcement has_advance = camp_followers has_advance = the_old_and_infirm has_advance = abm_deep_reserves has_advance = supply_trains has_advance = grand_army has_advance = oak_forests_for_ships has_advance = abm_patrol_vessels has_advance = abm_naval_education has_advance = copper_bottoms has_advance = naval_drill has_advance = grand_navy } }
 		}
 	}
 	effect = {
@@ -418,6 +458,10 @@ abm_focus_switch_quantity = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = formalized_officer_corps has_advance = administrative_leadership has_advance = quality_education has_advance = abm_drill_sergeants has_advance = abm_trained_march has_advance = military_drill has_advance = oak_forests_for_ships has_advance = abm_patrol_vessels has_advance = abm_naval_education has_advance = copper_bottoms has_advance = naval_drill has_advance = grand_navy } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_quality } remove_variable = abm_focus_quality }
@@ -456,6 +500,10 @@ abm_focus_switch_naval = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = formalized_officer_corps has_advance = administrative_leadership has_advance = quality_education has_advance = abm_drill_sergeants has_advance = abm_trained_march has_advance = military_drill has_advance = abm_rapid_reinforcement has_advance = camp_followers has_advance = the_old_and_infirm has_advance = abm_deep_reserves has_advance = supply_trains has_advance = grand_army } }
 		}
 	}
 	effect = {
@@ -496,6 +544,10 @@ abm_focus_switch_religion = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = free_colonies has_advance = land_of_opportunity has_advance = additional_colonists has_advance = vice_roys has_advance = merchant_power_from_maritime_rev_dip_choice has_advance = overseas_merchants has_advance = ecumenism has_advance = humanist_tolerance has_advance = abm_integration_of_cultures has_advance = cultural_ties has_advance = abm_compromise has_advance = cultures_capacity_mil_choice } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_expansion } remove_variable = abm_focus_expansion }
@@ -534,6 +586,10 @@ abm_focus_switch_expansion = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = devoutness has_advance = religious_tradition has_advance = abm_cultural_unity has_advance = preaching_missions has_advance = divine_supremacy has_advance = missionary_schools has_advance = ecumenism has_advance = humanist_tolerance has_advance = abm_integration_of_cultures has_advance = cultural_ties has_advance = abm_compromise has_advance = cultures_capacity_mil_choice } }
 		}
 	}
 	effect = {
@@ -574,6 +630,10 @@ abm_focus_switch_humanism = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = devoutness has_advance = religious_tradition has_advance = abm_cultural_unity has_advance = preaching_missions has_advance = divine_supremacy has_advance = missionary_schools has_advance = free_colonies has_advance = land_of_opportunity has_advance = additional_colonists has_advance = vice_roys has_advance = merchant_power_from_maritime_rev_dip_choice has_advance = overseas_merchants } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_religion } remove_variable = abm_focus_religion }
@@ -612,6 +672,10 @@ abm_focus_switch_offense = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = defensive_army has_advance = garrison_conscription has_advance = defensive_mentality has_advance = abm_earthworks has_advance = fort_logistics has_advance = abm_fortified_cities_focus has_advance = abm_gun_galleys has_advance = naval_cadets has_advance = merchant_marine has_advance = improved_shipyards has_advance = abm_home_fleet has_advance = sheltered_ports } }
 		}
 	}
 	effect = {
@@ -652,6 +716,10 @@ abm_focus_switch_defense = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = expanded_supply_trains has_advance = abm_night_assaults has_advance = engineer_corps has_advance = abm_standardized_barrels has_advance = superior_firepower has_advance = abm_siege_artillery has_advance = abm_gun_galleys has_advance = naval_cadets has_advance = merchant_marine has_advance = improved_shipyards has_advance = abm_home_fleet has_advance = sheltered_ports } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_offense } remove_variable = abm_focus_offense }
@@ -690,6 +758,10 @@ abm_focus_switch_littoral_fleet = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = expanded_supply_trains has_advance = abm_night_assaults has_advance = engineer_corps has_advance = abm_standardized_barrels has_advance = superior_firepower has_advance = abm_siege_artillery has_advance = defensive_army has_advance = garrison_conscription has_advance = defensive_mentality has_advance = abm_earthworks has_advance = fort_logistics has_advance = abm_fortified_cities_focus } }
 		}
 	}
 	effect = {
@@ -730,6 +802,10 @@ abm_focus_switch_administration = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = competetive_merchants has_advance = national_trade_policy has_advance = fast_negotiations has_advance = free_trade has_advance = trade_manipulation has_advance = bookkeeping has_advance = vetting has_advance = efficient_spies has_advance = infiltrate_administration_advance has_advance = foreign_embassies has_advance = abm_global_networks has_advance = abm_industrial_espionage } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_commerce } remove_variable = abm_focus_commerce }
@@ -768,6 +844,10 @@ abm_focus_switch_commerce = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = cabinet has_advance = national_bank has_advance = civil_servants has_advance = legislative_efficiency_idea has_advance = centralized_government has_advance = economic_ideas has_advance = vetting has_advance = efficient_spies has_advance = infiltrate_administration_advance has_advance = foreign_embassies has_advance = abm_global_networks has_advance = abm_industrial_espionage } }
 		}
 	}
 	effect = {
@@ -808,6 +888,10 @@ abm_focus_switch_espionage = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = cabinet has_advance = national_bank has_advance = civil_servants has_advance = legislative_efficiency_idea has_advance = centralized_government has_advance = economic_ideas has_advance = competetive_merchants has_advance = national_trade_policy has_advance = fast_negotiations has_advance = free_trade has_advance = trade_manipulation has_advance = bookkeeping } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_administration } remove_variable = abm_focus_administration }
@@ -846,6 +930,10 @@ abm_focus_switch_maneuver = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = abm_enduring_hardships has_advance = improved_foraging has_advance = abm_prepared_camps has_advance = improved_logistics has_advance = abm_logistics_corps has_advance = abm_trained_reserves has_advance = abm_ships_of_the_line has_advance = sea_hawks has_advance = escort_ships has_advance = superior_seamanship has_advance = naval_fighting_instruction has_advance = press_gangs } }
 		}
 	}
 	effect = {
@@ -886,6 +974,10 @@ abm_focus_switch_logistics = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = improved_manuever has_advance = abm_forced_march has_advance = land_morale_movement_cost_rev_choice_mil has_advance = abm_bold_maneuvers has_advance = abm_limbers has_advance = offensive_army has_advance = abm_ships_of_the_line has_advance = sea_hawks has_advance = escort_ships has_advance = superior_seamanship has_advance = naval_fighting_instruction has_advance = press_gangs } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_maneuver } remove_variable = abm_focus_maneuver }
@@ -924,6 +1016,10 @@ abm_focus_switch_highseas_fleet = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = improved_manuever has_advance = abm_forced_march has_advance = land_morale_movement_cost_rev_choice_mil has_advance = abm_bold_maneuvers has_advance = abm_limbers has_advance = offensive_army has_advance = abm_enduring_hardships has_advance = improved_foraging has_advance = abm_prepared_camps has_advance = improved_logistics has_advance = abm_logistics_corps has_advance = abm_trained_reserves } }
 		}
 	}
 	effect = {
@@ -964,6 +1060,10 @@ abm_focus_switch_industry = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = global_empire has_advance = local_traditions has_advance = postal_service has_advance = port_cost_distance_from_capital_choice_mil has_advance = abm_imperial_administration has_advance = abm_overseas_holdings has_advance = abm_national_academy_of_sciences has_advance = abm_the_scientific_method has_advance = abm_belle_epoque has_advance = humanism has_advance = abm_universal_literacy has_advance = optimism } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_empire } remove_variable = abm_focus_empire }
@@ -1002,6 +1102,10 @@ abm_focus_switch_empire = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = audit_checks has_advance = formal_administration has_advance = smithian_economics has_advance = regulation_bureau has_advance = abm_industrial_scale_extraction has_advance = abm_modern_extraction_methods has_advance = abm_national_academy_of_sciences has_advance = abm_the_scientific_method has_advance = abm_belle_epoque has_advance = humanism has_advance = abm_universal_literacy has_advance = optimism } }
 		}
 	}
 	effect = {
@@ -1042,6 +1146,10 @@ abm_focus_switch_innovation = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = audit_checks has_advance = formal_administration has_advance = smithian_economics has_advance = regulation_bureau has_advance = abm_industrial_scale_extraction has_advance = abm_modern_extraction_methods has_advance = global_empire has_advance = local_traditions has_advance = postal_service has_advance = port_cost_distance_from_capital_choice_mil has_advance = abm_imperial_administration has_advance = abm_overseas_holdings } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_industry } remove_variable = abm_focus_industry }
@@ -1080,6 +1188,10 @@ abm_focus_switch_voluntary_service = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = mass_army has_advance = national_conscripts has_advance = nationalistic_enthusiasm has_advance = the_young_can_serve has_advance = massed_battery has_advance = private_to_marshal has_advance = abm_guerillas has_advance = morale_recovery_rev_dip_choice has_advance = abm_peoples_war has_advance = abm_last_stand has_advance = abm_national_resistance has_advance = abm_foreign_fighters } }
 		}
 	}
 	effect = {
@@ -1120,6 +1232,10 @@ abm_focus_switch_conscription = {
 				var:abm_focus_changes_used < 3
 			}
 		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = discipline_drills has_advance = abm_thorough_training has_advance = regimental_system has_advance = abm_skirmish_line has_advance = finest_of_horses has_advance = bayonet_leaders has_advance = abm_guerillas has_advance = morale_recovery_rev_dip_choice has_advance = abm_peoples_war has_advance = abm_last_stand has_advance = abm_national_resistance has_advance = abm_foreign_fighters } }
+		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_voluntary_service } remove_variable = abm_focus_voluntary_service }
@@ -1158,6 +1274,10 @@ abm_focus_switch_insurrection = {
 				NOT = { has_variable = abm_focus_changes_used }
 				var:abm_focus_changes_used < 3
 			}
+		}
+		custom_tooltip = {
+			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
+			NOT = { OR = { has_advance = discipline_drills has_advance = abm_thorough_training has_advance = regimental_system has_advance = abm_skirmish_line has_advance = finest_of_horses has_advance = bayonet_leaders has_advance = mass_army has_advance = national_conscripts has_advance = nationalistic_enthusiasm has_advance = the_young_can_serve has_advance = massed_battery has_advance = private_to_marshal } }
 		}
 	}
 	effect = {
