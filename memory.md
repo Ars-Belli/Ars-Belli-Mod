@@ -141,6 +141,20 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **The replacement is `ars_belli_enforce_peace`** (`in_game\common\country_interactions\`, events in `in_game\events\ars_belli_enforce_peace_events.txt`, loc in `in_game\localization\english\ars_belli_enforce_peace_l_english.yml`). Defender is asked first; only on their acceptance does the attacker get `ars_belli_enforce_peace.1`; refusal drags the enforcer into the war on the defender's side. Standing: `is_mp_gp`, `is_mp_major`, or rival to either war leader — deliberately the same reach Intervene had. The vanilla rival-war alert (`can_intervene_in_rival_war`) is retargeted to it in `alertmanager.gui` with the `ALERT_INTERVENE_RIVAL_WAR_*` keys rewritten.
 - **Italian Wars `iw_intervene_in_war` is a different mechanic** (a situation generic_action for joining the Italian Wars, `generic_actions\italian_wars.txt`). Untouched — do not confuse the two when grepping for "intervene".
 
+### 3l. Focus Picks (age focus overhaul)
+- Engine adm/dip/mil focus (`set_age_preference` + advance `for = X`) = ONE slot, 3 values. Can't do 2 picks. So dropped fully; system is script-side.
+- Per age 2-6: Economic pick (3 branches) then Military pick (3 branches: 2 land + 1 naval). Design source: `Ars Belli MP Mod - Design Doc - Focus Picks.md` (user-local, gitignored).
+- Flow: hardcoded `on_new_age` fires `ages_of_eu.1` -> mod `in_game/events/ages.txt` (same-name replace) = Economic pick, option chains `abm_focus_picks.1` = Military pick. Options filtered by `current_age`. Age 1 skipped via event `trigger`.
+- Pick = `set_variable = abm_focus_<branch>` (never cleared -> old-age picks stay researchable). Advance gate = `allow = { custom_tooltip = { text = abm_focus_<branch>_tt has_variable = abm_focus_<branch> } }` (vanilla country_ENG pattern). No `potential` gating (vanilla readme: not retroactive) -> all focus advances visible, locked unless picked.
+- Vanilla `4_choices_adm/dip/mil.txt` emptied (same-name). Kept advances redefined under VANILLA KEYS in `abm_focus_picks_economic.txt` / `_military.txt` — keys referenced by vanilla script: exploration (CB), privateers (naval laws, OMA event), military_drill, innovativeness, humanism, battlefield_commisions, smithian_economics, national_bank. Don't rename those. "AND" combos keep first key; second key dropped.
+- Tree shape per branch: adv0 root; 1->2 off 0; 3->4->5 off 0.
+- `infiltrate_administration_advance` (vanilla diplomacy_unlocks.txt) moved to Espionage via REPLACE:. `mercenaries_reformation_advance` NOT moved (country advances CAS/TUR/India require it) -> new `abm_ensure_mercenary_payments` instead.
+- `steal_technology` same-name copy, allow `has_advance = abm_industrial_espionage`.
+- **GENERATED FILES**: advances x2, `in_game/events/ages.txt`, `main_menu/localization/english/abm_focus_picks_l_english.yml` all from `.tools/scripts/focus_picks/focus_data.js` via `node .tools/scripts/focus_picks/generate_focus_picks.js`. Edit data, re-run. Never hand-edit outputs.
+- Value rule used: reused vanilla advance keeps vanilla number unless doc says "(was X)". `*_efficiency` modifiers show ~half in UI (0.2 = "-10% cost"), so new efficiency values = 2x doc %.
+- No engine modifier for: unit starting experience (Thorough Training -> monthly_experience_gain), artillery move speed (Limbers -> army_movement_speed 0.05), flat monthly manpower (Guerillas -> max_manpower 1). Stand-ins, verify in game.
+- Modifier/icon validation: modifier keys = `MODIFIER_TYPE_NAME_*` in vanilla `modifier_types_l_english.yml` (engine modifiers have no def file). Icon must be an existing advance icon name.
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
