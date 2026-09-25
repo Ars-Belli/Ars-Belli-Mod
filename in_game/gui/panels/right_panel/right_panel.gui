@@ -265,17 +265,28 @@ types RightPanelTypes
 						parentanchor = right
 					}
 
-					button_regular = {
-						text = "ABM_TIER_PANEL_TOGGLE"
-						tooltip = "ABM_TIER_PANEL_TOGGLE_TOOLTIP"
-						onclick = "[GetVariableSystem.Toggle('mp_tier_panel_open')]"
-						size = { 110 22 }
+					# Ars Belli focus picks button sits left of the Tier List button.
+					flowcontainer = {
+						direction = horizontal
+						spacing = 4
 						parentanchor = right
+
+						abm_focus_picks_button = {}
+
+						button_regular = {
+							text = "ABM_TIER_PANEL_TOGGLE"
+							tooltip = "ABM_TIER_PANEL_TOGGLE_TOOLTIP"
+							onclick = "[GetVariableSystem.Toggle('mp_tier_panel_open')]"
+							size = { 80 22 }
+						}
 					}
 				}
 
-				# Ars Belli focus picks button (always visible; "(!)" while this age's picks are missing).
-				abm_focus_picks_button = {}
+				# Ars Belli focus picks button when the MP mechanics rule is off (rank block hidden).
+				abm_focus_picks_button = {
+					parentanchor = right|vcenter
+					visible = "[Not(GetGlobalVariable('mp_mechanics_enabled').IsSet)]"
+				}
 
 				# Ars Belli focus picks panel (type in gui/shared/abm_focus_picks_panel.gui, generated;
 				# opened from the Focus Picks button above or the Tier List panel's button):
