@@ -54,6 +54,9 @@ function advanceBlock(ageKey, branch, idx) {
 	// requires nor depth gets auto-attached under another node by the engine (Mercenary landed under Court).
 	if (PARENT[idx] === null) lines.push('\tdepth = 0');
 	else lines.push(`\trequires = ${branch.adv[PARENT[idx]][0]}`);
+	// Leaves of each chain: stop the engine hanging unparented vanilla/country advances under a
+	// focus branch (seen: National Assemblies under Court Accounting, NOR advances under Levy/Mercenary).
+	if (!PARENT.includes(idx)) lines.push('\tallow_children = no');
 	lines.push('');
 	lines.push('\tallow = {');
 	lines.push('\t\tcustom_tooltip = {');
