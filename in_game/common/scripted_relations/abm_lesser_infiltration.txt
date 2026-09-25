@@ -1,0 +1,67 @@
+﻿# Ars Belli: Lesser Infiltration - a scripted, cheaper stand-in for the engine Infiltrate Administration.
+#
+# The engine action (diplomatic_costs/00_hardcoded.txt, 50 spy network, INFILTRATE_ADMINISTRATION_DURATION
+# = 24 months) moved into the Espionage focus pick (Age of Absolutism). This relation takes its old place
+# in the general Renaissance tree (advance abm_lesser_infiltration_advance): same fog-of-war lift via
+# lifts_fog_of_war, half the spy network cost (abm_lesser_infiltration_cost = 25) and half the duration.
+#
+# Modelled on vanilla corrupt_officials (one-way covert relation, no acceptance, break_on_not_spying).
+# Duration: offer_effect puts the recipient in the actor's timed variable list; will_expire_trigger
+# (engine-evaluated: only scope:first / scope:second bound) ends the relation once the entry lapses.
+abm_lesser_infiltration = {
+	type = diplomacy
+	relation_type = oneway
+	block_when_at_war = no
+	break_on_not_spying = yes
+	dangerous_relation = yes
+	lifts_fog_of_war = yes
+	is_ongoing = yes
+	texture_file = "gfx/interface/icons/diplomatic_actions/infiltrate_administration.dds"
+	concept = spy_network
+	progress = { value = 0 }
+	diplomatic_cost_offer = abm_lesser_infiltration_cost
+	category = {
+		offer = CATEGORY_COVERT_ACTIONS
+		cancellation = CATEGORY_COVERT_ACTIONS
+		request = CATEGORY_COVERT_ACTIONS
+		break = CATEGORY_COVERT_ACTIONS
+	}
+
+	relation_type_for_ai = hostile
+	should_ai_offer_trigger = { always = no }
+
+	offer_visible = {
+		scope:actor = { has_advance = abm_lesser_infiltration_advance }
+	}
+
+	offer_enabled = {
+		scope:recipient = { NOT = { is_subject_of = scope:actor } }
+		scope:actor = { NOT = { is_subject_of = scope:recipient } }
+	}
+
+	offer_effect = {
+		scope:actor = {
+			add_to_variable_list = {
+				name = abm_lesser_infiltration_targets
+				target = scope:recipient
+				days = 365
+			}
+		}
+	}
+
+	will_expire_trigger = {
+		scope:first = {
+			NOT = {
+				is_target_in_variable_list = {
+					name = abm_lesser_infiltration_targets
+					target = scope:second
+				}
+			}
+		}
+	}
+
+	use_with_enemies = yes
+
+	request_visible = { always = no }
+	break_visible = { always = no }
+}
