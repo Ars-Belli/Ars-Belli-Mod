@@ -5,6 +5,33 @@
 # shows the game's own advance tooltip with its effects.
 types AbmFocusPicksTypes
 {
+	# Always-visible opener under the age in the top right (not tied to the MP mechanics rule, unlike
+	# the Tier List panel). Swaps to a highlighted "(!)" button while this age still has an empty slot.
+	type abm_focus_picks_button = flowcontainer {
+		direction = vertical
+		# Hangs just below the right end of the top bar (parent widget has allow_outside = yes).
+		parentanchor = bottom|right
+		widgetanchor = top|right
+		position = { -5 4 }
+
+		button_regular = {
+			text = "ABM_FOCUS_PANEL_TOGGLE"
+			tooltip = "ABM_FOCUS_PANEL_TOGGLE_TOOLTIP"
+			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
+			size = { 110 22 }
+			parentanchor = right
+			visible = "[Not(GetScriptedGui('abm_focus_pending').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+		}
+		button_regular = {
+			text = "ABM_FOCUS_PANEL_TOGGLE_PENDING"
+			tooltip = "ABM_FOCUS_PANEL_TOGGLE_PENDING_TOOLTIP"
+			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
+			size = { 130 22 }
+			parentanchor = right
+			visible = "[GetScriptedGui('abm_focus_pending').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		}
+	}
+
 	type abm_focus_picks_panel = widget {
 		name = "abm_focus_picks_panel"
 		layer = top
@@ -49,6 +76,13 @@ types AbmFocusPicksTypes
 				using = Font_Size_Small
 				autoresize = yes
 				max_width = 760
+			}
+
+			text_single = {
+				datacontext = "[GetPlayer]"
+				text = "ABM_FOCUS_PANEL_CHANGES"
+				using = Font_Size_Small
+				align = left
 			}
 
 			scrollarea = {
@@ -121,6 +155,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_court').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_court').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_court').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_court').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_court').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_court').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -163,6 +213,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_trade').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_trade').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_trade').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_trade').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_trade').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_trade').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -205,6 +271,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_influence').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_influence').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_influence').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_influence').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_influence').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_influence').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 
@@ -256,6 +338,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_levy').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_levy').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_levy').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_levy').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_levy').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_levy').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -298,6 +396,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_mercenary').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_mercenary').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_mercenary').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_mercenary').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_mercenary').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_mercenary').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -340,6 +454,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_maritime').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_maritime').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_maritime').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_maritime').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_maritime').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_maritime').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 			}
@@ -401,6 +531,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_infrastructure').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_infrastructure').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_infrastructure').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_infrastructure').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_infrastructure').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_infrastructure').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -443,6 +589,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_exploration').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_exploration').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_exploration').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_exploration').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_exploration').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_exploration').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -485,6 +647,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_diplomatic').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_diplomatic').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_diplomatic').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_diplomatic').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_diplomatic').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_diplomatic').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 
@@ -536,6 +714,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_quality').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_quality').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_quality').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_quality').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_quality').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_quality').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -578,6 +772,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_quantity').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_quantity').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_quantity').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_quantity').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_quantity').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_quantity').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -620,6 +830,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_naval').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_naval').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_naval').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_naval').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_naval').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_naval').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 			}
@@ -681,6 +907,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_religion').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_religion').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_religion').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_religion').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_religion').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_religion').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -723,6 +965,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_expansion').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_expansion').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_expansion').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_expansion').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_expansion').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_expansion').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -765,6 +1023,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_humanism').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_humanism').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_humanism').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_humanism').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_humanism').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_humanism').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 
@@ -816,6 +1090,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_offense').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_offense').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_offense').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_offense').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_offense').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_offense').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -858,6 +1148,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_defense').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_defense').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_defense').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_defense').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_defense').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_defense').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -900,6 +1206,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_littoral_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_littoral_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_littoral_fleet').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_littoral_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_littoral_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_littoral_fleet').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 			}
@@ -961,6 +1283,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_administration').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_administration').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_administration').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_administration').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_administration').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_administration').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -1003,6 +1341,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_commerce').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_commerce').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_commerce').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_commerce').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_commerce').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_commerce').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -1045,6 +1399,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_espionage').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_espionage').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_espionage').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_espionage').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_espionage').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_espionage').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 
@@ -1096,6 +1466,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_maneuver').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_maneuver').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_maneuver').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_maneuver').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_maneuver').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_maneuver').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -1138,6 +1524,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_logistics').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_logistics').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_logistics').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_logistics').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_logistics').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_logistics').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -1180,6 +1582,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_highseas_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_highseas_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_highseas_fleet').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_highseas_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_highseas_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_highseas_fleet').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 			}
@@ -1241,6 +1659,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_industry').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_industry').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_industry').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_industry').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_industry').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_industry').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -1283,6 +1717,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_empire').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_empire').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_empire').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_empire').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_empire').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_empire').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -1325,6 +1775,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_innovation').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_innovation').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_innovation').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_innovation').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_innovation').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_innovation').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 
@@ -1376,6 +1842,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_voluntary_service').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_voluntary_service').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_voluntary_service').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_voluntary_service').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_voluntary_service').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_voluntary_service').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -1418,6 +1900,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_conscription').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_conscription').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_conscription').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_conscription').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_conscription').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_conscription').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 
 					vbox = {
@@ -1460,6 +1958,22 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						expand = {}
+						button_regular = {
+							text = "ABM_FOCUS_PICK"
+							tooltip = "ABM_FOCUS_PICK_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_pick_insurrection').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_pick_insurrection').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_pick_insurrection').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
+						button_regular = {
+							text = "ABM_FOCUS_SWITCH"
+							tooltip = "ABM_FOCUS_SWITCH_TT"
+							size = { 234 26 }
+							visible = "[GetScriptedGui('abm_focus_switch_insurrection').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							enabled = "[GetScriptedGui('abm_focus_switch_insurrection').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							onclick = "[GetScriptedGui('abm_focus_switch_insurrection').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+						}
 					}
 				}
 			}

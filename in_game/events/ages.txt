@@ -6,220 +6,118 @@ namespace = abm_focus_picks
 #
 # Vanilla ages_of_eu.1 (fired by the hardcoded on_new_age) offered one adm/dip/mil focus via
 # set_age_preference. That engine slot allows a single pick, so it is dropped entirely.
-# Instead every age from the Renaissance on asks for two picks, each out of 3 branches:
-#   ages_of_eu.1        - Economic pick (economy and diplomacy branches)
-#   abm_focus_picks.1   - Military pick (two land branches + one naval branch)
-# A pick sets the country variable abm_focus_<branch>; the advances of that branch gate on it
-# (see in_game/common/advances/abm_focus_picks_*.txt). Variables are never cleared, so picks
-# from earlier ages stay researchable.
+# Every age from the Renaissance on has two focus slots (Economic, Military), 3 branches each.
+# Players pick in the Focus Picks panel (gui/shared/abm_focus_picks_panel.gui ->
+# scripted_guis/abm_focus_picks_gui.txt); AI countries pick here. A pick sets the country
+# variable abm_focus_<branch>, which the branch advances use as potential.
 #
-# Both are country_event, NOT age_event: the age event window (eventwindow.gui AgeEventWindow)
-# has exactly three cards bound via EventWindow.AccessOptionItemWithKey('adm'/'dip'/'mil') with
-# hardcoded Administrative/Diplomatic/Military tooltips. Options without those keys all fall back
-# to the first option (every card showed the same focus in game), so it can't list our branches.
+# abm_focus_picks.1 is a country_event, NOT age_event: the age event window has exactly three
+# cards bound to option keys adm/dip/mil and cannot show anything else.
 
 ages_of_eu.1 = {
 	type = country_event
-
-	title = ages_of_eu.1.title
-	desc = abm_focus_picks.economic.desc
-	outcome = neutral
-
-	illustration_tags = {
-		10 = ages
-	}
+	hidden = yes
 
 	# Age of Traditions has no focus picks.
 	trigger = {
 		NOT = { current_age = age_1_traditions }
 	}
 
-	option = {
-		name = abm_focus_picks.court
-		trigger = { current_age = age_2_renaissance }
-		hidden_effect = { set_variable = abm_focus_court }
-		custom_tooltip = abm_focus_picks.court.tt
-		custom_tooltip = abm_focus_picks.court.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
+	immediate = {
+		if = {
+			limit = { is_ai = yes }
+			if = {
+				limit = { current_age = age_2_renaissance NOT = { OR = { has_variable = abm_focus_court has_variable = abm_focus_trade has_variable = abm_focus_influence } } }
+				random_list = {
+					100 = { set_variable = abm_focus_court }
+					100 = { set_variable = abm_focus_trade }
+					100 = { set_variable = abm_focus_influence }
+				}
+			}
+			if = {
+				limit = { current_age = age_2_renaissance NOT = { OR = { has_variable = abm_focus_levy has_variable = abm_focus_mercenary has_variable = abm_focus_maritime } } }
+				random_list = {
+					100 = { set_variable = abm_focus_levy }
+					100 = { set_variable = abm_focus_mercenary }
+					50 = { set_variable = abm_focus_maritime }
+				}
+			}
+			if = {
+				limit = { current_age = age_3_discovery NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_diplomatic } } }
+				random_list = {
+					100 = { set_variable = abm_focus_infrastructure }
+					100 = { set_variable = abm_focus_exploration }
+					100 = { set_variable = abm_focus_diplomatic }
+				}
+			}
+			if = {
+				limit = { current_age = age_3_discovery NOT = { OR = { has_variable = abm_focus_quality has_variable = abm_focus_quantity has_variable = abm_focus_naval } } }
+				random_list = {
+					100 = { set_variable = abm_focus_quality }
+					100 = { set_variable = abm_focus_quantity }
+					50 = { set_variable = abm_focus_naval }
+				}
+			}
+			if = {
+				limit = { current_age = age_4_reformation NOT = { OR = { has_variable = abm_focus_religion has_variable = abm_focus_expansion has_variable = abm_focus_humanism } } }
+				random_list = {
+					100 = { set_variable = abm_focus_religion }
+					100 = { set_variable = abm_focus_expansion }
+					100 = { set_variable = abm_focus_humanism }
+				}
+			}
+			if = {
+				limit = { current_age = age_4_reformation NOT = { OR = { has_variable = abm_focus_offense has_variable = abm_focus_defense has_variable = abm_focus_littoral_fleet } } }
+				random_list = {
+					100 = { set_variable = abm_focus_offense }
+					100 = { set_variable = abm_focus_defense }
+					50 = { set_variable = abm_focus_littoral_fleet }
+				}
+			}
+			if = {
+				limit = { current_age = age_5_absolutism NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_espionage } } }
+				random_list = {
+					100 = { set_variable = abm_focus_administration }
+					100 = { set_variable = abm_focus_commerce }
+					100 = { set_variable = abm_focus_espionage }
+				}
+			}
+			if = {
+				limit = { current_age = age_5_absolutism NOT = { OR = { has_variable = abm_focus_maneuver has_variable = abm_focus_logistics has_variable = abm_focus_highseas_fleet } } }
+				random_list = {
+					100 = { set_variable = abm_focus_maneuver }
+					100 = { set_variable = abm_focus_logistics }
+					50 = { set_variable = abm_focus_highseas_fleet }
+				}
+			}
+			if = {
+				limit = { current_age = age_6_revolutions NOT = { OR = { has_variable = abm_focus_industry has_variable = abm_focus_empire has_variable = abm_focus_innovation } } }
+				random_list = {
+					100 = { set_variable = abm_focus_industry }
+					100 = { set_variable = abm_focus_empire }
+					100 = { set_variable = abm_focus_innovation }
+				}
+			}
+			if = {
+				limit = { current_age = age_6_revolutions NOT = { OR = { has_variable = abm_focus_voluntary_service has_variable = abm_focus_conscription has_variable = abm_focus_insurrection } } }
+				random_list = {
+					100 = { set_variable = abm_focus_voluntary_service }
+					100 = { set_variable = abm_focus_conscription }
+					100 = { set_variable = abm_focus_insurrection }
+				}
+			}
 		}
-	}
-	option = {
-		name = abm_focus_picks.trade
-		trigger = { current_age = age_2_renaissance }
-		hidden_effect = { set_variable = abm_focus_trade }
-		custom_tooltip = abm_focus_picks.trade.tt
-		custom_tooltip = abm_focus_picks.trade.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.influence
-		trigger = { current_age = age_2_renaissance }
-		hidden_effect = { set_variable = abm_focus_influence }
-		custom_tooltip = abm_focus_picks.influence.tt
-		custom_tooltip = abm_focus_picks.influence.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.infrastructure
-		trigger = { current_age = age_3_discovery }
-		hidden_effect = { set_variable = abm_focus_infrastructure }
-		custom_tooltip = abm_focus_picks.infrastructure.tt
-		custom_tooltip = abm_focus_picks.infrastructure.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.exploration
-		trigger = { current_age = age_3_discovery }
-		hidden_effect = { set_variable = abm_focus_exploration }
-		custom_tooltip = abm_focus_picks.exploration.tt
-		custom_tooltip = abm_focus_picks.exploration.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.diplomatic
-		trigger = { current_age = age_3_discovery }
-		hidden_effect = { set_variable = abm_focus_diplomatic }
-		custom_tooltip = abm_focus_picks.diplomatic.tt
-		custom_tooltip = abm_focus_picks.diplomatic.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.religion
-		trigger = { current_age = age_4_reformation }
-		hidden_effect = { set_variable = abm_focus_religion }
-		custom_tooltip = abm_focus_picks.religion.tt
-		custom_tooltip = abm_focus_picks.religion.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.expansion
-		trigger = { current_age = age_4_reformation }
-		hidden_effect = { set_variable = abm_focus_expansion }
-		custom_tooltip = abm_focus_picks.expansion.tt
-		custom_tooltip = abm_focus_picks.expansion.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.humanism
-		trigger = { current_age = age_4_reformation }
-		hidden_effect = { set_variable = abm_focus_humanism }
-		custom_tooltip = abm_focus_picks.humanism.tt
-		custom_tooltip = abm_focus_picks.humanism.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.administration
-		trigger = { current_age = age_5_absolutism }
-		hidden_effect = { set_variable = abm_focus_administration }
-		custom_tooltip = abm_focus_picks.administration.tt
-		custom_tooltip = abm_focus_picks.administration.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.commerce
-		trigger = { current_age = age_5_absolutism }
-		hidden_effect = { set_variable = abm_focus_commerce }
-		custom_tooltip = abm_focus_picks.commerce.tt
-		custom_tooltip = abm_focus_picks.commerce.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.espionage
-		trigger = { current_age = age_5_absolutism }
-		hidden_effect = { set_variable = abm_focus_espionage }
-		custom_tooltip = abm_focus_picks.espionage.tt
-		custom_tooltip = abm_focus_picks.espionage.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.industry
-		trigger = { current_age = age_6_revolutions }
-		hidden_effect = { set_variable = abm_focus_industry }
-		custom_tooltip = abm_focus_picks.industry.tt
-		custom_tooltip = abm_focus_picks.industry.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.empire
-		trigger = { current_age = age_6_revolutions }
-		hidden_effect = { set_variable = abm_focus_empire }
-		custom_tooltip = abm_focus_picks.empire.tt
-		custom_tooltip = abm_focus_picks.empire.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.innovation
-		trigger = { current_age = age_6_revolutions }
-		hidden_effect = { set_variable = abm_focus_innovation }
-		custom_tooltip = abm_focus_picks.innovation.tt
-		custom_tooltip = abm_focus_picks.innovation.unlocks_tt
-		trigger_event_non_silently = { id = abm_focus_picks.1 }
-
-		ai_will_select = {
-			value = 100
+		else = {
+			trigger_event_non_silently = { id = abm_focus_picks.1 }
 		}
 	}
 }
 
+# Player notice: the new age's focuses are picked in the Focus Picks panel.
 abm_focus_picks.1 = {
 	type = country_event
 
-	title = abm_focus_picks.1.title
+	title = ages_of_eu.1.title
 	desc = abm_focus_picks.1.desc
 	outcome = neutral
 
@@ -227,173 +125,7 @@ abm_focus_picks.1 = {
 		10 = ages
 	}
 
-	trigger = {
-		NOT = { current_age = age_1_traditions }
-	}
-
 	option = {
-		name = abm_focus_picks.levy
-		trigger = { current_age = age_2_renaissance }
-		hidden_effect = { set_variable = abm_focus_levy }
-		custom_tooltip = abm_focus_picks.levy.tt
-		custom_tooltip = abm_focus_picks.levy.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.mercenary
-		trigger = { current_age = age_2_renaissance }
-		hidden_effect = { set_variable = abm_focus_mercenary }
-		custom_tooltip = abm_focus_picks.mercenary.tt
-		custom_tooltip = abm_focus_picks.mercenary.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.maritime
-		trigger = { current_age = age_2_renaissance }
-		hidden_effect = { set_variable = abm_focus_maritime }
-		custom_tooltip = abm_focus_picks.maritime.tt
-		custom_tooltip = abm_focus_picks.maritime.unlocks_tt
-
-		ai_will_select = {
-			value = 50
-		}
-	}
-	option = {
-		name = abm_focus_picks.quality
-		trigger = { current_age = age_3_discovery }
-		hidden_effect = { set_variable = abm_focus_quality }
-		custom_tooltip = abm_focus_picks.quality.tt
-		custom_tooltip = abm_focus_picks.quality.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.quantity
-		trigger = { current_age = age_3_discovery }
-		hidden_effect = { set_variable = abm_focus_quantity }
-		custom_tooltip = abm_focus_picks.quantity.tt
-		custom_tooltip = abm_focus_picks.quantity.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.naval
-		trigger = { current_age = age_3_discovery }
-		hidden_effect = { set_variable = abm_focus_naval }
-		custom_tooltip = abm_focus_picks.naval.tt
-		custom_tooltip = abm_focus_picks.naval.unlocks_tt
-
-		ai_will_select = {
-			value = 50
-		}
-	}
-	option = {
-		name = abm_focus_picks.offense
-		trigger = { current_age = age_4_reformation }
-		hidden_effect = { set_variable = abm_focus_offense }
-		custom_tooltip = abm_focus_picks.offense.tt
-		custom_tooltip = abm_focus_picks.offense.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.defense
-		trigger = { current_age = age_4_reformation }
-		hidden_effect = { set_variable = abm_focus_defense }
-		custom_tooltip = abm_focus_picks.defense.tt
-		custom_tooltip = abm_focus_picks.defense.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.littoral_fleet
-		trigger = { current_age = age_4_reformation }
-		hidden_effect = { set_variable = abm_focus_littoral_fleet }
-		custom_tooltip = abm_focus_picks.littoral_fleet.tt
-		custom_tooltip = abm_focus_picks.littoral_fleet.unlocks_tt
-
-		ai_will_select = {
-			value = 50
-		}
-	}
-	option = {
-		name = abm_focus_picks.maneuver
-		trigger = { current_age = age_5_absolutism }
-		hidden_effect = { set_variable = abm_focus_maneuver }
-		custom_tooltip = abm_focus_picks.maneuver.tt
-		custom_tooltip = abm_focus_picks.maneuver.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.logistics
-		trigger = { current_age = age_5_absolutism }
-		hidden_effect = { set_variable = abm_focus_logistics }
-		custom_tooltip = abm_focus_picks.logistics.tt
-		custom_tooltip = abm_focus_picks.logistics.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.highseas_fleet
-		trigger = { current_age = age_5_absolutism }
-		hidden_effect = { set_variable = abm_focus_highseas_fleet }
-		custom_tooltip = abm_focus_picks.highseas_fleet.tt
-		custom_tooltip = abm_focus_picks.highseas_fleet.unlocks_tt
-
-		ai_will_select = {
-			value = 50
-		}
-	}
-	option = {
-		name = abm_focus_picks.voluntary_service
-		trigger = { current_age = age_6_revolutions }
-		hidden_effect = { set_variable = abm_focus_voluntary_service }
-		custom_tooltip = abm_focus_picks.voluntary_service.tt
-		custom_tooltip = abm_focus_picks.voluntary_service.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.conscription
-		trigger = { current_age = age_6_revolutions }
-		hidden_effect = { set_variable = abm_focus_conscription }
-		custom_tooltip = abm_focus_picks.conscription.tt
-		custom_tooltip = abm_focus_picks.conscription.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
-	}
-	option = {
-		name = abm_focus_picks.insurrection
-		trigger = { current_age = age_6_revolutions }
-		hidden_effect = { set_variable = abm_focus_insurrection }
-		custom_tooltip = abm_focus_picks.insurrection.tt
-		custom_tooltip = abm_focus_picks.insurrection.unlocks_tt
-
-		ai_will_select = {
-			value = 100
-		}
+		name = abm_focus_picks.1.a
 	}
 }
