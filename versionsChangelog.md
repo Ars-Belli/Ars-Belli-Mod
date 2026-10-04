@@ -4,6 +4,24 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.21
+
+Since game.1.3.11.mod.20 → game.1.3.11.mod.21:
+
+### War, Wargoals and Peace
+
+- **Lack of control lowers a location's warscore again.** The per-age values (0.2 / 0.4 / 0.6 / 0.8 /
+  1.0 / 1.0) had the wrong sign, so land you held only loosely was adding warscore instead of
+  costing less
+
+### Economy and Gold-Transfers
+
+- **Loans between countries are capped at 10% interest** [vanilla 25%], so a loan can no longer be
+  used to move large sums between players
+- **Send Economic Support cut to a quarter of its previous cap:** at most a quarter of the
+  recipient's tax base per month [was its full tax base], and never more than two and a half months
+  of the sender's income [was ten]
+
 ## game.1.3.11.mod.20
 
 Since game.1.3.11.mod.19 → game.1.3.11.mod.20:
