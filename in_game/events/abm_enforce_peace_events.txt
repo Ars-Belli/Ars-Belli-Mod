@@ -22,38 +22,10 @@ abm_enforce_peace.1 = {
 		var:abm_ep_war = { save_scope_as = ep_war }
 	}
 
-	# Accept the white peace.
-	option = {
-		name = abm_enforce_peace.1.a
-		white_peace = scope:ep_war
-
-		scope:ep_enforcer = {
-			trigger_event_silently = abm_enforce_peace.2
-		}
-
-		remove_variable = abm_ep_enforcer
-		remove_variable = abm_ep_defender
-		remove_variable = abm_ep_war
-
-		ai_chance = {
-			factor = 2
-			# A free exit looks far better when the war is going badly.
-			modifier = {
-				factor = 3
-				war_score_in_war_whole_side = {
-					war = scope:ep_war
-					value < 0
-				}
-			}
-			modifier = {
-				factor = -1
-				war_score_in_war_whole_side = {
-					war = scope:ep_war
-					value > 25
-				}
-			}
-		}
-	}
+	# Refuse is listed FIRST on purpose: an event left unanswered resolves to its first
+	# option, and letting it time out must not end the war. Ignoring the event counts as
+	# refusing, so the enforcer joins. The AI picks by ai_chance, so the order does not
+	# affect it.
 
 	# Refuse, and take the enforcer into the war against us.
 	option = {
@@ -84,6 +56,39 @@ abm_enforce_peace.1 = {
 			}
 			modifier = {
 				factor = 3
+				war_score_in_war_whole_side = {
+					war = scope:ep_war
+					value > 25
+				}
+			}
+		}
+	}
+
+	# Accept the white peace.
+	option = {
+		name = abm_enforce_peace.1.a
+		white_peace = scope:ep_war
+
+		scope:ep_enforcer = {
+			trigger_event_silently = abm_enforce_peace.2
+		}
+
+		remove_variable = abm_ep_enforcer
+		remove_variable = abm_ep_defender
+		remove_variable = abm_ep_war
+
+		ai_chance = {
+			factor = 2
+			# A free exit looks far better when the war is going badly.
+			modifier = {
+				factor = 3
+				war_score_in_war_whole_side = {
+					war = scope:ep_war
+					value < 0
+				}
+			}
+			modifier = {
+				factor = -1
 				war_score_in_war_whole_side = {
 					war = scope:ep_war
 					value > 25

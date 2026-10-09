@@ -1,10 +1,10 @@
 ﻿l_english:
  abm_economic_support_relation: "Economic Support"
- abm_economic_support_relation_desc: "A wealthier [country|e] sends an agreed sum of [gold_i] to another every month. The sum is capped at the recipient's [tax_base|e], and can never exceed ten months of the sender's income. Both parties spend a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as the arrangement stands."
+ abm_economic_support_relation_desc: "A wealthier [country|e] sends an agreed sum of [gold_i] to another every month. The sum is capped at a quarter of the recipient's [tax_base|e], and can never exceed two and a half months of the sender's income. Both parties spend a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as the arrangement stands."
 
  # The interaction that starts the relation - this is what players click.
  abm_send_economic_support: "Send $abm_economic_support_relation$"
- abm_send_economic_support_desc: "Send a country a sum of [gold_i] every month. We may send at most their [tax_base|e] each month, and never more than ten months of our own income - a small economy cannot absorb a large [country|e]'s gold. It costs us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e], and costs them the same."
+ abm_send_economic_support_desc: "Send a country a sum of [gold_i] every month. We may send at most a quarter of their [tax_base|e] each month, and never more than two and a half months of our own income - a small economy cannot absorb a large [country|e]'s gold. It costs us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e], and costs them the same."
  CATEGORY_ECONOMY_ACTIONS_abm_send_economic_support: "Send $abm_economic_support_relation$"
  abm_send_economic_support_act: "Offer $abm_economic_support_relation$"
  INCOMING_OFFER_abm_send_economic_support: "$ACTOR$ have offered to send us $abm_economic_support_relation$. Accepting will cost us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as it lasts. Do we wish to accept?\n\n$INFO$"
@@ -46,9 +46,10 @@
 
  # ---------------------------------------------------------------------------
  # The vanilla engine action cannot be removed - it is not exposed to script in
- # any form - so it is relabelled to steer players onto the mod action instead.
+ # any form - so it is relabelled to steer players onto the mod action instead. The
+ # warning leads the title because the diplomacy list truncates long button labels.
  # ---------------------------------------------------------------------------
- ECONOMIC_SUPPORTTITLE: "Send Economic Support (#R AGAINST THE RULES#!)"
+ ECONOMIC_SUPPORTTITLE: "(#R AGAINST THE RULES#!) Send Economic Support"
  ECONOMIC_SUPPORT_TOOLTIP_HEADER: "#R Do not use#! - Send Economic Support to [TARGET_COUNTRY.GetName]"
  ECONOMIC_SUPPORT_TOOLTIP_HEADER_NO_TARGET: "#R Do not use#! - Send Economic Support to a [country|e]"
  ECONOMIC_SUPPORT_DESC: "#R This is the vanilla action and is against the rules in Ars Belli.#!\n\nIt bypasses the recipient's consent, costs no #H Defensive Point#!, and costs no monthly [diplomats|e]. Use $abm_economic_support_relation$ instead.\n\nSelect how much [gold_i] we should send them each month."
