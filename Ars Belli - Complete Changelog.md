@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.20 | **Supported game version:** 1.3.\*
-**Compiled:** 18 September 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.21 | **Supported game version:** 1.3.\*
+**Compiled:** 5 October 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -35,7 +35,8 @@ here in full, but these can be easily seen in-game on the world map.
 
 **[Release History (Patchnotes)](#release-history-patchnotes)**
 
-- [game.1.3.11.mod.20](#game1311mod20-current)
+- [game.1.3.11.mod.21](#game1311mod21-current)
+- [game.1.3.11.mod.20](#game1311mod20)
 - [game.1.3.11.mod.19](#game1311mod19)
 - [game.1.3.11.mod.18](#game1311mod18)
 - [game.1.3.11.mod.17](#game1311mod17)
@@ -174,8 +175,8 @@ Alliance, Defensive and Guarantee points.
 
 - Pick a country and a monthly sum of gold; the recipient gets an accept/decline popup before
   anything starts.
-- The amount is capped at the recipient's tax base and never exceeds ten months of the sender's
-  income (never below 1 gold). The slider opens at half the cap.
+- The amount is capped at a quarter of the recipient's tax base and never exceeds two and a half
+  months of the sender's income (never below 1 gold). The slider opens at half the cap.
 - Costs both sides a Defensive Point and −0.10 monthly diplomats for as long as the arrangement
   stands.
 - A country can only receive Economic Support from **one patron at a time**.
@@ -437,6 +438,7 @@ Cut hard, to make wars less static.
   halved and its bar raised from 24 to 36 months of income), a new penalty band hits art quality
   40–69, and the below-40 band is deepened. Vanilla ignored the price entirely, so any rich AI would
   buy almost anything at whatever the game valued it at.
+- **Loans between countries are capped at 10% interest.** [vanilla 25%]
 - Destroying a market costs 10 stability. [vanilla 50 stability plus 25 prestige]
 - Economic Support and Gifts remain the intended gold-transfer routes (see
   [section 4](#4-new-diplomatic-actions)).
@@ -597,7 +599,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.20).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.21).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -608,7 +610,25 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.20 (current)
+## game.1.3.11.mod.21 (current)
+
+Since game.1.3.11.mod.20 → game.1.3.11.mod.21:
+
+### War, Wargoals and Peace
+
+- **Lack of control lowers a location's warscore again.** The per-age values (0.2 / 0.4 / 0.6 / 0.8 /
+  1.0 / 1.0) had the wrong sign, so land you held only loosely was adding warscore instead of
+  costing less
+
+### Economy and Gold-Transfers
+
+- **Loans between countries are capped at 10% interest** [vanilla 25%], so a loan can no longer be
+  used to move large sums between players
+- **Send Economic Support cut to a quarter of its previous cap:** at most a quarter of the
+  recipient's tax base per month [was its full tax base], and never more than two and a half months
+  of the sender's income [was ten]
+
+## game.1.3.11.mod.20
 
 Since game.1.3.11.mod.19 → game.1.3.11.mod.20:
 
