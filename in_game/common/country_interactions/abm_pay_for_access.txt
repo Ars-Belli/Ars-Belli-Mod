@@ -11,6 +11,7 @@
 	}
 
 	allow = {
+		scope:actor != scope:recipient
 		scope:actor = {
 			gold > 0
 		}
@@ -24,6 +25,7 @@
 			data = name
 		}
 		visible = {
+			this != scope:actor
 			within_diplomatic_range = scope:actor
 		}
 	}
@@ -119,6 +121,7 @@ pay_for_fleet_basing_rights = {
 	}
 
 	allow = {
+		scope:actor != scope:recipient
 		scope:actor = {
 			gold > 0
 			not = { has_blocked_treaties = scope:recipient }
@@ -137,6 +140,7 @@ pay_for_fleet_basing_rights = {
 			data = name
 		}
 		visible = {
+			this != scope:actor
 			within_diplomatic_range = scope:actor
 		}
 	}
@@ -219,6 +223,7 @@ pay_for_trade_access = {
 	}
 
 	allow = {
+		scope:actor != scope:recipient
 		scope:actor = {
 			gold > 0
 		}
@@ -235,6 +240,7 @@ pay_for_trade_access = {
 			data = name
 		}
 		visible = {
+			this != scope:actor
 			within_diplomatic_range = scope:actor
 		}
 	}
@@ -324,6 +330,7 @@ pay_for_food_access = {
 	}
 
 	allow = {
+		scope:actor != scope:recipient
 		scope:actor = {
 			gold > 0
 		}
@@ -337,6 +344,7 @@ pay_for_food_access = {
 			data = name
 		}
 		visible = {
+			this != scope:actor
 			within_diplomatic_range = scope:actor
 		}
 	}
@@ -421,6 +429,7 @@ pay_for_fondaco_rights = {
 	}
 
 	allow = {
+		scope:actor != scope:recipient
 		scope:actor = {
 			gold > 0
 		}
@@ -439,6 +448,7 @@ pay_for_fondaco_rights = {
 			data = name
 		}
 		visible = {
+			this != scope:actor
 			within_diplomatic_range = scope:actor
 		}
 	}
