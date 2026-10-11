@@ -153,6 +153,7 @@ banking_country_traditions = {
 
 hospital_advance = {
 	age = age_1_traditions
+	casualty_pop_losses = -0.05
 	requires = pest_house_advance
 	unlock_building = hospital
 }
@@ -217,6 +218,16 @@ city_building_advance = {
 	research_cost = 2.0
 	can_build_cities = yes
 	can_grant_town_rights = yes
+
+	unlock_town_rights = tooling_charter
+	unlock_town_rights = jewelry_charter
+	unlock_town_rights = naval_charter
+	unlock_town_rights = textile_charter
+	unlock_town_rights = weaponry_charter
+	unlock_town_rights = book_charter
+	unlock_town_rights = artisan_charter
+	unlock_town_rights = brewing_charter
+	unlock_town_rights = masonry_charter
 
 	requires = agriculture_advance
 }
@@ -348,11 +359,28 @@ iron_working = {
 	requires = metallurgy
 	research_cost = 2.0
 	starting_technology_level = 1
-	
-	allow = { 
-		has_embraced_institution = institution:feudalism
+
+	allow = {
+		OR = {
+			has_embraced_institution = institution:feudalism
+			original_capital ?= { continent = continent:europe }
+			original_capital ?= { continent = continent:asia }
+			original_capital ?= { sub_continent = sub_continent:north_africa }
+			original_capital ?= { sub_continent = sub_continent:west_africa }
+			original_capital ?= { sub_continent = sub_continent:central_africa }
+			original_capital ?= { sub_continent = sub_continent:east_africa }
+			original_capital ?= { sub_continent = sub_continent:southern_africa }
+			original_capital ?= {
+				market ?= {
+					OR = {
+						is_produced_in_market = goods:iron
+						is_traded_in_market = goods:iron
+					}
+				}
+			}
+		}
 	}
-	
+
 	can_extract_coal = yes
 	can_extract_iron = yes
 	unlock_building = bog_iron_smelter
@@ -411,7 +439,7 @@ trade_advance_age_of_trad = {
 	
 	requires = ship_building_advance
 	
-	selling_efficiency = small_trade_efficiency_bonus
+	selling_efficiency = small_selling_efficiency_bonus
 	
 	starting_technology_level = 3
 }
@@ -428,31 +456,6 @@ more_merchants_age_of_trad = {
 	
 	starting_technology_level = 3
 }
-slave_raid_advance = {
-	age = age_1_traditions
-	icon = slavery_before_death
-
-	potential = { 
-		OR = {
-			has_or_had_tag = MOR
-			has_or_had_tag = TUN
-			has_or_had_tag = TLE
-			has_or_had_tag = TRP
-			
-			AND = {
-				num_locations > 0
-				capital = { region = region:maghreb_region }
-			}
-		}
-		
-	}
-	
-	allow_privateers_slave_raid = yes
-	can_hire_privateers = yes
-	
-	requires = trade_advance_age_of_trad
-}
-
 #Organized Religion
 organized_religion = {
 	age = age_1_traditions
@@ -481,6 +484,17 @@ guilds = {
 
 	global_burghers_city_desired_pop = 0.1
 	global_burghers_max_literacy = 5
+}
+
+industry_promotion_advance = {
+	age = age_1_traditions
+	icon = guilds
+
+	requires = guilds
+	requires = more_merchants_age_of_trad
+
+	can_promote_industry = yes
+	possible_industry_promotions = 1
 }
 
 peasant_connections_advance = {
@@ -641,7 +655,7 @@ talented_traders = {
 	icon = merchants_and_trade
 	requires = abacus_advance
 
-	selling_efficiency = small_trade_efficiency_bonus
+	selling_efficiency = small_selling_efficiency_bonus
 }
 
 government_sanctioned_celebrations = {

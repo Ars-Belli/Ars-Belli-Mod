@@ -1,4 +1,277 @@
-﻿#####################################
+﻿###########################
+# The always allow tree
+##############################
+renaissance_development = {
+	age = age_2_renaissance
+	icon = offensive_army
+	
+	embrace_institution_cost_modifier = -0.10
+	revoke_privilege_cost_modifier = -0.05
+
+	depth = 0
+}
+
+
+improve_relation_impact_renaissance = {
+	age = age_2_renaissance
+	icon = court_accounting
+
+	requires = renaissance_development
+	
+	improve_relation_impact = 0.10
+
+	ai_weight = {
+		if = {
+			limit = {
+				root = {
+					subjects_relative_power > 0.25
+				}
+			}
+			add = 1
+		}
+	}
+}
+
+late_feudal_relations = {
+	age = age_2_renaissance
+	icon = late_feudal_relations
+
+	requires = improve_relation_impact_renaissance
+	
+	subject_loyalty = 5
+
+	ai_weight = {
+		if = {
+			limit = {
+				root = {
+					subjects_relative_power > 0.25
+				}
+			}
+			add = 1
+		}
+	}
+}
+
+medieval_military = {
+	age = age_2_renaissance
+	land_morale = 0.25
+	ai_weight = { add = 20 }
+
+	requires = late_feudal_relations
+}
+
+naval_morale_advance_1 = {
+	age = age_2_renaissance
+
+	naval_morale = 0.25
+
+	requires = late_feudal_relations
+}
+
+
+
+renaissance_subject_opinions_advance = {	
+	age = age_2_renaissance
+
+	requires = late_feudal_relations
+
+	subject_opinions = 10
+
+	ai_weight = {
+		if = {
+			limit = {
+				root = {
+					subjects_relative_power > 0.25
+				}
+			}
+			add = 1
+		}
+	}
+}
+
+
+
+
+grant_privilege_cost_modifier_renaissance_advance = {
+	age = age_2_renaissance
+	requires = renaissance_development
+
+	grant_privilege_cost_modifier = -0.1
+}
+
+rgo_size_advance_renaissance = {
+	age = age_2_renaissance
+
+	requires = grant_privilege_cost_modifier_renaissance_advance
+	
+	global_max_rgo_size_modifier = 0.10
+}
+
+food_advance_renaissance = {
+	age = age_2_renaissance
+	icon = expanded_supply_trains
+
+	requires = rgo_size_advance_renaissance
+	
+	global_monthly_food_modifier = monthly_food_productivity_mild_bonus
+}
+
+war_no_cb_cost_modifier_renaissance_advance = {
+	age = age_2_renaissance
+	icon = expansionism
+	requires = grant_privilege_cost_modifier_renaissance_advance
+
+	war_no_cb_cost_modifier = -0.1
+}
+
+
+
+global_nobles_max_literacy_advance = {
+	age = age_2_renaissance
+	requires = renaissance_subject_opinions_advance
+
+	global_nobles_max_literacy = 10
+}
+
+global_burghers_max_literacy_advance = {
+	age = age_2_renaissance
+	requires = food_advance_renaissance
+
+	global_burghers_max_literacy = 10
+}
+
+
+global_clergy_max_literacy_advance = {
+	age = age_2_renaissance
+	requires = food_advance_renaissance
+
+	global_clergy_max_literacy = 10
+}
+
+
+land_morale_recovery_renaissance_advance = {
+	icon = offensive_army
+	age = age_2_renaissance
+	
+	land_morale_recovery = 0.01
+	
+	requires = medieval_military
+}
+
+
+merchant_power_from_maritime_renaissance_advance = {
+	age = age_2_renaissance
+	icon = global_trade_routes_advance
+	
+	merchant_power_from_maritime = 0.025
+	
+	requires = global_burghers_max_literacy_advance
+}
+
+
+
+renaissance_urbanisation = {
+	age = age_2_renaissance
+	requires = food_advance_renaissance
+
+
+	global_max_rgo_size_modifier_in_non_rural = 0.1
+}
+
+
+renaissance_city_rights = {
+	icon = religious_toleration
+	age = age_2_renaissance
+	requires = renaissance_urbanisation
+	
+	megalopolis_upgrade_cost_modifier = -0.1
+	city_upgrade_cost_modifier = -0.1
+	town_upgrade_cost_modifier = -0.1
+}
+
+
+blockade_tactics = {
+	age = age_2_renaissance
+	requires = naval_morale_advance_1
+	
+	blockade_efficiency = 0.1
+}
+
+recovery_efforts = {
+	icon = offensive_army
+	age = age_2_renaissance
+	
+	requires = blockade_tactics
+
+
+	global_devastation_recovery = 0.0025
+}
+
+
+
+naval_initiative_ren = {
+	age = age_2_renaissance
+	icon = ship_building_advance
+	
+	requires = blockade_tactics
+	
+	navy_initiative = 0.2
+}
+
+
+army_initiative_ren = {
+	icon = professional_armies_advance
+	age = age_2_renaissance
+	
+	requires = land_morale_recovery_renaissance_advance
+	
+	army_initiative = 0.2
+}
+
+
+law_making_renaissance = {
+	age = age_2_renaissance
+	
+	requires = recovery_efforts
+	
+	change_policy_cost_modifier = -0.05
+}
+
+subject_integration = {
+	icon = glorious_arms
+	age = age_2_renaissance
+	
+	requires = renaissance_subject_opinions_advance
+	
+	diplomatic_annexation_efficiency = 0.2
+}
+
+rgo_construction_ren = {
+	age = age_2_renaissance
+	icon = efficient_mining
+	
+	requires = law_making_renaissance
+	
+	global_rgo_build_time = -0.1
+}
+
+naval_repair_ren = {
+	icon = rudimentary_coastal_ship_repair
+	age = age_2_renaissance
+	
+	requires = naval_initiative_ren
+	
+	navy_repair_efficiency = 0.10
+}
+
+construction_speed_renaissance = {
+	icon = efficient_mining
+	age = age_2_renaissance
+	global_construction_speed = 0.1
+	requires = rgo_construction_ren
+}
+
+#####################################
 # Renaissance
 #####################################
 renaissance_advance = {
@@ -56,6 +329,8 @@ chancery_records = {
 	chancery_cap_level = 1
 	requires = government_size_renaissance
 	allow_children = no
+
+	ai_weight = { add = 5 }
 }
 
 crown_power_advance_renaissance = {
@@ -88,6 +363,7 @@ power_projection_advance_2 = {
 
 anatomy_advance = {
 	age = age_2_renaissance
+	casualty_pop_losses = -0.03
 	global_life_expectancy = 2
 	global_disease_resistance = 0.03
 
@@ -132,7 +408,10 @@ merchants_and_trade = {
 	naval_range = 250
 	trade_range = 250
 	colonial_range = 250
-	
+
+	max_tariff = 0.05
+	max_trade_subventions = 0.05
+
 	ai_preference_tags = {
 		exploration
 	}
@@ -315,276 +594,3 @@ correct_box_advance_renaissance = {
 	requires = gunpowder_advance
 }
 
-###########################
-# The always allow tree
-##############################
-renaissance_development = {
-	age = age_2_renaissance
-	icon = offensive_army
-	
-	embrace_institution_cost_modifier = -0.10
-	revoke_privilege_cost_modifier = -0.05
-
-	depth = 0
-}
-
-
-improve_relation_impact_renaissance = {
-	age = age_2_renaissance
-	icon = court_accounting
-
-	requires = renaissance_development
-	
-	improve_relation_impact = 0.10
-
-	ai_weight = {
-		if = {
-			limit = {
-				root = {
-					subjects_relative_power > 0.25
-				}
-			}
-			add = 1
-		}
-	}
-}
-
-late_feudal_relations = {
-	age = age_2_renaissance
-	icon = late_feudal_relations
-
-	requires = improve_relation_impact_renaissance
-	
-	subject_loyalty = 5
-
-	ai_weight = {
-		if = {
-			limit = {
-				root = {
-					subjects_relative_power > 0.25
-				}
-			}
-			add = 1
-		}
-	}
-}
-
-medieval_military = {
-	age = age_2_renaissance
-	land_morale = 0.25
-	ai_weight = { add = 20 }
-
-	requires = late_feudal_relations
-}
-
-naval_morale_advance_1 = {
-	age = age_2_renaissance
-
-	naval_morale = 0.25
-
-	requires = late_feudal_relations
-}
-
-
-
-renaissance_subject_opinions_advance = {	
-	age = age_2_renaissance
-
-	requires = late_feudal_relations
-
-	subject_opinions = 10
-
-	ai_weight = {
-		if = {
-			limit = {
-				root = {
-					subjects_relative_power > 0.25
-				}
-			}
-			add = 1
-		}
-	}
-}
-
-
-
-
-grant_privilege_cost_modifier_renaissance_advance = {
-	age = age_2_renaissance
-	requires = renaissance_development
-
-	grant_privilege_cost_modifier = -0.1
-}
-
-rgo_size_advance_renaissance = {
-	age = age_2_renaissance
-
-	requires = grant_privilege_cost_modifier_renaissance_advance
-	
-	global_max_rgo_size_modifier = 0.10
-}
-
-food_advance_renaissance = {
-	age = age_2_renaissance
-	icon = expanded_supply_trains
-
-	requires = rgo_size_advance_renaissance
-	
-	global_monthly_food_modifier = 0.10
-}
-
-war_no_cb_cost_modifier_renaissance_advance = {
-	age = age_2_renaissance
-	icon = expansionism
-	requires = grant_privilege_cost_modifier_renaissance_advance
-
-	war_no_cb_cost_modifier = -0.1
-}
-
-
-
-global_nobles_max_literacy_advance = {
-	age = age_2_renaissance
-	requires = renaissance_subject_opinions_advance
-
-	global_nobles_max_literacy = 10
-}
-
-global_burghers_max_literacy_advance = {
-	age = age_2_renaissance
-	requires = food_advance_renaissance
-
-	global_burghers_max_literacy = 10
-}
-
-
-global_clergy_max_literacy_advance = {
-	age = age_2_renaissance
-	requires = food_advance_renaissance
-
-	global_clergy_max_literacy = 10
-}
-
-
-land_morale_recovery_renaissance_advance = {
-	icon = offensive_army
-	age = age_2_renaissance
-	
-	land_morale_recovery = 0.01
-	
-	requires = medieval_military
-}
-
-
-merchant_power_from_maritime_renaissance_advance = {
-	age = age_2_renaissance
-	icon = global_trade_routes_advance
-	
-	merchant_power_from_maritime = 0.025
-	
-	requires = global_burghers_max_literacy_advance
-}
-
-
-
-renaissance_urbanisation = {
-	age = age_2_renaissance
-	requires = food_advance_renaissance
-
-
-	global_max_rgo_size_modifier_in_non_rural = 0.1
-}
-
-
-renaissance_city_rights = {
-	icon = religious_toleration
-	age = age_2_renaissance
-	requires = renaissance_urbanisation
-	
-	megalopolis_upgrade_cost_modifier = -0.1
-	city_upgrade_cost_modifier = -0.1
-	town_upgrade_cost_modifier = -0.1
-}
-
-
-blockade_tactics = {
-	age = age_2_renaissance
-	requires = naval_morale_advance_1
-	
-	blockade_efficiency = 0.1
-}
-
-recovery_efforts = {
-	icon = offensive_army
-	age = age_2_renaissance
-	
-	requires = blockade_tactics
-
-
-	global_devastation_recovery = 0.005
-}
-
-
-
-naval_initiative_ren = {
-	age = age_2_renaissance
-	icon = ship_building_advance
-	
-	requires = blockade_tactics
-	
-	navy_initiative = 0.2
-}
-
-
-army_initiative_ren = {
-	icon = professional_armies_advance
-	age = age_2_renaissance
-	
-	requires = land_morale_recovery_renaissance_advance
-	
-	army_initiative = 0.2
-}
-
-
-law_making_renaissance = {
-	age = age_2_renaissance
-	
-	requires = recovery_efforts
-	
-	change_policy_cost_modifier = -0.05
-}
-
-subject_integration = {
-	icon = glorious_arms
-	age = age_2_renaissance
-	
-	requires = renaissance_subject_opinions_advance
-	
-	diplomatic_annexation_efficiency = 0.2
-}
-
-rgo_construction_ren = {
-	age = age_2_renaissance
-	icon = efficient_mining
-	
-	requires = law_making_renaissance
-	
-	global_rgo_build_time = -0.1
-}
-
-naval_repair_ren = {
-	icon = rudimentary_coastal_ship_repair
-	age = age_2_renaissance
-	
-	requires = naval_initiative_ren
-	
-	navy_repair_efficiency = 0.10
-}
-
-construction_speed_renaissance = {
-	icon = efficient_mining
-	age = age_2_renaissance
-	global_construction_speed = 0.1
-	requires = rgo_construction_ren
-}
-	
