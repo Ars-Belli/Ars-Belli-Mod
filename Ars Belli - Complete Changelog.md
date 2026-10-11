@@ -4,7 +4,7 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.21 | **Supported game version:** 1.3.\*
+**Mod version:** game.1.3.11.mod.22 | **Supported game version:** 1.3.\*
 **Compiled:** 5 October 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
@@ -183,7 +183,8 @@ Alliance, Defensive and Guarantee points.
 - Breaks on war between the two parties and is annulled by a peace treaty. Either side can end it
   early: Cancel for the sender, Refuse for the recipient.
 - The vanilla Send Economic Support is engine-implemented and cannot be removed, so it is relabelled
-  "(AGAINST THE RULES)" to steer players onto the new action.
+  "(AGAINST THE RULES) Send Economic Support" — warning first, so it survives the diplomacy list
+  truncating long names — to steer players onto the new action.
 
 ### Forgive Antagonism (two friendly actions)
 
@@ -286,7 +287,8 @@ Rebuilt from scratch.
   used to.
 - **The defender is asked first.** Only if the defender accepts is the demand put to the attacker:
   - attacker accepts → the war ends in a white peace;
-  - attacker refuses → the enforcer joins the war on the defender's side.
+  - attacker refuses → the enforcer joins the war on the defender's side;
+  - attacker does not answer in time → treated as a refusal, so the enforcer joins the war.
 
   Asking the defender first is the point: it stops Enforce Peace being used to rescue a losing
   attacker over the defender's objection.
@@ -599,7 +601,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.21).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.22).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -610,7 +612,22 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.21 (current)
+## game.1.3.11.mod.22 (current)
+
+Since game.1.3.11.mod.21 → game.1.3.11.mod.22:
+
+### Enforce Peace
+
+- **An unanswered Enforce Peace now counts as a refusal.** If the attacker lets the demand time out,
+  the enforcer joins the war on the defender's side — ignoring it no longer ends the war in a white
+  peace
+
+### Economy and Gold-Transfers
+
+- The vanilla Send Economic Support now reads **"(AGAINST THE RULES) Send Economic Support"**, so the
+  warning stays visible when the diplomacy list cuts long button names short
+
+## game.1.3.11.mod.21
 
 Since game.1.3.11.mod.20 → game.1.3.11.mod.21:
 

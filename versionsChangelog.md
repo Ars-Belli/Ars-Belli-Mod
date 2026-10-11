@@ -4,6 +4,21 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.22
+
+Since game.1.3.11.mod.21 → game.1.3.11.mod.22:
+
+### Enforce Peace
+
+- **An unanswered Enforce Peace now counts as a refusal.** If the attacker lets the demand time out,
+  the enforcer joins the war on the defender's side — ignoring it no longer ends the war in a white
+  peace
+
+### Economy and Gold-Transfers
+
+- The vanilla Send Economic Support now reads **"(AGAINST THE RULES) Send Economic Support"**, so the
+  warning stays visible when the diplomacy list cuts long button names short
+
 ## game.1.3.11.mod.21
 
 Since game.1.3.11.mod.20 → game.1.3.11.mod.21:
