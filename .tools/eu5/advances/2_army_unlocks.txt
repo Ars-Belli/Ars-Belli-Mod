@@ -60,14 +60,13 @@ unlock_crossbowmen_advance = {
 unlock_reformed_crusader_knights_advance = {
 	age = age_2_renaissance
 	unlock_unit = a_late_crusader_knights
-	unlock_unit = a_order_knights
 	unlock_unit = a_order_knights_2
 	unlock_levy = levy_late_crusader_knights
 
 	requires = regiment_reinforcement_speed_renaissance
 
 	potential = {
-		modifier:allow_military_order_units = yes
+		modifier:can_recruit_crusader_regiments = yes
 	}
 
 }
@@ -210,7 +209,19 @@ unlock_armored_horsemen_advance = {
 	}
 
 	requires = unlock_horsemen_advance
-	
+
+}
+
+unlock_crusader_knights_advance = {
+	age = age_1_traditions
+	unlock_unit = a_order_knights
+
+	requires = unlock_armored_horsemen_advance
+
+	potential = {
+		modifier:can_recruit_crusader_regiments = yes
+	}
+
 }
 
 unlock_cavalry_advance = {
@@ -303,6 +314,179 @@ unlock_cuirassiers_advance = {
 	requires = unlock_light_dragoons_advance
 }
 
+
+
+######################
+# Camel Cavalry
+######################
+
+unlock_camel_1_advance = {
+	age = age_1_traditions
+	unlock_unit = a_light_camelry_1
+	unlock_levy = levy_light_camelry_1
+	unlock_unit = a_heavy_camelry_1
+	unlock_levy = levy_heavy_camelry_1
+
+	potential = {
+		original_capital ?= {
+			OR = {
+				sub_continent = sub_continent:middle_east
+				sub_continent = sub_continent:north_africa
+				sub_continent = sub_continent:central_asia
+				region = region:sahel_region
+				region = region:somalia_region
+				region = region:nubia_region
+				region = region:western_india_region
+			}
+		}
+	}
+
+	allow = {
+		unit_camelry_country_trigger = yes
+	}
+
+	requires = horse_riding_advance
+}
+
+unlock_camel_2_advance = {
+	age = age_2_renaissance
+	unlock_unit = a_light_camelry_2
+	unlock_levy = levy_light_camelry_2
+	unlock_unit = a_heavy_camelry_2
+	unlock_levy = levy_heavy_camelry_2
+
+	potential = {
+		original_capital ?= {
+			OR = {
+				sub_continent = sub_continent:middle_east
+				sub_continent = sub_continent:north_africa
+				sub_continent = sub_continent:central_asia
+				region = region:sahel_region
+				region = region:somalia_region
+				region = region:nubia_region
+				region = region:western_india_region
+			}
+		}
+	}
+
+	allow = {
+		unit_camelry_country_trigger = yes
+	}
+
+	requires = correct_box_advance_renaissance
+}
+
+unlock_camel_3_advance = {
+	age = age_3_discovery
+	unlock_unit = a_light_camelry_3
+	unlock_levy = levy_light_camelry_3
+	unlock_unit = a_heavy_camelry_3
+	unlock_levy = levy_heavy_camelry_3
+
+	potential = {
+		original_capital ?= {
+			OR = {
+				sub_continent = sub_continent:middle_east
+				sub_continent = sub_continent:north_africa
+				sub_continent = sub_continent:central_asia
+				region = region:sahel_region
+				region = region:somalia_region
+				region = region:nubia_region
+				region = region:western_india_region
+			}
+		}
+	}
+
+	allow = {
+		unit_camelry_country_trigger = yes
+	}
+
+	requires = matchlock_gun
+}
+
+unlock_camel_4_advance = {
+	age = age_4_reformation
+	unlock_unit = a_light_camelry_4
+	unlock_levy = levy_light_camelry_4
+	unlock_unit = a_heavy_camelry_4
+	unlock_levy = levy_heavy_camelry_4
+
+	potential = {
+		original_capital ?= {
+			OR = {
+				sub_continent = sub_continent:middle_east
+				sub_continent = sub_continent:north_africa
+				sub_continent = sub_continent:central_asia
+				region = region:sahel_region
+				region = region:somalia_region
+				region = region:nubia_region
+				region = region:western_india_region
+			}
+		}
+	}
+
+	allow = {
+		unit_camelry_country_trigger = yes
+	}
+
+	requires = flintlock_gun
+}
+
+unlock_camel_5_advance = {
+	age = age_5_absolutism
+	unlock_unit = a_light_camelry_5
+	unlock_levy = levy_light_camelry_5
+	unlock_unit = a_heavy_camelry_5
+	unlock_levy = levy_heavy_camelry_5
+
+	potential = {
+		original_capital ?= {
+			OR = {
+				sub_continent = sub_continent:middle_east
+				sub_continent = sub_continent:north_africa
+				sub_continent = sub_continent:central_asia
+				region = region:sahel_region
+				region = region:somalia_region
+				region = region:nubia_region
+				region = region:western_india_region
+			}
+		}
+	}
+
+	allow = {
+		unit_camelry_country_trigger = yes
+	}
+
+	requires = regimental_camp_advance
+}
+
+unlock_camel_6_advance = {
+	age = age_6_revolutions
+	unlock_unit = a_light_camelry_6
+	unlock_levy = levy_light_camelry_6
+	unlock_unit = a_heavy_camelry_6
+	unlock_levy = levy_heavy_camelry_6
+
+	potential = {
+		original_capital ?= {
+			OR = {
+				sub_continent = sub_continent:middle_east
+				sub_continent = sub_continent:north_africa
+				sub_continent = sub_continent:central_asia
+				region = region:sahel_region
+				region = region:somalia_region
+				region = region:nubia_region
+				region = region:western_india_region
+			}
+		}
+	}
+
+	allow = {
+		unit_camelry_country_trigger = yes
+	}
+
+	requires = conscription_center_advance
+}
 
 
 ######################

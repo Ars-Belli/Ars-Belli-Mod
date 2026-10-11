@@ -8,6 +8,7 @@ sanitation_advance = {
 
 	global_life_expectancy = 4
 	global_disease_resistance = 0.07
+	global_population_growth = 0.001
 
 	depth = 0
 }
@@ -20,8 +21,10 @@ manufactories_advance = {
 	age = age_5_absolutism
 		
 	global_max_rgo_size_modifier = 0.10
+	max_tariff = 0.1
+	max_trade_subventions = 0.1
 	depth = 0
-	
+
 	allow = { has_embraced_institution = institution:manufactories }
 }
 
@@ -44,10 +47,18 @@ central_bank_advance = {
 lead_ore_dressing = {
 	age = age_5_absolutism
 	icon = serbian_mining
-	
+
 	requires = manufactories_advance
-	
+
 	global_lead_output_modifier = 1.0
+}
+
+industrial_expansion_advance = {
+	age = age_5_absolutism
+
+	requires = manufactories_advance
+
+	possible_industry_promotions = 1
 }
 
 powerful_statues = {
@@ -117,7 +128,7 @@ lumber_improvements_absolutism = {
 coal_improvements_absolutism = {
 	age = age_5_absolutism
 	requires = rgo_size_advance_absolutism
-	global_coal_output_modifier = 0.33
+	global_coal_output_modifier = 0.75
 	unlock_building = improved_charcoal_maker
 }
 
@@ -127,7 +138,7 @@ food_advance_absolutism = {
 
 	requires = construction_speed_absolutism
 
-	global_monthly_food_modifier = 0.20
+	global_monthly_food_modifier = monthly_food_productivity_extreme_bonus
 }
 
 ##########################
@@ -341,7 +352,7 @@ war_score_absolutism_advance = {
 	icon = diplomatic_influence
 	requires = artillery_vs_fort_age_5_absolutism
 
-	global_war_score_efficiency = 0.2
+	global_war_score_efficiency = 0.4
 }
 
 correct_box_advance_absolutism = {

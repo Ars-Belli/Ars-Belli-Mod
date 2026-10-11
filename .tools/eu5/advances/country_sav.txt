@@ -1,15 +1,15 @@
-﻿sav_savoyard_flexibility = {
+﻿sav_alpine_identity = {
 	age = age_1_traditions
-	icon = diplomatic_range_age_1
+	icon = arduous_terrain
 
 	potential = {
 		has_or_had_tag = SAV
 	}
 
-	diplomatic_capacity = 1
-	monthly_diplomats = 0.1
+	hills_proximity_impact = -0.33
+	mountains_proximity_impact = -0.33
 
-	requires = medieval_administration
+	requires = codified_laws
 }
 
 sav_house_of_savoy = {
@@ -25,18 +25,21 @@ sav_house_of_savoy = {
 	requires = codified_laws
 }
 
-sav_alpine_identity = {
+sav_savoyard_flexibility = {
 	age = age_1_traditions
-	icon = arduous_terrain
+	icon = diplomatic_range_age_1
 
 	potential = {
-		has_or_had_tag = SAV
+		OR = {
+			culture = culture:arpitan
+			culture = { merged_culture_group_contains_culture = culture:arpitan }
+		}
 	}
 
-	hills_proximity_impact = -0.33
-	mountains_proximity_impact = -0.33
+	diplomatic_capacity = 1
+	monthly_diplomats = 0.1
 
-	requires = sav_house_of_savoy
+	requires = medieval_administration
 }
 
 sav_the_shroud_of_turin = {
@@ -66,21 +69,6 @@ sav_alpine_pass_control = {
 	requires = paved_road_advance
 }
 
-sav_fight_the_vaudois = {
-	age = age_4_reformation
-	icon = scholasticism
-
-	potential = {
-		has_or_had_tag = SAV
-		religion = religion:catholic
-	}
-
-	global_pop_conversion_speed_modifier = 0.1
-
-	requires = confessional_court
-	allow_children = no
-}
-
 sav_embrace_the_vaudois = {
 	age = age_4_reformation
 	icon = smooth_administration
@@ -95,6 +83,21 @@ sav_embrace_the_vaudois = {
 	}
 
 	tolerance_own = 1
+
+	requires = confessional_court
+	allow_children = no
+}
+
+sav_fight_the_vaudois = {
+	age = age_4_reformation
+	icon = scholasticism
+
+	potential = {
+		has_or_had_tag = SAV
+		religion = religion:catholic
+	}
+
+	global_pop_conversion_speed_modifier = 0.1
 
 	requires = confessional_court
 	allow_children = no

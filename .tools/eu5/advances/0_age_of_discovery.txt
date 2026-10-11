@@ -5,6 +5,7 @@ surgery_advance = {
 	age = age_3_discovery
 	icon = alchemy_advance
 
+	casualty_pop_losses = -0.05
 	global_life_expectancy = 3
 	global_disease_resistance = 0.05
 
@@ -48,8 +49,18 @@ open_sea_exploration = {
 	requires = explorer_commisions_advance
 	allow_open_sea_exploration = yes
 	colonial_range = 1500
+
 	ai_preference_tags = {
 		exploration
+	}
+
+	ai_weight = {
+		if = {
+			limit = {
+				has_preference_tag = "exploration"
+			}
+			add = 100
+		}
 	}
 }
 
@@ -175,7 +186,7 @@ exploration_maintenance_advance = {
 
 native_policy_advance = {
 	age = age_3_discovery
-	requires = open_sea_exploration
+	requires = new_world_advance
 
 	unlock_law = native_policy
 }
@@ -349,7 +360,8 @@ town_rights_aod_advance = {
 trade_through_owned_disc_advance = {
 	icon = colonies
 	age = age_3_discovery
-	global_trade_through_owned_territory_efficiency = 0.2
+	trade_land_efficiency = small_trade_land_efficiency_bonus
+	max_tariff = 0.05
 
 	in_tree_of = surgery_advance
 }
@@ -513,7 +525,7 @@ land_morale_movement_cost_advance_disc = {
 	
 	requires = linked_armies_advance
 	
-	land_morale_movement_cost = -0.0001
+	land_morale_movement_cost = -0.0007
 }
 
 new_world_crops = {
@@ -521,7 +533,7 @@ new_world_crops = {
 	icon = expanded_supply_trains
 	
 	requires = construction_speed_discovery
-	global_monthly_food_modifier = 0.10
+	global_monthly_food_modifier = monthly_food_productivity_mild_bonus
 }
 
 rgo_size_advance_discovery = {
@@ -567,9 +579,11 @@ town_rights_enable = {
 	unlock_town_rights = royal_artisan_rights
 	unlock_town_rights = royal_brewing_rights
 	unlock_town_rights = royal_masonry_rights
+	unlock_town_rights = royal_market_rights
+	unlock_town_rights = royal_staple_rights
 	
 	ai_weight = { 
-		add = 100
+		add = 400
 		multiply = num_of_non_rural
 		divide = num_locations 
 	}
