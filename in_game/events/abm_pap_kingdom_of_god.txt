@@ -42,12 +42,8 @@ abm_pap_kog.1 = {
 		}
 
 		unlock_government_reform_effect = { type = kingdom_of_god_reform }
-		if = {
-			limit = {
-				num_reforms = modifier:government_reform_slots
-			}
-			add_country_modifier = { modifier = kingdom_of_god_slot_modifier }
-		}
+		#1.4: dropped the kingdom_of_god_slot_modifier hack (the modifier no longer exists; add_reform
+		#forces the reform in on its own, exactly like vanilla's flavor_pap.20)
 		add_reform = government_reform:kingdom_of_god_reform
         add_government_power = government_power_severe_bonus
 
@@ -60,12 +56,7 @@ abm_pap_kog.1 = {
 		}
 
 		unlock_government_reform_effect = { type = kingdom_of_god_reform }
-		if = {
-			limit = {
-				num_reforms = modifier:government_reform_slots
-			}
-			add_country_modifier = { modifier = kingdom_of_god_slot_modifier }
-		}
+		#1.4: see option a - the slot modifier is gone
 		add_reform = government_reform:kingdom_of_god_reform
 		add_prestige = prestige_severe_bonus
 	}

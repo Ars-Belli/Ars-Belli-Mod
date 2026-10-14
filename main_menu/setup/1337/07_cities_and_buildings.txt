@@ -459,7 +459,7 @@ locations={
 	# Crimean Horde
 	qirq_yer = { rank = town 		town_setup = central_asian_town } #NEW - Bakhchysarai, Crimean historical capital
 	domakha = { rank = town 		town_setup = central_asian_town } #NEW
-	enice = { rank = town 		town_setup = central_asian_town } #NEW
+#	enice = { rank = town 		town_setup = central_asian_town } #NEW #1.4: duplicate entry - enice stays the steppe_rural_settlement (below) so CRI's kurultai stays legal
 	oleshia = { rank = town 		town_setup = central_asian_town } #NEW
 	teligol = { rank = town 		town_setup = central_asian_town } #NEW
 	khadjibey = { rank = town 		town_setup = central_asian_town } #NEW
@@ -1289,13 +1289,13 @@ locations={
 	#Kilwa
 	kilwa_kisiwani = { rank = city 	town_setup = east_african_coastal_town } #NEW town >>> city
 	zanzibar = { rank = town 	town_setup = east_african_coastal_town } #NEW
-	mozambique = { rank = town 	town_setup = east_african_coastal_town } #NEW
-	lamu = { rank = town 	town_setup = east_african_coastal_town } #NEW
-	malindi = { rank = town 	town_setup = east_african_coastal_town } #NEW
+	mozambique = { rank = town 	town_setup = abm_swahili_port_town_small } #NEW #1.4: was east_african_coastal_town (Kilwa city template, over this town's caps)
+	lamu = { rank = town 	town_setup = abm_swahili_port_town } #NEW #1.4: was east_african_coastal_town (Kilwa city template, over this town's caps)
+	malindi = { rank = town 	town_setup = abm_swahili_port_town } #NEW #1.4: was east_african_coastal_town (Kilwa city template, over this town's caps)
 	mombasa = { rank = town 	town_setup = east_african_coastal_town } #NEW
-	memba = { rank = town 	town_setup = east_african_coastal_town } #NEW
+	memba = { rank = town 	town_setup = abm_swahili_port_town_small } #NEW #1.4: was east_african_coastal_town (Kilwa city template, over this town's caps)
 	kisiju = { rank = town town_setup = east_african_coastal_town } #NEW kilwan rural settlement >>> town
-	tintingue = { rank = town 	town_setup = east_african_coastal_town } #NEW (Madagascar)
+	tintingue = { rank = town 	town_setup = abm_swahili_port_town } #NEW (Madagascar) #1.4: was east_african_coastal_town (Kilwa city template, over this town's caps)
 	antananarivo = { rank = town town_setup = sahel_town  } #NEW
 	#Merchant Settlements
 	mikindani = { rank = rural_settlement town_setup = kilwan_merchant_settlement }
@@ -2549,7 +2549,7 @@ building_manager = {
 	trade_office = { tag = GAZ level = 1 location = teligol } #NEW
 	trade_office = { tag = GAZ level = 1 location = khadjibey } #NEW
 	trade_office = { tag = GAZ level = 1 location = domakha } #NEW
-	trade_office = { tag = GAZ level = 1 location = enice } #NEW
+#	trade_office = { tag = GAZ level = 1 location = enice } #NEW #1.4: trade_office needs a town/city, enice is a rural settlement
 	trade_office = { tag = GAZ level = 1 location = astrakhan } #NEW
 	trade_office = { tag = GAZ level = 1 location = sarayjuk } #NEW
 	trade_office = { tag = GAZ level = 1 location = taman } #NEW
@@ -2857,7 +2857,7 @@ building_manager = {
 	mason = { tag = YEM level = 1 location = masqat }
 	#market_village = { tag = YEM level = 1 location = adan }
 
-	market_village = { tag = OMA level = 1 location = masqat }
+#	market_village = { tag = OMA level = 1 location = masqat } #1.4: market_village needs a rural settlement, masqat is a town (#NEW - Ormus/Oman)
 	mason = { tag = OMA level = 1 location = masqat }
 
 
@@ -4084,7 +4084,7 @@ building_manager = {
 
 	#Ivory Production
 	elephant_hunting_grounds = { tag = DLH level = 3 location = unnao }
-	elephant_hunting_grounds = { tag = DLH level = 3 location = jaunpur }
+#	elephant_hunting_grounds = { tag = DLH level = 3 location = jaunpur } #1.4: elephant_hunting_grounds needs a rural settlement, jaunpur is a town (#NEW)
 	elephant_hunting_grounds = { tag = DLH level = 3 location = ghazipur }
 	elephant_hunting_grounds = { tag = DLH level = 3 location = tulsipur }
 	elephant_hunting_grounds = { tag = DLH level = 3 location = bareilly }
@@ -5588,7 +5588,7 @@ building_manager = {
 	dyes_guild = { tag = TIB level = 4 location = lhasa }
 	
 	monastery = { tag = MAR level = 1 location = leh }
-	hospital = { tag = MAR level = 1 location = leh }
+#	hospital = { tag = MAR level = 1 location = leh } #1.4: hospital needs a town/city, leh is a rural settlement
 	library = { tag = MAR level = 1 location = leh }
 	
 	monastery = { tag = GNJ level = 1 location = chamdo }
@@ -6073,8 +6073,8 @@ building_manager = {
 	city_walls = { tag = ABLEZ level = 1 location = qingdao }
 	dock = { tag = ABLEZ level = 1 location = qingdao }
 	dock = { tag = ABLEZ level = 1 location = zhanchuan }
-	sergeantry	= { tag = ABHNN level = 1 location = changhua }
-	sergeantry	= { tag = ABWCG level = 1 location = wenchang }
+#	sergeantry	= { tag = ABHNN level = 1 location = changhua } #1.4: sergeantry needs a town/city, changhua is a rural settlement
+#	sergeantry	= { tag = ABWCG level = 1 location = wenchang } #1.4: sergeantry needs a town/city, wenchang is a rural settlement
 	sergeantry	= { tag = ABNNL level = 1 location = nanliu }
 	sergeantry	= { tag = ABXNY level = 1 location = xinyi_gaozhou }
 	
@@ -6354,7 +6354,7 @@ building_manager = {
 	bog_iron_smelter = { tag = YMG level = 10 location = saitama }
 	bog_iron_smelter = { tag = UTN level = 9 location = nitta }
 	charcoal_maker = { tag = UTN level = 9 location = nitta }
-	bog_iron_smelter = { tag = UTN level = 6 location = seta }
+#	bog_iron_smelter = { tag = UTN level = 6 location = seta } #1.4: seta has no bog iron (raw material)
 	tar_kiln = { tag = UTN level = 5 location = seta }
 	
 	sergeantry = { tag = UES level = 1 location = koshi }
@@ -6465,7 +6465,7 @@ building_manager = {
 	city_walls = { tag = ABASK level = 1 location = osaka }
 	market_warehouse = { tag = ABASK level = 3 location = osaka }
 	jewelry_guild = { tag = ABASK level = 4 location = osaka }
-	fiber_crops_farm = { tag = ABASK level = 7 location = kaisou }
+	fiber_crops_farm = { tag = ABASK level = 6 location = kaisou } #1.4: was level 7, above this location's cap (6)
 	
 	sergeantry = { tag = ABASK level = 1 location = kyoto }
 	royal_garden = { tag = ABASK level = 1 location = kyoto }
@@ -6582,8 +6582,8 @@ building_manager = {
 	market_village = { tag = RYU level = 3 location = ishigaki }
 	market_village = { tag = RYU level = 3 location = iriomote }
 	farming_village = { tag = RYU level = 5 location = miyakojima }
-	farming_village = { tag = RYU level = 5 location = ishigaki }
-	farming_village = { tag = RYU level = 5 location = iriomote }
+#	farming_village = { tag = RYU level = 5 location = ishigaki } #1.4: no farming raw material here (cf. miyakojima, which works)
+#	farming_village = { tag = RYU level = 5 location = iriomote } #1.4: no farming raw material here (cf. miyakojima, which works)
 	bailiff = { tag = RYU level = 1 location = amis }
 	bailiff = { tag = RYU level = 1 location = pakuali }
 	bailiff = { tag = RYU level = 1 location = miyakojima }
