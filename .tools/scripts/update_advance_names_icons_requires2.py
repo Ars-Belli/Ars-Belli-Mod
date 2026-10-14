@@ -226,7 +226,7 @@ add_modifier_mappings(
     'army_professionalism', 'drill_army_advance', 'mil_discipline',
 )
 add_modifier_mappings(
-    """global_trade_through_owned_territory_efficiency
+    """trade_land_efficiency
     global_trade_through_owned_territory_cost_modifier
     global_trades_per_burgher global_own_trade_power bank_interest""",
     'merchants_and_trade', 'global_trade_advance', 'trade_merchant',
