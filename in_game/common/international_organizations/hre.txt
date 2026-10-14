@@ -381,7 +381,7 @@
 			}
 		}
 		trigger_else = {
-			scope:recipient = { international_organization_leader_reign >= LONG_IMPERIAL_REGENCY_YEARS }
+			scope:recipient = { international_organization_leader_reign >= define:NInternationalOrganization|LONG_IMPERIAL_REGENCY_YEARS }
 		}
 	}
 
@@ -834,13 +834,13 @@
 						# Subtract IA if there is a long interregnum
 						if = {
 							limit = {
-								international_organization_leader_reign >= LONG_IMPERIAL_REGENCY_YEARS
+								international_organization_leader_reign >= define:NInternationalOrganization|LONG_IMPERIAL_REGENCY_YEARS
 							}
 							subtract = {
 								desc = "LONG_IMPERIAL_REGENCY"
 								value = {
 									value = international_organization_leader_reign
-									subtract = LONG_IMPERIAL_REGENCY_YEARS
+									subtract = define:NInternationalOrganization|LONG_IMPERIAL_REGENCY_YEARS
 									multiply = 0.25
 								}
 							}
