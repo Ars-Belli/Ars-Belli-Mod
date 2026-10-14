@@ -522,16 +522,16 @@ locations={
 	# Iberia
 	barcelona = { rank = city 	town_setup = barcelona_city	 }
 	cordoba = { rank = city town_setup = cordoba_city }
-	granada = { rank = city town_setup = iberian_city }
+	granada = { rank = city town_setup = granada_city } #1.4
 	lisbon = { rank = city town_setup = iberian_city_port }
-	malaga = { rank = city town_setup = iberian_city_port }
+	malaga = { rank = city town_setup = malaga_city } #1.4
 	sevilla = { rank = city town_setup = iberian_city }
 	toledo = { rank = city town_setup = toledo_city }
 	valencia = { rank = city town_setup = iberian_city_port }
 	valladolid = { rank = city town_setup = iberian_city }
 
 	alcala_de_henares = { rank = town town_setup = iberian_town }
-	almeria = { rank = town town_setup = iberian_town_port }
+	almeria = { rank = town town_setup = almeria_town } #1.4
 	badajoz = { rank = town town_setup = iberian_town }
 	burgos = { rank = town town_setup = iberian_town }
 	calatayud = { rank = town town_setup = iberian_town }
@@ -729,7 +729,7 @@ locations={
 	ganzhou = { rank = city town_setup = chinese_city }
 	guangzhou = { rank = city town_setup = guangzhou_city }
 	handan = { rank = city town_setup = chinese_city }
-	hangzhou = { rank = city town_setup = hangzhou_city }
+	hangzhou = { rank = megalopolis town_setup = hangzhou_city } #1.4
 	jiangdu = { rank = city town_setup = chinese_city } #Yangzhou
 	jiangling = { rank = city town_setup = chinese_city }
 	kaifeng = { rank = city town_setup = chinese_city }
@@ -2259,7 +2259,7 @@ building_manager = {
 	cathedral 	= { tag = CAS level = 1 location = leon } #Saint Mary Cathedral, established in 1303
 	cathedral 	= { tag = POR level = 1 location = lisbon } #Lisboa Cathedral, established in 1147
 	cathedral 	= { tag = ARA level = 1 location = lleida } #Saint Mary Cathedral, established in 1278
-	cathedral 	= { tag = CAS level = 1 location = logrono } #Saint Dominic Cathedral, established in 1232
+#1.4 dropped by vanilla (replaced elsewhere): 	cathedral 	= { tag = CAS level = 1 location = logrono } #Saint Dominic Cathedral, established in 1232
 	cathedral 	= { tag = CAS level = 1 location = lugo } #Cathedral of the Assumption of Saint Mary, established in 1273
 	cathedral 	= { tag = CAS level = 1 location = mondonedo } #Cathedral of the Virgin of the Assumption, established in 1246
 	cathedral 	= { tag = CAS level = 1 location = ourense } #Saint Martin Cathedral, established in 1188
@@ -2277,7 +2277,7 @@ building_manager = {
 	cathedral 	= { tag = CAS level = 1 location = tuy } #Cathedral of Saint Mary of the Assumption, established in 1225
 	cathedral 	= { tag = ARA level = 1 location = valencia } #Cathedral of the Assumption of our Lady, established in 1238
 	cathedral 	= { tag = POR level = 1 location = viseu } #Viseu Cathedral, established in 1109
-	cathedral 	= { tag = CAS level = 1 location = vitoria } #Saint Mary Cathedral, established in 1200
+#1.4 dropped by vanilla (replaced elsewhere): 	cathedral 	= { tag = CAS level = 1 location = vitoria } #Saint Mary Cathedral, established in 1200
 	cathedral 	= { tag = CAS level = 1 location = zamora } #Cathedral of the Saviour, established in 1174
 	cathedral 	= { tag = ARA level = 1 location = zaragoza } #Cathedral of the Saviour, established in 1318
 
@@ -2625,7 +2625,7 @@ building_manager = {
 	#Switzerland - Rural Settlement
 
 	castle = { tag = BAS level = 1 location = bienne }
-	castle = { tag = SAV level = 1 location = lausanne }
+	castle = { tag = LSA level = 1 location = lausanne } #1.4: was SAV, Lausanne is LSA here
 	castle = { tag = NEU level = 1 location = neuchatel }
 	castle = { tag = KYB level = 1 location = burgdorf_emmental }
 	castle = { tag = BAS level = 1 location = basel }
@@ -4388,8 +4388,8 @@ building_manager = {
 	stockade = { tag = BEA level = 1 location = carbery }
 	stockade = { tag = PLE level = 1 location = navan }
 	stockade = { tag = PLE level = 1 location = drogheda }
-	stockade = { tag = PLE level = 1 location = limerick }
-	stockade = { tag = PLE level = 1 location = cork }
+#1.4 dropped by vanilla (replaced elsewhere): 	stockade = { tag = PLE level = 1 location = limerick }
+#1.4 dropped by vanilla (replaced elsewhere): 	stockade = { tag = PLE level = 1 location = cork }
 	stockade = { tag = PLE level = 1 location = kilkenny }
 	stockade = { tag = TYR level = 1 location = dungannon }
 	stockade = { tag = TYR level = 1 location = magherafelt }
@@ -5474,7 +5474,7 @@ building_manager = {
 	castle = { tag = MAM level = 1 location = qus }
 
 	#NEW - Middle East Castle & Building additions
-	castle = { tag = UPE level = 1 location = minya }
+	castle = { tag = MAM level = 1 location = minya } #1.4: was UPE, an undefined tag (Minya is MAM)
 	stockade = { tag = ABTDM level = 1 location = tadmur }
 	stockade = { tag = ABSIN level = 1 location = nekhel }
 	
@@ -6623,4 +6623,70 @@ building_manager = {
 #	trade_office = { tag = OSA level = 3 location = gunma }
 #	trade_office = { tag = OSA level = 3 location = koma_kai }
 #	trade_office = { tag = OSA level = 3 location = sarashina }
+	#1.4 additions (vanilla 1.4 building_manager entries the mod never had)
+	#  tags retagged to this mod's owner of the location: city_walls hangzhou/kaifeng/xiangyang -> WUU/CSO/ABCHU,
+	#  cathedral coria -> LON, monument_torre_de_hercules coruna -> GLC, pirate_haven bejaia -> TUN
+	cathedral = { tag = CAS level = 1 location = cadiz }
+	cathedral = { tag = CAS level = 1 location = calahorra }
+	cathedral = { tag = LON level = 1 location = coria }
+	cathedral = { tag = CAS level = 1 location = najera }
+	cathedral = { tag = CAS level = 1 location = palencia }
+	cathedral = { tag = CAS level = 1 location = plasencia }
+	cathedral = { tag = CAS level = 1 location = segovia }
+	cathedral = { tag = CAS level = 1 location = sevilla }
+	cathedral = { tag = CAS level = 1 location = toledo }
+	city_walls = { tag = BUL level = 1 location = tarnovo }
+	city_walls = { tag = CAS level = 1 location = sevilla }
+	city_walls = { tag = WUU level = 1 location = hangzhou }
+	city_walls = { tag = CSO level = 1 location = kaifeng }
+	city_walls = { tag = ABCHU level = 1 location = xiangyang }
+	city_walls = { tag = COC level = 1 location = mayapan }
+	city_walls = { tag = DAI level = 1 location = thang_long }
+	city_walls = { tag = HAB level = 1 location = vienna }
+	city_walls = { tag = HUN level = 1 location = buda }
+	city_walls = { tag = HUN level = 1 location = sopron }
+	city_walls = { tag = JAL level = 1 location = tabriz }
+	city_walls = { tag = KAN level = 1 location = kano }
+	city_walls = { tag = KHM level = 1 location = angkor }
+	city_walls = { tag = KRT level = 1 location = herat }
+	city_walls = { tag = MZF level = 1 location = yazd }
+	city_walls = { tag = NAP level = 1 location = naples }
+	city_walls = { tag = ORM level = 1 location = hormuz }
+	city_walls = { tag = PLE level = 1 location = cork }
+	city_walls = { tag = PLE level = 1 location = dublin }
+	city_walls = { tag = PLE level = 1 location = limerick }
+	city_walls = { tag = PLE level = 1 location = waterford }
+	city_walls = { tag = YSU level = 1 location = samarkand }
+	cloth_guild = { tag = MOR level = 5 location = fez }
+	dock = { tag = SLE level = 1 location = sale }
+	fine_cloth_guild = { tag = FLO level = 3 location = florence }
+	itinerant_court_seat = { tag = ARA level = 1 location = valencia }
+	itinerant_court_seat = { tag = CAS level = 1 location = sevilla }
+	itinerant_court_seat = { tag = ETH level = 1 location = ankober }
+	itinerant_court_seat = { tag = LOI level = 1 location = islay }
+	itinerant_court_seat = { tag = MOY level = 1 location = elgin }
+	itinerant_court_seat = { tag = POR level = 1 location = lisbon }
+	itinerant_court_seat = { tag = ROS level = 1 location = dingwall }
+	itinerant_court_seat = { tag = SCO level = 1 location = dunfermline }
+	itinerant_court_seat = { tag = UBV level = 1 location = munich }
+	local_governor = { tag = MOR level = 1 location = marrakesh }
+	monastery = { tag = ELL level = 1 location = ellwangen }
+	monument_dar_al_makhzen = { tag = MOR level = 1 location = fez }
+	monument_great_mosque_algiers = { tag = TLE level = 1 location = algiers }
+	monument_hassan_tower = { tag = MOR level = 1 location = rabat }
+	monument_kairouan_mosque = { tag = TUN level = 1 location = kairouan }
+	monument_kasbah_udayas = { tag = MOR level = 1 location = rabat }
+	monument_mansourah_tlemcen = { tag = TLE level = 1 location = tlemcen }
+	monument_qarawiyyin = { tag = MOR level = 1 location = fez }
+	monument_torre_de_hercules = { tag = GLC level = 1 location = coruna }
+	pirate_haven = { tag = TUN level = 1 location = bejaia }
+	porto_pisano = { tag = PIS level = 1 location = pisa }
+	sergeantry = { tag = VER level = 1 location = verona }
+	trade_office = { tag = GRA level = 2 location = meknes }
+	trade_office = { tag = GRA level = 3 location = fez }
+	trade_office = { tag = GRA level = 3 location = marrakesh }
+	trade_office = { tag = GRA level = 4 location = niani }
+	trade_office = { tag = GRA level = 4 location = sijilmasa }
+	trade_office = { tag = GRA level = 4 location = timbuktu }
+	wharf = { tag = SLE level = 1 location = sale }
 }
