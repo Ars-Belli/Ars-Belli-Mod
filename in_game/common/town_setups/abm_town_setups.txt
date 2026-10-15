@@ -1,4 +1,872 @@
-﻿#1.4: ABM port templates for the Swahili coast towns.
+﻿#1.4: all Ars Belli town_setup changes live here.
+#Vanilla's in_game/common/town_setups/00_default.txt is no longer overridden:
+#   REPLACE:<name> = { ... }  for the templates ABM rebalances (full body - replaces vanilla's entry)
+#   <name> = { ... }          for the templates ABM adds
+#NOTE: REPLACE: is per-database and silent when unsupported (it did nothing in generic_actions),
+#      so after any vanilla update confirm the values actually took - the level-cap warnings in
+#      error.log (e.g. "tannery in Suceava ... Current level is 2 (Max is 1)") only appear BECAUSE
+#      the mod's carpathian_town/russian_town tannery = 2 is live, which makes them a free probe.
+
+REPLACE:important_scandinavian_town = {
+	brewery = 1
+	temple = 1
+	tools_guild = 1
+	tannery = 2
+	naval_supplies_guild = 1
+	weapon_guild = 1
+	cloth_guild = 1
+	marketplace = 2
+	mason = 1
+	pottery_guild = 1
+}
+
+REPLACE:baltic_town = {
+	brewery = 2
+	winery = 1
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	
+	marketplace = 1
+	
+	temple = 1
+	tools_guild = 1
+	paper_guild = 1
+	cloth_guild = 1
+	weapon_guild = 1
+	glass_guild = 1
+	tannery = 1
+	granary = 1
+	stockade = 1
+}
+
+REPLACE:russian_town = {
+	brewery = 1
+	distillers_guild = 1
+	mason = 1
+	pottery_guild = 1
+	temple = 1
+	tools_guild = 1
+	weapon_guild = 1
+	tannery = 2
+	castle = 1
+	marketplace = 1
+}
+
+REPLACE:polish_town = {
+	brewery = 2
+	mason = 1
+	pottery_guild = 1
+	temple = 1
+	tools_guild = 1
+	cloth_guild = 1
+	weapon_guild = 1
+	glass_guild = 1
+	granary = 2
+	tannery = 1
+	marketplace = 1
+}
+
+REPLACE:ruthenian_town = {
+	brewery = 1
+	mason = 1
+	pottery_guild = 1
+	distillers_guild = 1
+	temple = 1
+	tools_guild = 1
+	cloth_guild = 1
+	weapon_guild = 1
+	glass_guild = 1
+	granary = 1
+	tannery = 2
+	castle = 1
+	marketplace = 1
+}
+
+REPLACE:british_town = {
+	brewery = 1
+	temple = 1
+	tools_guild = 1
+	weapon_guild = 1
+	mason = 1
+	pottery_guild = 1
+	cloth_guild = 2
+	tannery = 2
+	granary = 1
+	marketplace = 1
+}
+
+REPLACE:british_town_port = {
+	brewery = 1
+	temple = 1
+	tools_guild = 1
+	mason = 1
+	pottery_guild = 1
+	weapon_guild = 1
+	cloth_guild = 2
+	tannery = 2
+	granary = 1
+	naval_supplies_guild = 1
+	wharf = 1
+	marketplace = 1
+}
+
+REPLACE:iberian_town = {
+	temple = 1
+	marketplace = 1
+	tools_guild = 1
+	mason = 1
+	pottery_guild = 1
+	weapon_guild = 1
+	cloth_guild = 1
+	fine_cloth_guild = 1
+	paper_guild = 1
+#	castle = 1	#NEW - removed due to fort adjecency rule
+	granary = 1
+	brewery = 1
+	tannery = 2
+}
+
+REPLACE:iberian_town_port = {
+	temple = 1
+	marketplace = 1
+	tools_guild = 1
+	weapon_guild = 1
+	mason = 1
+	pottery_guild = 1
+	cloth_guild = 1
+	fine_cloth_guild = 1
+	paper_guild = 1
+#	castle = 1	#NEW - removed due to fort adjecency rule
+	granary = 1
+	brewery = 1
+	tannery = 2
+	naval_supplies_guild = 1
+	wharf = 1
+}
+
+REPLACE:iberian_city = {
+	temple = 1
+	tools_guild = 2
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	distillers_guild = 1
+	weapon_guild = 2
+	brewery = 1
+	cloth_guild = 1
+	fine_cloth_guild = 2
+	paper_guild = 1
+	scriptorium = 1
+#	castle = 1	#NEW - removed due to fort adjecency rule
+	jewelry_guild = 1
+	glass_guild = 1
+	granary = 3
+	tannery = 3
+	marketplace = 2
+}
+
+REPLACE:iberian_city_port = {
+	temple = 1
+	tools_guild = 2
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	weapon_guild = 2
+	cloth_guild = 1
+	fine_cloth_guild = 2
+	paper_guild = 1
+	scriptorium = 1
+#	castle = 1	#NEW - removed due to fort adjecency rule
+	jewelry_guild = 1
+	glass_guild = 1
+	granary = 3
+	marketplace = 2
+	tannery = 2
+	naval_supplies_guild = 1
+	wharf = 1
+}
+
+REPLACE:lowlands_town = {
+	temple = 1
+	tools_guild = 1
+	mason = 1
+	pottery_guild = 1
+	brewery = 1
+	weapon_guild = 1
+	cloth_guild = 3
+	paper_guild = 1
+	jewelry_guild = 1
+	fine_cloth_guild = 1
+	tannery = 1
+	dyes_guild = 1
+	marketplace = 2
+	granary = 3
+#	castle = 1	#NEW - removed due to fort adjecency rule
+}
+
+REPLACE:lowlands_costal_town = {
+	temple = 1
+	brewery = 1
+	weapon_guild = 1
+	mason = 1
+	pottery_guild = 1
+	cloth_guild = 3
+	paper_guild = 1
+	jewelry_guild = 1
+	fine_cloth_guild = 1
+	tannery = 1
+	marketplace = 2
+	granary = 3
+	wharf = 1
+#	castle = 1	#NEW - removed due to fort adjecency rule
+}
+
+REPLACE:lowlands_city = {
+	temple = 1
+	tools_guild = 1
+	distillers_guild = 1
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	brewery = 3
+	weapon_guild = 2
+	cloth_guild = 6
+	paper_guild = 2
+	jewelry_guild = 2
+	glass_guild = 1
+	fine_cloth_guild = 3
+	granary = 4
+	marketplace = 2
+	dyes_guild = 2
+#	castle = 1	#NEW - removed due to fort adjecency rule
+	tannery = 1
+
+}
+
+REPLACE:lowlands_coastal_city = {
+	temple = 1
+	tools_guild = 2
+	distillers_guild = 1
+	brewery = 3
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	weapon_guild = 2
+	cloth_guild = 6
+	paper_guild = 2
+	jewelry_guild = 2
+	glass_guild = 1
+	fine_cloth_guild = 3
+	granary = 4
+	marketplace = 2
+	dyes_guild = 2
+#	castle = 1	#NEW - removed due to fort adjecency rule
+	tannery = 2
+	wharf = 1
+
+}
+
+REPLACE:french_town = {
+	temple = 1
+	tools_guild = 1
+	mason = 1
+	pottery_guild = 1
+	brewery = 1
+	weapon_guild = 1
+	fine_cloth_guild = 1
+	paper_guild = 1
+	granary = 1
+	tannery = 1
+#	castle = 1	#NEW - removed due to fort adjecency rule
+	marketplace = 1
+}
+
+REPLACE:french_city = {
+	temple = 1
+	tools_guild = 1
+	distillers_guild = 1
+	brewery = 1
+	weapon_guild = 1
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	paper_guild = 1
+	cloth_guild = 1
+	glass_guild = 1
+	jewelry_guild = 2
+	marketplace = 2
+	fine_cloth_guild = 2
+	granary = 2
+#	castle = 1	#NEW - removed due to fort adjecency rule
+
+}
+
+REPLACE:jurchen_town = {
+	temple = 1
+	marketplace = 1
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	cloth_guild = 1
+	paper_guild = 1
+	tannery = 2
+	granary = 2
+	weapon_guild = 2
+	brewery = 1
+	tools_guild = 2
+	scriptorium = 1
+}
+
+REPLACE:chinese_town = {
+	temple = 1
+	winery = 1
+	porcelain_guild = 1
+	marketplace = 2
+	fine_cloth_guild = 2
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	cloth_guild = 2
+	paper_guild = 2
+	tannery = 1
+	granary = 2
+	weapon_guild = 1
+	brewery = 1
+	tools_guild = 1
+	scriptorium = 1
+	lacquerware_guild = 2
+	dyes_guild = 1
+	zhixian = 1
+}
+
+REPLACE:chinese_coastal_town = {
+	temple = 1
+	winery = 1
+	porcelain_guild = 1
+	marketplace = 2
+	fine_cloth_guild = 2
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	cloth_guild = 2
+	paper_guild = 2
+	tannery = 1
+	granary = 2
+	weapon_guild = 1
+	brewery = 1
+	tools_guild = 1
+	scriptorium = 1
+	lacquerware_guild = 2
+	dyes_guild = 1
+	zhixian = 1
+	wharf = 1
+}
+
+REPLACE:chinese_city = {
+	temple = 1
+	winery = 2
+	porcelain_guild = 1
+	distillers_guild = 1
+	marketplace = 5
+	weapon_guild = 2
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	paper_guild = 2
+	fine_cloth_guild = 2
+	cloth_guild = 2
+	glass_guild = 1
+	jewelry_guild = 1
+	tannery = 2
+	granary = 2
+	castle = 1
+	brewery = 1
+	tools_guild = 3 #increased from 2 to 3
+	scriptorium = 2
+	lacquerware_guild = 2
+	dyes_guild = 2
+	zhixian = 1
+	provincial_garrison = 1
+}
+
+REPLACE:chinese_coastal_city = {
+	temple = 1
+	winery = 2
+	porcelain_guild = 1
+	distillers_guild = 1
+	marketplace = 5
+	weapon_guild = 2
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	paper_guild = 2
+	fine_cloth_guild = 2
+	cloth_guild = 2
+	glass_guild = 1
+	jewelry_guild = 1
+	tannery = 2
+	granary = 2
+	castle = 1
+	brewery = 1
+	tools_guild = 3 #increased from 2 to 3
+	scriptorium = 2
+	lacquerware_guild = 2
+	dyes_guild = 2
+	zhixian = 1
+	wharf = 1
+}
+
+REPLACE:south_east_asia_town = {
+	temple = 1
+	tools_guild = 1
+	marketplace = 1
+	fine_cloth_guild = 2
+	cloth_guild = 1
+	paper_guild = 1
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	tannery = 1
+	granary = 2
+	weapon_guild = 1
+	brewery = 1
+}
+
+REPLACE:south_east_asia_port_town = {
+	temple = 1
+	tools_guild = 1
+	marketplace = 1
+	fine_cloth_guild = 2
+	cloth_guild = 1
+	paper_guild = 1
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	tannery = 1
+	granary = 2
+	weapon_guild = 1
+	brewery = 1
+	wharf = 1
+	naval_supplies_guild = 1
+}
+
+REPLACE:german_town = {
+	brewery = 2
+	temple = 1
+	tools_guild = 1
+	paper_guild = 1
+	cloth_guild = 1
+	weapon_guild = 1
+	tannery = 2
+	glass_guild = 1
+	granary = 1
+	castle = 1
+	mason = 1
+	pottery_guild = 1
+	marketplace = 2
+}
+
+REPLACE:german_coastal_town = {
+	brewery = 2
+	temple = 1
+	tools_guild = 1
+	paper_guild = 1
+	cloth_guild = 1
+	weapon_guild = 1
+	tannery = 2
+	jewelry_guild = 1
+	granary = 1
+	wharf = 1
+	naval_supplies_guild = 1
+	marketplace = 2
+	castle = 1
+	mason = 1
+	pottery_guild = 1
+}
+
+REPLACE:greek_town = {
+	brewery = 1
+	temple = 1
+	tools_guild = 1
+	weapon_guild = 1
+	cloth_guild = 1
+	fine_cloth_guild = 1
+	mason = 1
+	pottery_guild = 1
+	granary = 1
+	tannery = 1
+	castle = 1
+	marketplace = 1
+}
+
+REPLACE:greek_town_port = {
+	brewery = 1
+	temple = 1
+	tools_guild = 1
+	weapon_guild = 1
+	cloth_guild = 1
+	fine_cloth_guild = 1
+	glass_guild = 1
+	mason = 1
+	pottery_guild = 1
+	granary = 1
+	naval_supplies_guild = 1
+	wharf = 1
+	marketplace = 1
+}
+
+REPLACE:balkan_town = {
+	temple = 1
+	tools_guild = 1
+	weapon_guild = 1
+	cloth_guild = 1
+	granary = 1
+	mason = 1
+	pottery_guild = 1
+	glass_guild = 1
+	brewery = 1
+	tannery = 1
+#	castle = 1	#NEW - removed due to fort adjecency rule
+	marketplace = 1
+}
+
+REPLACE:carpathian_town = {
+	temple = 1
+	tools_guild = 1
+	weapon_guild = 1
+	mason = 1
+	pottery_guild = 1
+	brewery = 1
+	granary = 1
+	glass_guild = 1
+	tannery = 2
+	castle = 1
+	marketplace = 1
+}
+
+REPLACE:egyptian_city = {
+	temple = 1
+	tools_guild = 2
+	weapon_guild = 1
+	cloth_guild = 1
+	fine_cloth_guild = 3
+	paper_guild = 1
+	scriptorium = 2
+	granary = 5
+	marketplace = 2
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	dyes_guild = 1
+	jewelry_guild = 2
+#	castle = 1	#NEW - removed due to fort adjecency rule
+	slave_market = 2
+
+}
+
+REPLACE:anatolian_town = {
+	temple = 1
+	tools_guild = 1
+	tannery = 2
+	weapon_guild = 1
+	fine_cloth_guild = 1
+	mason = 1
+	pottery_guild = 1
+	slave_market = 1
+	marketplace = 1
+}
+
+REPLACE:christian_anatolian_town = {
+	temple = 1
+	tools_guild = 1
+	tannery = 2
+	weapon_guild = 1
+	mason = 1
+	pottery_guild = 1
+	marketplace = 1
+}
+
+REPLACE:indian_sultanate_coastal_city = {
+	glass_guild = 1
+	weapon_guild = 6
+	cloth_guild = 6
+	fine_cloth_guild = 5
+	jewelry_guild = 4
+	brewery = 2
+	distillers_guild = 1
+	tannery = 4
+	paper_guild = 2
+	scriptorium = 2
+	tools_guild = 4
+	mason = 5
+	naval_supplies_guild = 2
+	granary = 6
+	marketplace = 6
+	slave_market = 1
+	mamluk_barracks = 1 # was 2
+	castle = 1
+	temple = 1
+	wharf = 1
+}
+
+REPLACE:indian_sultanate_city = {
+	glass_guild = 1
+	weapon_guild = 6
+	cloth_guild = 6
+	fine_cloth_guild = 5
+	jewelry_guild = 4
+	brewery = 2
+	distillers_guild = 1
+	tannery = 4
+	paper_guild = 2
+	scriptorium = 2
+	tools_guild = 4
+	granary = 6
+	mason = 5
+	marketplace = 6
+	slave_market = 2
+	mamluk_barracks = 1 #was 2
+	castle = 1
+	temple = 1
+}
+
+REPLACE:indian_town = {
+	weapon_guild = 2
+	tools_guild = 2
+	brewery = 2
+	mason = 1
+	pottery_guild = 1
+	tannery = 2
+	temple = 1
+	stockade = 1
+	marketplace = 2
+}
+
+REPLACE:levant_city = {
+	temple = 1
+	tools_guild = 2
+	weapon_guild = 2
+	cloth_guild = 1
+	fine_cloth_guild = 2
+	paper_guild = 1
+	scriptorium = 1
+	granary = 2
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	glass_guild = 1
+	jewelry_guild = 2
+	dyes_guild = 1
+	marketplace = 2
+	castle = 1
+	tannery = 1
+	slave_market = 1
+}
+
+REPLACE:central_asian_city = {
+	temple = 1
+	tools_guild = 2
+	weapon_guild = 1
+	cloth_guild = 2 #increased from 1 to 2
+	fine_cloth_guild = 3
+	paper_guild = 1
+	scriptorium = 1
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	granary = 2
+	glass_guild = 1
+	jewelry_guild = 1
+	marketplace = 2
+	castle = 1
+	tannery = 1
+	slave_market = 1
+}
+
+REPLACE:japan_town = {
+	temple = 1
+	tools_guild = 1
+	brewery = 1
+	weapon_guild = 2
+	paper_guild = 1
+	granary = 1
+	tannery = 1
+	mason = 1
+	pottery_guild = 1
+	winery = 1
+	marketplace = 1
+	stockade = 1 #NEW
+}
+
+REPLACE:japan_city = {
+	temple = 1
+	tools_guild = 1
+	distillers_guild = 1
+	brewery = 1
+	weapon_guild = 3
+	paper_guild = 3
+	cloth_guild = 1
+	fine_cloth_guild = 1
+	scriptorium = 1
+	glass_guild = 1
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	granary = 1
+	castle = 1
+	tannery = 1
+	winery = 2
+	marketplace = 2
+}
+
+REPLACE:korea_city = {
+	temple = 1
+	tools_guild = 2
+	distillers_guild = 1
+	weapon_guild = 2
+	paper_guild = 2
+	cloth_guild = 1
+	fine_cloth_guild = 1
+	scriptorium = 1
+	glass_guild = 1
+	granary = 3
+	mason = 2
+	pottery_guild = 2
+	porcelain_guild = 2
+	furniture_guild = 1
+	marketplace = 2
+	castle = 1
+	brewery = 2
+	naval_supplies_guild = 2
+	tannery = 1
+	confucian_school = 1
+	korean_barracks = 1
+	winery = 1
+}
+
+REPLACE:majapahit_town = {
+	tools_guild = 1
+	marketplace = 2
+	mason = 3
+	pottery_guild = 1
+	furniture_guild = 2
+	granary = 2
+	cloth_guild = 1
+	distillers_guild = 1
+	tannery = 2
+	brewery = 1
+}
+
+REPLACE:bruges_city = {
+	copy_from = lowlands_coastal_city
+	fine_cloth_guild = 1		# base 3 → 4: Finest Flemish cloth in Europe
+	cloth_guild = 1				# base 6 → 7: Full output of Flemish cloth industry
+	marketplace = 2				# base 2 → 4: Financial capital of Northern Europe — the Bourse
+	dyes_guild = 2				# not in base → 2: Large-scale dyeworks; alum and woad
+}
+
+REPLACE:barcelona_city = {
+	copy_from = iberian_city_port
+	naval_supplies_guild = 2	# base 1 → 3: Barcelona royal shipyard; Crown of Aragon's main maritime hub
+	marketplace = 1				# base 2 → 3: Crown of Aragon trade center
+	fine_cloth_guild = 1		# not in base → 1: Catalan textile trade
+}
+
+REPLACE:kaffa_city = {
+	copy_from = italian_city
+	slave_market = 3			# not in base → 3: THE Black Sea slave trade hub; most European/Middle Eastern slaves passed through here
+	marketplace = 2				# base 2 → 4: Major Genoese Black Sea entrepôt
+	tannery = 1					# not in base → 1: Leather goods from the steppe
+	naval_supplies_guild = 1	# not in base → 1: Genoese port
+	sergeantry = 1
+	city_walls = 1
+}
+
+
+###NEW ADDITIONS###
+
+prince_elector_capital_city = {
+	copy_from = german_city
+	royal_court = 1
+	royal_garden = 1
+	sergeantry = 1
+	chancery = 1
+	city_walls = 1
+}
+
+
+archbishop_elector_capital_city = {
+	copy_from = german_city
+	hospital = 1
+	monastery = 1
+	fortress_church = 1
+	seat_of_cardinal = 1
+	library = 1
+	chancery = 1
+	city_walls = 1
+}
+
+
+steppe_rural_settlement = {
+	mason = 1
+	rural_clothmaker = 1
+	market_village = 3
+	caravanserai = 1
+}
+
+
+ryukyu_town = {
+	temple = 1
+	tools_guild = 2
+	marketplace = 3
+	fine_cloth_guild = 2
+	cloth_guild = 1
+	paper_guild = 1
+	mason = 1
+	pottery_guild = 1
+	furniture_guild = 1
+	tannery = 1
+	granary = 2
+	weapon_guild = 1
+	brewery = 1
+	wharf = 1
+	naval_supplies_guild = 1
+}
+
+
+ryukyu_capital = {
+	temple = 1
+	tools_guild = 10
+	marketplace = 9
+	fine_cloth_guild = 2
+	cloth_guild = 1
+	paper_guild = 1
+	mason = 2
+	pottery_guild = 2
+	furniture_guild = 1
+	tannery = 1
+	granary = 2
+	weapon_guild = 1
+	brewery = 1
+	wharf = 1
+	naval_supplies_guild = 1
+	jewelry_guild = 2
+	sergeantry = 1
+	chancery = 1
+	royal_court = 1
+	royal_garden = 1
+}
+
+
+erenkhot_mongol_capital = {
+	copy_from = chinese_town
+	marketplace = 2				
+	tools_guild = 4
+	#tannery = 1		
+}
+
+#1.4: ABM port templates for the Swahili coast towns.
 #Vanilla's east_african_coastal_town (jewelry/tools/furniture 2, mason 3) is written for kilwa_kisiwani,
 #which is a city here - the +5 city bonus in guild_max_level is what makes those levels legal there.
 #A town only gets 1 + 0.1*development + 0.05*population, so the same template overflows the caps in the
@@ -20,6 +888,7 @@ abm_swahili_port_town = {
 	wharf = 1
 	naval_supplies_guild = 1
 }
+
 
 abm_swahili_port_town_small = {
 	jewelry_guild = 1
