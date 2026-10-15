@@ -2574,6 +2574,36 @@ template sue_for_peace_action_tooltip {
 # Ars Belli: tooltip for the Enforce Peace button. Each requirement resolves to a
 # passed or failed loc line so a player who cannot use the action is told why,
 # rather than the button simply disappearing.
+
+#1.4: restored - vanilla 1.4 gained this template and ABM's stale copy of the file
+#      left it out, which broke every "using = war_scripted_diplomatic_action_tooltip"
+template war_scripted_diplomatic_action_tooltip {
+	ContextualTooltipType = {
+		blockoverride "title_text" {
+			text = "[Select_CString(PdxGuiWidget.HasTooltipMetaTitle, PdxGuiWidget.GetTooltipMetaTitle, UIAction.GetTitle)]"
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				visible = "[Not(StringIsEmpty(UIAction.GetDescription))]"
+				blockoverride "text" { text = "[UIAction.GetDescription]" }
+			}
+
+			TooltipConditionList = {
+				blockoverride "block_title" { text = "BREAKDOWN_REASONS_GENERIC_TITLE" }
+				visible = "[ConditionList.HasItems]"
+				datacontext = "[StringToConditionListOnlyPassedAndNeutral(UIAction.GetEffects)]"
+			}
+
+			TooltipConditionList = {
+				blockoverride "block_title" { text = "game_concept_effects" }
+				visible = "[And(UIAction.IsEnabled, ConditionList.HasItems)]"
+				datacontext = "[StringToConditionListOnlyPassedAndNeutral(UIAction.GetConditions)]"
+			}
+		}
+	}
+}
+
 template abm_enforce_peace_tooltip {
 	tooltipwidget = {
 		ContextualTooltipType = {
