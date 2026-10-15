@@ -2118,23 +2118,26 @@ lateralview_full = {
 						layoutpolicy_horizontal = expanding
 						margin = {10 0}
 						
-						action_button = {
+						button = {
+							visible = "[PdxGuiWidget.IsUberButtonVisible]"
 							using = button_wax_texture
 							using = button_common_template
 							layoutpolicy_horizontal = expanding
 
-							title = "surrender_civil_war"
-							actor = "[Player]"
-							parameter = {
-								parameter_name = "recipient"
-								parameter_value = "[WarLateralView.GetEnemyLeader]"
-							}
-		
-							left_click_and_hold_action = {
+							scripted_action_tooltip = {
+								click_type = left
+								click_mode = confirm
 								action_name = "surrender_civil_war"
+								actor = "[Player]"
+								parameter = {
+									parameter_name = "recipient"
+									parameter_value = "[WarLateralView.GetEnemyLeader]"
+								}
 							}
+							enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
 
-							tooltipwidget = { using = action_tooltip_pop_out }
+							button_tooltip_override = { title = "surrender_civil_war" }
+							tooltipwidget = { using = war_scripted_diplomatic_action_tooltip }
 		
 							hbox = {
 								spacing = 5
