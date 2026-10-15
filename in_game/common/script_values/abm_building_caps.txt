@@ -1,0 +1,65 @@
+﻿# ARS BELLI: flat level caps for the two foreign trade buildings, trade_office and fondaco.
+#
+# Vanilla scaled these off the location (development*0.1 + population*0.05 + a city/megalopolis
+# bonus, and for trade_office also the owner's market_building_levels), landing around 10 levels in
+# a city. Ars Belli uses a plain per-rank cap instead:
+#
+#   town / rural settlement = 1    city = 3    megalopolis = 5
+#
+# No development, population or modifier scaling. Each building gets its OWN value so the two can
+# be retuned independently; vanilla's trade_office_max_level is left untouched (unreferenced now),
+# since fondaco's original cap was the SHARED guild_max_level that 30 guild/marketplace buildings
+# also read. The buildings point at these mod-owned names because REPLACE: is per-database and
+# silent when unsupported - see building_types/abm_foreign_buildings.txt.
+
+abm_trade_office_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 1
+	}
+	if = {
+		limit = {
+			location_rank ?= location_rank:megalopolis
+		}
+		add = {
+			desc = "BUILDING_LEVEL_IS_MEGAPOLIS"
+			value = 4
+		}
+	}
+	else_if = {
+		limit = {
+			location_rank ?= location_rank:city
+		}
+		add = {
+			desc = "BUILDING_LEVEL_IS_CITY"
+			value = 2
+		}
+	}
+}
+
+
+# --- fondaco (same numbers as trade_office, kept separate so they can diverge) ---
+abm_fondaco_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 1
+	}
+	if = {
+		limit = {
+			location_rank ?= location_rank:megalopolis
+		}
+		add = {
+			desc = "BUILDING_LEVEL_IS_MEGAPOLIS"
+			value = 4
+		}
+	}
+	else_if = {
+		limit = {
+			location_rank ?= location_rank:city
+		}
+		add = {
+			desc = "BUILDING_LEVEL_IS_CITY"
+			value = 2
+		}
+	}
+}

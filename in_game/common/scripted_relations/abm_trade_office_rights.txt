@@ -1,0 +1,74 @@
+﻿# ARS BELLI: Trade Office Rights.
+#
+# The trade-office counterpart of vanilla's fondaco_rights: a country must be granted these
+# rights by a location's owner before it can build a [trade_office] there. Mirrors
+# fondaco_rights (oneway, break_on_war, economy category).
+#
+# Deliberately PLAYER-ONLY, so everything involving an AI keeps vanilla behaviour:
+#   * offer_visible / request_visible require BOTH countries to be players - these rights can
+#     never be offered to or requested from an AI.
+#   * should_ai_offer_trigger stops the AI from ever starting one on its own.
+#   * the building itself only demands the relation when BOTH the builder and the location
+#     owner are players - see REPLACE:trade_office in building_types/abm_foreign_buildings.txt.
+#
+# Revoking (or breaking) the right does NOT destroy existing Trade Offices, same as fondacos.
+#
+# first = the country granting the right, second = the country receiving it.
+
+abm_trade_office_rights = {
+	type = diplomacy
+	relation_type = oneway
+	break_on_war = yes
+
+	category = {
+		offer = CATEGORY_ECONOMY_ACTIONS
+		request = CATEGORY_ECONOMY_ACTIONS
+		cancellation = CATEGORY_ECONOMY_ACTIONS
+		break = CATEGORY_ECONOMY_ACTIONS
+	}
+
+	relation_type_for_ai = friendly
+
+	# Always visible so an existing relation can still be cancelled/broken.
+	visible = { always = yes }
+
+	# Only a player can start it, and only with another player.
+	offer_visible = {
+		scope:actor = { is_ai = no }
+		scope:recipient = { is_ai = no }
+	}
+	request_visible = {
+		scope:actor = { is_ai = no }
+		scope:recipient = { is_ai = no }
+	}
+
+	# The AI never starts this relation by itself.
+	should_ai_offer_trigger = { always = no }
+
+	# Both sides are players in practice; these only matter if one of them ever turns AI.
+	wants_to_receive = {
+		add = {
+			desc = "DIPLOREASON_GOOD_FOR_US"
+			value = 100
+		}
+	}
+
+	wants_to_give = {
+		add = {
+			desc = "THEIR_OPINION_TOOLTIP"
+			value = "scope:recipient.opinion(scope:actor)"
+			divide = 5
+		}
+		add = {
+			desc = "DIPLOREASON_DIPLOMATIC_REPUTATION"
+			scope:actor = {
+				value = modifier:diplomatic_reputation
+				multiply = 5
+			}
+		}
+		subtract = {
+			desc = "DIPLOREASON_BASE_RELUCTANCE"
+			value = 25
+		}
+	}
+}

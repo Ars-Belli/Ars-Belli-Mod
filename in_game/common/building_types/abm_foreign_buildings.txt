@@ -1,0 +1,162 @@
+﻿# ARS BELLI: the mod's versions of the two foreign trade buildings - trade_office and fondaco.
+#
+# ===========================================================================
+# trade_office  (vanilla source: in_game/common/building_types/foreign_buildings.txt)
+# Same fields as vanilla apart from:
+#   * allow - a Trade Office built by a player in another PLAYER's land now needs that owner's
+#     abm_trade_office_rights (see scripted_relations/abm_trade_office_rights.txt). AI builders
+#     and AI-owned locations are exempt, so everything involving an AI stays vanilla.
+#   * max_levels - points at abm_trade_office_max_level (script_values/abm_building_caps.txt),
+#     a flat per-rank cap: town 1, city 3, megalopolis 5 (no development/population scaling).
+#   * modifier / trade_office_requirements - Ars Belli rebalance: a few stronger offices instead
+#     of many weak ones (per-level effect raised, upkeep inputs raised to match), plus
+#     local_market_access like a marketplace, which is a LOCATION modifier so the location's owner
+#     (the host that granted the rights) is the one who benefits from it.
+#   * raw_modifier - a local_monthly_development line is present but commented out lower down.
+# ===========================================================================
+REPLACE:trade_office = {
+	audio_tier = 2
+	is_foreign = yes
+	stronger_power_projection = no
+	max_levels = abm_trade_office_max_level
+	need_good_relation = yes
+	pop_type = burghers
+	
+	category = trade_category
+	
+	employment_size = foreign_trade_employment
+	pop_size_created = foreign_trade_employment
+
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	allow_wrong_startup = yes
+
+	country_potential = {
+		NOR = {
+			AND = {
+				has_reform = government_reform:japanese_imperial_family
+				country_type = building
+			}
+			has_reform = government_reform:japanese_clan
+		}
+	}
+
+	allow = {
+		market = { in_trade_range_of = scope:actor }
+		trigger_if = {
+			limit = {
+				scope:actor = { is_ai = no }
+				owner = { is_ai = no }
+			}
+			custom_tooltip = {
+				text = abm_trade_office_rights_required_tt
+				owner = {
+					giving_scripted_relation = {
+						type = relation_type:abm_trade_office_rights
+						target = scope:actor
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
+	build_time = trade_post_build_time
+	
+	unique_production_methods = {
+		trade_office_requirements = {
+			icon_type = building_type
+			icon = trade_office
+			paper = 0.20							#0.1
+			cloth = 0.20							#0.1
+			salt = 0.20 							#0.075
+			category = building_maintenance
+		}
+	}
+	
+	
+	modifier = {
+		merchant_capacity_from_building = 1			#0.3
+		building_owner_maritime_presence = 0.20 	#0.05
+		merchant_power_from_building = 0.5			#0.2
+		local_market_access = 0.01			#marketplace value - location modifier, so the host (rights granter) benefits
+	}
+
+	# raw_modifier = {
+	# 	local_monthly_development = 0.001		#fixed regardless of level - raw_modifier is not scaled
+	# }
+}
+
+# ---------------------------------------------------------------------------
+# fondaco  (vanilla source: in_game/common/building_types/unique_buildings.txt)
+# Same fields as vanilla apart from:
+#   * max_levels - points at abm_fondaco_max_level (script_values/abm_building_caps.txt) instead
+#     of the SHARED guild_max_level, so fondacos get the flat town 1 / city 3 / megalopolis 5 cap
+#     without touching the 30 guild and marketplace buildings that also read guild_max_level.
+#   * raw_modifier - local_monthly_development, flat +0.001 development/month to the location (and
+#     so to the host). raw_modifier is not scaled by building level or goods access.
+# allow is untouched: vanilla already gates fondacos behind fondaco_rights.
+# ---------------------------------------------------------------------------
+REPLACE:fondaco = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = yes
+	need_good_relation = yes
+	pop_type = burghers
+	
+	category = trade_category
+	
+	max_levels = abm_fondaco_max_level
+	employment_size = foreign_trade_employment
+	pop_size_created = foreign_trade_employment
+	
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	increase_per_level_cost = 0.5
+	
+	
+	country_potential = {
+		OR = {
+			AND = {
+				is_merchant_republic = yes
+				culture = { has_culture_group = culture_group:italian_group }
+			}
+			has_policy = ara_consulate_sea
+		}
+	}
+	allow = {
+		within_naval_range_of = scope:actor
+		owner = {
+			giving_scripted_relation = {
+				type = relation_type:fondaco_rights
+				target = scope:actor
+			}
+		}
+	}
+	
+
+	build_time = trade_post_build_time
+	
+	modifier = {
+		merchant_power_from_building = 1.0
+		building_owner_maritime_presence = 0.025
+		merchant_capacity_from_building = 0.2
+		#Italian merchants settle in the new location
+		local_migration_attraction = 0.025
+	}
+
+	raw_modifier = {
+		local_monthly_development = 0.001		#fixed regardless of level - raw_modifier is not scaled
+	}
+	
+	possible_production_methods = {
+		fondaco_maintenance
+	}
+	construction_demand = fondaco_construction
+}
