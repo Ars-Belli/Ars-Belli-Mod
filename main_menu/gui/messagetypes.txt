@@ -92,6 +92,26 @@ message_category = military
 
 
 
+CANAL_BUILT_BY_US={
+log=no
+onmap=yes
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = economy
+}
+
+CANAL_BUILT_BY_OTHER={
+log=no
+onmap=yes
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = economy
+}
+
 TOWN_RIGHTS_GRANTED={
 log=no
 onmap=yes
@@ -562,7 +582,7 @@ popup=yes
 idle=no
 option=yes
 pausepopup=no
-sound=yes
+#sound=yes  - TODO in ud010
 message_category = government
 }
 
@@ -573,7 +593,7 @@ popup=yes
 idle=no
 option=yes
 pausepopup=no
-sound=yes
+#sound=yes - TODO in ud010
 message_category = government
 }
 
@@ -584,7 +604,7 @@ popup=yes
 idle=no
 option=yes
 pausepopup=no
-sound=yes
+#sound=yes - TODO in ud010
 message_category = government
 }
 
@@ -595,7 +615,7 @@ popup=yes
 idle=no
 option=yes
 pausepopup=no
-sound=yes
+#sound=yes - TODO in ud010
 message_category = government
 }
 
@@ -606,7 +626,17 @@ popup=yes
 idle=no
 option=yes
 pausepopup=no
-sound=yes
+#sound=yes - TODO in ud010
+message_category = government
+}
+
+ESTATE_REGIMENTS_RECALLED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
 message_category = government
 }
 
@@ -894,6 +924,26 @@ message_category = diplomacy
 
 
 
+REBELLION_OVER={
+log=yes
+onmap=yes
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+REBELLION_OVER_OTHER={
+log=yes
+onmap=yes
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
 DECLWAR={
 log=yes
 onmap=no
@@ -1092,6 +1142,7 @@ popup=yes
 idle=no
 option=yes
 pausepopup=yes
+sound=yes
 message_category = wars
 }
 UNCONDITIONALSURRENDER_THEY_SURRENDERED={
@@ -1101,6 +1152,7 @@ popup=yes
 idle=no
 option=yes
 pausepopup=no
+sound=yes
 message_category = wars
 }
 UNCONDITIONALSURRENDER_OTHER_SURRENDERED={
@@ -2128,10 +2180,90 @@ message_category = diplomacy
 }
 
 
+ROYAL_MARRIAGE_ACCEPTED_BY_US={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
 ROYAL_MARRIAGE_ACCEPTED_OTHER={
 log=yes
 onmap=no
 popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+BETROTHAL_ACCEPTED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+BETROTHAL_ACCEPTED_BY_US={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+BETROTHAL_ACCEPTED_OTHER={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+BETROTHAL_DECLINED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+BETROTHAL_BROKEN_BY_US={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+BETROTHAL_BROKEN={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+BETROTHAL_CONFIRMED={
+log=yes
+onmap=no
+popup=yes
 idle=no
 option=yes
 pausepopup=no
@@ -2574,6 +2706,16 @@ option=no
 pausepopup=no
 message_category = military
 }
+MERCENARY_MARKET_INCOME={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = economy
+}
+
 WE_HIRE_MERCENARY_LEADER_ARMY ={
 log=yes
 onmap=no
@@ -2714,6 +2856,36 @@ pausepopup=no
 message_category = diplomacy
 }
 
+WE_LOSE_CASUS_BELLI_GENERATION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_LOSE_CASUS_BELLI={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+THEY_LOSE_CASUS_BELLI={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
 WE_MOVED_CAPITAL={
 log=yes
 onmap=no
@@ -2838,16 +3010,6 @@ message_category = government
 
 
 
-
-INDEPENDANCE={
-log=yes
-onmap=yes
-popup=yes
-idle=no
-option=yes
-pausepopup=no
-message_category = diplomacy
-}
 
 
 
@@ -3015,6 +3177,16 @@ message_category = society
 }
 
 
+CHARACTERS_FLED_TO_COURT={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
 WE_COUNTRY_RANK={
 log=yes
 onmap=no
@@ -3110,6 +3282,206 @@ OTHERCONVERT={
 log=yes
 onmap=no
 popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+RELIGIOUS_ORDER_PRESENCE_LOST={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+RELIGIOUS_ORDER_PRESENCE_GAINED={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+RELIGIOUS_ORDER_DISSOLVED_ZEAL={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+RELIGIOUS_ORDER_DISSOLVED_HOLDINGS={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+RELIGIOUS_ORDER_DISSOLVED_ZEAL_POPUP={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+RELIGIOUS_ORDER_DISSOLVED_HOLDINGS_POPUP={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_invite_religious_order_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_found_religious_order_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_cabalgada_raids_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_feed_the_poor_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_bless_the_banners_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_escort_the_sea_lanes_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_entrust_the_chancery_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_pray_for_the_realm_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_open_the_scriptoria_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_break_new_ground_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_preach_a_mission_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_absolve_the_court_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_expel_order_holding_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_change_order_calling_ACTION={
+log=yes
+onmap=no
+popup=yes
 idle=no
 option=yes
 pausepopup=no
@@ -3375,6 +3747,26 @@ pausepopup=no
 message_category = economy
 }
 
+GOVERNMENT_BOND_ISSUED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = economy
+}
+
+GOVERNMENT_BOND_REDEEMED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = economy
+}
+
 TRADE_CANCELLED ={
 log=yes
 onmap=no
@@ -3537,6 +3929,16 @@ message_category = society
 }
 
 PERFORM_call_crusade_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+PERFORM_crusade_privileges_bull_ACTION={
 log=yes
 onmap=no
 popup=yes
@@ -3857,6 +4259,46 @@ message_category = society
 }
 
 OTHER_PERFORMS_remove_tolerated_culture_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+WE_PERFORM_add_discriminated_culture_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+OTHER_PERFORMS_add_discriminated_culture_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+WE_PERFORM_remove_discriminated_culture_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+OTHER_PERFORMS_remove_discriminated_culture_ACTION={
 log=no
 onmap=no
 popup=no
@@ -5555,6 +5997,16 @@ pausepopup=no
 message_category = society
 }
 
+PERFORM_propose_canonization_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
 WE_PERFORM_change_liturgical_language_ACTION={
 log=yes
 onmap=no
@@ -5679,6 +6131,16 @@ WE_PERFORM_request_cardinal_seat_ACTION={
 log=yes
 onmap=no
 popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+PERFORM_appoint_dynasty_cardinal_ACTION={
+log=yes
+onmap=no
+popup=yes
 idle=no
 option=yes
 pausepopup=no
@@ -6274,6 +6736,26 @@ pausepopup=no
 message_category = military
 }
 
+WE_PERFORM_return_lent_unit_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = military
+}
+
+ACTION_return_lent_unit_PERFORMED_ON_US={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = military
+}
+
 WE_PERFORM_cleansing_ritual_purity_ACTION={
 log=yes
 onmap=no
@@ -6441,6 +6923,17 @@ pausepopup=no
 message_category = economy
 }
 
+WE_PERFORM_favor_heir_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+sound=yes
+message_category = economy
+}
+
 WE_PERFORM_train_general_ACTION={
 log=yes
 onmap=no
@@ -6471,6 +6964,16 @@ idle=no
 option=yes
 pausepopup=no
 sound=yes
+message_category = government
+}
+
+ACTION_invite_foreign_cleric_PERFORMED_ON_US={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
 message_category = government
 }
 
@@ -6966,6 +7469,56 @@ pausepopup=no
 message_category = geopolitics
 }
 
+PERFORM_start_expedition_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = geopolitics
+}
+
+WE_PERFORM_start_expedition_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = geopolitics
+}
+
+EXPEDITION_ENDED={
+log=yes
+onmap=yes
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = geopolitics
+}
+
+EXPEDITION_FAILED={
+log=yes
+onmap=yes
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = geopolitics
+}
+
+EXPEDITION_WAYPOINT={
+log=yes
+onmap=yes
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = geopolitics
+}
+
 WE_PERFORM_start_exploration_ACTION={
 log=yes
 onmap=no
@@ -7015,6 +7568,86 @@ option=no
 pausepopup=no
 message_category = geopolitics
 }
+WE_PERFORM_set_colonial_charter_goal_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = geopolitics
+}
+
+COLONIAL_CHARTER_COMPLETED={
+log=yes
+onmap=yes
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+COLONIAL_CHARTER_FIRST_FLIP={
+log=yes
+onmap=yes
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+COLONIAL_CHARTER_SOURCE_DEPLETED={
+log=yes
+onmap=yes
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+COLONIAL_CHARTER_HALFWAY={
+log=yes
+onmap=yes
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+COLONIAL_CHARTER_COMPLETED_OTHER={
+log=yes
+onmap=yes
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+COLONIAL_CHARTER_FIRST_FLIP_OTHER={
+log=yes
+onmap=yes
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+COLONIAL_CHARTER_HALFWAY_OTHER={
+log=yes
+onmap=yes
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
 WE_PERFORM_create_market_ACTION={
 log=yes
 onmap=no
@@ -7105,6 +7738,26 @@ message_category = geopolitics
 }
 
 START_CONQUISTADOR_OTHERS={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = geopolitics
+}
+
+CONQUISTADOR_STALLED={
+log=yes
+onmap=yes
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = geopolitics
+}
+
+CONQUISTADOR_NO_HOMELAND_PORT={
 log=yes
 onmap=no
 popup=yes
@@ -8025,6 +8678,26 @@ option=yes
 pausepopup=no
 message_category = diplomacy
 }
+WE_PERFORM_remove_location_from_hre_ACTION = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_remove_location_from_hre_PERFORMED_ON_US = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
 WE_PERFORM_grant_county_privileges_ACTION = {
 log=yes
 onmap=no
@@ -8684,6 +9357,726 @@ option=yes
 pausepopup=no
 message_category = diplomacy
 }
+WE_PERFORM_cas_demand_war_entry_ACTION = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_cas_demand_war_entry_PERFORMED_ON_US = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_assert_patronato_real_ACTION = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_assert_patronato_real_PERFORMED_ON_US = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_cas_encomienda_visitation_ACTION = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_cas_encomienda_visitation_PERFORMED_ON_US = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_cas_demand_muslim_converts_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_cas_demand_muslim_converts_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_cas_demand_muslim_converts_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_cas_dismantle_fortifications_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_cas_dismantle_fortifications_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_cas_dismantle_fortifications_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_cas_reduce_granadan_sovereignty_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_cas_reduce_granadan_sovereignty_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_cas_reduce_granadan_sovereignty_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_mor_force_tribute_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_mor_force_tribute_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_mor_force_tribute_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_cas_force_tribute_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_cas_force_tribute_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_cas_force_tribute_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_adu_proclaim_crown_al_andalus_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_adu_proclaim_a_fatwa_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_adu_muster_the_ghuzat_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_adu_integrate_natives_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_invoke_ummayad_legacy_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_spa_demand_tribute_fleets_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_adu_build_qadi_office_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_spa_enforce_conformity_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_spa_patronize_golden_century_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_spa_seize_colony_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_adu_dispatch_gold_caravan_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_spa_issue_royal_decree_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_spa_increase_capital_market_demands_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_adu_charter_saharan_trade_house_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_spa_edict_expulsion_ACTION={
+log=no
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_plan_partition_campaign_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_plan_partition_campaign_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_plan_partition_campaign_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_mor_invite_granadan_scholars_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_mor_invite_granadan_scholars_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_mor_invite_granadan_scholars_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_mor_invite_granadan_advisor_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_mor_invite_granadan_advisor_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_mor_invite_granadan_advisor_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_mor_garrison_granadan_strongholds_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_mor_garrison_granadan_strongholds_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_mor_garrison_granadan_strongholds_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_mor_attract_andalusi_craftsmen_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_mor_attract_andalusi_craftsmen_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_mor_attract_andalusi_craftsmen_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_gra_reduce_castilian_influence_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_gra_reduce_castilian_influence_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_gra_reduce_castilian_influence_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_gra_reduce_moroccan_influence_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_gra_reduce_moroccan_influence_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_gra_reduce_moroccan_influence_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_gra_construct_alhambra_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_gra_construct_alhambra_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_gra_construct_alhambra_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_gra_enforce_sovereignty_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_gra_enforce_sovereignty_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_gra_enforce_sovereignty_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_hire_granadan_jinetes_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_hire_granadan_jinetes_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_hire_granadan_jinetes_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_vassalize_granada_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_vassalize_granada_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_vassalize_granada_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_claim_andalusi_inheritance_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_claim_andalusi_inheritance_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_claim_andalusi_inheritance_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
 WE_PERFORM_sabotage_reputation_ACTION = {
 log=yes
 onmap=no
@@ -8900,6 +10293,26 @@ option=yes
 pausepopup=no
 message_category = diplomacy
 }
+WE_PERFORM_default_on_creditor_ACTION = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_default_on_creditor_PERFORMED_ON_US = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
 WE_PERFORM_take_over_seniority_ACTION = {
 log=yes
 onmap=no
@@ -10227,6 +11640,16 @@ option=yes
 pausepopup=no
 message_category = government
 }
+PERFORM_rot_promote_regional_culture_fallback_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = government
+}
+
 PERFORM_press_claims_ACTION={
 log=yes
 onmap=no
@@ -11143,6 +12566,306 @@ pausepopup=no
 message_category = diplomacy
 }
 
+PERFORM_hasten_holy_war_preparations_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_claim_crusade_war_leadership_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_claim_jihad_leadership_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_claim_crusade_war_leadership_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+OTHER_PERFORMS_claim_jihad_leadership_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_claim_crusade_war_leadership_PERFORMED_ON_US_TARGET={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_claim_jihad_leadership_PERFORMED_ON_US_TARGET={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_offer_cardinal_seat_for_crusade_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_preach_the_crusade_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_grant_indulgence_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_levy_the_saladin_tithe_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_recover_holy_relics_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_offer_recognition_for_jihad_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_issue_a_fatwa_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_proclaim_jihad_privileges_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_promise_of_martyrdom_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_levy_the_war_zakat_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_levy_the_war_zakat_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_plunder_the_conquered_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_convert_occupied_territory_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_discipline_the_faithless_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_distribute_holy_war_spoils_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_petition_for_the_bula_de_cruzada_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_summon_iberian_military_orders_crusade_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_launch_a_cabalgada_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_demand_parias_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_summon_volunteers_of_the_faith_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_proclaim_the_ghazw_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_cross_the_strait_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+PERFORM_raid_the_shores_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
 PERFORM_withdraw_from_organization_treasury_ACTION={
 log=yes
 onmap=no
@@ -11531,6 +13254,16 @@ PERFORM_challenge_bureaucratic_entrenchment_ACTION ={
 	message_category = government
 }
 
+PERFORM_force_parliament_support_ACTION ={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = government
+}
+
 PERFORM_challenge_bureaucratic_entrenchment_ACTION ={
 	log=yes
 	onmap=no
@@ -11549,6 +13282,26 @@ PERFORM_declare_holidays_request_ACTION ={
 	option=yes
 	pausepopup=no
 	message_category = government
+}
+
+PERFORM_reroll_parliament_agendas_ACTION ={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = government
+}
+
+PERFORM_seat_the_itinerant_court_ACTION ={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = government
 }
 
 PERFORM_garrison_sortie_ACTION = {
@@ -11662,6 +13415,46 @@ message_category = society
 }
 
 PERFORM_conduct_investigation_ACTION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+PERFORM_mobilize_the_shurat_action_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = geopolitics
+}
+
+PERFORM_elect_weak_imam_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = government
+}
+
+PERFORM_return_to_zuhur_imamate_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = government
+}
+
+PERFORM_legacy_of_rustamids_ACTION={
 log=yes
 onmap=no
 popup=no
@@ -12080,6 +13873,16 @@ pausepopup=no
 message_category = government
 }
 
+
+PERFORM_press_estate_private_regiments_action_ACTION={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = government
+}
 
 PERFORM_pw_push_for_plutocracy_ACTION={
 log=yes
@@ -13092,6 +14895,236 @@ pausepopup=no
 message_category = diplomacy
 }
 
+WE_PERFORM_offer_war_leadership_ACTION = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_offer_war_leadership_PERFORMED_ON_US = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_demand_war_leadership_ACTION = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_demand_war_leadership_PERFORMED_ON_US = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_PERFORM_gra_trade_prestige_silk_ACTION = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+ACTION_gra_trade_prestige_silk_PERFORMED_ON_US = {
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=yes
+pausepopup=no
+message_category = diplomacy
+}
+
+WETOOKDECISION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+OTHERTOOKDECISION={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=yes
+pausepopup=no
+message_category = society
+}
+
+AMBITION_SUCCEEDED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_GOAL_MET={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_DECLARED_CONTESTABLE={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_SUCCEEDED_OTHER={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_FAILED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_FAILED_OTHER={
+log=yes
+onmap=no
+popup=no
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_ENDED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_CONTEST_STARTED_AGAINST_US={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_STARTED_AMBITION_CONTEST={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_CONTEST_AGAINST_US_CANCELLED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_CANCELLED_AMBITION_CONTEST={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_CONTEST_AGAINST_US_SUCCEEDED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_SUCCEEDED_AMBITION_CONTEST={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+AMBITION_CONTEST_AGAINST_US_FAILED={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
+WE_FAILED_AMBITION_CONTEST={
+log=yes
+onmap=no
+popup=yes
+idle=no
+option=no
+pausepopup=no
+message_category = diplomacy
+}
+
 # --- Ars Belli: custom message types (added below) ---
 WE_PERFORM_abm_enforce_peace_ACTION={
 log=yes
@@ -13300,3 +15333,4 @@ option=yes
 pausepopup=no
 message_category = government
 }
+
