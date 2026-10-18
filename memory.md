@@ -150,6 +150,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
+- **Or Qapi coal decision (2026-10-18):** `abm_develop_or_qapi_coal` (economy decisions) changes `location:or_qapi`'s RGO to coal. Gate `abm_can_develop_or_qapi_coal` in `in_game\common\scripted_triggers\abm_pontic_steppe.txt`: every owned land location in `or_qapi_province` must have an owner that is a monarchy/theocracy/republic and non-pagan, and that location's dominant culture must be primary/accepted and its dominant religion must be the owner's. Decision in `in_game\common\decisions\abm_pontic_steppe_decisions.txt`, loc in `in_game\localization\english\abm_pontic_steppe_l_english.yml`. Or Qapi is in `or_qapi_province` -> `crimea_area` -> `steppes_region`; there is no `pontic_steppe` region or `crimea_province`.
 
 ## Project Structure
 The repository mirrors the EU5 file structure:

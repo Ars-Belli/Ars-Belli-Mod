@@ -1,0 +1,26 @@
+﻿# Country-scope check for developing the Or Qapi coal seams.
+# Every owned land location in or_qapi_province must have an owner with a
+# settled government and a non-pagan faith, and that location's pops must
+# be majority primary/accepted culture and majority owner religion.
+abm_can_develop_or_qapi_coal = {
+	province:or_qapi_province = {
+		NOT = {
+			any_location_in_province = {
+				has_owner = yes
+				is_land = yes
+				NOT = {
+					owner = {
+						OR = {
+							government_type = government_type:monarchy
+							government_type = government_type:theocracy
+							government_type = government_type:republic
+						}
+						is_country_religion_pagan = no
+					}
+					owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+					dominant_religion = owner.religion
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,30 @@
+﻿# Or Qapi sits in or_qapi_province, crimea_area, steppes_region.
+# The decision is gated by abm_pontic_steppe.txt (scripted trigger).
+abm_develop_or_qapi_coal = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_coal.dds"
+
+	potential = {
+		owns = location:or_qapi
+		NOT = { location:or_qapi = { raw_material = goods:coal } }
+	}
+
+	allow = {
+		abm_can_develop_or_qapi_coal = yes
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_or_qapi_coal.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			location:or_qapi = {
+				change_raw_material = goods:coal
+			}
+		}
+	}
+}
