@@ -1,0 +1,35 @@
+﻿namespace = abm_flavor_abtau
+
+# -----------------------------------------------------------------------------
+# ABTAU RGO upgrade event.
+#
+# For every location you list below, if that location
+#   * is a fully integrated core of the country,
+#   * has a road to the capital, and
+#   * has a majority of pops of the root culture (ABTAU),
+# its RGO is changed to the goods you specify for it.
+#
+# HOW TO PASTE A PROVINCE (repeat one block per location inside the option):
+#
+#   location:<location_key> = {
+#       if = {
+#           limit = { abm_abtau_can_upgrade_rgo }
+#           change_raw_material = goods:<target_goods>
+#       }
+#   }
+# -----------------------------------------------------------------------------
+
+abm_flavor_abtau.1 = {
+	type = country_event
+	title = abm_flavor_abtau.1.title
+	desc = abm_flavor_abtau.1.desc
+	outcome = neutral
+	fire_only_once = yes
+	trigger = {
+		has_or_had_tag = ABTAU
+	}
+	option = {
+		name = abm_flavor_abtau.1.a
+		# ===================== PASTE PROVINCE / LOCATION BLOCKS HERE =====================
+	}
+}

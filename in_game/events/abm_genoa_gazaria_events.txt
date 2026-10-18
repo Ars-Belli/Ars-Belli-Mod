@@ -1,0 +1,34 @@
+﻿namespace = abm_genoa_gazaria
+
+# Fired at campaign start by on_game_start (see
+# in_game/common/on_action/abm_genoa_gazaria_on_actions.txt).
+# If both Gazaria (GAZ) and Genoa (GEN) are player-controlled and GAZ is
+# GEN's vassal, the GAZ player chooses to break free from vassalage, or to
+# break free and ally with Genoa.
+abm_genoa_gazaria.1 = {
+	type = country_event
+	title = abm_genoa_gazaria.1.title
+	desc = abm_genoa_gazaria.1.desc
+	outcome = neutral
+	fire_only_once = yes
+	trigger = {
+		is_human = yes
+		overlord ?= {
+			has_or_had_tag = GEN
+			is_human = yes
+		}
+	}
+	option = {
+		name = abm_genoa_gazaria.1.a
+		overlord ?= {
+			cancel_subject = root
+		}
+	}
+	option = {
+		name = abm_genoa_gazaria.1.b
+		overlord ?= {
+			cancel_subject = root
+		}
+		create_alliance = { target = c:GEN }
+	}
+}

@@ -1,0 +1,17 @@
+﻿# Fires the GEN/GAZ independence event once at campaign start.
+on_game_start = {
+	on_actions = {
+		abm_genoa_gazaria_game_start
+	}
+}
+
+abm_genoa_gazaria_game_start = {
+	effect = {
+		if = {
+			limit = { country_exists = c:GAZ }
+			c:GAZ = {
+				trigger_event_non_silently = { id = abm_genoa_gazaria.1 }
+			}
+		}
+	}
+}

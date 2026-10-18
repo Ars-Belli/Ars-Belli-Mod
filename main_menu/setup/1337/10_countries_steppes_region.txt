@@ -303,7 +303,7 @@ countries = {
 	FEO = {	# Theodoro
 		own_control_core = {
 			theodoro lusta #Gothia		
-			soldaia #Cafa
+			# soldaia #Cafa
 		}
 
 		starting_technology_level = 3
@@ -327,7 +327,7 @@ countries = {
 	}
 	GAZ = {	# Gazaria
 		own_control_core = {
-			kaffa vosporo #Black Sea
+			kaffa vosporo soldaia taman #Black Sea
 		}
 
 		own_control_integrated = {
@@ -335,6 +335,14 @@ countries = {
 		}
 
 		starting_technology_level = 3
+
+		include = "expl_mediterranean"
+		include = "expl_silk_road_west"
+		include = "expl_silk_road_center"
+		include = "expl_silk_road_east"
+		include = "expl_indian_trade_route"
+		include = "catholic_republic"
+
 		government = {
 			type = republic
 			heir_selection = oligarchic_elective
@@ -342,6 +350,39 @@ countries = {
 			reforms = {
 				merchant_republic
 			}
+
+			privilege = {
+				#nobles
+				primacy_of_nobility
+				nobles_land_rights
+
+				#clergy
+				clergy_military_orders
+				clergy_powerful_dioceses
+
+				#burghers
+				urban_development_grants
+				market_fairs
+			}
+
+			laws = {
+				republican_foundation_law = republicanism_policy
+				heir_religion_law = heir_same_religion
+			}
+
+			centralization_vs_decentralization = -25
+			aristocracy_vs_plutocracy = -25
+			serfdom_vs_free_subjects = 20
+			traditionalist_vs_innovative = 35
+			spiritualist_vs_humanist = -10
+			mercantilism_vs_free_trade = -40
+			offensive_vs_defensive = 50
+			land_vs_naval = 65
+			quality_vs_quantity = -20
+			belligerent_vs_conciliatory = 0
+			capital_economy_vs_traditional_economy = -60
+			individualism_vs_communalism = 20
+			outward_vs_inward = -70
 		}
 		country_rank = rank_duchy
 		capital = kaffa
@@ -350,12 +391,7 @@ countries = {
 			pontic_greek_culture
 		}
 
-		include = "expl_mediterranean"
-		include = "expl_silk_road_west"
-		include = "expl_silk_road_center"
-		include = "expl_silk_road_east"
-		include = "expl_indian_trade_route"
-		include = "catholic_republic"
+
 	}
 	ZAZ = { #Zaporozhia
 		starting_technology_level = 3
@@ -368,6 +404,9 @@ countries = {
 			mala_vyska yelanets umanske ingul sofiivka kryvyi_rih tomakivka mykytyn_rih kichkas rozdory hryshyne
 			usivka petrove kodak myshuryn_rih pavlohrad oril ternivka berestyn karlivka samarchyk 
 			barvinkove sloviansk adalaga #izium vovchansk kupiansk
+			kolomak
+			okhtyrka khotmyzh donets_kharkiv zmiiv chuhuiv
+			poltava kremenchuk opishnya hovtva myrhorod velyki_sorochyntsi kotelva
 			#zmiiv chuhuiv donets_kharkiv 
 			#oleksandrivka bakhmut lysychansk kreminna
 		}

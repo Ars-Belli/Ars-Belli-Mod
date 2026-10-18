@@ -1,4 +1,126 @@
 ﻿#############################
+# Taurica (ABTAU) - custom formable
+# Greek colonies (Chersonesus, Bosporan Kingdom), Crimean Goths,
+# Genoese Gazaria (Caffa) and the Pontic steppe.
+#############################
+
+abm_abtau_tradition_1 = {
+	age = age_2_renaissance
+	icon = city_building_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = ship_building_advance
+
+	global_max_literacy = 5
+}
+
+abm_abtau_tradition_2 = {
+	age = age_2_renaissance
+	icon = legalism_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = ship_building_advance
+
+	government_size = 1
+}
+
+abm_abtau_gothic_discipline = {
+	age = age_3_discovery
+	icon = a_central_power
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = recruitment_law_advance
+
+	discipline = 0.05
+}
+
+abm_abtau_harbours_of_gazaria = {
+	age = age_3_discovery
+	icon = rudimentary_coastal_ship_repair
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = naval_repair_ren
+
+	sea_cost_on_distance_from_capital_when_maritime = -0.5
+	port_cost_distance_from_capital = -5
+}
+
+abm_abtau_steppe_warriors = {
+	age = age_3_discovery
+	icon = nor_bounties_of_the_sea
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = ship_building_techniques_discovery
+
+	combined_bonus_per_type = 0.01	#change if the same bonus is added for Italian culture group
+	army_movement_speed = 0.10
+}
+
+abm_abtau_emporia_of_the_steppe = {
+	age = age_4_reformation
+	icon = new_world_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = rgo_logistics_discovery
+
+	trade_range_modifier = 0.20
+	global_trades_per_burgher = 0.20
+}
+
+abm_abtau_tauric_granaries = {
+	age = age_4_reformation
+	icon = local_nobility
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = crown_power_advance_reformation
+
+	global_monthly_prosperity = 0.001
+	global_foreign_build_buildings_efficiency = 0.10
+}
+
+abm_abtau_commune_of_caffa = {
+	age = age_5_absolutism
+	icon = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = sturdy_privateers
+
+	monthly_republican_tradition = 0.10
+	court_spending_efficiency = 0.10
+}
+
+abm_abtau_cave_cities_of_gothia = {
+	age = age_5_absolutism
+	icon = merchant_power_from_maritime_reformation_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = scientific_mapping_advance
+
+	building_upkeep_efficiency = 0.20
+}
+
+abm_abtau_ambition = {
+	age = age_6_revolutions
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = maritime_advance_age_6
+
+	global_defensive = 0.20
+	global_garrison_size_modifier = 0.20
+}
+
+#############################
 # Gazaria (GAZ) - Genoese Ideas
 #############################
 
@@ -39,7 +161,7 @@ abm_reunited_genoa = {
 	# stability_cost_modifier = -0.10
 	# justify_trade_conflict_cost = -0.10
 	stability_cost_efficiency = 0.10
-	diplomatic_upkeep_efficiency = 0.10
+	global_pop_assimilation_speed_modifier = 0.25
 }
 
 abm_lessons_of_chiogga = {
@@ -78,8 +200,9 @@ abm_the_genoese_arsenal = {
 	requires = rgo_logistics_discovery
 
 	# galley_cost = -0.33
-	navy_galley_build_cost_modifier = -0.20
-	can_convert_galleys_to_light = yes
+	
+	unlock_building = abm_gazarian_arsenal
+	unlock_building = abm_gazarian_headquarters
 }
 
 abm_overhauled_bureaucracy = {
@@ -91,8 +214,8 @@ abm_overhauled_bureaucracy = {
 	requires = crown_power_advance_reformation
 
 	# global_tax_modifier = 0.1
-	burghers_estate_max_tax = 0.10
-	burghers_estate_target_satisfaction = small_permanent_target_satisfaction
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+	trade_land_efficiency = medium_trade_land_efficiency_bonus
 }
 
 abm_the_office_of_grand_admiral = {
