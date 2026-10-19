@@ -1,0 +1,120 @@
+﻿# Dynamic provincial reorganisation for the Pontic steppe.
+#
+# Shows up in the Decisions panel (generic actions are listed there by the
+# engine) whenever the country owns a steppe province that qualifies. Taking it
+# opens three pickers: the province, the location inside it, and the new raw
+# material. Eligibility lives in abm_pontic_steppe.txt.
+abm_reorganize_pastoral_rgo = {
+	type = owncountry
+	show_message = no
+	ai_tick = never
+	automation_tick = never
+	automation_tick_frequency = 12
+
+	# 5 gold base. The modifier is 1 + development/5, clamped to 1..30, so the
+	# real cost runs from 5 gold (dev ~0) to 150 gold (dev 145+).
+	# A vanilla RGO expansion is a flat 100 gold, so this stays in that ballpark.
+	price = price:abm_reorganize_pastoral_rgo_price
+	price_modifier = {
+		value = 1
+		add = {
+			desc = "ABM_STEPPE_RGO_DEV_COST"
+			value = scope:target_location.development
+			multiply = 0.2
+		}
+		min = 1
+		max = 30
+	}
+
+	potential = {
+		scope:actor ?= {
+			any_province = {
+				region = region:steppes_region
+				any_location_in_province = {
+					owner = scope:actor
+				}
+			}
+		}
+	}
+
+	allow = {
+		scope:actor ?= {
+			any_province = {
+				abm_steppe_pastoral_province = { COUNTRY = scope:actor }
+			}
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = province
+		source = actor
+		target_flag = target_province
+		name = "abm_reorganize_pastoral_rgo_select_province"
+		none_available_msg_key = "abm_reorganize_pastoral_rgo_no_province"
+		show_why_not_visible = yes
+		column = { data = name }
+		column = { data = population }
+		column = { data = development }
+		visible = {
+			abm_steppe_pastoral_province = { COUNTRY = scope:actor }
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = location
+		source = target_province
+		source_flags = only_actual_locations
+		target_flag = target_location
+		name = "abm_reorganize_pastoral_rgo_select_location"
+		none_available_msg_key = "abm_reorganize_pastoral_rgo_no_location"
+		column = { data = name }
+		column = { data = raw_material }
+		visible = {
+			is_land = yes
+			NOT = { has_variable = abm_steppe_rgo_converted }
+			abm_steppe_pastoral_location = { COUNTRY = scope:actor }
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = goods
+		target_flag = target_good
+		interaction_source_list = {
+			every_goods = {
+				limit = {
+					abm_steppe_target_good = yes
+					NOT = { this = scope:target_location.raw_material }
+				}
+				add_to_list = source
+			}
+		}
+		name = "abm_reorganize_pastoral_rgo_select_good"
+		none_available_msg_key = "abm_reorganize_pastoral_rgo_no_good"
+		column = { data = name }
+		visible = {
+			abm_steppe_target_good = yes
+			NOT = { this = scope:target_location.raw_material }
+			trigger_if = {
+				limit = { this = goods:sand }
+				scope:target_location = { is_coastal = yes }
+			}
+		}
+	}
+
+	effect = {
+		scope:target_location = {
+			# A converted working starts from scratch: RGO level back to 1.
+			change_max_raw_material_workers = {
+				value = rgo_workers
+				subtract = 1
+				min = 0
+				multiply = -1
+			}
+			change_raw_material = scope:target_good
+			# One conversion per location, for this decision only. The variable is
+			# ours alone: the Columbian Exchange never reads it, so it can still
+			# change a location we already reorganised (and vice versa).
+			set_variable = { name = abm_steppe_rgo_converted value = yes }
+		}
+	}
+}

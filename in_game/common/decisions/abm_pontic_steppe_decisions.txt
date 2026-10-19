@@ -1,16 +1,28 @@
-﻿# Or Qapi sits in or_qapi_province, crimea_area, steppes_region.
-# The decision is gated by abm_pontic_steppe.txt (scripted trigger).
-abm_develop_or_qapi_coal = {
+﻿# or_qapi_province (kalay kezlev aqmecit jurchi or_qapi) is in crimea_area,
+# steppes_region. The decision is gated by abm_pontic_steppe.txt.
+#
+# kezlev is the only location this changes; kalay, aqmecit, jurchi and
+# or_qapi keep their vanilla goods.
+#
+# Campaign-global, not per country: only_once stops the same country from
+# taking it twice, and abm_or_qapi_rgos_developed is the global flag that
+# removes the decision for every other country as well - including any
+# country that later conquers the province or has its RGOs changed again.
+abm_develop_or_qapi_rgos = {
 	decision_category = economy_decisions
-	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_coal.dds"
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_stone.dds"
+	only_once = yes
 
 	potential = {
-		owns = location:or_qapi
-		NOT = { location:or_qapi = { raw_material = goods:coal } }
+		NOT = { has_global_variable = abm_or_qapi_rgos_developed }
+
+		owns = location:kezlev
+
+		NOT = { location:kezlev = { raw_material = goods:stone } }
 	}
 
 	allow = {
-		abm_can_develop_or_qapi_coal = yes
+		abm_can_develop_or_qapi_rgos = yes
 	}
 
 	ai_will_do = {
@@ -18,12 +30,208 @@ abm_develop_or_qapi_coal = {
 	}
 
 	option = {
-		name = abm_develop_or_qapi_coal.a
+		name = abm_develop_or_qapi_rgos.a
 		ai_chance = { value = 100 }
 
 		effect = {
-			location:or_qapi = {
+			set_global_variable = abm_or_qapi_rgos_developed
+
+			location:kezlev = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:stone
+			}
+		}
+	}
+}
+
+# Cafa province sits next to or_qapi_province in crimea_area. The location is
+# kaffa (cafa_province holds kaffa soldaia vosporo seyitler solkhat).
+# soldaia -> lumber, vosporo -> iron, kaffa -> dyes. solkhat and seyitler keep
+# their vanilla goods.
+# Same campaign-global once-only treatment as the province decisions here.
+abm_develop_cafa_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_dyes.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_cafa_rgos_developed }
+
+		owns = location:kaffa
+		owns = location:soldaia
+		owns = location:vosporo
+
+		OR = {
+			NOT = { location:kaffa = { raw_material = goods:dyes } }
+			NOT = { location:soldaia = { raw_material = goods:lumber } }
+			NOT = { location:vosporo = { raw_material = goods:iron } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_cafa_rgos = yes
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_cafa_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_cafa_rgos_developed
+
+			location:soldaia = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:lumber
+			}
+			location:vosporo = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:iron
+			}
+			location:kaffa = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:dyes
+			}
+		}
+	}
+}
+
+# Gothia province (theodoro qirq_yer lusta qarasuvbazar crimean_mountains) is in
+# crimea_area. qirq_yer and qarasuvbazar go to coal, lusta and theodoro to
+# lumber. Same campaign-global once-only treatment as the decisions above.
+abm_develop_gothia_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_coal.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_gothia_rgos_developed }
+
+		owns = location:qirq_yer
+		owns = location:qarasuvbazar
+		owns = location:lusta
+		owns = location:theodoro
+
+		OR = {
+			NOT = { location:qirq_yer = { raw_material = goods:coal } }
+			NOT = { location:qarasuvbazar = { raw_material = goods:coal } }
+			NOT = { location:lusta = { raw_material = goods:lumber } }
+			NOT = { location:theodoro = { raw_material = goods:lumber } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_gothia_rgos = yes
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_gothia_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_gothia_rgos_developed
+
+			location:qirq_yer = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
 				change_raw_material = goods:coal
+			}
+			location:qarasuvbazar = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:coal
+			}
+			location:lusta = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:lumber
+			}
+			location:theodoro = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:lumber
+			}
+		}
+	}
+}
+
+# Entry point for the steppe pastoral RGO reorganisation. The decision only
+# prompts: its option fires the generic action, which walks the player through
+# province -> location -> goods. `owncountry` generic actions have no automatic
+# UI, so this decision is what makes the feature discoverable.
+# Repeatable on purpose - the action has no cooldown, and `potential` already
+# disappears once no province qualifies.
+abm_reorganize_pastoral_rgo_decision = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_wool.dds"
+
+	potential = {
+		any_province = {
+			abm_steppe_pastoral_province = { COUNTRY = root }
+		}
+	}
+
+	allow = {
+		any_province = {
+			abm_steppe_pastoral_province = { COUNTRY = root }
+		}
+	}
+
+	ai_will_do = {
+		value = 0
+	}
+
+	option = {
+		name = abm_reorganize_pastoral_rgo_decision.a
+		ai_chance = { value = 0 }
+
+		effect = {
+			fire_generic_action = {
+				type = abm_reorganize_pastoral_rgo
+				actor = root
 			}
 		}
 	}

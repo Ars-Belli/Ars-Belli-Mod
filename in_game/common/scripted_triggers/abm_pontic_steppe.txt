@@ -1,25 +1,119 @@
-﻿# Country-scope check for developing the Or Qapi coal seams.
-# Every owned land location in or_qapi_province must have an owner with a
-# settled government and a non-pagan faith, and that location's pops must
-# be majority primary/accepted culture and majority owner religion.
-abm_can_develop_or_qapi_coal = {
+﻿# Location-scope check. True when the location is a full core of its owner,
+# the owning state has a settled government and a non-pagan faith, and the
+# location's pops are majority primary/accepted culture and majority their
+# owner's religion.
+abm_location_settled_and_loyal = {
+	integration_level = core
+
+	owner = {
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:theocracy
+			government_type = government_type:republic
+		}
+		is_country_religion_pagan = no
+	}
+	owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+	dominant_religion = owner.religion
+}
+
+# Country-scope checks: true when every owned land location in the province
+# passes abm_location_settled_and_loyal.
+abm_can_develop_or_qapi_rgos = {
 	province:or_qapi_province = {
 		NOT = {
 			any_location_in_province = {
 				has_owner = yes
 				is_land = yes
-				NOT = {
-					owner = {
-						OR = {
-							government_type = government_type:monarchy
-							government_type = government_type:theocracy
-							government_type = government_type:republic
-						}
-						is_country_religion_pagan = no
-					}
-					owner = { has_primary_or_accepted_culture = prev.dominant_culture }
-					dominant_religion = owner.religion
-				}
+				NOT = { abm_location_settled_and_loyal = yes }
+			}
+		}
+	}
+}
+
+abm_can_develop_cafa_rgos = {
+	province:cafa_province = {
+		NOT = {
+			any_location_in_province = {
+				has_owner = yes
+				is_land = yes
+				NOT = { abm_location_settled_and_loyal = yes }
+			}
+		}
+	}
+}
+
+abm_can_develop_gothia_rgos = {
+	province:gothia_province = {
+		NOT = {
+			any_location_in_province = {
+				has_owner = yes
+				is_land = yes
+				NOT = { abm_location_settled_and_loyal = yes }
+			}
+		}
+	}
+}
+
+# Location-scope: raw material is one of the steppe's pastoral goods.
+abm_steppe_pastoral_good = {
+	OR = {
+		raw_material = goods:wool
+		raw_material = goods:horses
+		raw_material = goods:millet
+		raw_material = goods:legumes
+		raw_material = goods:fiber_crops
+		raw_material = goods:livestock
+		raw_material = goods:wheat
+	}
+}
+
+# Goods-scope: a good the provincial reorganisation may switch to.
+abm_steppe_target_good = {
+	OR = {
+		this = goods:wool
+		this = goods:horses
+		this = goods:millet
+		this = goods:legumes
+		this = goods:fiber_crops
+		this = goods:livestock
+		this = goods:wheat
+		this = goods:wine
+		this = goods:sand
+	}
+}
+
+# Location-scope: a full core of $COUNTRY$ with a pastoral raw material, whose
+# pops are majority that country's primary/accepted culture and religion.
+abm_steppe_pastoral_location = {
+	integration_level = core
+	owner = $COUNTRY$
+	owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+	dominant_religion = owner.religion
+	abm_steppe_pastoral_good = yes
+}
+
+# Province-scope: a pastoral province of the steppes that $COUNTRY$ may
+# reorganise. Every owned land location in it must have at least 10 development,
+# belong to $COUNTRY$, and pass abm_steppe_pastoral_location.
+# The country is a parameter so the same trigger serves both scopes:
+#   generic action  -> abm_steppe_pastoral_province = { COUNTRY = scope:actor }
+#   decision        -> abm_steppe_pastoral_province = { COUNTRY = root }
+abm_steppe_pastoral_province = {
+	region = region:steppes_region
+	# at least one location still open for reorganisation
+	any_location_in_province = {
+		has_owner = yes
+		is_land = yes
+		NOT = { has_variable = abm_steppe_rgo_converted }
+	}
+	NOT = {
+		any_location_in_province = {
+			has_owner = yes
+			is_land = yes
+			NOT = {
+				development >= 10
+				abm_steppe_pastoral_location = { COUNTRY = $COUNTRY$ }
 			}
 		}
 	}
