@@ -11,20 +11,11 @@ abm_reorganize_pastoral_rgo = {
 	automation_tick = never
 	automation_tick_frequency = 12
 
-	# 5 gold base. The modifier is 1 + development/5, clamped to 1..30, so the
-	# real cost runs from 5 gold (dev ~0) to 150 gold (dev 145+).
-	# A vanilla RGO expansion is a flat 100 gold, so this stays in that ballpark.
+	# 10 stability + 10 political influence, and 4x the location's wealth in
+	# gold. The gold part can't live in the price object (a price_modifier would
+	# scale the stability and influence too), so it is paid in the effect, using
+	# the same idiom as vanilla's earthquake payments.
 	price = price:abm_reorganize_pastoral_rgo_price
-	price_modifier = {
-		value = 1
-		add = {
-			desc = "ABM_STEPPE_RGO_DEV_COST"
-			value = scope:target_location.development
-			multiply = 0.2
-		}
-		min = 1
-		max = 30
-	}
 
 	potential = {
 		scope:actor ?= {
@@ -115,6 +106,20 @@ abm_reorganize_pastoral_rgo = {
 			# ours alone: the Columbian Exchange never reads it, so it can still
 			# change a location we already reorganised (and vice versa).
 			set_variable = { name = abm_steppe_rgo_converted value = yes }
+		}
+		scope:actor = {
+			# 100 gold floor plus 10 per point of development, capped at 300.
+			# Development is the measure that also caps the RGO's size, so a
+			# bigger, more productive location costs proportionally more.
+			add_gold = {
+				value = -100
+				subtract = {
+					value = scope:target_location.development
+					multiply = 10
+				}
+				max = -100
+				min = -300
+			}
 		}
 	}
 }
