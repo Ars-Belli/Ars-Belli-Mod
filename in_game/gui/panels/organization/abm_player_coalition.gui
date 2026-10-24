@@ -1,0 +1,434 @@
+# Ars Belli Player Coalition panel. Engine maps IO type -> <type>.gui by name.
+# Copy of vanilla panels/organization/coalition.gui with mod loc keys (coalition_leader, coalition_hint_1 -> abm_player_coalition_*).
+organization_war_theme = {
+
+    blockoverride ios_common_subheader {
+        hbox = {
+            block "common_ios_subheader_properties" {
+                layoutpolicy_horizontal = expanding
+                size = { -1 50 }
+                margin = { 5 0}
+            }
+            #layoutpolicy_horizontal = expanding
+            #layoutpolicy_vertical = expanding
+            block "ios_information_header_content_extra_1" {}
+            block "ios_information_header_content_extra_2" {}
+            margin = { 0 5}
+        }
+    }
+
+    
+    blockoverride "card_header_button_header_content" { # Remove leave/join/invite IO icon + add member icon
+        margin_left = 18
+        icon = {
+            size = { 30 30 }
+            block "card_header_button_icon_texture" {
+                texture = "gfx/interface/icons/religious_doctrines/catholic/religious_actions.dds"
+            }
+            texture_density = 2
+            glow = {
+                name = "drop_shadow"
+                glow_radius = 3
+                color = {0.0 0.0 0.0 1.0}
+                alpha = 0.3
+            }
+        }
+        block "card_header_button_text_single" {
+            text_single = {
+                margin_left = 7
+                block "card_header_button_raw_text" {
+                    raw_text = "IO or Situation"
+                }
+            }
+        }
+        expand = {}
+    }
+
+    blockoverride "organization_overview_tab_visible" {}
+    blockoverride "organization_panel_overview_visible" {
+        visible = "[InternationalOrganizationsView.Vars.NotExistOrHasValue( 'organizations', 'overview' )]"
+    }
+    blockoverride "organization_members_tab_down" {
+		down = "[InternationalOrganizationsView.Vars.HasValue( 'organizations', 'members' )]"
+	}
+	blockoverride "organization_panel_members_visible" {
+		visible = "[InternationalOrganizationsView.Vars.HasValue( 'organizations', 'members' )]"
+	}
+
+    blockoverride "scroll_overview_empty_visible" { visible = no }
+    
+    blockoverride "io_main_actions_icon" {
+        texture = "[InternationalOrganizationsView.GetInternationalOrganization.GetIcon]"
+    }
+
+    blockoverride "organization_main_actions_extra_visible" {
+        visible = yes 
+    }
+
+    blockoverride "searchbar_visible" { visible = no }
+
+    	blockoverride "ios_information_header_content_extra_1" {
+        margin_left = 10
+		using = ios_header_content_extra_template
+		blockoverride "ios_header_content_extra" {
+            tooltipwidget = {
+                SimpleContextualTooltipType = {
+                        blockoverride "title_icon" {
+                            icon = {
+                                using = tooltip_title_icon_size
+                                texture = "gfx/interface/icons/flat_icons/military.dds"
+                            }
+                        }
+
+                        blockoverride "concept_link" {
+                            text = "[military_strength|e]"
+                        }
+                        lowpriotextcontext = "[InternationalOrganizationsView.GetLandComparisonTooltip]"
+
+                    }
+                }					
+
+                piechart = {
+                    size = { 32 32 }
+
+                    using = piechart_angles
+                    using = bg_circle_alt_brown
+                    using = bg_circle_piechart
+
+                    icon = {
+                        texture = "gfx/interface/icons/flat_icons/military.dds"
+                        size = { 60% 60% }
+                        parentanchor = center
+                    }
+
+                    pieslice_no_highlight = {
+                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+                        value = "[Subtract_float('(float)1.0', FixedPointToFloat(InternationalOrganizationsView.GetPercentageLandCombatStrength))]"
+                        color = { 1 1 1 1 }
+                    }
+
+                    pieslice_no_highlight = {
+                        texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+                        value = "[FixedPointToFloat(InternationalOrganizationsView.GetPercentageLandCombatStrength)]"
+                        color = { 1 1 1 1 }
+                    }
+                }
+
+                vbox = {
+                    layoutpolicy_horizontal = expanding
+                    text_single = {
+                        layoutpolicy_horizontal = expanding
+                        align = left|nobaseline
+                        text = "LAND_COMPARISON_TT"
+                    }
+
+                    text_single = {
+                        fontsize = 12
+                        visible = "[LessThanOrEqualTo_CFixedPoint(InternationalOrganizationsView.GetPercentageLandCombatStrength, '(CFixedPoint)0.25')]"
+                        layoutpolicy_horizontal = expanding
+                        align = left|nobaseline
+                        #default_format = "#color_red;bold"
+                        text = "COALITION_DECLARE_WAR_COMPARISON_WEAKER"
+                    }
+
+                    text_single = {
+                        fontsize = 12
+                        visible = "[Between_CFixedPoint(InternationalOrganizationsView.GetPercentageLandCombatStrength, '(CFixedPoint)0.25', '(CFixedPoint)0.5')]"
+                        layoutpolicy_horizontal = expanding
+                        align = left|nobaseline
+                        default_format = "#color_red;bold"
+                        text = "COALITION_DECLARE_WAR_COMPARISON_SLIGHTLY_WEAKER"
+                    }
+
+                    text_single = {
+                        fontsize = 12
+                        visible = "[EqualTo_CFixedPoint(InternationalOrganizationsView.GetPercentageLandCombatStrength, '(CFixedPoint)0.5')]"
+                        layoutpolicy_horizontal = expanding
+                        align = left|nobaseline
+                        text = "COALITION_DECLARE_WAR_COMPARISON_EQUAL"
+                    }
+
+                    text_single = {
+                        fontsize = 12
+                        visible = "[Between_CFixedPoint(InternationalOrganizationsView.GetPercentageLandCombatStrength, '(CFixedPoint)0.5', '(CFixedPoint)0.75')]"
+                        layoutpolicy_horizontal = expanding
+                        align = left|nobaseline
+                        #default_format = "#color_green;bold"
+                        text = "COALITION_DECLARE_WAR_COMPARISON_SLIGHTLY_STRONGER"
+                    }
+
+                    text_single = {
+                        fontsize = 12
+                        visible = "[GreaterThanOrEqualTo_CFixedPoint(InternationalOrganizationsView.GetPercentageLandCombatStrength, '(CFixedPoint)0.75')]"
+                        layoutpolicy_horizontal = expanding
+                        align = left|nobaseline
+                        #default_format = "#color_green;bold"
+                        text = "COALITION_DECLARE_WAR_COMPARISON_STRONGER"
+                    }
+                }
+            }				
+		}
+        blockoverride "ios_header_content_divider" {}
+	}
+
+	blockoverride "ios_information_header_content_extra_2" {
+        margin_right = 10
+		using = ios_header_content_extra_template
+		blockoverride "ios_header_content_extra" {
+            tooltipwidget = {
+                SimpleContextualTooltipType = {
+                    blockoverride "title_icon" {
+                        icon = {
+                            using = tooltip_title_icon_size
+                            texture = "gfx/interface/icons/flat_icons/declare_war/navy.dds"
+                        }
+                    }  
+                    blockoverride "concept_link" {
+                        text = "[naval_strength|e]"
+                    }
+                    lowpriotextcontext = "[InternationalOrganizationsView.GetNavalComparisonTooltip]"
+                }
+            }					
+
+            vbox = {
+                layoutpolicy_horizontal = expanding
+                text_single = {
+                    layoutpolicy_horizontal = expanding
+                    align = right|nobaseline
+                    text = "NAVAL_COMPARISON_TT"
+                }
+
+                text_single = {
+                    fontsize = 12
+                    visible = "[LessThanOrEqualTo_CFixedPoint(InternationalOrganizationsView.GetPercentageNavalCombatStrength, '(CFixedPoint)0.25')]"
+                    layoutpolicy_horizontal = expanding
+                    align = right|nobaseline
+                    #default_format = "#color_red;bold"
+                    text = "COALITION_DECLARE_WAR_COMPARISON_WEAKER"
+                }
+
+                text_single = {
+                    fontsize = 12
+                    visible = "[Between_CFixedPoint(InternationalOrganizationsView.GetPercentageNavalCombatStrength, '(CFixedPoint)0.25', '(CFixedPoint)0.5')]"
+                    layoutpolicy_horizontal = expanding
+                    align = right|nobaseline
+                    #default_format = "#color_red;bold"
+                    text = "COALITION_DECLARE_WAR_COMPARISON_SLIGHTLY_WEAKER"
+                }
+
+                text_single = {
+                    fontsize = 12
+                    visible = "[EqualTo_CFixedPoint(InternationalOrganizationsView.GetPercentageNavalCombatStrength, '(CFixedPoint)0.5')]"
+                    layoutpolicy_horizontal = expanding
+                    align = right|nobaseline
+                    text = "COALITION_DECLARE_WAR_COMPARISON_EQUAL"
+                }
+
+                text_single = {
+                    fontsize = 12
+                    visible = "[Between_CFixedPoint(InternationalOrganizationsView.GetPercentageNavalCombatStrength, '(CFixedPoint)0.5', '(CFixedPoint)0.75')]"
+                    layoutpolicy_horizontal = expanding
+                    align = right|nobaseline
+                    #default_format = "#color_green;bold"
+                    text = "COALITION_DECLARE_WAR_COMPARISON_SLIGHTLY_STRONGER"
+                }
+
+                text_single = {
+                    fontsize = 12
+                    visible = "[GreaterThanOrEqualTo_CFixedPoint(InternationalOrganizationsView.GetPercentageNavalCombatStrength, '(CFixedPoint)0.75')]"
+                    layoutpolicy_horizontal = expanding
+                    align = right|nobaseline
+                    #default_format = "#color_green;bold"
+                    text = "COALITION_DECLARE_WAR_COMPARISON_STRONGER"
+                }
+            }
+
+            piechart = {
+                size = { 32 32 }
+
+                using = piechart_angles
+                using = bg_circle_alt_brown
+                using = bg_circle_piechart
+
+                icon = {
+                    texture = "gfx/interface/icons/flat_icons/declare_war/navy.dds"
+                    size = { 60% 60% }
+                    parentanchor = center
+                }
+
+                pieslice_no_highlight = {
+                    texture = "gfx/interface/pie_charts/pie_chart_alpha_80_red.dds"
+                    value = "[Subtract_float('(float)1.0', FixedPointToFloat(InternationalOrganizationsView.GetPercentageNavalCombatStrength))]"
+                    color = { 1 1 1 1 }
+                }
+
+                pieslice_no_highlight = {
+                    texture = "gfx/interface/pie_charts/pie_chart_alpha_80_green.dds"
+                    value = "[FixedPointToFloat(InternationalOrganizationsView.GetPercentageNavalCombatStrength)]"
+                    color = { 1 1 1 1 }
+                }
+            }
+		}
+        blockoverride "ios_header_content_divider" {}
+	}
+
+    blockoverride "organization_overview_list_custom_top_extra" {
+        margin_top = 10
+        fancy_two_line_card = { # Coalition Leader
+            blockoverride "card_datacontext" {
+                datacontext = "[InternationalOrganizationsView.GetInternationalOrganization.GetLeaderCountry]"
+            }
+            blockoverride "left_content_text_single" {
+                text_single = {
+                    text = "abm_player_coalition_leader"
+                    align = left|nobaseline
+                    default_format = "#yellow_titles"
+                }
+            }
+            blockoverride "left_bottom_flag" {
+                country_flag_small = {
+                    visible = no
+                }
+            }
+            blockoverride "left_bottom_text" {
+                text = "[InternationalOrganizationsView.GetInternationalOrganization.GetLeaderCountry.GetName]"
+            }
+            blockoverride "right_content" {
+                visible = no
+            }
+            blockoverride "right_flag" {
+                visible = no
+            }
+        }
+    }
+    
+    blockoverride "organization_main_actions_extra" {
+        #Join io
+        action_button_diamond = {
+            #parentanchor = center
+            size = { 470 30 }
+            title = "INT_ORG_MEMBERSHIP_TITLE"
+            text = "ASK_FOR_IO_MEMBERSHIP"
+            actor = "[InternationalOrganizationsView.GetPlayer]"
+            parameter = {
+                parameter_name = "recipient"
+                parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization.GetLeaderCountry]"
+            }
+            left_action = {
+                action_name = "ask_to_join_international_organization"
+                action_direction = "request"
+                parameter = {
+                    parameter_name = "international_organization"
+                    parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
+                }
+            }
+            tooltipwidget = {
+                using = io_join_button_tooltip
+            }
+             visible = "[Not(Or(Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization), Player.IsTargetOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)))]"
+        }
+        #invite people
+        action_button_diamond = {
+            size = { 470 30 }
+            title = "INT_ORG_MEMBERSHIP_TITLE"
+            actor = "[InternationalOrganizationsView.GetPlayer]"
+            visible = "[Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)]"
+            left_action = {
+                action_name = "invite_to_international_organization"
+                action_direction = "offer"
+                parameter = {
+                    parameter_name = "international_organization"
+                    parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
+                }
+            }
+            tooltipwidget = {
+                using = io_invite_button_tooltip
+            }
+            text = "INVITE_FOR_IO_MEMBERSHIP"
+        }
+        #leave io
+        action_button_diamond = {
+            size = { 470 30 }
+            title = "INT_ORG_MEMBERSHIP_TITLE"
+            actor = "[InternationalOrganizationsView.GetPlayer]"
+            left_click_and_hold_action = {
+                action_name = "leave_international_organization"
+                action_direction = "offer"
+                parameter = {
+                    parameter_name = "recipient"
+                    parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
+                }
+            }
+            tooltipwidget = {
+                using = io_leave_button_tooltip
+            }
+            text = "LEAVE_IO_MEMBERSHIP"
+        }
+        #Declare coalition war
+        # Ars Belli: leader-only (pattern from vanilla independence_movement.gui)
+        button_regular_diamond = {
+            block "button_regular_diamond_texture" {
+			    texture = "gfx/interface/buttons/button_diamond_red.dds"
+		    }
+            size = { 470 30 }
+            visible = "[And3(InternationalOrganizationsView.GetInternationalOrganization.IsIOLeaderCountry(GetPlayer), Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization), InternationalOrganizationsView.GetInternationalOrganization.GetType.HasDeclareWarOnTargetCasusBelli)]"
+            enabled = "[And(InternationalOrganizationsView.GetInternationalOrganization.IsIOLeaderCountry(GetPlayer), InternationalOrganizationsView.CanDeclareWar)]"
+            
+            title = "INT_ORG_MEMBERSHIP_TITLE"
+            text = "WAR_COALITION"
+            
+            tooltipwidget = {
+                using = io_declare_war_coalition_tooltip
+            }
+            action_tooltip = {
+				click_type = left
+				title = "RALLY_MOVEMENT_ACTION_TT"
+				on_action = "[InternationalOrganizationsView.DeclareWar]"
+			}
+        }
+        
+        #visible = "[Not(Player.isTargetOfInternationalOrganizationOfType(InternationalOrganizationsView.GetInternationalOrganization))]"
+    }
+
+    blockoverride "organization_overview_list_custom_bottom" {       
+        vbox = {
+            margin = { 10 0 }
+            layoutpolicy_horizontal = expanding
+            card_expandable = { # Hints
+                margin_top = 15                        
+                blockoverride "header_content" {
+                    margin = { 10 0 }
+                    icon = {
+                        size = { 30 30 }
+                        block "header_icon" {
+                            texture = "gfx/interface/icons/flat_icons/tabicons/hints.dds"
+                        }
+                        texture_density = 2
+                    }
+                    text_single = {
+                        block "header_text" {
+                            margin = { 10 0 }
+                            raw_text = "Hints"
+                        }
+                    }
+                    expand = {}
+                }
+                blockoverride "bottom_content" {
+                    hbox = {
+                        layoutpolicy_horizontal = expanding
+                        spacing = 4
+                        text_single = {
+                            margin = { 20 10 }
+                            text = "abm_player_coalition_hint_1"
+                            multiline = yes
+                            autoresize = yes
+                            layoutpolicy_horizontal = expanding  
+                        }
+                    }
+                } 
+            } 
+        }
+        expand = {}
+    }
+}
+
