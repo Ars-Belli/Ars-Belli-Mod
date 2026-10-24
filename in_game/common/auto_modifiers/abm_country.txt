@@ -21,6 +21,13 @@ INJECT:country_base_values = {
 	fort_limit = 4 # 4 + 1 from vanilla = 5
 	mercenary_range = 250
 	supply_depot_capacity = 4950 # 4950 + 50 from vanilla = 5000 (100x)
+
+	# Ars Belli urbanisation limit - the flat part every country gets.
+	# Town = 1 point, city = 2, megalopolis = 4, so this alone is ten towns,
+	# or five towns and a large one. Built like the fort limit: base here,
+	# location and population terms below, and advances in advances\abm_urbanisation_advances.txt.
+	# Country rank adds +1 / +2 / +4 for duchy / kingdom / empire (country_ranks\abm_country_ranks.txt).
+	abm_urbanisation_limit = 10
 }
 
 REPLACE:num_locations_impact = {
@@ -30,6 +37,51 @@ REPLACE:num_locations_impact = {
 	}
 
 	fort_limit = 1
+}
+
+# Ars Belli urbanisation limit - the size terms, one auto_modifier each so they can be
+# retuned independently of each other and of the fort limit in num_locations_impact:
+#   +1 town point per 20 locations, and
+#   +1 town point per 400k people (total_population is in thousands, hence divide = 400).
+# Both divisors are also spelled out in the AUTO_MODIFIER_NAME_* loc keys in
+# abm_urbanisation_l_english.yml, so the breakdown states the rule - change them together.
+abm_urbanisation_locations_impact = {
+	scales_with = {
+		value = num_locations
+		divide = 20
+	}
+
+	abm_urbanisation_limit = 1
+}
+
+abm_urbanisation_population_impact = {
+	scales_with = {
+		value = total_population
+		divide = 400
+	}
+
+	abm_urbanisation_limit = 1
+}
+
+# Ars Belli urbanisation limit - over-limit penalty: -5% tax efficiency for every
+# whole town point held beyond the (rounded) limit. Uncapped, unlike the fort-limit
+# penalty below; add max = N to abm_urbanisation_points_over to cap it.
+# alert = yes is the one data route to a real engine alert: it surfaces in the shared
+# red "Penalties active" alert (alert_descriptions: static_modifier_active), which can
+# be hidden and muted like any other. Mod-defined alert types are not possible - see
+# task_solutions_urbanisation.md, Nr.3 and Nr.4.
+abm_over_urbanisation_limit = {
+	potential_trigger = {
+		abm_urbanisation_points_over > 0
+	}
+
+	scales_with = {
+		value = abm_urbanisation_points_over
+	}
+
+	alert = yes
+
+	tax_income_efficiency = -0.05
 }
 
 # INJECT:over_fort_limit = {

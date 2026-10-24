@@ -1,0 +1,21 @@
+﻿namespace = abm_urbanisation
+
+# Over Urban Capacity warning. Fired every month by abm_urbanisation_apply_alert
+# (scripted_effects\abm_urbanisation_effects.txt) while a human player holds more town
+# points than their limit, unless muted from the tier list panel. Same shape as
+# abm_mp_limits.2, the fort-limit popup.
+abm_urbanisation.1 = {
+	type = country_event
+
+	title = abm_urbanisation.1.title
+	desc = abm_urbanisation.1.desc
+	outcome = negative
+
+	trigger = {
+		is_human = yes
+	}
+
+	option = {
+		name = abm_urbanisation.1.a
+	}
+}

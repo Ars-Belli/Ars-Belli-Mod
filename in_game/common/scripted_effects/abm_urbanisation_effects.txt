@@ -1,0 +1,16 @@
+﻿# Pop up a warning event EVERY month the player is over their Urban Capacity.
+# Default: ON - fires unless the player has muted it via the tier list panel
+# (which sets abm_urban_alert_muted on the country). Same shape as
+# mp_limits_apply_fort_limit_alert in abm_scripted_effects.txt, and called from the
+# same monthly pulse. The penalty itself is the abm_over_urbanisation_limit
+# auto_modifier in auto_modifiers\abm_country.txt.
+abm_urbanisation_apply_alert = {
+	if = {
+		limit = {
+			is_human = yes
+			abm_urbanisation_points_over > 0
+			not = { has_variable = abm_urban_alert_muted }
+		}
+		trigger_event_non_silently = abm_urbanisation.1
+	}
+}

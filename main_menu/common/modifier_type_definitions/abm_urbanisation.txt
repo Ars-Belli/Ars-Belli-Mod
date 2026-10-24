@@ -1,0 +1,30 @@
+﻿# Ars Belli urbanisation limit.
+#
+# Two country modifiers, deliberately built the same way the fort limit is:
+#   abm_urbanisation_limit = how many "town points" we may hold.
+#       base + locations + advances, see auto_modifiers\abm_country.txt
+#       and advances\abm_urbanisation_advances.txt.
+#   abm_urbanisation_used  = how many we do hold.
+#       granted per location by the location_ranks country_modifier blocks
+#       (town 1, city 2, megalopolis 4), so the engine keeps the sum for us
+#       and it is exact the moment a rank changes.
+#
+# Neither has any engine meaning; they are read back from script through
+# modifier:<name> (see script_values\abm_urbanisation_values.txt).
+
+abm_urbanisation_limit = {
+	decimals=0
+	no_difference_sign=yes
+	game_data={
+		category=country
+	}
+}
+
+abm_urbanisation_used = {
+	color=neutral
+	decimals=0
+	no_difference_sign=yes
+	game_data={
+		category=country
+	}
+}

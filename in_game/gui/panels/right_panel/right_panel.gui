@@ -158,6 +158,7 @@ types RightPanelTypes
 
 				flowcontainer = {
 					parentanchor = center
+					position = { -25 0 } # Ars Belli: nudged left of centre, into the room the short left-hand MP rows leave
 					spacing = 5
 					datacontext = "[GetCurrentAge]"
 					alwaystransparent = no
@@ -167,7 +168,7 @@ types RightPanelTypes
 					text_single = {
 						allow_outside = yes
 						text = "[Age.GetNameWithNoTooltip]"
-						using = Font_Size_Medium
+						using = Font_Size_Small # Ars Belli: was Font_Size_Medium, shrunk to make room for the right-hand readouts
 						using = Font_Type_Headers
 						align = center
 						autoresize = yes
@@ -175,7 +176,7 @@ types RightPanelTypes
 						default_format = "#yellow_titles"
 
 						widget = {
-							size = { 40 40 }
+							size = { 30 30 } # Ars Belli: was 40x40
 							position = { -5 0 }
 
 							datacontext = "[GetCurrentAge]"
@@ -225,28 +226,70 @@ types RightPanelTypes
 					}
 				}
 
-				# Ars Belli Current country Rank:
+				# Ars Belli right-hand readouts: MP rank label, urbanisation counter, Tier
+				# List button, in one stack so they can never overlap. The two MP rows carry
+				# their own visible, so in single-player only the counter shows and centres.
+				# The bar above the tabs is only ~55px tall, hence spacing 1 and the same -4
+				# vertical text margin the left-hand MP counters use:
+				# 15 (rank label) + 1 + 16 (urban) + 1 + 22 (tier button) = 55.
 				flowcontainer = {
 					direction = vertical
-					spacing = 2
-					parentanchor = right
-					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
+					spacing = 1
+					parentanchor = right|vcenter
+					ignoreinvisible = yes
 
-					datacontext = "[GetPlayer]"
-
-					# Label + tooltip read the player country, so they hide for observers; the Tier List button stays
+					# Ars Belli Current country Rank. Label + tooltip read the player country, so they hide
+					# for observers (IsPlayerValid); the Tier List button stays.
 					text_single = {
-						visible = "[IsPlayerValid]"
+						visible = "[And(GetGlobalVariable('mp_mechanics_enabled').IsSet, IsPlayerValid)]"
+						datacontext = "[GetPlayer]"
 						tooltip = "MP_RANK_TOOLTIP"
 						text = "MP_RANK_LABEL"
 						using = Font_Size_Small
 						align = right
 						autoresize = yes
-						margin = { 5 0 }
+						margin = { 5 -4 }
 						parentanchor = right
 					}
 
+					# Ars Belli urbanisation limit: town points used out of the limit.
+					# Yellow at the cap, red past it - see
+					# customizable_localization\abm_urbanisation_custom_loc.txt.
+					# No value-based visibility guard: GetModifierValueNoFormat is not a CFixedPoint, so
+					# GreaterThan_CFixedPoint on it fails FetchData every frame. IsPlayerValid only hides it
+					# for observers, who have no player country for GetPlayer.Custom().
+					button = {
+						visible = "[IsPlayerValid]"
+						size = { 130 16 }
+						parentanchor = right
+						tooltip = "ABM_URBAN_CAPACITY_TOOLTIP"
+						onclick = "[OpenLateralView('player_modifiers')]"
+
+						flowcontainer = {
+							parentanchor = right|vcenter
+							direction = horizontal
+							spacing = 3
+							alwaystransparent = yes
+
+							icon = {
+								size = { 16 16 }
+								texture = "gfx/interface/icons/modifier_types/city_upgrade_cost_modifier.dds"
+								texture_density = 2
+							}
+
+							text_single = {
+								text = "[GetPlayer.Custom('abm_urbanisation_display')]"
+								using = Font_Size_Small
+								align = right|nobaseline
+								autoresize = yes
+								margin = { 5 -4 }
+							}
+						}
+					}
+
+					# Ars Belli tier list toggle:
 					button_regular = {
+						visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
 						text = "ABM_TIER_PANEL_TOGGLE"
 						tooltip = "ABM_TIER_PANEL_TOGGLE_TOOLTIP"
 						onclick = "[GetVariableSystem.Toggle('mp_tier_panel_open')]"
@@ -321,6 +364,22 @@ types RightPanelTypes
 								text = "[Country.Custom('mp_fort_alert_toggle_label')]"
 								tooltip = "ABM_FORT_ALERT_TOGGLE_TOOLTIP"
 								onclick = "[GetScriptedGui('mp_limits_toggle_fort_alert').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+								size = { -1 26 }
+								layoutpolicy_horizontal = expanding
+							}
+						}
+
+						# Ars Belli urbanisation limit: per-country toggle for the over-Urban-Capacity
+						# popup warning (abm_urbanisation.1), the same shape as the fort-limit one above.
+						hbox = {
+							visible = "[IsPlayerValid]"
+							layoutpolicy_horizontal = expanding
+							datacontext = "[GetPlayer]"
+
+							button_regular = {
+								text = "[Country.Custom('abm_urban_alert_toggle_label')]"
+								tooltip = "ABM_URBAN_ALERT_TOGGLE_TOOLTIP"
+								onclick = "[GetScriptedGui('abm_toggle_urban_alert').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 								size = { -1 26 }
 								layoutpolicy_horizontal = expanding
 							}

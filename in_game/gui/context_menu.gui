@@ -1368,6 +1368,41 @@ types ContextMenuSpecificTypes
 							}
 						}
 
+						# Ars Belli: step a location down one rank (megalopolis -> city -> town
+						# -> rural settlement). Sits next to the engine's own "Downgrade Location"
+						# right-click on the rank icon, which always razes straight to countryside.
+						# 1.4 entry shape (targetted_button_regular + scripted_action_tooltip), as
+						# add_location_to_international_organization: an owncountry generic_action
+						# whose location target is pre-filled from the menu's datacontext.
+						targetted_button_regular = {
+							using = contextmenu_entry_button_inner_template
+							layoutpolicy_horizontal = expanding
+							size = { -1 35 }
+							name = "abm_downgrade_location_rank"
+							datacontext = "[Location]"
+							visible = "[And3(PdxGuiWidget.IsUberButtonVisible, Location.IsPlayerLocation, Not(Location.GetRank.IsDefault))]"
+							scripted_action_tooltip = {
+								click_type = left
+								click_mode = confirm
+								action_name = "abm_downgrade_location_rank"
+								actor = "[Player]"
+								parameter = {
+									parameter_name = "target"
+									parameter_value = "[Location.MakeScope]"
+								}
+							}
+							enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/buttons/flats/down.dds"
+								using = ui_direction_button_overlay
+							}
+
+							blockoverride "entry_text" {
+								text = "abm_downgrade_location_rank"
+							}
+						}
+
 						targetted_button_regular = {
 							using = contextmenu_entry_button_inner_template
 							layoutpolicy_horizontal = expanding
