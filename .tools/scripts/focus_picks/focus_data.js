@@ -25,7 +25,7 @@ module.exports = {
     ]},
     { id: 'influence', art: 'government/diplomacy_illustration', name: 'Influence', desc: 'Subjects, vassals and diplomats.', adv: [
       ['integrated_elites', 'monthly_diplomats = 0.2\nmax_diplomats = 1\nglobal_estate_power = -0.20'],
-      ['tribute_system', 'subject_income_modifier = 0.05\nsubject_loyalty = 10\nsubject_opinions = 25'],
+      ['tribute_system', 'subject_income_modifier = 0.25\nsubject_loyalty = 10\nsubject_opinions = 25'],
       ['marcher_lords', '', { raw: 'unlock_subject_type = march' }],
       ['buffer_states', 'diplomatic_capacity = 2\ndiplomatic_reputation = 4'],
       ['benign_diplomats', 'improve_relation_impact = 0.25\nsubject_opinions = 10'],
