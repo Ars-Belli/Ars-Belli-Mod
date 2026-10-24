@@ -48,6 +48,7 @@ battlefield_commisions = {
 	potential = { has_variable = abm_focus_levy }
 
 	army_tradition_from_battle = 1.0
+	navy_tradition_from_battle = 1.0
 }
 
 abm_local_militias = {
@@ -86,6 +87,8 @@ benefits_for_mercenaries = {
 	potential = { has_variable = abm_focus_mercenary }
 
 	mercenary_maintenance_efficiency = 0.1
+	tolerance_heretic = 0.5
+	tolerance_heathen = 0.5
 }
 
 organised_mercenary_recruitment = {
@@ -106,6 +109,7 @@ organised_mercenary_payment = {
 	potential = { has_variable = abm_focus_mercenary }
 
 	hire_mercenary_premium_cost_modifier = -0.2
+	hire_privateer_cost_modifier = -0.2
 }
 
 glorious_arms = {
@@ -116,6 +120,7 @@ glorious_arms = {
 	potential = { has_variable = abm_focus_mercenary }
 
 	prestige_from_land_battle = 1.0
+	prestige_from_naval_battle = 1.0
 	military_tactics = 0.10
 }
 
@@ -129,115 +134,106 @@ abm_ensure_mercenary_payments = {
 	hire_mercenary_leader_cost_modifier = -0.75
 }
 
-tolerance_idea = {
+privateers = {
 	age = age_2_renaissance
-	icon = cultural_acceptance_advance
+	icon = letters_of_marque
 	requires = abm_ensure_mercenary_payments
 
 	potential = { has_variable = abm_focus_mercenary }
 
-	tolerance_heretic = 0.5
-	tolerance_heathen = 0.5
+	can_hire_privateers = yes
 }
 
 ############################
-# age_2_renaissance - Maritime (abm_focus_maritime)
+# age_2_renaissance - Standing Forces (abm_focus_standing_forces)
 ############################
+
+abm_permanent_companies = {
+	age = age_2_renaissance
+	icon = regimental_system
+	depth = 0
+
+	potential = { has_variable = abm_focus_standing_forces }
+
+	global_manpower_modifier = 0.10
+	global_sailors_modifier = 0.10
+}
+
+abm_royal_arsenals = {
+	age = age_2_renaissance
+	icon = ship_building_advance
+	requires = abm_permanent_companies
+
+	potential = { has_variable = abm_focus_standing_forces }
+
+	regiment_recruit_speed = 0.25
+	ship_build_speed = 0.25
+}
+
+abm_drilled_regulars = {
+	age = age_2_renaissance
+	icon = drill_army_advance
+	requires = abm_royal_arsenals
+
+	potential = { has_variable = abm_focus_standing_forces }
+
+	monthly_experience_gain = 0.25
+}
+
+abm_household_troops = {
+	age = age_2_renaissance
+	icon = army_professionalism
+	requires = abm_permanent_companies
+
+	potential = { has_variable = abm_focus_standing_forces }
+
+	land_morale = 0.25
+	naval_morale = 0.25
+}
+
+abm_regular_pay = {
+	age = age_2_renaissance
+	icon = court_accounting
+	requires = abm_household_troops
+
+	potential = { has_variable = abm_focus_standing_forces }
+
+	army_maintenance_efficiency = 0.05
+	navy_maintenance_efficiency = 0.05
+}
 
 improved_rams = {
 	age = age_2_renaissance
 	icon = global_trade_routes_advance
-	depth = 0
+	requires = abm_regular_pay
 
-	potential = { has_variable = abm_focus_maritime }
+	potential = { has_variable = abm_focus_standing_forces }
 
 	navy_galley_power = 0.15
 	navy_galley_maintenance_cost_modifier = -0.10
-}
-
-boarding_parties = {
-	age = age_2_renaissance
-	icon = gunpowder_advance
-	requires = improved_rams
-
-	potential = { has_variable = abm_focus_maritime }
-
-	naval_damage_done = 0.1
-}
-
-marine_regiments = {
-	age = age_2_renaissance
-	icon = global_trade_routes_advance
-	requires = boarding_parties
-
-	potential = { has_variable = abm_focus_maritime }
-
-	army_disembark_speed = 0.33
-}
-
-naval_glory = {
-	age = age_2_renaissance
-	icon = ship_building_advance
-	requires = improved_rams
-
-	potential = { has_variable = abm_focus_maritime }
-
-	navy_tradition_from_battle = 1.0
-	prestige_from_naval_battle = 1.0
-}
-
-privateers = {
-	age = age_2_renaissance
-	icon = letters_of_marque
-	requires = naval_glory
-
-	potential = { has_variable = abm_focus_maritime }
-
-	can_hire_privateers = yes
-	anti_piracy_warfare_modifier = 0.25
-}
-
-ships_penny = {
-	age = age_2_renaissance
-	icon = rudimentary_coastal_ship_repair
-	requires = privateers
-
-	potential = { has_variable = abm_focus_maritime }
-
-	ship_build_speed = 0.25
 }
 
 ############################
 # age_3_discovery - Quality (abm_focus_quality)
 ############################
 
-formalized_officer_corps = {
+military_drill = {
 	age = age_3_discovery
-	icon = expansionism
+	icon = recruitment_improvements_renaissance
 	depth = 0
 
 	potential = { has_variable = abm_focus_quality }
 
-	army_initiative = 0.25
-}
+	land_morale_modifier = 0.10
+	naval_morale_modifier = 0.10
 
-quality_education = {
-	age = age_3_discovery
-	icon = diplomatic_influence
-	requires = formalized_officer_corps
-
-	potential = { has_variable = abm_focus_quality }
-
-	monthly_army_tradition = 0.1
-	hire_advisor_cost_modifier = -0.25
-	train_general_cost_modifier = -0.25
-	train_admiral_cost_modifier = -0.25
+	ai_weight = { add = 10 }
 }
 
 abm_drill_sergeants = {
 	age = age_3_discovery
 	icon = offensive_army
-	requires = quality_education
+	requires = military_drill
 
 	potential = { has_variable = abm_focus_quality }
 
@@ -245,36 +241,48 @@ abm_drill_sergeants = {
 	experience_decay = -0.01
 }
 
+abm_strict_discipline = {
+	age = age_3_discovery
+	icon = glorious_arms
+	requires = abm_drill_sergeants
+
+	potential = { has_variable = abm_focus_quality }
+
+	discipline = 0.05
+}
+
+abm_hardened_ranks = {
+	age = age_3_discovery
+	icon = defensive_army
+	requires = military_drill
+
+	potential = { has_variable = abm_focus_quality }
+
+	military_tactics = 0.10
+	naval_damage_taken = -0.10
+}
+
 abm_trained_march = {
 	age = age_3_discovery
 	icon = expanded_supply_trains
-	requires = formalized_officer_corps
+	requires = abm_hardened_ranks
 
 	potential = { has_variable = abm_focus_quality }
 
 	land_morale_movement_cost = -0.0002
 }
 
-military_drill = {
+abm_elite_companies = {
 	age = age_3_discovery
-	icon = recruitment_improvements_renaissance
+	icon = royal_navy
 	requires = abm_trained_march
 
 	potential = { has_variable = abm_focus_quality }
 
-	land_morale_modifier = 0.10
-
-	ai_weight = { add = 10 }
-}
-
-abm_strict_discipline = {
-	age = age_3_discovery
-	icon = glorious_arms
-	requires = military_drill
-
-	potential = { has_variable = abm_focus_quality }
-
-	discipline = 0.05
+	army_heavy_cavalry_power = 0.10
+	navy_heavy_ship_power = 0.15
+	army_heavy_cavalry_maintenance_cost_modifier = 0.10
+	navy_heavy_ship_maintenance_cost_modifier = 0.10
 }
 
 ############################
@@ -289,6 +297,7 @@ abm_rapid_reinforcement = {
 	potential = { has_variable = abm_focus_quantity }
 
 	combat_speed_modifier = 0.10
+	possible_frontage_modifier = 0.10
 }
 
 camp_followers = {
@@ -299,6 +308,7 @@ camp_followers = {
 	potential = { has_variable = abm_focus_quantity }
 
 	global_supply_limit_modifier = 0.1
+	food_consumption_modifier = -0.10
 }
 
 the_old_and_infirm = {
@@ -309,6 +319,7 @@ the_old_and_infirm = {
 	potential = { has_variable = abm_focus_quantity }
 
 	army_maintenance_efficiency = 0.1
+	navy_maintenance_efficiency = 0.1
 }
 
 abm_deep_reserves = {
@@ -319,93 +330,99 @@ abm_deep_reserves = {
 	potential = { has_variable = abm_focus_quantity }
 
 	army_reinforce_efficiency = 0.2
-}
-
-supply_trains = {
-	age = age_3_discovery
-	requires = abm_deep_reserves
-
-	potential = { has_variable = abm_focus_quantity }
-
-	food_consumption_modifier = -0.10
-}
-
-grand_army = {
-	age = age_3_discovery
-	icon = regiment_reinforcement_speed_renaissance
-	requires = supply_trains
-
-	potential = { has_variable = abm_focus_quantity }
-
-	global_manpower_modifier = 0.15
-}
-
-############################
-# age_3_discovery - Naval (abm_focus_naval)
-############################
-
-oak_forests_for_ships = {
-	age = age_3_discovery
-	icon = rudimentary_coastal_ship_repair
-	depth = 0
-
-	potential = { has_variable = abm_focus_naval }
-
-	navy_heavy_ship_power = 0.10
-	navy_heavy_ship_maintenance_cost_modifier = -0.10
-}
-
-abm_patrol_vessels = {
-	age = age_3_discovery
-	icon = naval_morale_advance_1
-	requires = oak_forests_for_ships
-
-	potential = { has_variable = abm_focus_naval }
-
-	navy_light_ship_power = 0.10
-	navy_light_ship_build_cost_modifier = -0.20
-	navy_light_ship_maintenance_cost_modifier = -0.10
-}
-
-abm_naval_education = {
-	age = age_3_discovery
-	icon = naval_morale_advance_1
-	requires = abm_patrol_vessels
-
-	potential = { has_variable = abm_focus_naval }
-
-	monthly_navy_tradition = 0.1
-}
-
-naval_drill = {
-	age = age_3_discovery
-	icon = offensive_army
-	requires = oak_forests_for_ships
-
-	potential = { has_variable = abm_focus_naval }
-
-	naval_morale_modifier = 0.10
+	navy_repair_efficiency = 0.2
 }
 
 grand_navy = {
 	age = age_3_discovery
 	icon = maritime_advance_age_2
-	requires = naval_drill
+	requires = abm_deep_reserves
 
-	potential = { has_variable = abm_focus_naval }
+	potential = { has_variable = abm_focus_quantity }
 
-	navy_maintenance_efficiency = 0.1
-	naval_unit_attrition = -0.25
+	navy_galley_build_cost_modifier = -0.15
+	navy_heavy_ship_build_cost_modifier = -0.15
+	navy_light_ship_build_cost_modifier = -0.15
 }
 
-abm_tactics_from_across_the_seas = {
+grand_army = {
 	age = age_3_discovery
-	icon = nav_fearless_seamen
+	icon = regiment_reinforcement_speed_renaissance
 	requires = grand_navy
 
-	potential = { has_variable = abm_focus_naval }
+	potential = { has_variable = abm_focus_quantity }
 
-	military_tactics = 0.20
+	global_manpower_modifier = 0.15
+	global_sailors_modifier = 0.15
+}
+
+############################
+# age_3_discovery - Leadership (abm_focus_leadership)
+############################
+
+formalized_officer_corps = {
+	age = age_3_discovery
+	icon = expansionism
+	depth = 0
+
+	potential = { has_variable = abm_focus_leadership }
+
+	army_initiative = 0.25
+	navy_initiative = 0.50
+}
+
+quality_education = {
+	age = age_3_discovery
+	icon = diplomatic_influence
+	requires = formalized_officer_corps
+
+	potential = { has_variable = abm_focus_leadership }
+
+	monthly_army_tradition = 0.1
+	monthly_navy_tradition = 0.1
+}
+
+administrative_leadership = {
+	age = age_3_discovery
+	requires = quality_education
+
+	potential = { has_variable = abm_focus_leadership }
+
+	hire_advisor_cost_modifier = -0.25
+	train_general_cost_modifier = -0.25
+	train_admiral_cost_modifier = -0.25
+}
+
+abm_military_academies = {
+	age = age_3_discovery
+	icon = army_professionalism
+	requires = formalized_officer_corps
+
+	potential = { has_variable = abm_focus_leadership }
+
+	train_general_ability = 10
+	train_admiral_ability = 10
+}
+
+abm_peacetime_commissions = {
+	age = age_3_discovery
+	icon = administrative_leadership
+	requires = abm_military_academies
+
+	potential = { has_variable = abm_focus_leadership }
+
+	army_tradition_decay = -0.001
+	navy_tradition_decay = -0.001
+}
+
+abm_aides_de_camp = {
+	age = age_3_discovery
+	icon = military_revolution_advance
+	requires = abm_peacetime_commissions
+
+	potential = { has_variable = abm_focus_leadership }
+
+	correct_box_chance = 0.10
 }
 
 ############################
@@ -440,6 +457,7 @@ engineer_corps = {
 	potential = { has_variable = abm_focus_offense }
 
 	siege_ability = 0.20
+	blockade_efficiency = 0.25
 }
 
 abm_standardized_barrels = {
@@ -505,6 +523,7 @@ defensive_mentality = {
 	potential = { has_variable = abm_focus_defense }
 
 	global_defensive = 0.2
+	own_coast_naval_combat_bonus = 0.10
 }
 
 abm_earthworks = {
@@ -525,6 +544,7 @@ fort_logistics = {
 	potential = { has_variable = abm_focus_defense }
 
 	fort_maintenance_efficiency = 0.2
+	anti_piracy_warfare_modifier = 0.25
 }
 
 abm_fortified_cities_focus = {
@@ -539,68 +559,72 @@ abm_fortified_cities_focus = {
 }
 
 ############################
-# age_4_reformation - Littoral Fleet (abm_focus_littoral_fleet)
+# age_4_reformation - Balanced (abm_focus_balanced)
 ############################
 
-abm_gun_galleys = {
+abm_military_engineers = {
 	age = age_4_reformation
-	icon = naval_morale_advance_1
+	icon = siege_ability_revolutions
 	depth = 0
 
-	potential = { has_variable = abm_focus_littoral_fleet }
+	potential = { has_variable = abm_focus_balanced }
 
-	navy_galley_power = 0.10
-	navy_galley_build_cost_modifier = -0.20
+	siege_ability = 0.10
+	global_defensive = 0.10
 }
 
-naval_cadets = {
+abm_garrison_artillery = {
 	age = age_4_reformation
-	icon = safe_exploration_techniques_advance
-	requires = abm_gun_galleys
+	icon = artillery_institution_advance
+	requires = abm_military_engineers
 
-	potential = { has_variable = abm_focus_littoral_fleet }
+	potential = { has_variable = abm_focus_balanced }
 
-	navy_initiative = 0.75
+	army_artillery_power = 0.05
+	global_garrison_size_modifier = 0.10
 }
 
-merchant_marine = {
-	age = age_4_reformation
-	icon = maritime_advance_age_2
-	requires = naval_cadets
-
-	potential = { has_variable = abm_focus_littoral_fleet }
-
-	global_sailors_modifier = 0.20
-}
-
-improved_shipyards = {
+abm_coastal_squadrons = {
 	age = age_4_reformation
 	icon = rudimentary_coastal_ship_repair
-	requires = abm_gun_galleys
+	requires = abm_garrison_artillery
 
-	potential = { has_variable = abm_focus_littoral_fleet }
+	potential = { has_variable = abm_focus_balanced }
 
-	ship_build_speed = 0.50
+	blockade_efficiency = 0.25
+	own_coast_naval_combat_bonus = 0.05
 }
 
-abm_home_fleet = {
+abm_seasoned_campaigners = {
 	age = age_4_reformation
-	icon = naval_morale_advance_1
-	requires = improved_shipyards
+	icon = expanded_supply_trains
+	requires = abm_military_engineers
 
-	potential = { has_variable = abm_focus_littoral_fleet }
+	potential = { has_variable = abm_focus_balanced }
 
-	own_coast_naval_combat_bonus = 0.15
+	land_unit_attrition = -0.10
+	naval_unit_attrition = -0.10
 }
 
-sheltered_ports = {
+abm_ready_reserves = {
 	age = age_4_reformation
-	icon = rudimentary_coastal_ship_repair
-	requires = abm_home_fleet
+	icon = regiment_reinforcement_speed_renaissance
+	requires = abm_seasoned_campaigners
 
-	potential = { has_variable = abm_focus_littoral_fleet }
+	potential = { has_variable = abm_focus_balanced }
 
-	navy_repair_efficiency = 0.3
+	army_reinforce_efficiency = 0.10
+	navy_repair_efficiency = 0.10
+}
+
+abm_steady_resolve = {
+	age = age_4_reformation
+	icon = defensive_mentality
+	requires = abm_ready_reserves
+
+	potential = { has_variable = abm_focus_balanced }
+
+	max_war_exhaustion = 2
 }
 
 ############################
@@ -625,6 +649,7 @@ abm_forced_march = {
 	potential = { has_variable = abm_focus_maneuver }
 
 	army_movement_speed = 0.10
+	navy_movement_speed = 0.10
 }
 
 land_morale_movement_cost_rev_choice_mil = {
@@ -644,6 +669,7 @@ abm_bold_maneuvers = {
 	potential = { has_variable = abm_focus_maneuver }
 
 	movement_speed_if_no_road = 0.20
+	army_disembark_speed = 0.25
 }
 
 abm_limbers = {
@@ -664,6 +690,7 @@ offensive_army = {
 	potential = { has_variable = abm_focus_maneuver }
 
 	land_morale_recovery = 0.02
+	naval_morale_recovery = 0.02
 }
 
 ############################
@@ -677,7 +704,7 @@ abm_enduring_hardships = {
 
 	potential = { has_variable = abm_focus_logistics }
 
-	land_morale_attrition_cost = -0.25
+	land_morale_attrition_cost = -0.0025
 }
 
 improved_foraging = {
@@ -688,6 +715,7 @@ improved_foraging = {
 	potential = { has_variable = abm_focus_logistics }
 
 	land_unit_attrition = -0.20
+	naval_unit_attrition = -0.20
 }
 
 abm_prepared_camps = {
@@ -709,6 +737,7 @@ improved_logistics = {
 	potential = { has_variable = abm_focus_logistics }
 
 	army_logistics_distance_modifier = 0.20
+	naval_range_modifier = 0.20
 }
 
 abm_logistics_corps = {
@@ -721,6 +750,7 @@ abm_logistics_corps = {
 	army_auxiliary_power = 0.50
 	army_auxiliary_build_cost_modifier = -0.20
 	army_auxiliary_maintenance_cost_modifier = -0.10
+	navy_transport_power = 0.25
 }
 
 abm_trained_reserves = {
@@ -731,72 +761,74 @@ abm_trained_reserves = {
 	potential = { has_variable = abm_focus_logistics }
 
 	regiment_reinforcement_speed = 0.10
-}
-
-############################
-# age_5_absolutism - Highseas Fleet (abm_focus_highseas_fleet)
-############################
-
-abm_ships_of_the_line = {
-	age = age_5_absolutism
-	icon = naval_morale_advance_1
-	depth = 0
-
-	potential = { has_variable = abm_focus_highseas_fleet }
-
-	navy_heavy_ship_power = 0.10
-	navy_heavy_ship_build_cost_modifier = -0.20
-}
-
-sea_hawks = {
-	age = age_5_absolutism
-	icon = safe_exploration_techniques_advance
-	requires = abm_ships_of_the_line
-
-	potential = { has_variable = abm_focus_highseas_fleet }
-
-	navy_initiative = 0.75
-}
-
-escort_ships = {
-	age = age_5_absolutism
-	icon = global_trade_routes_advance
-	requires = sea_hawks
-
-	potential = { has_variable = abm_focus_highseas_fleet }
-
-	naval_damage_taken = -0.1
-}
-
-superior_seamanship = {
-	age = age_5_absolutism
-	icon = global_trade_routes_advance
-	requires = abm_ships_of_the_line
-
-	potential = { has_variable = abm_focus_highseas_fleet }
-
-	naval_morale_modifier = 0.1
-}
-
-naval_fighting_instruction = {
-	age = age_5_absolutism
-	icon = gunpowder_advance
-	requires = superior_seamanship
-
-	potential = { has_variable = abm_focus_highseas_fleet }
-
-	blockade_efficiency = 0.5
 	ship_repair_at_sea = 0.025
 }
 
-press_gangs = {
+############################
+# age_5_absolutism - Firepower (abm_focus_firepower)
+############################
+
+abm_volley_fire = {
 	age = age_5_absolutism
-	icon = rudimentary_coastal_ship_repair
-	requires = naval_fighting_instruction
+	icon = military_modernization
+	depth = 0
 
-	potential = { has_variable = abm_focus_highseas_fleet }
+	potential = { has_variable = abm_focus_firepower }
 
-	navy_repair_efficiency = 0.3
+	army_light_infantry_power = 0.05
+	naval_damage_done = 0.10
+}
+
+abm_line_of_battle = {
+	age = age_5_absolutism
+	icon = royal_navy
+	requires = abm_volley_fire
+
+	potential = { has_variable = abm_focus_firepower }
+
+	army_heavy_infantry_power = 0.05
+	navy_heavy_ship_power = 0.10
+}
+
+abm_horse_artillery = {
+	age = age_5_absolutism
+	icon = artillery_institution_advance
+	requires = abm_line_of_battle
+
+	potential = { has_variable = abm_focus_firepower }
+
+	army_artillery_power = 0.10
+}
+
+abm_paper_cartridges = {
+	age = age_5_absolutism
+	icon = offensive_army
+	requires = abm_volley_fire
+
+	potential = { has_variable = abm_focus_firepower }
+
+	combat_speed_modifier = 0.10
+}
+
+abm_frigates = {
+	age = age_5_absolutism
+	icon = naval_morale_advance_1
+	requires = abm_paper_cartridges
+
+	potential = { has_variable = abm_focus_firepower }
+
+	navy_light_ship_power = 0.15
+	navy_light_ship_build_cost_modifier = -0.20
+}
+
+abm_prize_crews = {
+	age = age_5_absolutism
+	icon = nav_fearless_seamen
+	requires = abm_frigates
+
+	potential = { has_variable = abm_focus_firepower }
+
+	ship_capture_chance = 0.05
 }
 
 ############################
@@ -811,6 +843,7 @@ discipline_drills = {
 	potential = { has_variable = abm_focus_voluntary_service }
 
 	discipline = 0.05
+	naval_morale_modifier = 0.10
 }
 
 abm_thorough_training = {
@@ -864,6 +897,7 @@ abm_mission_command = {
 	potential = { has_variable = abm_focus_voluntary_service }
 
 	army_initiative = 0.10
+	navy_initiative = 0.25
 }
 
 ############################
@@ -878,6 +912,7 @@ mass_army = {
 	potential = { has_variable = abm_focus_conscription }
 
 	global_manpower_modifier = 0.20
+	global_sailors_modifier = 0.20
 	global_levy_size_modifier = 0.10
 }
 
@@ -889,6 +924,7 @@ national_conscripts = {
 	potential = { has_variable = abm_focus_conscription }
 
 	regiment_recruit_speed = 0.5
+	ship_build_speed = 0.25
 	levy_maintenance_modifier = -0.5
 }
 
@@ -900,6 +936,7 @@ nationalistic_enthusiasm = {
 	potential = { has_variable = abm_focus_conscription }
 
 	army_maintenance_efficiency = 0.1
+	navy_maintenance_efficiency = 0.1
 	levy_combat_efficiency_modifier = 0.10
 }
 
@@ -911,6 +948,7 @@ the_young_can_serve = {
 	potential = { has_variable = abm_focus_conscription }
 
 	army_reinforce_efficiency = 0.10
+	navy_repair_efficiency = 0.10
 	levy_recovery_modifier = 0.10
 }
 
@@ -984,6 +1022,7 @@ abm_last_stand = {
 
 	global_garrison_size_modifier = 0.15
 	global_defensive = 0.15
+	own_coast_naval_combat_bonus = 0.10
 }
 
 abm_national_resistance = {
