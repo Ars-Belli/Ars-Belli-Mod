@@ -33,7 +33,7 @@ module.exports = {
    ],
    mil: [
     { id: 'levy', name: 'Levy', desc: 'Larger and better levies, raised for the army and the fleet alike.', adv: [
-      ['enforced_service', 'global_levy_size_modifier = 0.20\nlevy_recovery_modifier = 0.10'],
+      ['enforced_service', 'global_levy_size_modifier = 0.20\nlevy_recovery_modifier = 0.20'],
       ['open_levy_standards', 'wrong_culture_levy_size = 0.25'],
       ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.30'],
       ['battlefield_commisions', 'army_tradition_from_battle = 1.0\nnavy_tradition_from_battle = 1.0'],
