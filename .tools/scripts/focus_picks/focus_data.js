@@ -33,12 +33,11 @@ module.exports = {
    ],
    mil: [
     { id: 'levy', name: 'Levy', desc: 'Larger and better levies.', adv: [
-      ['enforced_service', 'global_levy_size_modifier = 0.1'],
+      ['enforced_service', 'global_levy_size_modifier = 0.1\nlevy_recovery_modifier = 0.10'],
       ['open_levy_standards', 'wrong_culture_levy_size = 0.25'],
       ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.30'],
       ['battlefield_commisions', 'army_tradition_from_battle = 1.0'],
       ['abm_local_militias', 'global_levy_recruitment_speed_modifier = 0.33\nlevy_maintenance_modifier = -0.5', { icon: 'regimental_system', name: 'Local Militias', desc: 'Townsmen and villagers drilled on the green each Sunday can be called to arms quickly and cost little to keep.' }],
-      ['abm_feudal_obligations', 'levy_recovery_modifier = 0.10', { icon: 'defensive_army', name: 'Feudal Obligations', desc: 'Every lord owes his liege a set number of men each year, and the lists are kept up to date.' }],
       ['finest_of_horses', 'army_heavy_cavalry_power = 0.05\narmy_light_cavalry_power = 0.05\narmy_heavy_cavalry_maintenance_cost_modifier = -0.05\narmy_light_cavalry_maintenance_cost_modifier = -0.05'],
     ]},
     { id: 'mercenary', name: 'Mercenary', desc: 'Cheaper and more available mercenaries.', adv: [
@@ -253,6 +252,7 @@ module.exports = {
       ['regimental_system', 'army_maintenance_efficiency = 0.1\narmy_initiative = 0.25'],
       ['abm_skirmish_line', 'military_tactics = 0.10', { icon: 'offensive_army', name: 'Skirmish Line', desc: 'Light troops screen the main body, picking off officers and disrupting the enemy advance.' }],
       ['bayonet_leaders', 'army_heavy_infantry_power = 0.1\narmy_light_infantry_power = 0.1'],
+      ['abm_mission_command', 'army_initiative = 0.10', { icon: 'offensive_army', name: 'Mission Command', desc: 'Our officers are told what to achieve, not how; trusted to act on their own judgement, they seize the moment without waiting for orders.' }],
     ]},
     { id: 'conscription', name: 'Conscription', desc: 'Mass armies from a large population.', adv: [
       ['mass_army', 'global_manpower_modifier = 0.20\nglobal_levy_size_modifier = 0.10'],

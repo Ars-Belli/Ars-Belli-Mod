@@ -17,6 +17,7 @@ enforced_service = {
 	potential = { has_variable = abm_focus_levy }
 
 	global_levy_size_modifier = 0.1
+	levy_recovery_modifier = 0.10
 }
 
 open_levy_standards = {
@@ -60,20 +61,10 @@ abm_local_militias = {
 	levy_maintenance_modifier = -0.5
 }
 
-abm_feudal_obligations = {
-	age = age_2_renaissance
-	icon = defensive_army
-	requires = abm_local_militias
-
-	potential = { has_variable = abm_focus_levy }
-
-	levy_recovery_modifier = 0.10
-}
-
 finest_of_horses = {
 	age = age_2_renaissance
 	icon = finest_of_horses
-	requires = regular_levy_training
+	requires = abm_local_militias
 
 	potential = { has_variable = abm_focus_levy }
 
@@ -879,6 +870,16 @@ bayonet_leaders = {
 
 	army_heavy_infantry_power = 0.1
 	army_light_infantry_power = 0.1
+}
+
+abm_mission_command = {
+	age = age_6_revolutions
+	icon = offensive_army
+	requires = bayonet_leaders
+
+	potential = { has_variable = abm_focus_voluntary_service }
+
+	army_initiative = 0.10
 }
 
 ############################
