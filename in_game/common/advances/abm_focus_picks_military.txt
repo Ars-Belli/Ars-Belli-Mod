@@ -36,7 +36,7 @@ regular_levy_training = {
 
 	potential = { has_variable = abm_focus_levy }
 
-	levy_combat_efficiency_modifier = 0.10
+	levy_combat_efficiency_modifier = 0.30
 }
 
 battlefield_commisions = {
@@ -68,6 +68,19 @@ abm_feudal_obligations = {
 	potential = { has_variable = abm_focus_levy }
 
 	levy_recovery_modifier = 0.10
+}
+
+finest_of_horses = {
+	age = age_2_renaissance
+	icon = finest_of_horses
+	requires = regular_levy_training
+
+	potential = { has_variable = abm_focus_levy }
+
+	army_heavy_cavalry_power = 0.05
+	army_light_cavalry_power = 0.05
+	army_heavy_cavalry_maintenance_cost_modifier = -0.05
+	army_light_cavalry_maintenance_cost_modifier = -0.05
 }
 
 ############################
@@ -112,6 +125,7 @@ glorious_arms = {
 	potential = { has_variable = abm_focus_mercenary }
 
 	prestige_from_land_battle = 1.0
+	military_tactics = 0.10
 }
 
 abm_ensure_mercenary_payments = {
@@ -245,6 +259,7 @@ abm_drill_sergeants = {
 	potential = { has_variable = abm_focus_quality }
 
 	monthly_experience_gain = 0.5
+	experience_decay = -0.01
 }
 
 abm_trained_march = {
@@ -267,6 +282,16 @@ military_drill = {
 	land_morale_modifier = 0.10
 
 	ai_weight = { add = 10 }
+}
+
+abm_strict_discipline = {
+	age = age_3_discovery
+	icon = glorious_arms
+	requires = quality_education
+
+	potential = { has_variable = abm_focus_quality }
+
+	discipline = 0.05
 }
 
 ############################
@@ -399,6 +424,16 @@ grand_navy = {
 	navy_maintenance_efficiency = 0.1
 }
 
+abm_tactics_from_across_the_seas = {
+	age = age_3_discovery
+	icon = nav_fearless_seamen
+	requires = abm_naval_education
+
+	potential = { has_variable = abm_focus_naval }
+
+	military_tactics = 0.10
+}
+
 ############################
 # age_4_reformation - Offense (abm_focus_offense)
 ############################
@@ -526,7 +561,7 @@ abm_fortified_cities_focus = {
 	potential = { has_variable = abm_focus_defense }
 
 	fort_limit_modifier = 0.10
-	fort_limit = 8
+	fort_limit = 3
 }
 
 ############################
@@ -698,7 +733,7 @@ improved_logistics = {
 
 	potential = { has_variable = abm_focus_logistics }
 
-	army_logistics_distance_modifier = 0.10
+	army_logistics_distance_modifier = 0.20
 }
 
 abm_logistics_corps = {
@@ -835,23 +870,10 @@ abm_skirmish_line = {
 	military_tactics = 0.10
 }
 
-finest_of_horses = {
-	age = age_6_revolutions
-	icon = finest_of_horses
-	requires = abm_skirmish_line
-
-	potential = { has_variable = abm_focus_voluntary_service }
-
-	army_heavy_cavalry_power = 0.1
-	army_light_cavalry_power = 0.1
-	army_heavy_cavalry_maintenance_cost_modifier = -0.05
-	army_light_cavalry_maintenance_cost_modifier = -0.05
-}
-
 bayonet_leaders = {
 	age = age_6_revolutions
 	icon = expansionism
-	requires = finest_of_horses
+	requires = abm_skirmish_line
 
 	potential = { has_variable = abm_focus_voluntary_service }
 

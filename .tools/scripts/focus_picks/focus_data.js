@@ -1,5 +1,5 @@
 // Focus pick data, transcribed from "Ars Belli MP Mod - Design Doc - Focus Picks.md".
-// Each branch: 6 advances. Entry: [key, modifiers(string lines), extra]
+// Each branch: 5-7 advances (tree shape: PARENT in generate_focus_picks.js). Entry: [key, modifiers(string lines), extra]
 // extra: { name, desc } for new keys (abm_*), { icon } override, { raw } extra raw lines.
 // Value rule: reused vanilla advance keeps vanilla value unless the doc marks "(was X)" or adds a new stat.
 module.exports = {
@@ -35,16 +35,17 @@ module.exports = {
     { id: 'levy', name: 'Levy', desc: 'Larger and better levies.', adv: [
       ['enforced_service', 'global_levy_size_modifier = 0.1'],
       ['open_levy_standards', 'wrong_culture_levy_size = 0.25'],
-      ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.10'],
+      ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.30'],
       ['battlefield_commisions', 'army_tradition_from_battle = 1.0'],
       ['abm_local_militias', 'global_levy_recruitment_speed_modifier = 0.33\nlevy_maintenance_modifier = -0.5', { icon: 'regimental_system', name: 'Local Militias', desc: 'Townsmen and villagers drilled on the green each Sunday can be called to arms quickly and cost little to keep.' }],
       ['abm_feudal_obligations', 'levy_recovery_modifier = 0.10', { icon: 'defensive_army', name: 'Feudal Obligations', desc: 'Every lord owes his liege a set number of men each year, and the lists are kept up to date.' }],
+      ['finest_of_horses', 'army_heavy_cavalry_power = 0.05\narmy_light_cavalry_power = 0.05\narmy_heavy_cavalry_maintenance_cost_modifier = -0.05\narmy_light_cavalry_maintenance_cost_modifier = -0.05'],
     ]},
     { id: 'mercenary', name: 'Mercenary', desc: 'Cheaper and more available mercenaries.', adv: [
       ['benefits_for_mercenaries', 'mercenary_maintenance_efficiency = 0.1'],
       ['organised_mercenary_recruitment', 'mercenary_range_modifier = 0.5'],
       ['organised_mercenary_payment', 'hire_mercenary_premium_cost_modifier = -0.2'],
-      ['glorious_arms', 'prestige_from_land_battle = 1.0'],
+      ['glorious_arms', 'prestige_from_land_battle = 1.0\nmilitary_tactics = 0.10'],
       ['abm_ensure_mercenary_payments', 'hire_mercenary_leader_cost_modifier = -0.75', { icon: 'regimental_system', name: 'Ensure Mercenary Payments', desc: 'A reputation for paying on time means the best condottieri will sign with us for far less.' }],
       ['tolerance_idea', 'tolerance_heretic = 0.5\ntolerance_heathen = 0.5'],
     ]},
@@ -75,13 +76,13 @@ module.exports = {
       ['colonial_ventures', 'colonial_migration_size_modifier = 0.25', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
       ['overseas_trade', 'trade_range_modifier = 0.5'],
     ]},
-    { id: 'diplomatic', name: 'Diplomatic', desc: 'The diplomacy of conquest.', adv: [
-      ['flexible_negotiation', 'global_war_score_efficiency = 0.2'],
-      ['formal_diplomacy', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\nimprove_relation_impact = 0.30'],
-      ['diplomatic_influence', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\ndiplomatic_capacity = 1'],
-      ['adaptability', 'antagonism_received_modifier = -0.3'],
-      ['diplomatic_corps', 'monthly_diplomats = 0.1\ncasus_belli_creation_speed_modifier = 0.25'],
-      ['indirect_rule', 'global_separatism = -0.1\nglobal_integration_speed_modifier = 0.1'],
+    { id: 'espionage', name: 'Espionage', desc: 'Spies, infiltration, sabotage and stolen research.', adv: [
+      ['vetting', 'counter_espionage = 0.33\nspy_network_construction = 0.5'],
+      ['abm_sabotage_fort_advance', '', { icon: 'fortified_towns', name: 'Sabotage Fort', desc: 'In time of war our agents can buy off the men who hold an enemy\'s walls, leaving the fort without a garrison.', raw: 'unlock_country_interaction = abm_sabotage_fort' }],
+      ['infiltrate_administration_advance', '', { raw: 'unlock_diplomacy = { infiltrate_administration }' }],
+      ['foreign_embassies', 'monthly_diplomats = 0.1\nmax_diplomats = 1'],
+      ['abm_global_networks', 'diplomatic_range_modifier = 0.5\ndiplomatic_range = 500', { icon: 'diplomatic_influence', name: 'Global Networks', desc: 'Our envoys, agents and correspondents reach every court of note, however distant.' }],
+      ['abm_industrial_espionage', '', { icon: 'efficient_spies', name: 'Industrial Espionage', desc: 'Why pay for discoveries when our agents can simply copy them?', raw: 'unlock_country_interaction = steal_technology' }],
     ]},
    ],
    mil: [
@@ -89,9 +90,10 @@ module.exports = {
       ['formalized_officer_corps', 'army_initiative = 0.25'],
       ['administrative_leadership', 'hire_advisor_cost_modifier = -0.25\ntrain_general_cost_modifier = -0.25\ntrain_admiral_cost_modifier = -0.25'],
       ['quality_education', 'monthly_army_tradition = 0.1'],
-      ['abm_drill_sergeants', 'monthly_experience_gain = 0.5', { icon: 'offensive_army', name: 'Drill Sergeants', desc: 'Veteran sergeants put every company through its paces daily, turning raw recruits into seasoned soldiers in half the time.' }],
+      ['abm_drill_sergeants', 'monthly_experience_gain = 0.5\nexperience_decay = -0.01', { icon: 'offensive_army', name: 'Drill Sergeants', desc: 'Veteran sergeants put every company through its paces daily, turning raw recruits into seasoned soldiers in half the time and keeping veterans sharp.' }],
       ['abm_trained_march', 'land_morale_movement_cost = -0.0002', { icon: 'expanded_supply_trains', name: 'Trained March', desc: 'Regulated marching pace and rest halts keep our columns in good order and good spirits on the road.' }],
       ['military_drill', 'land_morale_modifier = 0.10', { raw: 'ai_weight = { add = 10 }' }],
+      ['abm_strict_discipline', 'discipline = 0.05', { icon: 'glorious_arms', name: 'Strict Discipline', desc: 'Harsh drill and harsher punishment keep our ranks steady and in order when the shot starts flying.' }],
     ]},
     { id: 'quantity', name: 'Quantity', desc: 'Manpower, reinforcement and logistics.', adv: [
       ['abm_rapid_reinforcement', 'combat_speed_modifier = 0.10', { icon: 'regimental_system', name: 'Rapid Reinforcement', desc: 'Reserve companies are moved up to the line as soon as the front ranks falter, keeping the pressure on the enemy.' }],
@@ -108,6 +110,7 @@ module.exports = {
       ['copper_bottoms', 'naval_unit_attrition = -0.25'],
       ['naval_drill', 'naval_morale_modifier = 0.10'],
       ['grand_navy', 'navy_maintenance_efficiency = 0.1'],
+      ['abm_tactics_from_across_the_seas', 'military_tactics = 0.10', { icon: 'nav_fearless_seamen', name: 'Tactics from Across the Seas', desc: 'Our sailors and marines bring home what they have seen of foreign armies on distant shores, and our officers are quick to learn from it.' }],
     ]},
    ]},
  { age: 'age_4_reformation', n: 4,
@@ -152,7 +155,7 @@ module.exports = {
       ['defensive_mentality', 'global_defensive = 0.2'],
       ['abm_earthworks', 'global_fort_build_buildings_efficiency = 0.4', { icon: 'defensive_mentality', name: 'Earthworks', desc: 'Packed earth and timber ramparts can be thrown up quickly and cheaply, and they shrug off cannon fire better than stone.' }],
       ['fort_logistics', 'fort_maintenance_efficiency = 0.2'],
-      ['abm_fortified_cities_focus', 'fort_limit_modifier = 0.10\nfort_limit = 8', { icon: 'defensive_mentality', name: 'Fortified Cities', desc: 'Every town of note is ringed by modern bastions.' }],
+      ['abm_fortified_cities_focus', 'fort_limit_modifier = 0.10\nfort_limit = 3', { icon: 'defensive_mentality', name: 'Fortified Cities', desc: 'Every town of note is ringed by modern bastions.' }],
     ]},
     { id: 'littoral_fleet', name: 'Littoral Fleet', desc: 'Galleys and building up a navy quickly.', adv: [
       ['abm_gun_galleys', 'navy_galley_power = 0.10\nnavy_galley_build_cost_modifier = -0.20', { icon: 'naval_morale_advance_1', name: 'Gun Galleys', desc: 'Galleys mounting heavy bow guns remain masters of calm coastal waters.' }],
@@ -181,13 +184,13 @@ module.exports = {
       ['trade_manipulation', 'global_trade_center_power = 0.10'],
       ['bookkeeping', 'bank_interest = -0.01\nmax_bonds = 1'],
     ]},
-    { id: 'espionage', name: 'Espionage', desc: 'Spies, infiltration, sabotage and stolen research.', adv: [
-      ['vetting', 'counter_espionage = 0.33\nspy_network_construction = 0.5'],
-      ['abm_sabotage_fort_advance', '', { icon: 'fortified_towns', name: 'Sabotage Fort', desc: 'In time of war our agents can buy off the men who hold an enemy\'s walls, leaving the fort without a garrison.', raw: 'unlock_country_interaction = abm_sabotage_fort' }],
-      ['infiltrate_administration_advance', '', { raw: 'unlock_diplomacy = { infiltrate_administration }' }],
-      ['foreign_embassies', 'monthly_diplomats = 0.1\nmax_diplomats = 1'],
-      ['abm_global_networks', 'diplomatic_range_modifier = 0.5\ndiplomatic_range = 500', { icon: 'diplomatic_influence', name: 'Global Networks', desc: 'Our envoys, agents and correspondents reach every court of note, however distant.' }],
-      ['abm_industrial_espionage', '', { icon: 'efficient_spies', name: 'Industrial Espionage', desc: 'Why pay for discoveries when our agents can simply copy them?', raw: 'unlock_country_interaction = steal_technology' }],
+    { id: 'diplomatic', name: 'Diplomatic', desc: 'The diplomacy of conquest.', adv: [
+      ['flexible_negotiation', 'global_war_score_efficiency = 0.2'],
+      ['formal_diplomacy', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\nimprove_relation_impact = 0.30'],
+      ['diplomatic_influence', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\ndiplomatic_capacity = 1'],
+      ['adaptability', 'antagonism_received_modifier = -0.3'],
+      ['diplomatic_corps', 'monthly_diplomats = 0.1\ncasus_belli_creation_speed_modifier = 0.25'],
+      ['indirect_rule', 'global_separatism = -0.1\nglobal_integration_speed_modifier = 0.1'],
     ]},
    ],
    mil: [
@@ -203,7 +206,7 @@ module.exports = {
       ['abm_enduring_hardships', 'land_morale_attrition_cost = -0.25', { icon: 'improved_foraging', name: 'Enduring Hardships', desc: 'Hunger and disease no longer break the spirit of our soldiers as easily as they once did.' }],
       ['improved_foraging', 'land_unit_attrition = -0.20'],
       ['abm_prepared_camps', 'global_supply_limit_modifier = 0.10', { icon: 'expanded_supply_trains', name: 'Prepared Camps', desc: 'Camp sites along our lines of march are surveyed and stocked in advance.' }],
-      ['improved_logistics', 'army_logistics_distance_modifier = 0.10'],
+      ['improved_logistics', 'army_logistics_distance_modifier = 0.20'],
       ['abm_logistics_corps', 'army_auxiliary_power = 0.50\narmy_auxiliary_build_cost_modifier = -0.20\narmy_auxiliary_maintenance_cost_modifier = -0.10', { icon: 'expanded_supply_trains', name: 'Logistics Corps', desc: 'Wagoners, sappers and sutlers are organised into proper units that can defend themselves when caught out.' }],
       ['abm_trained_reserves', 'regiment_reinforcement_speed = 0.10', { icon: 'defensive_army', name: 'Trained Reserves', desc: 'Replacements arrive at the front already trained and equipped.' }],
     ]},
@@ -249,7 +252,6 @@ module.exports = {
       ['abm_thorough_training', 'regiment_recruit_speed = -0.50\nmonthly_experience_gain = 0.25', { icon: 'offensive_army', name: 'Thorough Training', desc: 'No recruit takes the field before he has mastered his drill; it takes longer, but it shows.' }],
       ['regimental_system', 'army_maintenance_efficiency = 0.1\narmy_initiative = 0.25'],
       ['abm_skirmish_line', 'military_tactics = 0.10', { icon: 'offensive_army', name: 'Skirmish Line', desc: 'Light troops screen the main body, picking off officers and disrupting the enemy advance.' }],
-      ['finest_of_horses', 'army_heavy_cavalry_power = 0.1\narmy_light_cavalry_power = 0.1\narmy_heavy_cavalry_maintenance_cost_modifier = -0.05\narmy_light_cavalry_maintenance_cost_modifier = -0.05'],
       ['bayonet_leaders', 'army_heavy_infantry_power = 0.1\narmy_light_infantry_power = 0.1'],
     ]},
     { id: 'conscription', name: 'Conscription', desc: 'Mass armies from a large population.', adv: [
