@@ -221,31 +221,23 @@ formalized_officer_corps = {
 	army_initiative = 0.25
 }
 
-administrative_leadership = {
+quality_education = {
 	age = age_3_discovery
+	icon = diplomatic_influence
 	requires = formalized_officer_corps
 
 	potential = { has_variable = abm_focus_quality }
 
+	monthly_army_tradition = 0.1
 	hire_advisor_cost_modifier = -0.25
 	train_general_cost_modifier = -0.25
 	train_admiral_cost_modifier = -0.25
 }
 
-quality_education = {
-	age = age_3_discovery
-	icon = diplomatic_influence
-	requires = administrative_leadership
-
-	potential = { has_variable = abm_focus_quality }
-
-	monthly_army_tradition = 0.1
-}
-
 abm_drill_sergeants = {
 	age = age_3_discovery
 	icon = offensive_army
-	requires = formalized_officer_corps
+	requires = quality_education
 
 	potential = { has_variable = abm_focus_quality }
 
@@ -256,7 +248,7 @@ abm_drill_sergeants = {
 abm_trained_march = {
 	age = age_3_discovery
 	icon = expanded_supply_trains
-	requires = abm_drill_sergeants
+	requires = formalized_officer_corps
 
 	potential = { has_variable = abm_focus_quality }
 
@@ -278,7 +270,7 @@ military_drill = {
 abm_strict_discipline = {
 	age = age_3_discovery
 	icon = glorious_arms
-	requires = quality_education
+	requires = military_drill
 
 	potential = { has_variable = abm_focus_quality }
 
@@ -385,20 +377,10 @@ abm_naval_education = {
 	monthly_navy_tradition = 0.1
 }
 
-copper_bottoms = {
-	age = age_3_discovery
-	icon = ship_building_advance
-	requires = oak_forests_for_ships
-
-	potential = { has_variable = abm_focus_naval }
-
-	naval_unit_attrition = -0.25
-}
-
 naval_drill = {
 	age = age_3_discovery
 	icon = offensive_army
-	requires = copper_bottoms
+	requires = oak_forests_for_ships
 
 	potential = { has_variable = abm_focus_naval }
 
@@ -413,16 +395,17 @@ grand_navy = {
 	potential = { has_variable = abm_focus_naval }
 
 	navy_maintenance_efficiency = 0.1
+	naval_unit_attrition = -0.25
 }
 
 abm_tactics_from_across_the_seas = {
 	age = age_3_discovery
 	icon = nav_fearless_seamen
-	requires = abm_naval_education
+	requires = grand_navy
 
 	potential = { has_variable = abm_focus_naval }
 
-	military_tactics = 0.10
+	military_tactics = 0.20
 }
 
 ############################

@@ -87,8 +87,7 @@ module.exports = {
    mil: [
     { id: 'quality', name: 'Quality', desc: 'Better-led, better-drilled armies.', adv: [
       ['formalized_officer_corps', 'army_initiative = 0.25'],
-      ['administrative_leadership', 'hire_advisor_cost_modifier = -0.25\ntrain_general_cost_modifier = -0.25\ntrain_admiral_cost_modifier = -0.25'],
-      ['quality_education', 'monthly_army_tradition = 0.1'],
+      ['quality_education', 'monthly_army_tradition = 0.1\nhire_advisor_cost_modifier = -0.25\ntrain_general_cost_modifier = -0.25\ntrain_admiral_cost_modifier = -0.25'],
       ['abm_drill_sergeants', 'monthly_experience_gain = 0.5\nexperience_decay = -0.01', { icon: 'offensive_army', name: 'Drill Sergeants', desc: 'Veteran sergeants put every company through its paces daily, turning raw recruits into seasoned soldiers in half the time and keeping veterans sharp.' }],
       ['abm_trained_march', 'land_morale_movement_cost = -0.0002', { icon: 'expanded_supply_trains', name: 'Trained March', desc: 'Regulated marching pace and rest halts keep our columns in good order and good spirits on the road.' }],
       ['military_drill', 'land_morale_modifier = 0.10', { raw: 'ai_weight = { add = 10 }' }],
@@ -106,10 +105,9 @@ module.exports = {
       ['oak_forests_for_ships', 'navy_heavy_ship_power = 0.10\nnavy_heavy_ship_maintenance_cost_modifier = -0.10'],
       ['abm_patrol_vessels', 'navy_light_ship_power = 0.10\nnavy_light_ship_build_cost_modifier = -0.20\nnavy_light_ship_maintenance_cost_modifier = -0.10', { icon: 'naval_morale_advance_1', name: 'Patrol Vessels', desc: 'Swift, cheap cruisers guard our coasts and shipping lanes, freeing the great ships for battle.' }],
       ['abm_naval_education', 'monthly_navy_tradition = 0.1', { icon: 'naval_morale_advance_1', name: 'Naval Education', desc: 'Schools of navigation and gunnery produce a steady stream of capable officers for the fleet.' }],
-      ['copper_bottoms', 'naval_unit_attrition = -0.25'],
       ['naval_drill', 'naval_morale_modifier = 0.10'],
-      ['grand_navy', 'navy_maintenance_efficiency = 0.1'],
-      ['abm_tactics_from_across_the_seas', 'military_tactics = 0.10', { icon: 'nav_fearless_seamen', name: 'Tactics from Across the Seas', desc: 'Our sailors and marines bring home what they have seen of foreign armies on distant shores, and our officers are quick to learn from it.' }],
+      ['grand_navy', 'navy_maintenance_efficiency = 0.1\nnaval_unit_attrition = -0.25'],
+      ['abm_tactics_from_across_the_seas', 'military_tactics = 0.20', { icon: 'nav_fearless_seamen', name: 'Tactics from Across the Seas', desc: 'Our sailors and marines bring home what they have seen of foreign armies on distant shores, and our officers are quick to learn from it.' }],
     ]},
    ]},
  { age: 'age_4_reformation', n: 4,
