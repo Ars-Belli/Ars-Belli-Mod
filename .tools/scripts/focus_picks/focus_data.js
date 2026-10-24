@@ -99,7 +99,7 @@ module.exports = {
       ['the_old_and_infirm', 'army_maintenance_efficiency = 0.1'],
       ['abm_deep_reserves', 'army_reinforce_efficiency = 0.2', { icon: 'defensive_army', name: 'Deep Reserves', desc: 'Depots of trained replacements stand ready behind every army, so losses are made good cheaply.' }],
       ['supply_trains', 'food_consumption_modifier = -0.10'],
-      ['grand_army', 'global_manpower_modifier = 0.10'],
+      ['grand_army', 'global_manpower_modifier = 0.15'],
     ]},
     { id: 'naval', name: 'Naval', desc: 'Heavy and light ships.', adv: [
       ['oak_forests_for_ships', 'navy_heavy_ship_power = 0.10\nnavy_heavy_ship_maintenance_cost_modifier = -0.10'],
