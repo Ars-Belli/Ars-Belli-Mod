@@ -13,32 +13,41 @@ types AbmFocusPicksTypes
 	# clipped and never showed), plus a standalone copy for games without the MP mechanics rule.
 	# Icon-only: a text button next to Tier List covered the age name. ignoreinvisible stops the
 	# hidden twin from reserving space (it pushed the visible button over the age name).
+	# The inner container is hidden until there is a player country: abm_focus_pending is a country
+	# trigger, and evaluating it during loading logged "Scoped object of type 'country' is not valid".
+	# (The instance in right_panel.gui sets its own visible, so the guard can't sit on the outer one.)
 	type abm_focus_picks_button = flowcontainer {
 		direction = horizontal
 		ignoreinvisible = yes
 
-		button_regular = {
-			tooltip = "ABM_FOCUS_PANEL_TOGGLE_TOOLTIP"
-			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
-			size = { 30 22 }
-			visible = "[Not(GetScriptedGui('abm_focus_pending').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+		flowcontainer = {
+			direction = horizontal
+			ignoreinvisible = yes
+			visible = "[IsPlayerValid]"
 
-			icon = {
-				texture = "gfx/interface/icons/flat_icons/ages.dds"
-				size = { 18 18 }
-				parentanchor = center
+			button_regular = {
+				tooltip = "ABM_FOCUS_PANEL_TOGGLE_TOOLTIP"
+				onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
+				size = { 30 22 }
+				visible = "[Not(GetScriptedGui('abm_focus_pending').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+
+				icon = {
+					texture = "gfx/interface/icons/flat_icons/ages.dds"
+					size = { 18 18 }
+					parentanchor = center
+				}
 			}
-		}
-		button_regular = {
-			tooltip = "ABM_FOCUS_PANEL_TOGGLE_PENDING_TOOLTIP"
-			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
-			size = { 30 22 }
-			visible = "[GetScriptedGui('abm_focus_pending').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+			button_regular = {
+				tooltip = "ABM_FOCUS_PANEL_TOGGLE_PENDING_TOOLTIP"
+				onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
+				size = { 30 22 }
+				visible = "[GetScriptedGui('abm_focus_pending').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 
-			icon = {
-				texture = "gfx/interface/icons/alerts_icons/advances.dds"
-				size = { 20 20 }
-				parentanchor = center
+				icon = {
+					texture = "gfx/interface/icons/alerts_icons/advances.dds"
+					size = { 20 20 }
+					parentanchor = center
+				}
 			}
 		}
 	}
@@ -202,6 +211,7 @@ types AbmFocusPicksTypes
 					scrollwidget = {
 						vbox = {
 							layoutpolicy_horizontal = expanding
+							margin_right = 14 # keep the strips' right-hand text clear of the scrollbar
 							spacing = 8
 
 			# age_2_renaissance
@@ -335,7 +345,7 @@ types AbmFocusPicksTypes
 						widget = {
 							size = { 244 92 }
 							background = {
-								texture = "gfx/interface/illustrations/bg/bg_government.dds"
+								texture = "gfx/interface/illustrations/government/throne_rooms/throne_room_north_german.dds"
 								fittype = centercrop
 							}
 							icon = {
@@ -1863,7 +1873,7 @@ types AbmFocusPicksTypes
 						widget = {
 							size = { 244 92 }
 							background = {
-								texture = "gfx/interface/illustrations/bg/bg_production.dds"
+								texture = "gfx/interface/illustrations/situation/_default.dds"
 								fittype = centercrop
 							}
 							icon = {
@@ -2313,7 +2323,7 @@ types AbmFocusPicksTypes
 						widget = {
 							size = { 244 92 }
 							background = {
-								texture = "gfx/interface/illustrations/bg/bg_foreign_country.dds"
+								texture = "gfx/interface/illustrations/disaster/byzantine_succession_crisis.dds"
 								fittype = centercrop
 							}
 							icon = {
@@ -2596,7 +2606,7 @@ types AbmFocusPicksTypes
 						widget = {
 							size = { 244 92 }
 							background = {
-								texture = "gfx/interface/illustrations/institutions/pike_and_shot.dds"
+								texture = "gfx/interface/illustrations/disaster/succession_crisis.dds"
 								fittype = centercrop
 							}
 							icon = {
@@ -2821,7 +2831,7 @@ types AbmFocusPicksTypes
 						widget = {
 							size = { 244 92 }
 							background = {
-								texture = "gfx/interface/illustrations/bg/bg_military.dds"
+								texture = "gfx/interface/illustrations/situation/guelphs_and_ghibellines.dds"
 								fittype = centercrop
 							}
 							icon = {
@@ -3046,7 +3056,7 @@ types AbmFocusPicksTypes
 						widget = {
 							size = { 244 92 }
 							background = {
-								texture = "gfx/interface/illustrations/institutions/meritocracy.dds"
+								texture = "gfx/interface/illustrations/army/army_full_flip.dds"
 								fittype = centercrop
 							}
 							icon = {
@@ -5369,7 +5379,7 @@ types AbmFocusPicksTypes
 						widget = {
 							size = { 244 92 }
 							background = {
-								texture = "gfx/interface/illustrations/bg/bg_diplomacy.dds"
+								texture = "gfx/interface/illustrations/situation/treaty_of_tordesillas.dds"
 								fittype = centercrop
 							}
 							icon = {
@@ -5877,7 +5887,7 @@ types AbmFocusPicksTypes
 						widget = {
 							size = { 244 92 }
 							background = {
-								texture = "gfx/interface/illustrations/army/army_full_flip.dds"
+								texture = "gfx/interface/illustrations/missions/generic_trade.dds"
 								fittype = centercrop
 							}
 							icon = {

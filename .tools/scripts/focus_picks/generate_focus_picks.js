@@ -670,32 +670,41 @@ types AbmFocusPicksTypes
 	# clipped and never showed), plus a standalone copy for games without the MP mechanics rule.
 	# Icon-only: a text button next to Tier List covered the age name. ignoreinvisible stops the
 	# hidden twin from reserving space (it pushed the visible button over the age name).
+	# The inner container is hidden until there is a player country: abm_focus_pending is a country
+	# trigger, and evaluating it during loading logged "Scoped object of type 'country' is not valid".
+	# (The instance in right_panel.gui sets its own visible, so the guard can't sit on the outer one.)
 	type abm_focus_picks_button = flowcontainer {
 		direction = horizontal
 		ignoreinvisible = yes
 
-		button_regular = {
-			tooltip = "ABM_FOCUS_PANEL_TOGGLE_TOOLTIP"
-			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
-			size = { 30 22 }
-			visible = "[Not(${shown('abm_focus_pending')})]"
+		flowcontainer = {
+			direction = horizontal
+			ignoreinvisible = yes
+			visible = "[IsPlayerValid]"
 
-			icon = {
-				texture = "${gfx('interface/icons/flat_icons/ages.dds')}"
-				size = { 18 18 }
-				parentanchor = center
+			button_regular = {
+				tooltip = "ABM_FOCUS_PANEL_TOGGLE_TOOLTIP"
+				onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
+				size = { 30 22 }
+				visible = "[Not(${shown('abm_focus_pending')})]"
+
+				icon = {
+					texture = "${gfx('interface/icons/flat_icons/ages.dds')}"
+					size = { 18 18 }
+					parentanchor = center
+				}
 			}
-		}
-		button_regular = {
-			tooltip = "ABM_FOCUS_PANEL_TOGGLE_PENDING_TOOLTIP"
-			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
-			size = { 30 22 }
-			visible = "[${shown('abm_focus_pending')}]"
+			button_regular = {
+				tooltip = "ABM_FOCUS_PANEL_TOGGLE_PENDING_TOOLTIP"
+				onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
+				size = { 30 22 }
+				visible = "[${shown('abm_focus_pending')}]"
 
-			icon = {
-				texture = "${gfx('interface/icons/alerts_icons/advances.dds')}"
-				size = { 20 20 }
-				parentanchor = center
+				icon = {
+					texture = "${gfx('interface/icons/alerts_icons/advances.dds')}"
+					size = { 20 20 }
+					parentanchor = center
+				}
 			}
 		}
 	}
@@ -810,6 +819,7 @@ ${tabs}
 					scrollwidget = {
 						vbox = {
 							layoutpolicy_horizontal = expanding
+							margin_right = 14 # keep the strips' right-hand text clear of the scrollbar
 							spacing = 8
 ${ageBlocks}
 						}
