@@ -495,7 +495,7 @@ types AbmFocusPicksTypes
 							layoutpolicy_horizontal = expanding
 							spacing = 4
 							text_single = {
-								text = "abm_focus_picks.maritime"
+								text = "abm_focus_picks.standing_forces"
 								using = Font_Size_Medium
 								align = left|nobaseline
 								layoutpolicy_horizontal = expanding
@@ -503,11 +503,11 @@ types AbmFocusPicksTypes
 							text_single = {
 								text = "ABM_FOCUS_PANEL_PICKED"
 								using = Font_Size_Small
-								visible = "[GetPlayer.MakeScope.GetVariable('abm_focus_maritime').IsSet]"
+								visible = "[GetPlayer.MakeScope.GetVariable('abm_focus_standing_forces').IsSet]"
 							}
 						}
 						text_multi = {
-							text = "abm_focus_picks.maritime.tt"
+							text = "abm_focus_picks.standing_forces.tt"
 							using = Font_Size_Small
 							autoresize = yes
 							align = left|nobaseline
@@ -515,7 +515,7 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						text_multi = {
-							text = "abm_focus_panel.maritime.advances"
+							text = "abm_focus_panel.standing_forces.advances"
 							using = Font_Size_Small
 							autoresize = yes
 							align = left|nobaseline
@@ -527,29 +527,29 @@ types AbmFocusPicksTypes
 							text = "ABM_FOCUS_PICK"
 							tooltip = "ABM_FOCUS_PICK_TT"
 							size = { 234 26 }
-							visible = "[And(GetScriptedGui('abm_focus_pick_maritime').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_pick_maritime').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
-							onclick = "[GetScriptedGui('abm_focus_pick_maritime').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							visible = "[And(GetScriptedGui('abm_focus_pick_standing_forces').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_pick_standing_forces').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+							onclick = "[GetScriptedGui('abm_focus_pick_standing_forces').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_PICK"
 							tooltip = "abm_focus_panel.age_2_renaissance.not_reached_tt"
 							size = { 234 26 }
 							enabled = no
-							visible = "[And(GetScriptedGui('abm_focus_pick_maritime').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_pick_maritime').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+							visible = "[And(GetScriptedGui('abm_focus_pick_standing_forces').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_pick_standing_forces').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_SWITCH"
 							tooltip = "ABM_FOCUS_SWITCH_TT"
 							size = { 234 26 }
-							visible = "[And(GetScriptedGui('abm_focus_switch_maritime').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_switch_maritime').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
-							onclick = "[GetScriptedGui('abm_focus_switch_maritime').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							visible = "[And(GetScriptedGui('abm_focus_switch_standing_forces').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_switch_standing_forces').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+							onclick = "[GetScriptedGui('abm_focus_switch_standing_forces').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_SWITCH"
 							tooltip = "ABM_FOCUS_SWITCH_NONE_TT"
 							size = { 234 26 }
 							enabled = no
-							visible = "[And(GetScriptedGui('abm_focus_switch_maritime').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_switch_maritime').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+							visible = "[And(GetScriptedGui('abm_focus_switch_standing_forces').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_switch_standing_forces').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 						}
 					}
 				}
@@ -943,7 +943,7 @@ types AbmFocusPicksTypes
 							layoutpolicy_horizontal = expanding
 							spacing = 4
 							text_single = {
-								text = "abm_focus_picks.naval"
+								text = "abm_focus_picks.leadership"
 								using = Font_Size_Medium
 								align = left|nobaseline
 								layoutpolicy_horizontal = expanding
@@ -951,11 +951,11 @@ types AbmFocusPicksTypes
 							text_single = {
 								text = "ABM_FOCUS_PANEL_PICKED"
 								using = Font_Size_Small
-								visible = "[GetPlayer.MakeScope.GetVariable('abm_focus_naval').IsSet]"
+								visible = "[GetPlayer.MakeScope.GetVariable('abm_focus_leadership').IsSet]"
 							}
 						}
 						text_multi = {
-							text = "abm_focus_picks.naval.tt"
+							text = "abm_focus_picks.leadership.tt"
 							using = Font_Size_Small
 							autoresize = yes
 							align = left|nobaseline
@@ -963,7 +963,7 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						text_multi = {
-							text = "abm_focus_panel.naval.advances"
+							text = "abm_focus_panel.leadership.advances"
 							using = Font_Size_Small
 							autoresize = yes
 							align = left|nobaseline
@@ -975,29 +975,29 @@ types AbmFocusPicksTypes
 							text = "ABM_FOCUS_PICK"
 							tooltip = "ABM_FOCUS_PICK_TT"
 							size = { 234 26 }
-							visible = "[And(GetScriptedGui('abm_focus_pick_naval').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_pick_naval').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
-							onclick = "[GetScriptedGui('abm_focus_pick_naval').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							visible = "[And(GetScriptedGui('abm_focus_pick_leadership').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_pick_leadership').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+							onclick = "[GetScriptedGui('abm_focus_pick_leadership').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_PICK"
 							tooltip = "abm_focus_panel.age_3_discovery.not_reached_tt"
 							size = { 234 26 }
 							enabled = no
-							visible = "[And(GetScriptedGui('abm_focus_pick_naval').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_pick_naval').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+							visible = "[And(GetScriptedGui('abm_focus_pick_leadership').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_pick_leadership').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_SWITCH"
 							tooltip = "ABM_FOCUS_SWITCH_TT"
 							size = { 234 26 }
-							visible = "[And(GetScriptedGui('abm_focus_switch_naval').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_switch_naval').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
-							onclick = "[GetScriptedGui('abm_focus_switch_naval').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							visible = "[And(GetScriptedGui('abm_focus_switch_leadership').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_switch_leadership').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+							onclick = "[GetScriptedGui('abm_focus_switch_leadership').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_SWITCH"
 							tooltip = "ABM_FOCUS_SWITCH_NONE_TT"
 							size = { 234 26 }
 							enabled = no
-							visible = "[And(GetScriptedGui('abm_focus_switch_naval').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_switch_naval').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+							visible = "[And(GetScriptedGui('abm_focus_switch_leadership').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_switch_leadership').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 						}
 					}
 				}
@@ -1391,7 +1391,7 @@ types AbmFocusPicksTypes
 							layoutpolicy_horizontal = expanding
 							spacing = 4
 							text_single = {
-								text = "abm_focus_picks.littoral_fleet"
+								text = "abm_focus_picks.balanced"
 								using = Font_Size_Medium
 								align = left|nobaseline
 								layoutpolicy_horizontal = expanding
@@ -1399,11 +1399,11 @@ types AbmFocusPicksTypes
 							text_single = {
 								text = "ABM_FOCUS_PANEL_PICKED"
 								using = Font_Size_Small
-								visible = "[GetPlayer.MakeScope.GetVariable('abm_focus_littoral_fleet').IsSet]"
+								visible = "[GetPlayer.MakeScope.GetVariable('abm_focus_balanced').IsSet]"
 							}
 						}
 						text_multi = {
-							text = "abm_focus_picks.littoral_fleet.tt"
+							text = "abm_focus_picks.balanced.tt"
 							using = Font_Size_Small
 							autoresize = yes
 							align = left|nobaseline
@@ -1411,7 +1411,7 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						text_multi = {
-							text = "abm_focus_panel.littoral_fleet.advances"
+							text = "abm_focus_panel.balanced.advances"
 							using = Font_Size_Small
 							autoresize = yes
 							align = left|nobaseline
@@ -1423,29 +1423,29 @@ types AbmFocusPicksTypes
 							text = "ABM_FOCUS_PICK"
 							tooltip = "ABM_FOCUS_PICK_TT"
 							size = { 234 26 }
-							visible = "[And(GetScriptedGui('abm_focus_pick_littoral_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_pick_littoral_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
-							onclick = "[GetScriptedGui('abm_focus_pick_littoral_fleet').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							visible = "[And(GetScriptedGui('abm_focus_pick_balanced').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_pick_balanced').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+							onclick = "[GetScriptedGui('abm_focus_pick_balanced').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_PICK"
 							tooltip = "abm_focus_panel.age_4_reformation.not_reached_tt"
 							size = { 234 26 }
 							enabled = no
-							visible = "[And(GetScriptedGui('abm_focus_pick_littoral_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_pick_littoral_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+							visible = "[And(GetScriptedGui('abm_focus_pick_balanced').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_pick_balanced').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_SWITCH"
 							tooltip = "ABM_FOCUS_SWITCH_TT"
 							size = { 234 26 }
-							visible = "[And(GetScriptedGui('abm_focus_switch_littoral_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_switch_littoral_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
-							onclick = "[GetScriptedGui('abm_focus_switch_littoral_fleet').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							visible = "[And(GetScriptedGui('abm_focus_switch_balanced').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_switch_balanced').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+							onclick = "[GetScriptedGui('abm_focus_switch_balanced').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_SWITCH"
 							tooltip = "ABM_FOCUS_SWITCH_NONE_TT"
 							size = { 234 26 }
 							enabled = no
-							visible = "[And(GetScriptedGui('abm_focus_switch_littoral_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_switch_littoral_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+							visible = "[And(GetScriptedGui('abm_focus_switch_balanced').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_switch_balanced').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 						}
 					}
 				}
@@ -1839,7 +1839,7 @@ types AbmFocusPicksTypes
 							layoutpolicy_horizontal = expanding
 							spacing = 4
 							text_single = {
-								text = "abm_focus_picks.highseas_fleet"
+								text = "abm_focus_picks.firepower"
 								using = Font_Size_Medium
 								align = left|nobaseline
 								layoutpolicy_horizontal = expanding
@@ -1847,11 +1847,11 @@ types AbmFocusPicksTypes
 							text_single = {
 								text = "ABM_FOCUS_PANEL_PICKED"
 								using = Font_Size_Small
-								visible = "[GetPlayer.MakeScope.GetVariable('abm_focus_highseas_fleet').IsSet]"
+								visible = "[GetPlayer.MakeScope.GetVariable('abm_focus_firepower').IsSet]"
 							}
 						}
 						text_multi = {
-							text = "abm_focus_picks.highseas_fleet.tt"
+							text = "abm_focus_picks.firepower.tt"
 							using = Font_Size_Small
 							autoresize = yes
 							align = left|nobaseline
@@ -1859,7 +1859,7 @@ types AbmFocusPicksTypes
 							maximumsize = { 234 -1 }
 						}
 						text_multi = {
-							text = "abm_focus_panel.highseas_fleet.advances"
+							text = "abm_focus_panel.firepower.advances"
 							using = Font_Size_Small
 							autoresize = yes
 							align = left|nobaseline
@@ -1871,29 +1871,29 @@ types AbmFocusPicksTypes
 							text = "ABM_FOCUS_PICK"
 							tooltip = "ABM_FOCUS_PICK_TT"
 							size = { 234 26 }
-							visible = "[And(GetScriptedGui('abm_focus_pick_highseas_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_pick_highseas_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
-							onclick = "[GetScriptedGui('abm_focus_pick_highseas_fleet').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							visible = "[And(GetScriptedGui('abm_focus_pick_firepower').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_pick_firepower').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+							onclick = "[GetScriptedGui('abm_focus_pick_firepower').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_PICK"
 							tooltip = "abm_focus_panel.age_5_absolutism.not_reached_tt"
 							size = { 234 26 }
 							enabled = no
-							visible = "[And(GetScriptedGui('abm_focus_pick_highseas_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_pick_highseas_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+							visible = "[And(GetScriptedGui('abm_focus_pick_firepower').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_pick_firepower').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_SWITCH"
 							tooltip = "ABM_FOCUS_SWITCH_TT"
 							size = { 234 26 }
-							visible = "[And(GetScriptedGui('abm_focus_switch_highseas_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_switch_highseas_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
-							onclick = "[GetScriptedGui('abm_focus_switch_highseas_fleet').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+							visible = "[And(GetScriptedGui('abm_focus_switch_firepower').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), GetScriptedGui('abm_focus_switch_firepower').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+							onclick = "[GetScriptedGui('abm_focus_switch_firepower').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
 						}
 						button_regular = {
 							text = "ABM_FOCUS_SWITCH"
 							tooltip = "ABM_FOCUS_SWITCH_NONE_TT"
 							size = { 234 26 }
 							enabled = no
-							visible = "[And(GetScriptedGui('abm_focus_switch_highseas_fleet').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_switch_highseas_fleet').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
+							visible = "[And(GetScriptedGui('abm_focus_switch_firepower').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End), Not(GetScriptedGui('abm_focus_switch_firepower').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 						}
 					}
 				}
