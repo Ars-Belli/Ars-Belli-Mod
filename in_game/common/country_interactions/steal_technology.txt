@@ -26,17 +26,13 @@
 		}
 	}
 
+	# Ars Belli: the target no longer loses research progress (vanilla took 10% of it), so
+	# several players stealing from one target cannot grind its research down.
 	effect = {
 		scope:actor = {
 			add_research_progress = {
 				value = scope:recipient.research_progress
 				multiply = 0.20
-			}
-		}
-		scope:recipient = {	
-			add_research_progress = {
-				value = research_progress
-				multiply = -0.10
 			}
 		}
 	}

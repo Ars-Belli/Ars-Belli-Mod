@@ -3,7 +3,8 @@
 # The engine action (diplomatic_costs/00_hardcoded.txt, 50 spy network, INFILTRATE_ADMINISTRATION_DURATION
 # = 24 months) moved into the Espionage focus pick (Age of Discovery). This relation takes its old place
 # in the general Renaissance tree (advance abm_lesser_infiltration_advance): same fog-of-war lift via
-# lifts_fog_of_war, half the spy network cost (abm_lesser_infiltration_cost = 25) and half the duration.
+# lifts_fog_of_war, the same spy network cost (abm_lesser_infiltration_cost = 50) but an eighth of the duration
+# (3 months against 24), so it is the weaker version.
 #
 # Modelled on vanilla corrupt_officials (one-way covert relation, no acceptance, break_on_not_spying).
 # Duration: offer_effect puts the recipient in the actor's timed variable list; will_expire_trigger
@@ -44,7 +45,7 @@ abm_lesser_infiltration = {
 			add_to_variable_list = {
 				name = abm_lesser_infiltration_targets
 				target = scope:recipient
-				days = 365
+				days = 91 # 3 months, an eighth of INFILTRATE_ADMINISTRATION_DURATION = 24 months
 			}
 		}
 	}

@@ -47,7 +47,9 @@ abm_sabotage_fort = {
 		scope:actor = { has_advance = abm_sabotage_fort_advance }
 	}
 
-	# One use per 2 years for the actor, whoever the target is.
+	# One use per 2 years for the actor, whoever the target is. The victim also gets a
+	# 2-year cooldown (timed variable abm_sabotage_fort_victim_cd, set in the effect and
+	# checked in the country stage), so allies cannot take turns on the same country.
 	cooldown = {
 		type = abm_sabotage_fort_cd
 		years = 2
@@ -73,6 +75,10 @@ abm_sabotage_fort = {
 					has_fort = yes
 					is_capital = no
 				}
+			}
+			custom_tooltip = {
+				text = abm_sabotage_fort_victim_cd_tt
+				NOT = { has_variable = abm_sabotage_fort_victim_cd }
 			}
 		}
 	}
@@ -119,6 +125,11 @@ abm_sabotage_fort = {
 						pop_type = pop_type:soldiers
 					}
 					change_pop_type = pop_type:peasants
+				}
+			}
+			hidden_effect = {
+				scope:recipient = {
+					set_variable = { name = abm_sabotage_fort_victim_cd value = yes years = 2 }
 				}
 			}
 		}
