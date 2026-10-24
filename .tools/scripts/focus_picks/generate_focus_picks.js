@@ -43,6 +43,45 @@ const advIcon = (key, extra = {}) => gfx(`interface/advance/${extra.icon || (van
 const branchArt = br => gfx(`interface/illustrations/${br.art}.dds`);
 const ROMAN = { 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI' };
 
+// Advance effects written out in the panel (one line per modifier), using the game's own modifier
+// names ($MODIFIER_TYPE_NAME_x$) and number formats, green for a bonus and red for a malus.
+const DEFS = require('./page/defs.js')(GAME);
+const { loc: VLOC, fmtValue } = require('./page/modloc.js')(GAME);
+const CONST = {};
+for (const d of ['main_menu/common/script_values', 'in_game/common/script_values']) {
+	const dir = path.join(GAME, d);
+	if (!fs.existsSync(dir)) continue;
+	for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.txt')))
+		for (const m of fs.readFileSync(path.join(dir, f), 'utf8').matchAll(/^@?([a-z0-9_]+)\s*=\s*(-?[\d.]+)\s*$/gm)) CONST[m[1]] = parseFloat(m[2]);
+}
+// For the advancing country hostile attrition is a bonus, though the game colours the modifier as bad.
+const GOOD_ANYWAY = new Set(['global_hostile_attrition']);
+const RAW_UNLOCKS = [
+	[/unlock_subject_type = march/, 'Unlocks the #Y March#! subject type'],
+	[/unlock_casus_belli = cb_exploration/, 'Unlocks the #Y Exploration#! casus belli'],
+	[/unlock_country_interaction = abm_sabotage_fort/, 'Unlocks #Y Sabotage Fort#!'],
+	[/unlock_diplomacy = \{ infiltrate_administration \}/, 'Unlocks #Y Infiltrate Administration#!'],
+	[/unlock_country_interaction = steal_technology/, 'Unlocks #Y Steal Technology#!'],
+];
+function advEffects(key, mods, extra = {}) {
+	const lines = [];
+	for (const l of mods.split('\n').filter(Boolean)) {
+		const [k, raw] = l.split('=').map(s => s.trim());
+		const def = DEFS[k];
+		if (!def || !VLOC['MODIFIER_TYPE_NAME_' + k]) throw new Error(`${key}: no definition or name for modifier ${k}`);
+		const name = `$MODIFIER_TYPE_NAME_${k}$`;
+		if (def.boolean) { lines.push(`#G ${name}#!`); continue; }
+		const v = raw in CONST ? CONST[raw] : parseFloat(raw);
+		if (Number.isNaN(v)) throw new Error(`${key}: can't resolve value ${raw} for ${k}`);
+		const good = GOOD_ANYWAY.has(k) || (def.color === 'bad' ? v < 0 : v > 0);
+		const val = fmtValue(def, v).replace(/−/g, '-');
+		lines.push(`${name} ${def.color === 'neutral' ? '#Y' : good ? '#G' : '#R'} ${val}#!`);
+	}
+	for (const [re, text] of RAW_UNLOCKS) if (extra.raw && re.test(extra.raw)) lines.push(text);
+	if (!lines.length) throw new Error(`${key}: no effects to show`);
+	return lines.join('\\n');
+}
+
 const focusVar = id => `abm_focus_${id}`;
 const MAX_CHANGES = 3; // focus changes each country may make after picking
 const indent = (s, n) => s.split('\n').map(l => (l ? '\t'.repeat(n) + l : l)).join('\n');
@@ -305,7 +344,11 @@ function locFile() {
 	L.push(' ABM_FOCUS_PANEL_CLOSE_TOOLTIP: "Close the Focus Picks panel"');
 	L.push(' ABM_FOCUS_PANEL_QUOTE: "“Every age had its own kind of war, its own limiting conditions, and its own peculiar preconceptions.”"');
 	L.push(' ABM_FOCUS_PANEL_QUOTE_BY: "— Carl von Clausewitz, On War"');
-	L.push(` ABM_FOCUS_PANEL_INTRO: "From the Renaissance on, each [age|e] we pick one #Y Economic#! and one #Y Military#! focus, once that age has begun. Only picked branches appear in the [advances|e] tree, and picks from earlier ages stay researchable. Hover an advance for its effects. A pick can be changed until one of its advances is researched."`);
+	L.push(` ABM_FOCUS_PANEL_INTRO: "From the Renaissance on, each [age|e] we pick one #Y Economic#! and one #Y Military#! focus, once that age has begun. Only picked branches appear in the [advances|e] tree, and picks from earlier ages stay researchable. A pick can be changed until one of its advances is researched."`);
+	L.push(' ABM_FOCUS_FX_HIDE: "Hide advance effects"');
+	L.push(' ABM_FOCUS_FX_HIDE_TT: "Show only the advance names, for a shorter list. Hovering an advance still shows its full tooltip."');
+	L.push(' ABM_FOCUS_FX_SHOW: "Show advance effects"');
+	L.push(' ABM_FOCUS_FX_SHOW_TT: "Show each advance\'s bonuses under its name."');
 	L.push(' ABM_FOCUS_PANEL_CHANGES: "Focus changes left: [Country.Custom(\'abm_focus_changes_left\')]"');
 	L.push(` ABM_FOCUS_PANEL_CHANGES_TT: "Each country may change a pick at most ${MAX_CHANGES} times per campaign, and only before any of that pick's [advances|e] is researched."`);
 	L.push(' ABM_FOCUS_AGE_CURRENT: "#G Current age#!: pick one Economic and one Military focus"');
@@ -346,6 +389,7 @@ function locFile() {
 				L.push(` abm_focus_name.${br.id}: "${q(br.name)}"`);
 				L.push(` abm_focus_panel.${br.id}.chosen: "Picked: #Y ${q(br.name)}#!"`);
 				for (const [key] of br.adv) L.push(` abm_focus_adv.${key}: "[ShowAdvanceName('${key}')]"`);
+				for (const [key, mods, extra] of br.adv) L.push(` abm_focus_fx.${key}: "${advEffects(key, mods, extra)}"`);
 				for (const [key, , extra = {}] of br.adv) {
 					if (!extra.name) continue;
 					L.push(` ${key}: "${q(extra.name)}"`);
@@ -406,22 +450,40 @@ function guiFile() {
 							}`;
 	};
 
+	// Icon, then the name (hover = the game's advance tooltip) with its effects underneath unless the
+	// player hid them (client-side abm_focus_hide_fx).
+	const FX_W = BODY_W - 30;
 	const advanceRow = ([key, , extra = {}]) => `
 							hbox = {
 								layoutpolicy_horizontal = expanding
 								spacing = 6
-								icon = {
-									size = { 24 24 }
-									texture = "${advIcon(key, extra)}"
+								vbox = {
+									icon = {
+										size = { 24 24 }
+										texture = "${advIcon(key, extra)}"
+									}
+									expand = {}
 								}
-								text_single = {
-									text = "abm_focus_adv.${key}"
-									using = Font_Size_Small
-									align = left|nobaseline
-									max_width = ${BODY_W - 30}
-									elide = right
+								vbox = {
+									layoutpolicy_horizontal = expanding
+									text_single = {
+										layoutpolicy_horizontal = expanding
+										text = "abm_focus_adv.${key}"
+										using = Font_Size_Small
+										align = left|nobaseline
+										max_width = ${FX_W}
+										elide = right
+									}
+									text_multi = {
+										visible = "[Not(GetVariableSystem.Exists('abm_focus_hide_fx'))]"
+										text = "abm_focus_fx.${key}"
+										using = Font_Size_Very_Small
+										autoresize = yes
+										align = left|nobaseline
+										minimumsize = { ${FX_W} -1 }
+										maximumsize = { ${FX_W} -1 }
+									}
 								}
-								expand = {}
 							}`;
 
 	const card = (br, age) => {
@@ -791,13 +853,32 @@ types AbmFocusPicksTypes
 						max_width = 720
 						align = center|nobaseline
 					}
-					text_single = {
+					hbox = {
 						layoutpolicy_horizontal = expanding
-						datacontext = "[GetPlayer]"
-						text = "ABM_FOCUS_PANEL_CHANGES"
-						tooltip = "ABM_FOCUS_PANEL_CHANGES_TT"
-						using = Font_Size_Small
-						align = center|nobaseline
+						spacing = 12
+						expand = {}
+						text_single = {
+							datacontext = "[GetPlayer]"
+							text = "ABM_FOCUS_PANEL_CHANGES"
+							tooltip = "ABM_FOCUS_PANEL_CHANGES_TT"
+							using = Font_Size_Small
+							align = center|nobaseline
+						}
+						button_regular = {
+							visible = "[Not(GetVariableSystem.Exists('abm_focus_hide_fx'))]"
+							text = "ABM_FOCUS_FX_HIDE"
+							tooltip = "ABM_FOCUS_FX_HIDE_TT"
+							size = { 190 24 }
+							onclick = "[GetVariableSystem.Set('abm_focus_hide_fx', 'yes')]"
+						}
+						button_regular = {
+							visible = "[GetVariableSystem.Exists('abm_focus_hide_fx')]"
+							text = "ABM_FOCUS_FX_SHOW"
+							tooltip = "ABM_FOCUS_FX_SHOW_TT"
+							size = { 190 24 }
+							onclick = "[GetVariableSystem.Clear('abm_focus_hide_fx')]"
+						}
+						expand = {}
 					}
 				}
 
