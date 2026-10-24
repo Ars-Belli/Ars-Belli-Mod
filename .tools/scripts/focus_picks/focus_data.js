@@ -70,11 +70,11 @@ module.exports = {
       ['advanced_bureaucracy', 'tax_income_efficiency = small_tax_income_efficiency_bonus\nglobal_bureaucracy_maintenance_efficiency = 0.04'],
     ]},
     { id: 'exploration', art: 'institutions/new_world', name: 'Exploration', desc: 'Exploration, colonisation and overseas trade.', adv: [
-      ['quest_for_the_new_world', 'exploration_preparation_time_modifier = -0.25\nexploration_mission_speed = 0.1', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
-      ['exploration', 'colonial_range = 500', { raw: 'unlock_casus_belli = cb_exploration\n\nai_preference_tags = {\n\texploration\n}' }],
-      ['overseas_exploration', 'colonial_range_modifier = 0.5', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
+      ['quest_for_the_new_world', 'exploration_preparation_time_modifier = -0.25\nexploration_mission_speed = 0.1\nexploration_maintenance_efficiency = 0.20', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
+      ['exploration', 'colonial_range = 500\nrecruit_explorer_cost_modifier = -0.25', { raw: 'unlock_casus_belli = cb_exploration\n\nai_preference_tags = {\n\texploration\n}' }],
+      ['overseas_exploration', 'colonial_range_modifier = 0.5\ncreate_colonial_charter_cost_modifier = -0.20', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
       ['faster_colonists', 'colonial_migration_size_modifier = 0.25', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
-      ['colonial_ventures', 'colonial_migration_size_modifier = 0.25', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
+      ['colonial_ventures', 'colonial_migration_size_modifier = 0.25\ncolonial_maintenance_efficiency = 0.20', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
       ['overseas_trade', 'trade_range_modifier = 0.5'],
     ]},
     { id: 'espionage', art: 'disaster/byzantine_succession_crisis', name: 'Espionage', desc: 'Spies, infiltration, sabotage and stolen research.', adv: [
