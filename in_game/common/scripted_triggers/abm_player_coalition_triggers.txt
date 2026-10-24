@@ -1,0 +1,39 @@
+﻿# Relaxed counterpart of vanilla scope_country_can_join_coalition_against.
+# Dropped vs vanilla: antagonism > 50, opinion < -50, knows_country,
+# within_diplomatic_range, has_limited_diplomacy, not at war with the target.
+#$target$ is the target of the coalition
+abm_can_join_player_coalition_against = {
+	custom_tooltip = {
+		text = abm_player_coalition_players_only_tt
+		is_ai = no
+	}
+	is_rebel_country = no
+	NOT = { this = $target$ }
+	OR = {
+		is_subject = no
+		is_subject_type = tributary
+	}
+
+	not = { is_subject_or_below_of = $target$ }
+	not = {
+		$target$ = {
+			is_subject_or_below_of = root
+		}
+	}
+	not = { has_truce_with = $target$ }
+	NOT = { in_union_with = $target$ }
+
+	#Do not allow joining 2 player coalitions at once against the same country
+	NOT = {
+		is_member_of_international_organization_of_type = {
+			type = abm_player_coalition
+			target = $target$
+		}
+	}
+	NOT = {
+		giving_scripted_relation = {
+			type = relation_type:anti_coalition_treaty
+			target = $target$
+		}
+	}
+}
