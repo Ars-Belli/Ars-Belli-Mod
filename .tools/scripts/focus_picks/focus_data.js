@@ -122,7 +122,7 @@ module.exports = {
     ]},
     { id: 'expansion', name: 'Expansion', desc: 'Late colonisation and overseas trade.', adv: [
       ['free_colonies', 'colonial_maintenance_efficiency = 0.40'],
-      ['land_of_opportunity', 'colonial_migration_size_modifier = 0.25'],
+      ['land_of_opportunity', 'colonial_migration_size_modifier = 0.50'],
       ['abm_trade_winds', 'navy_movement_speed = 0.10', { icon: 'maritime_advance_age_2', name: 'Trade Winds', desc: 'Our pilots have charted the great ocean winds and currents, and our ships now cross to the colonies in weeks rather than months.' }],
       ['vice_roys', 'subject_pays_colonial_cost_modifier = 0.50\ndiplomatic_range_modifier = 0.25'],
       ['merchant_power_from_maritime_rev_dip_choice', 'merchant_power_from_maritime_modifier = 0.1'],
