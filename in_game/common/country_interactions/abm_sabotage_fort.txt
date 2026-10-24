@@ -6,8 +6,9 @@
 # with nobody to work it until the location promotes pops back into soldiers on its own,
 # which is what makes this a temporary sabotage rather than a permanent demolition.
 #
-# Deliberately no cooldown: the 50 spy_network cost is the gate, and spy network regrows
-# slowly enough that repeat use on the same country is already self-limiting.
+# Wartime only: the target must be a country we are at war with. Unlocked solely by the
+# Espionage focus pick (advance abm_sabotage_fort_advance, abm_focus_picks_economic.txt - generated
+# from .tools/scripts/focus_picks/focus_data.js), and limited to one use per 2 years.
 
 abm_sabotage_fort = {
 	type = diplomacy
@@ -41,7 +42,15 @@ abm_sabotage_fort = {
 		}
 	}
 
+	# Only countries that took the Espionage focus pick (same pattern as steal_technology).
 	allow = {
+		scope:actor = { has_advance = abm_sabotage_fort_advance }
+	}
+
+	# One use per 2 years for the actor, whoever the target is.
+	cooldown = {
+		type = abm_sabotage_fort_cd
+		years = 2
 	}
 
 	select_trigger = {
@@ -54,6 +63,7 @@ abm_sabotage_fort = {
 		}
 		visible = {
 			this != scope:actor
+			is_at_war_with = scope:actor
 			within_diplomatic_range = scope:actor
 		}
 		enabled = {
