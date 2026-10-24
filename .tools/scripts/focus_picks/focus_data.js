@@ -202,7 +202,7 @@ module.exports = {
     { id: 'logistics', name: 'Logistics', desc: 'Attrition, supply and auxiliaries.', adv: [
       ['abm_enduring_hardships', 'land_morale_attrition_cost = -0.25', { icon: 'improved_foraging', name: 'Enduring Hardships', desc: 'Hunger and disease no longer break the spirit of our soldiers as easily as they once did.' }],
       ['improved_foraging', 'land_unit_attrition = -0.20'],
-      ['abm_prepared_camps', 'global_supply_limit_modifier = 0.10', { icon: 'expanded_supply_trains', name: 'Prepared Camps', desc: 'Camp sites along our lines of march are surveyed and stocked in advance.' }],
+      ['abm_prepared_camps', 'global_supply_limit_modifier = 0.10\nfood_consumption_modifier = -0.15', { icon: 'expanded_supply_trains', name: 'Prepared Camps', desc: 'Camp sites along our lines of march are surveyed and stocked in advance.' }],
       ['improved_logistics', 'army_logistics_distance_modifier = 0.20'],
       ['abm_logistics_corps', 'army_auxiliary_power = 0.50\narmy_auxiliary_build_cost_modifier = -0.20\narmy_auxiliary_maintenance_cost_modifier = -0.10', { icon: 'expanded_supply_trains', name: 'Logistics Corps', desc: 'Wagoners, sappers and sutlers are organised into proper units that can defend themselves when caught out.' }],
       ['abm_trained_reserves', 'regiment_reinforcement_speed = 0.10', { icon: 'defensive_army', name: 'Trained Reserves', desc: 'Replacements arrive at the front already trained and equipped.' }],
