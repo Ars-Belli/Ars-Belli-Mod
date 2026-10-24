@@ -106,7 +106,7 @@ module.exports = {
       ['formalized_officer_corps', 'army_initiative = 0.25\nnavy_initiative = 0.50'],
       ['quality_education', 'monthly_army_tradition = 0.1\nmonthly_navy_tradition = 0.1'],
       ['administrative_leadership', 'hire_advisor_cost_modifier = -0.25\ntrain_general_cost_modifier = -0.25\ntrain_admiral_cost_modifier = -0.25'],
-      ['abm_military_academies', 'train_general_ability = 10\ntrain_admiral_ability = 10', { icon: 'army_professionalism', name: 'Military Academies', desc: 'Officers are schooled in war on land and at sea before they ever hold a command.' }],
+      ['abm_military_academies', 'train_general_ability = 30\ntrain_admiral_ability = 30', { icon: 'army_professionalism', name: 'Military Academies', desc: 'Officers are schooled in war on land and at sea before they ever hold a command.' }],
       ['abm_peacetime_commissions', 'army_tradition_decay = -0.001\nnavy_tradition_decay = -0.001', { icon: 'administrative_leadership', name: 'Peacetime Commissions', desc: 'Officers keep their posts between wars, so hard-won experience is not lost the moment peace is signed.' }],
       ['abm_aides_de_camp', 'correct_box_chance = 0.30', { icon: 'military_revolution_advance', name: 'Aides-de-Camp', desc: 'Gallopers carry the commander\'s orders across the field, so units arriving late still reach the place they are needed.' }],
     ]},
