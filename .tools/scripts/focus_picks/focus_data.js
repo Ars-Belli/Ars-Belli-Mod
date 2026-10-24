@@ -108,7 +108,7 @@ module.exports = {
       ['administrative_leadership', 'hire_advisor_cost_modifier = -0.25\ntrain_general_cost_modifier = -0.25\ntrain_admiral_cost_modifier = -0.25'],
       ['abm_military_academies', 'train_general_ability = 10\ntrain_admiral_ability = 10', { icon: 'army_professionalism', name: 'Military Academies', desc: 'Officers are schooled in war on land and at sea before they ever hold a command.' }],
       ['abm_peacetime_commissions', 'army_tradition_decay = -0.001\nnavy_tradition_decay = -0.001', { icon: 'administrative_leadership', name: 'Peacetime Commissions', desc: 'Officers keep their posts between wars, so hard-won experience is not lost the moment peace is signed.' }],
-      ['abm_aides_de_camp', 'correct_box_chance = 0.10', { icon: 'military_revolution_advance', name: 'Aides-de-Camp', desc: 'Gallopers carry the commander\'s orders across the field, so units arriving late still reach the place they are needed.' }],
+      ['abm_aides_de_camp', 'correct_box_chance = 0.30', { icon: 'military_revolution_advance', name: 'Aides-de-Camp', desc: 'Gallopers carry the commander\'s orders across the field, so units arriving late still reach the place they are needed.' }],
     ]},
    ]},
  { age: 'age_4_reformation', n: 4,
