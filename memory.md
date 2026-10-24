@@ -162,6 +162,24 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - `alliance_can_exist` (abm_alliance_overrides) + `abm_vision_sharing` also block vs player-coalition target, same as vanilla coalition.
 - Loc: `main_menu\localization\english\abm_player_coalition_l_english.yml`.
 
+### 3n. Focus Picks (age focus overhaul)
+- Engine adm/dip/mil focus (`set_age_preference` + advance `for = X`) = ONE slot, 3 values. Can't do 2 picks. So dropped fully; system is script-side.
+- Per age 2-6: Economic pick (3 branches) then Military pick (3 branches: 2 land + 1 naval). Design source: `Ars Belli MP Mod - Design Doc - Focus Picks.md` (user-local, gitignored).
+- Flow (panel picking): hardcoded `on_new_age` fires `ages_of_eu.1` (mod `in_game/events/ages.txt`, same-name replace) = HIDDEN dispatcher, skipped in age 1. AI NEVER picks (user decision: a disconnected player must not get AI picks; SGUIs have no ai_is_valid so AI can't use them either). Player (is_ai = no): notice event `abm_focus_picks.1` -> pick in Focus Picks panel. Panel cards: Pick button (SGUI `abm_focus_pick_<b>`: shown = slot empty, valid = age reached via OR of current_age >= branch age) and Change button (SGUI `abm_focus_switch_<b>`: shown = sibling holds slot, valid = `abm_focus_changes_used` < 3; removes siblings, sets var, +1 used). `abm_focus_pending` SGUI drives always-visible top-right button ("Focus Picks (!)"). Changes left shown via custom loc `abm_focus_changes_left`. SGUI calls in GUI: `GetScriptedGui(k).IsShown/IsValid/Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)` (IsShown/IsValid untested before this; Execute proven by tier panel).
+- Focus change rule: EU5 has NO un-research effect (only `research_advance`); advance hidden by potential KEEPS its bonuses (tested: Enforced Service levy size stayed after switching Levy->Mercenary). So `abm_focus_switch_<b>` is valid only while none of the siblings' advances is researched (user chose this over counter-modifiers). Top-bar button lives in the rank block next to Tier List (a copy anchored below the bar was clipped/invisible) + standalone copy when MP rule off. Greyed buttons = separate enabled=no twin with reason tooltip.
+- Pick events are `country_event`, NOT `age_event`. Age window (eventwindow.gui AgeEventWindow) = 3 fixed cards via `AccessOptionItemWithKey('adm'/'dip'/'mil')` + hardcoded Adm/Dip/Mil tooltips; custom options have no key -> every card shows option #1. Don't switch back.
+- Pick = `set_variable = abm_focus_<branch>` (never cleared -> old-age picks stay researchable). Advance gate = `potential = { has_variable = abm_focus_<branch> }`. potential IS re-checked in game (user-verified) despite vanilla readme "not retroactively visible" -> unpicked branches hidden, like vanilla `for = X`. Earlier `allow` version kept all 36/age visible -> clutter + orphans auto-attached under them.
+- Vanilla `4_choices_adm/dip/mil.txt` emptied (same-name). Kept advances redefined under VANILLA KEYS in `abm_focus_picks_economic.txt` / `_military.txt` — keys referenced by vanilla script: exploration (CB), privateers (naval laws, OMA event), military_drill, innovativeness, humanism, battlefield_commisions, smithian_economics, national_bank. Don't rename those. "AND" combos keep first key; second key dropped.
+- Tree shape per branch: adv0 root (`depth = 0`, works on NEW game; advance tree changes do not apply to old saves, test on fresh start); 1->2 off 0; 3->4->5 off 0. ~237 vanilla/mod advances in ages 2-6 have no requires/depth (units, buildings, country advances) -> engine auto-places them under any VISIBLE node; `allow_children = no` does NOT stop it (tested). Hiding unpicked branches via potential is the fix. Vanilla age roots mostly institution-gated, don't hang branches under them.
+- Event option names dotted (`abm_focus_picks.<branch>`) like vanilla. Raw option key atop option tooltip = debug-mode only (vanilla shows it too), not a bug.
+- `infiltrate_administration_advance` (vanilla diplomacy_unlocks.txt) moved to Espionage via REPLACE:. `mercenaries_reformation_advance` NOT moved (country advances CAS/TUR/India require it) -> new `abm_ensure_mercenary_payments` instead.
+- **Lesser Infiltration** (general Renaissance tree, advance `abm_lesser_infiltration_advance` after `spy_construction_renaissance`) = scripted stand-in for the engine action: one-way relation `abm_lesser_infiltration` with `lifts_fog_of_war = yes` (readme: relations can lift FoW; engine Infiltrate Administration itself = fixed 50 spy network in diplomatic_costs/00_hardcoded.txt, no cost modifier, not scriptable). Cost `abm_lesser_infiltration_cost` = 25 spy network; 12 months via timed variable list `abm_lesser_infiltration_targets` (days = 365) + will_expire_trigger; break_on_not_spying; AI off. UNTESTED: which side of a oneway relation gets the FoW lift.
+- `steal_technology` same-name copy, allow `has_advance = abm_industrial_espionage`.
+- **GENERATED FILES**: advances x2, `in_game/events/ages.txt`, `main_menu/localization/english/abm_focus_picks_l_english.yml` all from `.tools/scripts/focus_picks/focus_data.js` via `node .tools/scripts/focus_picks/generate_focus_picks.js`. Edit data, re-run. Never hand-edit outputs.
+- Value rule used: reused vanilla advance keeps vanilla number unless doc says "(was X)". `*_efficiency` modifiers show ~half in UI (0.2 = "-10% cost"), so new efficiency values = 2x doc %.
+- No engine modifier for: unit starting experience (Thorough Training -> monthly_experience_gain), artillery move speed (Limbers -> army_movement_speed 0.05), flat monthly manpower (Guerillas -> max_manpower 1). Stand-ins, verify in game.
+- Modifier/icon validation: modifier keys = `MODIFIER_TYPE_NAME_*` in vanilla `modifier_types_l_english.yml` (engine modifiers have no def file). Icon must be an existing advance icon name.
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
@@ -234,7 +252,7 @@ Mod-only files (no vanilla counterpart): `in_game/gui/shared/abm_force_break_uni
 | `multi_unit_window.gui` | **ported 1.4.4** | "Make available for hire" + pin-check exclusions |
 | `sell_location_action_view.gui` | vanilla unchanged since 1.3 (== vanilla 1.4.4 + ceiling) | flat 100-gold sale ceiling |
 | `foreign_country_lateralview.gui` | **ported 1.4.4** | 3 blocks, below, + two-row layout (`size = { -1 70 }`, outer `vbox`) |
-| `panels/right_panel/right_panel.gui` | **ported 1.4.4** | 5 blocks, below |
+| `panels/right_panel/right_panel.gui` | **ported 1.4.4** | 6 blocks, below |
 
 **1.4 GUI idioms (what changed vs 1.2/1.3):**
 * `action_button` / `action_button_diamond` are **gone** → `button` / `button_regular_diamond`, with the action moved into `scripted_action_tooltip = { click_type = left  click_mode = <single|confirm>  action_name = "..."  actor = "[...]" [parameter = {...}] }`.
@@ -248,12 +266,13 @@ Mod-only files (no vanilla counterpart): `in_game/gui/shared/abm_force_break_uni
 * `Not enough widget entries: Property widgets must specify exactly one widget` (`pdx_gui_validation.cpp`) reported at a `using = X` / `tooltipwidget = { using = X }` line means **`X` is undefined** — a missing template, not a malformed button. The log does not name the template.
 * Before treating a log row as open, compare the mod file's **mtime** against the session span: EU5 logs the path and line number, never the content, so a row can already be fixed by an edit made after the game was run.
 
-**right_panel.gui** mod additions (5 blocks):
+**right_panel.gui** mod additions (6 blocks):
 0. **Campaign timeline button removed** — vanilla `button_timeline` (first child of the bar widget) commented out with an `# Ars Belli:` note; it overlapped the MP rank / Tier List block and the timeline is reachable from the decisions screen.
 1. **Alliance/Defensive/Guarantee points display** — a `flowcontainer` with `# Ars Belli multiplayer limits display:` comment, inserted after the `non_clickable_color_gold_texture` corner icon, before the age `flowcontainer`.
 2. **Remove `max_width = 200`** from the age name `text_single`.
 3. **Country rank display (clickable)** — a `flowcontainer` with `# Ars Belli Current country Rank:` comment, inserted after the age tooltip block, before `### CORNER2`. Inner `button` with onclick → `mp_limits_toggle_tier_panel` scripted_gui.
 4. **Tier list panel** — a `widget` with `# Ars Belli tier list panel` comment, inserted right after the rank flowcontainer, before `### CORNER2`. Toggled by global var `mp_tier_panel_open`. Contains 5 `dynamicgridbox` sections iterating `GetGlobalList('mp_<tier>_list')`.
+5. **Focus picks panel** — `abm_focus_picks_panel = {}` with `# Ars Belli focus picks panel` comment, right before the tier list panel; plus a `# Ars Belli focus picks` "Focus Picks" button hbox inside the tier panel (above the alliance-alert toggle). The panel TYPE lives in generated `in_game/gui/shared/abm_focus_picks_panel.gui` (not a vanilla file, no re-merge). Client-side toggle `GetVariableSystem('abm_focus_panel_open')`. Advances listed via loc `[ShowAdvanceName('key')]` -> hover = real advance tooltip w/ effects. Picked marker: `GetPlayer.MakeScope.GetVariable('abm_focus_<branch>').IsSet`.
 
 **foreign_country_lateralview.gui** mod additions (3 marked blocks):
 1. **MP Rank and Power Score hbox** — `# MP Rank and Power Score` comment, after the country rank icon's `glow` block (around the `GetCountryRankIcon` section), inside the same parent container.
