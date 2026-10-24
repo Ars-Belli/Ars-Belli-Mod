@@ -18,48 +18,8 @@ for (const f of ['advances_l_english.yml']) {
 	const txt = fs.readFileSync(path.join(game, 'main_menu/localization/english', f), 'utf8');
 	for (const m of txt.matchAll(/^\s*([A-Za-z0-9_]+):\d*\s*"(.*)"\s*$/gm)) names[m[1]] = m[2];
 }
-// All vanilla English loc, for modifier descriptions (tooltips).
-const loc = {};
-{
-	const dir = path.join(game, 'main_menu/localization/english');
-	for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.yml'))) {
-		const txt = fs.readFileSync(path.join(dir, f), 'utf8');
-		for (const m of txt.matchAll(/^\s*([A-Za-z0-9_.]+):\d*\s*"(.*)"\s*$/gm)) loc[m[1]] = m[2];
-	}
-}
-const UNIT_CATS = { army_artillery: 'artillery', army_auxiliary: 'auxiliary', navy_galley: 'galley', navy_heavy_ship: 'heavy ship', navy_light_ship: 'light ship' };
-function clean(text, depth = 0) {
-	if (depth > 4) return text;
-	return text
-		.replace(/\$([A-Za-z0-9_.]+)\$/g, (_, k) => (k in loc ? clean(loc[k], depth + 1) : ''))
-		.replace(/\[([a-z_]+)\|[eE]\]/g, (_, k) => {
-			const n = loc['game_concept_' + k];
-			return (n && !n.includes('[') && !n.includes('$') ? n : k.replace(/_/g, ' ')).toLowerCase();
-		})
-		.replace(/\[ShowUnitCategoryName\('([a-z_]+)'\)\]/g, (_, k) => UNIT_CATS[k] || k.replace(/_/g, ' '))
-		.replace(/\[ShowGoodsName\('([a-z_]+)'\)\]/g, (_, k) => (loc[k] || k).toLowerCase())
-		.replace(/\[ShowModifierTypeName\('([a-z_]+)'\)\]/g, (_, k) => (loc['MODIFIER_TYPE_NAME_' + k] || k).toLowerCase())
-		.replace(/\[ShowSubjectTypeName\('([a-z_]+)'\)\]/g, (_, k) => (loc[k] || k).toLowerCase())
-		.replace(/\[([a-z_]+)\]/g, (_, k) => {
-			const n = loc['game_concept_' + k];
-			return (n && !n.includes('[') && !n.includes('$') ? n : k.replace(/_/g, ' ')).toLowerCase();
-		})
-		.replace(/\[[^\]]*\]/g, '')
-		.replace(/@[A-Za-z0-9_]+!\s*/g, '')
-		.replace(/#[A-Za-z_]+ /g, '').replace(/#!/g, '')
-		.replace(/\\n/g, '\n')
-		.replace(/ ship ships/g, ' ships').replace(/galley ships/g, 'galleys')
-		.replace(/[ \t]+/g, ' ').trim();
-}
-// Concept text that explains these better than the generic modifier line.
-const CONCEPT_INFO = { discipline: 'discipline', military_tactics: 'military_tactics' };
-function modInfo(key) {
-	const parts = [];
-	const d = loc['MODIFIER_TYPE_DESC_' + key];
-	if (d) parts.push(clean(d));
-	if (CONCEPT_INFO[key]) parts.push(clean(loc['game_concept_' + CONCEPT_INFO[key] + '_desc'] || ''));
-	return [...new Set(parts.filter(Boolean))].join(' ') || null;
-}
+// All vanilla English loc, modifier names, descriptions (tooltips) and value formats.
+const { loc, clean, modInfo, modName, fmtValue } = require('./modloc.js')(game);
 
 const AGE_NAMES = {
 	age_2_renaissance: 'Age of Renaissance', age_3_discovery: 'Age of Discovery',
@@ -267,23 +227,13 @@ const isCombat = key => (M[key] && M[key][2] === 'combat') || UNIT_POWER.test(ke
 // country holding the modifier it is a bonus, so show it as one.
 const COLOR_OVERRIDE = { global_hostile_attrition: 'good' };
 
-function fmtNum(v, decimals) {
-	const r = Math.round(v * 10 ** decimals) / 10 ** decimals;
-	return (r > 0 ? '+' : r < 0 ? '−' : '') + Math.abs(r).toLocaleString('en-US', { maximumFractionDigits: decimals });
-}
 function fmt(key, rawVal) {
 	const def = DEFS[key];
 	if (!def) throw new Error('no modifier definition for ' + key);
-	const label = clean(loc['MODIFIER_TYPE_NAME_' + key] || key);
+	const label = modName(key);
 	if (def.boolean) return { label, value: 'Yes', good: true, combat: isCombat(key), info: modInfo(key) };
 	const v = rawVal in CONST ? CONST[rawVal] : parseFloat(rawVal);
-	const dec = def.decimals != null ? parseInt(def.decimals, 10) : 2;
-	let shown;
-	if (def.percent) shown = fmtNum(v * 100, dec) + '%';
-	else if (def.already) shown = fmtNum(v, dec) + '%';
-	else if (def.format === 'FormatManPower') shown = fmtNum(v * 1000, 0);
-	else if (def.format === 'FormatPopCaps') shown = fmtNum(v * 1000, dec);
-	else shown = fmtNum(v, dec);
+	const shown = fmtValue(def, v);
 	const color = COLOR_OVERRIDE[key] || def.color;
 	const good = color === 'bad' ? v < 0 : v > 0;
 	return { label, value: shown, good, neutral: color === 'neutral', combat: isCombat(key), info: modInfo(key) };

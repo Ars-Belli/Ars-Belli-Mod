@@ -1,0 +1,293 @@
+<title>Ars Belli Military Modifiers</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral+SC:wght@500;600&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a field manual of modifiers; a sticky filter bar, then one section per subject, each a ledger of rows (modifier | vanilla advances | focus picks). Same identity as the Focus Picks page. */
+:root {
+	--bg: #eef0ee;
+	--surface: #fbfcfa;
+	--ink: #1d2422;
+	--muted: #5c6662;
+	--line: #d3d9d5;
+	--mil: #9a3324;
+	--mil-soft: #f3e0dc;
+	--good: #2f6b3a;
+	--bad: #a1372a;
+	--chip: #e2e6e3;
+	--font-display: "Spectral SC", "Palatino Linotype", Palatino, Georgia, serif;
+	--font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+	--font-num: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835;
+		--mil: #e8826f; --mil-soft: #3a2420; --good: #86c890; --bad: #f08a7a; --chip: #26302d;
+		color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835;
+	--mil: #e8826f; --mil-soft: #3a2420; --good: #86c890; --bad: #f08a7a; --chip: #26302d;
+	color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding-block: 28px 48px;
+	padding-left: max(16px, env(safe-area-inset-left, 0px));
+	padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: 0.01em; line-height: 1.1; }
+.lede { max-width: 70ch; margin: 12px 0 0; font-size: 16.5px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px 24px; margin: 18px 0 0; padding: 0; list-style: none; max-width: 980px; }
+.facts li { border-top: 1px solid var(--line); padding-top: 8px; color: var(--muted); min-width: 0; }
+.facts b { color: var(--ink); font-weight: 600; display: block; }
+
+.bar {
+	position: sticky;
+	top: env(safe-area-inset-top, 0px);
+	z-index: 5;
+	background: var(--bg);
+	border-bottom: 1px solid var(--line);
+	margin-top: 24px;
+	padding-block: 10px;
+	display: grid;
+	gap: 8px;
+}
+.bar .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.bar label.lbl { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
+#q {
+	font: inherit;
+	flex: 1 1 260px;
+	min-width: 0;
+	padding: 6px 12px;
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	background: var(--surface);
+	color: var(--ink);
+}
+#q:focus-visible { outline: 2px solid var(--mil); outline-offset: 1px; }
+.toggle {
+	font: inherit;
+	font-size: 13.5px;
+	font-weight: 600;
+	border: 1px solid var(--line);
+	background: var(--surface);
+	color: var(--ink);
+	border-radius: 999px;
+	padding: 4px 12px;
+	cursor: pointer;
+}
+.toggle[aria-pressed="true"] { background: var(--mil); border-color: var(--mil); color: var(--surface); }
+.toggle:focus-visible, nav.secs a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+nav.secs { display: flex; flex-wrap: wrap; gap: 6px; }
+nav.secs a {
+	text-decoration: none;
+	color: var(--ink);
+	background: var(--chip);
+	border-radius: 999px;
+	padding: 3px 11px;
+	font-size: 13px;
+	font-weight: 600;
+}
+nav.secs a .n { font-family: var(--font-num); font-size: 11.5px; color: var(--muted); margin-left: 4px; }
+nav.secs a.empty { opacity: 0.45; }
+.count { font-size: 13px; color: var(--muted); margin-left: auto; font-variant-numeric: tabular-nums; }
+
+section.sec { margin-top: 34px; scroll-margin-top: 150px; }
+section.sec > header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; border-bottom: 2px solid var(--ink); padding-bottom: 6px; }
+section.sec h2 { font-size: 24px; }
+section.sec > header p { margin: 0; color: var(--muted); }
+.head, .mod {
+	display: grid;
+	grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 0.9fr);
+	gap: 6px 22px;
+}
+.head { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 8px 0 6px; border-bottom: 1px solid var(--line); }
+.mod { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.mod > div { min-width: 0; }
+.name { font-weight: 700; font-size: 16px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; align-items: center; }
+.key {
+	font-family: var(--font-num);
+	font-size: 12.5px;
+	background: var(--chip);
+	color: var(--ink);
+	border: 0;
+	border-radius: 4px;
+	padding: 1px 6px;
+	cursor: copy;
+	overflow-wrap: anywhere;
+	text-align: left;
+}
+.key:focus-visible { outline: 2px solid var(--mil); outline-offset: 1px; }
+.key.copied { background: var(--mil); color: var(--surface); }
+.tag { font-size: 12px; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; }
+.tag.up { color: var(--good); border-color: currentColor; }
+.tag.down { color: var(--bad); border-color: currentColor; }
+.desc { margin: 6px 0 0; color: var(--muted); font-size: 14px; max-width: 62ch; white-space: pre-line; }
+.vals { display: flex; flex-wrap: wrap; gap: 5px; }
+.val { font-family: var(--font-num); font-size: 13px; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; font-variant-numeric: tabular-nums; }
+.val i { font-style: normal; color: var(--muted); font-size: 11.5px; margin-left: 3px; }
+.small { font-size: 13px; color: var(--muted); margin-top: 5px; }
+.none { font-size: 13px; color: var(--muted); font-style: italic; }
+.abm { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.abm li { font-size: 14px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.abm .v { font-family: var(--font-num); font-size: 13px; font-weight: 500; color: var(--mil); font-variant-numeric: tabular-nums; }
+.abm .where { color: var(--muted); font-size: 12.5px; }
+.cell-label { display: none; }
+.empty-note { margin-top: 30px; color: var(--muted); }
+footer { margin-top: 40px; color: var(--muted); font-size: 13px; max-width: 80ch; }
+a { color: var(--mil); }
+
+@media (max-width: 760px) {
+	.head { display: none; }
+	.mod { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+	.cell-label { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+	section.sec { scroll-margin-top: 220px; }
+}
+@media (prefers-reduced-motion: no-preference) { .key { transition: background 0.15s; } }
+</style>
+
+<div class="wrap">
+	<header>
+		<h1>Ars Belli Military Modifiers</h1>
+		<p class="lede">Every army and navy modifier in Europa Universalis V, for designing focus picks. Each one shows its in-game name and tooltip, the values vanilla advances give it, where else vanilla uses it, and which focus pick advances use it now.</p>
+		<ul class="facts">
+			<li><b id="f-total"></b>modifiers, in <span id="f-secs"></span> sections</li>
+			<li><b>Click a key to copy it</b>it goes straight into an advance, e.g. <code>discipline = 0.05</code></li>
+			<li><b>Percent values</b>are written as fractions in script: 0.10 shows as +10%</li>
+			<li><b>Built from game files</b><span id="f-ver"></span>, with the current <a href="https://claude.ai/artifact/29vc2LhdPrB3yGwZ2P5MQT">focus picks</a></li>
+		</ul>
+	</header>
+
+	<div class="bar">
+		<div class="row">
+			<input id="q" type="search" placeholder="Search names, keys and tooltips" aria-label="Search modifiers" autocomplete="off">
+			<span class="count" id="count"></span>
+		</div>
+		<div class="row">
+			<span class="lbl">Applies to</span>
+			<button class="toggle" type="button" data-scope="Country" aria-pressed="true">Country</button>
+			<button class="toggle" type="button" data-scope="Unit" aria-pressed="true">Unit</button>
+			<button class="toggle" type="button" data-scope="Location" aria-pressed="false">Location</button>
+			<span class="lbl" style="margin-left:8px">Show</span>
+			<button class="toggle" type="button" id="t-adv" aria-pressed="false">Used by vanilla advances</button>
+			<button class="toggle" type="button" id="t-free" aria-pressed="false">Not in focus picks</button>
+		</div>
+		<nav class="secs" id="secs" aria-label="Sections"></nav>
+	</div>
+
+	<main id="main"></main>
+	<p class="empty-note" id="empty" hidden>No modifiers match. Clear the search or turn a filter off.</p>
+
+	<footer>
+		Names, tooltips, number formats and better/worse direction come from the game's own modifier definitions and English text. "Vanilla advances" counts every advance in the base game, including the age choice advances Ars Belli replaces with focus picks. Location modifiers are hidden by default: they are written for single locations and are rarely given by advances.
+	</footer>
+</div>
+
+<script>
+const ROWS = __ROWS__;
+const SECTIONS = __SECTIONS__;
+const VERSION = __VERSION__;
+
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+document.getElementById('f-total').textContent = ROWS.length;
+document.getElementById('f-secs').textContent = SECTIONS.length;
+document.getElementById('f-ver').textContent = VERSION ? ' of game version ' + VERSION : '';
+
+const BETTER = { higher: ['up', 'Higher is better'], lower: ['down', 'Lower is better'], neutral: ['', 'Neutral'], switch: ['', 'Yes / No'] };
+const main = document.getElementById('main');
+const nav = document.getElementById('secs');
+const secEls = {};
+for (const s of SECTIONS) {
+	const sec = el('section', 'sec'); sec.id = s.id;
+	const h = el('header'); h.append(el('h2', null, s.title), el('p', null, s.blurb)); sec.append(h);
+	const head = el('div', 'head'); head.append(el('div', null, 'Modifier'), el('div', null, 'Vanilla advances'), el('div', null, 'Focus picks')); sec.append(head);
+	main.append(sec);
+	const a = el('a', null, s.title); a.href = '#' + s.id; const n = el('span', 'n'); a.append(n); nav.append(a);
+	secEls[s.id] = { sec, link: a, n };
+}
+
+async function copyKey(btn) {
+	const txt = btn.textContent;
+	try { await navigator.clipboard.writeText(txt); }
+	catch (e) { const r = document.createRange(); r.selectNodeContents(btn); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); return; }
+	btn.classList.add('copied'); setTimeout(() => btn.classList.remove('copied'), 900);
+}
+
+for (const r of ROWS) {
+	const row = el('div', 'mod');
+	// Modifier
+	const c1 = el('div');
+	c1.append(el('div', 'name', r.name));
+	const meta = el('div', 'meta');
+	const key = el('button', 'key', r.key); key.type = 'button'; key.title = 'Copy key'; key.addEventListener('click', () => copyKey(key));
+	const [bc, bt] = BETTER[r.better];
+	meta.append(key, el('span', 'tag', r.scope), el('span', 'tag', r.kind), el('span', 'tag ' + bc, bt));
+	c1.append(meta);
+	if (r.info) c1.append(el('p', 'desc', r.info));
+	// Vanilla
+	const c2 = el('div'); c2.append(el('span', 'cell-label', 'Vanilla advances'));
+	if (r.advCount) {
+		const vals = el('div', 'vals');
+		for (const v of r.advValues) { const s = el('span', 'val', v.v); if (v.n > 1) s.append(el('i', null, '×' + v.n)); vals.append(s); }
+		c2.append(vals);
+		c2.append(el('div', 'small', r.advCount + (r.advCount === 1 ? ' advance' : ' advances') + (r.examples.length ? ', e.g. ' + r.examples.join(', ') : '')));
+	} else c2.append(el('div', 'none', 'No vanilla advance'));
+	if (r.elsewhere.length) c2.append(el('div', 'small', 'Also in ' + r.elsewhere.slice(0, 5).map(([d, n]) => d + ' ' + n).join(', ') + (r.elsewhere.length > 5 ? ' and ' + (r.elsewhere.length - 5) + ' more' : '')));
+	// Focus picks
+	const c3 = el('div'); c3.append(el('span', 'cell-label', 'Focus picks'));
+	if (r.abm.length) {
+		const ul = el('ul', 'abm');
+		for (const a of r.abm) { const li = el('li'); li.append(el('span', 'v', a.value), el('span', null, a.advance), el('span', 'where', a.branch + ', ' + a.age)); ul.append(li); }
+		c3.append(ul);
+	} else c3.append(el('div', 'none', 'Not used'));
+	row.append(c1, c2, c3);
+	r.el = row;
+	r.text = (r.name + ' ' + r.key + ' ' + (r.info || '') + ' ' + r.abm.map(a => a.advance + ' ' + a.branch).join(' ')).toLowerCase();
+	secEls[r.section].sec.append(row);
+}
+
+const state = { q: '', scopes: new Set(['Country', 'Unit']), adv: false, free: false };
+function apply() {
+	const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+	const shown = {};
+	let total = 0;
+	for (const r of ROWS) {
+		const ok = state.scopes.has(r.scope === 'Other' ? 'Country' : r.scope)
+			&& (!state.adv || r.advCount > 0)
+			&& (!state.free || r.abm.length === 0)
+			&& words.every(w => r.text.includes(w));
+		r.el.hidden = !ok;
+		if (ok) { shown[r.section] = (shown[r.section] || 0) + 1; total++; }
+	}
+	for (const s of SECTIONS) {
+		const n = shown[s.id] || 0;
+		secEls[s.id].sec.hidden = n === 0;
+		secEls[s.id].n.textContent = n;
+		secEls[s.id].link.classList.toggle('empty', n === 0);
+	}
+	document.getElementById('count').textContent = total + ' of ' + ROWS.length + ' shown';
+	document.getElementById('empty').hidden = total > 0;
+}
+document.getElementById('q').addEventListener('input', e => { state.q = e.target.value; apply(); });
+for (const b of document.querySelectorAll('[data-scope]')) b.addEventListener('click', () => {
+	const on = b.getAttribute('aria-pressed') !== 'true';
+	b.setAttribute('aria-pressed', on);
+	state.scopes[on ? 'add' : 'delete'](b.dataset.scope);
+	apply();
+});
+for (const [id, k] of [['t-adv', 'adv'], ['t-free', 'free']]) {
+	const b = document.getElementById(id);
+	b.addEventListener('click', () => { state[k] = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', state[k]); apply(); });
+}
+apply();
+if (location.hash && secEls[location.hash.slice(1)]) secEls[location.hash.slice(1)].sec.scrollIntoView();
+</script>
