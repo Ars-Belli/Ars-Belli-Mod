@@ -202,7 +202,7 @@ abm_focus_switch_mercenary = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = enforced_service has_advance = open_levy_standards has_advance = regular_levy_training has_advance = battlefield_commisions has_advance = abm_local_militias has_advance = abm_feudal_obligations has_advance = improved_rams has_advance = boarding_parties has_advance = marine_regiments has_advance = naval_glory has_advance = privateers has_advance = ships_penny } }
+			NOT = { OR = { has_advance = enforced_service has_advance = open_levy_standards has_advance = regular_levy_training has_advance = battlefield_commisions has_advance = abm_local_militias has_advance = abm_feudal_obligations has_advance = finest_of_horses has_advance = improved_rams has_advance = boarding_parties has_advance = marine_regiments has_advance = naval_glory has_advance = privateers has_advance = ships_penny } }
 		}
 	}
 	effect = {
@@ -245,7 +245,7 @@ abm_focus_switch_maritime = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = enforced_service has_advance = open_levy_standards has_advance = regular_levy_training has_advance = battlefield_commisions has_advance = abm_local_militias has_advance = abm_feudal_obligations has_advance = benefits_for_mercenaries has_advance = organised_mercenary_recruitment has_advance = organised_mercenary_payment has_advance = glorious_arms has_advance = abm_ensure_mercenary_payments has_advance = tolerance_idea } }
+			NOT = { OR = { has_advance = enforced_service has_advance = open_levy_standards has_advance = regular_levy_training has_advance = battlefield_commisions has_advance = abm_local_militias has_advance = abm_feudal_obligations has_advance = finest_of_horses has_advance = benefits_for_mercenaries has_advance = organised_mercenary_recruitment has_advance = organised_mercenary_payment has_advance = glorious_arms has_advance = abm_ensure_mercenary_payments has_advance = tolerance_idea } }
 		}
 	}
 	effect = {
@@ -262,7 +262,7 @@ abm_focus_switch_maritime = {
 
 abm_focus_pick_infrastructure = {
 	scope = country
-	is_shown = { NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_diplomatic } } }
+	is_shown = { NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_espionage } } }
 	is_valid = {
 		custom_tooltip = {
 			text = abm_focus_panel.age_3_discovery.reached_tt
@@ -276,7 +276,7 @@ abm_focus_switch_infrastructure = {
 	scope = country
 	is_shown = {
 		NOT = { has_variable = abm_focus_infrastructure }
-		OR = { has_variable = abm_focus_exploration has_variable = abm_focus_diplomatic }
+		OR = { has_variable = abm_focus_exploration has_variable = abm_focus_espionage }
 	}
 	is_valid = {
 		custom_tooltip = {
@@ -288,12 +288,12 @@ abm_focus_switch_infrastructure = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = quest_for_the_new_world has_advance = exploration has_advance = overseas_exploration has_advance = faster_colonists has_advance = colonial_ventures has_advance = overseas_trade has_advance = flexible_negotiation has_advance = formal_diplomacy has_advance = diplomatic_influence has_advance = adaptability has_advance = diplomatic_corps has_advance = indirect_rule } }
+			NOT = { OR = { has_advance = quest_for_the_new_world has_advance = exploration has_advance = overseas_exploration has_advance = faster_colonists has_advance = colonial_ventures has_advance = overseas_trade has_advance = vetting has_advance = abm_sabotage_fort_advance has_advance = infiltrate_administration_advance has_advance = foreign_embassies has_advance = abm_global_networks has_advance = abm_industrial_espionage } }
 		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_exploration } remove_variable = abm_focus_exploration }
-		if = { limit = { has_variable = abm_focus_diplomatic } remove_variable = abm_focus_diplomatic }
+		if = { limit = { has_variable = abm_focus_espionage } remove_variable = abm_focus_espionage }
 		set_variable = abm_focus_infrastructure
 		if = {
 			limit = { has_variable = abm_focus_changes_used }
@@ -305,7 +305,7 @@ abm_focus_switch_infrastructure = {
 
 abm_focus_pick_exploration = {
 	scope = country
-	is_shown = { NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_diplomatic } } }
+	is_shown = { NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_espionage } } }
 	is_valid = {
 		custom_tooltip = {
 			text = abm_focus_panel.age_3_discovery.reached_tt
@@ -319,7 +319,7 @@ abm_focus_switch_exploration = {
 	scope = country
 	is_shown = {
 		NOT = { has_variable = abm_focus_exploration }
-		OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_diplomatic }
+		OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_espionage }
 	}
 	is_valid = {
 		custom_tooltip = {
@@ -331,12 +331,12 @@ abm_focus_switch_exploration = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = organised_construction has_advance = efficient_construction_plans has_advance = expanded_infrastructure_network has_advance = efficient_mining has_advance = rgo_logistics_mil_choice has_advance = advanced_bureaucracy has_advance = flexible_negotiation has_advance = formal_diplomacy has_advance = diplomatic_influence has_advance = adaptability has_advance = diplomatic_corps has_advance = indirect_rule } }
+			NOT = { OR = { has_advance = organised_construction has_advance = efficient_construction_plans has_advance = expanded_infrastructure_network has_advance = efficient_mining has_advance = rgo_logistics_mil_choice has_advance = advanced_bureaucracy has_advance = vetting has_advance = abm_sabotage_fort_advance has_advance = infiltrate_administration_advance has_advance = foreign_embassies has_advance = abm_global_networks has_advance = abm_industrial_espionage } }
 		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_infrastructure } remove_variable = abm_focus_infrastructure }
-		if = { limit = { has_variable = abm_focus_diplomatic } remove_variable = abm_focus_diplomatic }
+		if = { limit = { has_variable = abm_focus_espionage } remove_variable = abm_focus_espionage }
 		set_variable = abm_focus_exploration
 		if = {
 			limit = { has_variable = abm_focus_changes_used }
@@ -346,22 +346,22 @@ abm_focus_switch_exploration = {
 	}
 }
 
-abm_focus_pick_diplomatic = {
+abm_focus_pick_espionage = {
 	scope = country
-	is_shown = { NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_diplomatic } } }
+	is_shown = { NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_espionage } } }
 	is_valid = {
 		custom_tooltip = {
 			text = abm_focus_panel.age_3_discovery.reached_tt
 			OR = { current_age = age_3_discovery current_age = age_4_reformation current_age = age_5_absolutism current_age = age_6_revolutions }
 		}
 	}
-	effect = { set_variable = abm_focus_diplomatic }
+	effect = { set_variable = abm_focus_espionage }
 }
 
-abm_focus_switch_diplomatic = {
+abm_focus_switch_espionage = {
 	scope = country
 	is_shown = {
-		NOT = { has_variable = abm_focus_diplomatic }
+		NOT = { has_variable = abm_focus_espionage }
 		OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration }
 	}
 	is_valid = {
@@ -380,7 +380,7 @@ abm_focus_switch_diplomatic = {
 	effect = {
 		if = { limit = { has_variable = abm_focus_infrastructure } remove_variable = abm_focus_infrastructure }
 		if = { limit = { has_variable = abm_focus_exploration } remove_variable = abm_focus_exploration }
-		set_variable = abm_focus_diplomatic
+		set_variable = abm_focus_espionage
 		if = {
 			limit = { has_variable = abm_focus_changes_used }
 			change_variable = { name = abm_focus_changes_used add = 1 }
@@ -417,7 +417,7 @@ abm_focus_switch_quality = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = abm_rapid_reinforcement has_advance = camp_followers has_advance = the_old_and_infirm has_advance = abm_deep_reserves has_advance = supply_trains has_advance = grand_army has_advance = oak_forests_for_ships has_advance = abm_patrol_vessels has_advance = abm_naval_education has_advance = copper_bottoms has_advance = naval_drill has_advance = grand_navy } }
+			NOT = { OR = { has_advance = abm_rapid_reinforcement has_advance = camp_followers has_advance = the_old_and_infirm has_advance = abm_deep_reserves has_advance = supply_trains has_advance = grand_army has_advance = oak_forests_for_ships has_advance = abm_patrol_vessels has_advance = abm_naval_education has_advance = copper_bottoms has_advance = naval_drill has_advance = grand_navy has_advance = abm_tactics_from_across_the_seas } }
 		}
 	}
 	effect = {
@@ -460,7 +460,7 @@ abm_focus_switch_quantity = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = formalized_officer_corps has_advance = administrative_leadership has_advance = quality_education has_advance = abm_drill_sergeants has_advance = abm_trained_march has_advance = military_drill has_advance = oak_forests_for_ships has_advance = abm_patrol_vessels has_advance = abm_naval_education has_advance = copper_bottoms has_advance = naval_drill has_advance = grand_navy } }
+			NOT = { OR = { has_advance = formalized_officer_corps has_advance = administrative_leadership has_advance = quality_education has_advance = abm_drill_sergeants has_advance = abm_trained_march has_advance = military_drill has_advance = abm_strict_discipline has_advance = oak_forests_for_ships has_advance = abm_patrol_vessels has_advance = abm_naval_education has_advance = copper_bottoms has_advance = naval_drill has_advance = grand_navy has_advance = abm_tactics_from_across_the_seas } }
 		}
 	}
 	effect = {
@@ -503,7 +503,7 @@ abm_focus_switch_naval = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = formalized_officer_corps has_advance = administrative_leadership has_advance = quality_education has_advance = abm_drill_sergeants has_advance = abm_trained_march has_advance = military_drill has_advance = abm_rapid_reinforcement has_advance = camp_followers has_advance = the_old_and_infirm has_advance = abm_deep_reserves has_advance = supply_trains has_advance = grand_army } }
+			NOT = { OR = { has_advance = formalized_officer_corps has_advance = administrative_leadership has_advance = quality_education has_advance = abm_drill_sergeants has_advance = abm_trained_march has_advance = military_drill has_advance = abm_strict_discipline has_advance = abm_rapid_reinforcement has_advance = camp_followers has_advance = the_old_and_infirm has_advance = abm_deep_reserves has_advance = supply_trains has_advance = grand_army } }
 		}
 	}
 	effect = {
@@ -778,7 +778,7 @@ abm_focus_switch_littoral_fleet = {
 
 abm_focus_pick_administration = {
 	scope = country
-	is_shown = { NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_espionage } } }
+	is_shown = { NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_diplomatic } } }
 	is_valid = {
 		custom_tooltip = {
 			text = abm_focus_panel.age_5_absolutism.reached_tt
@@ -792,7 +792,7 @@ abm_focus_switch_administration = {
 	scope = country
 	is_shown = {
 		NOT = { has_variable = abm_focus_administration }
-		OR = { has_variable = abm_focus_commerce has_variable = abm_focus_espionage }
+		OR = { has_variable = abm_focus_commerce has_variable = abm_focus_diplomatic }
 	}
 	is_valid = {
 		custom_tooltip = {
@@ -804,12 +804,12 @@ abm_focus_switch_administration = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = competetive_merchants has_advance = national_trade_policy has_advance = fast_negotiations has_advance = free_trade has_advance = trade_manipulation has_advance = bookkeeping has_advance = vetting has_advance = abm_sabotage_fort_advance has_advance = infiltrate_administration_advance has_advance = foreign_embassies has_advance = abm_global_networks has_advance = abm_industrial_espionage } }
+			NOT = { OR = { has_advance = competetive_merchants has_advance = national_trade_policy has_advance = fast_negotiations has_advance = free_trade has_advance = trade_manipulation has_advance = bookkeeping has_advance = flexible_negotiation has_advance = formal_diplomacy has_advance = diplomatic_influence has_advance = adaptability has_advance = diplomatic_corps has_advance = indirect_rule } }
 		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_commerce } remove_variable = abm_focus_commerce }
-		if = { limit = { has_variable = abm_focus_espionage } remove_variable = abm_focus_espionage }
+		if = { limit = { has_variable = abm_focus_diplomatic } remove_variable = abm_focus_diplomatic }
 		set_variable = abm_focus_administration
 		if = {
 			limit = { has_variable = abm_focus_changes_used }
@@ -821,7 +821,7 @@ abm_focus_switch_administration = {
 
 abm_focus_pick_commerce = {
 	scope = country
-	is_shown = { NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_espionage } } }
+	is_shown = { NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_diplomatic } } }
 	is_valid = {
 		custom_tooltip = {
 			text = abm_focus_panel.age_5_absolutism.reached_tt
@@ -835,7 +835,7 @@ abm_focus_switch_commerce = {
 	scope = country
 	is_shown = {
 		NOT = { has_variable = abm_focus_commerce }
-		OR = { has_variable = abm_focus_administration has_variable = abm_focus_espionage }
+		OR = { has_variable = abm_focus_administration has_variable = abm_focus_diplomatic }
 	}
 	is_valid = {
 		custom_tooltip = {
@@ -847,12 +847,12 @@ abm_focus_switch_commerce = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = cabinet has_advance = national_bank has_advance = civil_servants has_advance = legislative_efficiency_idea has_advance = centralized_government has_advance = economic_ideas has_advance = vetting has_advance = abm_sabotage_fort_advance has_advance = infiltrate_administration_advance has_advance = foreign_embassies has_advance = abm_global_networks has_advance = abm_industrial_espionage } }
+			NOT = { OR = { has_advance = cabinet has_advance = national_bank has_advance = civil_servants has_advance = legislative_efficiency_idea has_advance = centralized_government has_advance = economic_ideas has_advance = flexible_negotiation has_advance = formal_diplomacy has_advance = diplomatic_influence has_advance = adaptability has_advance = diplomatic_corps has_advance = indirect_rule } }
 		}
 	}
 	effect = {
 		if = { limit = { has_variable = abm_focus_administration } remove_variable = abm_focus_administration }
-		if = { limit = { has_variable = abm_focus_espionage } remove_variable = abm_focus_espionage }
+		if = { limit = { has_variable = abm_focus_diplomatic } remove_variable = abm_focus_diplomatic }
 		set_variable = abm_focus_commerce
 		if = {
 			limit = { has_variable = abm_focus_changes_used }
@@ -862,22 +862,22 @@ abm_focus_switch_commerce = {
 	}
 }
 
-abm_focus_pick_espionage = {
+abm_focus_pick_diplomatic = {
 	scope = country
-	is_shown = { NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_espionage } } }
+	is_shown = { NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_diplomatic } } }
 	is_valid = {
 		custom_tooltip = {
 			text = abm_focus_panel.age_5_absolutism.reached_tt
 			OR = { current_age = age_5_absolutism current_age = age_6_revolutions }
 		}
 	}
-	effect = { set_variable = abm_focus_espionage }
+	effect = { set_variable = abm_focus_diplomatic }
 }
 
-abm_focus_switch_espionage = {
+abm_focus_switch_diplomatic = {
 	scope = country
 	is_shown = {
-		NOT = { has_variable = abm_focus_espionage }
+		NOT = { has_variable = abm_focus_diplomatic }
 		OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce }
 	}
 	is_valid = {
@@ -896,7 +896,7 @@ abm_focus_switch_espionage = {
 	effect = {
 		if = { limit = { has_variable = abm_focus_administration } remove_variable = abm_focus_administration }
 		if = { limit = { has_variable = abm_focus_commerce } remove_variable = abm_focus_commerce }
-		set_variable = abm_focus_espionage
+		set_variable = abm_focus_diplomatic
 		if = {
 			limit = { has_variable = abm_focus_changes_used }
 			change_variable = { name = abm_focus_changes_used add = 1 }
@@ -1234,7 +1234,7 @@ abm_focus_switch_conscription = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = discipline_drills has_advance = abm_thorough_training has_advance = regimental_system has_advance = abm_skirmish_line has_advance = finest_of_horses has_advance = bayonet_leaders has_advance = abm_guerillas has_advance = morale_recovery_rev_dip_choice has_advance = abm_peoples_war has_advance = abm_last_stand has_advance = abm_national_resistance has_advance = abm_foreign_fighters } }
+			NOT = { OR = { has_advance = discipline_drills has_advance = abm_thorough_training has_advance = regimental_system has_advance = abm_skirmish_line has_advance = bayonet_leaders has_advance = abm_guerillas has_advance = morale_recovery_rev_dip_choice has_advance = abm_peoples_war has_advance = abm_last_stand has_advance = abm_national_resistance has_advance = abm_foreign_fighters } }
 		}
 	}
 	effect = {
@@ -1277,7 +1277,7 @@ abm_focus_switch_insurrection = {
 		}
 		custom_tooltip = {
 			text = ABM_FOCUS_NOTHING_RESEARCHED_TT
-			NOT = { OR = { has_advance = discipline_drills has_advance = abm_thorough_training has_advance = regimental_system has_advance = abm_skirmish_line has_advance = finest_of_horses has_advance = bayonet_leaders has_advance = mass_army has_advance = national_conscripts has_advance = nationalistic_enthusiasm has_advance = the_young_can_serve has_advance = massed_battery has_advance = private_to_marshal } }
+			NOT = { OR = { has_advance = discipline_drills has_advance = abm_thorough_training has_advance = regimental_system has_advance = abm_skirmish_line has_advance = bayonet_leaders has_advance = mass_army has_advance = national_conscripts has_advance = nationalistic_enthusiasm has_advance = the_young_can_serve has_advance = massed_battery has_advance = private_to_marshal } }
 		}
 	}
 	effect = {
@@ -1306,7 +1306,7 @@ abm_focus_pending = {
 			AND = {
 				current_age = age_3_discovery
 				OR = {
-					NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_diplomatic } }
+					NOT = { OR = { has_variable = abm_focus_infrastructure has_variable = abm_focus_exploration has_variable = abm_focus_espionage } }
 					NOT = { OR = { has_variable = abm_focus_quality has_variable = abm_focus_quantity has_variable = abm_focus_naval } }
 				}
 			}
@@ -1320,7 +1320,7 @@ abm_focus_pending = {
 			AND = {
 				current_age = age_5_absolutism
 				OR = {
-					NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_espionage } }
+					NOT = { OR = { has_variable = abm_focus_administration has_variable = abm_focus_commerce has_variable = abm_focus_diplomatic } }
 					NOT = { OR = { has_variable = abm_focus_maneuver has_variable = abm_focus_logistics has_variable = abm_focus_highseas_fleet } }
 				}
 			}

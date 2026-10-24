@@ -359,71 +359,70 @@ overseas_trade = {
 }
 
 ############################
-# age_3_discovery - Diplomatic (abm_focus_diplomatic)
+# age_3_discovery - Espionage (abm_focus_espionage)
 ############################
 
-flexible_negotiation = {
+vetting = {
 	age = age_3_discovery
-	icon = scholasticism
+	icon = debt_and_loans
 	depth = 0
 
-	potential = { has_variable = abm_focus_diplomatic }
+	potential = { has_variable = abm_focus_espionage }
 
-	global_war_score_efficiency = 0.2
+	counter_espionage = 0.33
+	spy_network_construction = 0.5
 }
 
-formal_diplomacy = {
+abm_sabotage_fort_advance = {
 	age = age_3_discovery
-	icon = glorious_arms
-	requires = flexible_negotiation
+	icon = fortified_towns
+	requires = vetting
 
-	potential = { has_variable = abm_focus_diplomatic }
+	potential = { has_variable = abm_focus_espionage }
 
-	diplomatic_reputation = diplomatic_reputation_mild_bonus
-	improve_relation_impact = 0.30
+	unlock_country_interaction = abm_sabotage_fort
 }
 
-diplomatic_influence = {
+REPLACE:infiltrate_administration_advance = {
+	age = age_3_discovery
+	icon = efficient_spies
+	requires = abm_sabotage_fort_advance
+
+	potential = { has_variable = abm_focus_espionage }
+
+	unlock_diplomacy = { infiltrate_administration }
+}
+
+foreign_embassies = {
 	age = age_3_discovery
 	icon = diplomatic_influence
-	requires = formal_diplomacy
+	requires = vetting
 
-	potential = { has_variable = abm_focus_diplomatic }
-
-	diplomatic_reputation = diplomatic_reputation_mild_bonus
-	diplomatic_capacity = 1
-}
-
-adaptability = {
-	age = age_3_discovery
-	icon = diplomatic_range_age_1
-	requires = flexible_negotiation
-
-	potential = { has_variable = abm_focus_diplomatic }
-
-	antagonism_received_modifier = -0.3
-}
-
-diplomatic_corps = {
-	age = age_3_discovery
-	icon = diplomatic_range_age_1
-	requires = adaptability
-
-	potential = { has_variable = abm_focus_diplomatic }
+	potential = { has_variable = abm_focus_espionage }
 
 	monthly_diplomats = 0.1
-	casus_belli_creation_speed_modifier = 0.25
+	max_diplomats = 1
 }
 
-indirect_rule = {
+abm_global_networks = {
 	age = age_3_discovery
-	icon = genoese_banking_traditions
-	requires = diplomatic_corps
+	icon = diplomatic_influence
+	requires = foreign_embassies
 
-	potential = { has_variable = abm_focus_diplomatic }
+	potential = { has_variable = abm_focus_espionage }
 
-	global_separatism = -0.1
-	global_integration_speed_modifier = 0.1
+	diplomatic_range_modifier = 0.5
+	diplomatic_range = 500
+}
+
+abm_industrial_espionage = {
+	age = age_3_discovery
+	icon = efficient_spies
+	requires = abm_global_networks
+
+	potential = { has_variable = abm_focus_espionage }
+
+	unlock_country_interaction = steal_technology
 }
 
 ############################
@@ -749,70 +748,71 @@ bookkeeping = {
 }
 
 ############################
-# age_5_absolutism - Espionage (abm_focus_espionage)
+# age_5_absolutism - Diplomatic (abm_focus_diplomatic)
 ############################
 
-vetting = {
+flexible_negotiation = {
 	age = age_5_absolutism
-	icon = debt_and_loans
+	icon = scholasticism
 	depth = 0
 
-	potential = { has_variable = abm_focus_espionage }
+	potential = { has_variable = abm_focus_diplomatic }
 
-	counter_espionage = 0.33
-	spy_network_construction = 0.5
+	global_war_score_efficiency = 0.2
 }
 
-abm_sabotage_fort_advance = {
+formal_diplomacy = {
 	age = age_5_absolutism
-	icon = fortified_towns
-	requires = vetting
+	icon = glorious_arms
+	requires = flexible_negotiation
 
-	potential = { has_variable = abm_focus_espionage }
+	potential = { has_variable = abm_focus_diplomatic }
 
-	unlock_country_interaction = abm_sabotage_fort
+	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	improve_relation_impact = 0.30
 }
 
-REPLACE:infiltrate_administration_advance = {
-	age = age_5_absolutism
-	icon = efficient_spies
-	requires = abm_sabotage_fort_advance
-
-	potential = { has_variable = abm_focus_espionage }
-
-	unlock_diplomacy = { infiltrate_administration }
-}
-
-foreign_embassies = {
+diplomatic_influence = {
 	age = age_5_absolutism
 	icon = diplomatic_influence
-	requires = vetting
+	requires = formal_diplomacy
 
-	potential = { has_variable = abm_focus_espionage }
+	potential = { has_variable = abm_focus_diplomatic }
+
+	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	diplomatic_capacity = 1
+}
+
+adaptability = {
+	age = age_5_absolutism
+	icon = diplomatic_range_age_1
+	requires = flexible_negotiation
+
+	potential = { has_variable = abm_focus_diplomatic }
+
+	antagonism_received_modifier = -0.3
+}
+
+diplomatic_corps = {
+	age = age_5_absolutism
+	icon = diplomatic_range_age_1
+	requires = adaptability
+
+	potential = { has_variable = abm_focus_diplomatic }
 
 	monthly_diplomats = 0.1
-	max_diplomats = 1
+	casus_belli_creation_speed_modifier = 0.25
 }
 
-abm_global_networks = {
+indirect_rule = {
 	age = age_5_absolutism
-	icon = diplomatic_influence
-	requires = foreign_embassies
+	icon = genoese_banking_traditions
+	requires = diplomatic_corps
 
-	potential = { has_variable = abm_focus_espionage }
+	potential = { has_variable = abm_focus_diplomatic }
 
-	diplomatic_range_modifier = 0.5
-	diplomatic_range = 500
-}
-
-abm_industrial_espionage = {
-	age = age_5_absolutism
-	icon = efficient_spies
-	requires = abm_global_networks
-
-	potential = { has_variable = abm_focus_espionage }
-
-	unlock_country_interaction = steal_technology
+	global_separatism = -0.1
+	global_integration_speed_modifier = 0.1
 }
 
 ############################
