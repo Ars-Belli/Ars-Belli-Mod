@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.22 | **Supported game version:** 1.3.\*
-**Compiled:** 5 October 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.23 | **Supported game version:** 1.3.\*
+**Compiled:** 24 October 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -35,7 +35,9 @@ here in full, but these can be easily seen in-game on the world map.
 
 **[Release History (Patchnotes)](#release-history-patchnotes)**
 
-- [game.1.3.11.mod.21](#game1311mod21-current)
+- [game.1.3.11.mod.23](#game1311mod23-current)
+- [game.1.3.11.mod.22](#game1311mod22)
+- [game.1.3.11.mod.21](#game1311mod21)
 - [game.1.3.11.mod.20](#game1311mod20)
 - [game.1.3.11.mod.19](#game1311mod19)
 - [game.1.3.11.mod.18](#game1311mod18)
@@ -157,19 +159,34 @@ Alliance, Defensive and Guarantee points.
 - Costs one diplomat and is limited to one use per month per actor, so it can no longer be spammed at
   another player (unthrottled use could crash the target's client).
 
-### "Pay for" access actions (five new actions)
+### "Pay for" access actions (two new actions)
 
-- Pay for Military Access, Fleet Basing Rights, Trade Access, Food Access and Fondaco Rights, each
-  with a gold slider so you can sweeten the offer.
+- Pay for Trade Access and Pay for Fondaco Rights, each with a gold slider so you can sweeten the
+  offer.
 - The slider opens at 12 months of the recipient's income, minimum 0, maximum your own treasury. Gold
   transfers from you to them on acceptance.
-- Pay for Military Access and Pay for Fleet Basing Rights auto-accept unless the AI is your rival
-  (rivalry overrides any amount of gold). The other three scale AI acceptance with the offered gold
-  (8 acceptance points per month of the recipient's income offered).
+- AI acceptance scales with the offered gold (8 acceptance points per month of the recipient's income
+  offered).
 - Country pickers are filtered to countries within diplomatic range.
-- The vanilla request paths for military access and fleet basing are untouched and keep their normal
-  favour-based flow.
 - The AI never proposes these actions itself.
+- There is no paid version of military access, fleet basing rights or food access — it could be used
+  to move gold between players. Use the vanilla requests instead (military access and fleet basing
+  rights cost no favours, see [section 5](#5-changes-to-vanilla-diplomatic-actions)).
+
+### Player Coalition
+
+- A coalition that only players can found or join, aimed at a multiplayer **Great Power**. It sits
+  alongside the vanilla coalition, which works as before.
+- It needs no antagonism, opinion or diplomatic range toward the target. Subjects (tributaries
+  excepted), countries with a truce, union or subject tie to the target, and countries already in a
+  player coalition against it cannot join. AI countries never join.
+- Members defend each other if the target attacks one of them. The coalition declares war with the
+  regular Coalition casus belli (see [section 8](#8-war-wargoals-and-peace)), which **only the
+  coalition leader** holds and uses to rally the members. If the leader leaves, the coalition
+  dissolves.
+- Members cannot ally or share vision with the target.
+- **Dissolve Player Coalition** peace term: the members cannot form another one against the winner
+  for 15 years.
 
 ### Send Economic Support (Ars Belli version)
 
@@ -228,6 +245,10 @@ Alliance, Defensive and Guarantee points.
 ### Rivals
 
 - No cooldown on removing a rival, so rivals can be swapped freely. [vanilla: 60 months]
+
+### Access requests
+
+- Requesting military access or fleet basing rights costs no favours. [vanilla 5 favours]
 
 ### Institution-spread exploits closed
 
@@ -335,10 +356,13 @@ Rebuilt from scratch.
 
 ### Casus belli and wargoal costs
 
-- **Coalition CB** (superiority_coalition): attacker conquer/subjugate cost 0.75, defender 1.25.
-  [vanilla 1.0 / 1.0]
-- **Take Down Hegemon CB** (take_capital_imperial): both sides 0.60. [vanilla 0.25 / 0.25 — both
-  sides were heavily discounted]
+- **Coalition CB** (superiority_coalition): attacker conquer/subjugate cost 0.65, defender 1.25.
+  [vanilla 1.0 / 1.0] Used by both the vanilla coalition and the Player Coalition.
+- **Take Down Great Power CB** (vanilla Take Down Hegemon): targets the **top 3 Great Powers** of the
+  multiplayer ranking, and cannot be used by a top-3 Great Power. [vanilla targeted the hegemon]
+- **Take-capital wargoal** (take_capital_imperial — Take Down Great Power, Imperialism and the
+  revolution casus belli): both sides 0.70. [vanilla 0.25 / 0.25 — both sides were heavily
+  discounted]
 - **Heretic wargoal** (superiority_heretic): attacker 1.1, defender 1.0. [vanilla was loaded +75% /
   +20%]
 - **Religious Conquer Province:** 1.0 / 1.0, i.e. neutral.
@@ -601,7 +625,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.22).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.23).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -612,7 +636,46 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.22 (current)
+## game.1.3.11.mod.23 (current)
+
+Since game.1.3.11.mod.22 → game.1.3.11.mod.23:
+
+### New Diplomatic Actions
+
+- **Player Coalition:** a new coalition that only players can found or join, aimed at a multiplayer
+  Great Power. It needs no antagonism, opinion or diplomatic range toward the target; subjects
+  (tributaries excepted), countries with a truce, union or subject tie to the target, and countries
+  already in a player coalition against it cannot join. AI countries never join. Members defend each
+  other if the target attacks one of them, and the coalition can declare war with the regular
+  Coalition casus belli, which **only the coalition leader** holds and uses to rally the members.
+  Coalition members cannot ally or share vision with the target, and a new **Dissolve Player
+  Coalition** peace term bars the members from forming another one against the winner for 15 years
+- **Pay for Military Access, Pay for Fleet Basing Rights and Pay for Food Access are removed** — they
+  could be used to move gold between players. Pay for Trade Access and Pay for Fondaco Rights remain
+- The mod's diplomatic actions (the Pay for actions, Send Economic Support, Break Others' Guarantee)
+  can no longer target your own country
+
+### Changes to Vanilla Diplomatic Actions
+
+- **Requesting military access or fleet basing rights no longer costs favours** [vanilla 5 favours]
+
+### War, Wargoals and Peace
+
+- **Take Down Hegemon is now "Take Down Great Power":** it targets the **top 3 Great Powers** of the
+  multiplayer ranking instead of the hegemon, and cannot be used by a top-3 Great Power
+- **Coalition CB:** attacker conquer and subjugate cost 0.65 [was 0.75]; the defender stays at 1.25
+- **Take Down Great Power, Imperialism and the revolution casus belli** (take-capital wargoal):
+  conquer and subjugate cost 0.70 on both sides [was 0.60]
+
+### National Flavour
+
+- The **Sakoku Law** event can now fire for **Western Japan** as intended
+
+### UI and Quality of Life
+
+- Paying for trade access or fondaco rights now shows in the message log for both sides
+
+## game.1.3.11.mod.22
 
 Since game.1.3.11.mod.21 → game.1.3.11.mod.22:
 
