@@ -38,7 +38,7 @@ module.exports = {
       ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.30'],
       ['battlefield_commisions', 'army_tradition_from_battle = 1.0\nnavy_tradition_from_battle = 1.0'],
       ['abm_local_militias', 'global_levy_recruitment_speed_modifier = 0.33\nlevy_maintenance_modifier = -0.5', { icon: 'regimental_system', name: 'Local Militias', desc: 'Townsmen and villagers drilled on the green each Sunday can be called to arms quickly and cost little to keep.' }],
-      ['finest_of_horses', 'army_heavy_cavalry_power = 0.05\narmy_light_cavalry_power = 0.05\narmy_heavy_cavalry_maintenance_cost_modifier = -0.05\narmy_light_cavalry_maintenance_cost_modifier = -0.05'],
+      ['abm_common_foot', 'army_heavy_infantry_power = 0.10\narmy_light_infantry_power = 0.10', { icon: 'drill_army_advance', name: 'Common Foot', desc: 'Most of our levies march on foot. Taught to keep their ranks with pike and bow, they stand their ground far better than a rabble.' }],
     ]},
     { id: 'mercenary', name: 'Mercenary', desc: 'Hired forces: cheaper, more available mercenaries, and privateers at sea.', adv: [
       ['benefits_for_mercenaries', 'mercenary_maintenance_efficiency = 0.1\ntolerance_heretic = 0.5\ntolerance_heathen = 0.5'],
@@ -50,7 +50,7 @@ module.exports = {
       ['privateers', 'can_hire_privateers = yes'],
     ]},
     { id: 'standing_forces', name: 'Standing Forces', desc: 'A permanent army and fleet, kept paid and under arms in peacetime.', adv: [
-      ['abm_permanent_companies', 'global_manpower_modifier = 0.10\nglobal_sailors_modifier = 0.10', { icon: 'regimental_system', name: 'Permanent Companies', desc: 'Companies of paid soldiers and crews are kept under arms between wars, quartered in our armories and ports and ready to march or sail.' }],
+      ['finest_of_horses', 'army_heavy_cavalry_power = 0.05\narmy_light_cavalry_power = 0.05\narmy_heavy_cavalry_maintenance_cost_modifier = -0.05\narmy_light_cavalry_maintenance_cost_modifier = -0.05'],
       ['abm_royal_arsenals', 'regiment_recruit_speed = 0.25\nship_build_speed = 0.25', { icon: 'ship_building_advance', name: 'Royal Arsenals', desc: 'State arsenals turn out arms, armour and hulls to a common pattern, year in, year out.' }],
       ['abm_drilled_regulars', 'monthly_experience_gain = 0.25', { icon: 'drill_army_advance', name: 'Drilled Regulars', desc: 'Soldiers and sailors who serve all year round have time to learn their trade between campaigns.' }],
       ['abm_household_troops', 'land_morale = 0.25\nnaval_morale = 0.25', { icon: 'army_professionalism', name: 'Household Troops', desc: 'The crown\'s own guards and flagships set the standard of courage for everyone else.' }],

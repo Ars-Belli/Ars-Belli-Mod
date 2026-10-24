@@ -62,17 +62,15 @@ abm_local_militias = {
 	levy_maintenance_modifier = -0.5
 }
 
-finest_of_horses = {
+abm_common_foot = {
 	age = age_2_renaissance
-	icon = finest_of_horses
+	icon = drill_army_advance
 	requires = abm_local_militias
 
 	potential = { has_variable = abm_focus_levy }
 
-	army_heavy_cavalry_power = 0.05
-	army_light_cavalry_power = 0.05
-	army_heavy_cavalry_maintenance_cost_modifier = -0.05
-	army_light_cavalry_maintenance_cost_modifier = -0.05
+	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.10
 }
 
 ############################
@@ -148,21 +146,23 @@ privateers = {
 # age_2_renaissance - Standing Forces (abm_focus_standing_forces)
 ############################
 
-abm_permanent_companies = {
+finest_of_horses = {
 	age = age_2_renaissance
-	icon = regimental_system
+	icon = finest_of_horses
 	depth = 0
 
 	potential = { has_variable = abm_focus_standing_forces }
 
-	global_manpower_modifier = 0.10
-	global_sailors_modifier = 0.10
+	army_heavy_cavalry_power = 0.05
+	army_light_cavalry_power = 0.05
+	army_heavy_cavalry_maintenance_cost_modifier = -0.05
+	army_light_cavalry_maintenance_cost_modifier = -0.05
 }
 
 abm_royal_arsenals = {
 	age = age_2_renaissance
 	icon = ship_building_advance
-	requires = abm_permanent_companies
+	requires = finest_of_horses
 
 	potential = { has_variable = abm_focus_standing_forces }
 
@@ -183,7 +183,7 @@ abm_drilled_regulars = {
 abm_household_troops = {
 	age = age_2_renaissance
 	icon = army_professionalism
-	requires = abm_permanent_companies
+	requires = finest_of_horses
 
 	potential = { has_variable = abm_focus_standing_forces }
 
