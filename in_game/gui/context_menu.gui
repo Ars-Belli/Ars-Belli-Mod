@@ -1247,6 +1247,33 @@ types ContextMenuSpecificTypes
 							}
 						}
 
+						# Ars Belli: step a location down one rank (megalopolis -> city -> town
+						# -> rural settlement). Sits next to the engine's own "Downgrade Location"
+						# right-click on the rank icon, which always razes straight to countryside.
+						# Same shape as add_location_to_international_organization below: an
+						# owncountry generic_action whose location target is pre-filled from the
+						# menu's datacontext, so the map picker is skipped.
+						ContextMenuActionEntry = {
+							name = "abm_downgrade_location_rank"
+							visible = "[And(Location.IsPlayerLocation, Not(Location.GetRank.IsDefault))]"
+							actor = "[Player]"
+							datacontext = "[Location]"
+							parameter = {
+								parameter_name = "target"
+								parameter_value = "[Location.MakeScope]"
+							}
+							left_click_and_hold_action = { action_name = "abm_downgrade_location_rank" }
+
+							blockoverride "entry_icon_texture" {
+								texture = "gfx/interface/buttons/flats/down.dds"
+								using = ui_direction_button_overlay
+							}
+
+							blockoverride "entry_text" {
+								text = "abm_downgrade_location_rank"
+							}
+						}
+
 						ContextMenuActionEntry = {
 							name = "periphora"
 							actor = "[Player]"

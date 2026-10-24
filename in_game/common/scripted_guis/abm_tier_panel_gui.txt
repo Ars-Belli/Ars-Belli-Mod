@@ -29,3 +29,19 @@ mp_limits_toggle_fort_alert = {
 		}
 	}
 }
+
+# Per-country toggle for the "over Urban Capacity" popup warning (abm_urbanisation.1).
+# Default state: ON (variable absent). Setting abm_urban_alert_muted mutes it.
+abm_toggle_urban_alert = {
+	effect = {
+		root = {
+			if = {
+				limit = { has_variable = abm_urban_alert_muted }
+				remove_variable = abm_urban_alert_muted
+			}
+			else = {
+				set_variable = { name = abm_urban_alert_muted value = 1 }
+			}
+		}
+	}
+}
