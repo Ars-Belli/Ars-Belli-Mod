@@ -20,7 +20,8 @@ The mod implements a custom ranking system that classifies countries into tiers 
     - Navy (Sailors, Heavy Ships, Galleys)
     - Control & Vassal population
 - **Classification:** Controlled by game rules (e.g., number of GPs/Majors) set at game start.
-- **Triggers:** Use `is_mp_gp`, `is_mp_major`, etc., from `in_game\common\scripted_triggers\mp_limits_triggers.txt` to check a country's rank.
+- **Triggers:** Use `is_mp_gp`, `is_mp_major`, etc., from `in_game\common\scripted_triggers\mp_limits_triggers.txt` to check a country's rank. `is_mp_top3_gp` = GP with `mp_rank_count < 3` (`mp_rank_count` = number of ranked countries with higher power score; unset/1000 for unranked).
+- **Hegemon CB retargeted:** `cb_hegemon` ("Take Down Great Power") is a same-name replacement (`in_game\common\casus_belli\hegemon.txt`): target must be `is_mp_top3_gp`, actor must NOT be (mirrors vanilla's actor `is_hegemon = no`). Loc override in `replace\01_abm_locals_vanilla_l_english.yml`. War goal `take_capital_imperial` (0.70, shared with imperialism/revolution CBs). `cb_hegemon_ultimatum` kept vanilla.
 
 ### 2. Diplomatic Limits (Alliance & Defensive Points)
 - Uses "Alliance Points" (AP) and "Defensive Points" (DP) to limit diplomatic web complexity in multiplayer.

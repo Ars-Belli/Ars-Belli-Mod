@@ -10,6 +10,13 @@ is_mp_small = {
 is_mp_minor = {
 	has_variable = mp_is_minor
 }
+# Top 3 MP Great Powers by power score (mp_rank_count = countries ranked above us).
+# Used by cb_hegemon (casus_belli/hegemon.txt) in place of vanilla is_hegemon.
+is_mp_top3_gp = {
+	is_mp_gp = yes
+	has_variable = mp_rank_count
+	var:mp_rank_count < 3
+}
 is_mp_normal = {
 	OR = {
 		has_variable = mp_is_normal
