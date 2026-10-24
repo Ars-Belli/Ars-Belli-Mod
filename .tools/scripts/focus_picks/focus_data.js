@@ -24,7 +24,7 @@ module.exports = {
       ['abm_protected_trade_caravans', 'trade_land_efficiency = medium_trade_land_efficiency_bonus', { icon: 'expanded_supply_trains', name: 'Protected Trade Caravans', desc: 'Armed escorts and fortified caravanserais along our overland routes let our merchants reach far-off markets without the expense of a fleet.' }],
     ]},
     { id: 'influence', art: 'government/diplomacy_illustration', name: 'Influence', desc: 'Subjects, vassals and diplomats.', adv: [
-      ['integrated_elites', 'monthly_diplomats = 0.2\nmax_diplomats = 1'],
+      ['integrated_elites', 'monthly_diplomats = 0.2\nmax_diplomats = 1\nglobal_estate_power = -0.20'],
       ['tribute_system', 'subject_income_modifier = 0.05\nsubject_loyalty = 10\nsubject_opinions = 25'],
       ['marcher_lords', '', { raw: 'unlock_subject_type = march' }],
       ['buffer_states', 'diplomatic_capacity = 1\ndiplomatic_reputation = diplomatic_reputation_mild_bonus'],
