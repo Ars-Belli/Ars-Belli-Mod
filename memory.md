@@ -46,6 +46,15 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - Cooldown loc key convention is `<cooldown_type>_cooldown` (e.g. `worsen_opinion_cd_cooldown`).
 - Files: `in_game\common\country_interactions\worsen_opinion.txt`, `in_game\common\biases\ars_belli_opinion.txt`, loc in `main_menu\localization\english\00_mp_limits_l_english.yml`
 
+### 2d. Sabotage Fort
+- Covert action (`CATEGORY_COVERT_ACTIONS`, modelled on vanilla `sabotage_reputation`) costing **50 spy network** plus **gold scaled to the victim's income**.
+- **Gold cost:** `price = price:abm_sabotage_fort_price` in `in_game\common\prices\abm_prices.txt`, using `scaled_recipient_gold = 3` = 3 months of `scope:recipient`'s monthly income (`scaled_recipient_gold`/`scaled_gold` = N months of recipient/actor income; vanilla documents this on `send_gift` in `prices\00_hardcoded.txt`). `min_scale = 25` floor, no `max_scale` on purpose. `payee` left unset so the gold leaves the game instead of paying the victim.
+- Two select stages: country, then one of that country's locations with `has_fort = yes` and `is_capital = no` (`source = recipient` + `source_flags = only_actual_locations`, same as vanilla `seize_location_from_subject`). **Capitals are deliberately not targetable**; the country stage's `enabled` check mirrors the same filter so the tooltip does not offer countries whose only fort is their capital.
+- Effect: `every_pop { limit = pop_type:soldiers; change_pop_type = pop_type:peasants }` in the target location. Forts declare `pop_type = soldiers`, so this leaves the fort unstaffed until the location promotes new soldiers on its own — temporary by design.
+- `ai_tick = never` (every vanilla country_interaction with a location select stage is player-only). No cooldown; spy network regen is the limiter.
+- **Victim is notified.** `show_message` / `show_message_to_target` left at default, so the engine raises `ACTION_abm_sabotage_fort_PERFORMED_ON_US_*` on the fort owner naming the actor and the location. Those message keys (plus the `WE_PERFORM_*` set) must be present in the loc file or the popup renders raw key names. Both types are also registered in the ABM block of `main_menu\gui\messagetypes.txt` (`abm_sabotage_fort` in `.tools\scripts\sync_messagetypes.py` ABM_TYPES), which gives them a toggle in message settings.
+- Files: `in_game\common\country_interactions\abm_sabotage_fort.txt`, cost in `in_game\common\diplomatic_costs\abm_diplo_costs.txt`, loc `in_game\localization\english\abm_sabotage_fort_l_english.yml`.
+
 ### 3. War & Military Rebalancing
 - **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
 - **Unconditional Surrender:** Removed (base game now has one). Previously in `in_game\common\country_interactions\unconditional_surrender.txt`.

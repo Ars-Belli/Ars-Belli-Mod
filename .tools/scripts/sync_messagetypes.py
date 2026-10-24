@@ -74,6 +74,7 @@ ABM_TYPES: list[tuple[str, str]] = [
     ("pay_for_fleet_basing_rights", "diplomacy"),
     ("worsen_opinion", "diplomacy"),
     ("break_others_guarantee", "diplomacy"),
+    ("abm_sabotage_fort", "military"),
 ]
 
 # Generic actions need the generic form (the readme: "At the very least, the
