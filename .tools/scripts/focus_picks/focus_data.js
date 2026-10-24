@@ -16,8 +16,8 @@ module.exports = {
       ['empiricism', 'legislative_efficiency = 0.20\nset_policy_cost_modifier = -0.66\nchange_policy_cost_modifier = -0.20'],
     ]},
     { id: 'trade', art: 'trade_market/trade', name: 'Trade', desc: 'Markets, merchants and trade range.', adv: [
-      ['shrewd_commerce_practice', 'global_trade_center_power = 0.10'],
-      ['merchant_traditions', 'merchant_power_from_maritime_modifier = 0.1'],
+      ['shrewd_commerce_practice', 'global_merchant_power = 0.15'],
+      ['merchant_traditions', 'trade_range_modifier = 0.20'],
       ['additional_merchants', 'global_merchant_capacity_modifier = 0.25'],
       ['merchant_adventures', 'trade_sea_efficiency = medium_trade_sea_efficiency_bonus'],
       ['debt_and_loans', 'bank_interest = -0.01\nmax_bonds = 1'],
