@@ -32,6 +32,17 @@ for (const f of fs.readdirSync(ADV_DIR).filter(f => f.endsWith('.txt'))) {
 }
 const CHOICE_FILES = ['4_choices_adm.txt', '4_choices_dip.txt', '4_choices_mil.txt'];
 
+// Panel art. Textures must exist in vanilla (a missing one renders as a blank square), so check them here.
+const GFX = GAME + '/main_menu/gfx/';
+const gfx = rel => {
+	if (!fs.existsSync(GFX + rel)) throw new Error('missing vanilla texture: gfx/' + rel);
+	return 'gfx/' + rel;
+};
+// An advance's icon: the data's override, else the vanilla icon line, else the key (engine default).
+const advIcon = (key, extra = {}) => gfx(`interface/advance/${extra.icon || (vanilla[key] && vanilla[key].icon) || key}.dds`);
+const branchArt = br => gfx(`interface/illustrations/${br.art}.dds`);
+const ROMAN = { 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI' };
+
 const focusVar = id => `abm_focus_${id}`;
 const MAX_CHANGES = 3; // focus changes each country may make after picking
 const indent = (s, n) => s.split('\n').map(l => (l ? '\t'.repeat(n) + l : l)).join('\n');
@@ -214,6 +225,25 @@ function sguiFile() {
 			}
 		}
 	}
+	// Age state for the panel: banner status line and which age tab opens by default (the current
+	// age; the Renaissance while still in the Age of Traditions).
+	for (const a of ages) {
+		out.push('');
+		out.push('abm_focus_age_current_' + a.age + ' = {');
+		out.push('\tscope = country');
+		out.push('\tis_shown = { current_age = ' + a.age + ' }');
+		out.push('}');
+		out.push('abm_focus_age_reached_' + a.age + ' = {');
+		out.push('\tscope = country');
+		out.push('\tis_shown = { ' + ageReached(a.age) + ' }');
+		out.push('}');
+		out.push('abm_focus_age_default_' + a.age + ' = {');
+		out.push('\tscope = country');
+		out.push(a.age === AGE_KEYS[0]
+			? '\tis_shown = { OR = { current_age = age_1_traditions current_age = ' + a.age + ' } }'
+			: '\tis_shown = { current_age = ' + a.age + ' }');
+		out.push('}');
+	}
 	out.push('');
 	out.push('abm_focus_pending = {');
 	out.push('\tscope = country');
@@ -273,13 +303,21 @@ function locFile() {
 	L.push(' ABM_FOCUS_PANEL_TITLE: "Focus Picks"');
 	L.push(' ABM_FOCUS_PANEL_CLOSE: "Close"');
 	L.push(' ABM_FOCUS_PANEL_CLOSE_TOOLTIP: "Close the Focus Picks panel"');
-	L.push(` ABM_FOCUS_PANEL_INTRO: "From the Renaissance on, each [age|e] we pick one #Y Economic#! and one #Y Military#! focus here, once that age has begun. Only the chosen branches appear in the [advances|e] tree, and picks from earlier ages stay researchable. Hover an advance to see its effects. A pick can be changed until one of its advances is researched, at most ${MAX_CHANGES} times per campaign."`);
+	L.push(' ABM_FOCUS_PANEL_QUOTE: "“Every age had its own kind of war, its own limiting conditions, and its own peculiar preconceptions.”"');
+	L.push(' ABM_FOCUS_PANEL_QUOTE_BY: "— Carl von Clausewitz, On War"');
+	L.push(` ABM_FOCUS_PANEL_INTRO: "From the Renaissance on, each [age|e] we pick one #Y Economic#! and one #Y Military#! focus, once that age has begun. Only picked branches appear in the [advances|e] tree, and picks from earlier ages stay researchable. Hover an advance for its effects. A pick can be changed until one of its advances is researched."`);
 	L.push(' ABM_FOCUS_PANEL_CHANGES: "Focus changes left: [Country.Custom(\'abm_focus_changes_left\')]"');
+	L.push(` ABM_FOCUS_PANEL_CHANGES_TT: "Each country may change a pick at most ${MAX_CHANGES} times per campaign, and only before any of that pick's [advances|e] is researched."`);
+	L.push(' ABM_FOCUS_AGE_CURRENT: "#G Current age#!: pick one Economic and one Military focus"');
+	L.push(' ABM_FOCUS_AGE_PAST: "#weak Past age: its picks stay researchable#!"');
+	L.push(' ABM_FOCUS_AGE_FUTURE: "#R Not begun yet#!: these focuses can be picked once this age begins"');
+	L.push(' ABM_FOCUS_SLOT_EMPTY: "#R Not picked yet#!"');
+	L.push(' ABM_FOCUS_CARD_PICKED: "#G Our focus for this age#!"');
 	for (let n = 0; n <= MAX_CHANGES; n++) L.push(` ABM_FOCUS_CHANGES_LEFT_${n}: "${n === 0 ? '#R 0#!' : '#G ' + n + '#!'}"`);
 	L.push(` ABM_FOCUS_CHANGES_NONE_TT: "We have focus changes left (at most ${MAX_CHANGES} per campaign)"`);
 	L.push(` ABM_FOCUS_NOTHING_RESEARCHED_TT: "None of the current pick's [advances|e] in this row has been researched yet"`);
-	L.push(' ABM_FOCUS_PANEL_ECONOMIC: "#Y Economic Focus#!"');
-	L.push(' ABM_FOCUS_PANEL_MILITARY: "#Y Military Focus#!"');
+	L.push(' ABM_FOCUS_PANEL_ECONOMIC: "Economic Focus"');
+	L.push(' ABM_FOCUS_PANEL_MILITARY: "Military Focus"');
 	L.push(' ABM_FOCUS_PANEL_PICKED: "#G Picked#!"');
 	L.push(' ABM_FOCUS_PICK: "Pick"');
 	L.push(' ABM_FOCUS_PICK_TT: "Pick this focus. Its [advances|e] appear in the tree and can be researched."');
@@ -290,6 +328,8 @@ function locFile() {
 		L.push(` abm_focus_panel.${a.age}: "Age of $${a.age}$"`);
 		L.push(` abm_focus_panel.${a.age}.reached_tt: "The Age of $${a.age}$ has begun"`);
 		L.push(` abm_focus_panel.${a.age}.not_reached_tt: "#R Not yet available.#! This focus can be picked once the Age of $${a.age}$ has begun."`);
+		L.push(` abm_focus_tab.${a.age}: "${ROMAN[a.n]} · $${a.age}$"`);
+		L.push(` abm_focus_tab.${a.age}.tt: "Show the focuses of the Age of $${a.age}$"`);
 	}
 	for (const kind of ['eco', 'mil']) {
 		for (const a of ages) {
@@ -303,6 +343,9 @@ function locFile() {
 				L.push(` abm_focus_picks.${br.id}.unlocks_tt: "Unlocks the #Y ${q(br.name)}#! [advances|e]: ${names}"`);
 				// Focus panel: one advance per line, as links whose tooltip shows the advance's effects.
 				L.push(` abm_focus_panel.${br.id}.advances: "${br.adv.map(x => `• [ShowAdvanceName('${x[0]}')]`).join('\\n')}"`);
+				L.push(` abm_focus_name.${br.id}: "${q(br.name)}"`);
+				L.push(` abm_focus_panel.${br.id}.chosen: "Picked: #Y ${q(br.name)}#!"`);
+				for (const [key] of br.adv) L.push(` abm_focus_adv.${key}: "[ShowAdvanceName('${key}')]"`);
 				for (const [key, , extra = {}] of br.adv) {
 					if (!extra.name) continue;
 					L.push(` ${key}: "${q(extra.name)}"`);
@@ -316,103 +359,309 @@ function locFile() {
 
 // Focus Picks panel: a GUI type placed in right_panel.gui next to the Tier List panel and toggled
 // client-side via GetVariableSystem('abm_focus_panel_open') (per-player UI state, not a script var).
+// Look: vanilla window frame (bg_lateralview + window_header_alt), one tab per age, an age banner with the
+// vanilla age illustration, and per branch a card with an illustrated header and the advances as icon rows.
+// Only vanilla templates and textures are used (gfx() checks every texture path exists).
 function guiFile() {
-	// 3 cards + 2 x 6 spacing = 744 = panel inner width (780 - 2 x 8 margin - scrollbar).
+	const PANEL_W = 800;
+	const PANEL_H = 840;
+	// 3 cards + 2 x 8 spacing inside the scroll area (panel - 2 x 10 margin - scrollbar - slack).
 	const CARD_W = 244;
-	const TEXT_W = CARD_W - 10; // card margin 4 + frame
+	const BODY_W = CARD_W - 16; // card body margin 8 each side
 	const SGUI_SCOPE = 'GuiScope.SetRoot(GetPlayer.MakeScope).End'; // same form as the tier panel toggles
+	const shown = name => `GetScriptedGui('${name}').IsShown(${SGUI_SCOPE})`;
+	const picked = id => `GetPlayer.MakeScope.GetVariable('${focusVar(id)}').IsSet`;
+	const and = (...xs) => xs.reduce((a, b) => `And(${a}, ${b})`);
+	// The open age tab: the one the player clicked, else the current age (Renaissance during Traditions).
+	const ageOpen = a => `Or(GetVariableSystem.HasValue('abm_focus_age', '${a.n}'), And(Not(GetVariableSystem.Exists('abm_focus_age')), ${shown('abm_focus_age_default_' + a.age)}))`;
+	const SECTION = {
+		eco: { label: 'ABM_FOCUS_PANEL_ECONOMIC', color: 'color_economy_texture', icon: gfx('interface/icons/flat_icons/adm.dds') },
+		mil: { label: 'ABM_FOCUS_PANEL_MILITARY', color: 'color_military_texture', icon: gfx('interface/icons/flat_icons/mil.dds') },
+	};
+	const GLOW = gfx('interface/advance/advances_glow/advances_glow_yellow.dds');
+	const FADE_MASK = gfx('interface/component_masks/mask_fadehorizontal_middle_thick.dds');
+	const CORNER = gfx('interface/component_decoration/bg_corner_flavor_04.dds');
+	const PANEL_ART = gfx('interface/illustrations/bg/bg_researches.dds');
+
 	// Each action is an enabled/disabled pair: a tooltip can't switch on validity, so the disabled
 	// twin carries the reason (age not begun / no focus changes left).
 	const btn = (sgui, text, okTip, noTip) => {
 		const g = `GetScriptedGui('${sgui}')`;
-		const shown = `${g}.IsShown(${SGUI_SCOPE})`;
+		const isShown = `${g}.IsShown(${SGUI_SCOPE})`;
 		const valid = `${g}.IsValid(${SGUI_SCOPE})`;
-		return `						button_regular = {
-							text = "${text}"
-							tooltip = "${okTip}"
-							size = { ${TEXT_W} 26 }
-							visible = "[And(${shown}, ${valid})]"
-							onclick = "[${g}.Execute(${SGUI_SCOPE})]"
-						}
-						button_regular = {
-							text = "${text}"
-							tooltip = "${noTip}"
-							size = { ${TEXT_W} 26 }
-							enabled = no
-							visible = "[And(${shown}, Not(${valid}))]"
-						}`;
+		return `
+							button_regular = {
+								text = "${text}"
+								tooltip = "${okTip}"
+								size = { ${BODY_W} 28 }
+								visible = "[And(${isShown}, ${valid})]"
+								onclick = "[${g}.Execute(${SGUI_SCOPE})]"
+							}
+							button_regular = {
+								text = "${text}"
+								tooltip = "${noTip}"
+								size = { ${BODY_W} 28 }
+								enabled = no
+								visible = "[And(${isShown}, Not(${valid}))]"
+							}`;
 	};
-	const card = (br, age) => `
+
+	const advanceRow = ([key, , extra = {}]) => `
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								spacing = 6
+								icon = {
+									size = { 24 24 }
+									texture = "${advIcon(key, extra)}"
+								}
+								text_single = {
+									text = "abm_focus_adv.${key}"
+									using = Font_Size_Small
+									align = left|nobaseline
+									max_width = ${BODY_W - 30}
+									elide = right
+								}
+								expand = {}
+							}`;
+
+	const card = (br, age) => {
+		const [leadKey, , leadExtra = {}] = br.adv[0];
+		return `
+					# ${br.name}
 					vbox = {
 						minimumsize = { ${CARD_W} -1 }
 						maximumsize = { ${CARD_W} -1 }
 						layoutpolicy_vertical = expanding
-						spacing = 2
-						margin = { 4 4 }
+						spacing = 6
+						margin_bottom = 8
+						using = bg_paper_card
 						using = bg_cabinet_card_frame
 
-						hbox = {
-							layoutpolicy_horizontal = expanding
-							spacing = 4
+						# Illustrated header: art, gold glow once picked, dark strip with the lead advance's icon and the name.
+						widget = {
+							size = { ${CARD_W} 92 }
+							background = {
+								texture = "${branchArt(br)}"
+								fittype = centercrop
+							}
+							icon = {
+								size = { 100% 100% }
+								texture = "${GLOW}"
+								alpha = 0.6
+								visible = "[${picked(br.id)}]"
+							}
+							icon = {
+								size = { 100% 38 }
+								parentanchor = bottom
+								using = color_black_texture
+								alpha = 0.6
+							}
+							icon = {
+								size = { 44 44 }
+								parentanchor = bottom|left
+								position = { 6 -4 }
+								texture = "${advIcon(leadKey, leadExtra)}"
+							}
 							text_single = {
-								text = "abm_focus_picks.${br.id}"
+								parentanchor = bottom|left
+								position = { 58 -10 }
+								text = "abm_focus_name.${br.id}"
+								using = Font_Type_Headers
 								using = Font_Size_Medium
+								default_format = "#yellow_titles"
 								align = left|nobaseline
-								layoutpolicy_horizontal = expanding
+								max_width = ${CARD_W - 66}
+								elide = right
 							}
-							text_single = {
-								text = "ABM_FOCUS_PANEL_PICKED"
+							widget = {
+								visible = "[${picked(br.id)}]"
+								parentanchor = top|right
+								position = { -6 6 }
+								size = { 68 22 }
+								background = {
+									using = color_black_texture
+									alpha = 0.7
+								}
+								text_single = {
+									parentanchor = center
+									text = "ABM_FOCUS_PANEL_PICKED"
+									using = Font_Size_Small
+									align = center|nobaseline
+								}
+							}
+						}
+
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							margin = { 8 0 }
+							spacing = 4
+							text_multi = {
+								text = "abm_focus_picks.${br.id}.tt"
 								using = Font_Size_Small
-								visible = "[GetPlayer.MakeScope.GetVariable('${focusVar(br.id)}').IsSet]"
+								autoresize = yes
+								align = left|nobaseline
+								minimumsize = { ${BODY_W} -1 }
+								maximumsize = { ${BODY_W} -1 }
 							}
+${br.adv.map(advanceRow).join('\n')}
 						}
-						text_multi = {
-							text = "abm_focus_picks.${br.id}.tt"
-							using = Font_Size_Small
-							autoresize = yes
-							align = left|nobaseline
-							minimumsize = { ${TEXT_W} -1 }
-							maximumsize = { ${TEXT_W} -1 }
-						}
-						text_multi = {
-							text = "abm_focus_panel.${br.id}.advances"
-							using = Font_Size_Small
-							autoresize = yes
-							align = left|nobaseline
-							minimumsize = { ${TEXT_W} -1 }
-							maximumsize = { ${TEXT_W} -1 }
-						}
+
 						expand = {}
+
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							margin = { 8 0 }
 ${btn('abm_focus_pick_' + br.id, 'ABM_FOCUS_PICK', 'ABM_FOCUS_PICK_TT', 'abm_focus_panel.' + age + '.not_reached_tt')}
 ${btn('abm_focus_switch_' + br.id, 'ABM_FOCUS_SWITCH', 'ABM_FOCUS_SWITCH_TT', 'ABM_FOCUS_SWITCH_NONE_TT')}
+							text_single = {
+								visible = "[${picked(br.id)}]"
+								text = "ABM_FOCUS_CARD_PICKED"
+								using = Font_Size_Small
+								align = center|nobaseline
+								size = { ${BODY_W} 28 }
+							}
+						}
 					}`;
-	const row = (label, brs, age) => `
-				text_single = {
-					text = "${label}"
-					using = Font_Size_Small
+	};
+
+	// Section strip (Economic / Military): tinted band, icon, title, and the slot's state on the right.
+	const section = (kind, brs, age) => {
+		const s = SECTION[kind];
+		return `
+				widget = {
+					layoutpolicy_horizontal = expanding
+					size = { -1 36 }
+					background = {
+						using = ${s.color}
+						alpha = 0.7
+						modify_texture = {
+							texture = "${FADE_MASK}"
+							blend_mode = alphamultiply
+						}
+					}
+					hbox = {
+						margin = { 10 0 }
+						spacing = 8
+						icon = {
+							size = { 26 26 }
+							texture = "${s.icon}"
+						}
+						text_single = {
+							text = "${s.label}"
+							using = Font_Type_Headers
+							using = Font_Size_Medium
+							default_format = "#yellow_titles"
+							align = left|nobaseline
+						}
+						expand = {}
+						text_single = {
+							visible = "[${and(...brs.map(b => `Not(${picked(b.id)})`))}]"
+							text = "ABM_FOCUS_SLOT_EMPTY"
+							using = Font_Size_Small
+							align = right|nobaseline
+						}
+${brs.map(b => `						text_single = {
+							visible = "[${picked(b.id)}]"
+							text = "abm_focus_panel.${b.id}.chosen"
+							using = Font_Size_Small
+							align = right|nobaseline
+						}`).join('\n')}
+					}
 				}
 				hbox = {
 					layoutpolicy_horizontal = expanding
-					spacing = 6
+					spacing = 8
 ${brs.map(br => card(br, age)).join('\n')}
+					expand = {}
 				}`;
+	};
+
+	// Age banner: the vanilla age illustration (as in the advances view), age icon, name, and state.
+	const banner = a => `
+				widget = {
+					layoutpolicy_horizontal = expanding
+					size = { -1 96 }
+					background = {
+						texture = "${gfx(`interface/illustrations/advances/${a.age}.dds`)}"
+						fittype = centercrop
+					}
+					using = scene_fade_horizontal
+					blockoverride "scene_fade_alpha" {
+						alpha = 0.6
+					}
+					using = bg_age_event_frame
+
+					hbox = {
+						margin = { 14 6 }
+						spacing = 12
+						icon = {
+							size = { 76 76 }
+							texture = "${gfx(`interface/icons/age/${a.age}.dds`)}"
+						}
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 4
+							expand = {}
+							text_single = {
+								text = "abm_focus_panel.${a.age}"
+								tooltip = "${a.age}_desc"
+								using = Font_Type_Headers
+								using = Font_Size_Big
+								default_format = "#yellow_titles"
+								align = left|nobaseline
+							}
+							text_single = {
+								visible = "[${shown('abm_focus_age_current_' + a.age)}]"
+								text = "ABM_FOCUS_AGE_CURRENT"
+								using = Font_Size_Small
+								align = left|nobaseline
+							}
+							text_single = {
+								visible = "[And(${shown('abm_focus_age_reached_' + a.age)}, Not(${shown('abm_focus_age_current_' + a.age)}))]"
+								text = "ABM_FOCUS_AGE_PAST"
+								using = Font_Size_Small
+								align = left|nobaseline
+							}
+							text_single = {
+								visible = "[Not(${shown('abm_focus_age_reached_' + a.age)})]"
+								text = "ABM_FOCUS_AGE_FUTURE"
+								using = Font_Size_Small
+								align = left|nobaseline
+							}
+							expand = {}
+						}
+					}
+				}`;
+
 	const ageBlocks = ages.map(a => `
 			# ${a.age}
 			vbox = {
+				visible = "[${ageOpen(a)}]"
 				layoutpolicy_horizontal = expanding
-				spacing = 4
-				text_single = {
-					text = "abm_focus_panel.${a.age}"
-					using = Font_Type_Headers
-				}
-${row('ABM_FOCUS_PANEL_ECONOMIC', a.eco, a.age)}
-${row('ABM_FOCUS_PANEL_MILITARY', a.mil, a.age)}
+				spacing = 8
+${banner(a)}
+${section('eco', a.eco, a.age)}
+${section('mil', a.mil, a.age)}
 			}`).join('\n');
+
+	const tabs = ages.map(a => `
+				button_secondary_tab_alt = {
+					using = layoutpolicy_expanding
+					blockoverride "tab_text" {
+						text = "abm_focus_tab.${a.age}"
+					}
+					tooltip = "abm_focus_tab.${a.age}.tt"
+					down = "[${ageOpen(a)}]"
+					onclick = "[GetVariableSystem.Set('abm_focus_age', '${a.n}')]"
+				}`).join('\n');
+
 	return `# Ars Belli Focus Picks panel. GENERATED by .tools/scripts/focus_picks/generate_focus_picks.js
 # Edit focus_data.js and re-run the generator instead of editing this file by hand.
 # Placed in panels/right_panel/right_panel.gui (search "# Ars Belli focus picks panel"); opened by the
 # "Focus Picks" button in the Tier List panel. Advance names use [ShowAdvanceName(...)], so hovering
 # shows the game's own advance tooltip with its effects.
+# Client-side UI state (per player, never synced): abm_focus_panel_open = panel open,
+# abm_focus_age = open age tab (2-6; unset = the current age).
 types AbmFocusPicksTypes
 {
 	# Always-visible opener under the age in the top right (not tied to the MP mechanics rule, unlike
@@ -429,10 +678,10 @@ types AbmFocusPicksTypes
 			tooltip = "ABM_FOCUS_PANEL_TOGGLE_TOOLTIP"
 			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
 			size = { 30 22 }
-			visible = "[Not(GetScriptedGui('abm_focus_pending').IsShown(${SGUI_SCOPE}))]"
+			visible = "[Not(${shown('abm_focus_pending')})]"
 
 			icon = {
-				texture = "gfx/interface/icons/flat_icons/ages.dds"
+				texture = "${gfx('interface/icons/flat_icons/ages.dds')}"
 				size = { 18 18 }
 				parentanchor = center
 			}
@@ -441,10 +690,10 @@ types AbmFocusPicksTypes
 			tooltip = "ABM_FOCUS_PANEL_TOGGLE_PENDING_TOOLTIP"
 			onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
 			size = { 30 22 }
-			visible = "[GetScriptedGui('abm_focus_pending').IsShown(${SGUI_SCOPE})]"
+			visible = "[${shown('abm_focus_pending')}]"
 
 			icon = {
-				texture = "gfx/interface/icons/alerts_icons/advances.dds"
+				texture = "${gfx('interface/icons/alerts_icons/advances.dds')}"
 				size = { 20 20 }
 				parentanchor = center
 			}
@@ -456,67 +705,131 @@ types AbmFocusPicksTypes
 		layer = top
 		parentanchor = top|right
 		widgetanchor = top|right
-		position = { -810 120 }
-		size = { 780 760 }
+		position = { -810 110 }
+		size = { ${PANEL_W} ${PANEL_H} }
 		allow_outside = yes
 		alwaystransparent = no
+		filter_mouse = all
 		visible = "[GetVariableSystem.Exists('abm_focus_panel_open')]"
 
-		using = bg_paper_card
-		using = bg_cabinet_card_frame
+		state = {
+			name = _show
+			using = Animation_FadeIn_Quick
+		}
+		state = {
+			name = _hide
+			using = Animation_FadeOut_Quick
+		}
 
 		vbox = {
-			margin = { 8 8 }
-			spacing = 6
-			layoutpolicy_horizontal = expanding
-			layoutpolicy_vertical = expanding
+			using = layoutpolicy_expanding
+			using = bg_lateralview
 
-			hbox = {
-				layoutpolicy_horizontal = expanding
-				spacing = 4
-
-				text_single = {
+			window_header_alt = {
+				blockoverride "header_text" {
 					text = "ABM_FOCUS_PANEL_TITLE"
-					using = Font_Type_Headers
-					align = left
+				}
+				blockoverride "window_header_alt_color_texture" {
+					using = color_advances_texture
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				using = bg_main_inner_image_alt
+				blockoverride "image" {
+					texture = "${PANEL_ART}"
+				}
+				margin = { 10 8 }
+				spacing = 8
+
+				# Intro: quote, the rules, and focus changes left.
+				vbox = {
 					layoutpolicy_horizontal = expanding
-				}
-
-				button_regular = {
-					text = "ABM_FOCUS_PANEL_CLOSE"
-					tooltip = "ABM_FOCUS_PANEL_CLOSE_TOOLTIP"
-					onclick = "[GetVariableSystem.Toggle('abm_focus_panel_open')]"
-					size = { 80 26 }
-				}
-			}
-
-			text_multi = {
-				text = "ABM_FOCUS_PANEL_INTRO"
-				using = Font_Size_Small
-				autoresize = yes
-				max_width = 760
-			}
-
-			text_single = {
-				datacontext = "[GetPlayer]"
-				text = "ABM_FOCUS_PANEL_CHANGES"
-				using = Font_Size_Small
-				align = left
-			}
-
-			scrollarea = {
-				layoutpolicy_horizontal = expanding
-				layoutpolicy_vertical = expanding
-				scrollbarpolicy_horizontal = always_off
-				scrollbar_vertical = {
-					using = Scrollbar_Vertical
-				}
-
-				scrollwidget = {
-					vbox = {
+					margin = { 18 8 }
+					spacing = 3
+					using = bg_paper_card
+					using = bg_corner_flavor
+					blockoverride "corner_flavor_texture" {
+						texture = "${CORNER}"
+						texture_density = 2
+						spriteType = Corneredstretched
+						spriteborder = { 35 35 }
+						margin = { -2 -2 }
+					}
+					text_multi = {
 						layoutpolicy_horizontal = expanding
-						spacing = 12
+						text = "ABM_FOCUS_PANEL_QUOTE"
+						using = Font_Type_Flavor
+						using = Font_Size_Medium
+						autoresize = yes
+						max_width = 720
+						align = center|nobaseline
+					}
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						text = "ABM_FOCUS_PANEL_QUOTE_BY"
+						using = Font_Size_Very_Small
+						default_format = "#weak"
+						align = center|nobaseline
+					}
+					widget = { size = { 10 4 } }
+					text_multi = {
+						layoutpolicy_horizontal = expanding
+						text = "ABM_FOCUS_PANEL_INTRO"
+						using = Font_Size_Small
+						autoresize = yes
+						max_width = 720
+						align = center|nobaseline
+					}
+					text_single = {
+						layoutpolicy_horizontal = expanding
+						datacontext = "[GetPlayer]"
+						text = "ABM_FOCUS_PANEL_CHANGES"
+						tooltip = "ABM_FOCUS_PANEL_CHANGES_TT"
+						using = Font_Size_Small
+						align = center|nobaseline
+					}
+				}
+
+				# One tab per age; the current age is open by default.
+				hbox = {
+					layoutpolicy_horizontal = expanding
+					spacing = 2
+${tabs}
+				}
+
+				scrollarea = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					scrollbarpolicy_horizontal = always_off
+					scrollbar_vertical = {
+						using = Scrollbar_Vertical
+					}
+
+					scrollwidget = {
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							spacing = 8
 ${ageBlocks}
+						}
+					}
+				}
+			}
+		}
+
+		# Close button, top right like the vanilla views; Escape closes the panel too.
+		widget = {
+			size = { 100% 40 }
+			widget = {
+				parentanchor = right
+				size = { 40 40 }
+				button_close_alt = {
+					blockoverride "close_on_action" {
+						on_action = "[GetVariableSystem.Clear('abm_focus_panel_open')]"
+					}
+					blockoverride "close_inputaction" {
+						input_action = "close_window"
 					}
 				}
 			}

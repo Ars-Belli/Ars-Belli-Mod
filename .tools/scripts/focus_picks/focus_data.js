@@ -1,12 +1,13 @@
 // Focus pick data, transcribed from "Ars Belli MP Mod - Design Doc - Focus Picks.md".
 // Each branch: 5-7 advances (tree shape: PARENT in generate_focus_picks.js). Entry: [key, modifiers(string lines), extra]
 // extra: { name, desc } for new keys (abm_*), { icon } override, { raw } extra raw lines.
+// Branch art: a vanilla illustration under gfx/interface/illustrations/ (no .dds), shown in the panel card header.
 // Value rule: reused vanilla advance keeps vanilla value unless the doc marks "(was X)" or adds a new stat.
 module.exports = {
  ages: [
  { age: 'age_2_renaissance', n: 2,
    eco: [
-    { id: 'court', name: 'Court', desc: 'Administrative and court efficiency.', adv: [
+    { id: 'court', art: 'bg/bg_government', name: 'Court', desc: 'Administrative and court efficiency.', adv: [
       ['innovativeness', 'global_max_literacy = 5'],
       ['state_efficiency', 'global_distance_from_capital_speed_propagation = 0.1'],
       ['court_accounting', 'court_spending_efficiency = 0.1'],
@@ -14,7 +15,7 @@ module.exports = {
       ['church_attendance_duty', 'stability_investment = small_stability_investment'],
       ['empiricism', 'legislative_efficiency = 0.20\nset_policy_cost_modifier = -0.66\nchange_policy_cost_modifier = -0.20'],
     ]},
-    { id: 'trade', name: 'Trade', desc: 'Markets, merchants and trade range.', adv: [
+    { id: 'trade', art: 'trade_market/trade', name: 'Trade', desc: 'Markets, merchants and trade range.', adv: [
       ['shrewd_commerce_practice', 'global_trade_center_power = 0.10'],
       ['merchant_traditions', 'merchant_power_from_maritime_modifier = 0.1'],
       ['additional_merchants', 'global_merchant_capacity_modifier = 0.25'],
@@ -22,7 +23,7 @@ module.exports = {
       ['debt_and_loans', 'bank_interest = -0.01\nmax_bonds = 1'],
       ['abm_protected_trade_caravans', 'trade_land_efficiency = medium_trade_land_efficiency_bonus', { icon: 'expanded_supply_trains', name: 'Protected Trade Caravans', desc: 'Armed escorts and fortified caravanserais along our overland routes let our merchants reach far-off markets without the expense of a fleet.' }],
     ]},
-    { id: 'influence', name: 'Influence', desc: 'Subjects, vassals and diplomats.', adv: [
+    { id: 'influence', art: 'government/diplomacy_illustration', name: 'Influence', desc: 'Subjects, vassals and diplomats.', adv: [
       ['integrated_elites', 'monthly_diplomats = 0.2\nmax_diplomats = 1'],
       ['tribute_system', 'subject_income_modifier = 0.05\nsubject_loyalty = 10\nsubject_opinions = 25'],
       ['marcher_lords', '', { raw: 'unlock_subject_type = march' }],
@@ -32,7 +33,7 @@ module.exports = {
     ]},
    ],
    mil: [
-    { id: 'levy', name: 'Levy', desc: 'Larger and better levies, raised for the army and the fleet alike.', adv: [
+    { id: 'levy', art: 'institutions/feudalism', name: 'Levy', desc: 'Larger and better levies, raised for the army and the fleet alike.', adv: [
       ['enforced_service', 'global_levy_size_modifier = 0.20\nlevy_recovery_modifier = 0.20'],
       ['open_levy_standards', 'wrong_culture_levy_size = 0.25'],
       ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.30'],
@@ -40,7 +41,7 @@ module.exports = {
       ['abm_local_militias', 'global_levy_recruitment_speed_modifier = 0.33\nlevy_maintenance_modifier = -0.5', { icon: 'regimental_system', name: 'Local Militias', desc: 'Townsmen and villagers drilled on the green each Sunday can be called to arms quickly and cost little to keep.' }],
       ['abm_common_foot', 'army_heavy_infantry_power = 0.10\narmy_light_infantry_power = 0.10', { icon: 'drill_army_advance', name: 'Common Foot', desc: 'Most of our levies march on foot. Taught to keep their ranks with pike and bow, they stand their ground far better than a rabble.' }],
     ]},
-    { id: 'mercenary', name: 'Mercenary', desc: 'Hired forces: cheaper, more available mercenaries, and privateers at sea.', adv: [
+    { id: 'mercenary', art: 'situation/italian_wars', name: 'Mercenary', desc: 'Hired forces: cheaper, more available mercenaries, and privateers at sea.', adv: [
       ['benefits_for_mercenaries', 'mercenary_maintenance_efficiency = 0.1\ntolerance_heretic = 0.5\ntolerance_heathen = 0.5'],
       ['organised_mercenary_recruitment', 'mercenary_range_modifier = 0.5'],
       ['organised_mercenary_payment', 'hire_mercenary_premium_cost_modifier = -0.2\nhire_privateer_cost_modifier = -0.2'],
@@ -49,7 +50,7 @@ module.exports = {
       // Keep the privateers key: vanilla naval laws (state piracy, letters of marque) and an OMA event check has_advance = privateers.
       ['privateers', 'can_hire_privateers = yes'],
     ]},
-    { id: 'standing_forces', name: 'Standing Forces', desc: 'A permanent army and fleet, kept paid and under arms in peacetime.', adv: [
+    { id: 'standing_forces', art: 'institutions/professional_armies', name: 'Standing Forces', desc: 'A permanent army and fleet, kept paid and under arms in peacetime.', adv: [
       ['finest_of_horses', 'army_heavy_cavalry_power = 0.05\narmy_light_cavalry_power = 0.05\narmy_heavy_cavalry_maintenance_cost_modifier = -0.05\narmy_light_cavalry_maintenance_cost_modifier = -0.05'],
       ['abm_royal_arsenals', 'regiment_recruit_speed = 0.25\nship_build_speed = 0.25', { icon: 'ship_building_advance', name: 'Royal Arsenals', desc: 'State arsenals turn out arms, armour and hulls to a common pattern, year in, year out.' }],
       ['abm_drilled_regulars', 'monthly_experience_gain = 0.25', { icon: 'drill_army_advance', name: 'Drilled Regulars', desc: 'Soldiers and sailors who serve all year round have time to learn their trade between campaigns.' }],
@@ -60,7 +61,7 @@ module.exports = {
    ]},
  { age: 'age_3_discovery', n: 3,
    eco: [
-    { id: 'infrastructure', name: 'Infrastructure', desc: 'Construction, roads and mining.', adv: [
+    { id: 'infrastructure', art: 'bg/bg_production', name: 'Infrastructure', desc: 'Construction, roads and mining.', adv: [
       ['organised_construction', 'global_build_buildings_efficiency = 0.2'],
       ['efficient_construction_plans', 'global_urban_build_buildings_efficiency = 0.2'],
       ['expanded_infrastructure_network', 'global_road_building_time = -0.1\nbuild_gravel_road_cost_modifier = -0.1\nbuild_paved_road_cost_modifier = -0.1\nbuild_modern_road_cost_modifier = -0.1'],
@@ -68,7 +69,7 @@ module.exports = {
       ['rgo_logistics_mil_choice', 'raw_material_in_province_impact = 0.025'],
       ['advanced_bureaucracy', 'tax_income_efficiency = small_tax_income_efficiency_bonus\nglobal_bureaucracy_maintenance_efficiency = 0.04'],
     ]},
-    { id: 'exploration', name: 'Exploration', desc: 'Exploration, colonisation and overseas trade.', adv: [
+    { id: 'exploration', art: 'institutions/new_world', name: 'Exploration', desc: 'Exploration, colonisation and overseas trade.', adv: [
       ['quest_for_the_new_world', 'exploration_preparation_time_modifier = -0.25\nexploration_mission_speed = 0.1', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
       ['exploration', 'colonial_range = 500', { raw: 'unlock_casus_belli = cb_exploration\n\nai_preference_tags = {\n\texploration\n}' }],
       ['overseas_exploration', 'colonial_range_modifier = 0.5', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
@@ -76,7 +77,7 @@ module.exports = {
       ['colonial_ventures', 'colonial_migration_size_modifier = 0.25', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
       ['overseas_trade', 'trade_range_modifier = 0.5'],
     ]},
-    { id: 'espionage', name: 'Espionage', desc: 'Spies, infiltration, sabotage and stolen research.', adv: [
+    { id: 'espionage', art: 'bg/bg_foreign_country', name: 'Espionage', desc: 'Spies, infiltration, sabotage and stolen research.', adv: [
       ['vetting', 'counter_espionage = 0.33\nspy_network_construction = 0.5'],
       ['abm_sabotage_fort_advance', '', { icon: 'fortified_towns', name: 'Sabotage Fort', desc: 'In time of war our agents can buy off the men who hold an enemy\'s walls, leaving the fort without a garrison.', raw: 'unlock_country_interaction = abm_sabotage_fort' }],
       ['infiltrate_administration_advance', '', { raw: 'unlock_diplomacy = { infiltrate_administration }' }],
@@ -86,7 +87,7 @@ module.exports = {
     ]},
    ],
    mil: [
-    { id: 'quality', name: 'Quality', desc: 'Better-drilled troops and crews that take less damage. Elite cavalry and great ships cost more to keep.', adv: [
+    { id: 'quality', art: 'institutions/pike_and_shot', name: 'Quality', desc: 'Better-drilled troops and crews that take less damage. Elite cavalry and great ships cost more to keep.', adv: [
       ['military_drill', 'land_morale_modifier = 0.10', { raw: 'ai_weight = { add = 10 }' }],
       ['naval_drill', 'naval_morale_modifier = 0.10', { icon: 'naval_morale_advance_1' }],
       ['abm_strict_discipline', 'discipline = 0.05', { icon: 'glorious_arms', name: 'Strict Discipline', desc: 'Harsh drill and harsher punishment keep our ranks steady and in order when the shot starts flying.' }],
@@ -94,7 +95,7 @@ module.exports = {
       ['abm_trained_march', 'land_morale_movement_cost = -0.0002', { icon: 'expanded_supply_trains', name: 'Trained March', desc: 'Regulated marching pace and rest halts keep our columns in good order and good spirits on the road.' }],
       ['abm_elite_companies', 'army_heavy_cavalry_power = 0.10\narmy_light_cavalry_power = 0.10\nnavy_heavy_ship_power = 0.15\narmy_heavy_cavalry_maintenance_cost_modifier = 0.05\nnavy_heavy_ship_maintenance_cost_modifier = 0.05', { icon: 'royal_navy', name: 'Elite Companies', desc: 'Picked horsemen and our finest great ships are given the best of everything. They fight like no others, and they cost like no others.' }],
     ]},
-    { id: 'quantity', name: 'Quantity', desc: 'More men and sailors, wider battle lines, cheap upkeep and cheap ships.', adv: [
+    { id: 'quantity', art: 'bg/bg_military', name: 'Quantity', desc: 'More men and sailors, wider battle lines, cheap upkeep and cheap ships.', adv: [
       ['abm_rapid_reinforcement', 'combat_speed_modifier = 0.10\npossible_frontage_modifier = 0.10', { icon: 'regimental_system', name: 'Rapid Reinforcement', desc: 'Reserve companies are moved up to the line as soon as the front ranks falter, and every spare man is put into the fight.' }],
       ['camp_followers', 'global_supply_limit_modifier = 0.1\nfood_consumption_modifier = -0.10'],
       ['the_old_and_infirm', 'army_maintenance_efficiency = 0.1\nnavy_maintenance_efficiency = 0.1'],
@@ -102,7 +103,7 @@ module.exports = {
       ['grand_navy', 'navy_galley_build_cost_modifier = -0.15\nnavy_heavy_ship_build_cost_modifier = -0.15\nnavy_light_ship_build_cost_modifier = -0.15'],
       ['grand_army', 'global_manpower_modifier = 0.15\nglobal_sailors_modifier = 0.15'],
     ]},
-    { id: 'leadership', name: 'Leadership', desc: 'Generals, admirals, and the officers and sergeants who serve under them.', adv: [
+    { id: 'leadership', art: 'institutions/meritocracy', name: 'Leadership', desc: 'Generals, admirals, and the officers and sergeants who serve under them.', adv: [
       ['formalized_officer_corps', 'army_initiative = 0.25\nnavy_initiative = 0.50'],
       ['quality_education', 'monthly_army_tradition = 0.2\nmonthly_navy_tradition = 0.2\narmy_tradition_decay = -0.001\nnavy_tradition_decay = -0.001'],
       ['administrative_leadership', 'hire_advisor_cost_modifier = -0.25\ntrain_general_cost_modifier = -0.40\ntrain_admiral_cost_modifier = -0.40'],
@@ -113,7 +114,7 @@ module.exports = {
    ]},
  { age: 'age_4_reformation', n: 4,
    eco: [
-    { id: 'religion', name: 'Religion', desc: 'Conversion and assimilation to the true faith.', adv: [
+    { id: 'religion', art: 'society/religion', name: 'Religion', desc: 'Conversion and assimilation to the true faith.', adv: [
       ['devoutness', 'tolerance_own = 1'],
       ['religious_tradition', 'monthly_prestige = 0.1\ncultural_tradition_modifier = 0.2'],
       ['abm_cultural_unity', 'global_pop_assimilation_speed_modifier = 0.2', { icon: 'cultural_ties', name: 'Cultural Unity', desc: 'One realm, one people: schools, sermons and law courts all speak the language of the crown.' }],
@@ -121,7 +122,7 @@ module.exports = {
       ['divine_supremacy', 'global_pop_conversion_speed_modifier = 0.20'],
       ['missionary_schools', 'global_pop_conversion_speed = 0.01'],
     ]},
-    { id: 'expansion', name: 'Expansion', desc: 'Late colonisation and overseas trade.', adv: [
+    { id: 'expansion', art: 'situation/columbian_exchange', name: 'Expansion', desc: 'Late colonisation and overseas trade.', adv: [
       ['free_colonies', 'colonial_maintenance_efficiency = 0.40'],
       ['land_of_opportunity', 'colonial_migration_size_modifier = 0.50'],
       ['abm_trade_winds', 'navy_movement_speed = 0.10', { icon: 'maritime_advance_age_2', name: 'Trade Winds', desc: 'Our pilots have charted the great ocean winds and currents, and our ships now cross to the colonies in weeks rather than months.' }],
@@ -129,7 +130,7 @@ module.exports = {
       ['merchant_power_from_maritime_rev_dip_choice', 'merchant_power_from_maritime_modifier = 0.1'],
       ['overseas_merchants', 'trade_range_modifier = 0.5'],
     ]},
-    { id: 'humanism', name: 'Humanism', desc: 'Religious and cultural tolerance.', adv: [
+    { id: 'humanism', art: 'society/culture_illustration', name: 'Humanism', desc: 'Religious and cultural tolerance.', adv: [
       ['ecumenism', 'tolerance_heretic = 1.5'],
       ['humanist_tolerance', 'tolerance_heathen = 1.5'],
       ['abm_integration_of_cultures', 'add_accepted_culture_cost_modifier = -0.5\nchange_primary_culture_cost_modifier = -0.5', { icon: 'cultural_ties', name: 'Integration of Cultures', desc: 'Welcoming new peoples into the heart of the realm is no longer a matter of controversy.' }],
@@ -139,7 +140,7 @@ module.exports = {
     ]},
    ],
    mil: [
-    { id: 'offense', name: 'Offense', desc: 'Sieges, assaults and artillery, with fleets to blockade the coast.', adv: [
+    { id: 'offense', art: 'government/siege_battle_illustration', name: 'Offense', desc: 'Sieges, assaults and artillery, with fleets to blockade the coast.', adv: [
       ['expanded_supply_trains', 'land_unit_attrition = -0.15'],
       ['abm_night_assaults', 'assault_ability = 0.20', { icon: 'offensive_army', name: 'Night Assaults', desc: 'Storming parties go over the walls under cover of darkness, when the defenders least expect it.' }],
       ['engineer_corps', 'siege_ability = 0.20\nblockade_efficiency = 0.25'],
@@ -147,7 +148,7 @@ module.exports = {
       ['superior_firepower', 'army_artillery_power = 0.1'],
       ['abm_siege_artillery', 'artillery_bonus_vs_fort = 1', { icon: 'offensive_army', name: 'Siege Artillery', desc: 'Heavy guns built for one purpose: bringing down walls.' }],
     ]},
-    { id: 'defense', name: 'Defense', desc: 'Forts and garrisons, and fleets that fight best off their own coasts.', adv: [
+    { id: 'defense', art: 'situation/hussite_wars', name: 'Defense', desc: 'Forts and garrisons, and fleets that fight best off their own coasts.', adv: [
       ['defensive_army', 'global_hostile_attrition = 1'],
       ['garrison_conscription', 'global_garrison_size_modifier = 0.20\nglobal_garrison_growth = 0.025'],
       ['defensive_mentality', 'global_defensive = 0.2\nown_coast_naval_combat_bonus = 0.10'],
@@ -155,7 +156,7 @@ module.exports = {
       ['fort_logistics', 'fort_maintenance_efficiency = 0.2\nanti_piracy_warfare_modifier = 0.25'],
       ['abm_fortified_cities_focus', 'fort_limit_modifier = 0.10\nfort_limit = 3', { icon: 'defensive_mentality', name: 'Fortified Cities', desc: 'Every town of note is ringed by modern bastions.' }],
     ]},
-    { id: 'balanced', name: 'Balanced', desc: 'A little of everything: sieges and forts, army and fleet, and the staying power to see a war through.', adv: [
+    { id: 'balanced', art: 'institutions/military_revolution', name: 'Balanced', desc: 'A little of everything: sieges and forts, army and fleet, and the staying power to see a war through.', adv: [
       ['abm_military_engineers', 'siege_ability = 0.10\nglobal_defensive = 0.10', { icon: 'siege_ability_revolutions', name: 'Military Engineers', desc: 'The same engineers who dig our trenches before an enemy fortress also lay out the bastions of our own.' }],
       ['abm_garrison_artillery', 'army_artillery_power = 0.05\nglobal_garrison_size_modifier = 0.10', { icon: 'artillery_institution_advance', name: 'Garrison Artillery', desc: 'Gunners trained on the walls of our forts take the field with the army when it marches.' }],
       ['abm_coastal_squadrons', 'blockade_efficiency = 0.25\nown_coast_naval_combat_bonus = 0.05', { icon: 'rudimentary_coastal_ship_repair', name: 'Coastal Squadrons', desc: 'Squadrons that guard our own shores in peace can close an enemy\'s ports in war.' }],
@@ -166,7 +167,7 @@ module.exports = {
    ]},
  { age: 'age_5_absolutism', n: 5,
    eco: [
-    { id: 'administration', name: 'Administration', desc: 'Control, cabinet and legislation.', adv: [
+    { id: 'administration', art: 'institutions/legalism', name: 'Administration', desc: 'Control, cabinet and legislation.', adv: [
       ['cabinet', 'country_cabinet_efficiency = 0.20'],
       ['national_bank', 'minting_income_factor = 0.10\nmax_bonds = 1'],
       ['civil_servants', 'global_monthly_control = 0.001\nglobal_monthly_control_decline = -0.002'],
@@ -174,7 +175,7 @@ module.exports = {
       ['centralized_government', 'global_distance_from_capital_speed_propagation = 0.1'],
       ['economic_ideas', 'global_monthly_development = 0.001'],
     ]},
-    { id: 'commerce', name: 'Commerce', desc: 'Trade advantage, capacity and banking.', adv: [
+    { id: 'commerce', art: 'institutions/banking', name: 'Commerce', desc: 'Trade advantage, capacity and banking.', adv: [
       ['competetive_merchants', 'global_merchant_power = 0.2'],
       ['national_trade_policy', 'selling_efficiency = small_trade_efficiency_bonus'],
       ['fast_negotiations', 'merchant_maintenance_efficiency = 0.20'],
@@ -182,7 +183,7 @@ module.exports = {
       ['trade_manipulation', 'global_trade_center_power = 0.10'],
       ['bookkeeping', 'bank_interest = -0.01\nmax_bonds = 1'],
     ]},
-    { id: 'diplomatic', name: 'Diplomatic', desc: 'The diplomacy of conquest.', adv: [
+    { id: 'diplomatic', art: 'bg/bg_diplomacy', name: 'Diplomatic', desc: 'The diplomacy of conquest.', adv: [
       ['flexible_negotiation', 'global_war_score_efficiency = 0.2'],
       ['formal_diplomacy', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\nimprove_relation_impact = 0.30'],
       ['diplomatic_influence', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\ndiplomatic_capacity = 1'],
@@ -192,7 +193,7 @@ module.exports = {
     ]},
    ],
    mil: [
-    { id: 'maneuver', name: 'Maneuver', desc: 'Faster armies and fleets, on and off the battlefield.', adv: [
+    { id: 'maneuver', art: 'units/army_cavalry_5', name: 'Maneuver', desc: 'Faster armies and fleets, on and off the battlefield.', adv: [
       ['improved_manuever', 'combat_speed_modifier = 0.10'],
       ['abm_forced_march', 'army_movement_speed = 0.10\nnavy_movement_speed = 0.10', { icon: 'expanded_supply_trains', name: 'Forced March', desc: 'Our armies are trained to cover great distances at speed when the campaign demands it, and our squadrons crowd on sail to match them.' }],
       ['land_morale_movement_cost_rev_choice_mil', 'land_morale_movement_cost = -0.0002'],
@@ -200,7 +201,7 @@ module.exports = {
       ['abm_limbers', 'army_movement_speed = 0.05', { icon: 'offensive_army', name: 'Limbers', desc: 'Two-wheeled carriages let our guns be hitched to horses and keep pace with the rest of the army.' }],
       ['offensive_army', 'land_morale_recovery = 0.02\nnaval_morale_recovery = 0.02'],
     ]},
-    { id: 'logistics', name: 'Logistics', desc: 'Attrition, supply, range and support units, for armies and fleets.', adv: [
+    { id: 'logistics', art: 'army/army_full_flip', name: 'Logistics', desc: 'Attrition, supply, range and support units, for armies and fleets.', adv: [
       ['abm_enduring_hardships', 'land_morale_attrition_cost = -0.0025', { icon: 'improved_foraging', name: 'Enduring Hardships', desc: 'Hunger and disease no longer break the spirit of our soldiers as easily as they once did.' }],
       ['improved_foraging', 'land_unit_attrition = -0.20\nnaval_unit_attrition = -0.20'],
       ['abm_prepared_camps', 'global_supply_limit_modifier = 0.10\nfood_consumption_modifier = -0.15', { icon: 'expanded_supply_trains', name: 'Prepared Camps', desc: 'Camp sites along our lines of march are surveyed and stocked in advance.' }],
@@ -208,7 +209,7 @@ module.exports = {
       ['abm_logistics_corps', 'army_auxiliary_power = 0.50\narmy_auxiliary_build_cost_modifier = -0.20\narmy_auxiliary_maintenance_cost_modifier = -0.10\nnavy_transport_power = 0.25', { icon: 'expanded_supply_trains', name: 'Logistics Corps', desc: 'Wagoners, sappers, sutlers and transport crews are organised into proper units that can defend themselves when caught out.' }],
       ['abm_trained_reserves', 'regiment_reinforcement_speed = 0.10\nship_repair_at_sea = 0.025', { icon: 'defensive_army', name: 'Trained Reserves', desc: 'Replacements arrive at the front already trained and equipped, and our ships carry the stores to repair themselves at sea.' }],
     ]},
-    { id: 'firepower', name: 'Firepower', desc: 'Damage done: infantry volleys, naval broadsides and guns.', adv: [
+    { id: 'firepower', art: 'institutions/artillery_institution', name: 'Firepower', desc: 'Damage done: infantry volleys, naval broadsides and guns.', adv: [
       ['abm_volley_fire', 'army_light_infantry_power = 0.05\nnaval_damage_done = 0.10', { icon: 'military_modernization', name: 'Volley Fire', desc: 'Ranks that fire together on command, on the battlefield and on the gun deck, hit far harder than men who fire at will.' }],
       ['abm_line_of_battle', 'army_heavy_infantry_power = 0.05\nnavy_heavy_ship_power = 0.10', { icon: 'royal_navy', name: 'Line of Battle', desc: 'Infantry drawn up in line and ships of the line in column bring every musket and every gun to bear at once.' }],
       ['abm_horse_artillery', 'army_artillery_power = 0.10', { icon: 'artillery_institution_advance', name: 'Horse Artillery', desc: 'Light guns drawn by teams of horses can unlimber wherever the fighting is hottest.' }],
@@ -219,7 +220,7 @@ module.exports = {
    ]},
  { age: 'age_6_revolutions', n: 6,
    eco: [
-    { id: 'industry', name: 'Industry', desc: 'Production, extraction and taxes. The tall pick.', adv: [
+    { id: 'industry', art: 'institutions/industrialization', name: 'Industry', desc: 'Production, extraction and taxes. The tall pick.', adv: [
       ['audit_checks', 'tax_income_efficiency = large_tax_income_efficiency_bonus'],
       ['formal_administration', 'government_size = 1'],
       ['smithian_economics', 'global_production_efficiency = medium_production_efficiency_bonus\nglobal_monthly_development = 0.002'],
@@ -227,7 +228,7 @@ module.exports = {
       ['abm_industrial_scale_extraction', 'global_max_rgo_size_modifier = 0.20', { icon: 'efficient_mining', name: 'Industrial Scale Extraction', desc: 'Steam pumps and organised labour open mines and plantations on a scale never seen before.' }],
       ['abm_modern_extraction_methods', 'global_raw_material_output = 0.20', { icon: 'efficient_mining', name: 'Modern Extraction Methods', desc: 'Scientific agriculture and new machinery wring more from every field and seam.' }],
     ]},
-    { id: 'empire', name: 'Empire', desc: 'Proximity, governors and subjects. The wide pick.', adv: [
+    { id: 'empire', art: 'government/geopolitics_expansion_illustration', name: 'Empire', desc: 'Proximity, governors and subjects. The wide pick.', adv: [
       ['global_empire', 'subject_income_modifier = 0.05\ntax_income_efficiency = medium_tax_income_efficiency_bonus'],
       ['local_traditions', 'global_estate_target_satisfaction = small_permanent_target_satisfaction'],
       ['postal_service', 'road_cost_on_distance_from_capital = -2\nsea_cost_on_distance_from_capital_when_maritime = -1'],
@@ -235,7 +236,7 @@ module.exports = {
       ['abm_imperial_administration', 'num_local_governors = 1', { icon: 'court_accounting', name: 'Imperial Administration', desc: 'A professional corps of governors administers the provinces in the name of the crown.' }],
       ['abm_overseas_holdings', 'num_naval_governors = 1', { icon: 'expansionism', name: 'Overseas Holdings', desc: 'Our possessions across the sea are placed under governors answerable directly to the capital.' }],
     ]},
-    { id: 'innovation', name: 'Innovation', desc: 'Research, literacy and the arts. The science pick.', adv: [
+    { id: 'innovation', art: 'institutions/scientific_revolution', name: 'Innovation', desc: 'Research, literacy and the arts. The science pick.', adv: [
       ['abm_national_academy_of_sciences', 'research_speed = 0.05', { icon: 'scholasticism', name: 'National Academy of Sciences', desc: 'A royal academy gathers the finest minds of the nation under one roof.' }],
       ['abm_the_scientific_method', 'research_speed_modifier = 0.25', { icon: 'scholasticism', name: 'The Scientific Method', desc: 'Observation, hypothesis and experiment replace received wisdom.' }],
       ['abm_belle_epoque', 'cultural_influence_modifier = 0.5\nwork_of_art_quality_modifier = 0.5\nartist_impact = 0.5\nglobal_monthly_art_start_chance = 0.5\nskill_of_new_artists = 0.5', { icon: 'scholasticism', name: 'Belle Époque', desc: 'Salons, galleries and opera houses make our capital the envy of the civilised world.' }],
@@ -245,7 +246,7 @@ module.exports = {
     ]},
    ],
    mil: [
-    { id: 'voluntary_service', name: 'Voluntary Service', desc: 'Fewer but better troops and crews.', adv: [
+    { id: 'voluntary_service', art: 'units/army_infantry_6', name: 'Voluntary Service', desc: 'Fewer but better troops and crews.', adv: [
       ['discipline_drills', 'discipline = 0.05\nnaval_morale_modifier = 0.10'],
       ['abm_thorough_training', 'regiment_recruit_speed = -0.50\nmonthly_experience_gain = 0.25', { icon: 'offensive_army', name: 'Thorough Training', desc: 'No recruit takes the field before he has mastered his drill; it takes longer, but it shows.' }],
       ['regimental_system', 'army_maintenance_efficiency = 0.1\narmy_initiative = 0.25'],
@@ -253,7 +254,7 @@ module.exports = {
       ['bayonet_leaders', 'army_heavy_infantry_power = 0.1\narmy_light_infantry_power = 0.1'],
       ['abm_mission_command', 'army_initiative = 0.10\nnavy_initiative = 0.25', { icon: 'offensive_army', name: 'Mission Command', desc: 'Our officers are told what to achieve, not how; trusted to act on their own judgement, they seize the moment without waiting for orders.' }],
     ]},
-    { id: 'conscription', name: 'Conscription', desc: 'Mass armies and fleets from a large population.', adv: [
+    { id: 'conscription', art: 'institutions/levee_en_masse', name: 'Conscription', desc: 'Mass armies and fleets from a large population.', adv: [
       ['mass_army', 'global_manpower_modifier = 0.20\nglobal_sailors_modifier = 0.20\nglobal_levy_size_modifier = 0.10'],
       ['national_conscripts', 'regiment_recruit_speed = 0.5\nship_build_speed = 0.25\nlevy_maintenance_modifier = -0.5'],
       ['nationalistic_enthusiasm', 'army_maintenance_efficiency = 0.1\nnavy_maintenance_efficiency = 0.1\nlevy_combat_efficiency_modifier = 0.10'],
@@ -261,7 +262,7 @@ module.exports = {
       ['massed_battery', 'army_artillery_power = 0.1\narmy_artillery_build_cost_modifier = -0.10'],
       ['private_to_marshal', 'army_heavy_infantry_build_cost_modifier = -0.20\narmy_light_infantry_build_cost_modifier = -0.20\narmy_heavy_infantry_reinforce_cost_modifier = -0.15\narmy_light_infantry_reinforce_cost_modifier = -0.15\narmy_heavy_infantry_maintenance_cost_modifier = -0.10\narmy_light_infantry_maintenance_cost_modifier = -0.10'],
     ]},
-    { id: 'insurrection', name: 'Insurrection', desc: 'Defensive war for small countries fighting for survival.', adv: [
+    { id: 'insurrection', art: 'situation/the_revolution', name: 'Insurrection', desc: 'Defensive war for small countries fighting for survival.', adv: [
       ['abm_guerillas', 'max_manpower = 1\noccupation_time = 1.0', { icon: 'defensive_army', name: 'Guerillas', desc: 'Every hill and forest hides a band of partisans, and no occupier sleeps soundly in our land.' }],
       ['morale_recovery_rev_dip_choice', 'morale_recovery_in_friendly = 0.05'],
       ['abm_peoples_war', 'global_hostile_attrition = 1\nglobal_devastation_recovery = 0.01', { icon: 'defensive_army', name: "People's War", desc: 'The whole nation takes up arms; invaders find the land stripped bare and every village hostile.' }],
