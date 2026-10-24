@@ -760,22 +760,23 @@ vetting = {
 	potential = { has_variable = abm_focus_espionage }
 
 	counter_espionage = 0.33
+	spy_network_construction = 0.5
 }
 
-efficient_spies = {
+abm_sabotage_fort_advance = {
 	age = age_5_absolutism
-	icon = efficient_spies
+	icon = fortified_towns
 	requires = vetting
 
 	potential = { has_variable = abm_focus_espionage }
 
-	spy_network_construction = 0.5
+	unlock_country_interaction = abm_sabotage_fort
 }
 
 REPLACE:infiltrate_administration_advance = {
 	age = age_5_absolutism
 	icon = efficient_spies
-	requires = efficient_spies
+	requires = abm_sabotage_fort_advance
 
 	potential = { has_variable = abm_focus_espionage }
 

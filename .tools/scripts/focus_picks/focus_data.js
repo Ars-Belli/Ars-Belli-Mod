@@ -181,9 +181,9 @@ module.exports = {
       ['trade_manipulation', 'global_trade_center_power = 0.10'],
       ['bookkeeping', 'bank_interest = -0.01\nmax_bonds = 1'],
     ]},
-    { id: 'espionage', name: 'Espionage', desc: 'Spies, infiltration and stolen research.', adv: [
-      ['vetting', 'counter_espionage = 0.33'],
-      ['efficient_spies', 'spy_network_construction = 0.5'],
+    { id: 'espionage', name: 'Espionage', desc: 'Spies, infiltration, sabotage and stolen research.', adv: [
+      ['vetting', 'counter_espionage = 0.33\nspy_network_construction = 0.5'],
+      ['abm_sabotage_fort_advance', '', { icon: 'fortified_towns', name: 'Sabotage Fort', desc: 'In time of war our agents can buy off the men who hold an enemy\'s walls, leaving the fort without a garrison.', raw: 'unlock_country_interaction = abm_sabotage_fort' }],
       ['infiltrate_administration_advance', '', { raw: 'unlock_diplomacy = { infiltrate_administration }' }],
       ['foreign_embassies', 'monthly_diplomats = 0.1\nmax_diplomats = 1'],
       ['abm_global_networks', 'diplomatic_range_modifier = 0.5\ndiplomatic_range = 500', { icon: 'diplomatic_influence', name: 'Global Networks', desc: 'Our envoys, agents and correspondents reach every court of note, however distant.' }],
