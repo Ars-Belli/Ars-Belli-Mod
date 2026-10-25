@@ -236,3 +236,47 @@ abm_reorganize_pastoral_rgo_decision = {
 		}
 	}
 }
+
+# Timber working. Separate from the pastoral reorganisation: it costs 1500 gold
+# on top of the usual price, so the two can't share one action.
+abm_establish_timber_working_decision = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_lumber.dds"
+
+	potential = {
+		any_province = {
+			abm_steppe_pastoral_province = { COUNTRY = root }
+			NOT = {
+				any_location_in_province = { raw_material = goods:lumber }
+			}
+		}
+	}
+
+	allow = {
+		gold >= 1500
+		stability >= 10
+		political_influence >= 10
+		any_province = {
+			abm_steppe_pastoral_province = { COUNTRY = root }
+			NOT = {
+				any_location_in_province = { raw_material = goods:lumber }
+			}
+		}
+	}
+
+	ai_will_do = {
+		value = 0
+	}
+
+	option = {
+		name = abm_establish_timber_working_decision.a
+		ai_chance = { value = 0 }
+
+		effect = {
+			fire_generic_action = {
+				type = abm_establish_timber_working
+				actor = root
+			}
+		}
+	}
+}

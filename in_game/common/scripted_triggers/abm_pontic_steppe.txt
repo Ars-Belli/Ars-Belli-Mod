@@ -69,6 +69,8 @@ abm_steppe_pastoral_good = {
 }
 
 # Goods-scope: a good the provincial reorganisation may switch to.
+# sand is additionally restricted in the action's select_trigger. Lumber is
+# NOT here: timber has its own action (abm_establish_timber_working).
 abm_steppe_target_good = {
 	OR = {
 		this = goods:wool
@@ -114,6 +116,25 @@ abm_steppe_pastoral_province = {
 			NOT = {
 				development >= 10
 				abm_steppe_pastoral_location = { COUNTRY = $COUNTRY$ }
+			}
+		}
+	}
+}
+
+# Country-scope, parameterised province gate used by the historical mineral
+# decisions (Luhansk, Bakhmut, Tana, Izium, Kursk, Belgorod, Donetsk).
+#   abm_can_develop_province_rgos = { PROVINCE = province:luhan_province }
+# Every owned land location in the province must pass
+# abm_location_settled_and_loyal. A scope parameter can be used as a block
+# root - vanilla does the same in religion_triggers.txt
+# (`crusade_target_relations_valid_trigger` uses `$ACTOR$ = { ... }`).
+abm_can_develop_province_rgos = {
+	$PROVINCE$ = {
+		NOT = {
+			any_location_in_province = {
+				has_owner = yes
+				is_land = yes
+				NOT = { abm_location_settled_and_loyal = yes }
 			}
 		}
 	}

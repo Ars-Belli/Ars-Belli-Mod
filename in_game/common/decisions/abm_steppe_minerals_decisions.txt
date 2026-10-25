@@ -1,0 +1,562 @@
+﻿# Historical mineral decisions for the Pontic-Caspian steppes.
+#
+# These convert pastoral / farming locations that sat on documented mineral
+# deposits: the Donets coalfields (Luhansk, Bakhmut, Kalmius), Donets Ridge and
+# Kursk Magnetic Anomaly iron, the northern forest-steppe timber, and the
+# non-ferrous metals of the Caucasus foothills (copper, lead) and the
+# Orenburg / Ural margin (copper, tin).
+#
+# Same shape as the three Crimea decisions in abm_pontic_steppe_decisions.txt:
+# free, campaign-global once-only via a global flag, and gated by
+# abm_can_develop_province_rgos (parameterised province variant of
+# abm_can_develop_*_rgos) so every owned land location in the province must be
+# a full core of a settled, non-pagan, culturally and religiously loyal owner.
+
+# Luhansk coalfield: the western end of the Donets basin, worked from the
+# 1790s Lugansk foundry onwards.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_luhan_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_coal.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_luhan_rgos_developed }
+
+		owns = location:luhansk
+		owns = location:mityakinskaya
+
+		OR = {
+			NOT = { location:luhansk = { raw_material = goods:coal } }
+			NOT = { location:mityakinskaya = { raw_material = goods:coal } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:luhan_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_luhan_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_luhan_rgos_developed
+
+			location:luhansk = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:coal
+			}
+			location:mityakinskaya = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:coal
+			}
+		}
+	}
+}
+
+# Bakhmut coalfield: the northern Donets basin around Lysychansk and
+# Kreminna.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_bakhmut_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_coal.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_bakhmut_rgos_developed }
+
+		owns = location:kreminna
+		owns = location:lysychansk
+
+		OR = {
+			NOT = { location:kreminna = { raw_material = goods:coal } }
+			NOT = { location:lysychansk = { raw_material = goods:coal } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:bakhmut_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_bakhmut_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_bakhmut_rgos_developed
+
+			location:kreminna = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:coal
+			}
+			location:lysychansk = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:coal
+			}
+		}
+	}
+}
+
+# Kalmius coalfield: the eastern Donets basin around the Kalmius.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_tana_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_coal.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_tana_rgos_developed }
+
+		owns = location:kalmius
+
+		OR = {
+			NOT = { location:kalmius = { raw_material = goods:coal } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:tana_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_tana_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_tana_rgos_developed
+
+			location:kalmius = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:coal
+			}
+		}
+	}
+}
+
+# Donets Ridge iron: the ore belt running along the Donets.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_izium_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_iron.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_izium_rgos_developed }
+
+		owns = location:barvinkove
+
+		OR = {
+			NOT = { location:barvinkove = { raw_material = goods:iron } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:izium_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_izium_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_izium_rgos_developed
+
+			location:barvinkove = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:iron
+			}
+		}
+	}
+}
+
+# Kursk Magnetic Anomaly: the great iron field around Stary Oskol.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_kursk_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_iron.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_kursk_rgos_developed }
+
+		owns = location:oskol
+
+		OR = {
+			NOT = { location:oskol = { raw_material = goods:iron } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:kursk_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_kursk_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_kursk_rgos_developed
+
+			location:oskol = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:iron
+			}
+		}
+	}
+}
+
+# Belgorod iron: the southern edge of the Kursk Magnetic Anomaly.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_belgorod_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_iron.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_belgorod_rgos_developed }
+
+		owns = location:muzhech
+
+		OR = {
+			NOT = { location:muzhech = { raw_material = goods:iron } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:belgorod_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_belgorod_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_belgorod_rgos_developed
+
+			location:muzhech = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:iron
+			}
+		}
+	}
+}
+
+# Northern forest-steppe timber along the upper Donets tributaries.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_donetsk_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_lumber.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_donetsk_rgos_developed }
+
+		owns = location:khotmyzh
+		owns = location:kotelva
+
+		OR = {
+			NOT = { location:khotmyzh = { raw_material = goods:lumber } }
+			NOT = { location:kotelva = { raw_material = goods:lumber } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:donetsk_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_donetsk_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_donetsk_rgos_developed
+
+			location:khotmyzh = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:lumber
+			}
+			location:kotelva = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:lumber
+			}
+		}
+	}
+}
+
+# Caucasus foothills: the mineral belt around Pyatigorsk and the upper Kuma,
+# where copper ores outcrop along the escarpment.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_majar_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_copper.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_majar_rgos_developed }
+
+		owns = location:yessentuq
+
+		OR = {
+			NOT = { location:yessentuq = { raw_material = goods:copper } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:majar_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_majar_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_majar_rgos_developed
+
+			location:yessentuq = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:copper
+			}
+		}
+	}
+}
+
+
+# Ciscaucasia: the Terek basin carries copper shows that the mountain
+# communities worked long before the Russians arrived.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_terek_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_copper.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_terek_rgos_developed }
+
+		owns = location:naurskaya
+
+		OR = {
+			NOT = { location:naurskaya = { raw_material = goods:copper } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:terek_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_terek_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_terek_rgos_developed
+
+			location:naurskaya = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:copper
+			}
+		}
+	}
+}
+
+
+# North Caucasus lead-zinc: the Sadon type of deposit, argentiferous galena
+# in the foothills, worked for lead and the silver that comes with it.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_stavropol_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_lead.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_stavropol_rgos_developed }
+
+		owns = location:shad_kirman
+
+		OR = {
+			NOT = { location:shad_kirman = { raw_material = goods:lead } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:stavropol_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_stavropol_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_stavropol_rgos_developed
+
+			location:shad_kirman = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:lead
+			}
+		}
+	}
+}
+
+
+# The Orenburg margin of the Ural foothills: the Kargaly copper field worked
+# since the Bronze Age, and, further out on the Kazakh side, the only workable
+# tin within reach of the steppe.
+# Campaign-global once-only, free, like the three Crimea decisions.
+abm_develop_taskala_rgos = {
+	decision_category = economy_decisions
+	image = "gfx/interface/icons/trade_goods/illustrations/icon_goods_copper.dds"
+	only_once = yes
+
+	potential = {
+		NOT = { has_global_variable = abm_taskala_rgos_developed }
+
+		owns = location:taskala
+		owns = location:chertanla
+
+		OR = {
+			NOT = { location:taskala = { raw_material = goods:copper } }
+			NOT = { location:chertanla = { raw_material = goods:tin } }
+		}
+	}
+
+	allow = {
+		abm_can_develop_province_rgos = { PROVINCE = province:taskala_province }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_develop_taskala_rgos.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_global_variable = abm_taskala_rgos_developed
+
+			location:taskala = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:copper
+			}
+			location:chertanla = {
+				change_max_raw_material_workers = {
+					value = rgo_workers
+					subtract = 1
+					min = 0
+					multiply = -1
+				}
+				change_raw_material = goods:tin
+			}
+		}
+	}
+}

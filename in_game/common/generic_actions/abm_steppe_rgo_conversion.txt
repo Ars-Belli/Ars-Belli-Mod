@@ -11,10 +11,10 @@ abm_reorganize_pastoral_rgo = {
 	automation_tick = never
 	automation_tick_frequency = 12
 
-	# 10 stability + 10 political influence, and 4x the location's wealth in
-	# gold. The gold part can't live in the price object (a price_modifier would
-	# scale the stability and influence too), so it is paid in the effect, using
-	# the same idiom as vanilla's earthquake payments.
+	# 10 stability + 10 political influence, and 100-300 gold scaled by the
+	# location's development. The gold part can't live in the price object (a
+	# price_modifier would scale the stability and influence too), so it is paid
+	# in the effect, using the same idiom as vanilla's earthquake payments.
 	price = price:abm_reorganize_pastoral_rgo_price
 
 	potential = {
@@ -85,6 +85,8 @@ abm_reorganize_pastoral_rgo = {
 		visible = {
 			abm_steppe_target_good = yes
 			NOT = { this = scope:target_location.raw_material }
+
+			# sand needs the location itself to be coastal
 			trigger_if = {
 				limit = { this = goods:sand }
 				scope:target_location = { is_coastal = yes }
@@ -120,6 +122,111 @@ abm_reorganize_pastoral_rgo = {
 				max = -100
 				min = -300
 			}
+		}
+	}
+}
+
+# Timber working: a separate action from the pastoral reorganisation, because it
+# is a far bigger investment (1500 gold) and is limited to one working per
+# province and three per area.
+abm_establish_timber_working = {
+	type = owncountry
+	show_message = no
+	ai_tick = never
+	automation_tick = never
+	automation_tick_frequency = 12
+
+	price = price:abm_timber_working_price
+
+	potential = {
+		scope:actor ?= {
+			any_province = {
+				region = region:steppes_region
+				any_location_in_province = {
+					owner = scope:actor
+				}
+			}
+		}
+	}
+
+	allow = {
+		scope:actor ?= {
+			any_province = {
+				abm_steppe_pastoral_province = { COUNTRY = scope:actor }
+			}
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = province
+		source = actor
+		target_flag = target_province
+		name = "abm_establish_timber_working_select_province"
+		none_available_msg_key = "abm_establish_timber_working_no_province"
+		show_why_not_visible = yes
+		column = { data = name }
+		column = { data = population }
+		column = { data = development }
+		visible = {
+			abm_steppe_pastoral_province = { COUNTRY = scope:actor }
+
+			# One timber working per province. Any lumber counts, including a
+			# location that was already lumber in 1337.
+			NOT = {
+				any_location_in_province = { raw_material = goods:lumber }
+			}
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = location
+		source = target_province
+		source_flags = only_actual_locations
+		target_flag = target_location
+		name = "abm_establish_timber_working_select_location"
+		none_available_msg_key = "abm_establish_timber_working_no_location"
+		column = { data = name }
+		column = { data = raw_material }
+		visible = {
+			is_land = yes
+			NOT = { has_variable = abm_steppe_rgo_converted }
+			abm_steppe_pastoral_location = { COUNTRY = scope:actor }
+
+			# Timber needs moving water or a lake shore.
+			OR = {
+				has_river = yes
+				is_adjacent_to_lake = yes
+			}
+
+			# Two caps on areas. The area as a whole may hold six lumber
+			# locations - any lumber counts, including land that was lumber in
+			# 1337 - and we ourselves may found three timber workings in it.
+			area = {
+				any_location_in_area = {
+					raw_material = goods:lumber
+					count < 6
+				}
+				any_location_in_area = {
+					owner = scope:actor
+					has_variable = abm_timber_working
+					count < 3
+				}
+			}
+		}
+	}
+
+	effect = {
+		scope:target_location = {
+			change_max_raw_material_workers = {
+				value = rgo_workers
+				subtract = 1
+				min = 0
+				multiply = -1
+			}
+			change_raw_material = goods:lumber
+			set_variable = { name = abm_steppe_rgo_converted value = yes }
+			# Counts towards this country's three-per-area timber allowance.
+			set_variable = { name = abm_timber_working value = yes }
 		}
 	}
 }
