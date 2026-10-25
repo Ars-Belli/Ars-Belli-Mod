@@ -4,7 +4,7 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.24 | **Supported game version:** 1.3.\*
+**Mod version:** game.1.3.11.mod.25 | **Supported game version:** 1.3.\*
 **Compiled:** 25 October 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
@@ -175,7 +175,8 @@ Alliance, Defensive and Guarantee points.
 
 ### Player Coalition
 
-- A coalition that only players can found or join, aimed at a multiplayer **Great Power**. It sits
+- A coalition that only players can found or join, aimed at a multiplayer **Great Power or Major
+  Power**. It sits
   alongside the vanilla coalition, which works as before.
 - Joining requires **more than 50 antagonism** toward the target, as for the vanilla coalition, but
   no opinion or diplomatic range. Subjects (tributaries excepted), countries with a truce, union or
@@ -628,7 +629,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.24).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.25).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -639,7 +640,16 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.24 (current)
+## game.1.3.11.mod.25 (current)
+
+Since game.1.3.11.mod.24 → game.1.3.11.mod.25:
+
+### New Diplomatic Actions
+
+- **Player Coalition:** can now target a multiplayer **Great Power or Major Power** [was Great Power
+  only]
+
+## game.1.3.11.mod.24
 
 Since game.1.3.11.mod.23 → game.1.3.11.mod.24:
 
