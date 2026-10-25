@@ -1,7 +1,7 @@
 ﻿# Ars Belli Player Coalition — runs in parallel with vanilla `coalition`.
 # Only player-controlled countries can create or join. Joining needs antagonism > 50
 # towards the target, but no opinion / diplomatic-range requirements
-# (see abm_can_join_player_coalition_against).
+# (see abm_can_join_player_coalition_against). Members leave below 30 when not at war.
 # The target must be an MP Great Power when the coalition is started.
 # Panel: in_game\gui\panels\organization\abm_player_coalition.gui (engine maps type -> <type>.gui).
 abm_player_coalition = {
@@ -106,7 +106,7 @@ abm_player_coalition = {
 		}
 	}
 
-	# Vanilla minus the antagonism < 30 exit: antagonism gates joining only, members are never expelled for it.
+	# Same as vanilla, including the antagonism < 30 exit (only while not at war with the target).
 	auto_leave_trigger = {
 		trigger_if = {
 			limit = { exists = scope:target }
@@ -128,6 +128,11 @@ abm_player_coalition = {
 							is_subject_or_below_of = root
 						}
 						in_union_with = scope:target
+
+						antagonism = {
+							target = scope:target
+							value < 30
+						}
 					}
 				}
 			}
