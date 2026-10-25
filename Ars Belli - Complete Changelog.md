@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.23 | **Supported game version:** 1.3.\*
-**Compiled:** 24 October 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.3.11.mod.24 | **Supported game version:** 1.3.\*
+**Compiled:** 25 October 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -177,9 +177,12 @@ Alliance, Defensive and Guarantee points.
 
 - A coalition that only players can found or join, aimed at a multiplayer **Great Power**. It sits
   alongside the vanilla coalition, which works as before.
-- It needs no antagonism, opinion or diplomatic range toward the target. Subjects (tributaries
-  excepted), countries with a truce, union or subject tie to the target, and countries already in a
-  player coalition against it cannot join. AI countries never join.
+- Joining requires **more than 50 antagonism** toward the target, as for the vanilla coalition, but
+  no opinion or diplomatic range. Subjects (tributaries excepted), countries with a truce, union or
+  subject tie to the target, and countries already in a player coalition against it cannot join. AI
+  countries never join.
+- Members leave once their antagonism toward the target drops **below 30** while they are not at war
+  with it.
 - Members defend each other if the target attacks one of them. The coalition declares war with the
   regular Coalition casus belli (see [section 8](#8-war-wargoals-and-peace)), which **only the
   coalition leader** holds and uses to rally the members. If the leader leaves, the coalition
@@ -625,7 +628,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.23).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.24).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -636,7 +639,30 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.23 (current)
+## game.1.3.11.mod.24 (current)
+
+Since game.1.3.11.mod.23 → game.1.3.11.mod.24:
+
+### New Diplomatic Actions
+
+- **Player Coalition:** joining now requires **more than 50 antagonism** toward the target, and members
+  leave once it drops **below 30** while not at war with the target — the same thresholds as the
+  vanilla coalition. This applies to the leader too, whose leaving dissolves the coalition. Opinion
+  and diplomatic range are still not required
+
+### National Flavour
+
+- **Genoese Crossbowmen** advance: +10% light infantry power and +10% heavy infantry power [was +20%
+  light infantry power]; the Genoese Crossbowmen unit also deals +10% morale damage
+- **Late Genoese Crossbowmen, Genoese Arquebusiers, Genoese Musketeers and Genoese Riflemen:** −1
+  initiative [Musketeers and Riflemen were +1] and a −10% wetlands combat penalty [was −15%];
+  Genoese Riflemen take 10% less strength and morale damage [was 5%]
+- **Venetian Stradioti** advance no longer gives +15% light cavalry power
+- **Italian Stradioti** deal +10% morale damage and get +1 combat speed instead of +1 initiative,
+  matching the Venetian Stradioti
+- **Late Balestrieri** lose their +1 initiative
+
+## game.1.3.11.mod.23
 
 Since game.1.3.11.mod.22 → game.1.3.11.mod.23:
 
