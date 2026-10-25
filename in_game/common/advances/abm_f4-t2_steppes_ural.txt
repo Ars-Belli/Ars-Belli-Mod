@@ -908,3 +908,24 @@ REPLACE:feo_the_iron_harvest_advance = {
 
 	requires = hot_blast_furnace
 }
+
+#############################################
+# Steppe redoubts (building)
+#############################################
+
+# Unlocks abm_steppe_redoubts (building_types/abm_steppe_buildings.txt). The
+# capital gate keeps the advance out of the trees of countries that will never
+# own flat steppe land; the building itself is gated on the location.
+abm_steppe_redoubts_advance = {
+	age = age_1_traditions
+
+	potential = {
+		capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = castle_advance
+	unlock_building = abm_steppe_redoubts
+	allow_children = no
+}

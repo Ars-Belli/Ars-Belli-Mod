@@ -1,0 +1,61 @@
+﻿# Steppe redoubts: small earth-and-timber strongpoints raised across the open
+# grassland of the Pontic steppe. Modelled on vanilla's fortress church
+# (religion_buildings.txt): it makes an existing fort harder to take rather than
+# bringing a fort level of its own, so it does nothing in a location that has
+# never been fortified.
+abm_steppe_redoubts = {
+	audio_tier = 2
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = 1
+
+	employment_size = 0.2
+	category = defense_category
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	build_time = small_fort_building
+	expensive = yes
+
+	country_potential = {
+		has_advance = abm_steppe_redoubts_advance
+	}
+
+	# Region and terrain are both static, so they belong in location_potential
+	# (vanilla: italian_administration_center gates on region the same way).
+	# Putting the region in `allow` would only grey the button out elsewhere.
+	location_potential = {
+		region = region:steppes_region
+		topography = flatland
+	}
+
+	# Buildings carry no icon field of their own - the production method's
+	# icon/icon_type decides what is drawn, the same way bastion does it. Point
+	# both at abm_steppe_redoubts once a matching dds exists in
+	# main_menu/gfx/interface/icons/buildings/.
+	unique_production_methods = {
+		abm_steppe_redoubts_maintenance = {
+			icon_type = building_type
+			icon = stockade
+			lumber = 0.1
+			tools = 0.02
+			weaponry = 0.02
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = fort_construction
+
+	modifier = {
+		local_garrison_size = 0.25
+		local_hostile_attrition = 1
+	}
+
+	raw_modifier = {
+		local_defensive = 0.25
+		pure_tooltip_entry = pte_no_propagating_zone_of_control
+	}
+}
