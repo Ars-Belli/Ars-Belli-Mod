@@ -1,6 +1,7 @@
 ﻿# Relaxed counterpart of vanilla scope_country_can_join_coalition_against.
-# Dropped vs vanilla: antagonism > 50, opinion < -50, knows_country,
-# within_diplomatic_range, has_limited_diplomacy, not at war with the target.
+# Kept vs vanilla: antagonism > 50.
+# Dropped vs vanilla: opinion < -50, knows_country, within_diplomatic_range,
+# has_limited_diplomacy, not at war with the target.
 #$target$ is the target of the coalition
 abm_can_join_player_coalition_against = {
 	custom_tooltip = {
@@ -12,6 +13,11 @@ abm_can_join_player_coalition_against = {
 	OR = {
 		is_subject = no
 		is_subject_type = tributary
+	}
+
+	antagonism = {
+		target = $target$
+		value > 50
 	}
 
 	not = { is_subject_or_below_of = $target$ }
