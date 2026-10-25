@@ -4,6 +4,29 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.24
+
+Since game.1.3.11.mod.23 → game.1.3.11.mod.24:
+
+### New Diplomatic Actions
+
+- **Player Coalition:** joining now requires **more than 50 antagonism** toward the target, and members
+  leave once it drops **below 30** while not at war with the target — the same thresholds as the
+  vanilla coalition. This applies to the leader too, whose leaving dissolves the coalition. Opinion
+  and diplomatic range are still not required
+
+### National Flavour
+
+- **Genoese Crossbowmen** advance: +10% light infantry power and +10% heavy infantry power [was +20%
+  light infantry power]; the Genoese Crossbowmen unit also deals +10% morale damage
+- **Late Genoese Crossbowmen, Genoese Arquebusiers, Genoese Musketeers and Genoese Riflemen:** −1
+  initiative [Musketeers and Riflemen were +1] and a −10% wetlands combat penalty [was −15%];
+  Genoese Riflemen take 10% less strength and morale damage [was 5%]
+- **Venetian Stradioti** advance no longer gives +15% light cavalry power
+- **Italian Stradioti** deal +10% morale damage and get +1 combat speed instead of +1 initiative,
+  matching the Venetian Stradioti
+- **Late Balestrieri** lose their +1 initiative
+
 ## game.1.3.11.mod.23
 
 Since game.1.3.11.mod.22 → game.1.3.11.mod.23:
