@@ -1,0 +1,99 @@
+﻿# Gazaria's break with Genoa, as decisions rather than events.
+#
+# The old version fired an on_game_start event, which meant the choice only
+# appeared when BOTH Gazaria and Genoa were human players. As decisions the
+# Gazaria player always sees them, whoever runs Genoa. GAZ starts as GEN's
+# vassal (main_menu/setup/1337/12_diplomacy.txt:
+# `dependency = { first = GEN second = GAZ subject_type = vassal }`).
+
+# Step one: break free of Genoa. Disappears once GAZ is no longer a subject.
+abm_gazaria_independence = {
+	decision_category = country_specific_decisions
+	only_once = yes
+
+	potential = {
+		tag = GAZ
+		is_human = yes
+		is_subject = yes
+		overlord ?= { has_or_had_tag = GEN }
+	}
+
+	allow = {
+		is_subject = yes
+		overlord ?= { has_or_had_tag = GEN }
+	}
+
+	ai_will_do = {
+		value = 0
+	}
+
+	option = {
+		name = abm_gazaria_independence.a
+		ai_chance = { value = 0 }
+
+		effect = {
+			overlord ?= { cancel_subject = root }
+		}
+	}
+
+	option = {
+		name = abm_gazaria_independence.b
+		ai_chance = { value = 0 }
+
+		effect = {
+			overlord ?= { cancel_subject = root }
+			if = {
+				limit = { country_exists = c:GEN }
+				create_alliance = { target = c:GEN }
+			}
+		}
+	}
+}
+
+# Step two: who are we now? Only after independence, and only while we are still
+# Ligurian. Both options are one-shot: only_once hides the decision afterwards,
+# so staying Ligurian is a real decision rather than simply ignoring it.
+abm_gazaria_culture_choice = {
+	decision_category = country_specific_decisions
+	only_once = yes
+
+	potential = {
+		tag = GAZ
+		is_human = yes
+		NOT = { is_subject = yes }
+		culture = culture:ligurian
+	}
+
+	allow = {
+		NOT = { is_subject = yes }
+		culture = culture:ligurian
+	}
+
+	ai_will_do = {
+		value = 0
+	}
+
+	# Stay Ligurian: nothing changes mechanically, the flag just records the choice.
+	option = {
+		name = abm_gazaria_culture_choice.a
+		ai_chance = { value = 0 }
+
+		effect = {
+			set_variable = { name = abm_gazaria_stayed_ligurian value = yes }
+		}
+	}
+
+	# Become Gothic. Deliberately no grant_culture_bonus_advances: that hands over
+	# the whole culture-locked advance set at once, with no can_change_primary_culture
+	# check, price or cooldown. The Gothic advances simply become researchable.
+	option = {
+		name = abm_gazaria_culture_choice.b
+		ai_chance = { value = 0 }
+
+		effect = {
+			change_culture = culture:gothic_culture
+			add_accepted_culture = culture:ligurian
+			custom_tooltip = abm_gazaria_culture_choice.b.tt
+		}
+	}
+}
