@@ -4,6 +4,15 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.25
+
+Since game.1.3.11.mod.24 → game.1.3.11.mod.25:
+
+### New Diplomatic Actions
+
+- **Player Coalition:** can now target a multiplayer **Great Power or Major Power** [was Great Power
+  only]
+
 ## game.1.3.11.mod.24
 
 Since game.1.3.11.mod.23 → game.1.3.11.mod.24:
