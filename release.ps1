@@ -15,6 +15,10 @@ if ([string]::IsNullOrWhiteSpace($version)) {
     throw "Could not read 'version' from $metadataPath"
 }
 
+# Validate the country history merge (run on the staged copy below) before bumping, so a
+# malformed regional file cannot leave a bumped version with no ZIP.
+& (Join-Path $sourceDir "merge_country_setup.ps1") -ModRoot $sourceDir -CheckOnly
+
 # Bump trailing integer in version (e.g. "0.0-alpha.10" -> "0.0-alpha.11") BEFORE archiving
 # so the produced ZIP and its embedded metadata.json carry the new version.
 if ($version -match '^(.*?)(\d+)$') {
@@ -83,6 +87,9 @@ if (Test-Path -Path $metadataDir) {
     Write-Host "Moving metadata content to staging root..."
     Copy-Item -Path (Join-Path $metadataDir "*") -Destination $stagingDir -Force
 }
+
+# Ship country history as one 10_countries.txt, like vanilla (see merge_country_setup.ps1).
+& (Join-Path $sourceDir "merge_country_setup.ps1") -ModRoot $stagingDir
 
 # Remove any .exe files from staging
 Get-ChildItem -Path $stagingDir -Recurse -Filter "*.exe" | ForEach-Object {

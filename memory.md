@@ -173,6 +173,7 @@ The repository mirrors the EU5 file structure:
 - `loading_screen/`: Contains defines.
 - `deploy.ps1`, `release.ps1`, `watch.ps1`: Automation scripts for mod development.
 - `release.ps1` excludes `.exe` files from the release archive.
+- `merge_country_setup.ps1`: deploy.ps1 + release.ps1 run it on the COPY (deploy dest / release staging), never repo (script refuses repo unless `-CheckOnly`). Merges `main_menu/setup/<folder>/10_countries_*.txt` into one `10_countries.txt`, deletes regional files. Why: game spends ~2 s per setup file on new-game generation, size no matter → 62 files ≈ 2 min. Repo keeps split files (split via `.tools/scripts/split_10_countries.py`) so no 100k-line merge conflicts. Order = ordinal filename = old load order (first claim on a location wins). Throws on dupe tag, header mismatch, odd trailer, unbalanced braces. Release runs `-CheckOnly` before version bump. Works for `setup/start` (1.3) and `setup/1337` (1.4). No BOM on output.
 
 ## Implementation Details for Agents
 - **Scripted Effects:** Check `in_game\common\scripted_effects\ars_belli_scripted_effects.txt` for the core logic of the ranking system.
