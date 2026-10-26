@@ -1,0 +1,1095 @@
+﻿# Cultural regiments of the Pontic steppe.
+#
+# Each culture furnishes two or three historical unit types. They are ordinary
+# recruitable regiments, not levies and not estate private armies.
+#
+# Two of the ten lines are gated on something other than plain culture:
+#   - the Cossack regiments need the Cossacks estate and Cossack pops in the
+#     recruiting location (a service institution, not an ethnicity);
+#   - the Ruthenian regiments accept three routes: Ruthenian primary culture,
+#     accepted Ruthenians while seated in Ruthenia or the steppe, or being Kyiv
+#     or Ruthenia outright.
+# The other eight lines use the default cultural gate: primary culture, or an
+# accepted culture our primary culture views at `positive` or better, and in
+# either case an original capital inside the steppes region.
+#
+# `cultural_view` is a culture-scope trigger, hence the `culture = { ... }`
+# wrapper; vanilla does the same in common/script_values/io_policy.txt
+# (`root.culture ?= { cultural_view = { target = ... value >= kindred } }`).
+#
+# Archetypes by design intent:
+#   horse archer   - wins the skirmish, loses the melee (morale damage, low strength)
+#   melee horse    - impact, then fades (strength damage, extra morale damage taken)
+#   defensive foot - the anvil (negative damage taken on both morale and strength)
+#   offensive foot - hits hard, dies faster (positive damage done AND taken)
+#   balanced foot  - no penalty, no standout bonus
+
+# crimean cultural regiment, age_2_renaissance.
+abm_crimean_horse_archers_2 = {
+	copy_from = a_age_2_renaissance_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_crimean_horse_archers_3
+	initiative = 2
+	morale_damage_done = 0.15
+	strength_damage_done = -0.10
+	supply_weight = -0.25
+	impact = {
+		flatland = -0.10
+		grasslands = -0.10
+		sparse = -0.10
+		hills = 0.10
+		mountains = 0.10
+		woods = 0.10
+		forest = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		grasslands = 0.10
+		sparse = 0.10
+		hills = -0.10
+		mountains = -0.10
+		woods = -0.10
+		forest = -0.10
+	}
+	gfx_tags = { archer_tag light_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:crimean
+			AND = {
+				has_accepted_culture = culture:crimean
+				culture = {
+					cultural_view = {
+						target = culture:crimean
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# crimean cultural regiment, age_3_discovery.
+abm_crimean_horse_archers_3 = {
+	copy_from = a_age_3_discovery_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	initiative = 2
+	morale_damage_done = 0.15
+	strength_damage_done = -0.10
+	supply_weight = -0.25
+	impact = {
+		flatland = -0.10
+		grasslands = -0.10
+		sparse = -0.10
+		hills = 0.10
+		mountains = 0.10
+		woods = 0.10
+		forest = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		grasslands = 0.10
+		sparse = 0.10
+		hills = -0.10
+		mountains = -0.10
+		woods = -0.10
+		forest = -0.10
+	}
+	gfx_tags = { archer_tag light_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:crimean
+			AND = {
+				has_accepted_culture = culture:crimean
+				culture = {
+					cultural_view = {
+						target = culture:crimean
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# mishar cultural regiment, age_2_renaissance.
+abm_mishar_horsemen_2 = {
+	copy_from = a_age_2_renaissance_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_mishar_horsemen_3
+	strength_damage_done = 0.20
+	morale_damage_taken = 0.10
+	initiative = 1
+	impact = {
+		flatland = -0.10
+		grasslands = -0.10
+		sparse = -0.10
+		hills = 0.10
+		mountains = 0.10
+		wetlands = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		grasslands = 0.10
+		sparse = 0.10
+		hills = -0.10
+		mountains = -0.10
+		wetlands = -0.10
+	}
+	gfx_tags = { sword_tag light_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:mishar
+			AND = {
+				has_accepted_culture = culture:mishar
+				culture = {
+					cultural_view = {
+						target = culture:mishar
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# mishar cultural regiment, age_3_discovery.
+abm_mishar_horsemen_3 = {
+	copy_from = a_age_3_discovery_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	strength_damage_done = 0.20
+	morale_damage_taken = 0.10
+	initiative = 1
+	impact = {
+		flatland = -0.10
+		grasslands = -0.10
+		sparse = -0.10
+		hills = 0.10
+		mountains = 0.10
+		wetlands = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		grasslands = 0.10
+		sparse = 0.10
+		hills = -0.10
+		mountains = -0.10
+		wetlands = -0.10
+	}
+	gfx_tags = { sword_tag light_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:mishar
+			AND = {
+				has_accepted_culture = culture:mishar
+				culture = {
+					cultural_view = {
+						target = culture:mishar
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# astrakhani cultural regiment, age_3_discovery.
+abm_astrakhani_horse_archers_3 = {
+	copy_from = a_age_3_discovery_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_astrakhani_horse_archers_4
+	initiative = 2
+	morale_damage_done = 0.10
+	strength_damage_done = -0.10
+	supply_weight = -0.25
+	build_time_modifier = -0.25
+	impact = {
+		desert = -0.10
+		sparse = -0.10
+		flatland = -0.10
+		grasslands = -0.10
+		hills = 0.10
+		mountains = 0.10
+		woods = 0.10
+		forest = 0.10
+	}
+	combat = {
+		desert = 0.10
+		sparse = 0.10
+		flatland = 0.10
+		grasslands = 0.10
+		hills = -0.10
+		mountains = -0.10
+		woods = -0.10
+		forest = -0.10
+	}
+	gfx_tags = { archer_tag light_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:astrakhani
+			AND = {
+				has_accepted_culture = culture:astrakhani
+				culture = {
+					cultural_view = {
+						target = culture:astrakhani
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# astrakhani cultural regiment, age_4_reformation.
+abm_astrakhani_horse_archers_4 = {
+	copy_from = a_age_4_reformation_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	initiative = 2
+	morale_damage_done = 0.10
+	strength_damage_done = -0.10
+	supply_weight = -0.25
+	build_time_modifier = -0.25
+	impact = {
+		desert = -0.10
+		sparse = -0.10
+		flatland = -0.10
+		grasslands = -0.10
+		hills = 0.10
+		mountains = 0.10
+		woods = 0.10
+		forest = 0.10
+	}
+	combat = {
+		desert = 0.10
+		sparse = 0.10
+		flatland = 0.10
+		grasslands = 0.10
+		hills = -0.10
+		mountains = -0.10
+		woods = -0.10
+		forest = -0.10
+	}
+	gfx_tags = { archer_tag light_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:astrakhani
+			AND = {
+				has_accepted_culture = culture:astrakhani
+				culture = {
+					cultural_view = {
+						target = culture:astrakhani
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# gothic_culture cultural regiment, age_2_renaissance.
+abm_gothic_cataphracts_2 = {
+	copy_from = a_age_2_renaissance_heavy_cavalry
+	category = army_heavy_cavalry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_gothic_cataphracts_3
+	strength_damage_taken = -0.15
+	morale_damage_taken = -0.10
+	impact = {
+		hills = -0.10
+		mountains = -0.10
+		flatland = 0.10
+	}
+	combat = {
+		hills = 0.10
+		flatland = -0.10
+	}
+	gfx_tags = { cataphract_tag heavy_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:gothic_culture
+			AND = {
+				has_accepted_culture = culture:gothic_culture
+				culture = {
+					cultural_view = {
+						target = culture:gothic_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# gothic_culture cultural regiment, age_3_discovery.
+abm_gothic_cataphracts_3 = {
+	copy_from = a_age_3_discovery_heavy_cavalry
+	category = army_heavy_cavalry
+	is_special = yes
+	buildable = yes
+	strength_damage_taken = -0.15
+	morale_damage_taken = -0.10
+	impact = {
+		hills = -0.10
+		mountains = -0.10
+		flatland = 0.10
+	}
+	combat = {
+		hills = 0.10
+		flatland = -0.10
+	}
+	gfx_tags = { cataphract_tag heavy_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:gothic_culture
+			AND = {
+				has_accepted_culture = culture:gothic_culture
+				culture = {
+					cultural_view = {
+						target = culture:gothic_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# gothic_culture cultural regiment, age_3_discovery.
+abm_gothic_spearmen_3 = {
+	copy_from = a_age_3_discovery_heavy_infantry
+	category = army_heavy_infantry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_gothic_spearmen_4
+	morale_damage_taken = -0.15
+	strength_damage_taken = -0.15
+	impact = {
+		hills = -0.10
+		mountains = -0.10
+		flatland = -0.10
+	}
+	combat = {
+		hills = 0.10
+		mountains = 0.10
+	}
+	gfx_tags = { spear_tag heavy_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:gothic_culture
+			AND = {
+				has_accepted_culture = culture:gothic_culture
+				culture = {
+					cultural_view = {
+						target = culture:gothic_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# gothic_culture cultural regiment, age_4_reformation.
+abm_gothic_spearmen_4 = {
+	copy_from = a_age_4_reformation_heavy_infantry
+	category = army_heavy_infantry
+	is_special = yes
+	buildable = yes
+	morale_damage_taken = -0.15
+	strength_damage_taken = -0.15
+	impact = {
+		hills = -0.10
+		mountains = -0.10
+		flatland = -0.10
+	}
+	combat = {
+		hills = 0.10
+		mountains = 0.10
+	}
+	gfx_tags = { spear_tag heavy_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:gothic_culture
+			AND = {
+				has_accepted_culture = culture:gothic_culture
+				culture = {
+					cultural_view = {
+						target = culture:gothic_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# cossack_culture cultural regiment, age_3_discovery.
+abm_cossack_cavalry_3 = {
+	copy_from = a_age_3_discovery_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_cossack_cavalry_4
+
+	combat_speed = 2
+
+	strength_damage_done = 0.10
+	morale_damage_taken = -0.10
+	supply_weight = -0.25
+
+	impact = {
+		flatland = -0.10
+		grasslands = -0.10
+		sparse = -0.10
+		hills = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		grasslands = 0.10
+		sparse = 0.10
+		hills = -0.10
+		mountains = -0.10
+	}
+	gfx_tags = { sword_tag light_tag }
+
+	# Cossack regiments are an estate privilege, not a cultural one: any country
+	# that has the Cossacks estate may raise them, whatever its own culture, and
+	# they may only be raised where Cossacks actually live - a handful is enough,
+	# they need not be the majority.
+	country_potential = {
+		country_has_estate = estate_type:cossacks_estate
+	}
+
+	location_potential = {
+		any_pop = {
+			culture = culture:cossack_culture
+		}
+	}
+}
+
+# cossack_culture cultural regiment, age_4_reformation.
+abm_cossack_cavalry_4 = {
+	copy_from = a_age_4_reformation_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_cossack_cavalry_5
+
+	combat_speed = 2
+
+	strength_damage_done = 0.10
+	morale_damage_taken = -0.10
+	supply_weight = -0.25	
+
+	impact = {
+		flatland = -0.10
+		grasslands = -0.10
+		sparse = -0.10
+		hills = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		grasslands = 0.10
+		sparse = 0.10
+		hills = -0.10
+		mountains = -0.10
+	}
+	gfx_tags = { sword_tag light_tag }
+
+	# Cossack regiments are an estate privilege, not a cultural one: any country
+	# that has the Cossacks estate may raise them, whatever its own culture, and
+	# they may only be raised where Cossacks actually live - a handful is enough,
+	# they need not be the majority.
+	country_potential = {
+		country_has_estate = estate_type:cossacks_estate
+	}
+
+	location_potential = {
+		any_pop = {
+			culture = culture:cossack_culture
+		}
+	}
+}
+
+# cossack_culture cultural regiment, age_5_absolutism.
+abm_cossack_cavalry_5 = {
+	copy_from = a_age_5_absolutism_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+
+	combat_speed = 2
+
+	strength_damage_done = 0.10
+	morale_damage_taken = -0.10
+	supply_weight = -0.25
+
+	impact = {
+		flatland = -0.10
+		grasslands = -0.10
+		sparse = -0.10
+		hills = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		grasslands = 0.10
+		sparse = 0.10
+		hills = -0.10
+		mountains = -0.10
+	}
+	gfx_tags = { sword_tag light_tag }
+
+	# Cossack regiments are an estate privilege, not a cultural one: any country
+	# that has the Cossacks estate may raise them, whatever its own culture, and
+	# they may only be raised where Cossacks actually live - a handful is enough,
+	# they need not be the majority.
+	country_potential = {
+		country_has_estate = estate_type:cossacks_estate
+	}
+
+	location_potential = {
+		any_pop = {
+			culture = culture:cossack_culture
+		}
+	}
+}
+
+# cossack_culture cultural regiment, age_4_reformation.
+abm_cossack_infantry_4 = {
+	copy_from = a_age_4_reformation_light_infantry
+	category = army_light_infantry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_cossack_infantry_5
+	morale_damage_taken = -0.15
+	strength_damage_taken = -0.10
+	impact = {
+		flatland = -0.10
+		grasslands = -0.10
+		wetlands = -0.10
+		hills = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		grasslands = 0.10
+		wetlands = 0.10
+		hills = -0.10
+		mountains = -0.10
+	}
+	gfx_tags = { musket_tag medium_tag }
+
+	# Cossack regiments are an estate privilege, not a cultural one: any country
+	# that has the Cossacks estate may raise them, whatever its own culture, and
+	# they may only be raised where Cossacks actually live - a handful is enough,
+	# they need not be the majority.
+	country_potential = {
+		country_has_estate = estate_type:cossacks_estate
+	}
+
+	location_potential = {
+		any_pop = {
+			culture = culture:cossack_culture
+		}
+	}
+}
+
+# cossack_culture cultural regiment, age_5_absolutism.
+abm_cossack_infantry_5 = {
+	copy_from = a_age_5_absolutism_light_infantry
+	category = army_light_infantry
+	is_special = yes
+	buildable = yes
+	morale_damage_taken = -0.15
+	strength_damage_taken = -0.10
+	impact = {
+		flatland = -0.10
+		grasslands = -0.10
+		wetlands = -0.10
+		hills = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		grasslands = 0.10
+		wetlands = 0.10
+		hills = -0.10
+		mountains = -0.10
+	}
+	gfx_tags = { musket_tag medium_tag }
+
+	# Cossack regiments are an estate privilege, not a cultural one: any country
+	# that has the Cossacks estate may raise them, whatever its own culture, and
+	# they may only be raised where Cossacks actually live - a handful is enough,
+	# they need not be the majority.
+	country_potential = {
+		country_has_estate = estate_type:cossacks_estate
+	}
+
+	location_potential = {
+		any_pop = {
+			culture = culture:cossack_culture
+		}
+	}
+}
+
+# ligurian cultural regiment, age_4_reformation.
+abm_ligurian_infantry_4 = {
+	copy_from = a_age_4_reformation_heavy_infantry
+	category = army_heavy_infantry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_ligurian_infantry_5
+	strength_damage_done = 0.15
+	morale_damage_done = 0.10
+	strength_damage_taken = 0.10
+	impact = {
+		flatland = -0.10
+		hills = -0.10
+		mountains = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		hills = 0.10
+		mountains = -0.10
+	}
+	gfx_tags = { pike_tag musket_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:ligurian
+			AND = {
+				has_accepted_culture = culture:ligurian
+				culture = {
+					cultural_view = {
+						target = culture:ligurian
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# ligurian cultural regiment, age_5_absolutism.
+abm_ligurian_infantry_5 = {
+	copy_from = a_age_5_absolutism_heavy_infantry
+	category = army_heavy_infantry
+	is_special = yes
+	buildable = yes
+	strength_damage_done = 0.15
+	morale_damage_done = 0.10
+	strength_damage_taken = 0.10
+	impact = {
+		flatland = -0.10
+		hills = -0.10
+		mountains = 0.10
+	}
+	combat = {
+		flatland = 0.10
+		hills = 0.10
+		mountains = -0.10
+	}
+	gfx_tags = { pike_tag musket_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:ligurian
+			AND = {
+				has_accepted_culture = culture:ligurian
+				culture = {
+					cultural_view = {
+						target = culture:ligurian
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# ruthenian cultural regiment, age_4_reformation.
+abm_ruthenian_infantry_4 = {
+	copy_from = a_age_4_reformation_heavy_infantry
+	category = army_heavy_infantry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_ruthenian_infantry_5
+	morale_damage_done = 0.05
+	strength_damage_done = 0.05
+	impact = {
+		woods = -0.10
+		forest = -0.10
+		flatland = -0.10
+		mountains = 0.10
+	}
+	combat = {
+		woods = 0.10
+		forest = 0.10
+	}
+	gfx_tags = { musket_tag medium_tag }
+
+	# Ruthenian regiments are the one line that is not purely cultural: three
+	# separate routes lead to them.
+	#   1. Ruthenian is our primary culture, wherever we sit.
+	#   2. We accept the Ruthenians and are seated in Ruthenia or the steppe -
+	#      a Lithuanian, Polish or Cossack state that has taken up the Ruthenian
+	#      inheritance.
+	#   3. We are Kyiv or Ruthenia itself, whether original or formed.
+	country_potential = {
+		OR = {
+			culture = culture:ruthenian
+			AND = {
+				has_accepted_culture = culture:ruthenian
+				original_capital ?= {
+					OR = {
+						region = region:ruthenia_region
+						region = region:steppes_region
+					}
+				}
+			}
+			has_or_had_tag = KIE
+			has_or_had_tag = UKR
+		}
+	}
+}
+
+# ruthenian cultural regiment, age_5_absolutism.
+abm_ruthenian_infantry_5 = {
+	copy_from = a_age_5_absolutism_heavy_infantry
+	category = army_heavy_infantry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_ruthenian_infantry_6
+	morale_damage_done = 0.05
+	strength_damage_done = 0.05
+	impact = {
+		woods = -0.10
+		forest = -0.10
+		flatland = -0.10
+		mountains = 0.10
+	}
+	combat = {
+		woods = 0.10
+		forest = 0.10
+	}
+	gfx_tags = { musket_tag medium_tag }
+
+	# Ruthenian regiments are the one line that is not purely cultural: three
+	# separate routes lead to them.
+	#   1. Ruthenian is our primary culture, wherever we sit.
+	#   2. We accept the Ruthenians and are seated in Ruthenia or the steppe -
+	#      a Lithuanian, Polish or Cossack state that has taken up the Ruthenian
+	#      inheritance.
+	#   3. We are Kyiv or Ruthenia itself, whether original or formed.
+	country_potential = {
+		OR = {
+			culture = culture:ruthenian
+			AND = {
+				has_accepted_culture = culture:ruthenian
+				original_capital ?= {
+					OR = {
+						region = region:ruthenia_region
+						region = region:steppes_region
+					}
+				}
+			}
+			has_or_had_tag = KIE
+			has_or_had_tag = UKR
+		}
+	}
+}
+
+# ruthenian cultural regiment, age_6_revolutions.
+abm_ruthenian_infantry_6 = {
+	copy_from = a_age_6_revolutions_heavy_infantry
+	category = army_heavy_infantry
+	is_special = yes
+	buildable = yes
+	morale_damage_done = 0.05
+	strength_damage_done = 0.05
+	impact = {
+		woods = -0.10
+		forest = -0.10
+		flatland = -0.10
+		mountains = 0.10
+	}
+	combat = {
+		woods = 0.10
+		forest = 0.10
+	}
+	gfx_tags = { musket_tag medium_tag }
+
+	# Ruthenian regiments are the one line that is not purely cultural: three
+	# separate routes lead to them.
+	#   1. Ruthenian is our primary culture, wherever we sit.
+	#   2. We accept the Ruthenians and are seated in Ruthenia or the steppe -
+	#      a Lithuanian, Polish or Cossack state that has taken up the Ruthenian
+	#      inheritance.
+	#   3. We are Kyiv or Ruthenia itself, whether original or formed.
+	country_potential = {
+		OR = {
+			culture = culture:ruthenian
+			AND = {
+				has_accepted_culture = culture:ruthenian
+				original_capital ?= {
+					OR = {
+						region = region:ruthenia_region
+						region = region:steppes_region
+					}
+				}
+			}
+			has_or_had_tag = KIE
+			has_or_had_tag = UKR
+		}
+	}
+}
+
+# circassian_culture cultural regiment, age_4_reformation.
+abm_circassian_cavalry_4 = {
+	copy_from = a_age_4_reformation_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_circassian_cavalry_5
+	strength_damage_done = 0.20
+	morale_damage_done = 0.15
+	flanking_ability = 0.15
+	strength_damage_taken = 0.15
+	impact = {
+		hills = -0.10
+		plateau = -0.10
+		flatland = -0.10
+		mountains = 0.10
+	}
+	combat = {
+		hills = 0.10
+		plateau = 0.10
+		flatland = -0.10
+	}
+	gfx_tags = { sword_tag light_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:circassian_culture
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = {
+					cultural_view = {
+						target = culture:circassian_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# circassian_culture cultural regiment, age_5_absolutism.
+abm_circassian_cavalry_5 = {
+	copy_from = a_age_5_absolutism_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	upgrades_to = abm_circassian_cavalry_6
+	strength_damage_done = 0.20
+	morale_damage_done = 0.15
+	flanking_ability = 0.15
+	strength_damage_taken = 0.15
+	impact = {
+		hills = -0.10
+		plateau = -0.10
+		flatland = -0.10
+		mountains = 0.10
+	}
+	combat = {
+		hills = 0.10
+		plateau = 0.10
+		flatland = -0.10
+	}
+	gfx_tags = { sword_tag light_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:circassian_culture
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = {
+					cultural_view = {
+						target = culture:circassian_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
+
+# circassian_culture cultural regiment, age_6_revolutions.
+abm_circassian_cavalry_6 = {
+	copy_from = a_age_6_revolutions_light_cavalry
+	category = army_light_cavalry
+	is_special = yes
+	buildable = yes
+	strength_damage_done = 0.20
+	morale_damage_done = 0.15
+	flanking_ability = 0.15
+	strength_damage_taken = 0.15
+	impact = {
+		hills = -0.10
+		plateau = -0.10
+		flatland = -0.10
+		mountains = 0.10
+	}
+	combat = {
+		hills = 0.10
+		plateau = 0.10
+		flatland = -0.10
+	}
+	gfx_tags = { sword_tag light_tag }
+
+	# Primary culture always qualifies; an accepted culture needs our primary
+	# culture's view of it at `positive` (the +1 tier) or better.
+	country_potential = {
+		OR = {
+			culture = culture:circassian_culture
+			AND = {
+				has_accepted_culture = culture:circassian_culture
+				culture = {
+					cultural_view = {
+						target = culture:circassian_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		# ...and the realm must be steppe-rooted. original_capital, not capital,
+		# so moving the capital into the steppe later does not unlock them.
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+}
