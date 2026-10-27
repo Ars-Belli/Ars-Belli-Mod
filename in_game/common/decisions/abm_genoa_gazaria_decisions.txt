@@ -50,9 +50,16 @@ abm_gazaria_independence = {
 	}
 }
 
-# Step two: who are we now? Only after independence, and only while we are still
-# Ligurian. Both options are one-shot: only_once hides the decision afterwards,
-# so staying Ligurian is a real decision rather than simply ignoring it.
+# Step two: who are we now?
+#
+# Only after independence, and only once we actually hold both Gothic heartlands
+# - Theodoro and Lusta. Taking the Gothic principality is what puts the question
+# to the Gazarian captains: are we still a Genoese factory, or have we become
+# the Gothic state that was here before us, or a Greek one?
+#
+# Still requires Ligurian primary culture, so the decision cannot be re-taken
+# after a change. only_once then hides it, which makes "stay Ligurian" a real
+# choice rather than simply ignoring the button.
 abm_gazaria_culture_choice = {
 	decision_category = country_specific_decisions
 	only_once = yes
@@ -62,18 +69,22 @@ abm_gazaria_culture_choice = {
 		is_human = yes
 		NOT = { is_subject = yes }
 		culture = culture:ligurian
+		owns = location:theodoro
+		owns = location:lusta
 	}
 
 	allow = {
 		NOT = { is_subject = yes }
 		culture = culture:ligurian
+		owns = location:theodoro
+		owns = location:lusta
 	}
 
 	ai_will_do = {
 		value = 0
 	}
 
-	# Stay Ligurian: nothing changes mechanically, the flag just records the choice.
+	# a: stay Ligurian. No mechanical change; the flag just records the choice.
 	option = {
 		name = abm_gazaria_culture_choice.a
 		ai_chance = { value = 0 }
@@ -83,8 +94,9 @@ abm_gazaria_culture_choice = {
 		}
 	}
 
-	# Become Gothic. Deliberately no grant_culture_bonus_advances: that hands over
-	# the whole culture-locked advance set at once, with no can_change_primary_culture
+	# b: become Gothic - the inheritance of Theodoro.
+	# Deliberately no grant_culture_bonus_advances: that hands over the whole
+	# culture-locked advance set at once, with no can_change_primary_culture
 	# check, price or cooldown. The Gothic advances simply become researchable.
 	option = {
 		name = abm_gazaria_culture_choice.b
@@ -94,6 +106,19 @@ abm_gazaria_culture_choice = {
 			change_culture = culture:gothic_culture
 			add_accepted_culture = culture:ligurian
 			custom_tooltip = abm_gazaria_culture_choice.b.tt
+		}
+	}
+
+	# c: become Pontic Greek - the inheritance of the Black Sea Greeks, who are
+	# already the largest population in most of our towns.
+	option = {
+		name = abm_gazaria_culture_choice.c
+		ai_chance = { value = 0 }
+
+		effect = {
+			change_culture = culture:pontic_greek_culture
+			add_accepted_culture = culture:ligurian
+			custom_tooltip = abm_gazaria_culture_choice.c.tt
 		}
 	}
 }
