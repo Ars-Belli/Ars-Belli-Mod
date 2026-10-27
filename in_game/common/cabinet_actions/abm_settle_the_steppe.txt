@@ -1,0 +1,117 @@
+﻿# Settle the Steppe: a cabinet action that pulls settlers into the empty
+# grassland of the Pontic steppe.
+#
+# Deliberately modelled on vanilla's swe_slash_and_burn_new_farms
+# (in_game/common/cabinet_actions/): a province picker whose `visible` block
+# rejects provinces that are already populous, plus per-location growth and
+# migration modifiers while the action runs, and an is_finished condition that
+# ends it once the province is settled.
+#
+# Differences from the vanilla reference:
+#   - gated on region:steppes_region instead of a hardcoded area list, so it
+#     works for every steppe province without naming them one by one;
+#   - the target province must be culturally OURS already: every owned land
+#     location in it must have a primary or accepted culture as its dominant
+#     culture. Vanilla's action colonises culturally foreign land, which is not
+#     what we want here - this is about filling up land we have already
+#     assimilated.
+#
+# Unlock: vanilla cabinet actions are unlocked either by a `modifier:allow_...`
+# country modifier on an advance, or by `unlock_cabinet_action`. This one uses
+# an advance (abm_settle_the_steppe_advance) so it can be researched.
+abm_settle_the_steppe = {
+	ability = adm
+	icon = pop_promote_action
+	allow_multiple = yes
+
+	# Any settled government of a non-pagan faith. Same government and religion
+	# test the Pontic-steppe decisions use (abm_location_settled_and_loyal), but
+	# checked on the country rather than on each location.
+	potential = {
+		has_advance = abm_settle_the_steppe_advance
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:theocracy
+			government_type = government_type:republic
+		}
+		is_country_religion_pagan = no
+	}
+
+	allow = {
+		any_province = {
+			region = region:steppes_region
+			owner ?= scope:actor
+			abm_steppe_province_is_our_culture = yes
+			abm_steppe_province_needs_settling = yes
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = province
+		source = actor
+		target_flag = target
+		name = "abm_settle_the_steppe_select_province"
+		none_available_msg_key = "abm_settle_the_steppe_no_provinces"
+		column = {
+			data = name
+		}
+		column = {
+			data = population
+		}
+		column = {
+			data = development
+		}
+		default_sort = development
+		visible = {
+			# the steppe itself
+			any_location_in_province = {
+				region = region:steppes_region
+			}
+			# only land we actually hold
+			NOT = {
+				any_location_in_province = {
+					has_owner = yes
+					is_land = yes
+					NOT = { owner ?= scope:actor }
+				}
+			}
+			# room left to fill: some location is still short of 20 development
+			# or of half its population capacity
+			abm_steppe_province_needs_settling = yes
+			# and it must already be ours in culture, not a colony project
+			abm_steppe_province_is_our_culture = yes
+
+			NOT = {
+				cabinet_already_performing_same_task_on_target = {
+					cabinet_action = abm_settle_the_steppe
+					interaction_target = target
+				}
+			}
+		}
+		map_color = {
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = province.province_average_development
+			}
+		}
+	}
+
+	# Finished once EVERY location in the province has reached 20 development
+	# and is at least half full against its population capacity.
+	is_finished = {
+		scope:target ?= {
+			NOT = { abm_steppe_province_needs_settling = yes }
+		}
+	}
+
+	location_modifier = {
+		local_population_growth = 0.02
+		local_monthly_development = 0.01
+		local_migration_attraction = 0.25
+	}
+
+	map_marker = {
+		show_for_owner = yes
+	}
+}

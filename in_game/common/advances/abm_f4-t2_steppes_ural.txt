@@ -929,3 +929,22 @@ abm_steppe_redoubts_advance = {
 	unlock_building = abm_steppe_redoubts
 	allow_children = no
 }
+
+#############################################
+# Settle the Steppe (cabinet action)
+#############################################
+
+# Unlocks abm_settle_the_steppe (cabinet_actions/abm_settle_the_steppe.txt).
+# Planted in the Age of Discovery alongside vanilla's other settlement tools
+# (send_people_to_colonial_charter, settle_the_frontier).
+#
+# No capital or culture gate here: the restriction the player cares about is on
+# the PROVINCE, and that lives in the cabinet action itself (which only offers
+# steppe provinces). Gating the advance on the capital would deny it to a
+# monarchy that conquers steppe land after moving its seat elsewhere.
+abm_settle_the_steppe_advance = {
+	age = age_3_discovery
+
+	requires = city_building_advance
+	unlock_cabinet_action = abm_settle_the_steppe
+}

@@ -139,3 +139,39 @@ abm_can_develop_province_rgos = {
 		}
 	}
 }
+
+# True when every owned land location in the province has a culture that the
+# province OWNER treats as primary or accepted as that location's dominant
+# culture.
+#
+# Root scope: province. Used by abm_settle_the_steppe so the cabinet action only
+# targets provinces that are already culturally ours.
+abm_steppe_province_is_our_culture = {
+	NOT = {
+		any_location_in_province = {
+			has_owner = yes
+			is_land = yes
+			NOT = {
+				owner ?= {
+					has_primary_or_accepted_culture = prev.dominant_culture
+				}
+			}
+		}
+	}
+}
+# Province scope. True when at least one land location in the province still
+# falls short of the settlement target: 20 development, and at least half of
+# its population capacity filled.
+#
+# Used in both directions by abm_settle_the_steppe - to decide whether the
+# province is worth offering in the picker, and (negated) as the is_finished
+# condition, so the cabinet action ends the moment every location is settled.
+abm_steppe_province_needs_settling = {
+	any_location_in_province = {
+		is_land = yes
+		NOT = {
+			development >= 20
+			location_population_percentage >= 0.5
+		}
+	}
+}
