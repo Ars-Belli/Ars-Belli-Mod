@@ -12,6 +12,10 @@
 #
 # Unilateral (modelled on worsen_opinion), costs one diplomat, and PLAYER-ONLY in both directions
 # so AI holdings stay exactly as vanilla.
+#
+# Consequences: the VICTIM gets vanilla's cb_destroyed_building against the actor for 10 years, and
+# the ACTOR wears the abm_expelled_foreign_merchants country modifier for 10 years (trade income,
+# merchant capacity and trade range each -10%). Repeated use extends both.
 
 abm_expel_fondacos = {
 	type = diplomacy
@@ -46,6 +50,11 @@ abm_expel_fondacos = {
 						}
 						location_building_level = {
 							building_type = building_type:hanseatic_kontor
+							value > 0
+							owner = scope:recipient
+						}
+						location_building_level = {
+							building_type = building_type:abm_merchant_enclave
 							value > 0
 							owner = scope:recipient
 						}
@@ -98,6 +107,16 @@ abm_expel_fondacos = {
 						}
 						destroy_building_forcefully = "building(building_type:hanseatic_kontor|scope:recipient)"
 					}
+					if = {
+						limit = {
+							location_building_level = {
+								building_type = building_type:abm_merchant_enclave
+								value > 0
+								owner = scope:recipient
+							}
+						}
+						destroy_building_forcefully = "building(building_type:abm_merchant_enclave|scope:recipient)"
+					}
 				}
 				# The rights go with the buildings, otherwise the target just rebuilds next month.
 				if = {
@@ -112,6 +131,21 @@ abm_expel_fondacos = {
 						second = scope:recipient
 						type = relation_type:fondaco_rights
 					}
+				}
+
+				# Our own merchants suffer for a while after throwing theirs out.
+				add_country_modifier = {
+					modifier = abm_expelled_foreign_merchants
+					years = 10
+					mode = add_and_extend
+				}
+			}
+			# The wronged country may take up arms over it.
+			scope:recipient = {
+				add_casus_belli = {
+					target = scope:actor
+					type = casus_belli:cb_destroyed_building
+					years = 10
 				}
 			}
 		}

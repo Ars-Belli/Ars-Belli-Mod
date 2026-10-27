@@ -1,0 +1,113 @@
+﻿# ARS BELLI: same-name shadow of vanilla in_game/common/scripted_relations/fondaco_rights.txt.
+# Only the `visible` block differs: the Merchant Enclave's governments (custom ABM reforms) were
+# added so they can be granted the slot too. Everything else is vanilla - re-sync on updates.
+fondaco_rights =  {
+	type = diplomacy
+	relation_type = oneway	
+	break_on_war = yes
+	category = {
+		offer = CATEGORY_ECONOMY_ACTIONS
+		request = CATEGORY_ECONOMY_ACTIONS
+		cancellation = CATEGORY_ECONOMY_ACTIONS
+		break = CATEGORY_ECONOMY_ACTIONS
+	}
+
+	relation_type_for_ai = friendly
+
+	visible = {
+		scope:recipient = {
+			OR = {
+				AND = {
+					is_merchant_republic = yes
+					culture = { has_culture_group = culture_group:italian_group }
+				}
+				has_policy = ara_consulate_sea
+				# ARS BELLI: the Merchant Enclave's governments can also receive these rights, so they
+				# can be granted the slot without being Italian merchant republics (see
+				# building_types/abm_foreign_buildings.txt, abm_merchant_enclave).
+				has_reform = government_reform:abm_china_meritocratic_republic
+				has_reform = government_reform:abm_india_maritime_league
+				has_reform = government_reform:abm_india_bazaar_republic
+				has_reform = government_reform:abm_bengaleese_meritocracy
+				has_reform = government_reform:abm_trade_emporium
+			}
+			within_diplomatic_range = scope:actor
+		}
+	}
+
+	break_enabled = {
+		OR = {
+			scope:recipient = {
+				NOT = { has_reform = government_reform:merchant_republic }
+				NOT = { has_policy = ara_consulate_sea }
+			}
+			scope:actor = {
+				OR = {
+					giving_scripted_relation = {
+						type = relation_type:deny_market_access
+						target = scope:recipient
+					}
+					is_embargoed_by = scope:recipient
+					is_embargoing = scope:recipient
+					giving_scripted_relation = {
+						type = relation_type:block_foreign_building
+						target = scope:recipient
+					}
+				}
+			}
+		}
+	}
+	
+	wants_to_receive = {
+		add = {
+			desc = "DIPLOREASON_GOOD_FOR_US"
+			value = 100
+		}
+	}
+
+	wants_to_give = {
+		add = {
+			desc = "THEIR_OPINION_TOOLTIP"
+			value = "scope:recipient.opinion(scope:actor)"
+			divide = 5
+		}
+		add = {
+			desc = "THEIR_TRUST_TOOLTIP"
+			value = "scope:recipient.trust(scope:actor)"
+			divide = 5
+		}
+		add = {
+			desc = "DIPLOREASON_DIPLOMATIC_REPUTATION"
+			scope:actor = {
+				value = modifier:diplomatic_reputation
+				multiply = 5
+			}
+		}
+		subtract = {
+			desc = "DIPLOREASON_BASE_RELUCTANCE"
+			value = 25
+		}
+		if = {
+			limit = {	
+				scope:recipient = { 
+					is_rival_of = scope:actor 
+				}
+			}
+			subtract = {
+				desc = "game_concept_rival"
+				value = 100
+			}
+		}
+		if = {
+			limit = {	
+				scope:recipient = { 
+					has_reform = government_reform:merchant_republic
+				}
+			}
+			subtract = {
+				desc = "DIPLOREASON_COMPETING_MERCHANT_REPUBLIC"
+				value = 100
+			}
+		}
+	}
+}

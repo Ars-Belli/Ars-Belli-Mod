@@ -155,6 +155,7 @@ REPLACE:fondaco = {
 					OR = {
 						building_type = building_type:fondaco
 						building_type = building_type:hanseatic_kontor
+						building_type = building_type:abm_merchant_enclave
 					}
 					NOT = { owner = scope:actor }
 				}
@@ -227,6 +228,7 @@ REPLACE:hanseatic_kontor = {
 					OR = {
 						building_type = building_type:fondaco
 						building_type = building_type:hanseatic_kontor
+						building_type = building_type:abm_merchant_enclave
 					}
 					NOT = { owner = scope:actor }
 				}
@@ -250,4 +252,84 @@ REPLACE:hanseatic_kontor = {
 		kontor_maintenance
 	}
 	construction_demand = kontor_construction
+}
+
+# ---------------------------------------------------------------------------
+# abm_merchant_enclave  (NEW - no vanilla counterpart)
+# A Merchant Enclave: the fondaco/kontor slot for the mod's own merchant governments - the Chinese
+# meritocratic republic, the Indian maritime league and bazaar republic, the Bengalee meritocracy
+# and the trade emporium. Structurally identical to fondaco (same employment, upkeep PM, build time,
+# one level, shares the one-per-location slot, gated on vanilla fondaco_rights) but with modifiers
+# at ~75% of fondaco's, so it is a weaker version of the same thing.
+# ---------------------------------------------------------------------------
+abm_merchant_enclave = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = yes
+	need_good_relation = yes
+	pop_type = burghers
+
+	category = trade_category
+
+	max_levels = 1
+	employment_size = foreign_trade_employment
+	pop_size_created = foreign_trade_employment
+
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	increase_per_level_cost = 1.5
+
+	country_potential = {
+		OR = {
+			has_reform = government_reform:abm_china_meritocratic_republic
+			has_reform = government_reform:abm_india_maritime_league
+			has_reform = government_reform:abm_india_bazaar_republic
+			has_reform = government_reform:abm_bengaleese_meritocracy
+			has_reform = government_reform:abm_trade_emporium
+		}
+	}
+
+	allow = {
+		within_naval_range_of = scope:actor
+		owner = {
+			giving_scripted_relation = {
+				type = relation_type:fondaco_rights
+				target = scope:actor
+			}
+		}
+		# Shared single slot with fondacos and kontors.
+		custom_tooltip = {
+			text = abm_fondaco_slot_taken_tt
+			NOT = {
+				any_foreign_buildings_in_location = {
+					OR = {
+						building_type = building_type:fondaco
+						building_type = building_type:hanseatic_kontor
+						building_type = building_type:abm_merchant_enclave
+					}
+					NOT = { owner = scope:actor }
+				}
+			}
+		}
+	}
+
+	build_time = trade_post_build_time
+
+	modifier = {
+		merchant_power_from_building = 1.5
+		building_owner_maritime_presence = 0.05
+		merchant_capacity_from_building = 0.5
+	}
+
+	raw_modifier = {
+		local_monthly_development = 0.001
+	}
+
+	possible_production_methods = {
+		fondaco_maintenance
+	}
+	construction_demand = fondaco_construction
 }
