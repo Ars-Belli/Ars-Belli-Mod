@@ -7,7 +7,7 @@
 #     abm_trade_office_rights (see scripted_relations/abm_trade_office_rights.txt). AI builders
 #     and AI-owned locations are exempt, so everything involving an AI stays vanilla.
 #   * max_levels - points at abm_trade_office_max_level (script_values/abm_building_caps.txt),
-#     a flat per-rank cap: town 1, city 3, megalopolis 5 (no development/population scaling).
+#     a flat per-rank cap: town 1, city 2, megalopolis 3 (no development/population scaling).
 #   * modifier / trade_office_requirements - Ars Belli rebalance: a few stronger offices instead
 #     of many weak ones (per-level effect raised, upkeep inputs raised to match), plus
 #     local_market_access like a marketplace, which is a LOCATION modifier so the location's owner
@@ -96,7 +96,7 @@ REPLACE:trade_office = {
 # fondaco  (vanilla source: in_game/common/building_types/unique_buildings.txt)
 # Same fields as vanilla apart from:
 #   * max_levels - points at abm_fondaco_max_level (script_values/abm_building_caps.txt) instead
-#     of the SHARED guild_max_level, so fondacos get the flat town 1 / city 3 / megalopolis 5 cap
+#     of the SHARED guild_max_level, so fondacos get the flat town 1 / city 2 / megalopolis 3 cap
 #     without touching the 30 guild and marketplace buildings that also read guild_max_level.
 #   * raw_modifier - local_monthly_development, flat +0.001 development/month to the location (and
 #     so to the host). raw_modifier is not scaled by building level or goods access.
@@ -151,7 +151,7 @@ REPLACE:fondaco = {
 		merchant_power_from_building = 2.0				#1.0
 		building_owner_maritime_presence = 0.05			#0.025
 		merchant_capacity_from_building = 0.5			#0.2
-		#Italian merchants settle in the new location
+		# merchants settle in the new location
 		local_migration_attraction = 0.05				#0.025
 	}
 
