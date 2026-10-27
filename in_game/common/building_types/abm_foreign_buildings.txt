@@ -21,9 +21,9 @@ REPLACE:trade_office = {
 	max_levels = abm_trade_office_max_level
 	need_good_relation = yes
 	pop_type = burghers
-	
+
 	category = trade_category
-	
+
 	employment_size = foreign_trade_employment
 	pop_size_created = foreign_trade_employment
 
@@ -32,6 +32,8 @@ REPLACE:trade_office = {
 	city = yes
 	megalopolis = yes
 	allow_wrong_startup = yes
+
+	increase_per_level_cost = 1.0	#0
 
 	country_potential = {
 		NOR = {
@@ -61,33 +63,33 @@ REPLACE:trade_office = {
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	build_time = trade_post_build_time
-	
+
 	unique_production_methods = {
 		trade_office_requirements = {
 			icon_type = building_type
 			icon = trade_office
 			paper = 0.20							#0.1
 			cloth = 0.20							#0.1
-			salt = 0.20 							#0.075
+			salt = 0.20								#0.075
 			category = building_maintenance
 		}
 	}
-	
-	
+
+
 	modifier = {
-		merchant_capacity_from_building = 1			#0.3
+		merchant_capacity_from_building = 1.0		#0.3
 		building_owner_maritime_presence = 0.20 	#0.05
-		merchant_power_from_building = 0.5			#0.2
-		local_market_access = 0.01			#marketplace value - location modifier, so the host (rights granter) benefits
+		merchant_power_from_building = 0.50			#0.2
+		local_market_access = 0.03					#0.01			#marketplace value - location modifier, so the host (rights granter) benefits
 	}
 
-	# raw_modifier = {
-	# 	local_monthly_development = 0.001		#fixed regardless of level - raw_modifier is not scaled
-	# }
+	raw_modifier = {
+		local_monthly_prosperity = 0.001			#fixed regardless of level - raw_modifier is not scaled
+	}
 }
 
 # ---------------------------------------------------------------------------
@@ -106,29 +108,31 @@ REPLACE:fondaco = {
 	is_foreign = yes
 	need_good_relation = yes
 	pop_type = burghers
-	
+
 	category = trade_category
-	
+
 	max_levels = abm_fondaco_max_level
 	employment_size = foreign_trade_employment
 	pop_size_created = foreign_trade_employment
-	
+
 	rural_settlement = no
 	town = yes
 	city = yes
 	megalopolis = yes
-	
-	increase_per_level_cost = 0.5
-	
-	
+
+	increase_per_level_cost = 1.0	#0.5
+
+
 	country_potential = {
-		OR = {
-			AND = {
-				is_merchant_republic = yes
-				culture = { has_culture_group = culture_group:italian_group }
-			}
-			has_policy = ara_consulate_sea
-		}
+		is_merchant_republic = yes
+		NOT = { has_or_had_tag = HSA }
+		# OR = {
+		# 	AND = {
+		# 		is_merchant_republic = yes
+		#		culture = { has_culture_group = culture_group:italian_group }
+		#	}
+		#has_policy = ara_consulate_sea
+		#}
 	}
 	allow = {
 		within_naval_range_of = scope:actor
@@ -139,22 +143,22 @@ REPLACE:fondaco = {
 			}
 		}
 	}
-	
+
 
 	build_time = trade_post_build_time
-	
+
 	modifier = {
-		merchant_power_from_building = 1.0
-		building_owner_maritime_presence = 0.025
-		merchant_capacity_from_building = 0.2
+		merchant_power_from_building = 2.0				#1.0
+		building_owner_maritime_presence = 0.05			#0.025
+		merchant_capacity_from_building = 0.5			#0.2
 		#Italian merchants settle in the new location
-		local_migration_attraction = 0.025
+		local_migration_attraction = 0.05				#0.025
 	}
 
 	raw_modifier = {
-		local_monthly_development = 0.001		#fixed regardless of level - raw_modifier is not scaled
+		local_monthly_development = 0.001				#fixed regardless of level - raw_modifier is not scaled
 	}
-	
+
 	possible_production_methods = {
 		fondaco_maintenance
 	}
