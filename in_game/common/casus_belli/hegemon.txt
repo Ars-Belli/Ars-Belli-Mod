@@ -1,0 +1,34 @@
+﻿#root is country
+#scope:target is the target
+
+# Ars Belli: same-name replacement. cb_hegemon targets the top 3 MP Great Powers
+# (is_mp_top3_gp, mp_limits_triggers.txt) instead of vanilla hegemons. Like vanilla
+# (is_hegemon = no on the actor), a top-3 Great Power cannot use it on another.
+cb_hegemon = {
+	create_visible = {
+		NOT = { is_mp_top3_gp = yes }
+		scope:target = { is_mp_top3_gp = yes }
+	}
+	declare_enabled = {
+		custom_tooltip = {
+			text = abm_cb_hegemon_actor_not_top3_gp_tt
+			NOT = { is_mp_top3_gp = yes }
+		}
+		scope:target = {
+			custom_tooltip = {
+				text = abm_cb_hegemon_target_top3_gp_tt
+				is_mp_top3_gp = yes
+			}
+		}
+	}
+
+	war_goal_type = take_capital_imperial
+}
+
+cb_hegemon_ultimatum = {
+	create_visible = {
+		#automatically given to the hegemon when the target refuses to accept their demand
+		always = no
+	}
+	war_goal_type = take_capital_enforce_hegemon_demands
+}

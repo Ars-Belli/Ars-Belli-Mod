@@ -4,6 +4,45 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.23
+
+Since game.1.3.11.mod.22 → game.1.3.11.mod.23:
+
+### New Diplomatic Actions
+
+- **Player Coalition:** a new coalition that only players can found or join, aimed at a multiplayer
+  Great Power. It needs no antagonism, opinion or diplomatic range toward the target; subjects
+  (tributaries excepted), countries with a truce, union or subject tie to the target, and countries
+  already in a player coalition against it cannot join. AI countries never join. Members defend each
+  other if the target attacks one of them, and the coalition can declare war with the regular
+  Coalition casus belli, which **only the coalition leader** holds and uses to rally the members.
+  Coalition members cannot ally or share vision with the target, and a new **Dissolve Player
+  Coalition** peace term bars the members from forming another one against the winner for 15 years
+- **Pay for Military Access, Pay for Fleet Basing Rights and Pay for Food Access are removed** — they
+  could be used to move gold between players. Pay for Trade Access and Pay for Fondaco Rights remain
+- The mod's diplomatic actions (the Pay for actions, Send Economic Support, Break Others' Guarantee)
+  can no longer target your own country
+
+### Changes to Vanilla Diplomatic Actions
+
+- **Requesting military access or fleet basing rights no longer costs favours** [vanilla 5 favours]
+
+### War, Wargoals and Peace
+
+- **Take Down Hegemon is now "Take Down Great Power":** it targets the **top 3 Great Powers** of the
+  multiplayer ranking instead of the hegemon, and cannot be used by a top-3 Great Power
+- **Coalition CB:** attacker conquer and subjugate cost 0.65 [was 0.75]; the defender stays at 1.25
+- **Take Down Great Power, Imperialism and the revolution casus belli** (take-capital wargoal):
+  conquer and subjugate cost 0.70 on both sides [was 0.60]
+
+### National Flavour
+
+- The **Sakoku Law** event can now fire for **Western Japan** as intended
+
+### UI and Quality of Life
+
+- Paying for trade access or fondaco rights now shows in the message log for both sides
+
 ## game.1.3.11.mod.22
 
 Since game.1.3.11.mod.21 → game.1.3.11.mod.22:

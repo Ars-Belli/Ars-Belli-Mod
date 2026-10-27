@@ -1,0 +1,193 @@
+﻿# Ars Belli Player Coalition — runs in parallel with vanilla `coalition`.
+# Only player-controlled countries can create or join. No antagonism / opinion /
+# diplomatic-range requirements to join (see abm_can_join_player_coalition_against).
+# The target must be an MP Great Power when the coalition is started.
+# Panel: in_game\gui\panels\organization\abm_player_coalition.gui (engine maps type -> <type>.gui).
+abm_player_coalition = {
+
+	has_target = yes
+	show_on_diplomatic_map = yes
+	expel_members_who_are_targets_of_other_members = yes
+	expel_members_who_are_attackers_at_war_with_other_members = yes
+	expel_members_who_are_defenders_at_war_with_other_members = yes
+	has_leader_country = yes
+	leader_type = country
+	show_strength_comparison_with_target = yes
+	declare_war_on_target_casus_belli = cb_coalition
+	# No promote_strongest_member_to_war_leader (vanilla coalition has it): the
+	# coalition leader who rallies must stay war leader.
+
+	gives_food_access_to_members = yes
+
+	create_visible_trigger = {
+		is_ai = no
+	}
+
+	create_enabled_trigger = {
+		custom_tooltip = {
+			text = abm_player_coalition_players_only_tt
+			is_ai = no
+		}
+	}
+
+	# No join/invite_visible_trigger: their root is not reliably the joiner, and an
+	# is_ai check there hid the Ask-to-join action entirely (empty greyed tooltip).
+	# can_join_trigger already enforces players-only on the joiner.
+
+	diplomatic_capacity_cost = {
+		add = {
+			desc = "UPKEEP_BASE_VALUE"
+			value = 1
+		}
+	}
+
+	leader_color = define:NMapColors|INTERNATIONAL_ORGANIZATION_LEADER_COLOR
+	target_color = define:NMapColors|INTERNATIONAL_ORGANIZATION_TARGET_COLOR
+
+	join_defensive_wars_always = {
+		scope:target ?= {
+			this = root.international_organization_target
+		}
+	}
+	join_offensive_wars_always = {
+		scope:target ?= {
+			this = root.international_organization_target
+		}
+		trigger_if = {
+			limit = {
+				exists = scope:casus_belli
+			}
+			scope:casus_belli = casus_belli:cb_coalition
+		}
+	}
+
+	can_declare_war = {
+		always = yes
+	}
+
+	modifier = {
+	}
+
+	target_modifier = {
+		monthly_complacency = -0.05
+	}
+
+	# Readme calls this alert-only, but the engine also checks it in the create
+	# action ("Never" blocked creation when it was always = no). Mirror can_target.
+	potential_target_trigger = {
+		is_mp_gp = yes
+	}
+
+	can_target_trigger = {
+		custom_tooltip = {
+			text = abm_player_coalition_target_rank_tt
+			is_mp_gp = yes
+		}
+	}
+
+	can_join_trigger = {
+		abm_can_join_player_coalition_against = {
+			target = scope:target
+		}
+	}
+
+	can_leave_trigger = {
+		OR = {
+			not = { exists = scope:target }
+			not = { is_at_war_with = scope:target }
+		}
+	}
+
+	auto_disband_trigger = {
+		or = {
+			total_members < 1
+			not = { country_exists = scope:target }
+		}
+	}
+
+	# Vanilla minus the antagonism < 30 exit: player coalitions are not antagonism-driven.
+	auto_leave_trigger = {
+		trigger_if = {
+			limit = { exists = scope:target }
+			or = {
+				AND = {
+					is_subject = yes
+					NOT = { is_subject_type = tributary }
+				}
+				and = {
+					not = { is_at_war_with = scope:target }
+					or = {
+						giving_scripted_relation = {
+							type = relation_type:anti_coalition_treaty
+							target = scope:target
+						}
+						has_truce_with = scope:target
+						is_subject_or_below_of = scope:target
+						scope:target = {
+							is_subject_or_below_of = root
+						}
+						in_union_with = scope:target
+					}
+				}
+			}
+		}
+		trigger_else = {
+			always = yes
+		}
+	}
+
+	# Uses vanilla cb_coalition (shared with the vanilla coalition IO).
+	# Leader-only: juniors holding it could declare from the normal Declare War
+	# screen and become war leader, bypassing the leader-only Rally button.
+	# The leader never changes (the IO dissolves without it), so the creator is it.
+	on_creation = {
+		scope:actor ?= {
+			add_casus_belli = {
+				target = scope:target
+				type = casus_belli:cb_coalition
+			}
+		}
+	}
+
+	# Fallback in case the creator's join fires with the leader already set.
+	on_joined = {
+		if = {
+			limit = { root ?= scope:recipient.leader_country }
+			add_casus_belli = {
+				target = scope:target
+				type = casus_belli:cb_coalition
+			}
+		}
+	}
+
+	# Keep the CB if we are still in a vanilla coalition against the same target.
+	on_left = {
+		if = {
+			limit = {
+				NOT = {
+					is_member_of_international_organization_of_type = {
+						type = coalition
+						target = scope:target
+					}
+				}
+			}
+			remove_casus_belli = {
+				target = scope:target
+				type = casus_belli:cb_coalition
+			}
+		}
+	}
+
+	ai_desire_to_join = {
+		value = -1000
+	}
+
+	# Only players can pass can_join_trigger, so an AI-run leader (player
+	# disconnected / tag-switched away) should accept them, not block all joins.
+	ai_desire_to_allow_new_member = {
+		add = {
+			desc = "WE_WANT_THE_ORGANIZATION_TO_GROW"
+			value = 20
+		}
+	}
+}
