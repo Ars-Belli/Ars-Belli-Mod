@@ -1,18 +1,20 @@
-﻿# ARS BELLI: flat level caps for the two foreign trade buildings, trade_office and fondaco.
+﻿# ARS BELLI: flat level cap for the trade_office.
 #
-# Vanilla scaled these off the location (development*0.1 + population*0.05 + a city/megalopolis
-# bonus, and for trade_office also the owner's market_building_levels), landing around 10 levels in
-# a city. Ars Belli uses a plain per-rank cap instead:
+# Vanilla's trade_office_max_level scaled the cap off the location (development*0.1 + population*0.05
+# + a city/megalopolis bonus, plus the owner's market_building_levels), landing around 10 levels in a
+# city. Ars Belli uses a plain per-rank cap instead:
 #
 #   town / rural settlement = 1    city = 2    megalopolis = 3
 #
 # Those are TOTALS: base 1 plus the rank bonus (city +1, megalopolis +2, exclusive via else_if).
+# No development, population or modifier scaling.
 #
-# No development, population or modifier scaling. Each building gets its OWN value so the two can
-# be retuned independently; vanilla's trade_office_max_level is left untouched (unreferenced now),
-# since fondaco's original cap was the SHARED guild_max_level that 30 guild/marketplace buildings
-# also read. The buildings point at these mod-owned names because REPLACE: is per-database and
-# silent when unsupported - see building_types/abm_foreign_buildings.txt.
+# The building points at this mod-owned name (REPLACE:trade_office -> max_levels =
+# abm_trade_office_max_level) because REPLACE: is per-database and silent when unsupported, so a
+# mod-owned value makes the change certain. Vanilla's trade_office_max_level is left untouched.
+#
+# fondaco is NOT here: it is a flat `max_levels = 1` (one single fondaco per location, never
+# upgradeable) - see building_types/abm_foreign_buildings.txt.
 
 abm_trade_office_max_level = {
 	add = {
@@ -25,34 +27,7 @@ abm_trade_office_max_level = {
 		}
 		add = {
 			desc = "BUILDING_LEVEL_IS_MEGAPOLIS"
-			value = 1
-		}
-	}
-	else_if = {
-		limit = {
-			location_rank ?= location_rank:city
-		}
-		add = {
-			desc = "BUILDING_LEVEL_IS_CITY"
-			value = 1
-		}
-	}
-}
-
-
-# --- fondaco (same numbers as trade_office, kept separate so they can diverge) ---
-abm_fondaco_max_level = {
-	add = {
-		desc = "BUILDING_LEVEL_BASE"
-		value = 1
-	}
-	if = {
-		limit = {
-			location_rank ?= location_rank:megalopolis
-		}
-		add = {
-			desc = "BUILDING_LEVEL_IS_MEGAPOLIS"
-			value = 1
+			value = 2
 		}
 	}
 	else_if = {

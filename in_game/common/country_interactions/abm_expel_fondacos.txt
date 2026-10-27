@@ -3,7 +3,8 @@
 # `fondaco_rights` but gives no way to clear out a fondaco that has ALREADY been built - revoking
 # the rights only stops new ones - so this is that missing lever.
 #
-# Destroys every fondaco the target country holds in the ACTOR's own locations and revokes their
+# Destroys every fondaco AND hanseatic kontor the target country holds in the ACTOR's own locations
+# (they share one slot per location) and revokes their
 # vanilla `fondaco_rights` in the same action, so they cannot simply rebuild. Same mechanics as
 # abm_expel_trade_offices: vanilla's disband_kontor pattern (peace_treaties/disband_kontor.txt) -
 # `location_building_level = { building_type = ... owner = scope:recipient }` to find one specific
@@ -37,10 +38,17 @@ abm_expel_fondacos = {
 			text = abm_expel_fondacos_has_fondacos_tt
 			scope:actor = {
 				any_owned_location = {
-					location_building_level = {
-						building_type = building_type:fondaco
-						value > 0
-						owner = scope:recipient
+					OR = {
+						location_building_level = {
+							building_type = building_type:fondaco
+							value > 0
+							owner = scope:recipient
+						}
+						location_building_level = {
+							building_type = building_type:hanseatic_kontor
+							value > 0
+							owner = scope:recipient
+						}
 					}
 				}
 			}
@@ -79,6 +87,16 @@ abm_expel_fondacos = {
 							}
 						}
 						destroy_building_forcefully = "building(building_type:fondaco|scope:recipient)"
+					}
+					if = {
+						limit = {
+							location_building_level = {
+								building_type = building_type:hanseatic_kontor
+								value > 0
+								owner = scope:recipient
+							}
+						}
+						destroy_building_forcefully = "building(building_type:hanseatic_kontor|scope:recipient)"
 					}
 				}
 				# The rights go with the buildings, otherwise the target just rebuilds next month.

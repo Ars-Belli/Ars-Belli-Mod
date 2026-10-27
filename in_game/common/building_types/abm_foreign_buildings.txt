@@ -12,7 +12,8 @@
 #     of many weak ones (per-level effect raised, upkeep inputs raised to match), plus
 #     local_market_access like a marketplace, which is a LOCATION modifier so the location's owner
 #     (the host that granted the rights) is the one who benefits from it.
-#   * raw_modifier - a local_monthly_development line is present but commented out lower down.
+#   * raw_modifier - local_monthly_prosperity, flat and unscaled by level (see the note on the
+#     fondaco section below for why raw_modifier rather than modifier).
 # ===========================================================================
 REPLACE:trade_office = {
 	audio_tier = 2
@@ -95,11 +96,14 @@ REPLACE:trade_office = {
 # ---------------------------------------------------------------------------
 # fondaco  (vanilla source: in_game/common/building_types/unique_buildings.txt)
 # Same fields as vanilla apart from:
-#   * max_levels - points at abm_fondaco_max_level (script_values/abm_building_caps.txt) instead
-#     of the SHARED guild_max_level, so fondacos get the flat town 1 / city 2 / megalopolis 3 cap
-#     without touching the 30 guild and marketplace buildings that also read guild_max_level.
+#   * max_levels - a flat 1, so a location holds a single fondaco level and it can never be
+#     upgraded (vanilla read the SHARED guild_max_level, which 30 guild/marketplace buildings also
+#     use, so it had to be replaced rather than retuned in place). Combined with the one-per-location
+#     rule below, a location can only ever contain one fondaco, owned by one country.
 #   * raw_modifier - local_monthly_development, flat +0.001 development/month to the location (and
 #     so to the host). raw_modifier is not scaled by building level or goods access.
+#   * allow - a location may hold only ONE fondaco, whoever owns it, so a second merchant republic
+#     cannot build where one already stands (the owner filter still lets the holder upgrade).
 # allow is untouched: vanilla already gates fondacos behind fondaco_rights.
 # ---------------------------------------------------------------------------
 REPLACE:fondaco = {
@@ -111,7 +115,7 @@ REPLACE:fondaco = {
 
 	category = trade_category
 
-	max_levels = abm_fondaco_max_level
+	max_levels = 1
 	employment_size = foreign_trade_employment
 	pop_size_created = foreign_trade_employment
 
@@ -142,6 +146,20 @@ REPLACE:fondaco = {
 				target = scope:actor
 			}
 		}
+		# One trade post per location, whoever owns it: a second merchant republic cannot build here,
+		# and a hanseatic_kontor occupies the same slot (see REPLACE:hanseatic_kontor below).
+		custom_tooltip = {
+			text = abm_fondaco_slot_taken_tt
+			NOT = {
+				any_foreign_buildings_in_location = {
+					OR = {
+						building_type = building_type:fondaco
+						building_type = building_type:hanseatic_kontor
+					}
+					NOT = { owner = scope:actor }
+				}
+			}
+		}
 	}
 
 
@@ -149,8 +167,8 @@ REPLACE:fondaco = {
 
 	modifier = {
 		merchant_power_from_building = 2.0				#1.0
-		building_owner_maritime_presence = 0.05			#0.025
-		merchant_capacity_from_building = 0.5			#0.2
+		building_owner_maritime_presence = 0.075		#0.025
+		merchant_capacity_from_building = 0.6			#0.2
 		# merchants settle in the new location
 		local_migration_attraction = 0.05				#0.025
 	}
@@ -163,4 +181,73 @@ REPLACE:fondaco = {
 		fondaco_maintenance
 	}
 	construction_demand = fondaco_construction
+}
+
+# ---------------------------------------------------------------------------
+# hanseatic_kontor  (vanilla source: in_game/common/building_types/unique_buildings.txt)
+# The Hansa's counterpart to the fondaco - HSA is excluded from fondacos, so this is its building.
+# Same fields as vanilla apart from:
+#   * max_levels - a flat 1 (vanilla scaled it off the rank: 3 base, +2 city, +10 megalopolis,
+#     then x market_building_levels, i.e. 5-13 levels).
+#   * allow - a new block (vanilla had none) enforcing the SAME one-per-location slot as fondacos:
+#     a location holds a fondaco OR a kontor, never one of each. Shared with REPLACE:fondaco above.
+# ---------------------------------------------------------------------------
+REPLACE:hanseatic_kontor = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = yes
+	need_good_relation = yes
+	pop_type = burghers
+	
+	category = trade_category
+	
+	max_levels = 1
+	employment_size = large_foreign_trade_employment
+	pop_size_created = large_foreign_trade_employment
+
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	increase_per_level_cost = 0.5
+	
+	country_potential = {
+		modifier:allows_hanseatic_federation_buildings = yes
+	}
+	
+
+	allow = {
+		# Shared single slot with fondacos: a location takes one fondaco OR one kontor, never both.
+		# The owner filter stops our own building from blocking anything of ours.
+		custom_tooltip = {
+			text = abm_fondaco_slot_taken_tt
+			NOT = {
+				any_foreign_buildings_in_location = {
+					OR = {
+						building_type = building_type:fondaco
+						building_type = building_type:hanseatic_kontor
+					}
+					NOT = { owner = scope:actor }
+				}
+			}
+		}
+	}
+	
+	build_time = trade_post_build_time
+	
+	modifier = {
+		merchant_power_from_building = 3.0			#1.0
+		building_owner_maritime_presence = 0.3		#0.1
+		merchant_capacity_from_building = 0.75		#0.25
+	}
+	
+	raw_modifier = {
+		local_monthly_development = 0.001			#fixed regardless of level - raw_modifier is not scaled
+	}
+
+	possible_production_methods = {
+		kontor_maintenance
+	}
+	construction_demand = kontor_construction
 }
