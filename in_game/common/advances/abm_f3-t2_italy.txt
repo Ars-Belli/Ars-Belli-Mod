@@ -447,9 +447,9 @@ REPLACE:genoese_flexibility = {
 	}
 
 	navy_maintenance_efficiency = 0.10
-	
+
 	unlock_building = abm_genoese_arsenal
-	
+
 	unlock_government_reform = alberghi_28
 
 	requires = crown_power_advance_discovery
@@ -464,22 +464,11 @@ REPLACE:ligurian_coastal_seafarers = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
-			# Gazaria keeps the Ligurian civic inheritance when it takes up one
-			# of the two identities offered by abm_gazaria_culture_choice - the
-			# counting-houses and the seafaring tradition do not vanish because
-			# the captains changed their name. Any OTHER culture loses them.
-			AND = {
-				has_or_had_tag = GAZ
-				OR = {
-					culture = culture:gothic_culture
-					culture = culture:pontic_greek_culture
-				}
-			}
 		}
 	}
 
 	navy_galley_power = 0.15
-	cultures_capacity = 1
+	global_monthly_development = 0.001
 
 	requires = trade_advance_age_of_trad
 }
@@ -494,22 +483,12 @@ REPLACE:ligurian_merchant_diaspora = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
-			# Gazaria keeps the Ligurian civic inheritance when it takes up one
-			# of the two identities offered by abm_gazaria_culture_choice - the
-			# counting-houses and the seafaring tradition do not vanish because
-			# the captains changed their name. Any OTHER culture loses them.
-			AND = {
-				has_or_had_tag = GAZ
-				OR = {
-					culture = culture:gothic_culture
-					culture = culture:pontic_greek_culture
-				}
-			}
 		}
 	}
 
-	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
-	global_monthly_development = 0.001
+	export_efficiency = medium_trade_efficiency_bonus
+	global_merchant_power = 0.1
+	max_tariff = 0.1
 
 	requires = banking_advance
 }
@@ -524,22 +503,11 @@ REPLACE:ligurian_spirit_of_navigation = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
-			# Gazaria keeps the Ligurian civic inheritance when it takes up one
-			# of the two identities offered by abm_gazaria_culture_choice - the
-			# counting-houses and the seafaring tradition do not vanish because
-			# the captains changed their name. Any OTHER culture loses them.
-			AND = {
-				has_or_had_tag = GAZ
-				OR = {
-					culture = culture:gothic_culture
-					culture = culture:pontic_greek_culture
-				}
-			}
 		}
 	}
 
-	export_efficiency = small_trade_efficiency_bonus
-	global_merchant_power = 0.10
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+	non_rural_migration_attraction = 0.1
 
 	requires = diplomatic_training
 }
@@ -554,22 +522,11 @@ REPLACE:ligurian_artisan_craft = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
-			# Gazaria keeps the Ligurian civic inheritance when it takes up one
-			# of the two identities offered by abm_gazaria_culture_choice - the
-			# counting-houses and the seafaring tradition do not vanish because
-			# the captains changed their name. Any OTHER culture loses them.
-			AND = {
-				has_or_had_tag = GAZ
-				OR = {
-					culture = culture:gothic_culture
-					culture = culture:pontic_greek_culture
-				}
-			}
 		}
 	}
 
-	building_upkeep_efficiency = 0.10
-	
+	building_upkeep_efficiency = 0.20
+
 	requires = artists_advance_reformations
 }
 
@@ -582,20 +539,10 @@ REPLACE:ligurian_communal_councils = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
-			# Gazaria keeps the Ligurian civic inheritance when it takes up one
-			# of the two identities offered by abm_gazaria_culture_choice - the
-			# counting-houses and the seafaring tradition do not vanish because
-			# the captains changed their name. Any OTHER culture loses them.
-			AND = {
-				has_or_had_tag = GAZ
-				OR = {
-					culture = culture:gothic_culture
-					culture = culture:pontic_greek_culture
-				}
-			}
 		}
 	}
 
+	country_cabinet_efficiency = 0.1
 	global_max_literacy = 10
 
 	requires = scientific_revolution_advance
@@ -611,17 +558,6 @@ REPLACE:ligurian_enlightenment = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
-			# Gazaria keeps the Ligurian civic inheritance when it takes up one
-			# of the two identities offered by abm_gazaria_culture_choice - the
-			# counting-houses and the seafaring tradition do not vanish because
-			# the captains changed their name. Any OTHER culture loses them.
-			AND = {
-				has_or_had_tag = GAZ
-				OR = {
-					culture = culture:gothic_culture
-					culture = culture:pontic_greek_culture
-				}
-			}
 		}
 	}
 
