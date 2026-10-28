@@ -58,7 +58,8 @@ types RightPanelTypes
 					direction = vertical
 					spacing = 5
 					parentanchor = vcenter
-					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
+					# IsPlayerValid: an observer has no player country, and GetPlayer.Custom() then logs every frame
+					visible = "[And(GetGlobalVariable('mp_mechanics_enabled').IsSet, IsPlayerValid)]"
 
 					# text_single = {
 					#	text = "[GetPlayer.Custom('mp_calc_counter_display')]"
@@ -230,9 +231,11 @@ types RightPanelTypes
 					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
 
 					datacontext = "[GetPlayer]"
-					tooltip = "MP_RANK_TOOLTIP"
 
+					# Label + tooltip read the player country, so they hide for observers; the Tier List button stays
 					text_single = {
+						visible = "[IsPlayerValid]"
+						tooltip = "MP_RANK_TOOLTIP"
 						text = "MP_RANK_LABEL"
 						using = Font_Size_Small
 						align = right
@@ -293,6 +296,7 @@ types RightPanelTypes
 
 						# Per-country toggle for the alliance-limit popup warning.
 						hbox = {
+							visible = "[IsPlayerValid]"
 							layoutpolicy_horizontal = expanding
 							datacontext = "[GetPlayer]"
 
@@ -307,6 +311,7 @@ types RightPanelTypes
 
 						# Per-country toggle for the fort-limit popup warning.
 						hbox = {
+							visible = "[IsPlayerValid]"
 							layoutpolicy_horizontal = expanding
 							datacontext = "[GetPlayer]"
 
@@ -335,6 +340,7 @@ types RightPanelTypes
 
 									# --- Your AP Partners section ---
 									vbox = {
+										visible = "[IsPlayerValid]"
 										layoutpolicy_horizontal = expanding
 										spacing = 2
 										text_single = {
@@ -370,6 +376,7 @@ types RightPanelTypes
 
 									# --- Your DP Partners section ---
 									vbox = {
+										visible = "[IsPlayerValid]"
 										layoutpolicy_horizontal = expanding
 										spacing = 2
 										text_single = {
@@ -405,6 +412,7 @@ types RightPanelTypes
 
 									# --- Your GR Partners section ---
 									vbox = {
+										visible = "[IsPlayerValid]"
 										layoutpolicy_horizontal = expanding
 										spacing = 2
 										text_single = {
