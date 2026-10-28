@@ -1,0 +1,858 @@
+<title>Ars Belli Battle Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral+SC:wght@500;600&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a war-room worksheet. Quick battle = two army sheets; Full battle = location, countries and any number of armies per side, then odds, one battle day by day, one hit taken apart. Same identity as the Focus Picks pages. */
+:root {
+	--bg: #eef0ee; --surface: #fbfcfa; --ink: #1d2422; --muted: #5c6662; --line: #d3d9d5; --chip: #e2e6e3;
+	--accent: #9a3324; --side-a: #2a78d6; --side-b: #eb6834; --good: #2f6b3a; --bad: #a1372a; --grid: #e3e7e4;
+	--tip-bg: #1d2422; --tip-fg: #f2f5f3;
+	--font-display: "Spectral SC", "Palatino Linotype", Palatino, Georgia, serif;
+	--font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+	--font-num: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835; --chip: #26302d;
+		--accent: #e8826f; --side-a: #3987e5; --side-b: #d95926; --good: #86c890; --bad: #f08a7a; --grid: #262e2b;
+		--tip-bg: #e5ebe8; --tip-fg: #141917; color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835; --chip: #26302d;
+	--accent: #e8826f; --side-a: #3987e5; --side-b: #d95926; --good: #86c890; --bad: #f08a7a; --grid: #262e2b;
+	--tip-bg: #e5ebe8; --tip-fg: #141917; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 24px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; }
+h2 { font-size: clamp(22px, 3vw, 28px); }
+h3 { font-size: 18px; }
+.lede { max-width: 72ch; margin: 10px 0 0; font-size: 16.5px; }
+.sub { color: var(--muted); max-width: 76ch; margin: 4px 0 0; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 0; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+
+.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+@media (max-width: 880px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px 16px; min-width: 0; display: grid; gap: 12px; }
+.card.side { border-top: 4px solid var(--side); }
+.a { --side: var(--side-a); } .b { --side: var(--side-b); }
+.card-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: space-between; }
+.card-head h3 { display: flex; align-items: center; gap: 8px; }
+.side .card-head h3::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--side); }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0; margin-bottom: 6px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px 10px; }
+.field { display: grid; gap: 2px; min-width: 0; }
+.field label { font-size: 13px; color: var(--muted); }
+input, select, textarea { font: inherit; font-size: 14px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); width: 100%; min-width: 0; }
+input[type="number"], textarea { font-family: var(--font-num); }
+input[type="checkbox"] { width: auto; }
+textarea { min-height: 160px; font-size: 12.5px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--side, var(--accent)); outline-offset: 1px; }
+button { font: inherit; font-weight: 600; border-radius: 6px; cursor: pointer; padding: 6px 13px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+button.small { padding: 2px 9px; font-size: 13px; font-weight: 600; }
+button.link { border: 0; background: none; color: var(--muted); padding: 2px 4px; text-decoration: underline; }
+button:disabled { opacity: 0.5; cursor: progress; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; }
+.bar .field { width: 140px; }
+.progress { font-size: 13px; color: var(--muted); }
+
+.army { border: 1px solid var(--line); border-left: 3px solid var(--side); border-radius: 6px; padding: 10px 12px; display: grid; gap: 10px; background: var(--bg); }
+.army-head { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px 10px; align-items: end; }
+.units { display: grid; gap: 6px; }
+.unit-row { display: grid; grid-template-columns: minmax(0, 3fr) 64px 82px 64px 64px 28px; gap: 6px; align-items: center; }
+.unit-row.head { font-size: 12px; color: var(--muted); }
+@media (max-width: 560px) { .unit-row { grid-template-columns: minmax(0, 1fr) 56px 74px 28px; } .unit-row .opt { display: none; } }
+.unit-stats { font-size: 12px; color: var(--muted); font-family: var(--font-num); grid-column: 1 / -1; margin-top: -4px; }
+.countries { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; min-width: 0; }
+.tile .label { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.tile .label i { width: 10px; height: 10px; border-radius: 2px; background: var(--side); display: inline-block; }
+.tile .value { font-family: var(--font-num); font-size: 28px; font-weight: 500; margin-top: 2px; }
+.tile .note { font-size: 13px; color: var(--muted); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px 16px; min-width: 0; display: grid; gap: 10px; }
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .charts { grid-template-columns: minmax(0, 1fr); } }
+.chart { position: relative; min-width: 0; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .title { font-weight: 700; font-size: 14px; }
+.legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend span::before { content: ""; width: 14px; height: 2px; background: var(--c); border-radius: 1px; }
+.axis text { fill: var(--muted); font-family: var(--font-num); font-size: 11px; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.tip { position: absolute; pointer-events: none; background: var(--tip-bg); color: var(--tip-fg); border-radius: 6px; padding: 6px 9px; font-size: 12.5px; line-height: 1.35; white-space: nowrap; transform: translate(-50%, -110%); box-shadow: 0 6px 18px rgb(0 0 0 / 0.25); z-index: 5; }
+.tip b { font-family: var(--font-num); font-weight: 500; }
+details summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 13px; min-width: 100%; }
+th, td { padding: 4px 10px; text-align: right; border-bottom: 1px solid var(--line); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; font-family: var(--font-body); }
+th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
+.hitgrid { display: grid; grid-template-columns: minmax(0, 280px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 760px) { .hitgrid { grid-template-columns: minmax(0, 1fr); } }
+.factors { list-style: none; margin: 0; padding: 0; display: grid; }
+.factors li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.factors li .v { font-family: var(--font-num); font-size: 13px; }
+.factors li.up .v { color: var(--good); } .factors li.down .v { color: var(--bad); }
+.factors li.total { font-weight: 700; border-bottom: 0; padding-top: 8px; }
+.notes { columns: 2 320px; column-gap: 28px; font-size: 14px; color: var(--muted); }
+.notes p { margin: 0 0 10px; break-inside: avoid; }
+.notes b { color: var(--ink); }
+.err { color: var(--bad); font-size: 13.5px; }
+</style>
+
+<div class="wrap">
+	<header>
+		<h1>Ars Belli Battle Simulator</h1>
+		<p class="lede">Land battles with the combat rules of Europa Universalis V 1.4.4, read from the game code: dice, initiative, reserves, frontage, every damage factor, morale collapse and stack wipes. Run hundreds of battles for the odds, watch one day by day, and take a single hit apart.</p>
+	</header>
+	<nav class="tabs" role="tablist" aria-label="Mode">
+		<button type="button" role="tab" id="tab-quick" aria-selected="true">Quick battle</button>
+		<button type="button" role="tab" id="tab-full" aria-selected="false">Full battle</button>
+	</nav>
+
+	<!-- QUICK -->
+	<section id="mode-quick" style="display:grid;gap:20px">
+		<p class="sub">One army per side, generic units of one age, open ground. Good for measuring what a stat is worth.</p>
+		<div class="cols"><div class="card side a" id="q-a"></div><div class="card side b" id="q-b"></div></div>
+		<div class="bar">
+			<div class="field"><label for="q-width">Battle frontage</label><input id="q-width" type="number" min="2" max="20" value="10"></div>
+			<div class="field"><label for="q-runs">Battles to run</label><input id="q-runs" type="number" min="50" max="10000" step="50" value="500"></div>
+			<button class="primary" id="q-run" type="button">Run battles</button>
+			<button id="q-copy" type="button">Copy A to B</button>
+			<button id="q-swap" type="button">Swap sides</button>
+			<button id="q-to-full" type="button">Open in Full battle</button>
+			<span class="progress" id="q-progress" aria-live="polite"></span>
+		</div>
+	</section>
+
+	<!-- FULL -->
+	<section id="mode-full" hidden style="display:grid;gap:20px">
+		<p class="sub">Any number of armies per side, real unit types from any age (including unique units), countries with their own stats, terrain, river crossings, marching morale and reinforcements arriving later. Import or paste a scenario file, or build one here.</p>
+		<div class="bar">
+			<span class="hint">Big battle presets (1547 Spain size: 6 armies of 30 a side, 2 at the start, the rest come in as the reserve runs empty):</span>
+			<button id="preset-cav3" type="button">Age III heavy cavalry</button>
+			<button id="preset-inf5" type="button">Age V heavy infantry</button>
+		</div>
+		<div class="card">
+			<div class="card-head"><h3>Location</h3><span class="hint" id="loc-summary"></span></div>
+			<div class="grid" id="loc-fields"></div>
+		</div>
+		<div class="card">
+			<div class="card-head"><h3>Countries</h3><button class="small" type="button" id="add-country">Add country</button></div>
+			<div class="countries" id="countries"></div>
+		</div>
+		<div class="cols">
+			<div class="card side a"><div class="card-head"><h3>Attacker</h3><button class="small" type="button" data-add-army="attacker">Add army</button></div><div id="armies-attacker" style="display:grid;gap:10px"></div></div>
+			<div class="card side b"><div class="card-head"><h3>Defender</h3><button class="small" type="button" data-add-army="defender">Add army</button></div><div id="armies-defender" style="display:grid;gap:10px"></div></div>
+		</div>
+		<div class="bar">
+			<div class="field"><label for="f-runs">Battles to run</label><input id="f-runs" type="number" min="50" max="10000" step="50" value="500"></div>
+			<button class="primary" id="f-run" type="button">Run battles</button>
+			<button id="f-swap" type="button" title="The defender attacks instead, in the same location (check the river crossing)">Swap attacker and defender</button>
+			<label class="field" style="width:auto"><span class="hint">Import a scenario file</span><input id="f-file" type="file" accept=".json,application/json"></label>
+			<span class="progress" id="f-progress" aria-live="polite"></span>
+		</div>
+		<datalist id="arrival-opts"><option value="needed"></option><option value="0"></option></datalist>
+		<details class="panel" id="json-panel">
+			<summary>Scenario as JSON (paste to import, copy to save or share)</summary>
+			<textarea id="f-json" spellcheck="false" aria-label="Scenario JSON"></textarea>
+			<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button type="button" id="f-load">Load this JSON</button><button type="button" id="f-copyjson">Copy JSON</button><span class="err" id="f-err"></span></div>
+			<p class="hint">Format: <code>location</code>, <code>countries</code>, <code>attacker.armies[]</code>, <code>defender.armies[]</code>; each army has <code>name, country, formation, arrivalDay, marchDays, morale, units[]</code>; each unit <code>type, count</code> and optionally <code>section, strength, morale, experience, levy</code>. Unit keys are the game's (e.g. <code>a_musketeers</code>).</p>
+		</details>
+	</section>
+
+	<!-- RESULTS (shared) -->
+	<section style="display:grid;gap:12px" aria-labelledby="odds-title">
+		<h2 id="odds-title">Odds</h2>
+		<div class="tiles" id="tiles"></div>
+		<p class="hint" id="ci-note"></p>
+		<div class="tablewrap" id="army-table"></div>
+	</section>
+	<section class="panel" aria-labelledby="cost-title">
+		<h2 id="cost-title">Costs and manpower</h2>
+		<p class="sub">What each side's armies cost to recruit and keep, and what the average battle above costs to make good. Gold is each unit's goods basket at base market prices; real prices move with each market.</p>
+		<div class="tiles" id="cost-tiles"></div>
+		<details><summary>Show the cost of every unit</summary><div class="tablewrap" id="cost-table"></div></details>
+	</section>
+	<section class="panel" aria-labelledby="war-title">
+		<h2 id="war-title">War of attrition</h2>
+		<p class="sub">The same battle, fought again and again. After each one the expected losses are applied. Between battles each side gains its monthly manpower and reinforces its regiments, up to 25% of a regiment a month; wiped regiments are rebuilt at once if manpower allows. Levies are raised again from pops. Who runs out first?</p>
+		<div class="cols">
+			<div class="card side a"><div class="card-head"><h3>Attacker manpower</h3></div><div class="grid">
+				<div class="field"><label for="w-max-0">Max manpower</label><input id="w-max-0" type="number" min="0" step="1000" value="40000"></div>
+				<div class="field"><label for="w-sur-0">Surplus per month</label><input id="w-sur-0" type="number" step="10" value="667"></div>
+				<div class="field"><label for="w-cur-0">Current manpower</label><input id="w-cur-0" type="number" min="0" step="1000"></div>
+				<div class="field"><label>&nbsp;</label><button class="small" type="button" id="w-sur-btn-0" title="Max manpower ÷ 60, minus the monthly manpower upkeep of the attacker's armies in this battle">Surplus from max and these armies</button></div>
+			</div></div>
+			<div class="card side b"><div class="card-head"><h3>Defender manpower</h3></div><div class="grid">
+				<div class="field"><label for="w-max-1">Max manpower</label><input id="w-max-1" type="number" min="0" step="1000" value="40000"></div>
+				<div class="field"><label for="w-sur-1">Surplus per month</label><input id="w-sur-1" type="number" step="10" value="667"></div>
+				<div class="field"><label for="w-cur-1">Current manpower</label><input id="w-cur-1" type="number" min="0" step="1000"></div>
+				<div class="field"><label>&nbsp;</label><button class="small" type="button" id="w-sur-btn-1" title="Max manpower ÷ 60, minus the monthly manpower upkeep of the defender's armies in this battle">Surplus from max and these armies</button></div>
+			</div></div>
+		</div>
+		<p class="hint">Surplus per month is what the country gains after paying the manpower upkeep of all its armies (it can be negative); reinforcements come out of it. The button sets it to max ÷ 60 (income: the game stores 5 years of it) minus the upkeep of this battle's armies only; subtract armies elsewhere yourself. Current manpower starts at the max unless you set it.</p>
+		<div class="bar">
+			<div class="field"><label for="w-battles">Battles</label><input id="w-battles" type="number" min="1" max="30" value="8"></div>
+			<div class="field"><label for="w-months">Months between battles</label><input id="w-months" type="number" min="0" max="36" step="0.5" value="3"></div>
+			<div class="field"><label for="w-runs">Battles simulated per step</label><input id="w-runs" type="number" min="50" max="1000" step="50" value="200"></div>
+			<button class="primary" id="w-run" type="button">Fight the war</button>
+			<span class="progress" id="w-progress" aria-live="polite"></span>
+		</div>
+		<p id="w-verdict" class="lede" style="font-size:16px"></p>
+		<div class="charts"><div class="chart" id="chart-war-army"></div><div class="chart" id="chart-war-mp"></div></div>
+		<details><summary>Show the war as a table</summary><div class="tablewrap" id="war-table"></div></details>
+	</section>
+	<section class="panel" aria-labelledby="sample-title">
+		<h2 id="sample-title">One battle, day by day</h2>
+		<p class="sub" id="sample-sub"></p>
+		<div class="charts"><div class="chart" id="chart-men"></div><div class="chart" id="chart-mor"></div></div>
+		<details><summary>Show the battle as a table</summary><div class="tablewrap" id="sample-table"></div></details>
+		<div><button id="resample" type="button">Fight another sample battle</button></div>
+	</section>
+	<section class="panel" aria-labelledby="hit-title">
+		<h2 id="hit-title">One hit, taken apart</h2>
+		<p class="sub">A full-strength regiment of the attacker hitting one of the defender (or the reverse), with every factor the damage function applies, in its order.</p>
+		<div class="hitgrid">
+			<div style="display:grid;gap:8px">
+				<div class="field"><label for="hit-a">Attacking regiment</label><select id="hit-a"></select></div>
+				<div class="field"><label for="hit-b">Target regiment</label><select id="hit-b"></select></div>
+				<div class="field"><label for="hit-die">Die shown in game (1–10)</label><input id="hit-die" type="number" min="1" max="10" value="5"></div>
+				<div class="field"><label for="hit-flank">Attack from a flank</label><select id="hit-flank"><option value="0">No</option><option value="1">Yes</option></select></div>
+				<div class="field"><label for="hit-eng">Target already engaged</label><select id="hit-eng"><option value="1">Yes</option><option value="0">No</option></select></div>
+				<p class="hint">The code adds the raw die (shown − 1) to 5, plus dice modifiers (commander; terrain and crossings for the attacker), capped at 15.</p>
+			</div>
+			<ul class="factors" id="factors"></ul>
+		</div>
+	</section>
+	<section class="panel" id="worth" aria-labelledby="worth-title">
+		<h2 id="worth-title">What is a stat worth?</h2>
+		<p class="sub" id="worth-sub">Quick-battle side A fights an exact copy of itself; only side A gets the bonus. On the left, how often side A wins (50% means the bonus did nothing); on the right, how many enemy men fall for each man side A loses (1.0 is an even trade). A bonus can win battles and still cost more men than it saves.</p>
+		<div class="bar">
+			<div class="field"><label for="worth-runs">Battles per bonus</label><input id="worth-runs" type="number" min="50" max="10000" step="50" value="500"></div>
+			<button id="measure" type="button">Measure the bonuses</button> <span class="progress" id="measure-progress" aria-live="polite"></span>
+		</div>
+		<div class="charts"><div class="chart" id="chart-worth"></div><div class="chart" id="chart-worth-loss"></div></div>
+		<details><summary>Show the results as a table</summary><div class="tablewrap" id="worth-table"></div></details>
+	</section>
+
+	<section class="notes" aria-label="How the simulator works">
+		<p><b>A day of battle.</b> The first 3 days are the bombard phase: only artillery in the battle line fires, up to the battle frontage of guns per section, each with a 20% × (1 + bombard efficiency) chance a day. Dice re-roll when it ends. After that, each day reserves move up (chance combat speed × 0.1, a frontage budget of the battle width), regiments not yet engaged engage (60% + initiative bonus up to 30% + 3% per day of battle), engaged regiments hit the enemy section facing them, everyone loses 0.03 morale, and losses land at once. Dice re-roll every 4 days.</p>
+		<p><b>Damage per hit.</b> (raw die + 5 + dice modifiers, capped at 15) × 0.12, then × 0.04 for strength and × 0.25 for morale; morale × attacker men/max and × attacker size ÷ target size (0.25–4); × (1 + unit power); × flanking ability on flank attacks; × (1 + discipline) ÷ (1 + target discipline); × religion modifier; × combat power; ÷ (1 + tactics gap) when the target has more; × levy factor for a levy hitting a regular; strength × attacker men; × (1 − 0.5 × target experience/100); × target damage taken (cavalry 0.30); × combined arms; secured flanks; × terrain (unit's combat values for the location's topography, vegetation, climate, coast and river); strength/morale damage done and taken; +10% strength and +20% morale damage against a target not yet engaged.</p>
+		<p><b>Ending.</b> At the start, a side with 10 times the enemy's men (levies at their levy factor) wipes it out at once, whatever the morale. During the first 4 days, a side whose battle line has broken (morale at or under 0.05) is wiped out if the enemy has twice its men. From day 5, a side whose battle line is empty loses and retreats, shattered if its average morale is under 0.5; only a 10:1 ratio still wipes it. So the 2:1 wipe mostly hits armies that enter a battle already broken.</p>
+		<p><b>Terrain and movement.</b> Battle frontage 10, minus terrain (mountains 4, hills and wetlands 3, forests 2–4), at least 2; three sections hold 1.25 × that each. Terrain gives the attacker minus dice (mountains 2; hills, plateau, wetlands, narrows, woods, forest, jungle 1), river crossing −1, strait −2, sea landing −1. Marching costs 0.69% of max morale a day (land morale movement cost) and armies cannot recover morale while moving.</p>
+		<p><b>Combined arms.</b> Counted in regiments across the side, auxiliaries excluded. If one category is half the regiments or more, there is no bonus at all; otherwise each category with at least 10% adds 2.5%.</p>
+		<p><b>Costs.</b> From the game's price lists (in_game/common/prices): each category has a build, reinforce and maintenance price in gold per 100 men and manpower per man (build and reinforce 1 manpower a man; upkeep 2% of the men a month for infantry, 4% for cavalry and artillery). Each is scaled by its cost modifier (e.g. cavalry build cost −20% also cuts the manpower). Upkeep is divided by (1 + maintenance efficiency), reinforcement gold by (1 + reinforce efficiency). Levies cost no manpower and 1% of the gold upkeep. Checked on a 1342 save: manpower upkeep matched exactly; the budget's gold upkeep was about 68% of the price list (a factor not yet traced).</p>
+		<p><b>Deployment.</b> Each regiment has a box from its army's formation: "balanced" deals them out C L R R L C…, "cavalry on flanks" alternates cavalry left and right and puts the rest in the centre. At the start a regiment enters its box while that section holds less than 1.25 × the frontage, else it waits in reserve. Armies arriving later go to reserve, except with the "correct section chance" (10% per military advance that gives it, and +0.1% per point of the general's administrative skill).</p>
+		<p><b>Generals.</b> Dice only come from traits (Offensive Planner +1 and others). Skills give the general's army, per point: military +0.1% discipline and +0.5% combat speed; diplomatic +0.2% morale and +1% initiative; administrative +0.1% correct section chance. The side uses the best-rated general's dice.</p>
+		<p><b>Location.</b> Frontage is 10 + terrain + location rank (town −1, city −2, megalopolis −3), at least 2, and then each side multiplies it by (1 + its possible frontage modifier: the general's administrative skill gives +0.1% a point, Absolutism +10%), so the two sides can have different widths. A fort does nothing in a field battle: no dice, no frontage. Units' terrain values (e.g. cavalry −10% in mountains) apply per terrain layer, plus coast or inland and river. No country-wide terrain modifiers exist in 1.4.4.</p>
+		<p><b>Approximated.</b> The order regiments overflow into reserve when a section is full, reinforcements' boxes, the 120-day cap, and the war of attrition (expected losses per battle, one manpower pool per side). Not modelled: naval combat.</p>
+		<p><b>Source.</b> “EU5 Combat Mechanics (1.4.4).md” in the Ars Belli repository; unit stats from the 1.4.4 unit types and Ars Belli’s overrides.</p>
+	</section>
+</div>
+
+<script src="engine.js"></script>
+<script>
+(async function () {
+	'use strict';
+	const S = window.BattleSim;
+	let DB = null;
+	try { DB = await (await fetch('units.json')).json(); S.setUnitDB(DB); } catch (e) { DB = null; }
+	const $ = id => document.getElementById(id);
+	const AGES = ['I Traditions', 'II Renaissance', 'III Discovery', 'IV Reformation', 'V Absolutism', 'VI Revolutions'];
+	const fmtMen = x => Math.round(x * 1000).toLocaleString('en-US');
+	const pct = x => (100 * x).toFixed(1) + '%';
+	const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+	let mode = 'quick', lastScenario = null;
+
+	// ---------- tabs
+	function setMode(m) {
+		mode = m;
+		$('tab-quick').setAttribute('aria-selected', m === 'quick'); $('tab-full').setAttribute('aria-selected', m === 'full');
+		$('mode-quick').hidden = m !== 'quick'; $('mode-full').hidden = m !== 'full';
+		$('mode-quick').style.display = m === 'quick' ? 'grid' : 'none'; $('mode-full').style.display = m === 'full' ? 'grid' : 'none';
+		$('worth-sub').textContent = m === 'full'
+			? 'Full battle: every attacker army gets the bonus, the defender stays as set up. The first row is the battle as it stands; the grey lines mark it, so each bonus reads as a change from there. On the left, how often the attacker wins; on the right, how many enemy men fall for each man the attacker loses. Big battles take a while: lower "Battles per bonus" for a first look.'
+			: 'Quick-battle side A fights an exact copy of itself; only side A gets the bonus. On the left, how often side A wins (50% means the bonus did nothing); on the right, how many enemy men fall for each man side A loses (1.0 is an even trade). A bonus can win battles and still cost more men than it saves.';
+		if (worthMode && worthMode !== m) { $('chart-worth').innerHTML = ''; $('chart-worth-loss').innerHTML = ''; $('worth-table').innerHTML = ''; $('measure-progress').textContent = 'Measure the bonuses for this battle.'; }
+		worthMode = m;
+	}
+	let worthMode = null;
+	$('tab-quick').onclick = () => setMode('quick');
+	$('tab-full').onclick = () => { setMode('full'); renderFull(); };
+
+	// ---------- QUICK mode form
+	const QSCHEMA = [
+		['General', [['age', 'Age', 'age', 2], ['formation', 'Formation', 'formation', 'balanced'], ['commanderDice', 'Commander dice', 'int', 0], ['marchDays', 'Days marched', 'int', 0]]],
+		['Regiments', [['u.li', 'Light infantry', 'int', 4], ['u.hi', 'Heavy infantry', 'int', 14], ['u.lc', 'Light cavalry', 'int', 2], ['u.hc', 'Heavy cavalry', 'int', 6], ['u.art', 'Artillery', 'int', 2], ['u.aux', 'Auxiliary', 'int', 0]]],
+		['Levies', [['l.li', 'Light inf. levies', 'int', 0], ['l.hi', 'Heavy inf. levies', 'int', 0], ['levyCE', 'Levy combat eff. %', 'pct', 0], ['levyExperience', 'Levy experience', 'num', 0]]],
+		['Stats', [['discipline', 'Discipline %', 'pct', 0], ['tactics', 'Military tactics', 'num', 1.0], ['moraleMod', 'Morale %', 'pct', 0], ['moraleFlat', 'Morale (flat)', 'num', 0], ['experience', 'Experience', 'num', 0], ['initiativeMod', 'Army initiative %', 'pct', 0], ['speedMod', 'Combat speed %', 'pct', 0]]],
+		['Unit power', [['p.li', 'Light inf. %', 'pct', 0], ['p.hi', 'Heavy inf. %', 'pct', 0], ['p.lc', 'Light cav. %', 'pct', 0], ['p.hc', 'Heavy cav. %', 'pct', 0], ['p.art', 'Artillery %', 'pct', 0]]],
+		['Upkeep', [['maintenanceEfficiency', 'Maintenance eff. %', 'pct', 0], ['reinforceEfficiency', 'Reinforce eff. %', 'pct', 0], ['reinforceSpeed', 'Reinforce speed %', 'pct', 0]]],
+		['Width', [['frontageMod', 'Possible frontage %', 'pct', 0]]],
+	];
+	function buildQuick(el, id, title) {
+		el.innerHTML = `<div class="card-head"><h3>${title}</h3><button class="small" type="button" data-clear="${id}" title="No regiments, no levies, every stat back to its default">Clear</button></div>`;
+		el.querySelector('[data-clear]').onclick = () => {
+			for (const [, fields] of QSCHEMA) for (const [key, , kind] of fields) {
+				if (kind === 'age' || kind === 'formation') continue;
+				$(`${id}-${key.replace('.', '-')}`).value = key === 'tactics' ? 1 : 0;
+			}
+		};
+		for (const [group, fields] of QSCHEMA) {
+			const fs = document.createElement('fieldset');
+			fs.innerHTML = `<legend>${group}</legend><div class="grid">${fields.map(([key, label, kind, def]) => {
+				const fid = `${id}-${key.replace('.', '-')}`;
+				let input;
+				if (kind === 'age') input = `<select id="${fid}">${AGES.map((a, i) => `<option value="${i + 1}"${i + 1 === def ? ' selected' : ''}>${a}</option>`).join('')}</select>`;
+				else if (kind === 'formation') input = `<select id="${fid}"><option value="balanced">Balanced</option><option value="cav_inf_cav">Cavalry on flanks</option></select>`;
+				else input = `<input id="${fid}" type="number" step="${key === 'tactics' ? '0.05' : kind === 'int' ? '1' : 'any'}" value="${def}">`;
+				return `<div class="field"><label for="${fid}">${label}</label>${input}</div>`;
+			}).join('')}</div>`;
+			el.appendChild(fs);
+		}
+	}
+	buildQuick($('q-a'), 'a', 'Side A (attacker)');
+	buildQuick($('q-b'), 'b', 'Side B (defender)');
+	$('b-discipline').value = 5;
+	function readQuick(id) {
+		const s = S.defaultSide(); s.units = {}; s.levies = {}; s.power = {};
+		for (const [, fields] of QSCHEMA) for (const [key, , kind] of fields) {
+			const el = $(`${id}-${key.replace('.', '-')}`);
+			let v = el.tagName === 'SELECT' ? el.value : parseFloat(el.value);
+			if (el.tagName !== 'SELECT' && !Number.isFinite(v)) v = 0;
+			if (kind === 'pct') v /= 100;
+			if (kind === 'int' || kind === 'age') v = Math.max(0, Math.round(+v));
+			const [a, b] = key.split('.');
+			if (b) s[{ u: 'units', l: 'levies', p: 'power' }[a]][b] = v; else s[a] = v;
+		}
+		return s;
+	}
+	const quickScenario = () => S.simpleScenario(readQuick('a'), readQuick('b'), { width: Math.max(2, +$('q-width').value || 10) });
+
+	// ---------- shared: runs, tiles, charts, hit explorer
+	// Battles run on a pool of Web Workers (one per core but one); if workers can't start, on the page's own thread.
+	let pool = null;
+	try {
+		const k = Math.max(1, Math.min(31, (navigator.hardwareConcurrency || 4) - 1));
+		pool = { workers: Array.from({ length: k }, () => new Worker('worker.js')), jobs: new Map(), next: 0, broken: false };
+		pool.workers.forEach(w => {
+			w.onmessage = e => { const j = pool.jobs.get(e.data.id); if (!j) return; pool.jobs.delete(e.data.id); e.data.error ? j.fail(e.data.error) : j.done(e.data.result); };
+			w.onerror = () => { pool.broken = true; for (const j of pool.jobs.values()) j.fail('worker error'); pool.jobs.clear(); };
+		});
+	} catch (e) { pool = null; }
+	function runMany(scn, n, onDone, onProgress) {
+		if (!pool || pool.broken || n < 100) return runManyLocal(scn, n, onDone, onProgress);
+		const chunks = Math.min(pool.workers.length * 2, Math.max(1, Math.floor(n / 40)));
+		const parts = [];
+		let got = 0, failed = false;
+		for (let c = 0; c < chunks; c++) {
+			const k = Math.floor(n / chunks) + (c < n % chunks ? 1 : 0), id = pool.next++;
+			pool.jobs.set(id, {
+				done: r => { parts.push(r); got++; onProgress && onProgress(got / chunks); if (got === chunks) onDone(S.mergeMC(parts)); },
+				fail: () => { if (failed) return; failed = true; pool.broken = true; runManyLocal(scn, n, onDone, onProgress); },
+			});
+			pool.workers[c % pool.workers.length].postMessage({ id, scn, n: k });
+		}
+	}
+	function runManyLocal(scn, n, onDone, onProgress) {
+		const SUMS = ['losses', 'lossesSq', 'lossesRegular', 'lossesLevy', 'overrunLosses'];
+		const acc = { n: 0, wins: [0, 0], draws: 0, days: 0, daysSq: 0, lossesProd: 0, overrun: [0, 0], shattered: [0, 0], start: [0, 0], armies: null, groups: null };
+		for (const k of SUMS) acc[k] = [0, 0];
+		const step = () => {
+			const k = Math.min(40, n - acc.n);
+			const m = S.monteCarloScenario(scn, k);
+			acc.n += k; acc.draws += m.draws; acc.days += m.days * k; acc.daysSq += m.daysSq * k; acc.lossesProd += m.lossesProd * k; acc.start = m.start;
+			for (const i of [0, 1]) { acc.wins[i] += m.wins[i]; acc.overrun[i] += m.overrun[i]; acc.shattered[i] += m.shattered[i]; for (const s of SUMS) acc[s][i] += m[s][i] * k; }
+			if (!acc.armies) acc.armies = m.armies.map(s => s.map(a => ({ name: a.name, start: a.start, lost: 0 })));
+			m.armies.forEach((s, i) => s.forEach((a, j) => { acc.armies[i][j].lost += a.lost * k; }));
+			if (!acc.groups) acc.groups = m.groups.map(s => s.map(a => a.map(() => ({ lost: 0, wiped: 0 }))));
+			m.groups.forEach((s, i) => s.forEach((a, j) => a.forEach((g, q) => { acc.groups[i][j][q].lost += g.lost * k; acc.groups[i][j][q].wiped += g.wiped * k; })));
+			onProgress && onProgress(acc.n / n);
+			if (acc.n < n) setTimeout(step, 0);
+			else {
+				const out = { ...acc, days: acc.days / n, daysSq: acc.daysSq / n, lossesProd: acc.lossesProd / n, armies: acc.armies.map(s => s.map(a => ({ ...a, lost: a.lost / n }))), groups: acc.groups.map(s => s.map(a => a.map(g => ({ lost: g.lost / n, wiped: g.wiped / n })))) };
+				for (const s of SUMS) out[s] = acc[s].map(x => x / n);
+				onDone(Object.assign(out, S.confidence(out)));
+			}
+		};
+		step();
+	}
+	function renderOdds(m) {
+		const t = (cls, label, value, note) => `<div class="tile ${cls}"><div class="label">${cls ? '<i></i>' : ''}${label}</div><div class="value">${value}</div><div class="note">${note}</div></div>`;
+		const r = ([a, b], f = pct) => `${f(a)} – ${f(b)}`;
+		$('tiles').innerHTML =
+			t('a', 'Attacker wins', pct(m.wins[0] / m.n), `95% range ${r(m.winsCI[0])}<br>wipes out the defender ${pct(m.overrun[1] / m.n)}`) +
+			t('b', 'Defender wins', pct(m.wins[1] / m.n), `95% range ${r(m.winsCI[1])}<br>wipes out the attacker ${pct(m.overrun[0] / m.n)}`) +
+			t('', 'Average length', m.days.toFixed(1) + ' days', `95% range ${r(m.daysCI, x => x.toFixed(1))}<br>${m.draws} undecided`) +
+			t('a', 'Attacker losses', fmtMen(m.losses[0]), `95% range ${r(m.lossesCI[0], fmtMen)}<br>of ${fmtMen(m.start[0])} men`) +
+			t('b', 'Defender losses', fmtMen(m.losses[1]), `95% range ${r(m.lossesCI[1], fmtMen)}<br>of ${fmtMen(m.start[1])} men`);
+		$('ci-note').textContent = `Ranges are 95% confidence intervals for ${m.n} simulated battles: with these inputs the true odds lie in the range 19 times in 20. They shrink by half with 4 times the battles. They do not cover wrong inputs or mechanics the simulator does not model.`;
+		$('army-table').innerHTML = `<table><thead><tr><th>Army</th><th>Side</th><th>Men</th><th>Average losses</th><th>Share lost</th></tr></thead><tbody>${m.armies.flatMap((s, i) => s.map(a => `<tr><td>${esc(a.name)}</td><td>${i ? 'Defender' : 'Attacker'}</td><td>${fmtMen(a.start)}</td><td>${fmtMen(a.lost)}</td><td>${pct(a.start ? a.lost / a.start : 0)}</td></tr>`)).join('')}</tbody></table>`;
+	}
+	// ---------- costs and the war of attrition
+	const gold = x => x >= 100 ? Math.round(x).toLocaleString('en-US') : x.toFixed(1);
+	const SIDE = ['Attacker', 'Defender'];
+	function renderCosts(scn, m) {
+		const c = S.armyCosts(scn), b = S.battleCosts(scn, m);
+		const t = (cls, label, value, note) => `<div class="tile ${cls}"><div class="label"><i></i>${label}</div><div class="value">${value}</div><div class="note">${note}</div></div>`;
+		$('cost-tiles').innerHTML = [0, 1].map(i => t(i ? 'b' : 'a', `${SIDE[i]}: to recruit`, fmtMen(c[i].buildManpower), `manpower and ${gold(c[i].buildGold)} gold for ${c[i].regiments} regiments${c[i].levies ? ` (+${c[i].levies} levies: pops, no manpower)` : ''}`)
+			+ t(i ? 'b' : 'a', `${SIDE[i]}: upkeep`, gold(c[i].upkeepGold), `gold and ${fmtMen(c[i].upkeepManpower)} manpower a month`)
+			+ t(i ? 'b' : 'a', `${SIDE[i]}: after this battle`, fmtMen(b[i].manpower), `manpower to refill; ${gold(b[i].reinforceGold)} gold to reinforce${b[i].rebuildGold ? `, ${gold(b[i].rebuildGold)} to rebuild wiped regiments` : ''}${b[i].levyPops ? `; ${fmtMen(b[i].levyPops)} pops died as levies` : ''}`)).join('');
+		$('cost-table').innerHTML = `<table><thead><tr><th>Unit</th><th>Side</th><th>Army</th><th>Count</th><th>Men</th><th>Recruit: manpower</th><th>Recruit: gold</th><th>Upkeep gold / month</th><th>Upkeep manpower / month</th><th>Reinforce gold / 1,000 men</th></tr></thead><tbody>${c.flatMap((s, i) => s.rows.map(r => `<tr><td>${esc(r.name)}${r.levy ? ' (levy)' : ''}</td><td>${SIDE[i]}</td><td>${esc(r.armyName)}</td><td>${r.count}</td><td>${fmtMen(r.men)}</td><td>${r.levy ? '—' : fmtMen(r.buildManpower)}</td><td>${r.levy ? '—' : gold(r.buildGold)}</td><td>${gold(r.upkeepGold)}</td><td>${r.levy ? '—' : fmtMen(r.upkeepManpower)}</td><td>${r.levy ? '—' : gold(r.reinforceGold)}</td></tr>`)).join('')}</tbody></table>`;
+	}
+	// surplus = manpower gained a month after all upkeep (may be negative). The button sets it from the max (5 years of
+	// income, so income = max ÷ 60) minus the upkeep of this battle's armies; other armies' upkeep is for you to subtract.
+	// Current manpower follows the max until edited.
+	const currentScenario = () => mode === 'quick' ? quickScenario() : JSON.parse(JSON.stringify(scn));
+	const setSurplus = i => { $(`w-sur-${i}`).value = Math.round(S.manpowerSurplus(currentScenario(), i, +$(`w-max-${i}`).value || 0)); };
+	for (const i of [0, 1]) {
+		const mx = $(`w-max-${i}`), cu = $(`w-cur-${i}`);
+		const cur = () => { if (cu.dataset.set !== '1') cu.value = mx.value; };
+		mx.addEventListener('input', cur);
+		cu.addEventListener('input', () => { cu.dataset.set = cu.value === '' ? '' : '1'; cur(); });
+		$(`w-sur-btn-${i}`).onclick = () => setSurplus(i);
+		cur();
+	}
+	const warInputs = () => ({
+		battles: Math.max(1, Math.min(30, +$('w-battles').value || 8)), monthsBetweenBattles: Math.max(0, +$('w-months').value || 0),
+		sides: [0, 1].map(i => ({ maxManpower: +$(`w-max-${i}`).value || 0, surplusManpower: +$(`w-sur-${i}`).value || 0, currentManpower: +$(`w-cur-${i}`).value || 0 })),
+	});
+	function setWarInputs(war) {
+		if (!war) return;
+		if (war.battles) $('w-battles').value = war.battles;
+		if (war.monthsBetweenBattles != null) $('w-months').value = war.monthsBetweenBattles;
+		(war.sides || []).forEach((w, i) => {
+			if (i > 1 || !w) return;
+			if (w.maxManpower != null) { $(`w-max-${i}`).value = w.maxManpower; $(`w-max-${i}`).dispatchEvent(new Event('input')); }
+			const sur = w.surplusManpower ?? w.monthlyManpower;
+			if (sur != null) $(`w-sur-${i}`).value = sur;
+			$(`w-cur-${i}`).dataset.set = w.currentManpower != null ? '1' : ''; if (w.currentManpower != null) $(`w-cur-${i}`).value = w.currentManpower;
+		});
+	}
+	function runWar() {
+		const base = mode === 'quick' ? quickScenario() : JSON.parse(JSON.stringify(scn));
+		base.war = warInputs();
+		if (mode === 'full') { scn.war = base.war; syncJson(); }
+		const it = S.campaignSteps(base, { runs: Math.max(50, Math.min(1000, +$('w-runs').value || 200)) });
+		$('w-run').disabled = true;
+		const step = () => {
+			let r;
+			try { r = it.next(); } catch (e) { $('w-progress').textContent = e.message; $('w-run').disabled = false; return; }
+			if (!r.done) { $('w-progress').textContent = `Battle ${r.value.battle} of ${r.value.of}…`; setTimeout(step, 0); return; }
+			$('w-run').disabled = false; $('w-progress').textContent = '';
+			renderWar(r.value);
+		};
+		setTimeout(step, 0);
+	}
+	function renderWar(w) {
+		const last = w.rows[w.rows.length - 1];
+		const spent = i => `${fmtMen(w.total.manpower[i])} manpower and ${gold(w.total.gold[i])} gold${w.total.levyPops[i] > 0.0005 ? `, plus ${fmtMen(w.total.levyPops[i])} pops lost as levies` : ''}`;
+		$('w-verdict').innerHTML = (w.worn < 0
+			? `<b>Neither side is worn down</b> in ${w.battles} battles fought ${w.months} months apart. In the last one the attacker wins ${pct(last.winRate[0])}.`
+			: `<b>The ${w.worn ? 'defender' : 'attacker'} is worn down after battle ${w.at}</b>: from then on it can no longer bring its army back above half strength between battles. In the last battle the attacker wins ${pct(last.winRate[0])}.`)
+			+ ` The attacker spent ${spent(0)}; the defender ${spent(1)}.`;
+		const xs = { tick: d => d + 1, name: d => `Battle ${d + 1}`, aria: 'by battle' };
+		lineChart($('chart-war-army'), 'Army at the start of each battle', [0, 1].map(i => ({ name: SIDE[i], c: i ? '--side-b' : '--side-a', pts: w.rows.map(r => w.full[i] ? r.before[i] / w.full[i] : 0) })), v => Math.round(v * 100) + '%', 1, xs);
+		lineChart($('chart-war-mp'), 'Manpower left after refilling', [0, 1].map(i => ({ name: SIDE[i], c: i ? '--side-b' : '--side-a', pts: w.rows.map(r => r.pool[i]) })), (v, axis) => axis ? (v >= 1 ? v.toFixed(0) + 'K' : Math.round(v * 1000)) : fmtMen(v), 0, xs);
+		$('war-table').innerHTML = `<table><thead><tr><th>Battle</th><th>Attacker wins</th><th>95% range</th><th>Army A</th><th>Army D</th><th>Lost A</th><th>Lost D</th><th>Refilled A</th><th>Refilled D</th><th>Manpower A</th><th>Manpower D</th><th>Gold A</th><th>Gold D</th></tr></thead><tbody>${w.rows.map(r => `<tr><td>${r.battle}</td><td>${pct(r.winRate[0])}</td><td>${(c => `${pct(c[0])} – ${pct(c[1])}`)(S.wilson(r.winRate[0] * w.runs, w.runs))}</td><td>${fmtMen(r.before[0])}</td><td>${fmtMen(r.before[1])}</td><td>${fmtMen(r.losses[0])}</td><td>${fmtMen(r.losses[1])}</td><td>${fmtMen(r.refilled[0])}</td><td>${fmtMen(r.refilled[1])}</td><td>${fmtMen(r.pool[0])}</td><td>${fmtMen(r.pool[1])}</td><td>${gold(r.gold[0])}</td><td>${gold(r.gold[1])}</td></tr>`).join('')}</tbody></table>`;
+	}
+	$('w-run').onclick = runWar;
+
+	function lineChart(el, title, series, fmt, yMaxHint, xs = { tick: d => d, name: d => `Day ${d}`, aria: 'by day' }) {
+		const W = 520, H = 230, L = 46, R = 70, T = 12, B = 26;
+		const days = series[0].pts.length - 1;
+		const yMax = Math.max(yMaxHint || 0, ...series.flatMap(s => s.pts)) || 1;
+		const nice = n => { const p = Math.pow(10, Math.floor(Math.log10(n))); const m = n / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; };
+		const step = nice(yMax / 4), top = Math.ceil(yMax / step) * step;
+		const x = d => L + (W - L - R) * (days ? d / days : 0), y = v => T + (H - T - B) * (1 - v / top);
+		let g = '';
+		for (let v = 0; v <= top + 1e-9; v += step) g += `<line class="gridline" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${fmt(v, true)}</text>`;
+		const xt = Math.max(1, Math.ceil(days / 6));
+		for (let d = 0; d <= days; d += xt) g += `<text x="${x(d)}" y="${H - 8}" text-anchor="middle">${xs.tick(d)}</text>`;
+		let paths = '', ends = '';
+		const endY = series.map(s => y(s.pts[days]));
+		if (Math.abs(endY[0] - endY[1]) < 14) { const s = endY[0] <= endY[1] ? -1 : 1, mid = (endY[0] + endY[1]) / 2; endY[0] = mid + 7 * s; endY[1] = mid - 7 * s; }
+		series.forEach((s, i) => {
+			paths += `<path d="${s.pts.map((v, d) => (d ? 'L' : 'M') + x(d).toFixed(1) + ' ' + y(v).toFixed(1)).join('')}" fill="none" stroke="var(${s.c})" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+			ends += `<circle cx="${x(days)}" cy="${y(s.pts[days])}" r="4" fill="var(${s.c})" stroke="var(--surface)" stroke-width="2"/><text x="${x(days) + 8}" y="${endY[i] + 4}" style="fill:var(--ink);font-family:var(--font-num);font-size:11px">${fmt(s.pts[days])}</text>`;
+		});
+		el.innerHTML = `<div class="title">${title}</div><div class="legend">${series.map(s => `<span style="--c:var(${s.c})">${s.name}</span>`).join('')}</div>
+			<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${title} ${xs.aria}"><g class="axis">${g}</g>${paths}${ends}<line class="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/><rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent"/></svg>`;
+		const svg = el.querySelector('svg'), cross = svg.querySelector('.cross'), hitR = svg.querySelector('rect');
+		const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; el.appendChild(tip);
+		hitR.addEventListener('pointermove', ev => {
+			const r = svg.getBoundingClientRect(); const px = (ev.clientX - r.left) * W / r.width;
+			const d = Math.max(0, Math.min(days, Math.round((px - L) / ((W - L - R) / (days || 1)))));
+			cross.setAttribute('x1', x(d)); cross.setAttribute('x2', x(d)); cross.setAttribute('visibility', 'visible');
+			tip.hidden = false; tip.innerHTML = `${xs.name(d)}<br>${series.map(s => `${s.name} <b>${fmt(s.pts[d])}</b>`).join('<br>')}`;
+			tip.style.left = (x(d) * r.width / W) + 'px'; tip.style.top = (r.top - el.getBoundingClientRect().top + y(Math.max(...series.map(s => s.pts[d]))) * r.height / H) + 'px';
+		});
+		hitR.addEventListener('pointerleave', () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); });
+	}
+	function renderSample(scn) {
+		const r = S.simulateScenario(scn);
+		const tl = r.timeline;
+		const who = r.winner < 0 ? 'Nobody won' : `The ${r.winner ? 'defender' : 'attacker'} won`;
+		$('sample-sub').textContent = `${who} after ${r.days} days${r.overrun ? ', wiping out the enemy' : r.shattered ? '; the loser retreats shattered' : ''}. Frontage ${+r.frontages[0].toFixed(2)} for the attacker, ${+r.frontages[1].toFixed(2)} for the defender. Attacker lost ${fmtMen(r.losses[0])} men, defender ${fmtMen(r.losses[1])}. Men counts include armies once they arrive; morale is the average of regiments in the battle line.`;
+		lineChart($('chart-men'), 'Men in the battle', [{ name: 'Attacker', c: '--side-a', pts: tl.map(t => t.men[0]) }, { name: 'Defender', c: '--side-b', pts: tl.map(t => t.men[1]) }], (v, axis) => axis ? (v >= 1 ? v.toFixed(0) + 'K' : Math.round(v * 1000)) : fmtMen(v));
+		lineChart($('chart-mor'), 'Average morale in the line', [{ name: 'Attacker', c: '--side-a', pts: tl.map(t => t.morale[0]) }, { name: 'Defender', c: '--side-b', pts: tl.map(t => t.morale[1]) }], v => Math.round(v * 100) + '%', 1);
+		$('sample-table').innerHTML = `<table><thead><tr><th>Day</th><th>Roll A</th><th>Roll D</th><th>Men A</th><th>Men D</th><th>Morale A</th><th>Morale D</th><th>Line A</th><th>Line D</th><th>Reserve A</th><th>Reserve D</th></tr></thead><tbody>${tl.map(t => `<tr><td>${t.day}${t.day <= 3 && t.day > 0 ? ' (bombard)' : ''}</td><td>${t.dice[0] + 5}</td><td>${t.dice[1] + 5}</td><td>${fmtMen(t.men[0])}</td><td>${fmtMen(t.men[1])}</td><td>${Math.round(t.morale[0] * 100)}%</td><td>${Math.round(t.morale[1] * 100)}%</td><td>${t.front[0]}</td><td>${t.front[1]}</td><td>${t.reserve[0]}</td><td>${t.reserve[1]}</td></tr>`).join('')}</tbody></table>`;
+	}
+	// hit explorer: options are [label, type, countrySpec, side, levy]
+	let hitOptions = [];
+	function setHitOptions(scn) {
+		const norm = s => s && s.armies ? s.armies : [];
+		hitOptions = [];
+		[['attacker', 0], ['defender', 1]].forEach(([k, i]) => norm(scn[k]).forEach(a => (a.units || []).forEach(u => {
+			let n = u.type; try { n = S.unitStats(u.type).n; } catch (e) { }
+			hitOptions.push({ label: `${i ? 'Defender' : 'Attacker'}: ${n} (${a.name || 'army'})`, type: u.type, country: typeof a.country === 'string' ? (scn.countries || {})[a.country] : a.country, side: i, levy: u.levy });
+		})));
+		const opts = hitOptions.map((o, i) => `<option value="${i}">${esc(o.label)}</option>`).join('');
+		$('hit-a').innerHTML = opts; $('hit-b').innerHTML = opts;
+		const firstDef = hitOptions.findIndex(o => o.side === 1);
+		$('hit-b').value = firstDef >= 0 ? firstDef : 0;
+		renderHit();
+	}
+	function renderHit() {
+		if (!lastScenario || !hitOptions.length) return;
+		const A = hitOptions[+$('hit-a').value], B = hitOptions[+$('hit-b').value];
+		if (!A || !B) return;
+		const loc = lastScenario.location || {};
+		const terr = S.terrainInfo(loc);
+		const die = Math.max(1, Math.min(10, parseInt($('hit-die').value, 10) || 5));
+		const dice = die - 1 + ((A.country && A.country.commanderDice) | 0) + (A.side === 0 ? terr.attackerDice : 0);
+		const h = S.hitBreakdown(A.type, B.type, A.country, B.country, { dice, flanking: $('hit-flank').value === '1', targetEngaged: $('hit-eng').value === '1', location: loc, attLevy: A.levy, defLevy: B.levy });
+		const rows = [`<li><span>Roll ${h.roll} (die ${die}${dice - die + 1 ? `, dice ${dice - die + 1 > 0 ? '+' : ''}${dice - die + 1}` : ''}) × 0.12 = base ${h.base.toFixed(2)}</span><span class="v">str ${(h.base * S.D.STR_MOD).toFixed(4)} · mor ${(h.base * S.D.MOR_MOD).toFixed(3)}</span></li>`];
+		for (const [k, x, what] of h.factors) rows.push(`<li class="${x > 1 ? 'up' : 'down'}"><span>${esc(k)}${what !== 'both' ? ` <span class="hint">(${what})</span>` : ''}</span><span class="v">× ${x.toFixed(3)}</span></li>`);
+		rows.push(`<li class="total"><span>One day: ${fmtMen(h.s)} men and ${h.m.toFixed(3)} morale</span><span class="v">${pct(h.s / h.target.maxStr)} of the regiment · ${pct(h.m / h.target.maxMor)} of its morale</span></li>`);
+		$('factors').innerHTML = rows.join('');
+	}
+	for (const id of ['hit-a', 'hit-b', 'hit-die', 'hit-flank', 'hit-eng']) $(id).addEventListener('input', renderHit);
+	$('resample').onclick = () => lastScenario && renderSample(lastScenario);
+
+	function runScenario(scn, n, progEl, btn) {
+		lastScenario = scn;
+		btn.disabled = true;
+		try { renderSample(scn); } catch (e) { progEl.textContent = e.message; btn.disabled = false; return; }
+		setHitOptions(scn);
+		runMany(scn, n, m => { renderOdds(m); renderCosts(scn, m); progEl.textContent = `${m.n} battles fought.`; btn.disabled = false; }, f => { progEl.textContent = `Fighting… ${Math.round(f * 100)}%`; });
+	}
+	$('q-run').onclick = () => runScenario(quickScenario(), Math.max(50, Math.min(10000, +$('q-runs').value || 500)), $('q-progress'), $('q-run'));
+	$('q-copy').onclick = () => { for (const [, f] of QSCHEMA) for (const [key] of f) $('b-' + key.replace('.', '-')).value = $('a-' + key.replace('.', '-')).value; $('q-run').click(); };
+	const swapValues = (x, y) => { const a = $(x), b = $(y), t = a.value; a.value = b.value; b.value = t; const d = a.dataset.set; a.dataset.set = b.dataset.set || ''; b.dataset.set = d || ''; };
+	const swapWar = () => { for (const k of ['max', 'sur', 'cur']) swapValues(`w-${k}-0`, `w-${k}-1`); };
+	$('q-swap').onclick = () => { for (const [, f] of QSCHEMA) for (const [key] of f) swapValues('a-' + key.replace('.', '-'), 'b-' + key.replace('.', '-')); swapWar(); $('q-run').click(); };
+
+	// ---------- stat worth
+	const BONUSES = [
+		['+5% discipline', s => { s.discipline += 0.05; }], ['+0.1 military tactics', s => { s.tactics += 0.1; }],
+		['+10% morale', s => { s.moraleMod += 0.10; }], ['+1 commander die', s => { s.commanderDice += 1; }],
+		['+20 experience', s => { s.experience += 20; s.levyExperience += 20; }], ['+25% army initiative', s => { s.initiativeMod += 0.25; }],
+		['+25% combat speed', s => { s.speedMod += 0.25; }], ['+10% infantry power', s => { s.power.li += 0.1; s.power.hi += 0.1; }],
+		['+10% cavalry power', s => { s.power.lc += 0.1; s.power.hc += 0.1; }], ['+10% artillery power', s => { s.power.art += 0.1; }],
+		['+0.5 morale (flat)', s => { s.moraleFlat = (s.moraleFlat || 0) + 0.5; }],
+		['−10% strength damage taken', s => { s.sdt = (s.sdt || 0) - 0.1; }], ['+10% morale damage done', s => { s.mdd = (s.mdd || 0) + 0.1; }],
+		['+10% possible frontage', s => { s.frontageMod = (s.frontageMod || 0) + 0.1; }], ['+25% levy combat efficiency', s => { s.levyCE = (s.levyCE || 0) + 0.25; }],
+		// Full battle only: correct section chance acts on armies that arrive late; generals belong to armies
+		['+30% correct section chance', s => { s.correctBoxChance = (s.correctBoxChance || 0) + 0.3; }, { full: true }],
+		['+20 general skills (each)', null, { full: true, army: a => { const g = a.general = a.general || {}; for (const k of ['adm', 'dip', 'mil']) g[k] = Math.min(100, (g[k] || 0) + 20); } }],
+	];
+	const QUICK_BONUSES = BONUSES.filter(b => !(b[2] && b[2].full));
+	// ref: where the grey reference lines go (quick: 50% and an even trade; full: the battle as set up, the first row)
+	function renderWorth(results, ref = { win: 0.5, trade: 1 }, who = 'Side A') {
+		const W = 620, rowH = 30, L = 190, R = 60, T = 8, H = T + results.length * rowH + 22;
+		const x = v => L + (W - L - R) * v;
+		let g = '';
+		for (let v = 0; v <= 1.0001; v += 0.25) g += `<line class="gridline" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H - 20}"/><text x="${x(v)}" y="${H - 6}" text-anchor="middle">${v * 100}%</text>`;
+		let bars = '';
+		results.forEach(([name, w, ci], i) => {
+			const yy = T + i * rowH + 6, h = 18, wv = Math.max(0.01, w);
+			// 95% interval as a whisker across the bar end
+			const wh = ci ? `<path d="M${x(ci[0])} ${yy + h / 2}H${x(ci[1])}M${x(ci[0])} ${yy + 4}v${h - 8}M${x(ci[1])} ${yy + 4}v${h - 8}" stroke="var(--ink)" stroke-width="1.5" fill="none" opacity="0.75"/>` : '';
+			bars += `<text x="${L - 8}" y="${yy + 13}" text-anchor="end" style="fill:var(--ink);font-family:var(--font-body);font-size:13px">${name}</text><path d="M${x(0)} ${yy}H${x(wv) - 4}a4 4 0 0 1 4 4v${h - 8}a4 4 0 0 1 -4 4H${x(0)}Z" fill="var(--side-a)"><title>${name}: ${who.toLowerCase()} wins ${pct(w)}${ci ? ` (95% range ${pct(ci[0])} – ${pct(ci[1])})` : ''}</title></path>${wh}<text x="${x(Math.max(wv, ci ? ci[1] : 0)) + 6}" y="${yy + 13}" style="fill:var(--ink);font-family:var(--font-num);font-size:12px">${pct(w)}${ci ? ` ±${(50 * (ci[1] - ci[0])).toFixed(1)}` : ''}</text>`;
+		});
+		const title = who === 'Side A' ? 'Side A win rate against its own copy' : `${who} win rate with each bonus`;
+		$('chart-worth').innerHTML = `<div class="title">${title}</div><div class="legend" style="--c:var(--ink)"><span>whiskers: 95% range for the battles run</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Win rate per bonus"><g class="axis">${g}</g><line x1="${x(ref.win)}" x2="${x(ref.win)}" y1="${T}" y2="${H - 20}" stroke="var(--muted)" stroke-width="1"/>${bars}</svg>`;
+		renderExchange(results, ref, who);
+		const ex = m => m && m.exchangeCI ? `${m.exchange.toFixed(2)} (${m.exchangeCI[0].toFixed(2)} – ${m.exchangeCI[1].toFixed(2)})` : '';
+		const foe = who === 'Side A' ? 'Side B' : 'Defender';
+		$('worth-table').innerHTML = `<table><thead><tr><th>Bonus</th><th>${who} wins</th><th>95% range</th><th>${who} losses</th><th>${foe} losses</th><th>Enemy losses per own loss</th></tr></thead><tbody>${results.map(([n, w, ci, m]) => `<tr><td>${n}</td><td>${pct(w)}</td><td>${ci ? `${pct(ci[0])} – ${pct(ci[1])}` : ''}</td><td>${m ? fmtMen(m.losses[0]) : ''}</td><td>${m ? fmtMen(m.losses[1]) : ''}</td><td>${ex(m)}</td></tr>`).join('')}</tbody></table>`;
+	}
+	// Casualties per bonus: how many enemy men fall for each of side A's (1 = an even trade). A bonus can win more battles
+	// and still cost more men, or win few more battles but bleed the enemy.
+	function renderExchange(results, ref = { win: 0.5, trade: 1 }, who = 'Side A') {
+		const rows = results.filter(r => r[3] && r[3].exchangeCI);
+		if (!rows.length) { $('chart-worth-loss').innerHTML = ''; return; }
+		const W = 620, rowH = 30, L = 190, R = 90, T = 8, H = T + rows.length * rowH + 22;
+		const top = Math.max(1.5, ...rows.map(r => r[3].exchangeCI[1])) * 1.05;
+		const x = v => L + (W - L - R) * v / top;
+		let g = '';
+		const step = top > 3 ? 1 : 0.5;
+		for (let v = 0; v <= top + 1e-9; v += step) g += `<line class="gridline" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H - 20}"/><text x="${x(v)}" y="${H - 6}" text-anchor="middle">${v.toFixed(1)}</text>`;
+		let bars = '';
+		rows.forEach(([name, , , m], i) => {
+			const yy = T + i * rowH + 6, h = 18, r = m.exchange, [lo, hi] = m.exchangeCI;
+			bars += `<text x="${L - 8}" y="${yy + 13}" text-anchor="end" style="fill:var(--ink);font-family:var(--font-body);font-size:13px">${name}</text>`
+				+ `<path d="M${x(0)} ${yy}H${x(r) - 4}a4 4 0 0 1 4 4v${h - 8}a4 4 0 0 1 -4 4H${x(0)}Z" fill="var(--side-a)"><title>${name}: ${r.toFixed(2)} enemy men lost per man of the ${who.toLowerCase()} (95% range ${lo.toFixed(2)} – ${hi.toFixed(2)}); the ${who.toLowerCase()} loses ${fmtMen(m.losses[0])}, the enemy ${fmtMen(m.losses[1])}</title></path>`
+				+ `<path d="M${x(lo)} ${yy + h / 2}H${x(hi)}M${x(lo)} ${yy + 4}v${h - 8}M${x(hi)} ${yy + 4}v${h - 8}" stroke="var(--ink)" stroke-width="1.5" fill="none" opacity="0.75"/>`
+				+ `<text x="${x(Math.max(r, hi)) + 6}" y="${yy + 13}" style="fill:var(--ink);font-family:var(--font-num);font-size:12px">${r.toFixed(2)} ±${((hi - lo) / 2).toFixed(2)}</text>`;
+		});
+		$('chart-worth-loss').innerHTML = `<div class="title">Enemy losses per man the ${who.toLowerCase()} loses</div><div class="legend" style="--c:var(--ink)"><span>${who === 'Side A' ? '1.0 = even trade' : 'grey line: the battle as set up'}; whiskers: 95% range</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Loss exchange ratio per bonus"><g class="axis">${g}</g><line x1="${x(ref.trade)}" x2="${x(ref.trade)}" y1="${T}" y2="${H - 20}" stroke="var(--muted)" stroke-width="1"/>${bars}</svg>`;
+	}
+	function measure(n, quiet) {
+		const base = readQuick('a'), width = Math.max(2, +$('q-width').value || 10), out = [];
+		if (quiet) {
+			for (const [name, mod] of QUICK_BONUSES) { const a = JSON.parse(JSON.stringify(base)); mod(a); const m = S.monteCarlo(a, base, n, { width }); out.push([name, (m.wins[0] + m.draws / 2) / m.n, S.wilson(m.wins[0] + m.draws / 2, m.n), m]); }
+			renderWorth(out); return;
+		}
+		$('measure').disabled = true;
+		let i = 0;
+		const next = () => {
+			if (i >= QUICK_BONUSES.length) { $('measure').disabled = false; $('measure-progress').textContent = `Done: ${n} battles per bonus.`; return; }
+			const [name, mod] = QUICK_BONUSES[i]; const a = JSON.parse(JSON.stringify(base)); mod(a);
+			runMany(S.simpleScenario(a, base, { width }), n, m => { out.push([name, (m.wins[0] + m.draws / 2) / m.n, m.shareCI[0], m]); i++; renderWorth(out); next(); }, f => { $('measure-progress').textContent = `${name}: ${Math.round(f * 100)}%`; });
+		};
+		next();
+	}
+	// Full battle: every attacker army's country gets the bonus (a copy, so a country shared with the defender is untouched)
+	function measureFull(n) {
+		const base = JSON.parse(JSON.stringify(scn)), out = [];
+		const withBonus = (mod, opt) => {
+			const s = JSON.parse(JSON.stringify(base));
+			for (const a of s.attacker.armies) {
+				if (opt && opt.army) opt.army(a);
+				const code = a.country + ' (bonus)';
+				if (!s.countries[code]) {
+					const c = { ...JSON.parse(JSON.stringify(DEF_C)), ...JSON.parse(JSON.stringify(s.countries[a.country] || {})) };
+					c.power = { li: 0, hi: 0, lc: 0, hc: 0, art: 0, ...(c.power || {}) };
+					if (mod) mod(c);
+					s.countries[code] = c;
+				}
+				a.country = code;
+			}
+			return s;
+		};
+		const list = [['As set up (no bonus)', null], ...BONUSES];
+		$('measure').disabled = true;
+		let i = 0;
+		const next = () => {
+			if (i >= list.length) { $('measure').disabled = false; $('measure-progress').textContent = `Done: ${n} battles per bonus.`; return; }
+			const [name, mod, opt] = list[i];
+			runMany(withBonus(mod, opt), n, m => {
+				out.push([name, (m.wins[0] + m.draws / 2) / m.n, m.shareCI[0], m]); i++;
+				const b = out[0][3]; renderWorth(out, { win: out[0][1], trade: b && b.exchange ? b.exchange : 1 }, 'Attacker'); next();
+			}, f => { $('measure-progress').textContent = `${name}: ${Math.round(f * 100)}%`; });
+		};
+		next();
+	}
+	$('measure').onclick = () => { const n = Math.max(50, Math.min(10000, +$('worth-runs').value || 500)); if (mode === 'full') measureFull(n); else measure(n); };
+
+	// ---------- FULL mode: scenario state and editor
+	const EXAMPLE = {
+		name: 'Example: river crossing into hills', location: { topography: 'hills', vegetation: 'farmland', climate: 'continental', crossing: 'river', river: true, coastal: false },
+		countries: {
+			FRA: { discipline: 0.05, tactics: 1.1, moraleMod: 0.10, commanderDice: 1, levyCE: 0.30, power: { hc: 0.10 } },
+			BUR: { experience: 20 }, SWI: { discipline: 0.05, moraleMod: 0.05 },
+		},
+		attacker: { armies: [
+			{ name: 'Royal Army', country: 'FRA', formation: 'cav_inf_cav', marchDays: 6, units: [{ type: 'a_halberdiers', count: 10 }, { type: 'a_early_arquebusiers', count: 4 }, { type: 'a_lancers', count: 6 }, { type: 'a_cavaliers', count: 4 }, { type: 'a_falconet', count: 3 }] },
+			{ name: 'Second Army', country: 'FRA', arrivalDay: 7, marchDays: 10, units: [{ type: 'a_matchlock_levy', count: 8 }, { type: 'a_lancers', count: 2 }] },
+		] },
+		defender: { armies: [
+			{ name: 'Army of Burgundy', country: 'BUR', formation: 'balanced', units: [{ type: 'a_halberdiers', count: 12 }, { type: 'a_lancers', count: 4 }, { type: 'a_falconet', count: 2 }] },
+			{ name: 'Swiss allies', country: 'SWI', arrivalDay: 5, marchDays: 4, units: [{ type: 'a_reislaufer', count: 6 }] },
+		] },
+	};
+	let scn = JSON.parse(JSON.stringify(EXAMPLE));
+	const CFIELDS = [['discipline', 'Discipline %', 'pct'], ['tactics', 'Military tactics', 'num'], ['moraleMod', 'Morale %', 'pct'], ['moraleFlat', 'Morale (flat)', 'num'],
+		['commanderDice', 'Commander dice', 'num'], ['experience', 'Experience', 'num'], ['levyCE', 'Levy combat eff. %', 'pct'], ['levyExperience', 'Levy experience', 'num'],
+		['initiativeMod', 'Army initiative %', 'pct'], ['speedMod', 'Combat speed %', 'pct'], ['movementCost', 'Morale movement cost %', 'pct4'],
+		['power.li', 'Light inf. power %', 'pct'], ['power.hi', 'Heavy inf. power %', 'pct'], ['power.lc', 'Light cav. power %', 'pct'], ['power.hc', 'Heavy cav. power %', 'pct'], ['power.art', 'Artillery power %', 'pct'],
+		['sdd', 'Strength dmg done %', 'pct'], ['sdt', 'Strength dmg taken %', 'pct'], ['mdd', 'Morale dmg done %', 'pct'], ['mdt', 'Morale dmg taken %', 'pct'],
+		['religion', 'Religion', 'text'], ['religionGroup', 'Religion group', 'text'], ['vsHeretic', 'vs heretics %', 'pct'], ['vsHeathen', 'vs heathens %', 'pct'],
+		['maintenanceEfficiency', 'Maintenance eff. %', 'pct'], ['levyMaintenance', 'Levy maintenance %', 'pct'], ['reinforceEfficiency', 'Reinforce eff. %', 'pct'], ['reinforceSpeed', 'Reinforce speed %', 'pct'],
+		['correctBoxChance', 'Correct section chance %', 'pct'], ['frontageMod', 'Possible frontage %', 'pct']];
+	const DEF_C = { discipline: 0, tactics: 1, moraleMod: 0, moraleFlat: 0, commanderDice: 0, experience: 0, levyCE: 0, levyExperience: 0, initiativeMod: 0, speedMod: 0, movementCost: S.D.MOVEMENT_COST, sdd: 0, sdt: 0, mdd: 0, mdt: 0, religion: '', religionGroup: '', vsHeretic: 0, vsHeathen: 0, maintenanceEfficiency: 0, levyMaintenance: 0, reinforceEfficiency: 0, reinforceSpeed: 0 };
+	const getPath = (o, p) => p.split('.').reduce((x, k) => (x == null ? undefined : x[k]), o);
+	const setPath = (o, p, v) => { const ks = p.split('.'); let x = o; ks.slice(0, -1).forEach(k => { x = x[k] ??= {}; }); x[ks[ks.length - 1]] = v; };
+	const toShow = (kind, v) => v == null || v === '' ? '' : kind === 'pct' ? +(v * 100).toFixed(2) : kind === 'pct4' ? +(v * 100).toFixed(3) : v;
+	const fromShow = (kind, s) => kind === 'text' ? s : kind === 'pct' || kind === 'pct4' ? (parseFloat(s) || 0) / 100 : (parseFloat(s) || 0);
+
+	const unitList = DB ? Object.entries(DB.units).filter(([, u]) => !u.hidden).sort((a, b) => a[1].a - b[1].a || a[1].c.localeCompare(b[1].c) || a[1].n.localeCompare(b[1].n)) : [];
+	const unitDatalist = document.createElement('datalist'); unitDatalist.id = 'unit-types';
+	unitDatalist.innerHTML = unitList.map(([k, u]) => `<option value="${esc(k)}">${esc(u.n)} · ${u.c} · age ${u.a}${u.levy ? ' · levy' : ''}</option>`).join('')
+		+ ['li', 'hi', 'lc', 'hc', 'art', 'aux'].flatMap(c => [1, 2, 3, 4, 5, 6].map(a => `<option value="generic:${c}:${a}">Generic ${c} age ${a}</option>`)).join('');
+	document.body.appendChild(unitDatalist);
+	const unitInfo = t => { try { const u = S.unitStats(t); return `${u.n} · ${u.c} age ${u.a}${u.levy ? ' levy' : ''} · power ${u.p} · ${fmtMen(u.s)} men · init ${u.i} · speed ${u.cs} · dmg taken ${u.dt}${u.sdd ? ` · str done ${u.sdd > 0 ? '+' : ''}${u.sdd}` : ''}${u.sdt ? ` · str taken ${u.sdt}` : ''}${u.mdd ? ` · mor done ${u.mdd > 0 ? '+' : ''}${u.mdd}` : ''}${u.mdt ? ` · mor taken ${u.mdt}` : ''}`; } catch (e) { return '⚠ ' + e.message; } };
+
+	function renderFull() {
+		// location
+		const terr = DB ? DB.terrain : { topography: {}, vegetation: {}, climate: {} };
+		const opt = (layer, val) => Object.entries(terr[layer] || {}).filter(([k]) => !/ocean|sea|lakes|wasteland|atoll|salt/.test(k)).map(([k, t]) => `<option value="${k}"${k === val ? ' selected' : ''}>${esc(t.name || k)}${t.defender ? ` (attacker −${t.defender})` : ''}</option>`).join('');
+		const L = scn.location = scn.location || {};
+		$('loc-fields').innerHTML = `
+			<div class="field"><label for="l-topo">Topography</label><select id="l-topo">${opt('topography', L.topography || 'flatland')}</select></div>
+			<div class="field"><label for="l-veg">Vegetation</label><select id="l-veg">${opt('vegetation', L.vegetation || 'farmland')}</select></div>
+			<div class="field"><label for="l-cli">Climate</label><select id="l-cli"><option value="">Any</option>${opt('climate', L.climate || '')}</select></div>
+			<div class="field"><label for="l-cross">Attacker crosses</label><select id="l-cross">${[['none', 'Nothing'], ['river', 'River (−1 die)'], ['strait', 'Strait (−2 dice)'], ['landing', 'Sea landing (−1 die)']].map(([v, t]) => `<option value="${v}"${(L.crossing || 'none') === v ? ' selected' : ''}>${t}</option>`).join('')}</select></div>
+			<div class="field"><label for="l-river">River in location</label><select id="l-river"><option value="0">No</option><option value="1"${L.river ? ' selected' : ''}>Yes</option></select></div>
+			<div class="field"><label for="l-coast">Coastal location</label><select id="l-coast"><option value="0">No</option><option value="1"${L.coastal ? ' selected' : ''}>Yes</option></select></div>
+			<div class="field"><label for="l-rank">Location rank</label><select id="l-rank">${[['0', 'Rural settlement'], ['-1', 'Town (−1 frontage)'], ['-2', 'City (−2 frontage)'], ['-3', 'Megalopolis (−3 frontage)']].map(([v, t]) => `<option value="${v}"${String(L.rankFrontage || 0) === v ? ' selected' : ''}>${t}</option>`).join('')}</select></div>
+			<div class="field"><label for="l-front">Frontage (blank = from terrain)</label><input id="l-front" type="number" min="2" max="30" value="${L.frontage ?? ''}"></div>`;
+		const upLoc = () => {
+			L.rankFrontage = +$('l-rank').value || undefined;
+			L.topography = $('l-topo').value; L.vegetation = $('l-veg').value; L.climate = $('l-cli').value || undefined;
+			L.crossing = $('l-cross').value; L.river = $('l-river').value === '1'; L.coastal = $('l-coast').value === '1';
+			const f = $('l-front').value; L.frontage = f === '' ? undefined : +f;
+			const t = S.terrainInfo(L); $('loc-summary').textContent = `Frontage ${t.frontage} (sections hold ${(t.frontage * 1.25).toFixed(2)} each) · attacker dice ${t.attackerDice >= 0 ? '+' : ''}${t.attackerDice}`;
+			syncJson();
+		};
+		$('loc-fields').querySelectorAll('select,input').forEach(e => e.addEventListener('input', upLoc));
+		upLoc();
+		// countries
+		scn.countries = scn.countries || {};
+		$('countries').innerHTML = Object.keys(scn.countries).map(code => `<fieldset class="army" data-country="${esc(code)}" style="--side:var(--muted)">
+			<div class="card-head"><div class="field" style="width:120px"><label>Name</label><input data-cname value="${esc(code)}"></div><button class="link" type="button" data-cdel>Remove</button></div>
+			<div class="grid">${CFIELDS.map(([p, label, kind]) => { const v = getPath(scn.countries[code], p) ?? DEF_C[p] ?? 0; return `<div class="field"><label>${label}</label><input data-cf="${p}" data-kind="${kind}" ${kind === 'text' ? '' : 'type="number" step="any"'} value="${esc(toShow(kind, v))}"></div>`; }).join('')}</div></fieldset>`).join('');
+		$('countries').querySelectorAll('[data-country]').forEach(fs => {
+			const code = fs.dataset.country;
+			fs.querySelectorAll('[data-cf]').forEach(inp => inp.addEventListener('input', () => { setPath(scn.countries[code], inp.dataset.cf, fromShow(inp.dataset.kind, inp.value)); syncJson(); }));
+			fs.querySelector('[data-cname]').addEventListener('change', e => {
+				const nn = e.target.value.trim(); if (!nn || nn === code || scn.countries[nn]) { e.target.value = code; return; }
+				scn.countries[nn] = scn.countries[code]; delete scn.countries[code];
+				for (const s of ['attacker', 'defender']) for (const a of scn[s].armies) if (a.country === code) a.country = nn;
+				renderFull();
+			});
+			fs.querySelector('[data-cdel]').onclick = () => { delete scn.countries[code]; renderFull(); };
+		});
+		// armies
+		for (const side of ['attacker', 'defender']) {
+			scn[side] = scn[side] && scn[side].armies ? scn[side] : { armies: [] };
+			const box = $('armies-' + side);
+			box.innerHTML = scn[side].armies.map((a, ai) => `<div class="army ${side === 'attacker' ? 'a' : 'b'}" data-side="${side}" data-ai="${ai}">
+				<div class="army-head">
+					<div class="field" style="grid-column:span 2"><label>Army</label><input data-af="name" value="${esc(a.name || '')}"></div>
+					<div class="field"><label>Country</label><select data-af="country">${Object.keys(scn.countries).map(c => `<option${a.country === c ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
+					<div class="field"><label>Formation</label><select data-af="formation"><option value="balanced">Balanced</option><option value="cav_inf_cav"${a.formation === 'cav_inf_cav' ? ' selected' : ''}>Cavalry on flanks</option></select></div>
+					<div class="field"><label>Arrives on day ("needed" = when the reserve runs empty)</label><input data-af="arrivalDay" list="arrival-opts" value="${esc(String(a.arrivalDay || 0))}"></div>
+					<div class="field"><label>Days marched</label><input data-af="marchDays" type="number" min="0" value="${a.marchDays || 0}"></div>
+					<div class="field"><label>Start morale % (blank = from march)</label><input data-af="morale" type="number" min="0" max="100" value="${a.morale != null ? Math.round(a.morale * 100) : ''}"></div>
+					<div class="field"><label>General: military</label><input data-gf="mil" type="number" min="0" max="100" value="${(a.general || {}).mil ?? ''}" placeholder="none"></div>
+					<div class="field"><label>General: diplomatic</label><input data-gf="dip" type="number" min="0" max="100" value="${(a.general || {}).dip ?? ''}" placeholder="none"></div>
+					<div class="field"><label>General: administrative</label><input data-gf="adm" type="number" min="0" max="100" value="${(a.general || {}).adm ?? ''}" placeholder="none"></div>
+					<div class="field"><label>General: trait dice</label><input data-gf="dice" type="number" min="-3" max="5" value="${(a.general || {}).dice ?? ''}" placeholder="0"></div>
+					<div class="field"><button class="link" type="button" data-adel>Remove army</button></div>
+				</div>
+				<div class="units">
+					<div class="unit-row head"><span>Unit type</span><span>Count</span><span>Flank</span><span class="opt">Men %</span><span class="opt">Exp.</span><span></span></div>
+					${(a.units || []).map((u, ui) => `<div class="unit-row" data-ui="${ui}">
+						<input data-uf="type" list="unit-types" value="${esc(u.type)}" aria-label="Unit type">
+						<input data-uf="count" type="number" min="0" value="${u.count || 0}" aria-label="Count">
+						<select data-uf="section" aria-label="Flank">${[['', 'Auto'], ['L', 'Left'], ['C', 'Centre'], ['R', 'Right'], ['reserve', 'Reserve']].map(([v, t]) => `<option value="${v}"${(u.section || '') === v ? ' selected' : ''}>${t}</option>`).join('')}</select>
+						<input class="opt" data-uf="strength" type="number" min="1" max="100" value="${u.strength != null ? Math.round(u.strength * 100) : 100}" aria-label="Men percent">
+						<input class="opt" data-uf="experience" type="number" min="0" max="100" value="${u.experience ?? ''}" placeholder="—" aria-label="Experience">
+						<button class="link" type="button" data-udel aria-label="Remove unit">✕</button>
+						<div class="unit-stats">${esc(unitInfo(u.type))}</div>
+					</div>`).join('')}
+					<div><button class="small" type="button" data-uadd>Add unit</button></div>
+				</div></div>`).join('') || '<p class="hint">No armies on this side.</p>';
+			box.querySelectorAll('.army').forEach(el => {
+				const a = scn[side].armies[+el.dataset.ai];
+				el.querySelectorAll('[data-af]').forEach(inp => inp.addEventListener('input', () => {
+					const k = inp.dataset.af;
+					a[k] = k === 'name' || k === 'country' || k === 'formation' ? inp.value : k === 'morale' ? (inp.value === '' ? undefined : +inp.value / 100)
+						: k === 'arrivalDay' && inp.value.trim().toLowerCase() === 'needed' ? 'needed' : +inp.value || 0;
+					syncJson();
+				}));
+				el.querySelectorAll('[data-gf]').forEach(inp => inp.addEventListener('input', () => {
+					a.general = a.general || {};
+					if (inp.value === '') delete a.general[inp.dataset.gf]; else a.general[inp.dataset.gf] = +inp.value;
+					if (!Object.keys(a.general).length) delete a.general;
+					syncJson();
+				}));
+				el.querySelector('[data-adel]').onclick = () => { scn[side].armies.splice(+el.dataset.ai, 1); renderFull(); };
+				el.querySelector('[data-uadd]').onclick = () => { a.units.push({ type: 'generic:hi:2', count: 1 }); renderFull(); };
+				el.querySelectorAll('.unit-row[data-ui]').forEach(row => {
+					const u = a.units[+row.dataset.ui];
+					row.querySelectorAll('[data-uf]').forEach(inp => inp.addEventListener('input', () => {
+						const k = inp.dataset.uf;
+						if (k === 'type') { u.type = inp.value.trim(); row.querySelector('.unit-stats').textContent = unitInfo(u.type); }
+						else if (k === 'section') u.section = inp.value || undefined;
+						else if (k === 'strength') u.strength = inp.value === '' || +inp.value >= 100 ? undefined : +inp.value / 100;
+						else if (k === 'experience') u.experience = inp.value === '' ? undefined : +inp.value;
+						else u.count = Math.max(0, Math.round(+inp.value || 0));
+						syncJson();
+					}));
+					row.querySelector('[data-udel]').onclick = () => { a.units.splice(+row.dataset.ui, 1); renderFull(); };
+				});
+			});
+		}
+		syncJson();
+	}
+	function syncJson() { $('f-json').value = JSON.stringify(scn, (k, v) => (v === undefined || v === '' ? undefined : v), 1); }
+	function loadScenario(obj) {
+		const norm = s => s && s.armies ? s : { armies: s ? [s] : [] };
+		obj.attacker = norm(obj.attacker); obj.defender = norm(obj.defender); obj.countries = obj.countries || {};
+		for (const s of ['attacker', 'defender']) for (const a of obj[s].armies) {
+			a.units = a.units || [];
+			if (a.country && typeof a.country === 'object') { const code = (a.name || 'Country').slice(0, 12) + '#' + Object.keys(obj.countries).length; obj.countries[code] = a.country; a.country = code; }
+			if (!a.country) { obj.countries.Default = obj.countries.Default || {}; a.country = 'Default'; }
+		}
+		scn = obj; $('f-err').textContent = ''; setWarInputs(obj.war); renderFull();
+	}
+	$('add-country').onclick = () => { let i = 1; while (scn.countries['Country ' + i]) i++; scn.countries['Country ' + i] = {}; renderFull(); };
+	document.querySelectorAll('[data-add-army]').forEach(b => b.onclick = () => {
+		const side = b.dataset.addArmy; const c = Object.keys(scn.countries)[0] || (scn.countries.Default = {}, 'Default');
+		scn[side].armies.push({ name: `Army ${scn[side].armies.length + 1}`, country: c, formation: 'balanced', units: [{ type: 'generic:hi:2', count: 10 }] }); renderFull();
+	});
+	$('f-load').onclick = () => { try { loadScenario(JSON.parse($('f-json').value)); } catch (e) { $('f-err').textContent = 'That is not valid JSON: ' + e.message; } };
+	$('f-copyjson').onclick = async () => { try { await navigator.clipboard.writeText($('f-json').value); $('f-err').textContent = 'Copied.'; } catch (e) { $('f-json').select(); $('f-err').textContent = 'Press Ctrl+C to copy the selected text.'; } };
+	$('f-file').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; try { loadScenario(JSON.parse(await f.text())); $('json-panel').open = false; } catch (err) { $('json-panel').open = true; $('f-err').textContent = 'Could not read the file: ' + err.message; } });
+	$('f-swap').onclick = () => {
+		[scn.attacker, scn.defender] = [scn.defender, scn.attacker];
+		if (scn.war && scn.war.sides) scn.war.sides.reverse();
+		swapWar(); renderFull();
+	};
+	// Big battle preset (analysis/age3_picks_war.js setup): 6 armies of 30 a side on open ground, generals 60/59/61 (the average
+	// commanding general in Europe in the 1547 save), army tradition 20 (+4% morale) and Spain's other morale and discipline, vanilla correct section chance +10% an age
+	// from age II. Two armies start the battle; the other four march in (1 day) as each side's reserve runs empty.
+	const bigPreset = (cat, age) => {
+		// Spain 1547 baseline: discipline +28.56%, morale +20.3% (laws, privileges, ruler) + 4% (army tradition 20), flat morale from the
+		// vanilla age advances (+0.25 II, +0.5 III, +0.8 IV, +1.15 V, +1.55 VI)
+		const country = { discipline: 0.2856, moraleMod: 0.243, moraleFlat: [0, 0.25, 0.5, 0.8, 1.15, 1.55][age - 1], correctBoxChance: 0.1 * (age - 1) };
+		const armies = tag => Array.from({ length: 6 }, (_, k) => ({ name: `${k + 1}. Army`, country: tag, formation: 'balanced',
+			general: { adm: 60, dip: 59, mil: 61 }, units: [{ type: `generic:${cat}:${age}`, count: 30 }], ...(k < 2 ? {} : { arrivalDay: 'needed', marchDays: 1 }) }));
+		return { name: `Big battle: age ${age} ${cat === 'hc' ? 'heavy cavalry' : 'heavy infantry'}, 6 x 30 a side`,
+			location: { topography: 'flatland', vegetation: 'farmland', climate: 'continental', crossing: 'none', river: false, coastal: false },
+			countries: { A: { ...country }, B: { ...country } }, attacker: { armies: armies('A') }, defender: { armies: armies('B') } };
+	};
+	$('preset-cav3').onclick = () => loadScenario(bigPreset('hc', 3));
+	$('preset-inf5').onclick = () => loadScenario(bigPreset('hi', 5));
+	$('f-run').onclick = () => runScenario(JSON.parse(JSON.stringify(scn)), Math.max(50, Math.min(10000, +$('f-runs').value || 500)), $('f-progress'), $('f-run'));
+	$('q-to-full').onclick = () => {
+		const q = quickScenario();
+		q.countries = { A: q.attacker.armies[0].country, B: q.defender.armies[0].country };
+		q.attacker.armies[0].country = 'A'; q.defender.armies[0].country = 'B';
+		q.name = 'From quick battle'; loadScenario(q); setMode('full');
+	};
+
+	if (!DB) $('tab-full').disabled = true;
+	setMode('quick');
+	$('q-run').click();
+	measure(80, true);
+	$('measure-progress').textContent = 'Showing a quick 80-battle estimate. Measure for the full count.';
+})();
+</script>
