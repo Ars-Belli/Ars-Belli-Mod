@@ -1,5 +1,6 @@
 # Ars Belli Player Coalition panel. Engine maps IO type -> <type>.gui by name.
-# Copy of vanilla panels/organization/coalition.gui with mod loc keys (coalition_leader, coalition_hint_1 -> abm_player_coalition_*).
+# Copy of vanilla 1.4.4 panels/organization/coalition.gui with mod loc keys (coalition_leader, coalition_hint_1 -> abm_player_coalition_*)
+# and a leader-only Declare War button. Re-port from vanilla coalition.gui on game updates.
 organization_war_theme = {
 
     blockoverride ios_common_subheader {
@@ -304,73 +305,89 @@ organization_war_theme = {
     
     blockoverride "organization_main_actions_extra" {
         #Join io
-        action_button_diamond = {
+        button_regular_diamond = {
             #parentanchor = center
             size = { 470 30 }
-            title = "INT_ORG_MEMBERSHIP_TITLE"
             text = "ASK_FOR_IO_MEMBERSHIP"
-            actor = "[InternationalOrganizationsView.GetPlayer]"
-            parameter = {
-                parameter_name = "recipient"
-                parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization.GetLeaderCountry]"
-            }
-            left_action = {
+
+            visible = "[Not(Or(Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization), Player.IsTargetOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)))]"
+            enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+            scripted_action_tooltip = {
+                click_type = left
+                click_mode = single
                 action_name = "ask_to_join_international_organization"
                 action_direction = "request"
+                actor = "[InternationalOrganizationsView.GetPlayer]"
+                parameter = {
+                    parameter_name = "recipient"
+                    parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization.GetLeaderCountry]"
+                }
                 parameter = {
                     parameter_name = "international_organization"
                     parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
                 }
             }
+
             tooltipwidget = {
                 using = io_join_button_tooltip
             }
-             visible = "[Not(Or(Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization), Player.IsTargetOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)))]"
         }
         #invite people
-        action_button_diamond = {
+        button_regular_diamond = {
             size = { 470 30 }
-            title = "INT_ORG_MEMBERSHIP_TITLE"
-            actor = "[InternationalOrganizationsView.GetPlayer]"
+            text = "INVITE_FOR_IO_MEMBERSHIP"
+
             visible = "[Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization)]"
-            left_action = {
+            enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+            scripted_action_tooltip = {
+                click_type = left
+                click_mode = single
                 action_name = "invite_to_international_organization"
                 action_direction = "offer"
+                actor = "[InternationalOrganizationsView.GetPlayer]"
                 parameter = {
                     parameter_name = "international_organization"
                     parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
                 }
             }
+
             tooltipwidget = {
                 using = io_invite_button_tooltip
             }
-            text = "INVITE_FOR_IO_MEMBERSHIP"
         }
         #leave io
-        action_button_diamond = {
+        button_regular_diamond = {
             size = { 470 30 }
-            title = "INT_ORG_MEMBERSHIP_TITLE"
-            actor = "[InternationalOrganizationsView.GetPlayer]"
-            left_click_and_hold_action = {
+            text = "LEAVE_IO_MEMBERSHIP"
+
+            visible = "[PdxGuiWidget.IsUberButtonVisible]"
+            enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+            scripted_action_tooltip = {
+                click_type = left
+                click_mode = confirm
                 action_name = "leave_international_organization"
                 action_direction = "offer"
+                actor = "[InternationalOrganizationsView.GetPlayer]"
                 parameter = {
                     parameter_name = "recipient"
                     parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
                 }
             }
+
             tooltipwidget = {
                 using = io_leave_button_tooltip
             }
-            text = "LEAVE_IO_MEMBERSHIP"
         }
         #Declare coalition war
-        # Ars Belli: leader-only (pattern from vanilla independence_movement.gui)
         button_regular_diamond = {
             block "button_regular_diamond_texture" {
 			    texture = "gfx/interface/buttons/button_diamond_red.dds"
 		    }
             size = { 470 30 }
+            # Ars Belli: leader-only (pattern from vanilla independence_movement.gui)
             visible = "[And3(InternationalOrganizationsView.GetInternationalOrganization.IsIOLeaderCountry(GetPlayer), Player.IsMemberOfInternationalOrganization(InternationalOrganizationsView.GetInternationalOrganization), InternationalOrganizationsView.GetInternationalOrganization.GetType.HasDeclareWarOnTargetCasusBelli)]"
             enabled = "[And(InternationalOrganizationsView.GetInternationalOrganization.IsIOLeaderCountry(GetPlayer), InternationalOrganizationsView.CanDeclareWar)]"
             
