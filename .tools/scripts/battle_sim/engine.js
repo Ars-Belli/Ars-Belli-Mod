@@ -610,6 +610,77 @@
 		for (;;) { const r = it.next(); if (r.done) return r.value; }
 	}
 
+	// ---- War of attrition, sampled battle by battle (not expected values). The two forces of a scenario fight a battle every
+	// `interval` months for `months` months, attacker alternating, full morale at each battle. Each month, per side:
+	//   pool += income (capped at max = MAX_MANPOWER_YEARS x 12 x income unless given)
+	//   pool -= manpower upkeep: price x men x current strength / (1 + maintenance efficiency)   (game tooltip, Spain 1547)
+	//   reinforcement: up to MONTHLY_REINFORCE x (1 + reinforce speed) of each regiment a month, one manpower a man (x reinforce
+	//   cost modifier), while the pool lasts; regiments destroyed in a wipe are rebuilt without the monthly cap.
+	// A side whose army is under collapseAt (default 50%) of its full men when a battle is due has lost the war.
+	// opts = { months, interval, collapseAt, sides: [{ income, max, pool }] } (men a month / men).
+	function simulateWar(scnIn, opts = {}, seed) {
+		const scn = JSON.parse(JSON.stringify(scnIn)), ns = normalize(scn);
+		const months = opts.months || 36, interval = Math.max(1, opts.interval || 2), collapseAt = opts.collapseAt != null ? opts.collapseAt : 0.5;
+		const sides = [0, 1].map(i => {
+			const w = (opts.sides || [])[i] || {}, income = (+w.income || 0) / 1000;
+			const max = w.max != null ? w.max / 1000 : income * D.MAX_MANPOWER_YEARS * 12;
+			return { income, max, pool: w.pool != null ? w.pool / 1000 : max, upkeep: 0, reinforce: 0, won: 0, lost: 0 };
+		});
+		const G = [0, 1].map(i => ns.sides[i].armies.flatMap((a, j) => {
+			const c = country(a.country, ns.countries);
+			return (a.units || []).map((g, k) => { const x = unitCost(g, c, scnIn.costs); return { g, j, k, x, c, total: x.size * (g.count | 0) }; });
+		}));
+		const str = g => g.strength != null ? g.strength : 1;
+		const men = i => G[i].reduce((t, x) => t + x.total * str(x.g), 0);
+		const full = [men(0), men(1)];
+		let battles = 0, loser = -1, month = 0;
+		const trace = [];
+		for (;;) {
+			for (const i of [0, 1]) if (loser < 0 && men(i) < collapseAt * full[i]) loser = i;
+			if (loser >= 0 || month >= months) break;
+			const att = battles % 2; // side that attacks this battle
+			const bscn = att === 0 ? scn : { ...scn, attacker: scn.defender, defender: scn.attacker };
+			const r = simulateScenario(bscn, { seed: seed != null ? seed * 1009 + battles : undefined });
+			for (const s of [0, 1]) {
+				const i = att === 0 ? s : 1 - s;
+				r.groups[s].forEach((ag, j) => ag.forEach((L, k) => {
+					const x = G[i].find(y => y.j === j && y.k === k);
+					if (!x || !x.total) return;
+					x.g.strength = Math.max(0, (x.total * str(x.g) - L.lost) / x.total);
+					if (L.wiped > 0) x.rebuild = true;
+					sides[i].lost += L.lost;
+				}));
+			}
+			if (r.winner >= 0) sides[att === 0 ? r.winner : 1 - r.winner].won++;
+			battles++;
+			for (let m = 0; m < interval && month < months; m++, month++) for (const i of [0, 1]) {
+				const P = sides[i];
+				P.pool = Math.min(P.max, P.pool + P.income);
+				const up = G[i].reduce((t, x) => t + x.x.upkeepManpower * (x.g.count | 0) * str(x.g), 0);
+				P.upkeep += Math.min(up, P.pool); P.pool = Math.max(0, P.pool - up);
+				const asks = G[i].filter(x => x.total && str(x.g) < 1 - 1e-9).map(x => ({ x, men: Math.min(x.total * (1 - str(x.g)), x.rebuild ? Infinity : x.total * D.MONTHLY_REINFORCE * (1 + (x.c.reinforceSpeed || 0))) }));
+				const cost = asks.reduce((t, a) => t + a.men * a.x.x.reinforceManpower, 0);
+				if (cost <= 0) continue;
+				const share = Math.min(1, P.pool / cost);
+				for (const a of asks) { a.x.g.strength = Math.min(1, str(a.x.g) + a.men * share / a.x.total); if (str(a.x.g) >= 1 - 1e-9) a.x.rebuild = false; }
+				P.pool -= cost * share; P.reinforce += cost * share;
+			}
+			trace.push({ battle: battles, month, men: [men(0), men(1)], pool: sides.map(p => p.pool) });
+		}
+		return { loser, battles, months: month, won: sides.map(p => p.won), lost: sides.map(p => p.lost), upkeep: sides.map(p => p.upkeep), reinforce: sides.map(p => p.reinforce),
+			end: [men(0) / full[0], men(1) / full[1]], pool: sides.map(p => p.pool), full, trace };
+	}
+	// many wars: P(collapse) per side with 95% intervals, battle win share, average ending strength, manpower spent
+	function summarizeWars(list) {
+		const n = list.length, s = k => [0, 1].map(i => list.reduce((t, w) => t + w[k][i], 0) / n);
+		const col = [0, 1].map(i => list.filter(w => w.loser === i).length);
+		const battles = list.reduce((t, w) => t + w.battles, 0);
+		const won = [0, 1].map(i => list.reduce((t, w) => t + w.won[i], 0));
+		return { n, collapsed: col.map(c => c / n), collapsedCI: col.map(c => wilson(c, n)), undecided: (n - col[0] - col[1]) / n,
+			battleShare: won.map(w => w / Math.max(1, battles)), battleShareCI: won.map(w => wilson(w, Math.max(1, battles))), battles: battles / n,
+			lost: s('lost'), upkeep: s('upkeep'), reinforce: s('reinforce'), end: s('end'), pool: s('pool') };
+	}
+
 	// ---- Simple mode on top of the scenario engine
 	function defaultSide() {
 		return {
@@ -640,6 +711,6 @@
 		return { ...r, target: B };
 	}
 
-	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, drilledExperience, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
+	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, drilledExperience, simulateWar, summarizeWars, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BattleSim = api;
 })(typeof window !== 'undefined' ? window : globalThis);

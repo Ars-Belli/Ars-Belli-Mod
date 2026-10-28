@@ -13,13 +13,17 @@ if (!isMainThread) {
 	const S = require('./engine.js');
 	S.setUnitDB(require('./units.json'));
 	const pristine = JSON.parse(JSON.stringify({ CAT: S.CAT, D: S.D }));
-	parentPort.on('message', ({ id, scn, n, opts }) => {
+	parentPort.on('message', ({ id, scn, n, opts, kind }) => {
 		for (const k of Object.keys(S.CAT)) { for (const f of Object.keys(S.CAT[k])) delete S.CAT[k][f]; Object.assign(S.CAT[k], JSON.parse(JSON.stringify(pristine.CAT[k]))); }
 		Object.assign(S.D, pristine.D);
 		const patch = opts.patch || {};
 		for (const [k, v] of Object.entries(patch.CAT || {})) Object.assign(S.CAT[k], v);
 		Object.assign(S.D, patch.D || {});
-		parentPort.postMessage({ id, result: S.monteCarloScenario(scn, n, { seed: opts.seed }) });
+		if (kind === 'war') {
+			const out = [];
+			for (let k = 0; k < n; k++) { const w = S.simulateWar(scn, opts.war, opts.seed != null ? opts.seed + k : undefined); delete w.trace; out.push(w); }
+			parentPort.postMessage({ id, result: out });
+		} else parentPort.postMessage({ id, result: S.monteCarloScenario(scn, n, { seed: opts.seed }) });
 	});
 } else {
 	module.exports = (threads = Math.max(1, os.cpus().length - 2)) => {
@@ -31,13 +35,13 @@ if (!isMainThread) {
 			while (idle.length && queue.length) {
 				const w = idle.pop(), job = queue.shift();
 				pending.set(job.id, { job, w });
-				w.postMessage({ id: job.id, scn: job.scn, n: job.n, opts: job.opts });
+				w.postMessage({ id: job.id, scn: job.scn, n: job.n, opts: job.opts, kind: job.kind });
 			}
 		};
 		for (const w of workers) w.on('message', ({ id, result }) => {
 			const p = pending.get(id); pending.delete(id); idle.push(w); p.job.resolve(result); pump();
 		});
-		const run = (scn, n, opts) => new Promise(resolve => { queue.push({ id: nextId++, scn, n, opts, resolve }); pump(); });
+		const run = (scn, n, opts, kind) => new Promise(resolve => { queue.push({ id: nextId++, scn, n, opts, kind, resolve }); pump(); });
 		return {
 			threads,
 			async mc(scn, n, opts = {}) {
@@ -49,6 +53,17 @@ if (!isMainThread) {
 					start += k;
 				}
 				return S.mergeMC(await Promise.all(parts));
+			},
+			// n sampled wars (simulateWar), split across the workers; returns summarizeWars of all of them
+			async wars(scn, n, war, seed) {
+				const chunks = Math.max(1, Math.min(threads * 2, Math.floor(n / 10)));
+				const parts = [];
+				for (let c = 0, start = 0; c < chunks; c++) {
+					const k = Math.floor(n / chunks) + (c < n % chunks ? 1 : 0);
+					parts.push(run(scn, k, { war, seed: seed != null ? seed + start : undefined }, 'war'));
+					start += k;
+				}
+				return S.summarizeWars((await Promise.all(parts)).flat());
 			},
 			close: () => Promise.all(workers.map(w => w.terminate())),
 		};

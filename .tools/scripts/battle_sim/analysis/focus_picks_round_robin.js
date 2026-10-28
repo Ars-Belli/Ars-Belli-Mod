@@ -1,5 +1,8 @@
 // node .tools/scripts/battle_sim/analysis/focus_picks_round_robin.js [battles per pairing, default 300] [threads]
 //      [--drill months --wait months]   both sides drill, then wait (default 0/0: no drilling, experience 0.37)
+//      [--war same|budget [--wars 200]]  score by wars of attrition (simulateWar) instead of battles: same base manpower
+//          income for both, income x (1 + manpower modifier); "same" = 30 regiments each (cheaper upkeep keeps more surplus),
+//          "budget" = each side builds regiments until upkeep is 75% of its income. 48 months, a battle every 2 months.
 // Military focus picks: at each age every distinct battle-relevant pick state fights every other (both sides alternating as
 // attacker), under three parity views. A state's score = expected win rate against a random opponent path (states weighted
 // by how many of the 3^k paths reach them).
@@ -22,13 +25,15 @@ const pos = argv.filter((a, i) => !a.startsWith('--') && !(argv[i - 1] || '').st
 const N = +pos[0] || 300;
 const pool = require('../pool.js')(+pos[1] || undefined);
 const DRILL = opt('--drill') || 0, WAIT = opt('--wait') || 0;
+const WAR = (() => { const i = argv.indexOf('--war'); return i < 0 ? null : argv[i + 1]; })(), WARS = opt('--wars') || 200;
 const exp = require('../engine.js').drilledExperience;
 const MAP = {
 	discipline: 'discipline', military_tactics: 'tactics', land_morale_modifier: 'moraleMod', land_morale: 'moraleFlat',
 	army_initiative: 'initiativeMod', combat_speed_modifier: 'speedMod', possible_frontage_modifier: 'frontageMod',
 	army_heavy_infantry_power: 'power.hi', army_heavy_cavalry_power: 'power.hc',
 	army_maintenance_efficiency: 'maint', army_heavy_cavalry_maintenance_cost_modifier: 'maintCost.hc', army_heavy_infantry_maintenance_cost_modifier: 'maintCost.hi',
-	global_manpower_modifier: 'manpower', monthly_experience_gain: 'expGain', experience_decay: 'expDecay', train_general_ability: 'genAbility', monthly_army_tradition: 'atGain',
+	global_manpower_modifier: 'manpower', regiment_reinforcement_speed: 'reinforceSpeed',
+	army_heavy_infantry_reinforce_cost_modifier: 'reinfCost.hi', army_heavy_cavalry_reinforce_cost_modifier: 'reinfCost.hc', monthly_experience_gain: 'expGain', experience_decay: 'expDecay', train_general_ability: 'genAbility', monthly_army_tradition: 'atGain',
 };
 const branchMods = br => {
 	const o = {};
@@ -41,7 +46,7 @@ const branchMods = br => {
 const AGES = ages.map(a => ({ n: a.n, branches: a.mil.map(b => ({ name: b.name, mods: branchMods(b) })) }));
 const BASE_MAINT = 0.25;
 const eff = m => (1 + BASE_MAINT + (m.maint || 0)) / (1 + BASE_MAINT);
-const VIEWS = {
+const VIEWS = WAR ? { ['war (' + WAR + ')']: () => 1 } : {
 	regiments: () => 1,
 	manpower: (m, cat) => (1 + (m.manpower || 0)) * eff(m) / (1 + (m['maintCost.' + cat] || 0)),
 	gold: (m, cat) => eff(m) / (1 + (m['maintCost.' + cat] || 0)),
@@ -51,9 +56,14 @@ const relevant = (mods, age, view) => {
 	const o = { ...mods }; const cat = age <= 4 ? 'hc' : 'hi';
 	for (const k of Object.keys(o)) if (/^(power|maintCost)\./.test(k) && !k.endsWith(cat)) delete o[k];
 	if (view === 'regiments') { delete o.maint; delete o.manpower; delete o['maintCost.' + cat]; }
+	if (!WAR) { delete o.reinforceSpeed; delete o['reinfCost.hi']; delete o['reinfCost.hc']; } else if (!o['reinfCost.' + cat]) { delete o['reinfCost.hi']; delete o['reinfCost.hc']; }
 	if (view === 'gold') delete o.manpower;
 	return JSON.stringify(Object.keys(o).sort().map(k => [k, +o[k].toFixed(4)]));
 };
+const S = require('../engine.js');
+const upkeepReg = (mods, cat, age) => (cat === 'hc' ? 0.04 : 0.02) * S.AGE[cat][age - 1][1] * (1 + (mods['maintCost.' + cat] || 0)) / (1 + BASE_MAINT + (mods.maint || 0));
+const baseIncome = (cat, age) => 30 * upkeepReg({}, cat, age) / 0.75;
+const warRegs = (mods, cat, age) => WAR === 'budget' ? Math.round(0.75 * baseIncome(cat, age) * (1 + (mods.manpower || 0)) / upkeepReg(mods, cat, age)) : 30;
 function side(mods, age, view) {
 	const cat = age <= 4 ? 'hc' : 'hi';
 	const g = mods.genAbility ? { adm: Math.max(CHAR.adm, TRAINED), dip: Math.max(CHAR.dip, TRAINED), mil: Math.max(CHAR.mil, TRAINED) } : CHAR;
@@ -61,6 +71,11 @@ function side(mods, age, view) {
 		initiativeMod: mods.initiativeMod || 0, speedMod: mods.speedMod || 0, frontageMod: mods.frontageMod || 0,
 		experience: DRILL || WAIT ? exp({ gain: mods.expGain || 0, decay: mods.expDecay || 0, drill: DRILL, wait: WAIT }) : 0.37, power: {} };
 	if (mods['power.' + cat]) c.power[cat] = mods['power.' + cat];
+	if (WAR) {
+		c.maintenanceEfficiency = BASE_MAINT + (mods.maint || 0); c.reinforceSpeed = mods.reinforceSpeed || 0;
+		c.costMod = { maintenance: { [cat]: mods['maintCost.' + cat] || 0 }, reinforce: { [cat]: mods['reinfCost.' + cat] || 0 } };
+		return { name: 'x', country: c, general: g, units: [{ type: `generic:${cat}:${age}`, count: warRegs(mods, cat, age) }] };
+	}
 	return { name: 'x', country: c, general: g, units: [{ type: `generic:${cat}:${age}`, count: Math.round(30 * VIEWS[view](mods, cat)) }] };
 }
 const sum = list => { const o = {}; for (const m of list) for (const [k, v] of Object.entries(m)) o[k] = (o[k] || 0) + v; return o; };
@@ -85,6 +100,12 @@ rec(0, []);
 			const jobs = [];
 			for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) {
 				const A = list[i][1].mods, B = list[j][1].mods;
+				if (WAR) {
+					const cat = a.n <= 4 ? 'hc' : 'hi', inc = m => baseIncome(cat, a.n) * (1 + (m.manpower || 0));
+					jobs.push(pool.wars({ location: { frontage: 10 }, attacker: { armies: [side(A, a.n, view)] }, defender: { armies: [side(B, a.n, view)] } }, WARS,
+						{ months: 48, interval: 2, sides: [{ income: inc(A) }, { income: inc(B) }] }, 7).then(w => [i, j, w.collapsed[1] + w.undecided / 2]));
+					continue;
+				}
 				jobs.push(Promise.all([
 					pool.mc({ location: { frontage: 10 }, attacker: { armies: [side(A, a.n, view)] }, defender: { armies: [side(B, a.n, view)] } }, N, { seed: 7 }),
 					pool.mc({ location: { frontage: 10 }, attacker: { armies: [side(B, a.n, view)] }, defender: { armies: [side(A, a.n, view)] } }, N, { seed: 7 }),
@@ -118,10 +139,12 @@ rec(0, []);
 		}
 	}
 	// realistic mix: gold matters until age III, manpower from age IV (Reformation)
+	if (!WAR) {
 	const G = Object.fromEntries(report.gold.ranked.map(x => [x.path, x.per])), M = Object.fromEntries(report.manpower.ranked.map(x => [x.path, x.per]));
 	const mix = Object.keys(G).map(p => { const per = [G[p][0], G[p][1], M[p][2], M[p][3], M[p][4]]; return { path: p, per, avg: per.reduce((a, b) => a + b, 0) / 5 }; }).sort((x, y) => y.avg - x.avg);
 	console.log('\n=== gold until age III, manpower from age IV');
 	mix.slice(0, 6).forEach(r => console.log(`  ${r.path.padEnd(72)}${r.per.map(x => String(Math.round(100 * x)).padStart(4)).join('')}  avg ${Math.round(100 * r.avg)}%`));
+	}
 	require('fs').writeFileSync(path.join(__dirname, 'focus_picks_results.json'), JSON.stringify(Object.fromEntries(Object.entries(report).map(([k, v]) => [k, v.ranked])), null, 1));
 	if (DRILL || WAIT) console.log(`\nExperience after drilling ${DRILL} months and waiting ${WAIT}: no picks ${exp({ drill: DRILL, wait: WAIT }).toFixed(1)}, Standing Forces ${exp({ gain: 0.25, drill: DRILL, wait: WAIT }).toFixed(1)}, Leadership ${exp({ gain: 0.5, decay: -0.02, drill: DRILL, wait: WAIT }).toFixed(1)}, both ${exp({ gain: 0.75, decay: -0.02, drill: DRILL, wait: WAIT }).toFixed(1)}`);
 	console.log(`\n${N} battles a pairing each way, ${pool.threads} threads, ${((Date.now() - t0) / 1000).toFixed(0)} s`);

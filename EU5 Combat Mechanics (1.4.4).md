@@ -536,6 +536,30 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 - **Page:** `worker.js` runs Web Workers (one per core but one), published next to the page; it falls back to the page thread if workers can't start. 5,000 battles take about 0.3 s on 28 cores.
 - `engine.mergeMC(parts)` merges chunk results (counts add up, means are weighted by battles, intervals recomputed).
 
+### Wars of attrition, sampled (`simulateWar`)
+Equal manpower is about **upkeep and reinforcement**, not the one-time recruitment. `engine.simulateWar(scenario, opts, seed)` fights the scenario's two forces again and again, sampling every battle:
+- A battle every `interval` months for `months` months, attacker alternating, full morale at each battle.
+- Each month per side: income into the pool (capped at 5 years of income), then manpower upkeep (price × men × current strength ÷ (1 + maintenance efficiency)).
+- Then reinforcement: up to 25% × (1 + reinforce speed) of each regiment a month, one manpower a man × the reinforce cost modifier. Wiped regiments are rebuilt without the monthly cap.
+- A side under 50% of its men when a battle is due has lost the war.
+- `summarizeWars` gives collapse chances with 95% intervals, battles won, men lost and manpower spent. `pool.wars(scn, n, opts, seed)` runs them on all cores.
+
+`analysis/attrition_war.js`: heavy cavalry vs heavy infantry of the same age, the same manpower income, 48-month wars, a battle every 2 months, 600 wars a row. Share of wars won by cavalry (the other side collapses):
+
+| Age | Same regiments (30 each) | 75/25 upkeep (38 cavalry vs 30 infantry) |
+|---|---|---|
+| III | 100% | 100% |
+| IV | 97% (cavalry wins only 38% of the battles: infantry bleeds out) | 100% |
+| V | 17% | 95% |
+| VI | 0% | 34% (cavalry +20% power: 79%) |
+| III, Lanzas de Castilla vs Halberdiers | 100% | 100% |
+
+At equal upkeep, cavalry wins wars of attrition through Absolutism, and in Revolutions with about +20% power. It loses fewer men and its regiments cost less upkeep each (Lanzas 24 vs Halberdiers 30 a month).
+
+**Focus picks as wars** (`focus_picks_round_robin.js --war same|budget`):
+- **Same regiments:** Quantity's extra surplus doesn't save it. Quality wins age III (76% vs Quantity 32%), and Voluntary Service age VI (66% vs Conscription 42%). Battles decide the war before surplus matters, because reinforcement is capped at 25% a month.
+- **75/25 budgets:** Quantity wins age III (70%), Conscription age VI (71%), and Standing Forces > Quantity > * > Firepower > Conscription tops the ranking at 84%.
+
 ### Ordered retreats in scenarios
 `attacker.retreatDay` / `defender.retreatDay`: that side orders a retreat at the end of that day (never before day 5). It loses 10% of its men and the battle. `analysis/artillery_raid.js` uses it.
 
