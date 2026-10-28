@@ -227,7 +227,7 @@ Mod-only files (no vanilla counterpart): `in_game/gui/shared/abm_force_break_uni
 | `multi_unit_window.gui` | **ported 1.4.4** | "Make available for hire" + pin-check exclusions |
 | `sell_location_action_view.gui` | vanilla unchanged since 1.3 (== vanilla 1.4.4 + ceiling) | flat 100-gold sale ceiling |
 | `foreign_country_lateralview.gui` | **ported 1.4.4** | 3 blocks, below, + two-row layout (`size = { -1 70 }`, outer `vbox`) |
-| `panels/right_panel/right_panel.gui` | **ported 1.4.4** | 4 blocks, below |
+| `panels/right_panel/right_panel.gui` | **ported 1.4.4** | 5 blocks, below |
 
 **1.4 GUI idioms (what changed vs 1.2/1.3):**
 * `action_button` / `action_button_diamond` are **gone** → `button` / `button_regular_diamond`, with the action moved into `scripted_action_tooltip = { click_type = left  click_mode = <single|confirm>  action_name = "..."  actor = "[...]" [parameter = {...}] }`.
@@ -241,7 +241,8 @@ Mod-only files (no vanilla counterpart): `in_game/gui/shared/abm_force_break_uni
 * `Not enough widget entries: Property widgets must specify exactly one widget` (`pdx_gui_validation.cpp`) reported at a `using = X` / `tooltipwidget = { using = X }` line means **`X` is undefined** — a missing template, not a malformed button. The log does not name the template.
 * Before treating a log row as open, compare the mod file's **mtime** against the session span: EU5 logs the path and line number, never the content, so a row can already be fixed by an edit made after the game was run.
 
-**right_panel.gui** mod additions (4 blocks):
+**right_panel.gui** mod additions (5 blocks):
+0. **Campaign timeline button removed** — vanilla `button_timeline` (first child of the bar widget) commented out with an `# Ars Belli:` note; it overlapped the MP rank / Tier List block and the timeline is reachable from the decisions screen.
 1. **Alliance/Defensive/Guarantee points display** — a `flowcontainer` with `# Ars Belli multiplayer limits display:` comment, inserted after the `non_clickable_color_gold_texture` corner icon, before the age `flowcontainer`.
 2. **Remove `max_width = 200`** from the age name `text_single`.
 3. **Country rank display (clickable)** — a `flowcontainer` with `# Ars Belli Current country Rank:` comment, inserted after the age tooltip block, before `### CORNER2`. Inner `button` with onclick → `mp_limits_toggle_tier_panel` scripted_gui.
