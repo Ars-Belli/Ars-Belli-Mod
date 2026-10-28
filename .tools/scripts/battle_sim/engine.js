@@ -419,6 +419,17 @@
 		return Object.assign(out, confidence(out));
 	}
 
+	// Regiment experience over months (0x143485830): each month
+	//   E += monthly_experience_gain - max(0, experience_decay) x E x (2 - goods access) [+ 1 on a mission]
+	// Drilling (unit ability drill_army) adds 2.5 a month (and costs -90% morale and -25% maintenance efficiency while on).
+	// Decay: country base 5%, regulars -1%, levies +2%. gain/decay here are the country's extra modifiers.
+	function drilledExperience({ gain = 0, decay = 0, drill = 0, wait = 0, start = 0, goods = 1, levy = false } = {}) {
+		const d = Math.max(0, 0.05 + (levy ? 0.02 : -0.01) + decay);
+		let E = start;
+		for (let m = 0; m < drill + wait; m++) E = Math.min(100, Math.max(0, E + gain + (m < drill ? 2.5 : 0) - d * E * (2 - goods)));
+		return E;
+	}
+
 	function monteCarloScenario(scn, n, opts = {}) {
 		const out = { n, wins: [0, 0], draws: 0, days: 0, daysSq: 0, losses: [0, 0], lossesSq: [0, 0], lossesProd: 0, lossesRegular: [0, 0], lossesLevy: [0, 0], overrunLosses: [0, 0], overrun: [0, 0], shattered: [0, 0], retreated: [0, 0], start: null, armies: null, groups: null };
 		for (let k = 0; k < n; k++) {
@@ -629,6 +640,6 @@
 		return { ...r, target: B };
 	}
 
-	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
+	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, drilledExperience, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BattleSim = api;
 })(typeof window !== 'undefined' ? window : globalThis);

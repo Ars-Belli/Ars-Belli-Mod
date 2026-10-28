@@ -244,7 +244,17 @@ Matching regulars needs a smaller levy discipline penalty, which the mod can set
 ## 9. Experience
 
 - Damage taken × (1 − 0.5 × experience ÷ 100): 50 experience = −25% damage taken, 100 = −50%. *(code)*
-- Monthly experience decay: base `experience_decay` 5% (country base values), regulars −1%, levies +2%. Mercenaries get +15% monthly experience gain and start with the age's `mercenary_starting_experience`.
+- **Monthly change** *(code, `0x143485830`; tooltip labels `XP_DECAY_GOODS_ACCESS`, `EXP_FROM_OBJ`)*:
+  ```
+  E += monthly_experience_gain - max(0, experience_decay) x E x (2 - goods access) + EXPERIENCE_GAIN_FROM_MISSIONS 1.0 (on a mission)
+  ```
+  - **Decay** is a share of current experience: base `experience_decay` 5% (country base values), regulars −1% (so 4%), levies +2% (7%). A regiment short of goods decays up to twice as fast.
+  - **Gain is flat and constant**, not only while drilling: Ars Belli's Standing Forces +0.25 a month, Leadership +0.5 (and −2% decay), Voluntary Service +0.25.
+  - Mercenaries get +0.15 a month and start with the age's `mercenary_starting_experience`.
+- **Drilling** (unit ability `drill_army`, unlocked by Drill Army in the Renaissance): +2.5 experience a month while on. While on it also costs −90% land morale and −25% maintenance efficiency, which raises manpower upkeep too. It needs a commander and stops on moving or combat.
+- **Drill 24 months, then idle 6** (full goods access): no picks 31, Standing Forces 35, Leadership 54, both 60. Drill 48 then idle 6: 42 / 48 / 85 / 93. The engine's `drilledExperience({ gain, decay, drill, wait })` computes this.
+- **Effect on focus picks** (`analysis/focus_picks_round_robin.js --drill 24 --wait 6`): Leadership rises from 43% to 56% at equal regiments, but Quality still leads. With 48 months of drilling, Leadership becomes the best age III pick in every parity view, and Standing Forces > Leadership paths top all three (80–87%). The more players drill, the stronger Leadership.
+- Not traced: whether reinforcement dilutes experience, and whether it carries over when regiments upgrade to a new age's unit.
 - `NCombat.EXPERIENCE_GAIN` = 30 is the experience gained from battles *(defines only)*.
 
 ---

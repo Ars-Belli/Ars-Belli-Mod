@@ -1,4 +1,5 @@
 // node .tools/scripts/battle_sim/analysis/focus_picks_round_robin.js [battles per pairing, default 300] [threads]
+//      [--drill months --wait months]   both sides drill, then wait (default 0/0: no drilling, experience 0.37)
 // Military focus picks: at each age every distinct battle-relevant pick state fights every other (both sides alternating as
 // attacker), under three parity views. A state's score = expected win rate against a random opponent path (states weighted
 // by how many of the 3^k paths reach them).
@@ -16,8 +17,12 @@
 //    scores ages II-III by gold and ages IV-VI by manpower.
 const path = require('path');
 const { ages } = require('../../focus_picks/focus_data.js');
-const N = +process.argv[2] || 300;
-const pool = require('../pool.js')(+process.argv[3] || undefined);
+const argv = process.argv.slice(2), opt = k => { const i = argv.indexOf(k); return i < 0 ? null : +argv[i + 1]; };
+const pos = argv.filter((a, i) => !a.startsWith('--') && !(argv[i - 1] || '').startsWith('--'));
+const N = +pos[0] || 300;
+const pool = require('../pool.js')(+pos[1] || undefined);
+const DRILL = opt('--drill') || 0, WAIT = opt('--wait') || 0;
+const exp = require('../engine.js').drilledExperience;
 const MAP = {
 	discipline: 'discipline', military_tactics: 'tactics', land_morale_modifier: 'moraleMod', land_morale: 'moraleFlat',
 	army_initiative: 'initiativeMod', combat_speed_modifier: 'speedMod', possible_frontage_modifier: 'frontageMod',
@@ -54,7 +59,7 @@ function side(mods, age, view) {
 	const g = mods.genAbility ? { adm: Math.max(CHAR.adm, TRAINED), dip: Math.max(CHAR.dip, TRAINED), mil: Math.max(CHAR.mil, TRAINED) } : CHAR;
 	const c = { tactics: 1 + (mods.tactics || 0), discipline: mods.discipline || 0, moraleMod: (mods.moraleMod || 0) + (mods.atGain ? 0.04 : 0), moraleFlat: mods.moraleFlat || 0,
 		initiativeMod: mods.initiativeMod || 0, speedMod: mods.speedMod || 0, frontageMod: mods.frontageMod || 0,
-		experience: 0.37 * (1 + (mods.expGain || 0)) * 0.05 / (0.05 + (mods.expDecay || 0)), power: {} };
+		experience: DRILL || WAIT ? exp({ gain: mods.expGain || 0, decay: mods.expDecay || 0, drill: DRILL, wait: WAIT }) : 0.37, power: {} };
 	if (mods['power.' + cat]) c.power[cat] = mods['power.' + cat];
 	return { name: 'x', country: c, general: g, units: [{ type: `generic:${cat}:${age}`, count: Math.round(30 * VIEWS[view](mods, cat)) }] };
 }
@@ -118,6 +123,7 @@ rec(0, []);
 	console.log('\n=== gold until age III, manpower from age IV');
 	mix.slice(0, 6).forEach(r => console.log(`  ${r.path.padEnd(72)}${r.per.map(x => String(Math.round(100 * x)).padStart(4)).join('')}  avg ${Math.round(100 * r.avg)}%`));
 	require('fs').writeFileSync(path.join(__dirname, 'focus_picks_results.json'), JSON.stringify(Object.fromEntries(Object.entries(report).map(([k, v]) => [k, v.ranked])), null, 1));
+	if (DRILL || WAIT) console.log(`\nExperience after drilling ${DRILL} months and waiting ${WAIT}: no picks ${exp({ drill: DRILL, wait: WAIT }).toFixed(1)}, Standing Forces ${exp({ gain: 0.25, drill: DRILL, wait: WAIT }).toFixed(1)}, Leadership ${exp({ gain: 0.5, decay: -0.02, drill: DRILL, wait: WAIT }).toFixed(1)}, both ${exp({ gain: 0.75, decay: -0.02, drill: DRILL, wait: WAIT }).toFixed(1)}`);
 	console.log(`\n${N} battles a pairing each way, ${pool.threads} threads, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
 	await pool.close();
 })();
