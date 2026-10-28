@@ -1,7 +1,8 @@
 // Command-line battle simulator.
 //   node .tools/scripts/battle_sim/sim.js <scenario.json> [--runs 2000] [--seed 1] [--sample] [--json]
+//        [--campaign [battles]] [--months 3]    repeat the battle and track manpower (scenario "war" block)
 //   node .tools/scripts/battle_sim/sim.js --units <search>        list unit types matching a name or key
-// Scenario format: see scenarios/README.md next to this file.
+// Scenario format: "EU5 Combat Mechanics (1.4.4).md", section 16, in the repo root.
 const fs = require('fs');
 const path = require('path');
 const S = require('./engine.js');
@@ -34,6 +35,22 @@ console.log(`  Defender wins ${(100 * m.wins[1] / runs).toFixed(1)}%  (wipes out
 if (m.draws) console.log(`  Undecided ${(100 * m.draws / runs).toFixed(1)}%`);
 console.log(`  Average length ${m.days.toFixed(1)} days; losses attacker ${men(m.losses[0])} of ${men(m.start[0])}, defender ${men(m.losses[1])} of ${men(m.start[1])}`);
 ['Attacker', 'Defender'].forEach((s, i) => m.armies[i].forEach(a => console.log(`    ${s}: ${a.name} - lost ${men(a.lost)} of ${men(a.start)}`)));
+const gold = x => x.toFixed(1);
+const costs = S.armyCosts(scn), bc = S.battleCosts(scn, m);
+console.log('\nCosts (gold = goods at base market prices)');
+['Attacker', 'Defender'].forEach((s, i) => {
+	const c = costs[i], b = bc[i];
+	console.log(`  ${s}: ${c.regiments} regiments + ${c.levies} levies; recruiting ${men(c.buildManpower)} manpower and ${gold(c.buildGold)} gold; upkeep ${gold(c.upkeepGold)} gold a month`);
+	console.log(`    this battle: ${men(b.manpower)} manpower to refill, ${gold(b.reinforceGold)} gold to reinforce, ${gold(b.rebuildGold)} gold to rebuild wiped regiments, ${men(b.levyPops)} pops lost as levies`);
+});
+if (flag('--campaign')) {
+	const w = S.campaign(scn, { battles: flag('--campaign') === true ? undefined : +flag('--campaign'), monthsBetween: flag('--months') === undefined ? undefined : +flag('--months'), runs: Math.min(runs, 500), seed });
+	console.log(`\nCampaign: ${w.battles} battles, ${w.months} months apart; manpower max ${men(w.pools[0].max)} / ${men(w.pools[1].max)}, monthly ${men(w.pools[0].monthly)} / ${men(w.pools[1].monthly)}`);
+	console.log('  #  attacker wins   army before A / D      after battle A / D     refilled A / D       manpower left A / D');
+	for (const r of w.rows) console.log(`  ${String(r.battle).padStart(2)}  ${(100 * r.winRate[0]).toFixed(0).padStart(5)}%      ${men(r.before[0]).padStart(8)} / ${men(r.before[1]).padEnd(9)} ${men(r.after[0]).padStart(8)} / ${men(r.after[1]).padEnd(9)} ${men(r.refilled[0]).padStart(8)} / ${men(r.refilled[1]).padEnd(9)} ${men(r.pool[0]).padStart(8)} / ${men(r.pool[1])}`);
+	console.log(w.worn < 0 ? '  Neither side is worn down.' : `  The ${w.worn ? 'defender' : 'attacker'} is worn down after battle ${w.at}: it can no longer refill its army to half strength.`);
+	console.log(`  Spent: manpower ${men(w.total.manpower[0])} / ${men(w.total.manpower[1])}, gold ${gold(w.total.gold[0])} / ${gold(w.total.gold[1])}, pops lost as levies ${men(w.total.levyPops[0])} / ${men(w.total.levyPops[1])}`);
+}
 if (flag('--sample')) {
 	const r = S.simulateScenario(scn, { seed });
 	console.log(`\nSample battle: ${r.winner < 0 ? 'undecided' : (r.winner ? 'defender' : 'attacker') + ' won'} after ${r.days} days${r.overrun ? ' (overrun)' : r.shattered ? ' (shattered retreat)' : ''}`);

@@ -54,6 +54,16 @@ function loadDb(rel) {
 const cats = loadDb('in_game/common/unit_categories');
 const types = loadDb('in_game/common/unit_types');
 
+// Goods: recruitment (construction_demand) and upkeep (maintenance_demand) baskets priced at default_market_price
+const demands = loadDb('in_game/common/goods_demand');
+const prices = {};
+for (const [k, v] of Object.entries(loadDb('in_game/common/goods'))) prices[k] = +((v.find(([x]) => x === 'default_market_price') || [])[1] || 1);
+const basketGold = key => {
+	const d = demands[key];
+	if (!d) return 0;
+	return +d.filter(([g]) => g !== 'category').reduce((t, [g, x]) => t + parseFloat(x) * (prices[g] || 1), 0).toFixed(4);
+};
+
 function numbers(list) {
 	const o = { combat: {} };
 	for (const [k, v] of list) {
@@ -117,6 +127,7 @@ for (const key of Object.keys(types)) {
 		p: v('combat_power'), s: v('max_strength'), i: v('initiative'), cs: v('combat_speed'), f: v('frontage'),
 		fl: v('flanking_ability'), sf: v('secure_flanks_defense'), dt: v('damage_taken'),
 		sdd: v('strength_damage_done'), sdt: v('strength_damage_taken'), mdd: v('morale_damage_done'), mdt: v('morale_damage_taken'),
+		bg: basketGold(u.construction_demand || c.construction_demand), ug: basketGold(u.maintenance_demand || c.maintenance_demand),
 		be: v('bombard_efficiency'), bombard: (c.bombard || u.bombard) === 'yes' ? 1 : 0, aux: (c.auxiliary || u.auxiliary) === 'yes' ? 1 : 0,
 		...(Object.keys(combat).length ? { ct: combat } : {}),
 	};
@@ -135,7 +146,9 @@ function terrain(rel) {
 	return out;
 }
 const data = {
-	built: new Date().toISOString().slice(0, 10), game: '1.4.4',
+	built: new Date().toISOString().slice(0, 10), game: '1.4.4', prices,
+	// category baskets, used for the simulator's generic units
+	catCost: Object.fromEntries(Object.entries(CAT_SHORT).map(([k, c]) => [c, { bg: basketGold((cats[k].find(([x]) => x === 'construction_demand') || [])[1]), ug: basketGold((cats[k].find(([x]) => x === 'maintenance_demand') || [])[1]) }])),
 	units, terrain: { topography: terrain('in_game/common/topography'), vegetation: terrain('in_game/common/vegetation'), climate: terrain('in_game/common/climates') },
 };
 fs.writeFileSync(OUT, JSON.stringify(data));

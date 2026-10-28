@@ -18,25 +18,25 @@ Combat ticks once per day (1.3 ticked per "hour"; see section 13). The daily tic
 3. **Stack wipe at the start:** if one side's men are at least `INITIAL_OVERRUN_FACTOR` = **10×** the other's, the weaker side is overrun at once, with no morale check. The battle screen warns about this with "They/We have a big enough army to instantly eliminate…" (`COMBAT_IMMINENT_STACKWIPE_*`).
 
 **Every day**
-1. Once the battle is older than `BOMBARD_DAYS` = **3** days, the bombard phase ends.
+1. Once the battle is older than `BOMBARD_DAYS` = **3** days, the bombard phase ends and both sides re-roll their dice.
 2. Every `DAYS_PER_PHASE` = **4** days a new phase starts and **both sides re-roll their dice**. The dice modifiers (commander, terrain, crossings) are recomputed every day.
-3. **Bombard phase (days 1–3): only artillery fires.** Each artillery regiment rolls `0.2 × (1 + bombard efficiency)` to hit the section facing it. No reserves move, no regiment engages, no melee, no daily morale drain.
+3. **Bombard phase (days 1–3): only artillery fires.** Per section, the guns in the battle line fire, up to W frontage of them; guns in reserve don't. Each rolls `0.2 × (1 + bombard efficiency)` once a day. A hit lands on the enemy section facing it: the gun keeps its last target if it is still there, otherwise it picks one at random. A miss makes it forget its target. Bombard hits get no flanking or secured-flank factors. Nothing happens if the facing section is empty. No reserves move, no regiment engages, no melee, no daily morale drain.
 4. **From day 4:** side 1 moves reserves up (`HandleReserves`) and rolls initiative in each section (`AttemptInitiative`), then side 2 does the same. Then both sides' engaged regiments hit (side 1, then side 2), and every regiment in the battle loses `COMBAT_DAILY_MORALE_TICK` = **0.03** morale.
 5. The day's collected strength and morale losses are applied together. Strength loss can't exceed the men a regiment has left.
 6. Each section drops regiments that can no longer fight: morale below `MORALE_COLLAPSE_THRESHOLD` = **0.05** (absolute morale points, 1.7% of base morale 3.0) or almost no men left.
-7. **End checks**, only once the battle has lasted `MINIMUM_COMBAT_DAYS` = **5** days:
-   - **Morale-collapse overrun:** a side whose morale has collapsed is wiped out if the other side has at least `MORALE_OVERRUN_FACTOR` = **2×** its men.
-   - Then the 10× check again.
-   - Otherwise the side that broke loses and **retreats**. It is a **shattered retreat** if the army's average morale is below `LOW_MORALE_THRESHOLD` = **0.5** (absolute, 17% of base morale); navies use 1.5.
+7. **End checks.** `0x142493100` compares the battle's age with `MINIMUM_COMBAT_DAYS` = **5** (plus a location modifier; navies use `MINIMUM_NAVAL_COMBAT_DAYS` 5). The two branches differ:
+   - **Days 1–4 (shorter than the minimum): only overruns.** A side whose battle-line morale has collapsed (≤ 0.05) is wiped out if the other side has at least `MORALE_OVERRUN_FACTOR` = **2×** its men; then the same check with 10×. Otherwise the battle goes on, even when one side's line is already empty.
+   - **Day 5 on: the line decides.** If the attacker's three sections hold no men (each under 0.01 strength), the attacker **loses and retreats**; then the same check for the defender. A side is **destroyed** instead only if none of its armies can retreat. The retreat is **shattered** if the army's average morale is below `LOW_MORALE_THRESHOLD` = **0.5** (absolute, 17% of base morale; navies 1.5). If neither line is empty, the 10× overrun check (with collapsed morale) runs.
 
 **Armies joining later.** An army that reaches the location while the battle runs joins it as fresh reserves (the game's own hint: "You can bring neighboring armies to reinforce ongoing battles. If they arrive in time, they will join the fight as fresh reserves"). From there they move up by combat speed like any reserve. They arrive with whatever morale their march left them (section 7).
 
 **"Men" in the overrun ratios** is each army's men still alive (current strength), with levies counted at their levy factor (section 8) (`0x143519150`). Navies count cannons instead, and naval levies at `NAVAL_LEVY_IMPACT` = 5%.
 
 **What this means:**
-- **A stack wipe needs 10:1 at the start, or 2:1 once the enemy's morale has collapsed.** Most wipes happen at the end of a long battle, when the loser's line breaks while the winner still has twice its men.
-- To avoid being wiped, keep your remaining men above half the winner's, or retreat before the line breaks.
-- Reinforcements that arrive in time count towards both the 2:1 ratio and the line.
+- **A stack wipe needs 10:1 at the start, or 2:1 during the first 4 days once a side's line has broken.** A battle that lasts 5 days or more ends in a retreat, not a wipe, unless the loser has nowhere to retreat or is outnumbered 10:1 with its morale gone.
+- Melee only starts on day 4, so a fresh army rarely breaks in time. The 2:1 wipe hits armies that **enter a battle already broken**: one attacked again before its morale has recovered from the last battle, one that marched its morale away (section 7), or one shredded by guns in days 1–3.
+- To avoid being wiped, don't let a low-morale army be caught by twice its men; let it recover first.
+- Reinforcements that arrive in time count towards the ratios and the line.
 
 ---
 
@@ -71,7 +71,7 @@ morale_loss   = base x LAND_MORALE_DAMAGE_MODIFIER 0.25       (naval 0.05)     [
 | `CURRENT_STRENGTH` | strength | × A current strength | 1.0 = 1000 men: more men kill more men |
 | `EXPERIENCE` | both | × (1 − `LAND_EXPERIENCE_DAMAGE_REDUCTION` 0.5 × B experience ÷ 100) | full experience halves damage taken |
 | `CATEGORY_TAKEN` | both | × B category `damage_taken` | infantry 1.0, **cavalry 0.30**, artillery 1.25, auxiliary 1.25 |
-| `COMBINED_ARMS` | both | × (1 + A side's combined-arms bonus) | `combined_bonus_per_type` 0.025 per category present; a category counts between `combined_arms_min_percent_for_bonus` 10% and `combined_arms_max_threshold` 50% of the side *(bonus calculation not traced)*. Auxiliaries are excluded |
+| `COMBINED_ARMS` | both | × (1 + A side's combined-arms bonus) | *(code, `0x142486dd0`)* counts **regiments** per category over the side's armies, auxiliaries excluded. If any category is ≥ `combined_arms_max_threshold` 50% of them, the bonus is **0**. Otherwise each category with ≥ `combined_arms_min_percent_for_bonus` 10% adds `combined_bonus_per_type` 0.025 (at most 5 categories, so ≤ 12.5%). An army that is half heavy infantry gets nothing |
 | `SECURED_FLANKS` | both | × max(0.05, 1 − n × B `secure_flanks_defense`), n = secured flanks | infantry 0.05 per secured flank, others 0 |
 | `TOPOGRAPHY`, `VEGETATION`, `CLIMATE` | both | × (1 + A's terrain modifier + A unit type `combat = { … }` entry) for the battle location | e.g. cavalry −10% in mountains, wetlands, jungle |
 | `COASTAL` / `INLAND` | both | × (1 + A coastal or inland bonus) | |
@@ -138,9 +138,10 @@ Category combat speed: light infantry 3, heavy infantry 2, cavalry 5, artillery 
 - **Three sections**, left, centre and right, each holding **1.25 × W** frontage of engaged regiments (`MAX_FRONTAGE_OVERSTACKING`, also `max_frontage = 1.25` per section in `unit_formation_preference`). Every land regiment has frontage 1.
 - **Deployment** (`AddUnit`): each regiment goes to the section its army's formation preference points to (`unit_formation_preference/army.txt`: `balanced_army` lets every category use any section; `cav_inf_cav` puts cavalry on the flanks and infantry and artillery in the centre), if that section has room; otherwise it waits in reserve. Auxiliaries always go to reserve.
 - **Reserves** (`HandleReserves`): each day a side spends a frontage budget of W on reserve regiments. Each considered regiment scores every section as *enemy engaged frontage facing it + our free room* and moves into the best one with its combat-speed chance (section 5).
-- **Targets** (`0x142481230`): an engaged regiment hits the enemy section **facing** it (left faces their right, centre faces centre). It keeps its last target while that target is still in the section; otherwise it picks a random enemy there. If the facing section is empty it hits another section, and that hit counts as a **flank attack** (× flanking ability).
+- **Targets** (`0x142481230`): an engaged regiment hits the enemy section **facing** it (left faces their right, centre faces centre). It keeps its last target while that target is still in the section; otherwise it picks a random enemy there. If the facing section is empty, it looks in this order: the enemy centre, left, right, reserve, then any other enemy regiment in the battle.
+- **Flank attack** (× flanking ability): the target is not in the section facing the attacker, the attacker's side has regiments facing the target's section, and the enemy section facing the attacker is empty. In short: a section whose opposite number is gone helps a neighbouring fight from the side.
 - **Secured flanks** (the `SECURED_FLANKS` factor): a target on a flank counts 1 secured flank if its own centre is occupied; a target in the centre counts one per occupied flank. Infantry take 5% less damage per secured flank.
-- **Bombard** (`0x142481ba0`): artillery rolls `BOMBARD_BASE_CHANCE 0.2 × (1 + its bombard bonus)` per day to hit a regiment in the facing section, through the same damage function.
+- **Bombard** (`0x142481720` per side, `0x142481ba0` per section): see section 1, step 3. Same damage function, side dice included.
 
 ---
 
@@ -177,7 +178,7 @@ There is no waiting time before a battle starts. A battle begins as soon as host
 | 20 | 86.2% | 89.0% | 91.8% |
 
 - **Recovery time:** 10 days of marching cost 6.9% of max morale, which takes 1.4 days of rest to win back (5%/day). One advance cuts that by 0.3 days, both by 0.6 days.
-- **Simulated** (equal Renaissance armies, 3,000 battles each, the attacker marched before the battle): attacker win rate after 10 days' march, base 38.6% → one advance 40.6% → both 43.4% (no march: 49.2%). After 20 days: 28.4% → 32.1% → 36.8%.
+- **Simulated** (simulator v3, equal Renaissance armies of 16 heavy infantry, 6 heavy cavalry and 2 artillery, 3,000 battles each, the attacker marched before the battle): attacker win rate after 10 days' march, base 39.3% → one advance 41.3% → both 42.8% (no march: 49.1%). After 20 days: 29.5% → 33.1% → 37.0%.
 - So each −0.14% is worth about **+2 to 4 points of win rate per 10 to 20 days of marching** into a battle. The longer the march, the more it matters, and it is worthless for armies that rest before attacking.
 
 ---
@@ -291,34 +292,52 @@ Analytically, against an equal enemy:
 - **+0.1 military tactics:** you take ÷1.1 and deal the same, a trade of ×1.10.
 - **Tactics only counts as a gap:** each +0.1 is worth ÷(1 + gap), so it shrinks a little when one side already leads. Discipline also shrinks slightly as its base grows.
 
-Simulated with the battle simulator (2,000 battles, equal armies of heavy infantry, heavy cavalry and artillery, one side with the bonus):
+Simulated with the battle simulator v3 (2,000 battles, frontage 10, each side 16 heavy infantry, 6 heavy cavalry and 2 artillery, one side with the bonus; draws count half):
 
-| Bonus | Win rate, Renaissance | Win rate, Absolutism | Enemy losses ÷ own losses |
+| Bonus | Win rate, Renaissance | Win rate, Absolutism | Enemy losses ÷ own losses (Renaissance) |
 |---|---|---|---|
-| none | 52.2% | 48.5% | 1.02 |
-| +5% discipline | 66.0% | 62.1% | 1.21 |
-| +0.1 tactics | 67.0% | 62.1% | 1.20 |
-| +10% discipline | 78.8% | 72.1% | 1.41 |
-| +0.2 tactics | 78.4% | 71.3% | 1.40 |
-| +10% morale | 66.8% | 61.3% | 1.07 |
-| +1 commander die | 67.8% | 62.2% | 1.21 |
-| +20 experience | 68.5% | 63.1% | 1.22 |
+| none | 49.4% | 49.5% | 1.00 |
+| +5% discipline | 64.1% | 60.3% | 1.18 |
+| +0.1 tactics | 62.9% | 60.2% | 1.17 |
+| +10% discipline | 76.0% | 70.6% | 1.37 |
+| +0.2 tactics | 77.0% | 69.3% | 1.37 |
+| +10% morale | 62.5% | 60.1% | 1.05 |
+| +1 commander die | 63.9% | 62.2% | 1.19 |
+| +20 experience | 64.6% | 61.9% | 1.19 |
+| +10% infantry power | 58.0% | 57.7% | 1.11 |
+| +10% cavalry power | 54.1% | 51.7% | 1.05 |
+| +25% army initiative | 49.8% | 50.2% | 1.00 |
+| +25% combat speed | 49.4% | 49.5% | 1.00 |
 
-(Simulator v2 with the 3-day bombard phase and absolute morale thresholds. "None" is not exactly 50% because side 1 moves reserves and engages first each day.)
+So **+0.1 tactics ≈ +5% discipline ≈ +1 commander die ≈ +20 experience**, each worth about 63% in an even Renaissance battle. Discipline edges ahead at larger amounts because it scales both sides of the trade. Morale wins battles without trading better (it keeps regiments in the line longer). Initiative and combat speed are worth nothing here: all 24 regiments fit in the line, so there are no reserves, and every regiment engages within two days anyway. They matter when armies are larger than the frontage or arrive late.
 
-So **+0.1 tactics ≈ +5% discipline**. Discipline edges ahead at larger amounts because it scales both sides of the trade. Morale wins battles without trading better (it keeps regiments in the line longer).
+(v3 = exact end rules, bombard limited to W guns per section, combined arms by regiment count. Neither army gets a combined-arms bonus: heavy infantry is two thirds of it. The v2 table, before those fixes, read about 2 points higher for every bonus.)
 
 ---
 
-## 12. Sieges *(defines only, not traced in code)*
+## 12. Sieges *(partly code; marked per line)*
 
-- `SIEGE_DAYS_PER_PHASE` 1: siege dice re-roll every day (was 5 on 1.3).
-- `DAYS_PER_SIEGE_PHASE` 30, `MIN_DAYS_PER_SIEGE_PHASE` 7, `DAYS_PER_SIEGE_PHASE_WITHOUT_FORT` 15.
-- `SIEGE_REGIMENTS_FOR_ARTILLERY` 2 (was 3).
-- `SIEGE_WIN` 20; `SIEGE_GARRISON_SURRENDER_THRESHOLD` 5%; `MAX_BREACH` 3, `BREACH_REPAIR_PER_DAY` 0.01.
-- Shortages hurt the defender each phase: supply `SIEGE_SUPPLY_SHORTAGE_LOSS` 2% (impact 1), food 3% (impact 2), water 5% (impact 3), desertion 10% (impact 2), breach 5% (impact 2).
-- Assaults: `ASSAULT_DICE_MODIFIER` 5; the attacker loses `ASSAULT_ATTACKER_LOSS` 2.5 and morale 3.0, the defender 0.03 and morale 0.3 *(units not traced)*; `ASSAULT_WIDTH_LIMIT` 1.
-- `SIEGE_DISEASE_IMPACT` 5%; `SIEGE_MAX_FORT_LIMIT_BONUS` 8.
+**Phase length** *(code, `0x143462cb0`; the arithmetic of the modifiers not finished)*: a siege rolls once per phase. The base is `DAYS_PER_SIEGE_PHASE` **30** days with a fort, `DAYS_PER_SIEGE_PHASE_WITHOUT_FORT` **15** without, and never under `MIN_DAYS_PER_SIEGE_PHASE` **7**. It is changed by the besieger's `siege_ability`, the fort's defence (`global_defensive` + `local_defensive`), the spy network and culture war; the tooltip reads "Siege phases are X (±Y%) days long".
+
+**The roll** *(code, `0x143465df0`)*: a die of **1–14** plus siege modifiers. The modifiers include the breach bonus and an artillery bonus of artillery regiments ÷ `SIEGE_REGIMENTS_FOR_ARTILLERY` **2** (was 3 on 1.3). The artillery bonus is capped by `artillery_bonus_vs_fort` and the fort level, up to `SIEGE_MAX_FORT_LIMIT_BONUS` 8.
+
+**Outcome of a phase** *(code, `0x143466d60`; `SIEGE_WIN` 20)*:
+
+| Total | Outcome | Effect |
+|---|---|---|
+| natural 1 | disease | the besiegers lose `SIEGE_DISEASE_IMPACT` 5% of their max strength |
+| 2–4 | status quo | nothing |
+| 5–11 | supplies shortage | garrison −2% (impact 1) |
+| 12–13 | food shortage | garrison −3% (impact 2) |
+| 14–15 | water shortage | garrison −5% (impact 3) |
+| 16–19 | defenders desert | garrison −10% (impact 2) |
+| 20 or more | surrender | the fort falls |
+
+- A **breach** costs the garrison 5% (impact 2) and gives a roll bonus; at most `MAX_BREACH` 3, repaired at `BREACH_REPAIR_PER_DAY` 1% a day. *(defines; the breach trigger was not traced)*
+- "Impact" is probably a roll bonus for the next phases *(not confirmed)*.
+- The garrison surrenders at or under `SIEGE_GARRISON_SURRENDER_THRESHOLD` **5%**. *(code)*
+- The siege only progresses while the besiegers' men are at least the garrison's (100 men without a fort). *(code)*
+- **Assaults** *(defines only)*: `ASSAULT_DICE_MODIFIER` +5; the attacker loses `ASSAULT_ATTACKER_LOSS` 2.5 and morale 3.0, the defender 0.03 and morale 0.3 (units not traced); `ASSAULT_WIDTH_LIMIT` 1; `SIEGE_DAYS_PER_PHASE` 1 (was 5 on 1.3).
 
 ---
 
@@ -386,8 +405,25 @@ cost    = goods for those men (bought from the market) / (1 + army_reinforce_eff
 ```
 
 - A regiment refills at most 25% of its size a month before speed bonuses. The situation factor (supply, location, at war or not) was not traced.
+- Reinforce efficiency divides the **goods**, not the manpower: each man added still costs one manpower.
+- Which goods: the reinforcement code (`0x14352ed50`) picks one of the unit's three baskets (`construction_demand`, `maintenance_demand`, `upgrade_demand`, at unit type +0x540/+0x548/+0x550, falling back to the category's). Which offset is which was not mapped; the simulator assumes the recruitment basket, scaled to the men replaced.
 - Navies use `navy_repair_efficiency` the same way.
 - Category `army_*_reinforce_cost_modifier` also exists (where it enters was not traced).
+
+**Manpower.**
+- Max manpower = `MAX_MANPOWER_YEARS` **5** years of monthly manpower (tooltip `MAX_MANPOWER_TT`: "We can store up to 5 years of manpower of our monthly production"). So monthly manpower = max ÷ 60.
+- Recruiting a regular regiment costs its full size in manpower (assumed; the recruitment draw was not traced) plus its `construction_demand` goods.
+- Levies cost no manpower: they are raised from pops, and the levies that die are pops lost (`LEVY_RECOVERY_MONTHS` 240).
+
+**Base gold at default market prices** (`default_market_price` of each good; `units.json` stores them as `bg` recruitment and `ug` upkeep per 1,000 men):
+
+| Basket | Recruit (per regiment) | Upkeep per 1,000 men a month |
+|---|---|---|
+| Infantry (category) | 1.5 | 0.78 |
+| Cavalry (category) | 4.8 | 2.28 |
+| Artillery (category) | 14.4 | 4.8 |
+| Early infantry (e.g. halberdiers) | 2.1 | 0.48 |
+| Lancers, cavaliers | 10.2 | 4.8 |
 
 ---
 
@@ -399,7 +435,7 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 |---|---|
 | `engine.js` | The rules of this document as code. Runs in the browser and in Node. |
 | `units.json` | Every army unit type of vanilla 1.4.4 + Ars Belli with its effective stats, plus terrain. Rebuild with `node .tools/scripts/battle_sim/build_units.js` after a game update or a unit change. |
-| `sim.js` | Command line: `node .tools/scripts/battle_sim/sim.js <scenario.json> [--runs 2000] [--seed 1] [--sample] [--json]`; `--units <text>` lists unit types matching a key or name. |
+| `sim.js` | Command line: `node .tools/scripts/battle_sim/sim.js <scenario.json> [--runs 2000] [--seed 1] [--sample] [--json] [--campaign [battles]] [--months 3]`; `--units <text>` lists unit types matching a key or name. It always prints costs; `--campaign` adds the war of attrition. |
 | `scenarios/` | Scenario files; `example_river_hills.json` shows every field. |
 | `battle-sim.html` | The page (publish with `engine.js` and `units.json` as supporting files). |
 
@@ -417,12 +453,16 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
                  "initiativeMod": 0, "speedMod": 0, "movementCost": 0.0069,
                  "power": { "li": 0, "hi": 0, "lc": 0, "hc": 0.1, "art": 0 },
                  "sdd": 0, "sdt": 0, "mdd": 0, "mdt": 0,
-                 "religion": "catholic", "religionGroup": "christian", "vsHeretic": 0, "vsHeathen": 0 } },
+                 "religion": "catholic", "religionGroup": "christian", "vsHeretic": 0, "vsHeathen": 0,
+                 "maintenanceEfficiency": 0, "levyMaintenance": 0, "reinforceEfficiency": 0, "reinforceSpeed": 0 } },
   "attacker": { "armies": [ { "name": "…", "country": "FRA", "formation": "balanced|cav_inf_cav",
                 "arrivalDay": 0, "marchDays": 6, "morale": null,
                 "units": [ { "type": "a_musketeers", "count": 10, "section": "L|C|R|reserve",
                              "strength": 0.8, "morale": 0.9, "experience": 25, "levy": false } ] } ] },
-  "defender": { "armies": [ … ] }
+  "defender": { "armies": [ … ] },
+  "costs": { "hc": { "buildGold": 12, "upkeepGold": 3, "reinforceGold": 20 }, "a_musketeers": { … } },
+  "war": { "battles": 8, "monthsBetweenBattles": 3,
+           "sides": [ { "maxManpower": 60000, "monthlyManpower": 1000, "currentManpower": 50000 }, { … } ] }
 }
 ```
 
@@ -430,17 +470,50 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 - `morale` (army or unit) is a fraction of max morale and overrides `marchDays`. Use it when a screenshot shows an army's current morale.
 - `arrivalDay` > 0 means the army joins on that day as reserves. Defenders coming from a neighbouring location also march, so give them `marchDays`.
 - `type` is a unit key from `units.json` (`sim.js --units musket` to search), or `generic:<li|hi|lc|hc|art|aux>:<age 1-6>`.
+- `costs` (optional) overrides the base-price gold per unit key or category: `buildGold` per regiment, `upkeepGold` per regiment a month at full strength, `reinforceGold` per 1,000 men. Use it when market prices are far from base.
+- `war` (optional) drives the war of attrition. Manpower is in men; `monthlyManpower` defaults to max ÷ 60 and `currentManpower` to the max. There is one pool per side, even with allied countries on it.
+
+### Costs and the war of attrition
+- **Per army:** recruitment manpower (regular regiments' full size) and gold, monthly upkeep, and reinforcement gold per 1,000 men (section 15).
+- **Per battle:** the expected manpower to refill (one man per man lost by regulars), gold to reinforce what retreated, gold to rebuild regiments that were wiped, and pops that died as levies.
+- **War of attrition** (`campaign` in `engine.js`): the same battle is fought `battles` times, `monthsBetweenBattles` apart, with the expected losses of each battle applied to every unit group.
+  - Between battles each side gains its monthly manpower, up to its max.
+  - It then reinforces regulars at up to 25% of a regiment a month × (1 + reinforce speed); regiments that were wiped are rebuilt without that cap, if the pool allows.
+  - Levies come back at full strength (raised again from pops); the pops they lost are counted.
+  - A side is **worn down** once it can no longer refill its army past half strength before the next battle.
+  - It is an expected-value model: each battle uses averages from a fresh Monte Carlo of the armies as they stand.
 
 ### From an in-game screenshot to a scenario
 Read, per army, the regiments by type (the unit names map to keys; names are in `units.json`), their count, and if visible each one's men and morale. Per country, read discipline, military tactics, morale, combat speed, initiative, unit power and levy combat efficiency from the military tab or modifier tooltips; read the general's combat bonus. For the location, read topography, vegetation, a river and whether the attacker crossed one. Then run `sim.js` and compare the day-by-day sample with the game's battle screen.
 
 ### Approximated in the simulator
 - the order regiments are placed inside one formation;
-- the combined-arms bonus (2.5% per category holding 10–50% of the side; the exact rule lives in `0x142486dd0`);
 - reinforcements always joining as reserves;
-- the 120-day cap.
+- the 120-day cap;
+- the reinforcement goods basket, and the war of attrition's expected-value steps (section above).
+
+Exact since v3 (2026-10-28): the end rules (section 1, step 7), bombard (W guns per section, one roll per gun, target forgotten on a miss), the melee fallback order and flank rule, combined arms by regiment count with the 50% cut-off, and the dice re-roll when the bombard phase ends.
 
 Not modelled: general traits other than dice, country-specific per-terrain unit modifiers, battles at a fort, naval combat.
+
+---
+
+## 17. Where the code and the tooltips disagree
+
+What the game shows, and what the code actually does:
+
+| Tooltip or description | What the code does |
+|---|---|
+| Battle die shown as 1–10 | The damage code adds the raw die, 0–9. Rolls run 5–14 before modifiers (section 3). |
+| Levy combat efficiency +X% | Levies hitting regulars deal 0.75 + 0.25 × levy CE, capped at 1.0. So +40% levy CE is worth +10% damage, and nothing past +100% (section 8). |
+| "Army Morale Movement Cost" (description says every hour) | Applied once a day, as a share of max morale (0.69% a day base) (section 7). |
+| Maintenance / reinforce efficiency +25% | Divides the cost: 1 ÷ 1.25 = 80%, not 75% (section 15). Reinforce efficiency cuts goods, never manpower. |
+| Military tactics | Only the gap counts, and only on the side with less tactics: it cuts the damage that side deals ÷ (1 + gap). Equal tactics do nothing (section 2). |
+| Combat speed | Only the daily chance that a reserve moves into the line (speed × 0.1). It never changes damage (section 5). |
+| Initiative / army initiative | A daily chance to engage, capped at +30% on top of the 60% base and +3% a day; worth nothing once the initiative part reaches 30% (section 4). |
+| Combined arms "+2.5% per type" | No bonus at all if one category is half the regiments or more (section 2). |
+| "Instantly eliminate" warning at 10:1 | True. But the 2:1 wipe only happens in the first 4 days, not at the end of a long battle (section 1). |
+| `MORALE_LAND_FLAVOR` (only the battle line counts for morale) | Matches the code: side morale is the line's, reserves don't count. |
 
 ---
 
@@ -466,7 +539,13 @@ Kit: `E:\Tools\ghidra-scripts` (README there). Addresses change every patch; re-
 | Battle frontage W | `0x14247a0d0` | reads location modifier `local_frontage_allowed` (index `0x14f0a37ea`) |
 | Regiment maintenance | `0x14357a730` | `LEVY_MAINTENANCE_FACTOR`, `MOTHBALL_MAINTENANCE_FACTOR`; labels `SUBUNIT_MAINTENANCE_FACTOR`, `LEVY_MAINTENANCE_RATE_TOOLTIP` |
 | Reinforcement rate / cost | `0x143491290` / `0x14352ed50` | `MONTHLY_REINFORCE`; `army_reinforce_efficiency` (`0x14f0a3676`) |
-| Overrun check (stack wipe) | `0x14248ed60` | called at start with `INITIAL_OVERRUN_FACTOR` (no morale check), daily with `MORALE_OVERRUN_FACTOR` and again 10 (loser morale ≤ 0.05) |
+| Overrun check (stack wipe) | `0x14248ed60` | called at start with `INITIAL_OVERRUN_FACTOR` (no morale check); on days 1–4 with `MORALE_OVERRUN_FACTOR` then 10 (loser line morale ≤ 0.05); from day 5 only with 10, after the empty-line check |
+| Minimum battle length | `0x142493100` | `MINIMUM_COMBAT_DAYS` / `MINIMUM_NAVAL_COMBAT_DAYS` + a location modifier, compared with battle days (+0x34) |
+| Lost battle, no retreat possible | `0x14248fc80` | called when a side's line is empty and none of its armies can retreat |
+| Combined arms | `0x142486dd0` | `combined_arms_max_threshold`, `combined_arms_min_percent_for_bonus`, `combined_bonus_per_type` |
+| Bombard per side / gun collector | `0x142481720` / `0x142486c70` | bombard-capable flag at unit type +0x1e3; budget W per section |
+| Siege phase length / roll / outcome | `0x143462cb0` / `0x143465df0` / `0x143466d60` | `DAYS_PER_SIEGE_PHASE*`, `SIEGE_REGIMENTS_FOR_ARTILLERY`, `SIEGE_WIN`, shortage defines |
+| Max manpower tooltip | `0x142638ab0` | `MAX_MANPOWER_YEARS` (`0x14fb243b8`), labels `MAX_MANPOWER_TT`, `THIRD_MAX_MANPOWER_TT` |
 | Land army strength for overruns | `0x143519150` | men, levies × levy factor |
 | Daily morale change outside battle | `0x1434f47a0` | recovery `0x143493940` (labels `CAN_NOT_RECOVER_WHILE_MOVING`, `UNIT_MORALE_RECOVERY_IN_FRIENDLY`), movement cost `land_morale_movement_cost` (`0x14f0a367e`), attrition cost; `LOCKED_MORALE_CAP` |
 | Retreat after a lost battle | `0x142477570` | shattered if average morale < `LOW_MORALE_THRESHOLD` 0.5 (navy 1.5) |

@@ -171,6 +171,39 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		<div class="tiles" id="tiles"></div>
 		<div class="tablewrap" id="army-table"></div>
 	</section>
+	<section class="panel" aria-labelledby="cost-title">
+		<h2 id="cost-title">Costs and manpower</h2>
+		<p class="sub">What each side's armies cost to recruit and keep, and what the average battle above costs to make good. Gold is each unit's goods basket at base market prices; real prices move with each market.</p>
+		<div class="tiles" id="cost-tiles"></div>
+		<details><summary>Show the cost of every unit</summary><div class="tablewrap" id="cost-table"></div></details>
+	</section>
+	<section class="panel" aria-labelledby="war-title">
+		<h2 id="war-title">War of attrition</h2>
+		<p class="sub">The same battle, fought again and again. After each one the expected losses are applied. Between battles each side gains its monthly manpower and reinforces its regiments, up to 25% of a regiment a month; wiped regiments are rebuilt at once if manpower allows. Levies are raised again from pops. Who runs out first?</p>
+		<div class="cols">
+			<div class="card side a"><div class="card-head"><h3>Attacker manpower</h3></div><div class="grid">
+				<div class="field"><label for="w-max-0">Max manpower</label><input id="w-max-0" type="number" min="0" step="1000" value="40000"></div>
+				<div class="field"><label for="w-mon-0">Per month (max ÷ 60)</label><input id="w-mon-0" type="number" min="0" step="50"></div>
+				<div class="field"><label for="w-cur-0">Current manpower</label><input id="w-cur-0" type="number" min="0" step="1000"></div>
+			</div></div>
+			<div class="card side b"><div class="card-head"><h3>Defender manpower</h3></div><div class="grid">
+				<div class="field"><label for="w-max-1">Max manpower</label><input id="w-max-1" type="number" min="0" step="1000" value="40000"></div>
+				<div class="field"><label for="w-mon-1">Per month (max ÷ 60)</label><input id="w-mon-1" type="number" min="0" step="50"></div>
+				<div class="field"><label for="w-cur-1">Current manpower</label><input id="w-cur-1" type="number" min="0" step="1000"></div>
+			</div></div>
+		</div>
+		<p class="hint">The game stores up to 5 years of monthly manpower, so the monthly figure follows the max until you change it. Current manpower starts at the max unless you set it lower.</p>
+		<div class="bar">
+			<div class="field"><label for="w-battles">Battles</label><input id="w-battles" type="number" min="1" max="30" value="8"></div>
+			<div class="field"><label for="w-months">Months between battles</label><input id="w-months" type="number" min="0" max="36" step="0.5" value="3"></div>
+			<div class="field"><label for="w-runs">Battles simulated per step</label><input id="w-runs" type="number" min="50" max="1000" step="50" value="200"></div>
+			<button class="primary" id="w-run" type="button">Fight the war</button>
+			<span class="progress" id="w-progress" aria-live="polite"></span>
+		</div>
+		<p id="w-verdict" class="lede" style="font-size:16px"></p>
+		<div class="charts"><div class="chart" id="chart-war-army"></div><div class="chart" id="chart-war-mp"></div></div>
+		<details><summary>Show the war as a table</summary><div class="tablewrap" id="war-table"></div></details>
+	</section>
 	<section class="panel" aria-labelledby="sample-title">
 		<h2 id="sample-title">One battle, day by day</h2>
 		<p class="sub" id="sample-sub"></p>
@@ -202,11 +235,13 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	</section>
 
 	<section class="notes" aria-label="How the simulator works">
-		<p><b>A day of battle.</b> The first 3 days are the bombard phase: only artillery fires (chance 20% × (1 + bombard efficiency) a day). After that, each day reserves move up (chance combat speed × 0.1, a frontage budget of the battle width), regiments not yet engaged engage (60% + initiative bonus up to 30% + 3% per day of battle), engaged regiments hit the enemy section facing them, everyone loses 0.03 morale, and losses land at once. Dice re-roll every 4 days.</p>
+		<p><b>A day of battle.</b> The first 3 days are the bombard phase: only artillery in the battle line fires, up to the battle frontage of guns per section, each with a 20% × (1 + bombard efficiency) chance a day. Dice re-roll when it ends. After that, each day reserves move up (chance combat speed × 0.1, a frontage budget of the battle width), regiments not yet engaged engage (60% + initiative bonus up to 30% + 3% per day of battle), engaged regiments hit the enemy section facing them, everyone loses 0.03 morale, and losses land at once. Dice re-roll every 4 days.</p>
 		<p><b>Damage per hit.</b> (raw die + 5 + dice modifiers, capped at 15) × 0.12, then × 0.04 for strength and × 0.25 for morale; morale × attacker men/max and × attacker size ÷ target size (0.25–4); × (1 + unit power); × flanking ability on flank attacks; × (1 + discipline) ÷ (1 + target discipline); × religion modifier; × combat power; ÷ (1 + tactics gap) when the target has more; × levy factor for a levy hitting a regular; strength × attacker men; × (1 − 0.5 × target experience/100); × target damage taken (cavalry 0.30); × combined arms; secured flanks; × terrain (unit's combat values for the location's topography, vegetation, climate, coast and river); strength/morale damage done and taken; +10% strength and +20% morale damage against a target not yet engaged.</p>
-		<p><b>Ending.</b> At the start, a side with 10 times the enemy's men (levies at their levy factor) wipes it out at once. From day 5, when a side has no regiment left with morale of at least 0.05, it loses; if the winner then has twice its men, the loser is wiped out, otherwise it retreats, shattered if its average morale is under 0.5.</p>
+		<p><b>Ending.</b> At the start, a side with 10 times the enemy's men (levies at their levy factor) wipes it out at once, whatever the morale. During the first 4 days, a side whose battle line has broken (morale at or under 0.05) is wiped out if the enemy has twice its men. From day 5, a side whose battle line is empty loses and retreats, shattered if its average morale is under 0.5; only a 10:1 ratio still wipes it. So the 2:1 wipe mostly hits armies that enter a battle already broken.</p>
 		<p><b>Terrain and movement.</b> Battle frontage 10, minus terrain (mountains 4, hills and wetlands 3, forests 2–4), at least 2; three sections hold 1.25 × that each. Terrain gives the attacker minus dice (mountains 2; hills, plateau, wetlands, narrows, woods, forest, jungle 1), river crossing −1, strait −2, sea landing −1. Marching costs 0.69% of max morale a day (land morale movement cost) and armies cannot recover morale while moving.</p>
-		<p><b>Approximated.</b> Deployment order inside a formation, the combined-arms bonus (2.5% per category holding 10–50% of the side), reinforcements joining as reserves, the 120-day cap. Not modelled: generals' traits other than dice, country-specific per-terrain unit modifiers, battles in a fortified location, naval combat.</p>
+		<p><b>Combined arms.</b> Counted in regiments across the side, auxiliaries excluded. If one category is half the regiments or more, there is no bonus at all; otherwise each category with at least 10% adds 2.5%.</p>
+		<p><b>Costs.</b> Upkeep is the unit's maintenance goods × its men ÷ (1 + maintenance efficiency); levies pay 1% of that. Recruiting costs the unit's construction goods and its full size in manpower. Reinforcing costs one manpower per man and goods ÷ (1 + reinforce efficiency); the simulator prices those goods with the construction basket (inferred). Max manpower is 5 years of monthly manpower.</p>
+		<p><b>Approximated.</b> Deployment order inside a formation, reinforcements joining as reserves, the 120-day cap, and the war of attrition (expected losses per battle, one manpower pool per side). Not modelled: generals' traits other than dice, country-specific per-terrain unit modifiers, battles in a fortified location, naval combat.</p>
 		<p><b>Source.</b> “EU5 Combat Mechanics (1.4.4).md” in the Ars Belli repository; unit stats from the 1.4.4 unit types and Ars Belli’s overrides.</p>
 	</section>
 </div>
@@ -242,9 +277,16 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		['Levies', [['l.li', 'Light inf. levies', 'int', 0], ['l.hi', 'Heavy inf. levies', 'int', 0], ['levyCE', 'Levy combat eff. %', 'pct', 0], ['levyExperience', 'Levy experience', 'num', 0]]],
 		['Stats', [['discipline', 'Discipline %', 'pct', 0], ['tactics', 'Military tactics', 'num', 1.0], ['moraleMod', 'Morale %', 'pct', 0], ['moraleFlat', 'Morale (flat)', 'num', 0], ['experience', 'Experience', 'num', 0], ['initiativeMod', 'Army initiative %', 'pct', 0], ['speedMod', 'Combat speed %', 'pct', 0]]],
 		['Unit power', [['p.li', 'Light inf. %', 'pct', 0], ['p.hi', 'Heavy inf. %', 'pct', 0], ['p.lc', 'Light cav. %', 'pct', 0], ['p.hc', 'Heavy cav. %', 'pct', 0], ['p.art', 'Artillery %', 'pct', 0]]],
+		['Upkeep', [['maintenanceEfficiency', 'Maintenance eff. %', 'pct', 0], ['reinforceEfficiency', 'Reinforce eff. %', 'pct', 0], ['reinforceSpeed', 'Reinforce speed %', 'pct', 0]]],
 	];
 	function buildQuick(el, id, title) {
-		el.innerHTML = `<div class="card-head"><h3>${title}</h3></div>`;
+		el.innerHTML = `<div class="card-head"><h3>${title}</h3><button class="small" type="button" data-clear="${id}" title="No regiments, no levies, every stat back to its default">Clear</button></div>`;
+		el.querySelector('[data-clear]').onclick = () => {
+			for (const [, fields] of QSCHEMA) for (const [key, , kind] of fields) {
+				if (kind === 'age' || kind === 'formation') continue;
+				$(`${id}-${key.replace('.', '-')}`).value = key === 'tactics' ? 1 : 0;
+			}
+		};
 		for (const [group, fields] of QSCHEMA) {
 			const fs = document.createElement('fieldset');
 			fs.innerHTML = `<legend>${group}</legend><div class="grid">${fields.map(([key, label, kind, def]) => {
@@ -278,17 +320,25 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 
 	// ---------- shared: runs, tiles, charts, hit explorer
 	function runMany(scn, n, onDone, onProgress) {
-		const acc = { n: 0, wins: [0, 0], draws: 0, days: 0, losses: [0, 0], overrun: [0, 0], shattered: [0, 0], start: [0, 0], armies: null };
+		const SUMS = ['losses', 'lossesRegular', 'lossesLevy', 'overrunLosses'];
+		const acc = { n: 0, wins: [0, 0], draws: 0, days: 0, overrun: [0, 0], shattered: [0, 0], start: [0, 0], armies: null, groups: null };
+		for (const k of SUMS) acc[k] = [0, 0];
 		const step = () => {
 			const k = Math.min(40, n - acc.n);
 			const m = S.monteCarloScenario(scn, k);
 			acc.n += k; acc.draws += m.draws; acc.days += m.days * k; acc.start = m.start;
-			for (const i of [0, 1]) { acc.wins[i] += m.wins[i]; acc.losses[i] += m.losses[i] * k; acc.overrun[i] += m.overrun[i]; acc.shattered[i] += m.shattered[i]; }
+			for (const i of [0, 1]) { acc.wins[i] += m.wins[i]; acc.overrun[i] += m.overrun[i]; acc.shattered[i] += m.shattered[i]; for (const s of SUMS) acc[s][i] += m[s][i] * k; }
 			if (!acc.armies) acc.armies = m.armies.map(s => s.map(a => ({ name: a.name, start: a.start, lost: 0 })));
 			m.armies.forEach((s, i) => s.forEach((a, j) => { acc.armies[i][j].lost += a.lost * k; }));
+			if (!acc.groups) acc.groups = m.groups.map(s => s.map(a => a.map(() => ({ lost: 0, wiped: 0 }))));
+			m.groups.forEach((s, i) => s.forEach((a, j) => a.forEach((g, q) => { acc.groups[i][j][q].lost += g.lost * k; acc.groups[i][j][q].wiped += g.wiped * k; })));
 			onProgress && onProgress(acc.n / n);
 			if (acc.n < n) setTimeout(step, 0);
-			else onDone({ ...acc, days: acc.days / n, losses: acc.losses.map(x => x / n), armies: acc.armies.map(s => s.map(a => ({ ...a, lost: a.lost / n }))) });
+			else {
+				const out = { ...acc, days: acc.days / n, armies: acc.armies.map(s => s.map(a => ({ ...a, lost: a.lost / n }))), groups: acc.groups.map(s => s.map(a => a.map(g => ({ lost: g.lost / n, wiped: g.wiped / n })))) };
+				for (const s of SUMS) out[s] = acc[s].map(x => x / n);
+				onDone(out);
+			}
 		};
 		step();
 	}
@@ -302,7 +352,70 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 			t('b', 'Defender losses', fmtMen(m.losses[1]), `of ${fmtMen(m.start[1])} men`);
 		$('army-table').innerHTML = `<table><thead><tr><th>Army</th><th>Side</th><th>Men</th><th>Average losses</th><th>Share lost</th></tr></thead><tbody>${m.armies.flatMap((s, i) => s.map(a => `<tr><td>${esc(a.name)}</td><td>${i ? 'Defender' : 'Attacker'}</td><td>${fmtMen(a.start)}</td><td>${fmtMen(a.lost)}</td><td>${pct(a.start ? a.lost / a.start : 0)}</td></tr>`)).join('')}</tbody></table>`;
 	}
-	function lineChart(el, title, series, fmt, yMaxHint) {
+	// ---------- costs and the war of attrition
+	const gold = x => x >= 100 ? Math.round(x).toLocaleString('en-US') : x.toFixed(1);
+	const SIDE = ['Attacker', 'Defender'];
+	function renderCosts(scn, m) {
+		const c = S.armyCosts(scn), b = S.battleCosts(scn, m);
+		const t = (cls, label, value, note) => `<div class="tile ${cls}"><div class="label"><i></i>${label}</div><div class="value">${value}</div><div class="note">${note}</div></div>`;
+		$('cost-tiles').innerHTML = [0, 1].map(i => t(i ? 'b' : 'a', `${SIDE[i]}: to recruit`, fmtMen(c[i].buildManpower), `manpower and ${gold(c[i].buildGold)} gold for ${c[i].regiments} regiments${c[i].levies ? ` (+${c[i].levies} levies: pops, no manpower)` : ''}`)
+			+ t(i ? 'b' : 'a', `${SIDE[i]}: upkeep`, gold(c[i].upkeepGold), 'gold a month at full strength')
+			+ t(i ? 'b' : 'a', `${SIDE[i]}: after this battle`, fmtMen(b[i].manpower), `manpower to refill; ${gold(b[i].reinforceGold)} gold to reinforce${b[i].rebuildGold ? `, ${gold(b[i].rebuildGold)} to rebuild wiped regiments` : ''}${b[i].levyPops ? `; ${fmtMen(b[i].levyPops)} pops died as levies` : ''}`)).join('');
+		$('cost-table').innerHTML = `<table><thead><tr><th>Unit</th><th>Side</th><th>Army</th><th>Count</th><th>Men</th><th>Recruit: manpower</th><th>Recruit: gold</th><th>Upkeep / month</th><th>Reinforce gold / 1,000 men</th></tr></thead><tbody>${c.flatMap((s, i) => s.rows.map(r => `<tr><td>${esc(r.name)}${r.levy ? ' (levy)' : ''}</td><td>${SIDE[i]}</td><td>${esc(r.armyName)}</td><td>${r.count}</td><td>${fmtMen(r.men)}</td><td>${r.levy ? '—' : fmtMen(r.buildManpower)}</td><td>${r.levy ? '—' : gold(r.buildGold)}</td><td>${gold(r.upkeepGold)}</td><td>${r.levy ? '—' : gold(r.reinforceGold)}</td></tr>`)).join('')}</tbody></table>`;
+	}
+	// monthly manpower follows the max (÷ 60) and current follows the max until edited
+	for (const i of [0, 1]) {
+		const mx = $(`w-max-${i}`), mo = $(`w-mon-${i}`), cu = $(`w-cur-${i}`);
+		const follow = () => { const v = +mx.value || 0; if (mo.dataset.set !== '1') mo.value = Math.round(v / (S.D.MAX_MANPOWER_YEARS * 12)); if (cu.dataset.set !== '1') cu.value = v; };
+		mx.addEventListener('input', follow); mo.addEventListener('input', () => { mo.dataset.set = mo.value === '' ? '' : '1'; follow(); }); cu.addEventListener('input', () => { cu.dataset.set = cu.value === '' ? '' : '1'; follow(); });
+		follow();
+	}
+	const warInputs = () => ({
+		battles: Math.max(1, Math.min(30, +$('w-battles').value || 8)), monthsBetweenBattles: Math.max(0, +$('w-months').value || 0),
+		sides: [0, 1].map(i => ({ maxManpower: +$(`w-max-${i}`).value || 0, monthlyManpower: +$(`w-mon-${i}`).value || 0, currentManpower: +$(`w-cur-${i}`).value || 0 })),
+	});
+	function setWarInputs(war) {
+		if (!war) return;
+		if (war.battles) $('w-battles').value = war.battles;
+		if (war.monthsBetweenBattles != null) $('w-months').value = war.monthsBetweenBattles;
+		(war.sides || []).forEach((w, i) => {
+			if (i > 1 || !w) return;
+			if (w.maxManpower != null) $(`w-max-${i}`).value = w.maxManpower;
+			$(`w-mon-${i}`).dataset.set = w.monthlyManpower != null ? '1' : ''; if (w.monthlyManpower != null) $(`w-mon-${i}`).value = w.monthlyManpower;
+			$(`w-cur-${i}`).dataset.set = w.currentManpower != null ? '1' : ''; if (w.currentManpower != null) $(`w-cur-${i}`).value = w.currentManpower;
+			$(`w-max-${i}`).dispatchEvent(new Event('input'));
+		});
+	}
+	function runWar() {
+		const base = mode === 'quick' ? quickScenario() : JSON.parse(JSON.stringify(scn));
+		base.war = warInputs();
+		if (mode === 'full') { scn.war = base.war; syncJson(); }
+		const it = S.campaignSteps(base, { runs: Math.max(50, Math.min(1000, +$('w-runs').value || 200)) });
+		$('w-run').disabled = true;
+		const step = () => {
+			let r;
+			try { r = it.next(); } catch (e) { $('w-progress').textContent = e.message; $('w-run').disabled = false; return; }
+			if (!r.done) { $('w-progress').textContent = `Battle ${r.value.battle} of ${r.value.of}…`; setTimeout(step, 0); return; }
+			$('w-run').disabled = false; $('w-progress').textContent = '';
+			renderWar(r.value);
+		};
+		setTimeout(step, 0);
+	}
+	function renderWar(w) {
+		const last = w.rows[w.rows.length - 1];
+		const spent = i => `${fmtMen(w.total.manpower[i])} manpower and ${gold(w.total.gold[i])} gold${w.total.levyPops[i] > 0.0005 ? `, plus ${fmtMen(w.total.levyPops[i])} pops lost as levies` : ''}`;
+		$('w-verdict').innerHTML = (w.worn < 0
+			? `<b>Neither side is worn down</b> in ${w.battles} battles fought ${w.months} months apart. In the last one the attacker wins ${pct(last.winRate[0])}.`
+			: `<b>The ${w.worn ? 'defender' : 'attacker'} is worn down after battle ${w.at}</b>: from then on it can no longer bring its army back above half strength between battles. In the last battle the attacker wins ${pct(last.winRate[0])}.`)
+			+ ` The attacker spent ${spent(0)}; the defender ${spent(1)}.`;
+		const xs = { tick: d => d + 1, name: d => `Battle ${d + 1}`, aria: 'by battle' };
+		lineChart($('chart-war-army'), 'Army at the start of each battle', [0, 1].map(i => ({ name: SIDE[i], c: i ? '--side-b' : '--side-a', pts: w.rows.map(r => w.full[i] ? r.before[i] / w.full[i] : 0) })), v => Math.round(v * 100) + '%', 1, xs);
+		lineChart($('chart-war-mp'), 'Manpower left after refilling', [0, 1].map(i => ({ name: SIDE[i], c: i ? '--side-b' : '--side-a', pts: w.rows.map(r => r.pool[i]) })), (v, axis) => axis ? (v >= 1 ? v.toFixed(0) + 'K' : Math.round(v * 1000)) : fmtMen(v), 0, xs);
+		$('war-table').innerHTML = `<table><thead><tr><th>Battle</th><th>Attacker wins</th><th>Army A</th><th>Army D</th><th>Lost A</th><th>Lost D</th><th>Refilled A</th><th>Refilled D</th><th>Manpower A</th><th>Manpower D</th><th>Gold A</th><th>Gold D</th></tr></thead><tbody>${w.rows.map(r => `<tr><td>${r.battle}</td><td>${pct(r.winRate[0])}</td><td>${fmtMen(r.before[0])}</td><td>${fmtMen(r.before[1])}</td><td>${fmtMen(r.losses[0])}</td><td>${fmtMen(r.losses[1])}</td><td>${fmtMen(r.refilled[0])}</td><td>${fmtMen(r.refilled[1])}</td><td>${fmtMen(r.pool[0])}</td><td>${fmtMen(r.pool[1])}</td><td>${gold(r.gold[0])}</td><td>${gold(r.gold[1])}</td></tr>`).join('')}</tbody></table>`;
+	}
+	$('w-run').onclick = runWar;
+
+	function lineChart(el, title, series, fmt, yMaxHint, xs = { tick: d => d, name: d => `Day ${d}`, aria: 'by day' }) {
 		const W = 520, H = 230, L = 46, R = 70, T = 12, B = 26;
 		const days = series[0].pts.length - 1;
 		const yMax = Math.max(yMaxHint || 0, ...series.flatMap(s => s.pts)) || 1;
@@ -312,7 +425,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		let g = '';
 		for (let v = 0; v <= top + 1e-9; v += step) g += `<line class="gridline" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${fmt(v, true)}</text>`;
 		const xt = Math.max(1, Math.ceil(days / 6));
-		for (let d = 0; d <= days; d += xt) g += `<text x="${x(d)}" y="${H - 8}" text-anchor="middle">${d}</text>`;
+		for (let d = 0; d <= days; d += xt) g += `<text x="${x(d)}" y="${H - 8}" text-anchor="middle">${xs.tick(d)}</text>`;
 		let paths = '', ends = '';
 		const endY = series.map(s => y(s.pts[days]));
 		if (Math.abs(endY[0] - endY[1]) < 14) { const s = endY[0] <= endY[1] ? -1 : 1, mid = (endY[0] + endY[1]) / 2; endY[0] = mid + 7 * s; endY[1] = mid - 7 * s; }
@@ -321,14 +434,14 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 			ends += `<circle cx="${x(days)}" cy="${y(s.pts[days])}" r="4" fill="var(${s.c})" stroke="var(--surface)" stroke-width="2"/><text x="${x(days) + 8}" y="${endY[i] + 4}" style="fill:var(--ink);font-family:var(--font-num);font-size:11px">${fmt(s.pts[days])}</text>`;
 		});
 		el.innerHTML = `<div class="title">${title}</div><div class="legend">${series.map(s => `<span style="--c:var(${s.c})">${s.name}</span>`).join('')}</div>
-			<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${title} by day"><g class="axis">${g}</g>${paths}${ends}<line class="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/><rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent"/></svg>`;
+			<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${title} ${xs.aria}"><g class="axis">${g}</g>${paths}${ends}<line class="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/><rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent"/></svg>`;
 		const svg = el.querySelector('svg'), cross = svg.querySelector('.cross'), hitR = svg.querySelector('rect');
 		const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; el.appendChild(tip);
 		hitR.addEventListener('pointermove', ev => {
 			const r = svg.getBoundingClientRect(); const px = (ev.clientX - r.left) * W / r.width;
 			const d = Math.max(0, Math.min(days, Math.round((px - L) / ((W - L - R) / (days || 1)))));
 			cross.setAttribute('x1', x(d)); cross.setAttribute('x2', x(d)); cross.setAttribute('visibility', 'visible');
-			tip.hidden = false; tip.innerHTML = `Day ${d}<br>${series.map(s => `${s.name} <b>${fmt(s.pts[d])}</b>`).join('<br>')}`;
+			tip.hidden = false; tip.innerHTML = `${xs.name(d)}<br>${series.map(s => `${s.name} <b>${fmt(s.pts[d])}</b>`).join('<br>')}`;
 			tip.style.left = (x(d) * r.width / W) + 'px'; tip.style.top = (r.top - el.getBoundingClientRect().top + y(Math.max(...series.map(s => s.pts[d]))) * r.height / H) + 'px';
 		});
 		hitR.addEventListener('pointerleave', () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); });
@@ -379,7 +492,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		btn.disabled = true;
 		try { renderSample(scn); } catch (e) { progEl.textContent = e.message; btn.disabled = false; return; }
 		setHitOptions(scn);
-		runMany(scn, n, m => { renderOdds(m); progEl.textContent = `${m.n} battles fought.`; btn.disabled = false; }, f => { progEl.textContent = `Fighting… ${Math.round(f * 100)}%`; });
+		runMany(scn, n, m => { renderOdds(m); renderCosts(scn, m); progEl.textContent = `${m.n} battles fought.`; btn.disabled = false; }, f => { progEl.textContent = `Fighting… ${Math.round(f * 100)}%`; });
 	}
 	$('q-run').onclick = () => runScenario(quickScenario(), Math.max(50, Math.min(5000, +$('q-runs').value || 500)), $('q-progress'), $('q-run'));
 	$('q-copy').onclick = () => { for (const [, f] of QSCHEMA) for (const [key] of f) $('b-' + key.replace('.', '-')).value = $('a-' + key.replace('.', '-')).value; $('q-run').click(); };
@@ -444,8 +557,9 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		['initiativeMod', 'Army initiative %', 'pct'], ['speedMod', 'Combat speed %', 'pct'], ['movementCost', 'Morale movement cost %', 'pct4'],
 		['power.li', 'Light inf. power %', 'pct'], ['power.hi', 'Heavy inf. power %', 'pct'], ['power.lc', 'Light cav. power %', 'pct'], ['power.hc', 'Heavy cav. power %', 'pct'], ['power.art', 'Artillery power %', 'pct'],
 		['sdd', 'Strength dmg done %', 'pct'], ['sdt', 'Strength dmg taken %', 'pct'], ['mdd', 'Morale dmg done %', 'pct'], ['mdt', 'Morale dmg taken %', 'pct'],
-		['religion', 'Religion', 'text'], ['religionGroup', 'Religion group', 'text'], ['vsHeretic', 'vs heretics %', 'pct'], ['vsHeathen', 'vs heathens %', 'pct']];
-	const DEF_C = { discipline: 0, tactics: 1, moraleMod: 0, moraleFlat: 0, commanderDice: 0, experience: 0, levyCE: 0, levyExperience: 0, initiativeMod: 0, speedMod: 0, movementCost: S.D.MOVEMENT_COST, sdd: 0, sdt: 0, mdd: 0, mdt: 0, religion: '', religionGroup: '', vsHeretic: 0, vsHeathen: 0 };
+		['religion', 'Religion', 'text'], ['religionGroup', 'Religion group', 'text'], ['vsHeretic', 'vs heretics %', 'pct'], ['vsHeathen', 'vs heathens %', 'pct'],
+		['maintenanceEfficiency', 'Maintenance eff. %', 'pct'], ['levyMaintenance', 'Levy maintenance %', 'pct'], ['reinforceEfficiency', 'Reinforce eff. %', 'pct'], ['reinforceSpeed', 'Reinforce speed %', 'pct']];
+	const DEF_C = { discipline: 0, tactics: 1, moraleMod: 0, moraleFlat: 0, commanderDice: 0, experience: 0, levyCE: 0, levyExperience: 0, initiativeMod: 0, speedMod: 0, movementCost: S.D.MOVEMENT_COST, sdd: 0, sdt: 0, mdd: 0, mdt: 0, religion: '', religionGroup: '', vsHeretic: 0, vsHeathen: 0, maintenanceEfficiency: 0, levyMaintenance: 0, reinforceEfficiency: 0, reinforceSpeed: 0 };
 	const getPath = (o, p) => p.split('.').reduce((x, k) => (x == null ? undefined : x[k]), o);
 	const setPath = (o, p, v) => { const ks = p.split('.'); let x = o; ks.slice(0, -1).forEach(k => { x = x[k] ??= {}; }); x[ks[ks.length - 1]] = v; };
 	const toShow = (kind, v) => v == null || v === '' ? '' : kind === 'pct' ? +(v * 100).toFixed(2) : kind === 'pct4' ? +(v * 100).toFixed(3) : v;
@@ -558,7 +672,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 			if (a.country && typeof a.country === 'object') { const code = (a.name || 'Country').slice(0, 12) + '#' + Object.keys(obj.countries).length; obj.countries[code] = a.country; a.country = code; }
 			if (!a.country) { obj.countries.Default = obj.countries.Default || {}; a.country = 'Default'; }
 		}
-		scn = obj; $('f-err').textContent = ''; renderFull();
+		scn = obj; $('f-err').textContent = ''; setWarInputs(obj.war); renderFull();
 	}
 	$('add-country').onclick = () => { let i = 1; while (scn.countries['Country ' + i]) i++; scn.countries['Country ' + i] = {}; renderFull(); };
 	document.querySelectorAll('[data-add-army]').forEach(b => b.onclick = () => {

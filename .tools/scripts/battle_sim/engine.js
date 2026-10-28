@@ -1,7 +1,6 @@
-// EU5 1.4.4 land battle simulator engine (v2, scenario based).
+// EU5 1.4.4 land battle simulator engine (v3).
 // Mechanics read from eu5.exe 1.4.4; see "EU5 Combat Mechanics (1.4.4).md" in the repo root.
-// Unit stats come from units.json (build_units.js). Steps the code reading did not cover are marked APPROX.
-// Works in the browser (window.BattleSim) and in Node (module.exports).
+// Unit stats come from units.json (build_units.js). Works in the browser (window.BattleSim) and Node.
 (function (root) {
 	'use strict';
 
@@ -9,17 +8,17 @@
 		COMBAT_BASE: 5, COMBAT_MAX: 15, DICE_SIDES: 10, DAMAGE_MULT: 0.12,
 		STR_MOD: 0.04, MOR_MOD: 0.25, DAILY_MORALE: 0.03, DAYS_PER_PHASE: 4, MIN_DAYS: 5, BOMBARD_DAYS: 3,
 		COLLAPSE: 0.05,            // absolute morale points (MORALE_COLLAPSE_THRESHOLD)
-		LOW_MORALE: 0.5,           // absolute, below it a lost battle is a shattered retreat
-		MIN_STRENGTH: 0.001,       // regiments with less (in thousands of men) cannot fight
+		LOW_MORALE: 0.5,           // absolute; below it a lost battle is a shattered retreat
+		MIN_STRENGTH: 0.001,       // regiments with less strength (thousands of men) leave the line
+		LINE_EMPTY: 0.01,          // a section counts as empty below this total strength
 		INIT_BASE: 0.6, INIT_EACH: 0.025, INIT_MAX: 0.3, INIT_DAY: 0.03,
 		SPEED_SCALE: 0.1, OVERSTACK: 1.25, SIZE_RATIO_MAX: 4, LEVY_IMPACT: 0.75, EXP_RED: 0.5,
 		NOT_ENG_STR: 1.1, NOT_ENG_MOR: 1.2, INITIAL_OVERRUN: 10, MORALE_OVERRUN: 2,
 		BOMBARD_CHANCE: 0.2, LAND_MORALE: 3, LEVY_DISCIPLINE: -0.2,
 		COMBINED_PER_TYPE: 0.025, COMBINED_MIN: 0.1, COMBINED_MAX: 0.5,
 		BASE_FRONTAGE: 10, MIN_FRONTAGE: 2, MOVEMENT_COST: 0.0069, MAX_DAYS: 120,
+		REINFORCE_EFF_FLOOR: -0.5, MAINT_EFF_FLOOR: -0.95, LEVY_MAINTENANCE: 0.01, MONTHLY_REINFORCE: 0.25, MAX_MANPOWER_YEARS: 5,
 	};
-
-	// unit_categories 1.4.4 (fallback when a unit is given generically)
 	const CAT = {
 		li: { name: 'Light infantry', dt: 1.0, sdd: -0.1, mdt: 0.1, i: 5, cs: 3, fl: 1.1, sf: 0.05 },
 		hi: { name: 'Heavy infantry', dt: 1.0, sdd: 0, mdt: 0, i: 1, cs: 2, fl: 1.0, sf: 0.05 },
@@ -29,7 +28,6 @@
 		aux: { name: 'Auxiliary', dt: 1.25, sdd: 0, mdt: 0, i: 1, cs: 0.1, fl: 1.0, sf: 0, aux: 1 },
 	};
 	const CATS = Object.keys(CAT);
-	// 00_age_templates_land.txt: [combat_power, max_strength] per age 1-6
 	const AGE = {
 		li: [[1, 0.5], [1, 1.0], [1, 1.5], [1.5, 2.0], [2.25, 2.5], [3, 3.0]],
 		hi: [[1, 0.5], [1, 1.0], [1, 1.5], [1.5, 2.0], [2.25, 2.5], [3, 3.0]],
@@ -38,15 +36,15 @@
 		art: [[2, 0.1], [3, 0.2], [4, 0.6], [5, 0.8], [5.5, 1.0], [7.5, 1.2]],
 		aux: [[0.25, 0.05], [0.25, 0.1], [0.25, 0.15], [0.25, 0.2], [0.25, 0.25], [0.25, 0.3]],
 	};
-	// topography/vegetation/climate: defender = attacker dice penalty, frontage = battle frontage change
 	const TERRAIN_FALLBACK = {
 		topography: { flatland: [0, 0], mountains: [2, -4], hills: [1, -3], plateau: [1, -1], wetlands: [1, -3], narrows: [1, -2] },
 		vegetation: { sparse: [0, 0], grasslands: [0, 0], farmland: [0, 0], woods: [1, -2], forest: [1, -3], jungle: [1, -4] },
 		climate: {},
 	};
 	const MIRROR = { L: 'R', C: 'C', R: 'L' };
-	const SECTIONS = ['L', 'C', 'R'];
-	let DB = null; // units.json
+	const SECTIONS = ['C', 'L', 'R'];       // code order: centre (0x198), left (0xf0), right (0x240)
+	const FALLBACK = ['C', 'L', 'R', 'reserve'];
+	let DB = null;
 	const setUnitDB = db => { DB = db; };
 
 	function makeRng(seed) {
@@ -54,26 +52,23 @@
 		let s = seed >>> 0;
 		return () => { s = (s + 0x6d2b79f5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 	}
-
 	const COUNTRY_DEFAULTS = {
 		discipline: 0, tactics: 1.0, moraleMod: 0, moraleFlat: 0, initiativeMod: 0, speedMod: 0, levyCE: 0,
 		commanderDice: 0, movementCost: D.MOVEMENT_COST, experience: 0, levyExperience: 0,
 		power: {}, sdd: 0, sdt: 0, mdd: 0, mdt: 0, vsHeretic: 0, vsHeathen: 0, religion: null, religionGroup: null,
+		combinedPerType: D.COMBINED_PER_TYPE, combinedMin: D.COMBINED_MIN, combinedMax: D.COMBINED_MAX,
+		reinforceEfficiency: 0, maintenanceEfficiency: 0, reinforceSpeed: 0, levyMaintenance: 0,
 	};
-	function country(spec, countries) {
-		const c = typeof spec === 'string' ? (countries && countries[spec]) || {} : spec || {};
-		return { ...COUNTRY_DEFAULTS, ...c, power: { ...(c.power || {}) } };
-	}
+	const country = (spec, countries) => { const c = typeof spec === 'string' ? (countries && countries[spec]) || {} : spec || {}; return { ...COUNTRY_DEFAULTS, ...c, power: { ...(c.power || {}) } }; };
 
-	// Unit stats: units.json entry, or "generic:<cat>:<age>"
 	function unitStats(type) {
 		if (DB && DB.units && DB.units[type]) return DB.units[type];
 		const m = /^generic:(li|hi|lc|hc|art|aux):([1-6])$/.exec(type || '');
 		if (!m) throw new Error('unknown unit type ' + type + (DB ? '' : ' (no unit database loaded)'));
 		const c = CAT[m[1]], [p, s] = AGE[m[1]][+m[2] - 1];
-		return { n: `${c.name} (age ${m[2]})`, c: m[1], a: +m[2], levy: 0, p, s, i: c.i, cs: c.cs, f: 1, fl: c.fl, sf: c.sf, dt: c.dt, sdd: c.sdd, sdt: 0, mdd: 0, mdt: c.mdt, be: 0, bombard: c.bombard || 0, aux: c.aux || 0, ct: c.ct };
+		const cost = (DB && DB.catCost && DB.catCost[m[1]]) || {};
+		return { n: `${c.name} (age ${m[2]})`, c: m[1], a: +m[2], levy: 0, p, s, i: c.i, cs: c.cs, f: 1, fl: c.fl, sf: c.sf, dt: c.dt, sdd: c.sdd, sdt: 0, mdd: 0, mdt: c.mdt, be: 0, bombard: c.bombard || 0, aux: c.aux || 0, ct: c.ct, bg: cost.bg || 0, ug: cost.ug || 0 };
 	}
-
 	function terrainInfo(loc) {
 		const t = (layer, key) => {
 			const db = DB && DB.terrain && DB.terrain[layer];
@@ -91,14 +86,15 @@
 		const regs = [];
 		const maxMor = D.LAND_MORALE * (1 + c.moraleMod) + c.moraleFlat;
 		const startMorFrac = army.morale != null ? army.morale : Math.max(0, 1 - (army.marchDays || 0) * c.movementCost);
-		for (const g of army.units || []) {
+		for (const [gi, g] of (army.units || []).entries()) {
 			const u = unitStats(g.type);
 			const levy = g.levy != null ? !!g.levy : !!u.levy;
 			for (let k = 0; k < (g.count | 0); k++) {
 				const maxStr = u.s * (g.maxStrength || 1);
+				const str = maxStr * (g.strength != null ? g.strength : 1);
+				if (str < D.MIN_STRENGTH) continue; // an emptied regiment does not take part
 				regs.push({
-					side: sideIdx, army: armyIdx, type: g.type, name: u.n, cat: u.c, levy, u, c,
-					maxStr, str: maxStr * (g.strength != null ? g.strength : 1),
+					side: sideIdx, army: armyIdx, grp: gi, type: g.type, name: u.n, cat: u.c, levy, u, c, maxStr, str, start: str,
 					maxMor, mor: maxMor * (g.morale != null ? g.morale : startMorFrac),
 					disc: c.discipline + (levy ? D.LEVY_DISCIPLINE : 0) + (g.discipline || 0),
 					exp: g.experience != null ? g.experience : (levy ? c.levyExperience : c.experience),
@@ -111,32 +107,37 @@
 
 	const levyFactor = c => Math.min(1, Math.max(0.05, D.LEVY_IMPACT + (1 - D.LEVY_IMPACT) * c.levyCE));
 	const present = r => r.section !== 'absent' && r.section !== 'routed';
-	const canFight = r => present(r) && r.str > D.MIN_STRENGTH && r.mor >= D.COLLAPSE;
-	const menWeighted = regs => regs.reduce((t, r) => t + (present(r) || r.section === 'routed' ? r.str * (r.levy ? levyFactor(r.c) : 1) : 0), 0);
+	const inLine = r => SECTIONS.includes(r.section);
+	const canFight = r => present(r) && r.str >= D.MIN_STRENGTH && r.mor >= D.COLLAPSE;
+	// overrun "men": every regiment of the side's armies in the battle, levies at their factor (0x143519150)
+	const sideMen = regs => regs.reduce((t, r) => t + (r.section === 'absent' ? 0 : r.str * (r.levy ? levyFactor(r.c) : 1)), 0);
 
-	// AddUnit: section by formation preference (or the unit's own section) while it has room, else reserve
+	// AddUnit: section by formation (or the unit's own section) while it has room (1.25 x W), else reserve
 	function deploy(armyRegs, formation, width, sideRegs, toReserve) {
 		const cap = D.OVERSTACK * width;
 		const used = s => sideRegs.filter(x => x.section === s && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0);
 		let rr = 0;
 		for (const r of armyRegs) {
-			if (toReserve || r.u.aux || r.cat === 'aux') { r.section = 'reserve'; continue; }
+			r.section = 'reserve';
+			if (toReserve || r.u.aux) continue;
 			let prefs;
 			if (r.prefSection) prefs = [r.prefSection];
 			else if (formation === 'cav_inf_cav') prefs = (r.cat === 'lc' || r.cat === 'hc') ? (rr++ % 2 ? ['R', 'L'] : ['L', 'R']) : ['C'];
 			else prefs = [['C', 'L', 'R'][rr++ % 3]];
-			r.section = 'reserve';
-			for (const s of prefs) if (s === 'reserve') break; else if (used(s) + (r.u.f || 1) <= cap) { r.section = s; break; }
+			for (const s of prefs) { if (s === 'reserve') break; if (used(s) + (r.u.f || 1) <= cap) { r.section = s; break; } }
 		}
 	}
 
-	function combinedArms(regs) {
-		const tot = {}; let all = 0;
-		for (const r of regs) if (canFight(r) && !r.u.aux) { tot[r.cat] = (tot[r.cat] || 0) + r.str; all += r.str; }
+	// Combined arms (0x142486dd0): regiment COUNT per category over the side's armies (auxiliaries excluded).
+	// If any category is >= combined_arms_max_threshold of the regiments: no bonus at all.
+	// Otherwise every category with >= combined_arms_min_percent_for_bonus adds combined_bonus_per_type.
+	function combinedArms(regs, c) {
+		const n = {}; let all = 0;
+		for (const r of regs) if (r.section !== 'absent' && !r.u.aux) { n[r.cat] = (n[r.cat] || 0) + 1; all++; }
 		if (!all) return 0;
-		let n = 0;
-		for (const c in tot) { const sh = tot[c] / all; if (sh >= D.COMBINED_MIN && sh <= D.COMBINED_MAX) n++; }
-		return n * D.COMBINED_PER_TYPE;
+		const shares = Object.values(n).map(x => x / all);
+		if (Math.max(...shares) >= c.combinedMax) return 0;
+		return shares.filter(s => s >= c.combinedMin).length * c.combinedPerType;
 	}
 
 	// Damage function 0x142482130: one hit of A on B
@@ -181,10 +182,10 @@
 		return breakdown ? { s, m, base, roll, factors: f } : { s, m };
 	}
 
-	function normalize(scn) {
+	const normalize = scn => {
 		const side = s => (s && s.armies) ? s : { armies: s ? [s] : [] };
 		return { location: scn.location || {}, countries: scn.countries || {}, sides: [side(scn.attacker), side(scn.defender)] };
-	}
+	};
 
 	function simulateScenario(scnIn, opts = {}) {
 		const scn = normalize(scnIn);
@@ -195,86 +196,106 @@
 		const all = [0, 1].map(i => sides[i].flatMap(a => a.regs));
 		const timeline = [];
 		const dice = [0, 0];
-		const arrive = (i, day) => {
-			for (const a of sides[i]) {
-				const at = a.army.arrivalDay || 0;
-				if (at === day) deploy(a.regs, a.army.formation || 'balanced', W, all[i], day > 0);
-			}
-		};
-		const sideDice = i => {
-			const cmd = Math.max(0, ...sides[i].filter(a => (a.army.arrivalDay || 0) <= curDay).map(a => a.c.commanderDice | 0));
-			return cmd + (i === 0 ? terr.attackerDice : 0);
-		};
-		const roll = () => { for (const i of [0, 1]) dice[i] = Math.floor(rng() * D.DICE_SIDES); };
 		let curDay = 0;
+		const arrived = i => sides[i].filter(a => (a.army.arrivalDay || 0) <= curDay);
+		const leadCountry = i => (arrived(i)[0] || sides[i][0]).c;
+		const arrive = (i, day) => { for (const a of sides[i]) if ((a.army.arrivalDay || 0) === day) deploy(a.regs, a.army.formation || 'balanced', W, all[i], day > 0); };
+		const sideDice = i => Math.max(0, ...arrived(i).map(a => a.c.commanderDice | 0)) + (i === 0 ? terr.attackerDice : 0);
+		const roll = () => { for (const i of [0, 1]) dice[i] = Math.floor(rng() * D.DICE_SIDES); };
+		const lineStrength = (i, s) => all[i].filter(r => r.section === s).reduce((t, r) => t + r.str, 0);
+		const lineEmpty = i => SECTIONS.every(s => lineStrength(i, s) < D.LINE_EMPTY);
+		const lineMorale = i => { const f = all[i].filter(inLine); return f.length ? f.reduce((t, r) => t + r.mor, 0) / f.length : 0; };
 		const startMen = [0, 1].map(i => all[i].reduce((t, r) => t + r.str, 0));
 		const snap = day => timeline.push({
 			day, dice: [dice[0] + sideDice(0), dice[1] + sideDice(1)],
 			men: [0, 1].map(i => all[i].filter(r => r.section !== 'absent').reduce((t, r) => t + r.str, 0)),
-			morale: [0, 1].map(i => { const f = all[i].filter(r => SECTIONS.includes(r.section)); return f.length ? f.reduce((t, r) => t + r.mor / r.maxMor, 0) / f.length : 0; }),
-			front: [0, 1].map(i => all[i].filter(r => SECTIONS.includes(r.section) && canFight(r)).length),
+			morale: [0, 1].map(i => { const f = all[i].filter(inLine); return f.length ? f.reduce((t, r) => t + r.mor / r.maxMor, 0) / f.length : 0; }),
+			front: [0, 1].map(i => all[i].filter(r => inLine(r)).length),
 			reserve: [0, 1].map(i => all[i].filter(r => r.section === 'reserve' && canFight(r)).length),
 		});
 		const finish = (winner, day, overrunSide) => {
-			const end = [0, 1].map(i => all[i].reduce((t, r) => t + (overrunSide === i ? 0 : r.str), 0));
 			const loser = winner < 0 ? -1 : 1 - winner;
-			const lr = loser >= 0 ? all[loser].filter(r => r.str > D.MIN_STRENGTH) : [];
+			const lostOf = r => r.section === 'absent' ? 0 : overrunSide === r.side ? r.start : r.start - r.str; // a wiped army loses every man
+			const lr = loser >= 0 ? all[loser].filter(r => r.str >= D.MIN_STRENGTH) : [];
 			const shattered = loser >= 0 && overrunSide !== loser && lr.length > 0 && lr.reduce((t, r) => t + r.mor, 0) / lr.length < D.LOW_MORALE;
+			const sum = (i, f) => all[i].filter(r => r.section !== 'absent').reduce((t, r) => t + f(r), 0);
 			return {
-				winner, days: day, overrun: overrunSide != null && overrunSide >= 0, shattered, frontage: W,
-				start: startMen, end, losses: [0, 1].map(i => startMen[i] - end[i]),
-				armies: sides.map((s, i) => s.map((a, j) => ({ name: a.army.name || `Army ${j + 1}`, start: a.regs.reduce((t, r) => t + r._start, 0), end: overrunSide === i ? 0 : a.regs.reduce((t, r) => t + r.str, 0) }))),
+				winner, days: day, overrun: overrunSide != null, shattered, frontage: W, start: startMen,
+				losses: [0, 1].map(i => sum(i, lostOf)),
+				lossesRegular: [0, 1].map(i => sum(i, r => r.levy ? 0 : lostOf(r))),
+				lossesLevy: [0, 1].map(i => sum(i, r => r.levy ? lostOf(r) : 0)),
+				armies: sides.map(s => s.map((a, j) => ({ name: a.army.name || `Army ${j + 1}`, start: a.regs.reduce((t, r) => t + r.start, 0), lost: a.regs.reduce((t, r) => t + lostOf(r), 0) }))),
+				// per unit group: men lost, and how many of them were in a wiped army (rebuilt rather than reinforced)
+				groups: sides.map((s, i) => s.map(a => (a.army.units || []).map((g, gi) => {
+					const lost = a.regs.filter(r => r.grp === gi).reduce((t, r) => t + lostOf(r), 0);
+					return { lost, wiped: overrunSide === i ? lost : 0 };
+				}))),
 				timeline,
 			};
 		};
-		for (const i of [0, 1]) for (const r of all[i]) r._start = r.str;
 		arrive(0, 0); arrive(1, 0);
 		roll();
 		snap(0);
-		// INITIAL_OVERRUN at battle start (no morale requirement)
-		const s0 = [0, 1].map(i => menWeighted(all[i].filter(present)));
-		if (s0[1] > 0 && s0[0] >= D.INITIAL_OVERRUN * s0[1]) return finish(0, 0, 1);
-		if (s0[0] > 0 && s0[1] >= D.INITIAL_OVERRUN * s0[0]) return finish(1, 0, 0);
-		if (!s0[0] || !s0[1]) return finish(s0[0] ? 0 : s0[1] ? 1 : -1, 0, null);
+		const m0 = [0, 1].map(i => sideMen(all[i]));
+		if (!m0[0] || !m0[1]) return finish(m0[0] ? 0 : m0[1] ? 1 : -1, 0, null);
+		if (m0[0] >= D.INITIAL_OVERRUN * m0[1]) return finish(0, 0, 1);   // stack wipe at the start, no morale check
+		if (m0[1] >= D.INITIAL_OVERRUN * m0[0]) return finish(1, 0, 0);
+		let phaseCounter = 0, bombardOver = false;
+
+		const attackSide = (i, bombard) => {
+			const own = all[i], foe = all[1 - i];
+			const combinedA = combinedArms(own, leadCountry(i));
+			const d = dice[i] + sideDice(i);
+			for (const sec of SECTIONS) {
+				let budget = W; // bombard: up to W frontage of artillery per section (0x142486c70)
+				for (const A of own) {
+					if (A.section !== sec || !canFight(A)) continue;
+					if (bombard) {
+						if (!A.u.bombard) continue;
+						if ((A.u.f || 1) > budget) continue;
+						budget -= (A.u.f || 1);
+						if (rng() > D.BOMBARD_CHANCE * (1 + (A.u.be || 0))) { A.target = null; continue; }
+						const pool = foe.filter(x => x.section === MIRROR[sec] && canFight(x));
+						if (!pool.length) continue;
+						const B = A.target && pool.includes(A.target) ? A.target : pool[Math.floor(rng() * pool.length)];
+						A.target = B;
+						const h = hit(A, B, { dice: d, flanking: false, secured: 0, combinedA, terr });
+						B.pendStr += h.s; B.pendMor += h.m;
+						continue;
+					}
+					if (!A.engaged) continue;
+					// melee target (0x142481230): facing section, keep target; else centre, left, right, reserve
+					let tSec = MIRROR[sec];
+					let pool = foe.filter(x => x.section === tSec && canFight(x));
+					if (!pool.length) { tSec = FALLBACK.find(s => foe.some(x => x.section === s && canFight(x))); if (!tSec) continue; pool = foe.filter(x => x.section === tSec && canFight(x)); }
+					const B = A.target && pool.includes(A.target) ? A.target : pool[Math.floor(rng() * pool.length)];
+					A.target = B;
+					const foeHas = s => foe.some(x => x.section === s && canFight(x));
+					const ownHas = s => own.some(x => x.section === s && canFight(x));
+					let secured = 0, flanking = false;
+					if (tSec !== 'reserve') {
+						secured = tSec === 'C' ? (foeHas('L') ? 1 : 0) + (foeHas('R') ? 1 : 0) : (foeHas('C') ? 1 : 0);
+						const facingPair = MIRROR[sec] === tSec;
+						flanking = !facingPair && ownHas(MIRROR[tSec]) && !foeHas(MIRROR[sec]);
+					}
+					const h = hit(A, B, { dice: d, flanking, secured, combinedA, terr });
+					B.pendStr += h.s; B.pendMor += h.m;
+				}
+			}
+		};
 
 		for (let day = 1; day <= D.MAX_DAYS; day++) {
 			curDay = day;
 			arrive(0, day); arrive(1, day);
-			if (day > 1 && (day - 1) % D.DAYS_PER_PHASE === 0) roll();
-			const bombardPhase = day <= D.BOMBARD_DAYS;
-			const attackSide = (i, bombard) => {
-				const own = all[i], foe = all[1 - i];
-				const combinedA = combinedArms(own);
-				for (const A of own) {
-					if (!SECTIONS.includes(A.section) || !canFight(A)) continue;
-					if (bombard) { if (!A.u.bombard || rng() > D.BOMBARD_CHANCE * (1 + (A.u.be || 0))) continue; }
-					else if (!A.engaged) continue;
-					const facing = MIRROR[A.section];
-					let pool = foe.filter(x => x.section === facing && canFight(x));
-					let flanking = false;
-					if (!pool.length) {
-						if (bombard) continue;
-						const others = SECTIONS.filter(s => s !== facing && foe.some(x => x.section === s && canFight(x)));
-						if (!others.length) continue;
-						const sec = others[Math.floor(rng() * others.length)];
-						pool = foe.filter(x => x.section === sec && canFight(x));
-						flanking = true;
-					}
-					const B = A.target && pool.includes(A.target) ? A.target : pool[Math.floor(rng() * pool.length)];
-					A.target = B;
-					const secured = B.section === 'C'
-						? ['L', 'R'].filter(s => foe.some(x => x.section === s && canFight(x))).length
-						: (foe.some(x => x.section === 'C' && canFight(x)) ? 1 : 0);
-					const d = hit(A, B, { dice: dice[i] + sideDice(i), flanking, secured, combinedA, terr });
-					B.pendStr += d.s; B.pendMor += d.m;
-				}
-			};
-			if (bombardPhase) { attackSide(0, true); attackSide(1, true); }
+			let justEnded = false;
+			if (day > D.BOMBARD_DAYS && !bombardOver) { bombardOver = true; justEnded = true; }
+			phaseCounter++;
+			if (phaseCounter >= D.DAYS_PER_PHASE) { phaseCounter = 0; roll(); } else if (justEnded) roll();
+			if (!bombardOver) { attackSide(0, true); attackSide(1, true); }
 			else {
 				for (const i of [0, 1]) {
 					const own = all[i], foe = all[1 - i];
-					// HandleReserves: frontage budget W per day; section score = enemy engaged facing it + our free room
-					let budget = W;
+					let budget = W; // HandleReserves
 					const reserves = own.filter(r => r.section === 'reserve' && canFight(r) && !r.u.aux).sort((a, b) => b.str - a.str);
 					for (const r of reserves) {
 						if (budget <= 0) break;
@@ -283,23 +304,20 @@
 							const usedEng = own.filter(x => x.section === s && x.engaged && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0);
 							const free = D.OVERSTACK * W - usedEng;
 							if (free < (r.u.f || 1)) continue;
-							const score = foe.filter(x => x.section === MIRROR[s] && x.engaged && canFight(x)).length + free;
+							const score = foe.filter(x => x.section === MIRROR[s] && x.engaged && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0) + free;
 							if (score > bestScore) { bestScore = score; best = s; }
 						}
 						budget -= (r.u.f || 1);
 						if (best && rng() <= r.u.cs * (1 + r.c.speedMod) * D.SPEED_SCALE) r.section = best;
 					}
-					// AttemptInitiative
-					for (const r of own) {
-						if (!SECTIONS.includes(r.section) || r.engaged || !canFight(r)) continue;
-						const ch = D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * (day - 1);
-						if (rng() <= ch) r.engaged = true;
+					for (const s of SECTIONS) for (const r of own) { // AttemptInitiative per section
+						if (r.section !== s || r.engaged || !canFight(r)) continue;
+						if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * day) r.engaged = true;
 					}
 				}
 				attackSide(0, false); attackSide(1, false);
 				for (const i of [0, 1]) for (const r of all[i]) if (present(r)) r.pendMor += D.DAILY_MORALE;
 			}
-			// apply and clean up
 			for (const i of [0, 1]) for (const r of all[i]) {
 				if (!present(r)) continue;
 				r.str = Math.max(0, r.str - Math.min(r.pendStr, r.str));
@@ -308,38 +326,191 @@
 				if (!canFight(r)) { r.section = 'routed'; r.engaged = false; }
 			}
 			snap(day);
-			if (day < D.MIN_DAYS) continue;
-			const fight = [0, 1].map(i => all[i].some(canFight));
-			if (fight[0] && fight[1]) continue;
-			if (!fight[0] && !fight[1]) return finish(-1, day, null);
-			const w = fight[0] ? 0 : 1, l = 1 - w;
-			// MORALE_OVERRUN: loser's morale collapsed; winner men (levies at their factor) >= 2x loser men
-			const wm = menWeighted(all[w].filter(r => r.section !== 'absent')), lm = menWeighted(all[l].filter(r => r.section !== 'absent'));
-			return finish(w, day, wm >= D.MORALE_OVERRUN * lm ? l : null);
+			// end of day (0x1424a77f0): before the minimum length only overruns; after it a side with an empty line loses
+			const men = [0, 1].map(i => sideMen(all[i]));
+			const overrun = f => {
+				for (const i of [0, 1]) if (lineMorale(i) <= D.COLLAPSE && !lineEmpty(1 - i) && men[1 - i] >= f * men[i]) return i;
+				return -1;
+			};
+			if (day < D.MIN_DAYS) {
+				let w = overrun(D.MORALE_OVERRUN); if (w < 0) w = overrun(D.INITIAL_OVERRUN);
+				if (w >= 0) return finish(1 - w, day, w);
+				continue;
+			}
+			const e0 = lineEmpty(0), e1 = lineEmpty(1);
+			if (e0 && e1) return finish(-1, day, null);
+			if (e0) return finish(1, day, null);
+			if (e1) return finish(0, day, null);
+			const w = overrun(D.INITIAL_OVERRUN);
+			if (w >= 0) return finish(1 - w, day, w);
 		}
 		return finish(-1, D.MAX_DAYS, null);
 	}
 
 	function monteCarloScenario(scn, n, opts = {}) {
-		const out = { n, wins: [0, 0], draws: 0, days: 0, losses: [0, 0], overrun: [0, 0], shattered: [0, 0], start: null, armies: null, daysHist: {} };
+		const out = { n, wins: [0, 0], draws: 0, days: 0, losses: [0, 0], lossesRegular: [0, 0], lossesLevy: [0, 0], overrunLosses: [0, 0], overrun: [0, 0], shattered: [0, 0], start: null, armies: null, groups: null };
 		for (let k = 0; k < n; k++) {
 			const r = simulateScenario(scn, { ...opts, seed: opts.seed != null ? opts.seed + k : undefined });
 			if (r.winner < 0) out.draws++;
 			else { out.wins[r.winner]++; if (r.overrun) out.overrun[1 - r.winner]++; if (r.shattered) out.shattered[1 - r.winner]++; }
-			out.days += r.days; out.losses[0] += r.losses[0]; out.losses[1] += r.losses[1]; out.start = r.start;
-			out.daysHist[r.days] = (out.daysHist[r.days] || 0) + 1;
+			out.days += r.days; out.start = r.start;
+			for (const i of [0, 1]) {
+				out.losses[i] += r.losses[i]; out.lossesRegular[i] += r.lossesRegular[i]; out.lossesLevy[i] += r.lossesLevy[i];
+				if (r.overrun && r.winner === 1 - i) out.overrunLosses[i] += r.lossesRegular[i];
+			}
 			if (!out.armies) out.armies = r.armies.map(s => s.map(a => ({ name: a.name, start: a.start, lost: 0 })));
-			r.armies.forEach((s, i) => s.forEach((a, j) => { out.armies[i][j].lost += (a.start - a.end) / n; }));
+			r.armies.forEach((s, i) => s.forEach((a, j) => { out.armies[i][j].lost += a.lost; }));
+			if (!out.groups) out.groups = r.groups.map(s => s.map(a => a.map(() => ({ lost: 0, wiped: 0 }))));
+			r.groups.forEach((s, i) => s.forEach((a, j) => a.forEach((g, k) => { out.groups[i][j][k].lost += g.lost; out.groups[i][j][k].wiped += g.wiped; })));
 		}
-		out.days /= n; out.losses = out.losses.map(x => x / n);
+		for (const k of ['losses', 'lossesRegular', 'lossesLevy', 'overrunLosses']) out[k] = out[k].map(x => x / n);
+		out.days /= n;
+		out.armies = out.armies.map(s => s.map(a => ({ ...a, lost: a.lost / n })));
+		out.groups = out.groups.map(s => s.map(a => a.map(g => ({ lost: g.lost / n, wiped: g.wiped / n }))));
 		return out;
 	}
 
-	// ---- Simple mode (one army per side, generic units by category) on top of the scenario engine
+	// ---- Costs, manpower and repeated battles. Strength and manpower are in thousands of men.
+	// Gold is a unit's goods basket at default market prices (units.json: bg = recruitment basket, ug = upkeep basket);
+	// scenario.costs[unitKey or category] = { buildGold, upkeepGold, reinforceGold } overrides it (reinforceGold per 1,000 men).
+	function unitCost(g, c, costs) {
+		const u = unitStats(g.type), levy = g.levy != null ? !!g.levy : !!u.levy;
+		const o = (costs && (costs[g.type] || costs[u.c])) || {};
+		const size = u.s * (g.maxStrength || 1);
+		const build = o.buildGold != null ? o.buildGold : (u.bg || 0);
+		const upkeepFull = o.upkeepGold != null ? o.upkeepGold : (u.ug || 0) * size; // maintenance basket x strength
+		const maintDiv = 1 + Math.max(D.MAINT_EFF_FLOOR, c.maintenanceEfficiency || 0);
+		const upkeep = upkeepFull * (levy ? D.LEVY_MAINTENANCE * (1 + (c.levyMaintenance || 0)) : 1) / maintDiv;
+		// reinforcing buys goods for the men replaced (priced here with the recruitment basket: inferred), / (1 + reinforce efficiency)
+		const reinforce = (o.reinforceGold != null ? o.reinforceGold : build / size) / (1 + Math.max(D.REINFORCE_EFF_FLOOR, c.reinforceEfficiency || 0));
+		return { u, levy, size, build, upkeep, reinforce };
+	}
+	function armyCosts(scnIn) {
+		const scn = normalize(scnIn);
+		return scn.sides.map(s => {
+			const rows = [];
+			const tot = { regiments: 0, levies: 0, men: 0, menLevy: 0, buildManpower: 0, buildGold: 0, upkeepGold: 0 };
+			s.armies.forEach((a, j) => {
+				const c = country(a.country, scn.countries);
+				for (const g of a.units || []) {
+					const k = g.count | 0;
+					if (!k) continue;
+					const x = unitCost(g, c, scnIn.costs);
+					const men = x.size * k * (g.strength != null ? g.strength : 1);
+					rows.push({
+						army: j, armyName: a.name || `Army ${j + 1}`, type: g.type, name: x.u.n, count: k, levy: x.levy, men, size: x.size,
+						buildManpower: x.levy ? 0 : x.size * k, buildGold: x.levy ? 0 : x.build * k, upkeepGold: x.upkeep * k, reinforceGold: x.levy ? 0 : x.reinforce,
+					});
+					if (x.levy) { tot.levies += k; tot.menLevy += men; } else { tot.regiments += k; tot.men += men; tot.buildManpower += x.size * k; tot.buildGold += x.build * k; }
+					tot.upkeepGold += x.upkeep * k;
+				}
+			});
+			return { rows, ...tot };
+		});
+	}
+	// What one battle costs each side (expected values from a Monte Carlo result): manpower to refill regulars
+	// (one man per man), gold to reinforce what retreated, gold to rebuild what was wiped, pops lost as levies.
+	function battleCosts(scnIn, mc) {
+		const scn = normalize(scnIn);
+		return scn.sides.map((s, i) => {
+			const o = { manpower: 0, reinforceGold: 0, rebuildGold: 0, rebuildManpower: 0, levyPops: 0 };
+			s.armies.forEach((a, j) => {
+				const c = country(a.country, scn.countries);
+				(a.units || []).forEach((g, k) => {
+					const L = mc.groups && mc.groups[i][j][k];
+					if (!L || !L.lost) return;
+					const x = unitCost(g, c, scnIn.costs);
+					if (x.levy) { o.levyPops += L.lost; return; }
+					o.manpower += L.lost;
+					o.reinforceGold += (L.lost - L.wiped) * x.reinforce;
+					o.rebuildGold += L.wiped / x.size * x.build; o.rebuildManpower += L.wiped;
+				});
+			});
+			return o;
+		});
+	}
+
+	// Repeated battles: the same armies meet every `monthsBetween` months. After each battle the expected losses are
+	// applied; between battles each side gains its monthly manpower (stored up to MAX_MANPOWER_YEARS x 12 months of it)
+	// and spends it reinforcing regulars: MONTHLY_REINFORCE 25% of a regiment a month x (1 + reinforceSpeed), wiped
+	// regiments rebuilt without that cap. Levies are re-raised from pops (no manpower); the pops they lost are counted.
+	// scenario.war = { battles, monthsBetweenBattles, sides: [{ maxManpower, monthlyManpower, currentManpower }] } (men);
+	// monthly manpower defaults to max / 60, current to max.
+	function* campaignSteps(scnIn, opts = {}) {
+		const war = scnIn.war || {};
+		const battles = opts.battles || war.battles || 8;
+		const months = Math.max(0, opts.monthsBetween != null ? opts.monthsBetween : (war.monthsBetweenBattles != null ? war.monthsBetweenBattles : 3));
+		const runs = opts.runs || 200;
+		const scn = JSON.parse(JSON.stringify(scnIn));
+		const ns = normalize(scn); // shares its army objects with scn, so strengths written here carry into the next battle
+		const num = x => x != null && x !== '' && !isNaN(+x);
+		const pools = [0, 1].map(i => {
+			const w = (war.sides && war.sides[i]) || {};
+			const max = (+w.maxManpower || 0) / 1000;
+			const monthly = num(w.monthlyManpower) ? w.monthlyManpower / 1000 : max / (D.MAX_MANPOWER_YEARS * 12);
+			const start = num(w.currentManpower) ? Math.min(max, w.currentManpower / 1000) : max;
+			return { max, monthly, start, pool: start };
+		});
+		const isLevy = g => g.levy != null ? !!g.levy : !!unitStats(g.type).levy;
+		const strength = g => g.strength != null ? g.strength : 1;
+		const groups = i => ns.sides[i].armies.flatMap((a, j) => (a.units || []).map((g, k) => ({ g, j, k, size: unitStats(g.type).s * (g.maxStrength || 1) * (g.count | 0) })));
+		const men = (i, f) => groups(i).reduce((t, x) => t + x.size * f(x.g), 0);
+		const full = [men(0, () => 1), men(1, () => 1)];
+		const total = { gold: [0, 0], manpower: [0, 0], levyPops: [0, 0] };
+		const rows = [];
+		for (let b = 1; b <= battles; b++) {
+			const before = [men(0, strength), men(1, strength)];
+			const mc = monteCarloScenario(scn, runs, { seed: opts.seed != null ? opts.seed + b * 100003 : undefined });
+			const bc = battleCosts(scn, mc);
+			const rebuild = [0, 0];
+			for (const i of [0, 1]) for (const x of groups(i)) {
+				if (!x.size) continue;
+				const L = mc.groups[i][x.j][x.k];
+				x.g.strength = Math.max(0, (x.size * strength(x.g) - L.lost) / x.size);
+				if (!isLevy(x.g)) rebuild[i] += L.wiped;
+			}
+			const after = [men(0, strength), men(1, strength)];
+			const used = [0, 0];
+			for (const i of [0, 1]) {
+				const P = pools[i];
+				const cs = ns.sides[i].armies.map(a => country(a.country, ns.countries));
+				for (let m = 0; m < months; m++) {
+					P.pool = Math.min(P.max, P.pool + P.monthly);
+					const asks = groups(i).filter(x => x.size && !isLevy(x.g) && strength(x.g) < 1 - 1e-9).map(x => {
+						const missing = x.size * (1 - strength(x.g));
+						const cap = rebuild[i] > 1e-9 ? missing : x.size * D.MONTHLY_REINFORCE * (1 + (cs[x.j].reinforceSpeed || 0));
+						return { x, want: Math.min(missing, cap) };
+					});
+					const want = asks.reduce((t, a) => t + a.want, 0);
+					if (want <= 1e-9) continue;
+					const share = Math.min(1, P.pool / want);
+					for (const a of asks) a.x.g.strength = Math.min(1, strength(a.x.g) + a.want * share / a.x.size);
+					P.pool -= want * share; used[i] += want * share; rebuild[i] = Math.max(0, rebuild[i] - want * share);
+				}
+				for (const x of groups(i)) if (isLevy(x.g)) x.g.strength = 1; // levies re-raised
+				total.gold[i] += bc[i].reinforceGold + bc[i].rebuildGold; total.manpower[i] += used[i]; total.levyPops[i] += bc[i].levyPops;
+			}
+			rows.push({
+				battle: b, winRate: mc.wins.map(w => w / runs), wiped: [mc.overrun[0] / runs, mc.overrun[1] / runs], days: mc.days,
+				before, after, refilled: [men(0, strength), men(1, strength)], losses: mc.losses.slice(),
+				pool: pools.map(p => p.pool), used, gold: bc.map(c => c.reinforceGold + c.rebuildGold), levyPops: bc.map(c => c.levyPops),
+			});
+			yield { battle: b, of: battles };
+		}
+		// a side is worn down once it can no longer bring its army back above half strength before the next battle
+		let worn = -1, at = 0;
+		for (const r of rows) { for (const i of [0, 1]) if (worn < 0 && r.refilled[i] < 0.5 * full[i]) { worn = i; at = r.battle; } if (worn >= 0) break; }
+		return { battles, months, runs, rows, pools, full, total, worn, at };
+	}
+	function campaign(scnIn, opts) {
+		const it = campaignSteps(scnIn, opts);
+		for (;;) { const r = it.next(); if (r.done) return r.value; }
+	}
+
+	// ---- Simple mode on top of the scenario engine
 	function defaultSide() {
 		return {
-			age: 2, formation: 'balanced',
-			units: { li: 0, hi: 10, lc: 0, hc: 4, art: 0, aux: 0 }, levies: { li: 0, hi: 0 },
+			age: 2, formation: 'balanced', units: { li: 0, hi: 10, lc: 0, hc: 4, art: 0, aux: 0 }, levies: { li: 0, hi: 0 },
 			discipline: 0, tactics: 1.0, moraleMod: 0, moraleFlat: 0, initiativeMod: 0, speedMod: 0, levyCE: 0,
 			experience: 0, levyExperience: 0, power: { li: 0, hi: 0, lc: 0, hc: 0, art: 0 }, commanderDice: 0, crossing: 'none', marchDays: 0,
 		};
@@ -352,32 +523,20 @@
 		const { units: _u, levies: _l, age: _a, formation, crossing, marchDays, ...c } = s;
 		return { name, formation, marchDays: marchDays || 0, country: c, units };
 	}
-	function simpleScenario(a, b, opts = {}) {
-		return { location: { frontage: opts.width || 10, crossing: a.crossing || 'none' }, attacker: { armies: [simpleArmy(a, 'Side A')] }, defender: { armies: [simpleArmy(b, 'Side B')] } };
-	}
-	const simulate = (a, b, opts = {}) => {
-		const r = simulateScenario(simpleScenario(a, b, opts), opts);
-		r.timeline.forEach(t => { t.str = t.men; t.mor = t.morale; });
-		return r;
-	};
-	const monteCarlo = (a, b, n, opts = {}) => {
-		const m = monteCarloScenario(simpleScenario(a, b, opts), n, opts);
-		return { ...m, overruns: m.overrun };
-	};
+	const simpleScenario = (a, b, opts = {}) => ({ location: { frontage: opts.width || 10, crossing: a.crossing || 'none' }, attacker: { armies: [simpleArmy(a, 'Side A')] }, defender: { armies: [simpleArmy(b, 'Side B')] } });
+	const simulate = (a, b, opts = {}) => { const r = simulateScenario(simpleScenario(a, b, opts), opts); r.timeline.forEach(t => { t.str = t.men; t.mor = t.morale; }); return r; };
+	const monteCarlo = (a, b, n, opts = {}) => { const m = monteCarloScenario(simpleScenario(a, b, opts), n, opts); return { ...m, overruns: m.overrun }; };
 
-	// One hit for the page: attacker/target unit types and their armies' countries
 	function hitBreakdown(attType, defType, attCountry, defCountry, o = {}) {
 		const mk = (type, c, levy) => {
-			const u = unitStats(type), cc = country(c);
-			const lv = levy != null ? levy : !!u.levy;
+			const u = unitStats(type), cc = country(c), lv = levy != null ? levy : !!u.levy;
 			return { u, c: cc, cat: u.c, levy: lv, maxStr: u.s, str: u.s, maxMor: D.LAND_MORALE * (1 + cc.moraleMod) + cc.moraleFlat, disc: cc.discipline + (lv ? D.LEVY_DISCIPLINE : 0), exp: lv ? cc.levyExperience : cc.experience, engaged: o.targetEngaged !== false };
 		};
 		const A = mk(attType, attCountry, o.attLevy), B = mk(defType, defCountry, o.defLevy);
-		const terr = o.location ? terrainInfo(o.location) : null;
-		const r = hit(A, B, { dice: o.dice || 0, flanking: !!o.flanking, secured: o.secured || 0, combinedA: o.combined || 0, terr, breakdown: true });
+		const r = hit(A, B, { dice: o.dice || 0, flanking: !!o.flanking, secured: o.secured || 0, combinedA: o.combined || 0, terr: o.location ? terrainInfo(o.location) : null, breakdown: true });
 		return { ...r, target: B };
 	}
 
-	const api = { D, CAT, CATS, AGE, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
+	const api = { D, CAT, CATS, AGE, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BattleSim = api;
 })(typeof window !== 'undefined' ? window : globalThis);
