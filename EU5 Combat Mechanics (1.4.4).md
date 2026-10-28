@@ -34,6 +34,24 @@ Combat ticks once per day (1.3 ticked per "hour"; see section 13). The daily tic
 
 **Armies joining later.** An army that reaches the location while the battle runs joins it as fresh reserves (unless its correct section chance puts a regiment straight into its box, section 6) (the game's own hint: "You can bring neighboring armies to reinforce ongoing battles. If they arrive in time, they will join the fight as fresh reserves"). From there they move up by combat speed like any reserve. They arrive with whatever morale their march left them (section 7).
 
+**Feeding armies in vs bringing them all** (`analysis/staggered_arrivals.js [unit] [battles]`; frontage 10, so the line holds 37.5 regiments; generals 60/59/61; both seat orders, 4,000–6,000 battles a row). A late army skips the reserves' 0.03-a-day morale drain, but marches in (1–3 days of movement cost). Win rate of side B against side A, which brings everything on day 0:
+
+| B's plan | Age V infantry | Age III cavalry |
+|---|---|---|
+| 3 × 30 regiments, all at once | 50% | 50% |
+| 3 × 30, one army every 4 / 8 / 12 days | 23% / 1% / 0% | 40% / 21% / 2% |
+| 4 × 30: two at once (line full), last two on day 5 | 50% | 50% |
+| 4 × 30: two at once, last two on day 8 | **57%** | 54% |
+| 4 × 30: two at once, last two on days 6 and 12 | 56% | 54% |
+| 4 × 30: two at once, last two on days 10 and 20 | 51% | **61%** |
+| 4 × 30: two at once, last two on day 15 | 33% | 58% |
+
+- **Feeding armies in one by one loses.** Each wave faces a full enemy line on its own, and if it breaks before the next arrives, the battle is lost. The follow-up battle against the battered winner is not simulated.
+- **Holding back what doesn't fit is worth up to +7 (infantry) to +11 points (cavalry).** Start with enough to fill the line and keep a reserve, then bring the rest just before the reserve runs out. That is about day 8 for infantry battles (about 22 days long) and days 10–20 for cavalry (about 41 days).
+- **Too late is worse than all at once**: infantry whose last armies come on day 15 wins only 33%.
+- A 1-day march costs 0–3 points less than a 3-day march.
+- Late regiments go to reserve and then to the section that needs them most, so they never deploy into the "wrong" box. With identical armies at the start, the snake deployment spreads them evenly anyway.
+
 **"Men" in the overrun ratios** is each army's men still alive (current strength), with levies counted at their levy factor (section 8) (`0x143519150`). Navies count cannons instead, and naval levies at `NAVAL_LEVY_IMPACT` = 5%.
 
 **What this means:**
