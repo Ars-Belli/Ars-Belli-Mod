@@ -4,7 +4,7 @@
 # (root = building) and empty in vanilla; on_actions = { } lists merge across files.
 
 on_building_construction_started = {
-	on_actions = { abm_trade_office_changed }
+	on_actions = { abm_trade_office_started }
 }
 
 on_building_construction_ended = {
@@ -31,6 +31,16 @@ on_game_started_after_lobby = {
 # Catches level tear-downs (no on_action fires for them), script level changes and owner changes.
 monthly_country_pulse = {
 	on_actions = { abm_trade_office_monthly }
+}
+
+# Fired before the new construction joins its owner's construction list - see
+# abm_recount_trade_offices_with_new_level. construction_ended fires after it has left the list
+# (cancelled or finished), so the plain recount is right there.
+abm_trade_office_started = {
+	trigger = { building_type = building_type:trade_office }
+	effect = {
+		location = { abm_recount_trade_offices_with_new_level = yes }
+	}
 }
 
 abm_trade_office_changed = {

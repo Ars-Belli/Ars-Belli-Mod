@@ -24,8 +24,9 @@ abm_update_trade_office_slots_full = {
 	}
 }
 
-# Location scope.
-abm_recount_trade_offices = {
+# Location scope: abm_trade_office_count = the location's trade office levels, built plus queued.
+# building_levels_under_construction counts the entries in the office owner's construction list.
+abm_count_trade_office_levels = {
 	set_variable = { name = abm_trade_office_count value = 0 }
 	every_foreign_buildings_in_location = {
 		limit = {
@@ -40,11 +41,34 @@ abm_recount_trade_offices = {
 			change_variable = { name = abm_trade_office_count add = prev.building_levels_under_construction }
 		}
 	}
+}
+
+# Location scope: refresh the slots-full modifier from the count and drop a zero count.
+abm_finish_trade_office_count = {
 	abm_update_trade_office_slots_full = yes
 	if = {
 		limit = { var:abm_trade_office_count <= 0 }
 		remove_variable = abm_trade_office_count
 	}
+}
+
+# Location scope.
+abm_recount_trade_offices = {
+	abm_count_trade_office_levels = yes
+	abm_finish_trade_office_count = yes
+}
+
+# Location scope, from on_building_construction_started. The engine fires that on_action while it
+# sets the construction up, BEFORE it adds the construction to its owner's construction list (eu5.exe
+# 1.4.4: the on_action runs in the construction setup, the list append comes after it), so the level
+# being queued right now is not in building_levels_under_construction yet - add it by hand. Without
+# this the count lagged one level behind and a country could queue one level past the limit. The build
+# command re-checks allow for every level it queues, so with the count current a second click (or the
+# next level of a "+5" order) is refused.
+abm_recount_trade_offices_with_new_level = {
+	abm_count_trade_office_levels = yes
+	change_variable = { name = abm_trade_office_count add = 1 }
+	abm_finish_trade_office_count = yes
 }
 
 # Location scope, from on_building_destroyed (root = the destroyed building): the same count
@@ -65,11 +89,7 @@ abm_recount_trade_offices_without_root = {
 			change_variable = { name = abm_trade_office_count add = prev.building_levels_under_construction }
 		}
 	}
-	abm_update_trade_office_slots_full = yes
-	if = {
-		limit = { var:abm_trade_office_count <= 0 }
-		remove_variable = abm_trade_office_count
-	}
+	abm_finish_trade_office_count = yes
 }
 
 # Country scope: recount every owned location that has a trade office, or still carries a
