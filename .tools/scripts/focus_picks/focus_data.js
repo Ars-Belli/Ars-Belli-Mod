@@ -34,7 +34,7 @@ module.exports = {
    ],
    mil: [
     { id: 'levy', art: 'institutions/feudalism', name: 'Levy', desc: 'Larger and better levies, raised for the army and the fleet alike.', adv: [
-      ['enforced_service', 'global_levy_size_modifier = 0.20\nlevy_recovery_modifier = 0.20\nnobles_estate_levy_size = 0.30'], // nobles raise the knights (cavalry levies); +30% like France's French Heritage
+      ['enforced_service', 'global_levy_size_modifier = 0.20\nlevy_recovery_modifier = 0.20\nnobles_estate_levy_size = 2.00'], // nobles raise the knights (cavalry levies); +30% like France's French Heritage
       ['open_levy_standards', 'wrong_culture_levy_size = 0.25'],
       ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.30'],
       ['battlefield_commisions', 'army_tradition_from_battle = 1.0\nnavy_tradition_from_battle = 1.0'],
