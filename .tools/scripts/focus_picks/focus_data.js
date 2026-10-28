@@ -42,7 +42,7 @@ module.exports = {
       ['abm_common_foot', 'army_heavy_infantry_power = 0.10\narmy_light_infantry_power = 0.10', { icon: 'drill_army_advance', name: 'Common Foot', desc: 'Most of our levies march on foot. Taught to keep their ranks with pike and bow, they stand their ground far better than a rabble.' }],
     ]},
     { id: 'mercenary', art: 'situation/italian_wars', name: 'Mercenary', desc: 'Hired forces: cheaper, more available mercenaries, and privateers at sea.', adv: [
-      ['benefits_for_mercenaries', 'mercenary_maintenance_efficiency = 0.1\ntolerance_heretic = 0.5\ntolerance_heathen = 0.5'],
+      ['benefits_for_mercenaries', 'mercenary_maintenance_efficiency = 0.25\ntolerance_heretic = 0.5\ntolerance_heathen = 0.5'],
       ['organised_mercenary_recruitment', 'mercenary_range_modifier = 0.5'],
       ['organised_mercenary_payment', 'hire_mercenary_premium_cost_modifier = -0.2\nhire_privateer_cost_modifier = -0.2'],
       ['glorious_arms', 'prestige_from_land_battle = 1.0\nprestige_from_naval_battle = 1.0\nmilitary_tactics = 0.10'],
