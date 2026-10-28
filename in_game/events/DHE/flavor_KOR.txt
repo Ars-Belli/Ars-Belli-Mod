@@ -147,9 +147,9 @@ scripted_effect kor_get_mongol_aristocrat_count = {
 }
 scripted_effect kor_setup_mongol_aristocrat_demand_gold = {
 	set_variable = { name = kor_mongol_gold_to_pay value = var:kor_mongol_aristocrats }
-	change_variable = { name = kor_mongol_gold_to_pay multiply = root.monthly_income_trade_and_tax }
 	change_variable = { name = kor_mongol_gold_to_pay multiply = -1 }
 	limit_variable = { name = kor_mongol_gold_to_pay value = -6 mode = min }
+	change_variable = { name = kor_mongol_gold_to_pay multiply = root.monthly_income_trade_and_tax }
 	set_variable = { name = kor_mongol_gold_to_transfer value = var:kor_mongol_gold_to_pay }
 	change_variable = { name = kor_mongol_gold_to_transfer multiply = -1 }
 }
@@ -676,6 +676,10 @@ flavor_kor.10 = {
 	option = {
 		name = flavor_kor.10.a
 		historical_option = yes
+		scope:target_country = {
+			set_variable = { name = wont_be_auto_defended_by_overlord years = 3 }
+		}
+		# Ars Belli: only declare when a legal war is possible, otherwise hand out the CB instead.
 		if = {
 			limit = {
 				can_declare_legal_war_on = { target = scope:target_country }
@@ -693,7 +697,7 @@ flavor_kor.10 = {
 				province = location:hwaju.province
 			}
 		}
-		
+
 	}
 	option = {
 		name = flavor_kor.10.b
@@ -902,16 +906,16 @@ flavor_kor.14 = {
 		to = 1550.1.1
 		monthly_chance = 10
 	}
-	
+
 	illustration_tags = {
-        10 = angry
-        10 = interior
-    }
+       10 = angry
+       10 = interior
+   }
 
 	immediate = {
 		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:clergy_estate }
 	}
-	
+
 	trigger = {
 		custom_tooltip = {
 			text = variable_tt_kor_has_confucianism_active
@@ -931,7 +935,7 @@ flavor_kor.14 = {
 						international_organization_has_policy = policy:confucianism_policy
 					}
 				}
-				# NOT = { is_member_of_international_organization = international_organization:middle_kingdom }
+				# NOT = { is_member_of_international_organization = international_organization:middle_kingdom } # Ars Belli: Middle Kingdom removed
 			}
 			custom_tooltip = flavor_kor.14.a.tt
 		}
@@ -966,12 +970,17 @@ flavor_kor.15 = {
 			}
 		}
 		at_war = no
-		custom_tooltip = {
-			text = variable_tt_had_successful_coup
-			has_variable = had_successful_coup
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = variable_tt_had_successful_coup
+					has_variable = had_successful_coup
+				}
+				government_power < 20
+				stability < 10
+			}
+			has_active_disaster = disaster_type:coup_attempt
 		}
-		government_power < 20
-		stability < 10
 		exists = ruler
 	}
 	
@@ -982,27 +991,54 @@ flavor_kor.15 = {
 
 	immediate = {
 		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
-		capital = {
-			save_scope_as = target_location
-			if = {
-				limit = {
-					NOT = {
-						dynasty_exists = yi_dynasty
+		capital = { save_scope_as = target_location }
+		if = {
+			limit = {
+				current_date >= 1355.1.1
+				current_date <= 1415.1.1
+			}
+			scope:target_location = {
+				if = {
+					limit = {
+						NOT = {
+							dynasty_exists = yi_dynasty
+						}
 					}
+					create_dynasty_from_location = yi_dynasty
 				}
-				create_dynasty_from_location = yi_dynasty
+			}
+			create_character = {
+				first_name = name_seong_gye
+				dynasty = dynasty:yi_dynasty
+				estate = estate_type:peasants_estate
+				adm = 80
+				dip = 70
+				mil = 90
+				birth_date = 1335.10.11
+				script = yi_seong_gye
+				save_scope_as = target_character
+			}
+			if = {
+				limit = { current_date >= 1357.7.26 }
+				create_character = {
+					first_name = name_bang_gwa
+					dynasty = dynasty:yi_dynasty
+					father = scope:target_character
+					birth_date = 1357.7.26
+					script = yi_bang_gwa
+				}
 			}
 		}
-		create_character = {
-			first_name = name_seong_gye
-			dynasty = dynasty:yi_dynasty
-			estate = estate_type:peasants_estate
-			adm = 80
-			dip = 70
-			mil = 90
-			age = 30
-			script = yi_seong_gye
-			save_scope_as = target_character
+		else = {
+			create_character = {
+				estate = estate_type:peasants_estate
+				adm = 80
+				dip = 70
+				mil = 90
+				age = 30
+				script = yi_seong_gye
+				save_scope_as = target_character
+			}
 		}
 		create_rebel = {
 			category = pretender
@@ -1151,83 +1187,16 @@ flavor_kor.17 = {
 	}
 }
 
-##################################################################################
-### This event can be abused to spawn units multiple times, removal is easiest ###
-##################################################################################
-
 # Righteous Army
-#flavor_kor.18 = {
-#	type = country_event
-#	title = flavor_kor.18.title
-#	desc = flavor_kor.18.desc
-#	outcome = neutral
-#
-#	trigger = {
-#		tag = KOR
-#		any_current_war = {
-#			NOT = { has_variable = received_righteous_army }
-#			any_defender = {
-#				this = ROOT
-#			}
-#		}
-#	}
-#
-#	illustration_tags = {
-#		10 = armed
-#		10 = exterior
-#	}
-#
-#	immediate = {
-#		event_illustration_poptype_effect = { foreground = pop_type:peasants   background = pop_type:soldiers }
-#		random_war = {
-#			limit = {
-#				NOT = { has_variable = received_righteous_army }
-#				any_defender = {
-#					this = ROOT
-#				}
-#			}
-#			save_scope_as = target_war
-#		}
-#		scope:target_war = {
-#			set_variable = received_righteous_army
-#		}
-#
-#		random_core_location = {
-#			save_scope_as = target_location
-#		}
-#
-#		random_core_location = {
-#			limit = {
-#				controller ?= ROOT
-#			}
-#			save_scope_as = target_location
-#		}
-#	}
-#
-#	option = {
-#		name = flavor_kor.18.a
-#
-#		add_war_exhaustion = war_exhaustion_severe_penalty
-#
-#		add_yearly_manpower = 2
-#
-#		scope:target_location = {
-#			while = {
-#				count = 5
-#				create_sub_unit_of_category = sub_unit_category:army_heavy_infantry
-#			}
-#		}
-#	}
-#
-#	option = {
-#		name = flavor_kor.18.b
-#
-#		change_societal_value = {
-#			type = individualism_vs_communalism
-#			value = societal_value_move_to_left
-#		}
-#	}
-#}
+##################################################################################
+### Ars Belli: this event can be abused to spawn units multiple times. Disabled ###
+### as a never-firing stub (country_four_yearly on_action still references it). ###
+##################################################################################
+flavor_kor.18 = {
+	type = country_event
+	hidden = yes
+	trigger = { always = no }
+}
 
 # Cotton Seeds
 flavor_kor.19 = {
@@ -2774,7 +2743,8 @@ flavor_kor.38 = {
 	}
 }
 
-## Sadae
+# Sadae
+# Ars Belli: disabled - depends on the removed Middle Kingdom IO.
 #flavor_kor.39 = {
 #	type = country_event
 #	title = flavor_kor.39.title
