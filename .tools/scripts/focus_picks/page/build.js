@@ -27,14 +27,15 @@ const AGE_NAMES = {
 	age_6_revolutions: 'Age of Revolutions',
 };
 
-// Named constants used in the data (resolved from vanilla script values).
-const CONST = {
-	diplomatic_reputation_mild_bonus: 2, small_permanent_target_satisfaction: 0.025,
-	medium_production_efficiency_bonus: 0.05, small_trade_efficiency_bonus: 0.025,
-	small_tax_income_efficiency_bonus: 0.02, large_tax_income_efficiency_bonus: 0.05,
-	medium_tax_income_efficiency_bonus: 0.03, medium_trade_land_efficiency_bonus: 0.20,
-	medium_trade_sea_efficiency_bonus: 0.20, small_stability_investment: 0.02,
-};
+// Named constants used in the data, read from the game's script values (a hard-coded copy went
+// stale on 1.4, which changed some values and added new names).
+const CONST = {};
+for (const d of ['main_menu/common/script_values', 'in_game/common/script_values']) {
+	const dir = path.join(game, d);
+	if (!fs.existsSync(dir)) continue;
+	for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.txt')))
+		for (const m of fs.readFileSync(path.join(dir, f), 'utf8').matchAll(/^@?([a-z0-9_]+)\s*=\s*(-?[\d.]+)\s*$/gm)) CONST[m[1]] = parseFloat(m[2]);
+}
 
 // kind: pct = value x100 %, cost = cost-efficiency shown as a cost cut of half the value
 // (the game shows *_efficiency on costs at half), flat = plain number, raw = plain decimal,
@@ -238,6 +239,7 @@ function fmt(key, rawVal) {
 	const label = modName(key);
 	if (def.boolean) return { label, value: 'Yes', good: true, combat: isCombat(key), info: modInfo(key) };
 	const v = rawVal in CONST ? CONST[rawVal] : parseFloat(rawVal);
+	if (Number.isNaN(v)) throw new Error(`can't resolve value ${rawVal} for ${key}`);
 	const shown = fmtValue(def, v);
 	const color = COLOR_OVERRIDE[key] || def.color;
 	const good = color === 'bad' ? v < 0 : v > 0;
