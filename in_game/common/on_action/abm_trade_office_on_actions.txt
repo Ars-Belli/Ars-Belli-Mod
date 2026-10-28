@@ -1,4 +1,4 @@
-﻿# Ars Belli trade office limit: recount a location's trade offices whenever one changes, so the
+﻿# Ars Belli trade office limit: recount a location's trade office levels whenever one changes, so the
 # cached abm_trade_office_count read by the build allow stays current
 # (scripted_effects/abm_trade_office_effects.txt). The four building on_actions are hardcoded
 # (root = building) and empty in vanilla; on_actions = { } lists merge across files.
@@ -28,8 +28,9 @@ on_game_started_after_lobby = {
 	on_actions = { abm_trade_office_game_start }
 }
 
-yearly_country_pulse = {
-	on_actions = { abm_trade_office_yearly }
+# Catches level tear-downs (no on_action fires for them), script level changes and owner changes.
+monthly_country_pulse = {
+	on_actions = { abm_trade_office_monthly }
 }
 
 abm_trade_office_changed = {
@@ -54,7 +55,7 @@ abm_trade_office_game_start = {
 	}
 }
 
-abm_trade_office_yearly = {
+abm_trade_office_monthly = {
 	effect = {
 		abm_recount_owned_trade_offices = yes
 	}

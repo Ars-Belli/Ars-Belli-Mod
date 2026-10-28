@@ -1,6 +1,6 @@
 ﻿# Ars Belli trade office limit: keep the location variable abm_trade_office_count equal to the
-# number of trade offices in the location (one per owning country), counting offices that are
-# still under construction so a started office holds its slot straight away. Read by
+# number of trade office LEVELS in the location, every country's office added together, counting
+# levels still under construction so a started level holds its place straight away. Read by
 # abm_trade_office_slot_free (scripted_triggers/abm_trade_office_triggers.txt).
 
 # Location scope: show and enforce "slots full" as the location modifier abm_trade_office_full
@@ -35,7 +35,10 @@ abm_recount_trade_offices = {
 				building_levels_under_construction >= 1
 			}
 		}
-		location = { change_variable = { name = abm_trade_office_count add = 1 } }
+		location = {
+			change_variable = { name = abm_trade_office_count add = prev.building_level }
+			change_variable = { name = abm_trade_office_count add = prev.building_levels_under_construction }
+		}
 	}
 	abm_update_trade_office_slots_full = yes
 	if = {
@@ -57,7 +60,10 @@ abm_recount_trade_offices_without_root = {
 				building_levels_under_construction >= 1
 			}
 		}
-		location = { change_variable = { name = abm_trade_office_count add = 1 } }
+		location = {
+			change_variable = { name = abm_trade_office_count add = prev.building_level }
+			change_variable = { name = abm_trade_office_count add = prev.building_levels_under_construction }
+		}
 	}
 	abm_update_trade_office_slots_full = yes
 	if = {
@@ -68,8 +74,9 @@ abm_recount_trade_offices_without_root = {
 
 # Country scope: recount every owned location that has a trade office, or still carries a
 # count or the slots-full modifier from one that is gone. Runs at game start / save load and
-# yearly as a safety net for anything the building on_actions miss (e.g. a location changing
-# owner along with its offices).
+# monthly, which catches what the building on_actions miss: a level torn down (no on_action
+# fires for that, so a full location frees up within a month), levels changed by script, and
+# a location changing owner along with its offices.
 abm_recount_owned_trade_offices = {
 	every_owned_location = {
 		limit = {

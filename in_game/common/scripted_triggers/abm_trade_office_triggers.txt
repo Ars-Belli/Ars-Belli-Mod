@@ -1,34 +1,27 @@
 ﻿# Ars Belli trade office limit. Location scope, scope:actor = the country building.
 #
+# The limit counts trade office LEVELS: every country's office in the location added together,
+# so building a new office and adding a level to your own both need a free level.
+#
 # Why a cached count: inside a building's allow, the location building iterators
 # (any_foreign_buildings_in_location and friends) come back empty, and a global any_country
-# per candidate location lags the build menu. So the number of trade offices in a location is
-# kept in the location variable abm_trade_office_count, recounted in effect context (where the
-# iterators work) whenever a trade office is started, finished, cancelled or destroyed, when a
-# game starts or a save is loaded, and yearly - see scripted_effects/abm_trade_office_effects.txt.
-# The recount also sets the location modifier abm_trade_office_slots_full while the slots are full;
-# that modifier is the main gate here, since location modifiers are proven readable in an allow.
+# per candidate location lags the build menu. So the number of trade office levels in a location
+# is kept in the location variable abm_trade_office_count, recounted in effect context (where the
+# iterators work) whenever a trade office level is started, finished, cancelled or destroyed, when
+# a game starts or a save is loaded, and monthly - see scripted_effects/abm_trade_office_effects.txt.
+# The recount also sets the location modifier abm_trade_office_slots_full while the levels are all
+# taken; that modifier is the main gate here, since location modifiers are proven readable in an allow.
 #
 # Called from the allow of REPLACE:trade_office (building_types/abm_foreign_buildings.txt).
 abm_trade_office_slot_free = {
 	custom_tooltip = {
 		text = abm_trade_office_slot_free_tt
-		OR = {
-			# upgrading an office you already have here never takes a new slot
-			location_building_level = {
-				building_type = building_type:trade_office
-				owner = scope:actor
-				value > 0
-			}
-			AND = {
-				# the slots-full location modifier set by the recount (proven readable in allow)
-				modifier:abm_trade_office_slots_full = no
-				# and the cached count itself, wherever the variable can be read
-				trigger_if = {
-					limit = { has_variable = abm_trade_office_count }
-					var:abm_trade_office_count < abm_trade_office_limit_value
-				}
-			}
+		# the slots-full location modifier set by the recount (proven readable in allow)
+		modifier:abm_trade_office_slots_full = no
+		# and the cached count itself, wherever the variable can be read
+		trigger_if = {
+			limit = { has_variable = abm_trade_office_count }
+			var:abm_trade_office_count < abm_trade_office_limit_value
 		}
 	}
 }
