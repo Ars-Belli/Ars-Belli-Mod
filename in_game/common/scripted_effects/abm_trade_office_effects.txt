@@ -3,6 +3,27 @@
 # still under construction so a started office holds its slot straight away. Read by
 # abm_trade_office_slot_free (scripted_triggers/abm_trade_office_triggers.txt).
 
+# Location scope: show and enforce "slots full" as the location modifier abm_trade_office_full
+# (modifier abm_trade_office_slots_full). The build allow reads the modifier - a location modifier is
+# known to be readable there (vanilla location_ranks read modifier:cannot_upgrade_location), a location
+# variable is not proven to be - and players see it in the location's modifiers.
+abm_update_trade_office_slots_full = {
+	if = {
+		limit = {
+			has_variable = abm_trade_office_count
+			var:abm_trade_office_count >= abm_trade_office_limit_value
+		}
+		if = {
+			limit = { NOT = { has_location_modifier = abm_trade_office_full } }
+			add_location_modifier = { modifier = abm_trade_office_full months = -1 mode = add_and_extend }
+		}
+	}
+	else_if = {
+		limit = { has_location_modifier = abm_trade_office_full }
+		remove_location_modifier = abm_trade_office_full
+	}
+}
+
 # Location scope.
 abm_recount_trade_offices = {
 	set_variable = { name = abm_trade_office_count value = 0 }
@@ -16,6 +37,7 @@ abm_recount_trade_offices = {
 		}
 		location = { change_variable = { name = abm_trade_office_count add = 1 } }
 	}
+	abm_update_trade_office_slots_full = yes
 	if = {
 		limit = { var:abm_trade_office_count <= 0 }
 		remove_variable = abm_trade_office_count
@@ -37,6 +59,7 @@ abm_recount_trade_offices_without_root = {
 		}
 		location = { change_variable = { name = abm_trade_office_count add = 1 } }
 	}
+	abm_update_trade_office_slots_full = yes
 	if = {
 		limit = { var:abm_trade_office_count <= 0 }
 		remove_variable = abm_trade_office_count
@@ -44,14 +67,16 @@ abm_recount_trade_offices_without_root = {
 }
 
 # Country scope: recount every owned location that has a trade office, or still carries a
-# count from one that is gone. Game start and yearly safety net for anything the building
-# on_actions miss (e.g. a location changing owner along with its offices).
+# count or the slots-full modifier from one that is gone. Runs at game start / save load and
+# yearly as a safety net for anything the building on_actions miss (e.g. a location changing
+# owner along with its offices).
 abm_recount_owned_trade_offices = {
 	every_owned_location = {
 		limit = {
 			OR = {
 				has_building = building_type:trade_office
 				has_variable = abm_trade_office_count
+				has_location_modifier = abm_trade_office_full
 			}
 		}
 		abm_recount_trade_offices = yes

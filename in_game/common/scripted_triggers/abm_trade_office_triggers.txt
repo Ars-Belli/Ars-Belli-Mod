@@ -4,8 +4,10 @@
 # (any_foreign_buildings_in_location and friends) come back empty, and a global any_country
 # per candidate location lags the build menu. So the number of trade offices in a location is
 # kept in the location variable abm_trade_office_count, recounted in effect context (where the
-# iterators work) whenever a trade office is started, finished, cancelled or destroyed, at game
-# start and yearly - see scripted_effects/abm_trade_office_effects.txt. Here it is only read.
+# iterators work) whenever a trade office is started, finished, cancelled or destroyed, when a
+# game starts or a save is loaded, and yearly - see scripted_effects/abm_trade_office_effects.txt.
+# The recount also sets the location modifier abm_trade_office_slots_full while the slots are full;
+# that modifier is the main gate here, since location modifiers are proven readable in an allow.
 #
 # Called from the allow of REPLACE:trade_office (building_types/abm_foreign_buildings.txt).
 abm_trade_office_slot_free = {
@@ -18,9 +20,15 @@ abm_trade_office_slot_free = {
 				owner = scope:actor
 				value > 0
 			}
-			# never counted: no trade office has been built or started here yet
-			NOT = { has_variable = abm_trade_office_count }
-			var:abm_trade_office_count < abm_trade_office_limit_value
+			AND = {
+				# the slots-full location modifier set by the recount (proven readable in allow)
+				modifier:abm_trade_office_slots_full = no
+				# and the cached count itself, wherever the variable can be read
+				trigger_if = {
+					limit = { has_variable = abm_trade_office_count }
+					var:abm_trade_office_count < abm_trade_office_limit_value
+				}
+			}
 		}
 	}
 }
