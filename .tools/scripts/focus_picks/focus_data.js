@@ -48,7 +48,8 @@ module.exports = {
       ['glorious_arms', 'prestige_from_land_battle = 1.0\nprestige_from_naval_battle = 1.0\nmilitary_tactics = 0.10'],
       ['abm_ensure_mercenary_payments', 'hire_mercenary_leader_cost_modifier = -0.75', { icon: 'regimental_system', name: 'Ensure Mercenary Payments', desc: 'A reputation for paying on time means the best condottieri will sign with us for far less.' }],
       // Keep the privateers key: vanilla naval laws (state piracy, letters of marque) and an OMA event check has_advance = privateers.
-      ['privateers', 'can_hire_privateers = yes'],
+      // 1.4 vanilla also lists the Letters of Marque policy here (its allow already checks has_advance = privateers).
+      ['privateers', 'can_hire_privateers = yes', { raw: 'unlock_policy = issue_letter_of_marque_policy' }],
     ]},
     { id: 'standing_forces', art: 'institutions/professional_armies', name: 'Standing Forces', desc: 'A permanent army and fleet, kept paid and under arms in peacetime.', adv: [
       ['finest_of_horses', 'army_heavy_cavalry_power = 0.05\narmy_light_cavalry_power = 0.05\narmy_heavy_cavalry_maintenance_cost_modifier = -0.05\narmy_light_cavalry_maintenance_cost_modifier = -0.05'],
@@ -92,7 +93,8 @@ module.exports = {
       ['naval_drill', 'naval_morale_modifier = 0.10', { icon: 'naval_morale_advance_1' }],
       ['abm_strict_discipline', 'discipline = 0.05', { icon: 'glorious_arms', name: 'Strict Discipline', desc: 'Harsh drill and harsher punishment keep our ranks steady and in order when the shot starts flying.' }],
       ['abm_hardened_ranks', 'military_tactics = 0.10\nnaval_damage_taken = -0.10', { icon: 'defensive_army', name: 'Hardened Ranks', desc: 'Soldiers who know how to take cover and crews who know how to fight their ship lose fewer men to every volley and broadside.' }],
-      ['abm_trained_march', 'land_morale_movement_cost = -0.0002', { icon: 'expanded_supply_trains', name: 'Trained March', desc: 'Regulated marching pace and rest halts keep our columns in good order and good spirits on the road.' }],
+      // land_morale_movement_cost: 1.4 vanilla scaled it x7 (base 0.001 -> 0.0069, advances -0.0001 -> -0.0007); was -0.0002 on 1.3.
+      ['abm_trained_march', 'land_morale_movement_cost = -0.0014', { icon: 'expanded_supply_trains', name: 'Trained March', desc: 'Regulated marching pace and rest halts keep our columns in good order and good spirits on the road.' }],
       ['abm_elite_companies', 'army_heavy_cavalry_power = 0.10\narmy_light_cavalry_power = 0.10\nnavy_heavy_ship_power = 0.15\narmy_heavy_cavalry_maintenance_cost_modifier = 0.05\nnavy_heavy_ship_maintenance_cost_modifier = 0.05', { icon: 'royal_navy', name: 'Elite Companies', desc: 'Picked horsemen and our finest great ships are given the best of everything. They fight like no others, and they cost like no others.' }],
     ]},
     { id: 'quantity', art: 'situation/guelphs_and_ghibellines', name: 'Quantity', desc: 'More men and sailors, wider battle lines, cheap upkeep and cheap ships.', adv: [
@@ -177,7 +179,7 @@ module.exports = {
     ]},
     { id: 'commerce', art: 'institutions/banking', name: 'Commerce', desc: 'Trade advantage, capacity and banking.', adv: [
       ['competetive_merchants', 'global_merchant_power = 0.2'],
-      ['national_trade_policy', 'selling_efficiency = small_trade_efficiency_bonus'],
+      ['national_trade_policy', 'selling_efficiency = small_selling_efficiency_bonus'], // 1.4 vanilla moved selling_efficiency to the *_selling_efficiency_bonus values
       ['fast_negotiations', 'merchant_maintenance_efficiency = 0.20'],
       ['free_trade', 'global_merchant_capacity_modifier = 0.20'],
       ['trade_manipulation', 'global_trade_center_power = 0.10'],
@@ -196,7 +198,7 @@ module.exports = {
     { id: 'maneuver', art: 'units/army_cavalry_5', name: 'Maneuver', desc: 'Faster armies and fleets, on and off the battlefield.', adv: [
       ['improved_manuever', 'combat_speed_modifier = 0.10'],
       ['abm_forced_march', 'army_movement_speed = 0.10\nnavy_movement_speed = 0.10', { icon: 'expanded_supply_trains', name: 'Forced March', desc: 'Our armies are trained to cover great distances at speed when the campaign demands it, and our squadrons crowd on sail to match them.' }],
-      ['land_morale_movement_cost_rev_choice_mil', 'land_morale_movement_cost = -0.0002'],
+      ['land_morale_movement_cost_rev_choice_mil', 'land_morale_movement_cost = -0.0014'], // 2x vanilla 1.4 (-0.0007), as on 1.3 (-0.0002 vs -0.0001)
       ['abm_bold_maneuvers', 'movement_speed_if_no_road = 0.20\narmy_disembark_speed = 0.25', { icon: 'offensive_army', name: 'Bold Maneuvers', desc: 'Our generals do not wait for roads or harbours; they march across country, land on open beaches and appear where the enemy least expects them.' }],
       ['abm_limbers', 'army_movement_speed = 0.05', { icon: 'offensive_army', name: 'Limbers', desc: 'Two-wheeled carriages let our guns be hitched to horses and keep pace with the rest of the army.' }],
       ['offensive_army', 'land_morale_recovery = 0.02\nnaval_morale_recovery = 0.02'],
@@ -265,7 +267,8 @@ module.exports = {
     { id: 'insurrection', art: 'situation/the_revolution', name: 'Insurrection', desc: 'Defensive war for small countries fighting for survival.', adv: [
       ['abm_guerillas', 'max_manpower = 1\noccupation_time = 1.0', { icon: 'defensive_army', name: 'Guerillas', desc: 'Every hill and forest hides a band of partisans, and no occupier sleeps soundly in our land.' }],
       ['morale_recovery_rev_dip_choice', 'morale_recovery_in_friendly = 0.05'],
-      ['abm_peoples_war', 'global_hostile_attrition = 1\nglobal_devastation_recovery = 0.01', { icon: 'defensive_army', name: "People's War", desc: 'The whole nation takes up arms; invaders find the land stripped bare and every village hostile.' }],
+      // global_devastation_recovery: 1.4 vanilla halved every prosperity recovery source (0.005 -> 0.0025); was 0.01 on 1.3.
+      ['abm_peoples_war', 'global_hostile_attrition = 1\nglobal_devastation_recovery = 0.005', { icon: 'defensive_army', name: "People's War", desc: 'The whole nation takes up arms; invaders find the land stripped bare and every village hostile.' }],
       ['abm_last_stand', 'global_garrison_size_modifier = 0.15\nglobal_defensive = 0.15\nown_coast_naval_combat_bonus = 0.10', { icon: 'defensive_mentality', name: 'Last Stand', desc: 'Our garrisons will hold to the last man, and our ships will fight for every mile of our own coast.' }],
       ['abm_national_resistance', 'monthly_war_exhaustion = -0.05\ncultural_tradition_modifier = 10', { icon: 'cultural_ties', name: 'National Resistance', desc: 'Defeat only hardens the resolve of our people and deepens their sense of who they are.' }],
       ['abm_foreign_fighters', 'mercenary_maintenance_efficiency = 0.5\nmercenary_range_modifier = 1.0', { icon: 'regimental_system', name: 'Foreign Fighters', desc: 'Volunteers from across the world flock to our cause.' }],

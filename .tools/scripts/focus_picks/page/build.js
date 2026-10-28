@@ -259,9 +259,11 @@ const UNLOCK_INFO = {
 	march: clean(loc.march_desc || '') + ' Lets you turn subjects into Marches.',
 	exploration: 'A casus belli for wars of superiority against a country whose capital is on another subcontinent, as long as your power projection is higher than theirs. Chartered Companies grants it too.',
 	privateers: clean(loc.game_concept_privateer_desc || '') + ' This advance lets you hire them.',
+	marque: 'A naval policy: privateers cost 25% less to hire, but navy maintenance efficiency drops 10%. The Letters of Marque advance in the Age of Reformation unlocks it too.',
 };
 const UNLOCKS = {
 	'unlock_subject_type = march': ['Unlocks the March subject type', 'march'],
+	'unlock_policy = issue_letter_of_marque_policy': ['Unlocks the Letters of Marque policy', 'marque'],
 	'unlock_casus_belli = cb_exploration': ['Unlocks the Exploration casus belli', 'exploration'],
 	'unlock_country_interaction = abm_sabotage_fort': ['Unlocks the Sabotage Fort action', 'sabotage'],
 	'unlock_diplomacy = { infiltrate_administration }': ['Unlocks Infiltrate Administration', 'infiltrate'],

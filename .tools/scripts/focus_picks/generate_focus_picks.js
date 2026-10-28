@@ -58,6 +58,7 @@ for (const d of ['main_menu/common/script_values', 'in_game/common/script_values
 const GOOD_ANYWAY = new Set(['global_hostile_attrition']);
 const RAW_UNLOCKS = [
 	[/unlock_subject_type = march/, 'Unlocks the #Y March#! subject type'],
+	[/unlock_policy = issue_letter_of_marque_policy/, 'Unlocks the #Y Letters of Marque#! policy'],
 	[/unlock_casus_belli = cb_exploration/, 'Unlocks the #Y Exploration#! casus belli'],
 	[/unlock_country_interaction = abm_sabotage_fort/, 'Unlocks #Y Sabotage Fort#!'],
 	[/unlock_diplomacy = \{ infiltrate_administration \}/, 'Unlocks #Y Infiltrate Administration#!'],
@@ -169,6 +170,8 @@ function eventsFile() {
 		'ages_of_eu.1 = {',
 		'\ttype = country_event',
 		'\thidden = yes',
+		'\ttitle = empty_text # like vanilla hidden events; without it the log reports a missing title',
+		'\tdesc = empty_text',
 		'',
 		'\t# Age of Traditions has no focus picks.',
 		'\ttrigger = {',
