@@ -159,6 +159,12 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 			<label class="field" style="width:auto"><span class="hint">Import a scenario file</span><input id="f-file" type="file" accept=".json,application/json"></label>
 			<span class="progress" id="f-progress" aria-live="polite"></span>
 		</div>
+		<div class="bar">
+			<span class="hint">Big battle presets (1547 Spain size: 6 armies of 30 a side, 2 at the start, the rest come in as the reserve runs empty):</span>
+			<button id="preset-cav3" type="button">Age III heavy cavalry</button>
+			<button id="preset-inf5" type="button">Age V heavy infantry</button>
+		</div>
+		<datalist id="arrival-opts"><option value="needed"></option><option value="0"></option></datalist>
 		<details class="panel" id="json-panel">
 			<summary>Scenario as JSON (paste to import, copy to save or share)</summary>
 			<textarea id="f-json" spellcheck="false" aria-label="Scenario JSON"></textarea>
@@ -691,7 +697,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 					<div class="field" style="grid-column:span 2"><label>Army</label><input data-af="name" value="${esc(a.name || '')}"></div>
 					<div class="field"><label>Country</label><select data-af="country">${Object.keys(scn.countries).map(c => `<option${a.country === c ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
 					<div class="field"><label>Formation</label><select data-af="formation"><option value="balanced">Balanced</option><option value="cav_inf_cav"${a.formation === 'cav_inf_cav' ? ' selected' : ''}>Cavalry on flanks</option></select></div>
-					<div class="field"><label>Arrives on day</label><input data-af="arrivalDay" type="number" min="0" value="${a.arrivalDay || 0}"></div>
+					<div class="field"><label>Arrives on day ("needed" = when the reserve runs empty)</label><input data-af="arrivalDay" list="arrival-opts" value="${esc(String(a.arrivalDay || 0))}"></div>
 					<div class="field"><label>Days marched</label><input data-af="marchDays" type="number" min="0" value="${a.marchDays || 0}"></div>
 					<div class="field"><label>Start morale % (blank = from march)</label><input data-af="morale" type="number" min="0" max="100" value="${a.morale != null ? Math.round(a.morale * 100) : ''}"></div>
 					<div class="field"><label>General: military</label><input data-gf="mil" type="number" min="0" max="100" value="${(a.general || {}).mil ?? ''}" placeholder="none"></div>
@@ -717,7 +723,8 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 				const a = scn[side].armies[+el.dataset.ai];
 				el.querySelectorAll('[data-af]').forEach(inp => inp.addEventListener('input', () => {
 					const k = inp.dataset.af;
-					a[k] = k === 'name' || k === 'country' || k === 'formation' ? inp.value : k === 'morale' ? (inp.value === '' ? undefined : +inp.value / 100) : +inp.value || 0;
+					a[k] = k === 'name' || k === 'country' || k === 'formation' ? inp.value : k === 'morale' ? (inp.value === '' ? undefined : +inp.value / 100)
+						: k === 'arrivalDay' && inp.value.trim().toLowerCase() === 'needed' ? 'needed' : +inp.value || 0;
 					syncJson();
 				}));
 				el.querySelectorAll('[data-gf]').forEach(inp => inp.addEventListener('input', () => {
@@ -769,6 +776,19 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		if (scn.war && scn.war.sides) scn.war.sides.reverse();
 		swapWar(); renderFull();
 	};
+	// Big battle preset (analysis/age3_picks_war.js setup): 6 armies of 30 a side on open ground, generals 60/59/61 (the average
+	// commanding general in Europe in the 1547 save), army tradition 20 (+4% morale), vanilla correct section chance +10% an age
+	// from age II. Two armies start the battle; the other four march in (1 day) as each side's reserve runs empty.
+	const bigPreset = (cat, age) => {
+		const country = { moraleMod: 0.04, correctBoxChance: 0.1 * (age - 1) };
+		const armies = tag => Array.from({ length: 6 }, (_, k) => ({ name: `${k + 1}. Army`, country: tag, formation: 'balanced',
+			general: { adm: 60, dip: 59, mil: 61 }, units: [{ type: `generic:${cat}:${age}`, count: 30 }], ...(k < 2 ? {} : { arrivalDay: 'needed', marchDays: 1 }) }));
+		return { name: `Big battle: age ${age} ${cat === 'hc' ? 'heavy cavalry' : 'heavy infantry'}, 6 x 30 a side`,
+			location: { topography: 'flatland', vegetation: 'farmland', climate: 'continental', crossing: 'none', river: false, coastal: false },
+			countries: { A: { ...country }, B: { ...country } }, attacker: { armies: armies('A') }, defender: { armies: armies('B') } };
+	};
+	$('preset-cav3').onclick = () => loadScenario(bigPreset('hc', 3));
+	$('preset-inf5').onclick = () => loadScenario(bigPreset('hi', 5));
 	$('f-run').onclick = () => runScenario(JSON.parse(JSON.stringify(scn)), Math.max(50, Math.min(5000, +$('f-runs').value || 500)), $('f-progress'), $('f-run'));
 	$('q-to-full').onclick = () => {
 		const q = quickScenario();

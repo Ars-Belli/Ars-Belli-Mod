@@ -604,7 +604,7 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 - `general` adds the skill modifiers of section 3 to that army only; `dice` is its trait dice (`commander_combat_bonus`). A country's `correctBoxChance` sets how often late regiments reach their box.
 - `rankFrontage` is the location rank's frontage change (town −1, city −2, megalopolis −3).
 - `arrivalDay` > 0 means the army joins on that day as reserves. Defenders coming from a neighbouring location also march, so give them `marchDays`.
-- `arrivalDay: 'needed'` keeps the army next door until its side has no fighting regiment left in reserve, then brings it in (one army a day, in list order).
+- `arrivalDay: 'needed'` keeps the army next door until its side has no fighting regiment left in reserve, then brings it in (one army a day, in list order). The page's Full battle tab takes "needed" in the arrival field, and its **Big battle presets** (age III heavy cavalry, age V heavy infantry) load the Spain-size setup: 6 armies of 30 a side on open ground, generals 60/59/61, +4% morale from army tradition 20, vanilla Correct Section Chance, 2 armies at the start and 4 needed.
 - `type` is a unit key from `units.json` (`sim.js --units musket` to search), or `generic:<li|hi|lc|hc|art|aux>:<age 1-6>`.
 - `costs` (optional) overrides the base-price gold per unit key or category: `buildGold` per regiment, `upkeepGold` per regiment a month at full strength, `reinforceGold` per 1,000 men. Use it when market prices are far from base.
 - `war` (optional) drives the war of attrition. Manpower is in men, and there is one pool per side, even with allied countries on it.
