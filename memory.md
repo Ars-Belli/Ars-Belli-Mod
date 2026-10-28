@@ -166,6 +166,12 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
 
+### 3m. Map modes: Bailiffs and Urbanisation (2026-10-28)
+- **Files:** `in_game/gfx/map/map_modes/abm_map_modes.txt` (`abm_bailiffs` in economy group 2 next to max control, `abm_urbanisation` in economy group 1 next to Location Rank), rules in `in_game/common/scripted_triggers/abm_map_mode_triggers.txt`, threshold `abm_bailiff_min_tax_base = 8` in `script_values/abm_map_mode_values.txt`, loc `main_menu/localization/english/abm_map_modes_l_english.yml` (`mapmode_<key>_name` + `MAPMODE_<KEY>`, legend + tooltip keys). Vanilla 1.4.4 map modes are pure script (`map_color`/`tooltip_key`/`legend_key`, root = location, `scope:actor` = viewing country); the `@data_*` gradient constants are file-local to vanilla `map_modes.txt`, so ours spell out the values.
+- **Bailiffs:** only the actor's locations. Light blue = has one; green = rural, not overseas, integrated or core, tax base >= 8; yellow = same but tax base < 8 with a high-value raw material; dark green = worth it but still conquered/colonized; red = eligible but not worth it; blue-black = town/city/overseas.
+- **Urbanisation:** light blue = city/megalopolis; blue-black = `modifier:cannot_upgrade_location`; red = rural with a high-value good (keep the rural +100% RGO size); yellow = food staple (food value >= 5; towns -10% / cities -20% food); green = low-value good and population ready (town 5, city 30, as vanilla `location_ranks`); dark green = needs population.
+- **Goods lists** (explicit, from vanilla default prices; no script accessor for `default_market_price` was verified): high value = default price >= 2.5 (29 goods incl. wool 2.5, iron 3, silver, gold, saffron, dyes); food staples = rice, wheat, maize, potato, livestock, fish, millet, legumes. Retune the lists if goods prices change in a game update.
+
 ## Project Structure
 The repository mirrors the EU5 file structure:
 - `in_game/`: Contains gameplay logic (advances, effects, triggers, setup).

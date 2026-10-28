@@ -1,0 +1,86 @@
+﻿# Ars Belli map modes (in_game/gfx/map/map_modes/abm_map_modes.txt): Bailiffs and Urbanisation.
+# All triggers are location scope.
+
+# Raw goods worth keeping rural and worth a bailiff before the tax base is there:
+# vanilla default_market_price 2.5 or more (goods/00_raw_materials, 01_plantation_goods, 03_food).
+abm_has_high_value_raw_material = {
+	OR = {
+		raw_material = goods:goods_gold		# 8
+		raw_material = goods:silver			# 6
+		raw_material = goods:elephants		# 5
+		raw_material = goods:marble			# 5
+		raw_material = goods:saffron		# 5
+		raw_material = goods:pepper			# 5
+		raw_material = goods:cloves			# 5
+		raw_material = goods:chili			# 5
+		raw_material = goods:silk			# 4
+		raw_material = goods:dyes			# 4
+		raw_material = goods:cocoa			# 4
+		raw_material = goods:ivory			# 4
+		raw_material = goods:salt			# 4
+		raw_material = goods:gems			# 4
+		raw_material = goods:pearls			# 4
+		raw_material = goods:amber			# 4
+		raw_material = goods:horses			# 3
+		raw_material = goods:iron			# 3
+		raw_material = goods:copper			# 3
+		raw_material = goods:tea			# 3
+		raw_material = goods:coffee			# 3
+		raw_material = goods:alum			# 3
+		raw_material = goods:camels			# 3
+		raw_material = goods:mercury		# 3
+		raw_material = goods:cotton			# 3
+		raw_material = goods:sugar			# 3
+		raw_material = goods:tobacco		# 3
+		raw_material = goods:wool			# 2.5
+		raw_material = goods:incense		# 2.5
+	}
+}
+
+# Food staples (vanilla food value 5 or more): towns and cities cut food production
+# (-10% / -20%) and lose the rural +100% RGO size, so these urbanise last.
+abm_has_food_staple_raw_material = {
+	OR = {
+		raw_material = goods:rice			# 10
+		raw_material = goods:wheat			# 8
+		raw_material = goods:maize			# 8
+		raw_material = goods:potato			# 8
+		raw_material = goods:livestock		# 8
+		raw_material = goods:fish			# 5
+		raw_material = goods:millet			# 5
+		raw_material = goods:legumes		# 5
+	}
+}
+
+# Where a bailiff could stand (vanilla bailiff: rural_settlement, not overseas), limited to
+# integrated or cored locations.
+abm_bailiff_location_eligible = {
+	location_rank = location_rank:rural_settlement
+	is_overseas_for_owner = no
+	OR = {
+		integration_level = integrated
+		integration_level = core
+	}
+}
+
+# A bailiff (+20% local max control) pays for its upkeep, or the goods are worth growing into.
+abm_bailiff_worth_it = {
+	OR = {
+		location_tax_base >= abm_bailiff_min_tax_base
+		abm_has_high_value_raw_material = yes
+	}
+}
+
+# Population needed for the next rank (vanilla location_ranks: town 5, city 30).
+abm_urbanisation_population_ready = {
+	OR = {
+		AND = {
+			location_rank = location_rank:rural_settlement
+			population >= 5
+		}
+		AND = {
+			location_rank = location_rank:town
+			population >= 30
+		}
+	}
+}

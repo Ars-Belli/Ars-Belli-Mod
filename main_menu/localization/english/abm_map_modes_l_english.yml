@@ -1,0 +1,38 @@
+﻿l_english:
+ # Ars Belli map modes (in_game/gfx/map/map_modes/abm_map_modes.txt)
+
+ mapmode_abm_bailiffs_name: "Bailiffs"
+ MAPMODE_ABM_BAILIFFS: "#T $mapmode_abm_bailiffs_name$#!\n$mapmode_common_start$ whether a Bailiff (+20% local [max_control|e]) pays off there. Bailiffs can only be built in rural [locations|e] of your own that are not overseas; this map mode also asks for them to be [integrated|e] or a [core|e].\n\n#G Green#!: [tax_base|e] of 8 or more, the extra [control|e] earns more than the upkeep.\n#Y Yellow#!: high-value [raw_material|e] (wool, iron, silver, gold, saffron, dyes and similar), worth a Bailiff while you build it up.\nDark green: worth it, but not [integrated|e] yet.\n#R Red#!: too little [tax_base|e] and low-value [goods|e].\nLight blue: already has a Bailiff."
+
+ ABM_BAILIFF_MM_LEGEND_HAS: "Has a Bailiff"
+ ABM_BAILIFF_MM_LEGEND_BUILD: "Build: tax base 8+"
+ ABM_BAILIFF_MM_LEGEND_VALUABLE: "Build: high-value goods"
+ ABM_BAILIFF_MM_LEGEND_NOT_INTEGRATED: "Worth it once integrated"
+ ABM_BAILIFF_MM_LEGEND_LOW: "Not worth it"
+ ABM_BAILIFF_MM_LEGEND_CANNOT: "Town, city or overseas"
+
+ ABM_BAILIFF_MM_HAS_TT: "[ROOT.GetLocation.GetName] already has a Bailiff."
+ ABM_BAILIFF_MM_BUILD_TT: "#G Build a Bailiff#! in [ROOT.GetLocation.GetName]: with a [tax_base|e] of 8 or more, the extra [control|e] earns more than the Bailiff's upkeep."
+ ABM_BAILIFF_MM_VALUABLE_TT: "#Y Build a Bailiff#! in [ROOT.GetLocation.GetName]: its [ROOT.GetLocation.GetRawMaterial.GetName] is a high-value [raw_material|e], worth the upkeep while you build up its [tax_base|e]."
+ ABM_BAILIFF_MM_NOT_INTEGRATED_TT: "[ROOT.GetLocation.GetName] would be worth a Bailiff once it is [integrated|e]."
+ ABM_BAILIFF_MM_LOW_TT: "#R Not worth a Bailiff:#! [ROOT.GetLocation.GetName] has a [tax_base|e] below 8 and no high-value [raw_material|e]."
+ ABM_BAILIFF_MM_CANNOT_TT: "[ROOT.GetLocation.GetName] cannot have a Bailiff: Bailiffs are only built in rural [locations|e] that are not overseas."
+
+ mapmode_abm_urbanisation_name: "Urbanisation"
+ MAPMODE_ABM_URBANISATION: "#T $mapmode_abm_urbanisation_name$#!\n$mapmode_common_start$ whether you should raise them to a town or city. Rural settlements get +100% [rgo|e] size and towns and cities produce less [food|e], so towns belong where the [raw_material|e] is cheap and not a food staple.\n\n#G Green#!: low-value [goods|e], enough [population|e] for the next rank (town 5, city 30).\nDark green: low-value [goods|e], needs more [population|e].\n#Y Yellow#!: food staple, urbanise last to keep your food supply.\n#R Red#!: high-value [goods|e], keep it rural.\nLight blue: already a city."
+
+ ABM_URBAN_MM_LEGEND_READY: "Urbanise now"
+ ABM_URBAN_MM_LEGEND_LATER: "Urbanise later: needs population"
+ ABM_URBAN_MM_LEGEND_FOOD: "Food staple: urbanise last"
+ ABM_URBAN_MM_LEGEND_KEEP_RURAL: "High-value goods: keep rural"
+ ABM_URBAN_MM_LEGEND_CITY: "Already a city"
+ ABM_URBAN_MM_LEGEND_CANNOT: "Cannot be upgraded"
+
+ ABM_URBAN_MM_CITY_TT: "[ROOT.GetLocation.GetName] is already a city."
+ ABM_URBAN_MM_CANNOT_TT: "[ROOT.GetLocation.GetName] cannot be upgraded."
+ ABM_URBAN_MM_KEEP_RURAL_TT: "#R Keep [ROOT.GetLocation.GetName] rural:#! [ROOT.GetLocation.GetRawMaterial.GetName] is a high-value [raw_material|e], and a town loses the rural +100% [rgo|e] size."
+ ABM_URBAN_MM_FOOD_TT: "#Y Urbanise [ROOT.GetLocation.GetName] last:#! [ROOT.GetLocation.GetRawMaterial.GetName] is a food staple, and towns and cities produce less [food|e]."
+ ABM_URBAN_MM_READY_TOWN_TT: "#G Raise [ROOT.GetLocation.GetName] to a town:#! its [raw_material|e] is cheap and it has the 5 [population|e] a town needs."
+ ABM_URBAN_MM_READY_CITY_TT: "#G Raise [ROOT.GetLocation.GetName] to a city:#! it has the 30 [population|e] a city needs."
+ ABM_URBAN_MM_LATER_TOWN_TT: "[ROOT.GetLocation.GetName] is a good town once it reaches 5 [population|e]."
+ ABM_URBAN_MM_LATER_CITY_TT: "[ROOT.GetLocation.GetName] is a good city once it reaches 30 [population|e]."

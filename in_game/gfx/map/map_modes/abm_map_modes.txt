@@ -1,0 +1,325 @@
+﻿# Ars Belli map modes. Layout follows vanilla max_control / market_access (map_modes.txt);
+# the @data_* gradient constants are file-local there, so their values are written out here.
+# Rules live in common/scripted_triggers/abm_map_mode_triggers.txt; only the actor's own
+# locations are coloured.
+
+# Where a Bailiff (+20% local max control) pays off.
+abm_bailiffs = {
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				owner = scope:actor
+			}
+			if = {
+				limit = { has_building = building_type:bailiff }
+				value = define:NMapColors|MAP_COLOR_TOP
+			}
+			else_if = {
+				limit = {
+					abm_bailiff_location_eligible = yes
+					location_tax_base >= abm_bailiff_min_tax_base
+				}
+				value = define:NMapColors|MAP_COLOR_HIGH
+			}
+			else_if = {
+				limit = {
+					abm_bailiff_location_eligible = yes
+					abm_has_high_value_raw_material = yes
+				}
+				value = define:NMapColors|MAP_COLOR_MID
+			}
+			else_if = {
+				limit = { abm_bailiff_location_eligible = yes }
+				value = define:NMapColors|MAP_COLOR_LOW
+			}
+			else_if = {
+				# rural and worth it, but still conquered / colonized
+				limit = {
+					location_rank = location_rank:rural_settlement
+					is_overseas_for_owner = no
+					abm_bailiff_worth_it = yes
+				}
+				value = define:NMapColors|MAP_COLOR_POSITIVE_MIN
+			}
+			else = {
+				value = define:NMapColors|MAP_COLOR_NULL
+			}
+		}
+	}
+
+	tooltip_key = {
+		if = {
+			limit = {
+				has_owner = yes
+				owner = scope:actor
+			}
+			if = {
+				limit = { has_building = building_type:bailiff }
+				value = ABM_BAILIFF_MM_HAS_TT
+			}
+			else_if = {
+				limit = {
+					abm_bailiff_location_eligible = yes
+					location_tax_base >= abm_bailiff_min_tax_base
+				}
+				value = ABM_BAILIFF_MM_BUILD_TT
+			}
+			else_if = {
+				limit = {
+					abm_bailiff_location_eligible = yes
+					abm_has_high_value_raw_material = yes
+				}
+				value = ABM_BAILIFF_MM_VALUABLE_TT
+			}
+			else_if = {
+				limit = { abm_bailiff_location_eligible = yes }
+				value = ABM_BAILIFF_MM_LOW_TT
+			}
+			else_if = {
+				limit = {
+					location_rank = location_rank:rural_settlement
+					is_overseas_for_owner = no
+					abm_bailiff_worth_it = yes
+				}
+				value = ABM_BAILIFF_MM_NOT_INTEGRATED_TT
+			}
+			else = {
+				value = ABM_BAILIFF_MM_CANNOT_TT
+			}
+		}
+	}
+
+	legend_key = {
+		desc = "ABM_BAILIFF_MM_LEGEND_HAS"
+		color = define:NMapColors|MAP_COLOR_TOP
+	}
+	legend_key = {
+		desc = "ABM_BAILIFF_MM_LEGEND_BUILD"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+	legend_key = {
+		desc = "ABM_BAILIFF_MM_LEGEND_VALUABLE"
+		color = define:NMapColors|MAP_COLOR_MID
+	}
+	legend_key = {
+		desc = "ABM_BAILIFF_MM_LEGEND_NOT_INTEGRATED"
+		color = define:NMapColors|MAP_COLOR_POSITIVE_MIN
+	}
+	legend_key = {
+		desc = "ABM_BAILIFF_MM_LEGEND_LOW"
+		color = define:NMapColors|MAP_COLOR_LOW
+	}
+	legend_key = {
+		desc = "ABM_BAILIFF_MM_LEGEND_CANNOT"
+		color = define:NMapColors|MAP_COLOR_NULL
+	}
+
+	icon = "gfx/interface/icons/buildings/bailiff.dds"
+
+	small_map_names = location
+	medium_map_names = country
+	large_map_names = country
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	enable_rivers = yes
+
+	flatmap_behaviour = Always
+	force_brown_in_flatmap = only_in_rg_colorblind_mode
+	use_fow = no
+
+	category = economy
+	index = 2
+
+	map_markers = {
+		market_marker = no
+		fort_marker = no
+		toll_marker = no
+		unit_marker = no
+	}
+
+	gradient_parameters = {
+		zoom_step = 2
+
+		gradient_alpha_inside = 	1
+		gradient_alpha_outside = 	1
+		gradient_width = 			0.875
+		gradient_color_mult =		0.9
+		edge_width = 				0
+		edge_sharpness = 			0
+		edge_alpha = 				0
+		edge_color_mult = 			0
+		before_lighting_blend =		0.5
+		after_lighting_blend =		0.5
+	}
+
+	refresh_colors_on_selection_change = yes
+	color_refresh_counters = { Month LocationTaxBaseChanged LocationIntegrationChanged }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
+}
+
+# Which locations to raise to town / city: low-value goods first, food staples last,
+# high-value goods stay rural (rural settlements get +100% RGO size).
+abm_urbanisation = {
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				owner = scope:actor
+			}
+			if = {
+				limit = {
+					OR = {
+						location_rank = location_rank:city
+						location_rank = location_rank:megalopolis
+					}
+				}
+				value = define:NMapColors|MAP_COLOR_TOP
+			}
+			else_if = {
+				limit = { modifier:cannot_upgrade_location = yes }
+				value = define:NMapColors|MAP_COLOR_NULL
+			}
+			else_if = {
+				limit = {
+					location_rank = location_rank:rural_settlement
+					abm_has_high_value_raw_material = yes
+				}
+				value = define:NMapColors|MAP_COLOR_LOW
+			}
+			else_if = {
+				limit = { abm_has_food_staple_raw_material = yes }
+				value = define:NMapColors|MAP_COLOR_MID
+			}
+			else_if = {
+				limit = { abm_urbanisation_population_ready = yes }
+				value = define:NMapColors|MAP_COLOR_HIGH
+			}
+			else = {
+				value = define:NMapColors|MAP_COLOR_POSITIVE_MIN
+			}
+		}
+	}
+
+	tooltip_key = {
+		if = {
+			limit = {
+				has_owner = yes
+				owner = scope:actor
+			}
+			if = {
+				limit = {
+					OR = {
+						location_rank = location_rank:city
+						location_rank = location_rank:megalopolis
+					}
+				}
+				value = ABM_URBAN_MM_CITY_TT
+			}
+			else_if = {
+				limit = { modifier:cannot_upgrade_location = yes }
+				value = ABM_URBAN_MM_CANNOT_TT
+			}
+			else_if = {
+				limit = {
+					location_rank = location_rank:rural_settlement
+					abm_has_high_value_raw_material = yes
+				}
+				value = ABM_URBAN_MM_KEEP_RURAL_TT
+			}
+			else_if = {
+				limit = { abm_has_food_staple_raw_material = yes }
+				value = ABM_URBAN_MM_FOOD_TT
+			}
+			else_if = {
+				limit = {
+					abm_urbanisation_population_ready = yes
+					location_rank = location_rank:town
+				}
+				value = ABM_URBAN_MM_READY_CITY_TT
+			}
+			else_if = {
+				limit = { abm_urbanisation_population_ready = yes }
+				value = ABM_URBAN_MM_READY_TOWN_TT
+			}
+			else_if = {
+				limit = { location_rank = location_rank:town }
+				value = ABM_URBAN_MM_LATER_CITY_TT
+			}
+			else = {
+				value = ABM_URBAN_MM_LATER_TOWN_TT
+			}
+		}
+	}
+
+	legend_key = {
+		desc = "ABM_URBAN_MM_LEGEND_READY"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+	legend_key = {
+		desc = "ABM_URBAN_MM_LEGEND_LATER"
+		color = define:NMapColors|MAP_COLOR_POSITIVE_MIN
+	}
+	legend_key = {
+		desc = "ABM_URBAN_MM_LEGEND_FOOD"
+		color = define:NMapColors|MAP_COLOR_MID
+	}
+	legend_key = {
+		desc = "ABM_URBAN_MM_LEGEND_KEEP_RURAL"
+		color = define:NMapColors|MAP_COLOR_LOW
+	}
+	legend_key = {
+		desc = "ABM_URBAN_MM_LEGEND_CITY"
+		color = define:NMapColors|MAP_COLOR_TOP
+	}
+	legend_key = {
+		desc = "ABM_URBAN_MM_LEGEND_CANNOT"
+		color = define:NMapColors|MAP_COLOR_NULL
+	}
+
+	icon = "gfx/interface/icons/map_modes/cities.dds"
+
+	small_map_names = location
+	medium_map_names = country
+	large_map_names = country
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	enable_rivers = yes
+
+	flatmap_behaviour = Always
+	force_brown_in_flatmap = only_in_rg_colorblind_mode
+	use_fow = no
+
+	category = economy
+	index = 1
+
+	map_markers = {
+		market_marker = no
+		fort_marker = no
+		toll_marker = no
+		unit_marker = no
+	}
+
+	gradient_parameters = {
+		zoom_step = 2
+
+		gradient_alpha_inside = 	1
+		gradient_alpha_outside = 	1
+		gradient_width = 			0.875
+		gradient_color_mult =		0.9
+		edge_width = 				0
+		edge_sharpness = 			0
+		edge_alpha = 				0
+		edge_color_mult = 			0
+		before_lighting_blend =		0.5
+		after_lighting_blend =		0.5
+	}
+
+	refresh_colors_on_selection_change = yes
+	color_refresh_counters = { Month LocationPopulationChanged }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
+}
