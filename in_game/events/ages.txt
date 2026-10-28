@@ -12,8 +12,10 @@ namespace = abm_focus_picks
 # disconnects must not have the AI choose for them. A pick sets the country
 # variable abm_focus_<branch>, which the branch advances use as potential.
 #
-# abm_focus_picks.1 is a country_event, NOT age_event: the age event window has exactly three
-# cards bound to option keys adm/dip/mil and cannot show anything else.
+# The notices abm_focus_picks.<n> (one per age, for the art) are country_events, NOT age_event:
+# the age event window has exactly three cards bound to option keys adm/dip/mil and cannot show
+# anything else. Vanilla's illustration_tags = { ages } only has art in that window, so the
+# notices set a fixed image instead.
 
 ages_of_eu.1 = {
 	type = country_event
@@ -29,24 +31,96 @@ ages_of_eu.1 = {
 	immediate = {
 		if = {
 			limit = { is_ai = no }
-			trigger_event_non_silently = { id = abm_focus_picks.1 }
+			if = {
+				limit = { current_age = age_2_renaissance }
+				trigger_event_non_silently = { id = abm_focus_picks.2 }
+			}
+			else_if = {
+				limit = { current_age = age_3_discovery }
+				trigger_event_non_silently = { id = abm_focus_picks.3 }
+			}
+			else_if = {
+				limit = { current_age = age_4_reformation }
+				trigger_event_non_silently = { id = abm_focus_picks.4 }
+			}
+			else_if = {
+				limit = { current_age = age_5_absolutism }
+				trigger_event_non_silently = { id = abm_focus_picks.5 }
+			}
+			else_if = {
+				limit = { current_age = age_6_revolutions }
+				trigger_event_non_silently = { id = abm_focus_picks.6 }
+			}
 		}
 	}
 }
 
-# Player notice: the new age's focuses are picked in the Focus Picks panel.
-abm_focus_picks.1 = {
+# Player notice for age_2_renaissance: the new age's focuses are picked in the Focus Picks panel.
+abm_focus_picks.2 = {
 	type = country_event
 
 	title = ages_of_eu.1.title
-	desc = abm_focus_picks.1.desc
+	desc = abm_focus_picks.notice.desc
 	outcome = neutral
-
-	illustration_tags = {
-		10 = ages
-	}
+	image = "gfx/interface/illustrations/institutions/renaissance.dds"
 
 	option = {
-		name = abm_focus_picks.1.a
+		name = abm_focus_picks.notice.a
+	}
+}
+
+# Player notice for age_3_discovery: the new age's focuses are picked in the Focus Picks panel.
+abm_focus_picks.3 = {
+	type = country_event
+
+	title = ages_of_eu.1.title
+	desc = abm_focus_picks.notice.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/new_world.dds"
+
+	option = {
+		name = abm_focus_picks.notice.a
+	}
+}
+
+# Player notice for age_4_reformation: the new age's focuses are picked in the Focus Picks panel.
+abm_focus_picks.4 = {
+	type = country_event
+
+	title = ages_of_eu.1.title
+	desc = abm_focus_picks.notice.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/confessionalism.dds"
+
+	option = {
+		name = abm_focus_picks.notice.a
+	}
+}
+
+# Player notice for age_5_absolutism: the new age's focuses are picked in the Focus Picks panel.
+abm_focus_picks.5 = {
+	type = country_event
+
+	title = ages_of_eu.1.title
+	desc = abm_focus_picks.notice.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/scientific_revolution.dds"
+
+	option = {
+		name = abm_focus_picks.notice.a
+	}
+}
+
+# Player notice for age_6_revolutions: the new age's focuses are picked in the Focus Picks panel.
+abm_focus_picks.6 = {
+	type = country_event
+
+	title = ages_of_eu.1.title
+	desc = abm_focus_picks.notice.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/institutions/enlightenment.dds"
+
+	option = {
+		name = abm_focus_picks.notice.a
 	}
 }
