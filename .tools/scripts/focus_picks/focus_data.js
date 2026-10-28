@@ -11,7 +11,7 @@ module.exports = {
       ['innovativeness', 'global_max_literacy = 5'],
       ['state_efficiency', 'global_distance_from_capital_speed_propagation = 0.1'],
       ['court_accounting', 'court_spending_efficiency = 0.1'],
-      ['dynamic_court', 'country_cabinet_efficiency = 0.10'],
+      ['dynamic_court', 'country_cabinet_efficiency = 0.10\nmonthly_political_influence_gain_modifier = 0.10'],
       ['church_attendance_duty', 'stability_investment = small_stability_investment'],
       ['empiricism', 'legislative_efficiency = 0.20\nset_policy_cost_modifier = -0.66\nchange_policy_cost_modifier = -0.20'],
     ]},
@@ -24,7 +24,7 @@ module.exports = {
       ['abm_protected_trade_caravans', 'trade_land_efficiency = medium_trade_land_efficiency_bonus', { icon: 'expanded_supply_trains', name: 'Protected Trade Caravans', desc: 'Armed escorts and fortified caravanserais along our overland routes let our merchants reach far-off markets without the expense of a fleet.' }],
     ]},
     { id: 'influence', art: 'government/diplomacy_illustration', name: 'Influence', desc: 'Subjects, vassals and diplomats.', adv: [
-      ['integrated_elites', 'monthly_diplomats = 0.2\nmax_diplomats = 1\nglobal_estate_power = -0.20'],
+      ['integrated_elites', 'monthly_diplomats = 0.2\nmax_diplomats = 1\nglobal_estate_power = -0.20\nmonthly_political_influence_gain_modifier = 0.15'],
       ['tribute_system', 'subject_income_modifier = 0.25\nsubject_loyalty = 10\nsubject_opinions = 25'],
       ['marcher_lords', '', { raw: 'unlock_subject_type = march' }],
       ['buffer_states', 'diplomatic_capacity = 2\ndiplomatic_reputation = 4'],
@@ -170,7 +170,7 @@ module.exports = {
  { age: 'age_5_absolutism', n: 5,
    eco: [
     { id: 'administration', art: 'institutions/legalism', name: 'Administration', desc: 'Control, cabinet and legislation.', adv: [
-      ['cabinet', 'country_cabinet_efficiency = 0.20'],
+      ['cabinet', 'country_cabinet_efficiency = 0.20\nmonthly_political_influence = 0.25'],
       ['national_bank', 'minting_income_factor = 0.10\nmax_bonds = 1'],
       ['civil_servants', 'global_monthly_control = 0.001\nglobal_monthly_control_decline = -0.002'],
       ['legislative_efficiency_idea', 'legislative_efficiency = 0.25\nchange_policy_cost_modifier = -0.25'],
