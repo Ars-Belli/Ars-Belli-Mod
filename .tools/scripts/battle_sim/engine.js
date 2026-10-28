@@ -14,7 +14,7 @@
 		INIT_BASE: 0.6, INIT_EACH: 0.025, INIT_MAX: 0.3, INIT_DAY: 0.03,
 		SPEED_SCALE: 0.1, OVERSTACK: 1.25, SIZE_RATIO_MAX: 4, LEVY_IMPACT: 0.75, EXP_RED: 0.5,
 		NOT_ENG_STR: 1.1, NOT_ENG_MOR: 1.2, INITIAL_OVERRUN: 10, MORALE_OVERRUN: 2,
-		BOMBARD_CHANCE: 0.2, LAND_MORALE: 3, LEVY_DISCIPLINE: -0.2,
+		BOMBARD_CHANCE: 0.2, LAND_MORALE: 3, LEVY_DISCIPLINE: -0.2, RETREAT_STRENGTH_DAMAGE: 0.1,
 		COMBINED_PER_TYPE: 0.025, COMBINED_MIN: 0.1, COMBINED_MAX: 0.5,
 		BASE_FRONTAGE: 10, MIN_FRONTAGE: 2, MOVEMENT_COST: 0.0069, MAX_DAYS: 120,
 		REINFORCE_EFF_FLOOR: -0.5, MAINT_EFF_FLOOR: -0.95, LEVY_MAINTENANCE: 0.01, MONTHLY_REINFORCE: 0.25, MAX_MANPOWER_YEARS: 5, PRICE_SCALE: 0.1,
@@ -210,6 +210,8 @@
 		const rng = makeRng(opts.seed);
 		const terr = terrainInfo(scn.location);
 		const sides = scn.sides.map((s, i) => s.armies.map((a, j) => buildArmy(a, i, j, scn.countries)));
+		// side.retreatDay: order a retreat at the end of that day (not before the minimum battle length)
+		const retreatDay = scn.sides.map(s => s.retreatDay != null ? Math.max(D.MIN_DAYS, +s.retreatDay) : null);
 		// each side's width: the location's frontage x (1 + possible_frontage_modifier of one of its armies; the code's pick
 		// was not decoded, the first army is used)
 		const Ws = [0, 1].map(i => terr.frontage * (1 + ((sides[i][0] || {}).c?.frontageMod || 0)));
@@ -358,6 +360,12 @@
 				if (w >= 0) return finish(1 - w, day, w);
 				continue;
 			}
+			for (const i of [0, 1]) if (retreatDay[i] != null && day >= retreatDay[i]) {
+				for (const r of all[i]) if (r.section !== 'absent') r.str *= 1 - D.RETREAT_STRENGTH_DAMAGE;
+				const res = finish(1 - i, day, null);
+				res.retreated = i;
+				return res;
+			}
 			const e0 = lineEmpty(0), e1 = lineEmpty(1);
 			if (e0 && e1) return finish(-1, day, null);
 			if (e0) return finish(1, day, null);
@@ -397,10 +405,25 @@
 		};
 	}
 
+	function mergeMC(parts) {
+		parts = parts.filter(p => p && p.n);
+		const n = parts.reduce((t, p) => t + p.n, 0);
+		const w = p => p.n / n;
+		const out = { n, start: parts[0].start };
+		for (const k of ['wins', 'overrun', 'shattered', 'retreated']) out[k] = [0, 1].map(i => parts.reduce((t, p) => t + ((p[k] || [0, 0])[i] || 0), 0));
+		out.draws = parts.reduce((t, p) => t + p.draws, 0);
+		for (const k of ['days', 'daysSq', 'lossesProd']) out[k] = parts.reduce((t, p) => t + (p[k] || 0) * w(p), 0);
+		for (const k of ['losses', 'lossesSq', 'lossesRegular', 'lossesLevy', 'overrunLosses']) out[k] = [0, 1].map(i => parts.reduce((t, p) => t + p[k][i] * w(p), 0));
+		out.armies = parts[0].armies.map((s, i) => s.map((a, j) => ({ ...a, lost: parts.reduce((t, p) => t + p.armies[i][j].lost * w(p), 0) })));
+		out.groups = parts[0].groups.map((s, i) => s.map((a, j) => a.map((g, k) => ({ lost: parts.reduce((t, p) => t + p.groups[i][j][k].lost * w(p), 0), wiped: parts.reduce((t, p) => t + p.groups[i][j][k].wiped * w(p), 0) }))));
+		return Object.assign(out, confidence(out));
+	}
+
 	function monteCarloScenario(scn, n, opts = {}) {
-		const out = { n, wins: [0, 0], draws: 0, days: 0, daysSq: 0, losses: [0, 0], lossesSq: [0, 0], lossesProd: 0, lossesRegular: [0, 0], lossesLevy: [0, 0], overrunLosses: [0, 0], overrun: [0, 0], shattered: [0, 0], start: null, armies: null, groups: null };
+		const out = { n, wins: [0, 0], draws: 0, days: 0, daysSq: 0, losses: [0, 0], lossesSq: [0, 0], lossesProd: 0, lossesRegular: [0, 0], lossesLevy: [0, 0], overrunLosses: [0, 0], overrun: [0, 0], shattered: [0, 0], retreated: [0, 0], start: null, armies: null, groups: null };
 		for (let k = 0; k < n; k++) {
 			const r = simulateScenario(scn, { ...opts, seed: opts.seed != null ? opts.seed + k : undefined });
+			if (r.retreated != null) out.retreated[r.retreated]++;
 			if (r.winner < 0) out.draws++;
 			else { out.wins[r.winner]++; if (r.overrun) out.overrun[1 - r.winner]++; if (r.shattered) out.shattered[1 - r.winner]++; }
 			out.days += r.days; out.daysSq += r.days * r.days; out.start = r.start;
@@ -604,6 +627,6 @@
 		return { ...r, target: B };
 	}
 
-	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
+	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BattleSim = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -1,6 +1,7 @@
 // Command-line battle simulator.
 //   node .tools/scripts/battle_sim/sim.js <scenario.json> [--runs 2000] [--seed 1] [--sample] [--json]
 //        [--campaign [battles]] [--months 3]    repeat the battle and track manpower (scenario "war" block)
+//        [--threads N]                            worker threads (default: cores - 2; 1 = no workers)
 //   node .tools/scripts/battle_sim/sim.js --units <search>        list unit types matching a name or key
 // Scenario format: "EU5 Combat Mechanics (1.4.4).md", section 16, in the repo root.
 const fs = require('fs');
@@ -25,7 +26,12 @@ if (!file) { console.error('usage: node sim.js <scenario.json> [--runs N] [--see
 const scn = JSON.parse(fs.readFileSync(file, 'utf8'));
 const runs = +flag('--runs', scn.runs || 2000);
 const seed = flag('--seed') === undefined ? undefined : +flag('--seed');
-const m = S.monteCarloScenario(scn, runs, { seed });
+(async () => {
+// all cores but two by default (--threads 1 for a single thread); seeded runs give the same result either way
+const threads = +flag('--threads', 0) || undefined;
+let m;
+if (threads === 1) m = S.monteCarloScenario(scn, runs, { seed });
+else { const pool = require('./pool.js')(threads); m = await pool.mc(scn, runs, { seed }); await pool.close(); }
 if (flag('--json')) { console.log(JSON.stringify(m, null, 1)); process.exit(0); }
 
 const t = S.terrainInfo(scn.location || {});
@@ -60,3 +66,4 @@ if (flag('--sample')) {
 	console.log('  day  roll A/D   men A / D            morale A / D   front A / D  reserve A / D');
 	for (const d of r.timeline) console.log(`  ${String(d.day).padStart(3)}  ${String(d.dice[0] + 5).padStart(3)}/${String(d.dice[1] + 5).padEnd(4)} ${men(d.men[0]).padStart(8)} / ${men(d.men[1]).padEnd(9)} ${String(Math.round(d.morale[0] * 100)).padStart(4)}% / ${String(Math.round(d.morale[1] * 100)).padEnd(5)}% ${String(d.front[0]).padStart(5)} / ${String(d.front[1]).padEnd(5)} ${String(d.reserve[0]).padStart(5)} / ${d.reserve[1]}`);
 }
+})();

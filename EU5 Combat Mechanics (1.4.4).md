@@ -24,9 +24,11 @@ Combat ticks once per day (1.3 ticked per "hour"; see section 13). The daily tic
 4. **From day 4:** side 1 moves reserves up (`HandleReserves`) and rolls initiative in each section (`AttemptInitiative`), then side 2 does the same. Then both sides' engaged regiments hit (side 1, then side 2), and every regiment in the battle loses `COMBAT_DAILY_MORALE_TICK` = **0.03** morale.
 5. The day's collected strength and morale losses are applied together. Strength loss can't exceed the men a regiment has left.
 6. Each section drops regiments that can no longer fight: morale below `MORALE_COLLAPSE_THRESHOLD` = **0.05** (absolute morale points, 1.7% of base morale 3.0) or almost no men left.
-7. **End checks.** `0x142493100` compares the battle's age with `MINIMUM_COMBAT_DAYS` = **5** (plus a location modifier; navies use `MINIMUM_NAVAL_COMBAT_DAYS` 5). The two branches differ:
+7. **End checks.** `0x142493100` compares the battle's age with `MINIMUM_COMBAT_DAYS` = **5** (plus the `retreat_delay` modifier; navies use `MINIMUM_NAVAL_COMBAT_DAYS` 5). The two branches differ:
    - **Days 1–4 (shorter than the minimum): only overruns.** A side whose battle-line morale has collapsed (≤ 0.05) is wiped out if the other side has at least `MORALE_OVERRUN_FACTOR` = **2×** its men; then the same check with 10×. Otherwise the battle goes on, even when one side's line is already empty.
    - **Day 5 on: the line decides.** If the attacker's three sections hold no men (each under 0.01 strength), the attacker **loses and retreats**; then the same check for the defender. A side is **destroyed** instead only if none of its armies can retreat. The retreat is **shattered** if the army's average morale is below `LOW_MORALE_THRESHOLD` = **0.5** (absolute, 17% of base morale; navies 1.5). If neither line is empty, the 10× overrun check (with collapsed morale) runs.
+
+**Ordered retreats.** A side can only order a retreat once the battle has lasted `MINIMUM_COMBAT_DAYS` = **5** days plus `retreat_delay` (a modifier; its description says hours; Christian religions +20, some folk religions −5). The game says "It is not possible to retreat from a battle until N days have passed" (`RETREAT_BLOCK_TT`, `0x140135fa0`). It is the same check as the battle's own minimum length (`0x142493100`, which reads `retreat_delay`), so melee on days 4 and 5 can't be skipped: an artillery raid can't leave right after the bombardment. The retreat is a shattered retreat ("We can only force a shattered retreat from others' territory OR from a battle").
 
 **Retreat losses.** `RETREAT_STRENGTH_DAMAGE` = 10% applies only to the **manual shattered retreat** order (the army's Shatter button: "a full retreat makes the army lose X% of its current strength"; `0x143521670`). Losing a battle costs no strength beyond the battle itself; the loser's armies lose `FOOD_PERCENTAGE_LOST_AT_RETREAT` = 50% of their food (`0x142477570`).
 
@@ -499,6 +501,17 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
   - `surplusManpower` is the net gain a month after all the country's army upkeep (may be negative). It defaults to max ÷ 60 minus the upkeep of the armies in the scenario.
   - `currentManpower` defaults to the max.
 - Country `costMod` (`{ build: { hc: -0.2 }, reinforce: {…}, maintenance: {…} }`) and `frontageMod` (possible frontage) are filled by `from_save.js`.
+
+### Speed: all cores
+- **Command line and analysis scripts:** `pool.js` runs battles on worker threads (all cores but two by default).
+  - `sim.js --threads N` sets the count; `--threads 1` turns the workers off.
+  - A seeded run splits its battles by seed offset, so it gives exactly the single-thread result.
+  - 20,000 battles: 13.6 s on one thread, 2.9 s on 26 threads.
+- **Page:** `worker.js` runs Web Workers (one per core but one), published next to the page; it falls back to the page thread if workers can't start. 5,000 battles take about 0.3 s on 28 cores.
+- `engine.mergeMC(parts)` merges chunk results (counts add up, means are weighted by battles, intervals recomputed).
+
+### Ordered retreats in scenarios
+`attacker.retreatDay` / `defender.retreatDay`: that side orders a retreat at the end of that day (never before day 5). It loses 10% of its men and the battle. `analysis/artillery_raid.js` uses it.
 
 ### How sure a result is
 Every Monte Carlo result carries 95% intervals for its sampling noise: the spread you would see if you ran the same battles again.

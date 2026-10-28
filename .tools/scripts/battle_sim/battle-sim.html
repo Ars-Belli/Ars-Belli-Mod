@@ -328,7 +328,31 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	const quickScenario = () => S.simpleScenario(readQuick('a'), readQuick('b'), { width: Math.max(2, +$('q-width').value || 10) });
 
 	// ---------- shared: runs, tiles, charts, hit explorer
+	// Battles run on a pool of Web Workers (one per core but one); if workers can't start, on the page's own thread.
+	let pool = null;
+	try {
+		const k = Math.max(1, Math.min(31, (navigator.hardwareConcurrency || 4) - 1));
+		pool = { workers: Array.from({ length: k }, () => new Worker('worker.js')), jobs: new Map(), next: 0, broken: false };
+		pool.workers.forEach(w => {
+			w.onmessage = e => { const j = pool.jobs.get(e.data.id); if (!j) return; pool.jobs.delete(e.data.id); e.data.error ? j.fail(e.data.error) : j.done(e.data.result); };
+			w.onerror = () => { pool.broken = true; for (const j of pool.jobs.values()) j.fail('worker error'); pool.jobs.clear(); };
+		});
+	} catch (e) { pool = null; }
 	function runMany(scn, n, onDone, onProgress) {
+		if (!pool || pool.broken || n < 100) return runManyLocal(scn, n, onDone, onProgress);
+		const chunks = Math.min(pool.workers.length * 2, Math.max(1, Math.floor(n / 40)));
+		const parts = [];
+		let got = 0, failed = false;
+		for (let c = 0; c < chunks; c++) {
+			const k = Math.floor(n / chunks) + (c < n % chunks ? 1 : 0), id = pool.next++;
+			pool.jobs.set(id, {
+				done: r => { parts.push(r); got++; onProgress && onProgress(got / chunks); if (got === chunks) onDone(S.mergeMC(parts)); },
+				fail: () => { if (failed) return; failed = true; pool.broken = true; runManyLocal(scn, n, onDone, onProgress); },
+			});
+			pool.workers[c % pool.workers.length].postMessage({ id, scn, n: k });
+		}
+	}
+	function runManyLocal(scn, n, onDone, onProgress) {
 		const SUMS = ['losses', 'lossesSq', 'lossesRegular', 'lossesLevy', 'overrunLosses'];
 		const acc = { n: 0, wins: [0, 0], draws: 0, days: 0, daysSq: 0, lossesProd: 0, overrun: [0, 0], shattered: [0, 0], start: [0, 0], armies: null, groups: null };
 		for (const k of SUMS) acc[k] = [0, 0];

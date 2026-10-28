@@ -1,17 +1,26 @@
-// node .tools/scripts/battle_sim/analysis/focus_picks_round_robin.js [battles per pairing, default 120]   (~3 min)
-// Round-robin: at each age, every distinct battle-relevant pick state fights every other (budget view, both sides
-// alternating as attacker). A state's score = expected win rate against a random opponent path (states weighted by how
-// many of the 3^k paths reach them). Same assumptions as focus.js.
-const S = require('../engine.js');
-S.setUnitDB(require('../units.json'));
+// node .tools/scripts/battle_sim/analysis/focus_picks_round_robin.js [battles per pairing, default 300] [threads]
+// Military focus picks: at each age every distinct battle-relevant pick state fights every other (both sides alternating as
+// attacker), under three parity views. A state's score = expected win rate against a random opponent path (states weighted
+// by how many of the 3^k paths reach them).
+// Meta armies (the user's MP meta): ages 2-4 thirty heavy cavalry, ages 5-6 thirty heavy infantry; frontage 10.
+// Assumptions (2026-10-28, from the user and a 1547 Spain save):
+//  - Generals are characters, typically 55/58/62 (adm/dip/mil; median of Spain's field generals). Without Leadership,
+//    trained generals average 37 at army tradition 14, so nobody trains. Leadership: trained generals +40 a skill, i.e. 77
+//    on average (better than most characters), plus +0.2 army tradition a month, taken as +20 by mid-age (+4% morale).
+//  - Experience starts near 0 (Spain 1547: 0.37), so experience-gain picks barely count.
+//  - Parity views: "regiments" = equal regiment count (recruitment locations/buildings are the limit); "manpower" = size x
+//    (1 + manpower modifier) x (1 + maintenance efficiency) / (1 + unit maintenance cost modifier) (manpower upkeep is
+//    divided by maintenance efficiency, checked on a save); "gold" = size x (1 + maintenance efficiency) / (1 + cost modifier).
+const path = require('path');
 const { ages } = require('../../focus_picks/focus_data.js');
-const N = +process.argv[2] || 120;
+const N = +process.argv[2] || 300;
+const pool = require('../pool.js')(+process.argv[3] || undefined);
 const MAP = {
 	discipline: 'discipline', military_tactics: 'tactics', land_morale_modifier: 'moraleMod', land_morale: 'moraleFlat',
 	army_initiative: 'initiativeMod', combat_speed_modifier: 'speedMod', possible_frontage_modifier: 'frontageMod',
 	army_heavy_infantry_power: 'power.hi', army_heavy_cavalry_power: 'power.hc',
 	army_maintenance_efficiency: 'maint', army_heavy_cavalry_maintenance_cost_modifier: 'maintCost.hc', army_heavy_infantry_maintenance_cost_modifier: 'maintCost.hi',
-	monthly_experience_gain: 'expGain', experience_decay: 'expDecay', train_general_ability: 'genAbility', monthly_army_tradition: 'atGain',
+	global_manpower_modifier: 'manpower', monthly_experience_gain: 'expGain', experience_decay: 'expDecay', train_general_ability: 'genAbility', monthly_army_tradition: 'atGain',
 };
 const branchMods = br => {
 	const o = {};
@@ -22,65 +31,83 @@ const branchMods = br => {
 	return o;
 };
 const AGES = ages.map(a => ({ n: a.n, branches: a.mil.map(b => ({ name: b.name, mods: branchMods(b) })) }));
-const relevant = (mods, age) => { // drop stats that do nothing for the meta army of that age
-	const o = { ...mods }; const cav = age <= 4;
-	if (cav) { delete o['power.hi']; delete o['maintCost.hi']; } else { delete o['power.hc']; delete o['maintCost.hc']; }
+const VIEWS = {
+	regiments: () => 1,
+	manpower: (m, cat) => (1 + (m.manpower || 0)) * (1 + (m.maint || 0)) / (1 + (m['maintCost.' + cat] || 0)),
+	gold: (m, cat) => (1 + (m.maint || 0)) / (1 + (m['maintCost.' + cat] || 0)),
+};
+const CHAR = { adm: 55, dip: 58, mil: 62 }, TRAINED = 37 + 40;
+const relevant = (mods, age, view) => {
+	const o = { ...mods }; const cat = age <= 4 ? 'hc' : 'hi';
+	for (const k of Object.keys(o)) if (/^(power|maintCost)\./.test(k) && !k.endsWith(cat)) delete o[k];
+	if (view === 'regiments') { delete o.maint; delete o.manpower; delete o['maintCost.' + cat]; }
+	if (view === 'gold') delete o.manpower;
 	return JSON.stringify(Object.keys(o).sort().map(k => [k, +o[k].toFixed(4)]));
 };
-function side(mods, age) {
+function side(mods, age, view) {
 	const cat = age <= 4 ? 'hc' : 'hi';
-	const g = Math.min(100, 40 + (mods.genAbility || 0) + (mods.atGain ? 12.5 : 0));
-	const c = { tactics: 1 + (mods.tactics || 0), discipline: mods.discipline || 0, moraleMod: (mods.moraleMod || 0) + (mods.atGain ? 0.05 : 0), moraleFlat: mods.moraleFlat || 0,
+	const g = mods.genAbility ? { adm: Math.max(CHAR.adm, TRAINED), dip: Math.max(CHAR.dip, TRAINED), mil: Math.max(CHAR.mil, TRAINED) } : CHAR;
+	const c = { tactics: 1 + (mods.tactics || 0), discipline: mods.discipline || 0, moraleMod: (mods.moraleMod || 0) + (mods.atGain ? 0.04 : 0), moraleFlat: mods.moraleFlat || 0,
 		initiativeMod: mods.initiativeMod || 0, speedMod: mods.speedMod || 0, frontageMod: mods.frontageMod || 0,
-		experience: 10 * (1 + (mods.expGain || 0)) * 0.05 / (0.05 + (mods.expDecay || 0)), power: {} };
+		experience: 0.37 * (1 + (mods.expGain || 0)) * 0.05 / (0.05 + (mods.expDecay || 0)), power: {} };
 	if (mods['power.' + cat]) c.power[cat] = mods['power.' + cat];
-	const size = (1 + (mods.maint || 0)) / (1 + (mods['maintCost.' + cat] || 0));
-	return { name: 'x', country: c, general: { adm: g, dip: g, mil: g }, units: [{ type: `generic:${cat}:${age}`, count: Math.round(30 * size) }] };
+	return { name: 'x', country: c, general: g, units: [{ type: `generic:${cat}:${age}`, count: Math.round(30 * VIEWS[view](mods, cat)) }] };
 }
 const sum = list => { const o = {}; for (const m of list) for (const [k, v] of Object.entries(m)) o[k] = (o[k] || 0) + v; return o; };
 const paths = [];
 const rec = (i, picks) => { if (i === AGES.length) { paths.push(picks); return; } for (const b of AGES[i].branches) rec(i + 1, [...picks, b]); };
 rec(0, []);
-const scoreOf = {}; // age -> state key -> score
-for (const [ai, a] of AGES.entries()) {
-	const states = new Map(); // key -> { mods, weight, prefixes }
-	for (const p of paths) {
-		const mods = sum(p.slice(0, ai + 1).map(b => b.mods));
-		const key = relevant(mods, a.n);
-		if (!states.has(key)) states.set(key, { mods, weight: 0, names: new Set() });
-		const st = states.get(key); st.weight++; st.names.add(p.slice(0, ai + 1).map(b => b.name).join(' > '));
-	}
-	const list = [...states.entries()];
-	const total = list.reduce((t, [, s]) => t + s.weight, 0);
-	const wr = new Map();
-	for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) {
-		const A = list[i][1], B = list[j][1];
-		let w = 0;
-		for (const [x, y, me] of [[side(A.mods, a.n), side(B.mods, a.n), 0], [side(B.mods, a.n), side(A.mods, a.n), 1]]) {
-			const m = S.monteCarloScenario({ location: { frontage: 10 }, attacker: { armies: [x] }, defender: { armies: [y] } }, N, { seed: 7 + i * 31 + j });
-			w += (m.wins[me] + m.draws / 2) / N;
+(async () => {
+	const t0 = Date.now();
+	const report = {};
+	for (const view of Object.keys(VIEWS)) {
+		const scoreOf = {};
+		for (const [ai, a] of AGES.entries()) {
+			const states = new Map();
+			for (const p of paths) {
+				const mods = sum(p.slice(0, ai + 1).map(b => b.mods));
+				const key = relevant(mods, a.n, view);
+				if (!states.has(key)) states.set(key, { mods, weight: 0, names: new Set() });
+				const st = states.get(key); st.weight++; st.names.add(p.slice(0, ai + 1).map(b => b.name).join(' > '));
+			}
+			const list = [...states.entries()];
+			const total = list.reduce((t, [, s]) => t + s.weight, 0);
+			const jobs = [];
+			for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) {
+				const A = list[i][1].mods, B = list[j][1].mods;
+				jobs.push(Promise.all([
+					pool.mc({ location: { frontage: 10 }, attacker: { armies: [side(A, a.n, view)] }, defender: { armies: [side(B, a.n, view)] } }, N, { seed: 7 }),
+					pool.mc({ location: { frontage: 10 }, attacker: { armies: [side(B, a.n, view)] }, defender: { armies: [side(A, a.n, view)] } }, N, { seed: 7 }),
+				]).then(([m1, m2]) => [i, j, ((m1.wins[0] + m1.draws / 2) + (m2.wins[1] + m2.draws / 2)) / (2 * N)]));
+			}
+			const wr = new Map((await Promise.all(jobs)).map(([i, j, v]) => [i + ',' + j, v]));
+			scoreOf[a.n] = {};
+			list.forEach(([key], i) => {
+				let t = 0;
+				list.forEach(([, o], j) => { t += (i === j ? 0.5 : i < j ? wr.get(i + ',' + j) : 1 - wr.get(j + ',' + i)) * o.weight; });
+				scoreOf[a.n][key] = t / total;
+			});
 		}
-		wr.set(i + ',' + j, w / 2);
+		const ranked = paths.map(p => {
+			const per = AGES.map((a, ai) => scoreOf[a.n][relevant(sum(p.slice(0, ai + 1).map(b => b.mods)), a.n, view)]);
+			return { path: p.map(b => b.name).join(' > '), per, avg: per.reduce((t, x) => t + x, 0) / per.length };
+		}).sort((x, y) => y.avg - x.avg);
+		report[view] = { ranked, scoreOf };
+		console.log(`\n=== parity: ${view} (score = win rate vs a random path; ages 2..6, average)`);
+		// best pick per age assuming the best path so far
+		ranked.slice(0, 8).forEach(r => console.log(`  ${r.path.padEnd(72)}${r.per.map(x => String(Math.round(100 * x)).padStart(4)).join('')}  avg ${Math.round(100 * r.avg)}%`));
+		console.log('  ...');
+		ranked.slice(-3).forEach(r => console.log(`  ${r.path.padEnd(72)}${r.per.map(x => String(Math.round(100 * x)).padStart(4)).join('')}  avg ${Math.round(100 * r.avg)}%`));
+		// per-age pick value: average score of states reached by each branch at that age
+		for (const [ai, a] of AGES.entries()) {
+			const by = a.branches.map(b => {
+				const ps = paths.filter(p => p[ai] === b);
+				return `${b.name} ${Math.round(100 * ps.reduce((t, p) => t + scoreOf[a.n][relevant(sum(p.slice(0, ai + 1).map(x => x.mods)), a.n, view)], 0) / ps.length)}%`;
+			});
+			console.log(`  age ${a.n} picks (average over paths): ${by.join(', ')}`);
+		}
 	}
-	const score = list.map(([key, s], i) => {
-		let t = 0;
-		list.forEach(([, o], j) => { const v = i === j ? 0.5 : i < j ? wr.get(i + ',' + j) : 1 - wr.get(j + ',' + i); t += v * o.weight; });
-		return { key, score: t / total, s };
-	});
-	scoreOf[a.n] = Object.fromEntries(score.map(x => [x.key, x.score]));
-	score.sort((x, y) => y.score - x.score);
-	console.log(`\nAge ${a.n}: ${list.length} distinct states; best and worst (score = win rate vs a random path):`);
-	const show = x => `  ${Math.round(100 * x.score).toString().padStart(3)}%  ${[...x.s.names].slice(0, 3).join(' | ')}${x.s.names.size > 3 ? ` (+${x.s.names.size - 3} same)` : ''}`;
-	score.slice(0, 5).forEach(x => console.log(show(x)));
-	if (score.length > 6) console.log('  ...');
-	score.slice(-Math.min(3, score.length - 5)).forEach(x => console.log(show(x)));
-}
-// full paths: average score over ages
-const ranked = paths.map(p => {
-	const per = AGES.map((a, ai) => scoreOf[a.n][relevant(sum(p.slice(0, ai + 1).map(b => b.mods)), a.n)]);
-	return { path: p.map(b => b.name).join(' > '), per, avg: per.reduce((t, x) => t + x, 0) / per.length };
-}).sort((x, y) => y.avg - x.avg);
-console.log('\nWhole paths (ages 2..6 scores, average):');
-ranked.slice(0, 10).forEach(r => console.log(`  ${r.path.padEnd(72)}${r.per.map(x => String(Math.round(100 * x)).padStart(4)).join('')}  avg ${Math.round(100 * r.avg)}%`));
-console.log('  ...');
-ranked.slice(-5).forEach(r => console.log(`  ${r.path.padEnd(72)}${r.per.map(x => String(Math.round(100 * x)).padStart(4)).join('')}  avg ${Math.round(100 * r.avg)}%`));
+	require('fs').writeFileSync(path.join(__dirname, 'focus_picks_results.json'), JSON.stringify(Object.fromEntries(Object.entries(report).map(([k, v]) => [k, v.ranked])), null, 1));
+	console.log(`\n${N} battles a pairing each way, ${pool.threads} threads, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+	await pool.close();
+})();
