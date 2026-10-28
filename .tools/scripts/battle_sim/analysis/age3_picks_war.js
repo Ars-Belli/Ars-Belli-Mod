@@ -1,4 +1,5 @@
-// node .tools/scripts/battle_sim/analysis/age3_picks_war.js [wars, default 200] [battles, default 1000] [armies, default 6] [--reinf-eff-gold-only]
+// node .tools/scripts/battle_sim/analysis/age3_picks_war.js [wars, default 200] [battles, default 1000] [armies, default 6]
+//      [--age 3 --cat hc] [--reinf-eff-gold-only]
 // Quality vs Quantity vs Leadership (each after Standing Forces), at the army size of the 1547 Spain save: 6 armies of 30
 // heavy cavalry a side (Spain: 8 armies, 182 Lanzas). Does a pick win early and lose long wars, or the other way round?
 // Each side brings 2 armies and feeds the rest in as its reserve runs empty (arrivalDay 'needed', 1 day's march), so every
@@ -12,26 +13,31 @@ const pool = require('../pool.js')();
 const S = require('../engine.js');
 S.setUnitDB(require('../units.json'));
 const { ages } = require('../../focus_picks/focus_data.js');
-const [WARS, N, K] = [+process.argv[2] || 200, +process.argv[3] || 1000, +process.argv[4] || 6];
+const pos = process.argv.slice(2).filter((a, i, arr) => !a.startsWith('--') && !(arr[i - 1] || '').startsWith('--'));
+const [WARS, N, K] = [+pos[0] || 200, +pos[1] || 1000, +pos[2] || 6];
 // --reinf-eff-gold-only: army_reinforce_efficiency divides reinforcement gold only (the game divides manpower too)
 const MONTHS = [12, 24, 48];
 const PATCH = process.argv.includes('--reinf-eff-gold-only') ? { D: { REINFORCE_EFF_MANPOWER: false } } : undefined;
-const AGE = 3, CAT = 'hc', UNIT = `generic:${CAT}:${AGE}`, BASE_MAINT = 0.25, MON = -0.01;
+const argOf = k => { const i = process.argv.indexOf(k); return i < 0 ? null : process.argv[i + 1]; };
+// --age N --cat hc|hi: the armies' unit (default age 3 heavy cavalry); the picks stay Standing Forces + the age III pick
+const AGE = +(argOf('--age') || 3), CAT = argOf('--cat') || 'hc', UNIT = `generic:${CAT}:${AGE}`, BASE_MAINT = 0.25, MON = -0.01;
+const CATNAME = { hc: 'heavy_cavalry', hi: 'heavy_infantry', lc: 'light_cavalry', li: 'light_infantry' }[CAT];
+const UPKEEP_PRICE = CAT === 'hc' || CAT === 'lc' ? 0.04 : 0.02; // manpower upkeep a man a month (prices/02_units.txt)
 const CHAR = { adm: 60, dip: 59, mil: 61 };
 // Army tradition decays 0.5% of itself a month (auto_modifiers), so it settles at monthly gain / 0.005. Typical sources: Martial
 // Society +0.05, army experience ~+0.01, advances like Castile's Masters of the Orders +0.05: about AT 20. Leadership adds +0.2 a
 // month and its player maximises tradition: about AT 60. Tradition gives +0.2% morale a point. Trained generals
 // (generic_actions/train_general.txt) roll each skill in [10 + AT/2, 50 + AT/2] + train_general_ability, capped at 100.
-const AT_BASE = 20, AT_LEADERSHIP = 60;
+const AT_BASE = 20, AT_LEADERSHIP = 70; // Leadership: +0.2 a month and decay 0.4% (Quality Education -0.1%): ~0.29 / 0.004
 const trained = (at, ability) => { let t = 0, n = 0; for (let x = Math.ceil(10 + at / 2); x <= Math.floor(50 + at / 2); x++, n++) t += Math.min(100, x + ability); return t / n; };
 const AT = m => m.atGain ? AT_LEADERSHIP : AT_BASE;
 const MAP = {
 	discipline: 'discipline', military_tactics: 'tactics', land_morale_modifier: 'moraleMod', land_morale: 'moraleFlat',
 	army_initiative: 'initiativeMod', combat_speed_modifier: 'speedMod', possible_frontage_modifier: 'frontageMod',
-	army_heavy_cavalry_power: 'power', army_maintenance_efficiency: 'maint', army_heavy_cavalry_maintenance_cost_modifier: 'maintCost',
+	[`army_${CATNAME}_power`]: 'power', army_maintenance_efficiency: 'maint', [`army_${CATNAME}_maintenance_cost_modifier`]: 'maintCost',
 	global_manpower_modifier: 'manpower', regiment_reinforcement_speed: 'reinforceSpeed', army_reinforce_efficiency: 'reinfEff',
-	army_heavy_cavalry_reinforce_cost_modifier: 'reinfCost', monthly_experience_gain: 'expGain', experience_decay: 'expDecay',
-	train_general_ability: 'genAbility', monthly_army_tradition: 'atGain',
+	[`army_${CATNAME}_reinforce_cost_modifier`]: 'reinfCost', monthly_experience_gain: 'expGain', experience_decay: 'expDecay',
+	train_general_ability: 'genAbility', monthly_army_tradition: 'atGain', correct_box_chance: 'correctBox',
 };
 const branch = (age, name) => {
 	const b = ages.find(a => a.n === age).mil.find(x => x.name === name), o = {};
@@ -43,7 +49,7 @@ const branch = (age, name) => {
 };
 const add = (...l) => { const o = {}; for (const m of l) for (const [k, v] of Object.entries(m)) o[k] = (o[k] || 0) + v; return o; };
 const PICKS = ['Quality', 'Quantity', 'Leadership'].map(p => ({ name: p, mods: add(branch(2, 'Standing Forces'), branch(3, p)) }));
-const upkeep = m => 0.04 * S.AGE[CAT][AGE - 1][1] * 1000 * (1 + (m.maintCost || 0)) / (1 + BASE_MAINT + (m.maint || 0)); // men a month a regiment
+const upkeep = m => UPKEEP_PRICE * S.AGE[CAT][AGE - 1][1] * 1000 * (1 + (m.maintCost || 0)) / (1 + BASE_MAINT + (m.maint || 0)); // men a month a regiment
 const BASE_INCOME = K * 30 * upkeep({}) / 0.75;
 const income = m => BASE_INCOME * (1 + (m.manpower || 0));
 const perArmy = (m, view) => view === 'budget' ? Math.round(0.75 * income(m) / upkeep(m) / K) : 30;
@@ -53,6 +59,8 @@ function side(m, view, drill) {
 		tactics: 1 + (m.tactics || 0), discipline: m.discipline || 0, moraleMod: (m.moraleMod || 0) + 0.002 * AT(m), moraleFlat: m.moraleFlat || 0,
 		initiativeMod: m.initiativeMod || 0, speedMod: m.speedMod || 0, frontageMod: m.frontageMod || 0, power: m.power ? { [CAT]: m.power } : {},
 		experience: drill ? S.drilledExperience({ gain: m.expGain || 0, decay, drill: 48, wait: 6 }) : 0.37,
+		// correct section chance: vanilla age advances +10% each from the Renaissance (age II), plus picks (Leadership +30%)
+		correctBoxChance: 0.1 * (AGE - 1) + (m.correctBox || 0),
 		maintenanceEfficiency: BASE_MAINT + (m.maint || 0), reinforceSpeed: m.reinforceSpeed || 0, reinforceEfficiency: m.reinfEff || 0,
 		costMod: { maintenance: { [CAT]: m.maintCost || 0 }, reinforce: { [CAT]: m.reinfCost || 0 } },
 	};

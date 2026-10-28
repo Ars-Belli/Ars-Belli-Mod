@@ -41,7 +41,7 @@ const MAP = {
 	army_heavy_infantry_power: 'power.hi', army_heavy_cavalry_power: 'power.hc',
 	army_maintenance_efficiency: 'maint', army_heavy_cavalry_maintenance_cost_modifier: 'maintCost.hc', army_heavy_infantry_maintenance_cost_modifier: 'maintCost.hi',
 	global_manpower_modifier: 'manpower', regiment_reinforcement_speed: 'reinforceSpeed', army_reinforce_efficiency: 'reinfEff',
-	army_heavy_infantry_reinforce_cost_modifier: 'reinfCost.hi', army_heavy_cavalry_reinforce_cost_modifier: 'reinfCost.hc', monthly_experience_gain: 'expGain', experience_decay: 'expDecay', train_general_ability: 'genAbility', monthly_army_tradition: 'atGain',
+	army_heavy_infantry_reinforce_cost_modifier: 'reinfCost.hi', army_heavy_cavalry_reinforce_cost_modifier: 'reinfCost.hc', monthly_experience_gain: 'expGain', experience_decay: 'expDecay', train_general_ability: 'genAbility', monthly_army_tradition: 'atGain', correct_box_chance: 'correctBox',
 };
 const branchMods = br => {
 	const o = {};
@@ -63,7 +63,7 @@ const CHAR = { adm: 60, dip: 59, mil: 61 };
 // Army tradition settles at monthly gain / 0.005 (it decays 0.5% of itself a month): about 20 for most countries, about 60 for
 // a Leadership player maximising it (+0.2 a month). +0.2% morale a point. Trained generals roll each skill in
 // [10 + AT/2, 50 + AT/2] + train_general_ability, capped at 100 (generic_actions/train_general.txt): Leadership at AT 60 = 95.
-const AT_BASE = 20, AT_LEADERSHIP = 60;
+const AT_BASE = 20, AT_LEADERSHIP = 70; // Leadership: +0.2 a month and decay 0.4% (Quality Education -0.1%): ~0.29 / 0.004
 const trained = (at, ability) => { let t = 0, n = 0; for (let x = Math.ceil(10 + at / 2); x <= Math.floor(50 + at / 2); x++, n++) t += Math.min(100, x + ability); return t / n; };
 const relevant = (mods, age, view) => {
 	const o = { ...mods }; const cat = age <= 4 ? 'hc' : 'hi';
@@ -83,6 +83,7 @@ function side(mods, age, view) {
 	const g = { adm: Math.max(CHAR.adm, tg), dip: Math.max(CHAR.dip, tg), mil: Math.max(CHAR.mil, tg) };
 	const c = { tactics: 1 + (mods.tactics || 0), discipline: mods.discipline || 0, moraleMod: (mods.moraleMod || 0) + 0.002 * (mods.atGain ? AT_LEADERSHIP : AT_BASE), moraleFlat: mods.moraleFlat || 0,
 		initiativeMod: mods.initiativeMod || 0, speedMod: mods.speedMod || 0, frontageMod: mods.frontageMod || 0,
+		correctBoxChance: 0.1 * (age - 1) + (mods.correctBox || 0), // vanilla +10% an age from age II; only matters for late arrivals
 		experience: DRILL || WAIT ? exp({ gain: mods.expGain || 0, decay: (mods.expDecay || 0) + monDecay(age), drill: DRILL, wait: WAIT }) : 0.37, power: {} };
 	if (mods['power.' + cat]) c.power[cat] = mods['power.' + cat];
 	if (WAR) {
@@ -160,7 +161,7 @@ rec(0, []);
 	mix.slice(0, 6).forEach(r => console.log(`  ${r.path.padEnd(72)}${r.per.map(x => String(Math.round(100 * x)).padStart(4)).join('')}  avg ${Math.round(100 * r.avg)}%`));
 	}
 	require('fs').writeFileSync(path.join(__dirname, 'focus_picks_results.json'), JSON.stringify(Object.fromEntries(Object.entries(report).map(([k, v]) => [k, v.ranked])), null, 1));
-	if (DRILL || WAIT) console.log(`\nExperience after drilling ${DRILL} months and waiting ${WAIT}: (age III+${MON ? ', monarchy' : ''}) no picks ${exp({ decay: MON, drill: DRILL, wait: WAIT }).toFixed(1)}, Standing Forces ${exp({ gain: 0.25, decay: MON, drill: DRILL, wait: WAIT }).toFixed(1)}, Leadership ${exp({ gain: 0.5, decay: -0.02 + MON, drill: DRILL, wait: WAIT }).toFixed(1)}, both ${exp({ gain: 0.75, decay: -0.02 + MON, drill: DRILL, wait: WAIT }).toFixed(1)}`);
+	if (DRILL || WAIT) console.log(`\nExperience after drilling ${DRILL} months and waiting ${WAIT}: (age III+${MON ? ', monarchy' : ''}) no picks ${exp({ decay: MON, drill: DRILL, wait: WAIT }).toFixed(1)}, Standing Forces ${exp({ gain: 0.25, decay: MON, drill: DRILL, wait: WAIT }).toFixed(1)}, Leadership ${exp({ gain: 0.75, decay: -0.02 + MON, drill: DRILL, wait: WAIT }).toFixed(1)}, both ${exp({ gain: 1, decay: -0.02 + MON, drill: DRILL, wait: WAIT }).toFixed(1)}`);
 	console.log(`\n${N} battles a pairing each way, ${pool.threads} threads, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
 	await pool.close();
 })();
