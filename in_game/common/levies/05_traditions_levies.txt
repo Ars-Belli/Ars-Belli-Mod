@@ -73,7 +73,7 @@ levy_order_knights = {
 	allow = {
 		location ?= {
 			OR = {
-				owner = { modifier:can_raise_crusader_levies = yes }
+				owner ?= { modifier:can_raise_crusader_levies = yes }
 				modifier:can_raise_crusader_levies = yes
 			}
 		}
@@ -180,6 +180,7 @@ levy_a_early_paik = {
 
 levy_a_almogavars = {
 	size = levy_generic_infantry_size
+	allowed_pop_type = peasants
 	
 	allow = {
 		unit_almogavars_pop_trigger = yes
@@ -249,6 +250,10 @@ levy_chieftains = {
 	size = levy_generic_noble_cavalry_size
 	
 	allowed_pop_type = nobles
+	
+	allow = {
+		unit_is_tribal_pop_trigger = yes
+	}
 	
 	unit = a_chieftains
 }

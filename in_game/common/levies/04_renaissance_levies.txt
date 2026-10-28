@@ -111,6 +111,7 @@ levy_a_reformed_gallowglass = {
 
 levy_a_late_almogavars = {
 	size = levy_generic_infantry_size
+	allowed_pop_type = peasants
 	
 	allow = {
 		unit_almogavars_pop_trigger = yes
@@ -143,7 +144,7 @@ levy_order_knights_2 = {
 	allow = {
 		location ?= {
 			OR = {
-				owner = { modifier:can_raise_crusader_levies = yes }
+				owner ?= { modifier:can_raise_crusader_levies = yes }
 				modifier:can_raise_crusader_levies = yes
 			}
 		}
