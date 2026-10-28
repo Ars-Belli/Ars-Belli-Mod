@@ -131,6 +131,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 			<div class="field"><label for="q-runs">Battles to run</label><input id="q-runs" type="number" min="50" max="5000" step="50" value="500"></div>
 			<button class="primary" id="q-run" type="button">Run battles</button>
 			<button id="q-copy" type="button">Copy A to B</button>
+			<button id="q-swap" type="button">Swap sides</button>
 			<button id="q-to-full" type="button">Open in Full battle</button>
 			<span class="progress" id="q-progress" aria-live="polite"></span>
 		</div>
@@ -154,6 +155,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		<div class="bar">
 			<div class="field"><label for="f-runs">Battles to run</label><input id="f-runs" type="number" min="50" max="5000" step="50" value="500"></div>
 			<button class="primary" id="f-run" type="button">Run battles</button>
+			<button id="f-swap" type="button" title="The defender attacks instead, in the same location (check the river crossing)">Swap attacker and defender</button>
 			<label class="field" style="width:auto"><span class="hint">Import a scenario file</span><input id="f-file" type="file" accept=".json,application/json"></label>
 			<span class="progress" id="f-progress" aria-live="polite"></span>
 		</div>
@@ -183,16 +185,18 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		<div class="cols">
 			<div class="card side a"><div class="card-head"><h3>Attacker manpower</h3></div><div class="grid">
 				<div class="field"><label for="w-max-0">Max manpower</label><input id="w-max-0" type="number" min="0" step="1000" value="40000"></div>
-				<div class="field"><label for="w-mon-0">Per month (max ÷ 60)</label><input id="w-mon-0" type="number" min="0" step="50"></div>
+				<div class="field"><label for="w-sur-0">Surplus per month</label><input id="w-sur-0" type="number" step="10" value="667"></div>
 				<div class="field"><label for="w-cur-0">Current manpower</label><input id="w-cur-0" type="number" min="0" step="1000"></div>
+				<div class="field"><label>&nbsp;</label><button class="small" type="button" id="w-sur-btn-0" title="Max manpower ÷ 60, minus the monthly manpower upkeep of the attacker's armies in this battle">Surplus from max and these armies</button></div>
 			</div></div>
 			<div class="card side b"><div class="card-head"><h3>Defender manpower</h3></div><div class="grid">
 				<div class="field"><label for="w-max-1">Max manpower</label><input id="w-max-1" type="number" min="0" step="1000" value="40000"></div>
-				<div class="field"><label for="w-mon-1">Per month (max ÷ 60)</label><input id="w-mon-1" type="number" min="0" step="50"></div>
+				<div class="field"><label for="w-sur-1">Surplus per month</label><input id="w-sur-1" type="number" step="10" value="667"></div>
 				<div class="field"><label for="w-cur-1">Current manpower</label><input id="w-cur-1" type="number" min="0" step="1000"></div>
+				<div class="field"><label>&nbsp;</label><button class="small" type="button" id="w-sur-btn-1" title="Max manpower ÷ 60, minus the monthly manpower upkeep of the defender's armies in this battle">Surplus from max and these armies</button></div>
 			</div></div>
 		</div>
-		<p class="hint">Max manpower is 5 years of monthly manpower: change either one and the other follows. Current manpower starts at the max unless you set it lower.</p>
+		<p class="hint">Surplus per month is what the country gains after paying the manpower upkeep of all its armies (it can be negative); reinforcements come out of it. The button sets it to max ÷ 60 (income: the game stores 5 years of it) minus the upkeep of this battle's armies only; subtract armies elsewhere yourself. Current manpower starts at the max unless you set it.</p>
 		<div class="bar">
 			<div class="field"><label for="w-battles">Battles</label><input id="w-battles" type="number" min="1" max="30" value="8"></div>
 			<div class="field"><label for="w-months">Months between battles</label><input id="w-months" type="number" min="0" max="36" step="0.5" value="3"></div>
@@ -240,10 +244,10 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		<p><b>Ending.</b> At the start, a side with 10 times the enemy's men (levies at their levy factor) wipes it out at once, whatever the morale. During the first 4 days, a side whose battle line has broken (morale at or under 0.05) is wiped out if the enemy has twice its men. From day 5, a side whose battle line is empty loses and retreats, shattered if its average morale is under 0.5; only a 10:1 ratio still wipes it. So the 2:1 wipe mostly hits armies that enter a battle already broken.</p>
 		<p><b>Terrain and movement.</b> Battle frontage 10, minus terrain (mountains 4, hills and wetlands 3, forests 2–4), at least 2; three sections hold 1.25 × that each. Terrain gives the attacker minus dice (mountains 2; hills, plateau, wetlands, narrows, woods, forest, jungle 1), river crossing −1, strait −2, sea landing −1. Marching costs 0.69% of max morale a day (land morale movement cost) and armies cannot recover morale while moving.</p>
 		<p><b>Combined arms.</b> Counted in regiments across the side, auxiliaries excluded. If one category is half the regiments or more, there is no bonus at all; otherwise each category with at least 10% adds 2.5%.</p>
-		<p><b>Costs.</b> Upkeep is the unit's maintenance goods × its men ÷ (1 + maintenance efficiency); levies pay 1% of that. Recruiting costs the unit's construction goods and its full size in manpower. Reinforcing costs one manpower per man and goods ÷ (1 + reinforce efficiency); the simulator prices those goods with the construction basket (inferred). Max manpower is 5 years of monthly manpower.</p>
+		<p><b>Costs.</b> From the game's price lists (in_game/common/prices): each category has a build, reinforce and maintenance price in gold per 100 men and manpower per man (build and reinforce 1 manpower a man; upkeep 2% of the men a month for infantry, 4% for cavalry and artillery). Each is scaled by its cost modifier (e.g. cavalry build cost −20% also cuts the manpower). Upkeep is divided by (1 + maintenance efficiency), reinforcement gold by (1 + reinforce efficiency). Levies cost no manpower and 1% of the gold upkeep. Checked on a 1342 save: manpower upkeep matched exactly; the budget's gold upkeep was about 68% of the price list (a factor not yet traced).</p>
 		<p><b>Deployment.</b> Each regiment has a box from its army's formation: "balanced" deals them out C L R R L C…, "cavalry on flanks" alternates cavalry left and right and puts the rest in the centre. At the start a regiment enters its box while that section holds less than 1.25 × the frontage, else it waits in reserve. Armies arriving later go to reserve, except with the "correct section chance" (10% per military advance that gives it, and +0.1% per point of the general's administrative skill).</p>
 		<p><b>Generals.</b> Dice only come from traits (Offensive Planner +1 and others). Skills give the general's army, per point: military +0.1% discipline and +0.5% combat speed; diplomatic +0.2% morale and +1% initiative; administrative +0.1% correct section chance. The side uses the best-rated general's dice.</p>
-		<p><b>Location.</b> Frontage is 10 + terrain + location rank (town −1, city −2, megalopolis −3). A fort does nothing in a field battle: no dice, no frontage. Units' terrain values (e.g. cavalry −10% in mountains) apply per terrain layer, plus coast or inland and river. No country-wide terrain modifiers exist in 1.4.4.</p>
+		<p><b>Location.</b> Frontage is 10 + terrain + location rank (town −1, city −2, megalopolis −3), at least 2, and then each side multiplies it by (1 + its possible frontage modifier: the general's administrative skill gives +0.1% a point, Absolutism +10%), so the two sides can have different widths. A fort does nothing in a field battle: no dice, no frontage. Units' terrain values (e.g. cavalry −10% in mountains) apply per terrain layer, plus coast or inland and river. No country-wide terrain modifiers exist in 1.4.4.</p>
 		<p><b>Approximated.</b> The order regiments overflow into reserve when a section is full, reinforcements' boxes, the 120-day cap, and the war of attrition (expected losses per battle, one manpower pool per side). Not modelled: naval combat.</p>
 		<p><b>Source.</b> “EU5 Combat Mechanics (1.4.4).md” in the Ars Belli repository; unit stats from the 1.4.4 unit types and Ars Belli’s overrides.</p>
 	</section>
@@ -281,6 +285,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		['Stats', [['discipline', 'Discipline %', 'pct', 0], ['tactics', 'Military tactics', 'num', 1.0], ['moraleMod', 'Morale %', 'pct', 0], ['moraleFlat', 'Morale (flat)', 'num', 0], ['experience', 'Experience', 'num', 0], ['initiativeMod', 'Army initiative %', 'pct', 0], ['speedMod', 'Combat speed %', 'pct', 0]]],
 		['Unit power', [['p.li', 'Light inf. %', 'pct', 0], ['p.hi', 'Heavy inf. %', 'pct', 0], ['p.lc', 'Light cav. %', 'pct', 0], ['p.hc', 'Heavy cav. %', 'pct', 0], ['p.art', 'Artillery %', 'pct', 0]]],
 		['Upkeep', [['maintenanceEfficiency', 'Maintenance eff. %', 'pct', 0], ['reinforceEfficiency', 'Reinforce eff. %', 'pct', 0], ['reinforceSpeed', 'Reinforce speed %', 'pct', 0]]],
+		['Width', [['frontageMod', 'Possible frontage %', 'pct', 0]]],
 	];
 	function buildQuick(el, id, title) {
 		el.innerHTML = `<div class="card-head"><h3>${title}</h3><button class="small" type="button" data-clear="${id}" title="No regiments, no levies, every stat back to its default">Clear</button></div>`;
@@ -362,23 +367,26 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		const c = S.armyCosts(scn), b = S.battleCosts(scn, m);
 		const t = (cls, label, value, note) => `<div class="tile ${cls}"><div class="label"><i></i>${label}</div><div class="value">${value}</div><div class="note">${note}</div></div>`;
 		$('cost-tiles').innerHTML = [0, 1].map(i => t(i ? 'b' : 'a', `${SIDE[i]}: to recruit`, fmtMen(c[i].buildManpower), `manpower and ${gold(c[i].buildGold)} gold for ${c[i].regiments} regiments${c[i].levies ? ` (+${c[i].levies} levies: pops, no manpower)` : ''}`)
-			+ t(i ? 'b' : 'a', `${SIDE[i]}: upkeep`, gold(c[i].upkeepGold), 'gold a month at full strength')
+			+ t(i ? 'b' : 'a', `${SIDE[i]}: upkeep`, gold(c[i].upkeepGold), `gold and ${fmtMen(c[i].upkeepManpower)} manpower a month`)
 			+ t(i ? 'b' : 'a', `${SIDE[i]}: after this battle`, fmtMen(b[i].manpower), `manpower to refill; ${gold(b[i].reinforceGold)} gold to reinforce${b[i].rebuildGold ? `, ${gold(b[i].rebuildGold)} to rebuild wiped regiments` : ''}${b[i].levyPops ? `; ${fmtMen(b[i].levyPops)} pops died as levies` : ''}`)).join('');
-		$('cost-table').innerHTML = `<table><thead><tr><th>Unit</th><th>Side</th><th>Army</th><th>Count</th><th>Men</th><th>Recruit: manpower</th><th>Recruit: gold</th><th>Upkeep / month</th><th>Reinforce gold / 1,000 men</th></tr></thead><tbody>${c.flatMap((s, i) => s.rows.map(r => `<tr><td>${esc(r.name)}${r.levy ? ' (levy)' : ''}</td><td>${SIDE[i]}</td><td>${esc(r.armyName)}</td><td>${r.count}</td><td>${fmtMen(r.men)}</td><td>${r.levy ? '—' : fmtMen(r.buildManpower)}</td><td>${r.levy ? '—' : gold(r.buildGold)}</td><td>${gold(r.upkeepGold)}</td><td>${r.levy ? '—' : gold(r.reinforceGold)}</td></tr>`)).join('')}</tbody></table>`;
+		$('cost-table').innerHTML = `<table><thead><tr><th>Unit</th><th>Side</th><th>Army</th><th>Count</th><th>Men</th><th>Recruit: manpower</th><th>Recruit: gold</th><th>Upkeep gold / month</th><th>Upkeep manpower / month</th><th>Reinforce gold / 1,000 men</th></tr></thead><tbody>${c.flatMap((s, i) => s.rows.map(r => `<tr><td>${esc(r.name)}${r.levy ? ' (levy)' : ''}</td><td>${SIDE[i]}</td><td>${esc(r.armyName)}</td><td>${r.count}</td><td>${fmtMen(r.men)}</td><td>${r.levy ? '—' : fmtMen(r.buildManpower)}</td><td>${r.levy ? '—' : gold(r.buildGold)}</td><td>${gold(r.upkeepGold)}</td><td>${r.levy ? '—' : fmtMen(r.upkeepManpower)}</td><td>${r.levy ? '—' : gold(r.reinforceGold)}</td></tr>`)).join('')}</tbody></table>`;
 	}
-	// max manpower = 5 years of monthly manpower: editing either updates the other; current follows the max until edited
-	const MP_MONTHS = S.D.MAX_MANPOWER_YEARS * 12;
+	// surplus = manpower gained a month after all upkeep (may be negative). The button sets it from the max (5 years of
+	// income, so income = max ÷ 60) minus the upkeep of this battle's armies; other armies' upkeep is for you to subtract.
+	// Current manpower follows the max until edited.
+	const currentScenario = () => mode === 'quick' ? quickScenario() : JSON.parse(JSON.stringify(scn));
+	const setSurplus = i => { $(`w-sur-${i}`).value = Math.round(S.manpowerSurplus(currentScenario(), i, +$(`w-max-${i}`).value || 0)); };
 	for (const i of [0, 1]) {
-		const mx = $(`w-max-${i}`), mo = $(`w-mon-${i}`), cu = $(`w-cur-${i}`);
+		const mx = $(`w-max-${i}`), cu = $(`w-cur-${i}`);
 		const cur = () => { if (cu.dataset.set !== '1') cu.value = mx.value; };
-		mx.addEventListener('input', () => { mo.value = Math.round((+mx.value || 0) / MP_MONTHS); cur(); });
-		mo.addEventListener('input', () => { mx.value = Math.round((+mo.value || 0) * MP_MONTHS); cur(); });
+		mx.addEventListener('input', cur);
 		cu.addEventListener('input', () => { cu.dataset.set = cu.value === '' ? '' : '1'; cur(); });
-		mo.value = Math.round((+mx.value || 0) / MP_MONTHS); cur();
+		$(`w-sur-btn-${i}`).onclick = () => setSurplus(i);
+		cur();
 	}
 	const warInputs = () => ({
 		battles: Math.max(1, Math.min(30, +$('w-battles').value || 8)), monthsBetweenBattles: Math.max(0, +$('w-months').value || 0),
-		sides: [0, 1].map(i => ({ maxManpower: +$(`w-max-${i}`).value || 0, monthlyManpower: +$(`w-mon-${i}`).value || 0, currentManpower: +$(`w-cur-${i}`).value || 0 })),
+		sides: [0, 1].map(i => ({ maxManpower: +$(`w-max-${i}`).value || 0, surplusManpower: +$(`w-sur-${i}`).value || 0, currentManpower: +$(`w-cur-${i}`).value || 0 })),
 	});
 	function setWarInputs(war) {
 		if (!war) return;
@@ -387,7 +395,8 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		(war.sides || []).forEach((w, i) => {
 			if (i > 1 || !w) return;
 			if (w.maxManpower != null) { $(`w-max-${i}`).value = w.maxManpower; $(`w-max-${i}`).dispatchEvent(new Event('input')); }
-			if (w.monthlyManpower != null) $(`w-mon-${i}`).value = w.monthlyManpower; // as given (a save's income need not be exactly max ÷ 60)
+			const sur = w.surplusManpower ?? w.monthlyManpower;
+			if (sur != null) $(`w-sur-${i}`).value = sur;
 			$(`w-cur-${i}`).dataset.set = w.currentManpower != null ? '1' : ''; if (w.currentManpower != null) $(`w-cur-${i}`).value = w.currentManpower;
 		});
 	}
@@ -455,7 +464,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		const r = S.simulateScenario(scn);
 		const tl = r.timeline;
 		const who = r.winner < 0 ? 'Nobody won' : `The ${r.winner ? 'defender' : 'attacker'} won`;
-		$('sample-sub').textContent = `${who} after ${r.days} days${r.overrun ? ', wiping out the enemy' : r.shattered ? '; the loser retreats shattered' : ''}. Battle frontage ${r.frontage}. Attacker lost ${fmtMen(r.losses[0])} men, defender ${fmtMen(r.losses[1])}. Men counts include armies once they arrive; morale is the average of regiments in the battle line.`;
+		$('sample-sub').textContent = `${who} after ${r.days} days${r.overrun ? ', wiping out the enemy' : r.shattered ? '; the loser retreats shattered' : ''}. Frontage ${+r.frontages[0].toFixed(2)} for the attacker, ${+r.frontages[1].toFixed(2)} for the defender. Attacker lost ${fmtMen(r.losses[0])} men, defender ${fmtMen(r.losses[1])}. Men counts include armies once they arrive; morale is the average of regiments in the battle line.`;
 		lineChart($('chart-men'), 'Men in the battle', [{ name: 'Attacker', c: '--side-a', pts: tl.map(t => t.men[0]) }, { name: 'Defender', c: '--side-b', pts: tl.map(t => t.men[1]) }], (v, axis) => axis ? (v >= 1 ? v.toFixed(0) + 'K' : Math.round(v * 1000)) : fmtMen(v));
 		lineChart($('chart-mor'), 'Average morale in the line', [{ name: 'Attacker', c: '--side-a', pts: tl.map(t => t.morale[0]) }, { name: 'Defender', c: '--side-b', pts: tl.map(t => t.morale[1]) }], v => Math.round(v * 100) + '%', 1);
 		$('sample-table').innerHTML = `<table><thead><tr><th>Day</th><th>Roll A</th><th>Roll D</th><th>Men A</th><th>Men D</th><th>Morale A</th><th>Morale D</th><th>Line A</th><th>Line D</th><th>Reserve A</th><th>Reserve D</th></tr></thead><tbody>${tl.map(t => `<tr><td>${t.day}${t.day <= 3 && t.day > 0 ? ' (bombard)' : ''}</td><td>${t.dice[0] + 5}</td><td>${t.dice[1] + 5}</td><td>${fmtMen(t.men[0])}</td><td>${fmtMen(t.men[1])}</td><td>${Math.round(t.morale[0] * 100)}%</td><td>${Math.round(t.morale[1] * 100)}%</td><td>${t.front[0]}</td><td>${t.front[1]}</td><td>${t.reserve[0]}</td><td>${t.reserve[1]}</td></tr>`).join('')}</tbody></table>`;
@@ -501,6 +510,9 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	}
 	$('q-run').onclick = () => runScenario(quickScenario(), Math.max(50, Math.min(5000, +$('q-runs').value || 500)), $('q-progress'), $('q-run'));
 	$('q-copy').onclick = () => { for (const [, f] of QSCHEMA) for (const [key] of f) $('b-' + key.replace('.', '-')).value = $('a-' + key.replace('.', '-')).value; $('q-run').click(); };
+	const swapValues = (x, y) => { const a = $(x), b = $(y), t = a.value; a.value = b.value; b.value = t; const d = a.dataset.set; a.dataset.set = b.dataset.set || ''; b.dataset.set = d || ''; };
+	const swapWar = () => { for (const k of ['max', 'sur', 'cur']) swapValues(`w-${k}-0`, `w-${k}-1`); };
+	$('q-swap').onclick = () => { for (const [, f] of QSCHEMA) for (const [key] of f) swapValues('a-' + key.replace('.', '-'), 'b-' + key.replace('.', '-')); swapWar(); $('q-run').click(); };
 
 	// ---------- stat worth
 	const BONUSES = [
@@ -564,7 +576,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		['sdd', 'Strength dmg done %', 'pct'], ['sdt', 'Strength dmg taken %', 'pct'], ['mdd', 'Morale dmg done %', 'pct'], ['mdt', 'Morale dmg taken %', 'pct'],
 		['religion', 'Religion', 'text'], ['religionGroup', 'Religion group', 'text'], ['vsHeretic', 'vs heretics %', 'pct'], ['vsHeathen', 'vs heathens %', 'pct'],
 		['maintenanceEfficiency', 'Maintenance eff. %', 'pct'], ['levyMaintenance', 'Levy maintenance %', 'pct'], ['reinforceEfficiency', 'Reinforce eff. %', 'pct'], ['reinforceSpeed', 'Reinforce speed %', 'pct'],
-		['correctBoxChance', 'Correct section chance %', 'pct']];
+		['correctBoxChance', 'Correct section chance %', 'pct'], ['frontageMod', 'Possible frontage %', 'pct']];
 	const DEF_C = { discipline: 0, tactics: 1, moraleMod: 0, moraleFlat: 0, commanderDice: 0, experience: 0, levyCE: 0, levyExperience: 0, initiativeMod: 0, speedMod: 0, movementCost: S.D.MOVEMENT_COST, sdd: 0, sdt: 0, mdd: 0, mdt: 0, religion: '', religionGroup: '', vsHeretic: 0, vsHeathen: 0, maintenanceEfficiency: 0, levyMaintenance: 0, reinforceEfficiency: 0, reinforceSpeed: 0 };
 	const getPath = (o, p) => p.split('.').reduce((x, k) => (x == null ? undefined : x[k]), o);
 	const setPath = (o, p, v) => { const ks = p.split('.'); let x = o; ks.slice(0, -1).forEach(k => { x = x[k] ??= {}; }); x[ks[ks.length - 1]] = v; };
@@ -700,6 +712,11 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	$('f-load').onclick = () => { try { loadScenario(JSON.parse($('f-json').value)); } catch (e) { $('f-err').textContent = 'That is not valid JSON: ' + e.message; } };
 	$('f-copyjson').onclick = async () => { try { await navigator.clipboard.writeText($('f-json').value); $('f-err').textContent = 'Copied.'; } catch (e) { $('f-json').select(); $('f-err').textContent = 'Press Ctrl+C to copy the selected text.'; } };
 	$('f-file').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; try { loadScenario(JSON.parse(await f.text())); $('json-panel').open = false; } catch (err) { $('json-panel').open = true; $('f-err').textContent = 'Could not read the file: ' + err.message; } });
+	$('f-swap').onclick = () => {
+		[scn.attacker, scn.defender] = [scn.defender, scn.attacker];
+		if (scn.war && scn.war.sides) scn.war.sides.reverse();
+		swapWar(); renderFull();
+	};
 	$('f-run').onclick = () => runScenario(JSON.parse(JSON.stringify(scn)), Math.max(50, Math.min(5000, +$('f-runs').value || 500)), $('f-progress'), $('f-run'));
 	$('q-to-full').onclick = () => {
 		const q = quickScenario();

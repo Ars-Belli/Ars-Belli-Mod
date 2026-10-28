@@ -17,7 +17,7 @@
 		BOMBARD_CHANCE: 0.2, LAND_MORALE: 3, LEVY_DISCIPLINE: -0.2,
 		COMBINED_PER_TYPE: 0.025, COMBINED_MIN: 0.1, COMBINED_MAX: 0.5,
 		BASE_FRONTAGE: 10, MIN_FRONTAGE: 2, MOVEMENT_COST: 0.0069, MAX_DAYS: 120,
-		REINFORCE_EFF_FLOOR: -0.5, MAINT_EFF_FLOOR: -0.95, LEVY_MAINTENANCE: 0.01, MONTHLY_REINFORCE: 0.25, MAX_MANPOWER_YEARS: 5,
+		REINFORCE_EFF_FLOOR: -0.5, MAINT_EFF_FLOOR: -0.95, LEVY_MAINTENANCE: 0.01, MONTHLY_REINFORCE: 0.25, MAX_MANPOWER_YEARS: 5, PRICE_SCALE: 0.1,
 	};
 	const CAT = {
 		li: { name: 'Light infantry', dt: 1.0, sdd: -0.1, mdt: 0.1, i: 5, cs: 3, fl: 1.1, sf: 0.05 },
@@ -57,10 +57,10 @@
 		commanderDice: 0, movementCost: D.MOVEMENT_COST, experience: 0, levyExperience: 0,
 		power: {}, sdd: 0, sdt: 0, mdd: 0, mdt: 0, vsHeretic: 0, vsHeathen: 0, religion: null, religionGroup: null,
 		combinedPerType: D.COMBINED_PER_TYPE, combinedMin: D.COMBINED_MIN, combinedMax: D.COMBINED_MAX,
-		reinforceEfficiency: 0, maintenanceEfficiency: 0, reinforceSpeed: 0, levyMaintenance: 0, correctBoxChance: 0,
+		reinforceEfficiency: 0, maintenanceEfficiency: 0, reinforceSpeed: 0, levyMaintenance: 0, correctBoxChance: 0, frontageMod: 0, costMod: {},
 	};
 	// a general's skills (static_modifiers/character.txt general_adm/dip/mil, per point) and trait dice, on his army only
-	const GENERAL_PER_POINT = { mil: { discipline: 0.001, speedMod: 0.005 }, dip: { moraleMod: 0.002, initiativeMod: 0.01 }, adm: { correctBoxChance: 0.001 } };
+	const GENERAL_PER_POINT = { mil: { discipline: 0.001, speedMod: 0.005 }, dip: { moraleMod: 0.002, initiativeMod: 0.01 }, adm: { correctBoxChance: 0.001, frontageMod: 0.001 } };
 	function withGeneral(c, g) {
 		if (!g) return c;
 		const o = { ...c, power: { ...c.power } };
@@ -210,15 +210,17 @@
 		const scn = normalize(scnIn);
 		const rng = makeRng(opts.seed);
 		const terr = terrainInfo(scn.location);
-		const W = terr.frontage;
 		const sides = scn.sides.map((s, i) => s.armies.map((a, j) => buildArmy(a, i, j, scn.countries)));
+		// each side's width: the location's frontage x (1 + possible_frontage_modifier of one of its armies; the code's pick
+		// was not decoded, the first army is used)
+		const Ws = [0, 1].map(i => terr.frontage * (1 + ((sides[i][0] || {}).c?.frontageMod || 0)));
 		const all = [0, 1].map(i => sides[i].flatMap(a => a.regs));
 		const timeline = [];
 		const dice = [0, 0];
 		let curDay = 0;
 		const arrived = i => sides[i].filter(a => (a.army.arrivalDay || 0) <= curDay);
 		const leadCountry = i => (arrived(i)[0] || sides[i][0]).c;
-		const arrive = (i, day) => { for (const a of sides[i]) if ((a.army.arrivalDay || 0) === day) deploy(a.regs, a.army.formation || 'balanced', W, all[i], day > 0, rng); };
+		const arrive = (i, day) => { for (const a of sides[i]) if ((a.army.arrivalDay || 0) === day) deploy(a.regs, a.army.formation || 'balanced', Ws[i], all[i], day > 0, rng); };
 		const sideDice = i => Math.max(0, ...arrived(i).map(a => a.c.commanderDice | 0)) + (i === 0 ? terr.attackerDice : 0);
 		const roll = () => { for (const i of [0, 1]) dice[i] = Math.floor(rng() * D.DICE_SIDES); };
 		const lineStrength = (i, s) => all[i].filter(r => r.section === s).reduce((t, r) => t + r.str, 0);
@@ -239,7 +241,7 @@
 			const shattered = loser >= 0 && overrunSide !== loser && lr.length > 0 && lr.reduce((t, r) => t + r.mor, 0) / lr.length < D.LOW_MORALE;
 			const sum = (i, f) => all[i].filter(r => r.section !== 'absent').reduce((t, r) => t + f(r), 0);
 			return {
-				winner, days: day, overrun: overrunSide != null, shattered, frontage: W, start: startMen,
+				winner, days: day, overrun: overrunSide != null, shattered, frontage: Ws[0], frontages: Ws, start: startMen,
 				losses: [0, 1].map(i => sum(i, lostOf)),
 				lossesRegular: [0, 1].map(i => sum(i, r => r.levy ? 0 : lostOf(r))),
 				lossesLevy: [0, 1].map(i => sum(i, r => r.levy ? lostOf(r) : 0)),
@@ -266,7 +268,7 @@
 			const combinedA = combinedArms(own, leadCountry(i));
 			const d = dice[i] + sideDice(i);
 			for (const sec of SECTIONS) {
-				let budget = W; // bombard: up to W frontage of artillery per section (0x142486c70)
+				let budget = Ws[i]; // bombard: up to W frontage of artillery per section (0x142486c70)
 				for (const A of own) {
 					if (A.section !== sec || !canFight(A)) continue;
 					if (bombard) {
@@ -314,6 +316,7 @@
 			else {
 				for (const i of [0, 1]) {
 					const own = all[i], foe = all[1 - i];
+					const W = Ws[i];
 					let budget = W; // HandleReserves
 					const reserves = own.filter(r => r.section === 'reserve' && canFight(r) && !r.u.aux).sort((a, b) => b.str - a.str);
 					for (const r of reserves) {
@@ -390,25 +393,36 @@
 	}
 
 	// ---- Costs, manpower and repeated battles. Strength and manpower are in thousands of men.
-	// Gold is a unit's goods basket at default market prices (units.json: bg = recruitment basket, ug = upkeep basket);
-	// scenario.costs[unitKey or category] = { buildGold, upkeepGold, reinforceGold } overrides it (reinforceGold per 1,000 men).
+	// Prices (in_game/common/prices/02_units.txt, units.json "pr"): <category>_build / _reinforce / _maintenance as
+	// [gold, manpower], plus unit-specific adds. Gold is per 100 men (BASE_REGIMENT_PRICE_SCALE 0.1); manpower is per man.
+	// Each price is scaled by its army_<category>_<build|reinforce|maintenance>_cost_modifier (country costMod); upkeep is
+	// divided by (1 + army maintenance efficiency) and reinforcement gold by (1 + reinforce efficiency).
+	// Checked on a 1342 save: monthly manpower upkeep matched to the man; gold upkeep in the budget was ~68% of the
+	// price-list value (a factor not traced). scenario.costs[unitKey or category] = { buildGold, upkeepGold, reinforceGold }
+	// overrides gold (reinforceGold per 1,000 men).
+	const NO_PRICE = { b: [0, 0], r: [0, 0], m: [0, 0] };
 	function unitCost(g, c, costs) {
 		const u = unitStats(g.type), levy = g.levy != null ? !!g.levy : !!u.levy;
 		const o = (costs && (costs[g.type] || costs[u.c])) || {};
+		const pr = u.pr || (DB && DB.catPrice && DB.catPrice[u.c]) || NO_PRICE;
+		const mod = kind => 1 + (((c.costMod || {})[kind] || {})[u.c] || 0);
 		const size = u.s * (g.maxStrength || 1);
-		const build = o.buildGold != null ? o.buildGold : (u.bg || 0);
-		const upkeepFull = o.upkeepGold != null ? o.upkeepGold : (u.ug || 0) * size; // maintenance basket x strength
 		const maintDiv = 1 + Math.max(D.MAINT_EFF_FLOOR, c.maintenanceEfficiency || 0);
-		const upkeep = upkeepFull * (levy ? D.LEVY_MAINTENANCE * (1 + (c.levyMaintenance || 0)) : 1) / maintDiv;
-		// reinforcing buys goods for the men replaced (priced here with the recruitment basket: inferred), / (1 + reinforce efficiency)
-		const reinforce = (o.reinforceGold != null ? o.reinforceGold : build / size) / (1 + Math.max(D.REINFORCE_EFF_FLOOR, c.reinforceEfficiency || 0));
-		return { u, levy, size, build, upkeep, reinforce };
+		const reinfDiv = 1 + Math.max(D.REINFORCE_EFF_FLOOR, c.reinforceEfficiency || 0);
+		const build = o.buildGold != null ? o.buildGold : pr.b[0] * size / D.PRICE_SCALE * mod('build');
+		const buildManpower = levy ? 0 : pr.b[1] * size * mod('build');
+		const upkeep = (o.upkeepGold != null ? o.upkeepGold : pr.m[0] * size / D.PRICE_SCALE * mod('maintenance')) * (levy ? D.LEVY_MAINTENANCE * (1 + (c.levyMaintenance || 0)) : 1) / maintDiv;
+		const upkeepManpower = levy ? 0 : pr.m[1] * size * mod('maintenance') / maintDiv;
+		// per 1,000 men put back into the regiment
+		const reinforce = (o.reinforceGold != null ? o.reinforceGold : pr.r[0] / D.PRICE_SCALE * mod('reinforce')) / reinfDiv;
+		const reinforceManpower = pr.r[1] * mod('reinforce');
+		return { u, levy, size, build, buildManpower, upkeep, upkeepManpower, reinforce, reinforceManpower };
 	}
 	function armyCosts(scnIn) {
 		const scn = normalize(scnIn);
 		return scn.sides.map(s => {
 			const rows = [];
-			const tot = { regiments: 0, levies: 0, men: 0, menLevy: 0, buildManpower: 0, buildGold: 0, upkeepGold: 0 };
+			const tot = { regiments: 0, levies: 0, men: 0, menLevy: 0, buildManpower: 0, buildGold: 0, upkeepGold: 0, upkeepManpower: 0 };
 			s.armies.forEach((a, j) => {
 				const c = country(a.country, scn.countries);
 				for (const g of a.units || []) {
@@ -418,17 +432,18 @@
 					const men = x.size * k * (g.strength != null ? g.strength : 1);
 					rows.push({
 						army: j, armyName: a.name || `Army ${j + 1}`, type: g.type, name: x.u.n, count: k, levy: x.levy, men, size: x.size,
-						buildManpower: x.levy ? 0 : x.size * k, buildGold: x.levy ? 0 : x.build * k, upkeepGold: x.upkeep * k, reinforceGold: x.levy ? 0 : x.reinforce,
+						buildManpower: x.buildManpower * k, buildGold: x.levy ? 0 : x.build * k, upkeepGold: x.upkeep * k, upkeepManpower: x.upkeepManpower * k,
+						reinforceGold: x.levy ? 0 : x.reinforce,
 					});
-					if (x.levy) { tot.levies += k; tot.menLevy += men; } else { tot.regiments += k; tot.men += men; tot.buildManpower += x.size * k; tot.buildGold += x.build * k; }
-					tot.upkeepGold += x.upkeep * k;
+					if (x.levy) { tot.levies += k; tot.menLevy += men; } else { tot.regiments += k; tot.men += men; tot.buildManpower += x.buildManpower * k; tot.buildGold += x.build * k; }
+					tot.upkeepGold += x.upkeep * k; tot.upkeepManpower += x.upkeepManpower * k;
 				}
 			});
 			return { rows, ...tot };
 		});
 	}
-	// What one battle costs each side (expected values from a Monte Carlo result): manpower to refill regulars
-	// (one man per man), gold to reinforce what retreated, gold to rebuild what was wiped, pops lost as levies.
+	// What one battle costs each side (expected values from a Monte Carlo result): manpower to refill regulars, gold to
+	// reinforce what retreated, gold and manpower to rebuild what was wiped, pops lost as levies.
 	function battleCosts(scnIn, mc) {
 		const scn = normalize(scnIn);
 		return scn.sides.map((s, i) => {
@@ -440,21 +455,24 @@
 					if (!L || !L.lost) return;
 					const x = unitCost(g, c, scnIn.costs);
 					if (x.levy) { o.levyPops += L.lost; return; }
-					o.manpower += L.lost;
+					o.manpower += (L.lost - L.wiped) * x.reinforceManpower + L.wiped / x.size * x.buildManpower;
 					o.reinforceGold += (L.lost - L.wiped) * x.reinforce;
-					o.rebuildGold += L.wiped / x.size * x.build; o.rebuildManpower += L.wiped;
+					o.rebuildGold += L.wiped / x.size * x.build; o.rebuildManpower += L.wiped / x.size * x.buildManpower;
 				});
 			});
 			return o;
 		});
 	}
+	// Monthly manpower left for the war: max / 60 minus the upkeep of the armies in this scenario (men a month)
+	const manpowerSurplus = (scnIn, i, maxManpower) => maxManpower / (D.MAX_MANPOWER_YEARS * 12) - armyCosts(scnIn)[i].upkeepManpower * 1000;
 
 	// Repeated battles: the same armies meet every `monthsBetween` months. After each battle the expected losses are
 	// applied; between battles each side gains its monthly manpower (stored up to MAX_MANPOWER_YEARS x 12 months of it)
 	// and spends it reinforcing regulars: MONTHLY_REINFORCE 25% of a regiment a month x (1 + reinforceSpeed), wiped
 	// regiments rebuilt without that cap. Levies are re-raised from pops (no manpower); the pops they lost are counted.
-	// scenario.war = { battles, monthsBetweenBattles, sides: [{ maxManpower, monthlyManpower, currentManpower }] } (men);
-	// monthly manpower defaults to max / 60, current to max.
+	// scenario.war = { battles, monthsBetweenBattles, sides: [{ maxManpower, surplusManpower, currentManpower }] } (men).
+	// surplusManpower is the net gain a month left for this war (income minus the upkeep of all the country's armies;
+	// may be negative); it defaults to max / 60 minus the upkeep of the armies in the scenario. Current defaults to max.
 	function* campaignSteps(scnIn, opts = {}) {
 		const war = scnIn.war || {};
 		const battles = opts.battles || war.battles || 8;
@@ -466,7 +484,7 @@
 		const pools = [0, 1].map(i => {
 			const w = (war.sides && war.sides[i]) || {};
 			const max = (+w.maxManpower || 0) / 1000;
-			const monthly = num(w.monthlyManpower) ? w.monthlyManpower / 1000 : max / (D.MAX_MANPOWER_YEARS * 12);
+			const monthly = (num(w.surplusManpower) ? +w.surplusManpower : num(w.monthlyManpower) ? +w.monthlyManpower : manpowerSurplus(scnIn, i, max * 1000)) / 1000;
 			const start = num(w.currentManpower) ? Math.min(max, w.currentManpower / 1000) : max;
 			return { max, monthly, start, pool: start };
 		});
@@ -494,7 +512,7 @@
 				const P = pools[i];
 				const cs = ns.sides[i].armies.map(a => country(a.country, ns.countries));
 				for (let m = 0; m < months; m++) {
-					P.pool = Math.min(P.max, P.pool + P.monthly);
+					P.pool = Math.max(0, Math.min(P.max, P.pool + P.monthly));
 					const asks = groups(i).filter(x => x.size && !isLevy(x.g) && strength(x.g) < 1 - 1e-9).map(x => {
 						const missing = x.size * (1 - strength(x.g));
 						const cap = rebuild[i] > 1e-9 ? missing : x.size * D.MONTHLY_REINFORCE * (1 + (cs[x.j].reinforceSpeed || 0));
@@ -556,6 +574,6 @@
 		return { ...r, target: B };
 	}
 
-	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
+	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BattleSim = api;
 })(typeof window !== 'undefined' ? window : globalThis);

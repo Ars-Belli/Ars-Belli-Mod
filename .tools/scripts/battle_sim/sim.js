@@ -37,15 +37,15 @@ console.log(`  Average length ${m.days.toFixed(1)} days; losses attacker ${men(m
 ['Attacker', 'Defender'].forEach((s, i) => m.armies[i].forEach(a => console.log(`    ${s}: ${a.name} - lost ${men(a.lost)} of ${men(a.start)}`)));
 const gold = x => x.toFixed(1);
 const costs = S.armyCosts(scn), bc = S.battleCosts(scn, m);
-console.log('\nCosts (gold = goods at base market prices)');
+console.log('\nCosts (prices from in_game/common/prices; the 1342 save budget showed ~68% of the gold upkeep)');
 ['Attacker', 'Defender'].forEach((s, i) => {
 	const c = costs[i], b = bc[i];
-	console.log(`  ${s}: ${c.regiments} regiments + ${c.levies} levies; recruiting ${men(c.buildManpower)} manpower and ${gold(c.buildGold)} gold; upkeep ${gold(c.upkeepGold)} gold a month`);
+	console.log(`  ${s}: ${c.regiments} regiments + ${c.levies} levies; recruiting ${men(c.buildManpower)} manpower and ${gold(c.buildGold)} gold; upkeep ${gold(c.upkeepGold)} gold and ${men(c.upkeepManpower)} manpower a month`);
 	console.log(`    this battle: ${men(b.manpower)} manpower to refill, ${gold(b.reinforceGold)} gold to reinforce, ${gold(b.rebuildGold)} gold to rebuild wiped regiments, ${men(b.levyPops)} pops lost as levies`);
 });
 if (flag('--campaign')) {
 	const w = S.campaign(scn, { battles: flag('--campaign') === true ? undefined : +flag('--campaign'), monthsBetween: flag('--months') === undefined ? undefined : +flag('--months'), runs: Math.min(runs, 500), seed });
-	console.log(`\nCampaign: ${w.battles} battles, ${w.months} months apart; manpower max ${men(w.pools[0].max)} / ${men(w.pools[1].max)}, monthly ${men(w.pools[0].monthly)} / ${men(w.pools[1].monthly)}`);
+	console.log(`\nCampaign: ${w.battles} battles, ${w.months} months apart; manpower max ${men(w.pools[0].max)} / ${men(w.pools[1].max)}, surplus a month ${men(w.pools[0].monthly)} / ${men(w.pools[1].monthly)}`);
 	console.log('  #  attacker wins   army before A / D      after battle A / D     refilled A / D       manpower left A / D');
 	for (const r of w.rows) console.log(`  ${String(r.battle).padStart(2)}  ${(100 * r.winRate[0]).toFixed(0).padStart(5)}%      ${men(r.before[0]).padStart(8)} / ${men(r.before[1]).padEnd(9)} ${men(r.after[0]).padStart(8)} / ${men(r.after[1]).padEnd(9)} ${men(r.refilled[0]).padStart(8)} / ${men(r.refilled[1]).padEnd(9)} ${men(r.pool[0]).padStart(8)} / ${men(r.pool[1])}`);
 	console.log(w.worn < 0 ? '  Neither side is worn down.' : `  The ${w.worn ? 'defender' : 'attacker'} is worn down after battle ${w.at}: it can no longer refill its army to half strength.`);

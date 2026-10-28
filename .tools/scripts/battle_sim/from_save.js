@@ -1,4 +1,4 @@
-// Builds a battle scenario from an EU5 TEXT save (a save made with debug mode on; it starts with SAV0300).
+// Builds a battle scenario from an EU5 save: a normal (binary) save or a debug-mode text save.
 //   node .tools/scripts/battle_sim/from_save.js <save.eu5|latest> --list                     armies with their location
 //   node .tools/scripts/battle_sim/from_save.js <save> --attacker <army id|TAG> --defender <army id|TAG>
 //        [--at <location key>] [--out scenario.json]
@@ -9,15 +9,15 @@
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
-const { GAME, parse, loadDb, get, TextSave, latestSave } = require('./paradox.js');
+const { GAME, loadDb, get, openSave, latestSave } = require('./paradox.js');
 const UNITS = JSON.parse(fs.readFileSync(path.join(__dirname, 'units.json'), 'utf8')).units;
 
 const args = process.argv.slice(2);
 const flag = k => { const i = args.indexOf(k); return i < 0 ? undefined : args[i + 1]; };
 const saveArg = args.find(a => !a.startsWith('--') && args[args.indexOf(a) - 1]?.startsWith('--') !== true);
 const file = !saveArg || saveArg === 'latest' ? latestSave() : saveArg;
-if (!file) throw new Error('no text save found');
-const save = new TextSave(file);
+if (!file) throw new Error('no save found');
+const save = openSave(file);
 
 // ---- game data
 const templates = {};
@@ -37,7 +37,11 @@ const FIELD = {
 	army_maintenance_efficiency: 'maintenanceEfficiency', army_reinforce_efficiency: 'reinforceEfficiency',
 	regiment_reinforcement_speed: 'reinforceSpeed', levy_maintenance_modifier: 'levyMaintenance',
 	land_morale_movement_cost: 'movementCost', correct_box_chance: 'correctBoxChance', commander_combat_bonus: 'commanderDice',
+	possible_frontage_modifier: 'frontageMod',
 };
+// army_<category>_<build|reinforce|maintenance>_cost_modifier -> costMod.<kind>.<category>
+const CAT_KEY = { light_infantry: 'li', heavy_infantry: 'hi', light_cavalry: 'lc', heavy_cavalry: 'hc', artillery: 'art', auxiliary: 'aux' };
+for (const [k, c] of Object.entries(CAT_KEY)) for (const kind of ['build', 'reinforce', 'maintenance']) FIELD[`army_${k}_${kind}_cost_modifier`] = `costMod.${kind}.${c}`;
 const autoMods = loadDb('in_game/common/auto_modifiers');
 const advances = loadDb('in_game/common/advances');
 const laws = loadDb('in_game/common/laws');
@@ -59,6 +63,14 @@ function addBlock(acc, notes, source, block, scale = 1) {
 		acc[f] = (acc[f] || 0) + x * scale;
 		notes.push(`${source}: ${k} ${x * scale > 0 ? '+' : ''}${+(x * scale).toFixed(4)}`);
 	}
+}
+// "power.hc" / "costMod.build.hc" -> nested fields
+function setField(o, f, x) {
+	const ks = f.split('.');
+	let t = o;
+	for (const k of ks.slice(0, -1)) t = t[k] ??= {};
+	const last = ks[ks.length - 1];
+	t[last] = +((t[last] || 0) + x).toFixed(4);
 }
 function countryStats(id) {
 	const c = save.entry('countries', id);
@@ -94,12 +106,11 @@ function countryStats(id) {
 		addBlock(acc, notes, `societal value ${sv} ${x > 0 ? '+' : ''}${(+x).toFixed(0)}`, get(societal[sv], x < 0 ? 'left_modifier' : 'right_modifier'), Math.abs(x) / 100);
 	}
 	const out = { tactics: 0, movementCost: 0 };
-	for (const [f, x] of Object.entries(acc)) {
-		if (f.startsWith('power.')) { out.power = out.power || {}; out.power[f.slice(6)] = +x.toFixed(4); } else out[f] = +x.toFixed(4);
-	}
+	for (const [f, x] of Object.entries(acc)) setField(out, f, x);
 	return {
 		tag: c.country_name, stats: out, notes,
-		manpower: { max: +(c.max_manpower || 0) * 1000, monthly: +(c.last_month_manpower_income || 0) * 1000, current: +(cur.manpower || 0) * 1000 },
+		// monthly_manpower = net change a month (income minus the upkeep of all the country's armies)
+		manpower: { max: +(c.max_manpower || 0) * 1000, income: +(c.last_month_manpower_income || 0) * 1000, surplus: +(c.monthly_manpower || 0) * 1000, current: +(cur.manpower || 0) * 1000 },
 		religion: c.primary_religion,
 	};
 }
@@ -209,9 +220,7 @@ const sideArmies = list => list.map(a => {
 	if (gen) {
 		code = `${cs.tag} (${gen.name})`;
 		const st = JSON.parse(JSON.stringify(cs.stats));
-		for (const [f, x] of Object.entries(gen.acc)) {
-			if (f.startsWith('power.')) { st.power = st.power || {}; st.power[f.slice(6)] = +((st.power[f.slice(6)] || 0) + x).toFixed(4); } else st[f] = +((st[f] || 0) + x).toFixed(4);
-		}
+		for (const [f, x] of Object.entries(gen.acc)) setField(st, f, x);
 		countries[code] = { ...st, notes: [...cs.notes, ...gen.notes.map(n => 'general ' + n)] };
 	} else countries[code] = { ...cs.stats, notes: cs.notes };
 	const groups = new Map();
@@ -241,10 +250,10 @@ const A = sideArmies(att), Dd = sideArmies(def);
 const t = templates[at] || {};
 const fromLoc = A[0].from !== at ? A[0].from : null;
 const map = mapCheck(fromLoc, at);
-const rankOf = (() => { const txt = save.sectionText('locations'); const id = locKeys.indexOf(at) + 1; const i = txt.indexOf('\n\t\t' + id + '={'); const m = i < 0 ? null : /\n\t\t\trank=(\w+)/.exec(txt.slice(i, txt.indexOf('\n\t\t}', i))); return m ? m[1] : null; })();
+const rankOf = (save.section('locations').locations[locKeys.indexOf(at) + 1] || {}).rank || null;
 const rankFront = rankOf && ranks[rankOf] ? parseFloat((JSON.stringify(ranks[rankOf]).match(/"local_frontage_allowed","(-?[\d.]+)"/) || [])[1] || 0) : 0;
 const scn = {
-	name: `${att.map(a => tagOf(a.u.country)).join('+')} attacks ${def.map(a => tagOf(a.u.country)).join('+')} at ${at} (${save.sectionText('metadata').match(/date=([\d.]+)/)[1]}, ${path.basename(file)})`,
+	name: `${att.map(a => tagOf(a.u.country)).join('+')} attacks ${def.map(a => tagOf(a.u.country)).join('+')} at ${at} (${save.date()}, ${path.basename(file)})`,
 	runs: 2000,
 	location: {
 		topography: t.topography, vegetation: t.vegetation, climate: t.climate, river: map.river,
@@ -255,7 +264,7 @@ const scn = {
 	defender: { armies: Dd.map(({ from, ...a }) => ({ ...a, arrivalDay: 0 })) },
 	war: {
 		battles: 6, monthsBetweenBattles: 3,
-		sides: [att, def].map(list => { const m = countryCache[list[0].u.country].manpower; return { maxManpower: Math.round(m.max), monthlyManpower: Math.round(m.monthly), currentManpower: Math.round(m.current) }; }),
+		sides: [att, def].map(list => { const m = countryCache[list[0].u.country].manpower; return { maxManpower: Math.round(m.max), surplusManpower: Math.round(m.surplus), currentManpower: Math.round(m.current) }; }),
 	},
 	source: { save: path.basename(file), attackerFrom: fromLoc, adjacent: map.adjacent },
 };

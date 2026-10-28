@@ -155,7 +155,7 @@ Category combat speed: light infantry 3, heavy infantry 2, cavalry 5, artillery 
   - 10 base (static modifier on every location);
   - terrain: mountains −4, hills −3, wetlands −3, plateau −1, forests −2 to −4 (vegetation);
   - location rank (`location_ranks`): town −1, city −2, megalopolis −3.
-  - `possible_frontage_modifier` (advances, generals' administrative skill) is not read there.
+  - Then **each side** multiplies it by (1 + `possible_frontage_modifier`) of one of its armies (picked by `0x1424722b0` mode 2; probably the commanding army, not verified). Sources: generals' administrative skill +0.1% a point, the Absolutism advance +10%, a military law +5%, a general trait +10%. So the attacker and defender can have different widths, and the width is not rounded.
 - **Forts don't touch field battles.** The engine's dice modifier types are DICE, TOPOGRAPHY, VEGETATION, CLIMATE, RIVER_CROSSING, STRAIT_CROSSING, SEA_LANDING and COMMANDER: no fort entry. No fort modifier changes frontage. Forts matter for sieges and zones of control only.
 - **Three sections**, left, centre and right, each holding **1.25 × W** frontage of engaged regiments (`MAX_FRONTAGE_OVERSTACKING`, also `max_frontage = 1.25` per section in `unit_formation_preference`). Every land regiment has frontage 1.
 - **Boxes.** Every regiment carries a `box` (Left / Center / Right; no box stored = Center), set when its army is formed by the army's formation (`unit_formation_preference/army.txt`, "autobalance").
@@ -403,54 +403,46 @@ So **+0.1 tactics ≈ +5% discipline ≈ +1 commander die ≈ +20 experience**, 
 
 ---
 
-## 15. Upkeep and reinforcement *(code, `0x14357a730`, `0x143491290`, `0x14352ed50`)*
+## 15. Costs: recruitment, upkeep, reinforcement and manpower
 
-**Maintenance** of one regiment, per month:
+**Prices** (`in_game/common/prices/02_units.txt`; GUI `UnitTypeItem.GetManpowerCost` → `0x1477d17a0` → cost struct `0x144d189c0`). Every army category has three prices, each `{ gold, manpower }`, and a unit can add its own (`<unit>_build` etc., e.g. Clan Retainers −30 gold). The file's own note: "All manpower costs scale by max_strength, so army units should be at 1 manpower".
 
-```
-cost = goods(maintenance_demand) x current strength
-       x army maintenance slider ("Investment in Maintenance")
-       x category maintenance cost multipliers (army_*_maintenance_cost_modifier)
-       / (1 + army_maintenance_efficiency)        (efficiency floored at -95%)
-       x 0.5 if mothballed (MOTHBALL_MAINTENANCE_FACTOR)
-       x prisoners factor if it is a prisoner unit (PRISONERS_MAINTENANCE_FACTOR 0.3)
-levy:      x LEVY_MAINTENANCE_FACTOR 0.01 x (1 + levy_maintenance_modifier)
-mercenary: x MERCENARY_MONTHLY_MAINTENANCE_MULTIPLIER 1.35, efficiency = mercenary_maintenance_efficiency
-```
+| Category | Build gold / manpower | Reinforce gold / manpower | Maintenance gold / manpower (a month) |
+|---|---|---|---|
+| Light infantry | 40 / 1 | 2 / 1 | 0.4 / 0.02 |
+| Heavy infantry | 50 / 1 | 2.5 / 1 | 0.5 / 0.02 |
+| Light cavalry | 100 / 1 | 5 / 1 | 1.0 / 0.04 |
+| Heavy cavalry | 150 / 1 | 7.5 / 1 | 1.5 / 0.04 |
+| Artillery | 200 / 1 | 10 / 1 | 2.0 / 0.04 |
+| Auxiliary | 100 / 1 | 5 / 1 | 1.0 / 0.02 |
 
-- **Goods, not gold.** Upkeep is a basket of goods bought at market prices (`goods_demand/army_demands.txt`). Per regiment: infantry 0.1 firearms + 0.1 weaponry + 0.06 leather (early infantry has no firearms); heavy cavalry 1.0 horses + 0.2 weaponry + 0.2 tools + 0.1 leather + 0.1 cloth; light cavalry 0.5 horses + …; artillery 1.0 cannons + 0.2 copper + 0.1 tin. Cavalry and artillery cost follows horse and cannon prices.
-- **Efficiency divides.** +25% maintenance efficiency means paying 80%, not 75% (confirmed in game with mercenaries: 6.24 → 5.49 when efficiency went 10% → 25%).
-- **Levies cost 1%** of a regular's upkeep, so `levy_maintenance_modifier` −50% saves half of almost nothing.
-- **Recruitment** uses `construction_demand` (e.g. infantry 0.2 firearms + 0.2 weaponry + 0.1 leather; heavy cavalry 2.0 horses + …; artillery 2.0 cannons + 2.0 copper + 0.2 tin).
+*(code, `0x144d189c0`)*
+- **Manpower** = price × max strength (1 = the regiment's men). Recruiting costs the regiment's full size; reinforcing costs one man per man; upkeep is 2% of the regiment's men a month for infantry and auxiliaries, 4% for cavalry and artillery.
+- **Gold** = price × max strength ÷ `BASE_REGIMENT_PRICE_SCALE` 0.1 ("100 men is a base"), i.e. the price is per 100 men. A 500-man Footmen regiment recruits for 250 gold.
+- Each price is scaled by its `army_<category>_<build|reinforce|maintenance>_cost_modifier`. The modifier scales the whole price, so a −20% cavalry build cost (Halych's parliament modifier) also cuts the manpower. This follows the price system; the multiplication itself was not traced.
+- **Upkeep** (gold and manpower) is divided by (1 + `army_maintenance_efficiency`), floored at −95%. Mothballed regiments pay 50%, prisoners 30%. Levies pay `LEVY_MAINTENANCE_FACTOR` 1% of the gold and no manpower. Mercenaries pay ×1.35 with `mercenary_maintenance_efficiency`.
+- **Efficiency divides.** +25% efficiency means paying 80%, not 75% (confirmed in game with mercenaries: 6.24 → 5.49 when efficiency went 10% → 25%).
+- **Checked on the 1342 save:**
+  - Manpower upkeep matches to the man. Moldavia's 16 Horsemen cost 0.04 × 0.2 × 16 ÷ 1.0635 = 120 a month; with 9 a month of income, the save's net change is −111.2 (formula −111.3). Halych's 16 Footmen cost 150; the save's net change is −133.7 (formula −133.7).
+  - Gold upkeep in the budget was about **68%** of the price-list value for both armies (20.8 vs 30.1, 25.2 vs 37.6). A common factor is missing (not traced).
+  - The goods baskets (`goods_demand/army_demands.txt`) are the regiments' market **demand**, not their gold cost: priced at base, they come out 3–5× below the budget. The earlier reading of `0x14357a730` as "goods × strength" is that demand.
 
-**Reinforcement**, per month:
+**Reinforcement**, per month (`0x143491290`, `0x14352ed50`):
 
 ```
 rate    = situation factor x MONTHLY_REINFORCE 0.25 x (1 + regiment_reinforcement_speed)
 amount  = min(missing men, rate x max strength)
-cost    = goods for those men (bought from the market) / (1 + army_reinforce_efficiency)   (floored at -50%)
+cost    = reinforce price for those men; gold / (1 + army_reinforce_efficiency)   (floored at -50%)
 ```
 
 - A regiment refills at most 25% of its size a month before speed bonuses. The situation factor (supply, location, at war or not) was not traced.
-- Reinforce efficiency divides the **goods**, not the manpower: each man added still costs one manpower.
-- Which goods: the reinforcement code (`0x14352ed50`) picks one of the unit's three baskets (`construction_demand`, `maintenance_demand`, `upgrade_demand`, at unit type +0x540/+0x548/+0x550, falling back to the category's). Which offset is which was not mapped; the simulator assumes the recruitment basket, scaled to the men replaced.
+- Reinforce efficiency divides the gold, not the manpower: each man added costs one manpower.
 - Navies use `navy_repair_efficiency` the same way.
-- Category `army_*_reinforce_cost_modifier` also exists (where it enters was not traced).
 
-**Manpower.**
-- Max manpower = `MAX_MANPOWER_YEARS` **5** years of monthly manpower (tooltip `MAX_MANPOWER_TT`: "We can store up to 5 years of manpower of our monthly production"). So monthly manpower = max ÷ 60.
-- Recruiting a regular regiment costs its full size in manpower (assumed; the recruitment draw was not traced) plus its `construction_demand` goods.
-- Levies cost no manpower: they are raised from pops, and the levies that die are pops lost (`LEVY_RECOVERY_MONTHS` 240).
-
-**Base gold at default market prices** (`default_market_price` of each good; `units.json` stores them as `bg` recruitment and `ug` upkeep per 1,000 men):
-
-| Basket | Recruit (per regiment) | Upkeep per 1,000 men a month |
-|---|---|---|
-| Infantry (category) | 1.5 | 0.78 |
-| Cavalry (category) | 4.8 | 2.28 |
-| Artillery (category) | 14.4 | 4.8 |
-| Early infantry (e.g. halberdiers) | 2.1 | 0.48 |
-| Lancers, cavaliers | 10.2 | 4.8 |
+**Manpower pool.**
+- Max manpower = `MAX_MANPOWER_YEARS` **5** years of monthly income (tooltip `MAX_MANPOWER_TT`). So income = max ÷ 60.
+- The save's `monthly_manpower` is the **net** change: income − the upkeep of every army. It can be negative, as for both countries in the test save.
+- Levies cost no manpower: they are raised from pops, and levies that die are pops lost (`LEVY_RECOVERY_MONTHS` 240).
 
 ---
 
@@ -482,7 +474,8 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
                  "power": { "li": 0, "hi": 0, "lc": 0, "hc": 0.1, "art": 0 },
                  "sdd": 0, "sdt": 0, "mdd": 0, "mdt": 0,
                  "religion": "catholic", "religionGroup": "christian", "vsHeretic": 0, "vsHeathen": 0,
-                 "maintenanceEfficiency": 0, "levyMaintenance": 0, "reinforceEfficiency": 0, "reinforceSpeed": 0 } },
+                 "maintenanceEfficiency": 0, "levyMaintenance": 0, "reinforceEfficiency": 0, "reinforceSpeed": 0,
+                 "frontageMod": 0, "correctBoxChance": 0, "costMod": { "build": { "hc": -0.2 } } } },
   "attacker": { "armies": [ { "name": "…", "country": "FRA", "formation": "balanced|cav_inf_cav",
                 "arrivalDay": 0, "marchDays": 6, "morale": null,
                 "general": { "adm": 60, "dip": 70, "mil": 80, "dice": 1 },
@@ -491,7 +484,7 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
   "defender": { "armies": [ … ] },
   "costs": { "hc": { "buildGold": 12, "upkeepGold": 3, "reinforceGold": 20 }, "a_musketeers": { … } },
   "war": { "battles": 8, "monthsBetweenBattles": 3,
-           "sides": [ { "maxManpower": 60000, "monthlyManpower": 1000, "currentManpower": 50000 }, { … } ] }
+           "sides": [ { "maxManpower": 60000, "surplusManpower": 600, "currentManpower": 50000 }, { … } ] }
 }
 ```
 
@@ -502,20 +495,27 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 - `arrivalDay` > 0 means the army joins on that day as reserves. Defenders coming from a neighbouring location also march, so give them `marchDays`.
 - `type` is a unit key from `units.json` (`sim.js --units musket` to search), or `generic:<li|hi|lc|hc|art|aux>:<age 1-6>`.
 - `costs` (optional) overrides the base-price gold per unit key or category: `buildGold` per regiment, `upkeepGold` per regiment a month at full strength, `reinforceGold` per 1,000 men. Use it when market prices are far from base.
-- `war` (optional) drives the war of attrition. Manpower is in men; `monthlyManpower` defaults to max ÷ 60 and `currentManpower` to the max. There is one pool per side, even with allied countries on it.
+- `war` (optional) drives the war of attrition. Manpower is in men, and there is one pool per side, even with allied countries on it.
+  - `surplusManpower` is the net gain a month after all the country's army upkeep (may be negative). It defaults to max ÷ 60 minus the upkeep of the armies in the scenario.
+  - `currentManpower` defaults to the max.
+- Country `costMod` (`{ build: { hc: -0.2 }, reinforce: {…}, maintenance: {…} }`) and `frontageMod` (possible frontage) are filled by `from_save.js`.
 
 ### Costs and the war of attrition
 - **Per army:** recruitment manpower (regular regiments' full size) and gold, monthly upkeep, and reinforcement gold per 1,000 men (section 15).
 - **Per battle:** the expected manpower to refill (one man per man lost by regulars), gold to reinforce what retreated, gold to rebuild regiments that were wiped, and pops that died as levies.
 - **War of attrition** (`campaign` in `engine.js`): the same battle is fought `battles` times, `monthsBetweenBattles` apart, with the expected losses of each battle applied to every unit group.
-  - Between battles each side gains its monthly manpower, up to its max.
+  - Between battles each side adds its monthly surplus (net of all army upkeep; may be negative), keeping the pool between 0 and its max.
   - It then reinforces regulars at up to 25% of a regiment a month × (1 + reinforce speed); regiments that were wiped are rebuilt without that cap, if the pool allows.
   - Levies come back at full strength (raised again from pops); the pops they lost are counted.
   - A side is **worn down** once it can no longer refill its army past half strength before the next battle.
   - It is an expected-value model: each battle uses averages from a fresh Monte Carlo of the armies as they stand.
 
 ### From a save to a scenario (`from_save.js`)
-Needs a **text** save: debug-mode saves start with `SAV0300` (binary ones with `SAV0303`).
+Reads both kinds of save:
+- **normal (binary) saves** (`SAV0303`): most keys are stored as names in `string_lookup`, so the same fields are read. Dates are hours since 1 Jan −5000; one unmatched `}` after `country_name_keys` is skipped.
+- **debug-mode text saves** (`SAV0300`).
+
+`latest` takes the newest save of either kind.
 
 ```
 node .tools/scripts/battle_sim/from_save.js <save.eu5|latest> --list
@@ -530,7 +530,7 @@ node .tools/scripts/battle_sim/from_save.js <save|latest> --attacker <army id|TA
   - the proper-culture nobles ratio (up to +10% discipline);
   - advances, law policies, estate privileges, timed modifiers and societal values.
   - Not counted: religion, culture, rulers and cabinet, government reforms, situations, and conditional auto-modifiers. Compare the notes with the military tab and edit the numbers if they differ.
-- **Manpower:** max, monthly income and current pool.
+- **Manpower:** max, the net monthly change (`monthly_manpower`, used as the surplus) and the current pool.
 - `paradox.js` holds the shared script and save readers. The binary-save reader `eu5save.js` lives on branch `feature/trade-office-limit-1.4`.
 
 ### From an in-game screenshot to a scenario
