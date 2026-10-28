@@ -368,10 +368,6 @@ lateralview_unattached = {
 					text = "ARMY_SCROLL_LIST_EMPTY"
 				}
 
-				blockoverride "scroll_list_vbox" {
-					layoutpolicy_horizontal = expanding
-				}
-
 				blockoverride "scroll_list_setup" {
 					name = "scroll_list_name"
 					layoutpolicy_horizontal = expanding
@@ -427,6 +423,10 @@ select_menu_left = {
 	}
 
 	blockoverride "close_on_action" { on_action = "[MultiUnitSelectUnit.OnClose]" }
+	blockoverride "select_header_text" {
+		text = "SELECT_UNITS_HEADER"
+	}
+
 	blockoverride "select_content" {
 		select_menu_header = {
 			blockoverride "select_menu_header_extra" {

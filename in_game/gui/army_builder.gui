@@ -701,8 +701,8 @@ lateralview = {
 											blockoverride "concept_link" {
 												raw_text = "[army|e]"
 											}
-											
-											lowpriotextcontext = "ARMY_SIZE_SIMPLE"
+
+											lowpriotextcontext = "[SelectLocalization(ArmyBuilderLateralView.GetUnitToMergeWith.IsValid, 'ARMY_SIZE_UNIT_SIMPLE', 'ARMY_SIZE_SIMPLE')]"
 
 										}
 									}
@@ -722,7 +722,7 @@ lateralview = {
 									text = "ARMY_SIZE"
 								}
 								blockoverride "bottom_text_setup" {
-									text = "[Player.GetTotalStrength|Y]"
+									text = "[SelectLocalization(ArmyBuilderLateralView.GetUnitToMergeWith.IsValid, ArmyBuilderLateralView.GetUnitToMergeWith.GetVisualStrength, Player.GetTotalStrength)]"
 									blockoverride "base_setup" {
 										tooltipwidget = {
 											SimpleContextualTooltipType = {
@@ -732,13 +732,13 @@ lateralview = {
 														texture = "gfx/interface/icons/unit_category/army_size.dds"
 													}
 												}
-	
+
 												blockoverride "concept_link" {
 													raw_text = "[army|e]"
 												}
-												
-												textcontext = "ARMY_SIZE_SIMPLE"
-	
+
+												textcontext = "[SelectLocalization(ArmyBuilderLateralView.GetUnitToMergeWith.IsValid, 'ARMY_SIZE_UNIT_SIMPLE', 'ARMY_SIZE_SIMPLE')]"
+
 											}
 										}
 									}
@@ -920,7 +920,7 @@ lateralview = {
 								}
 
 								blockoverride "icon_size" {
-									size = { 22 30 }
+									size = { 40 40 }
 								}
 								
 								blockoverride "icon_overlay" {}
@@ -1039,7 +1039,7 @@ lateralview = {
 									widget = {
 										size = { 100% 85 }
 										widget = {
-											size = { 99% 74 }
+											size = { 95% 78 }
 											parentanchor = center
 			
 											hbox = {
@@ -1134,7 +1134,7 @@ lateralview = {
 			
 														widget = {
 															layoutpolicy_horizontal = expanding
-															size = { -1 65 }
+															size = { -1 70 }
 			
 															clickable_header_card = {
 																parentanchor = vcenter
@@ -1158,10 +1158,10 @@ lateralview = {
 																blockoverride "card_bg" {}
 																		
 																blockoverride "clickable_header_card_size"{
-																	size = { 100% 65 }
+																	size = { 100% 70 }
 																}
 																blockoverride "header_size" {
-																	size = { -1 35 }
+																	size = { -1 40 }
 																}
 																blockoverride "header_button" {
 			
@@ -1170,7 +1170,7 @@ lateralview = {
 																		spacing = 1
 																		widget = {
 																			layoutpolicy_horizontal = expanding
-																			size = { -1 35 }
+																			size = { -1 40 }
 																			using = bg_card_header_01
 																			blockoverride "bg_card_header_01_bg" {
 																				background = {
@@ -1184,27 +1184,109 @@ lateralview = {
 			
 																			hbox = {
 																				margin = { 4 0 }
-																				margin_left = 12
+																				margin_left = 6
 																				spacing = 5
 			
 																				datacontext = "[UnitTypeItem.GetUnitType]"
-																				tooltipwidget = {
-																					using = SubUnitType_tooltip
-																				}
 			
 																				# UNIT CATEGORY ICON
+																				hbox = {
+																					visible = "[UnitTypeItem.GetUnitType.GetCategory.IsArmy]"
+																					using = layoutpolicy_expanding
+																					spacing = 7
+
+																					icon = {
+																						visible = "[Not(UnitTypeItem.IsLevy)]"
+																						size = {30 30}
+
+																						datacontext = "[SubUnitType.GetCategory]"
+
+																						using = bg_circle_piechart
+																						texture = "[GetUnitIcon(SubUnitType.Self)]"
+																						texture_density = 2
+																					}
+
+																					vbox = {
+																						using = layoutpolicy_expanding
+																						hbox = {
+																							layoutpolicy_horizontal = expanding
+
+																							text_single = {
+																								size = { -1 20 }
+																								autoresize = yes
+																								align = left|nobaseline
+																								using = Font_Type_Headers
+																								using = Font_Size_Small
+																								alwaystransparent = no
+																								text = "[UnitTypeItem.GetName]"
+
+																								tooltipwidget = {
+																									using = SubUnitType_tooltip
+																								}
+																							}
+
+																							expand = {}
+																						}
+
+																						hbox = {
+																							layoutpolicy_horizontal = expanding
+
+																							hbox = {
+																								spacing = 3
+																								alwaystransparent = no
+
+																								tooltipwidget = {
+																									SimpleContextualTooltipType = {
+																										blockoverride "title_icon" {
+																											icon = {
+																												using = tooltip_title_icon_size
+																												texture = "gfx/interface/icons/unit_category/total_strength.dds"
+																											}
+																										}
+
+																										blockoverride "concept_link" {
+																											raw_text = "[maximum_strength|e]"
+																										}
+
+																										lowpriotextcontext = "MAXIMUM_STRENGTH_SIMPLE_2"
+																									}
+																								}
+
+																								text_single = {
+																									size = { -1 20 }
+																									autoresize = yes
+																									align = left|nobaseline
+																									default_format = "#important_number"
+																									fontsize = 14
+																									text = "[UnitTypeItem.GetMaxStrength|0]"
+																								}
+
+																								icon = {
+																									size = { 18 18 }
+																									texture = "gfx/interface/icons/unit_category/total_strength.dds"
+																									texture_density = 2
+																								}
+																							}
+
+																							expand = {}
+																						}
+
+																					}
+																				}
+
 																				icon = {
-																					visible = "[Not(UnitTypeItem.IsLevy)]"
+																					visible = "[And(Not(UnitTypeItem.IsLevy), Not(UnitTypeItem.GetUnitType.GetCategory.IsArmy))]"
 																					size = {25 25}
-			
+
 																					datacontext = "[SubUnitType.GetCategory]"
-			
+
 																					using = bg_circle_piechart
 																					texture = "[GetUnitIcon(SubUnitType.Self)]"
 																					texture_density = 2
 																				}
-			
+
 																				text_single = {
+																					visible = "[Not(UnitTypeItem.GetUnitType.GetCategory.IsArmy)]"
 																					maximumsize = {250 20}
 																					align = left|nobaseline
 																					using = Font_Type_Headers
@@ -1216,7 +1298,7 @@ lateralview = {
 																				expand = {}
 
 																				icon = {
-																					size = { 35 35 }
+																					size = { 25 25 }
 																					texture = "[GetAgeIcon(SubUnitType.GetAge)]"
 																					datacontext = "[SubUnitType.GetAge]"
 																					tooltipwidget = {
@@ -1450,7 +1532,7 @@ lateralview = {
 																		
 																							visible = "[And(Not(UnitTypeItem.IsLevy), Not(EqualTo_int32(Player.GetOwnedLocationCount, '(int32)1')))]"
 																							description = "[UnitTypeItem.CanRecruitTT]"
-																							title = "RECRUIT_ARMY"
+																							title = "[SelectLocalization(UnitTypeItem.EnableUIClick, SelectLocalization(ArmyBuilderLateralView.GetUnitToMergeWith.IsValid, 'RECRUIT_ARMY_TO_UNIT', 'RECRUIT_ARMY'), UnitTypeItem.CanRecruitTT)]"
 																							on_action = "[SelectLocationToRecruit(UnitTypeItem.GetUnitType, ArmyBuilderLateralView.GetUnitToMergeWith)]"
 																						}
 																						enabled = "[UnitTypeItem.EnableUIClick]"
@@ -1464,7 +1546,7 @@ lateralview = {
 																							visible = "[And(Not(UnitTypeItem.IsLevy), EqualTo_int32(Player.GetOwnedLocationCount, '(int32)1'))]"
 																							enabled = "[And(And(And(UnitTypeItem.CanAffordGoldCost, UnitTypeItem.CanAffordManpowerCost), UnitTypeItem.CanAffordSailorsCost), UnitTypeItem.CanRecruit)]"
 																							description = "[UnitTypeItem.CanRecruitTT]"
-																							title = "RECRUIT_ARMY"
+																							title = "[SelectLocalization(UnitTypeItem.EnableUIClick, 'RECRUIT_ARMY', UnitTypeItem.CanRecruitTT)]"
 																							on_action = "[UnitTypeItem.Recruit]"
 																						}
 																					}
@@ -1479,42 +1561,6 @@ lateralview = {
 																		size = {100% 100%}
 																		hbox = {
 																			margin = { 5 0 }
-																			hbox = {
-																				visible = "[UnitTypeItem.GetUnitType.GetCategory.IsArmy]"
-																				spacing = 2
-																				minimumsize = { 70 20 }
-																				margin = { 2 0 }
-																				tooltipwidget = {
-																					SimpleContextualTooltipType = {
-																						blockoverride "title_icon" {
-																							icon = {
-																								using = tooltip_title_icon_size
-																								texture = "gfx/interface/icons/unit_category/total_strength.dds"
-																							}
-																						}
-																						blockoverride "concept_link" {
-																							raw_text = "[maximum_strength|e]"
-																						}
-																						
-																						lowpriotextcontext = "MAXIMUM_STRENGTH_SIMPLE_2"
-																					}
-																				}
-																										
-							
-																				text_single = {
-																					maximumsize = { 60 20 }
-																					align = center
-																					text = "[UnitTypeItem.GetMaxStrength|0]"
-																					fontsize = 13
-																					default_format = "#important_number"
-																				}
-																				icon = {
-																					size = { 22 22 }
-																					texture = "gfx/interface/icons/unit_category/total_strength.dds"
-																					texture_density = 2
-																				}
-																			}
-			
 																			hbox = {
 																				visible = "[Not(UnitTypeItem.GetUnitType.GetCategory.IsArmy)]"
 																				spacing = 2
@@ -1632,12 +1678,6 @@ lateralview = {
 																				}
 																			}
 			
-																			divider_flavor_01 = { 
-																				visible = "[UnitTypeItem.GetUnitType.GetCategory.IsArmy]"
-																				blockoverride "divider_margin" {}
-																				size = {9 -1}
-																			}
-			
 																			hbox = {
 																				visible = "[UnitTypeItem.GetUnitType.GetCategory.IsArmy]"
 																				datamodel = "[DataModelFirst(UnitTypeItem.GetUniqueStats, '(int32)3')]"
@@ -1704,14 +1744,11 @@ lateralview = {
 																			hbox = {
 																				visible = "[Not(UnitTypeItem.GetUnitType.GetCategory.IsArmy)]"
 																				datamodel = "[DataModelFirst(UnitTypeItem.GetUniqueStats, '(int32)4')]"
-																				spacing = 2
 								
 																				item = {
 																					widget = {
-																						size = { 60 20 }
-																						hbox = {
-																							spacing = 2
-			
+																						size = { 52 20 }
+																						hbox = {			
 																							expand = {}
 			
 																							tooltipwidget = {
@@ -1748,10 +1785,7 @@ lateralview = {
 																								text = "[UniqueStatItem.GetImpact]"
 																							}
 			
-																							icon = {
-																								size = { 16 16 }
-																								texture = "[UniqueStatItem.GetIcon]"
-																							}
+																							
 			
 																							expand = {}
 			
@@ -1805,13 +1839,13 @@ lateralview = {
 																						autoresize = yes
 																						align = right
 																						fontsize = 13
-																						raw_text = "[UnitTypeItem.GetManpowerCost|0]@manpower!"
+																						raw_text = "[UnitTypeItem.GetManpowerCost|0] ([UnitTypeItem.GetUnitType.GetCurrencyUpkeep])"
 																					}
 																				}
-						
+																				
 																				hbox = {
 																					spacing = 2
-																					margin = { 8 0 }
+																					margin = { 2 0 }
 																					tooltipwidget = {
 																						SimpleContextualTooltipType = {
 																							blockoverride "title_icon" {
@@ -1838,7 +1872,7 @@ lateralview = {
 																						autoresize = yes
 																						align = right
 																						fontsize = 13
-																						raw_text = "[UnitTypeItem.GetSailorsCost|0]@sailors!"
+																						raw_text = "[UnitTypeItem.GetSailorsCost|0] ([UnitTypeItem.GetUnitType.GetSailorsUpkeepPrecise])"
 																					}
 																				}
 																			}

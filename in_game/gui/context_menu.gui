@@ -537,6 +537,16 @@ types ContextMenuSpecificTypes
 						description = "[UnitActionItem.GetLeftClickDescription]"
 					}
 
+					action_tooltip = {
+						click_type = right
+						click_mode = single
+						visible = "[UnitActionItem.HasSingleRightAction]"
+						title = "[UnitActionItem.GetSecondaryName]"
+						on_action = "[UnitActionItem.SingleRightClick]"
+						enabled = "[UnitActionItem.CanSingleRightClick]"
+						description = "[UnitActionItem.GetRightClickDescription]"
+					}
+
 					enabled = "[Or3(And(UnitActionItem.HasSingleLeftAction, UnitActionItem.CanSingleLeftClick),
 					And(UnitActionItem.HasHoldRightAction, UnitActionItem.CanHoldRightClick),
 					And(UnitActionItem.HasHoldLeftAction, UnitActionItem.CanHoldLeftClick))]"
@@ -589,6 +599,16 @@ types ContextMenuSpecificTypes
 								enabled = "[UnitActionItem.CanSingleLeftClick]"
 								conditions = "[MakeItFailIf(Not(UnitActionItem.CanSingleLeftClick), UnitActionItem.GetTooltip)]"
 								description = "[UnitActionItem.GetLeftClickDescription]"
+							}
+
+							action_tooltip = {
+								click_type = right
+								click_mode = single
+								visible = "[UnitActionItem.HasSingleRightAction]"
+								title = "[UnitActionItem.GetSecondaryName]"
+								on_action = "[UnitActionItem.SingleRightClick]"
+								enabled = "[UnitActionItem.CanSingleRightClick]"
+								description = "[UnitActionItem.GetRightClickDescription]"
 							}
 
 							enabled = "[Or3(And(UnitActionItem.HasSingleLeftAction, UnitActionItem.CanSingleLeftClick),
