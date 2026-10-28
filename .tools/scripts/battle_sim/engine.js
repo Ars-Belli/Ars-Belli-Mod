@@ -482,14 +482,16 @@
 					const k = g.count | 0;
 					if (!k) continue;
 					const x = unitCost(g, c, scnIn.costs);
-					const men = x.size * k * (g.strength != null ? g.strength : 1);
+					// upkeep scales with current strength (game tooltip: "Current Strength x1.00")
+					const cur = g.strength != null ? g.strength : 1;
+					const men = x.size * k * cur;
 					rows.push({
 						army: j, armyName: a.name || `Army ${j + 1}`, type: g.type, name: x.u.n, count: k, levy: x.levy, men, size: x.size,
-						buildManpower: x.buildManpower * k, buildGold: x.levy ? 0 : x.build * k, upkeepGold: x.upkeep * k, upkeepManpower: x.upkeepManpower * k,
+						buildManpower: x.buildManpower * k, buildGold: x.levy ? 0 : x.build * k, upkeepGold: x.upkeep * k * cur, upkeepManpower: x.upkeepManpower * k * cur,
 						reinforceGold: x.levy ? 0 : x.reinforce,
 					});
 					if (x.levy) { tot.levies += k; tot.menLevy += men; } else { tot.regiments += k; tot.men += men; tot.buildManpower += x.buildManpower * k; tot.buildGold += x.build * k; }
-					tot.upkeepGold += x.upkeep * k; tot.upkeepManpower += x.upkeepManpower * k;
+					tot.upkeepGold += x.upkeep * k * cur; tot.upkeepManpower += x.upkeepManpower * k * cur;
 				}
 			});
 			return { rows, ...tot };

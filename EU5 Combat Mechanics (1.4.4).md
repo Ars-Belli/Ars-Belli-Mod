@@ -310,7 +310,19 @@ Same roll of 11 (raw die 6, shown as 7; base 1.32), both engaged, equal discipli
 | Infantry hits cavalry | 1.32 × 0.04 × 2.5 × 2.25 × 0.30 = 0.089 | 8.9% of 1000 | 1.32 × 0.25 × 2.5 × 2.25 × 0.30 = 0.56 |
 | Cavalry hits infantry | 1.32 × 0.04 × 1.0 × 3.25 × 1.0 = 0.172 | 6.9% of 2500 | 1.32 × 0.25 × 0.4 × 3.25 × 1.0 = 0.43 |
 
-Early on, cavalry's 0.30 damage taken and 2.6 power outweigh infantry's size. By Absolutism, infantry's power and size growth flip it: infantry deal more morale damage and lose a smaller share of their men. Cavalry also cost more frontage per man and more upkeep.
+Early on, cavalry's 0.30 damage taken and 2.6 power outweigh infantry's size. By Absolutism, infantry's power and size growth flip it: infantry deal more morale damage and lose a smaller share of their men.
+
+**Per frontage slot vs per manpower** (`analysis/cav_transition.js`: 30 heavy infantry vs heavy cavalry of the same age, frontage 10, cavalry win rate):
+
+| Age | Equal regiments, +0 / +10 / +20 / +50% cavalry power | Equal manpower upkeep (cavalry gets 25% more regiments) |
+|---|---|---|
+| IV (Reformation) | 43% / 58% / 70% / 90% | 95% / 98% / 99% / 100% |
+| V (Absolutism) | 14% / 22% / 32% / 62% | 71% / 81% / 87% / 97% |
+| VI (Revolutions) | 2% / 4% / 10% / 27% | 28% / 38% / 50% / 75% |
+
+- **Cavalry is cheap in manpower per frontage slot.** It needs 4% of its men a month against infantry's 2%, but its regiments are a third to two fifths the size: 32 against 40 men a month per regiment in age IV, and 48 against 60 in age VI. It also never loses more men than the infantry: infantry loses 1.0× (age VI, equal regiments, no bonus) to 9.8× as many.
+- **At equal regiments**, the multiplayer meta appears: in the Reformation, cavalry with about +10% power still beats infantry, so cavalry-bonus countries can keep cavalry one more age. From Absolutism, infantry wins unless cavalry has +50%.
+- **At equal manpower**, cavalry stays ahead into Absolutism, and in age VI breaks even at +20% power. If manpower were the only limit after 1550, cavalry should still win. That the meta switches suggests regiment count is the real limit: recruitment locations, supply weight, horses on the market, or frontage-filling stacks.
 
 ---
 
@@ -424,6 +436,10 @@ So **+0.1 tactics ≈ +5% discipline ≈ +1 commander die ≈ +20 experience**, 
 - Each price is scaled by its `army_<category>_<build|reinforce|maintenance>_cost_modifier`. The modifier scales the whole price, so a −20% cavalry build cost (Halych's parliament modifier) also cuts the manpower. This follows the price system; the multiplication itself was not traced.
 - **Upkeep** (gold and manpower) is divided by (1 + `army_maintenance_efficiency`), floored at −95%. Mothballed regiments pay 50%, prisoners 30%. Levies pay `LEVY_MAINTENANCE_FACTOR` 1% of the gold and no manpower. Mercenaries pay ×1.35 with `mercenary_maintenance_efficiency`.
 - **Efficiency divides.** +25% efficiency means paying 80%, not 75% (confirmed in game with mercenaries: 6.24 → 5.49 when efficiency went 10% → 25%).
+- **Confirmed by the game's manpower tooltip (Spain 1547):**
+  - One Lanzas de Castilla: "Base Cost 0.02" (0.04 × 600 men = 0.024), "Army Maintenance Efficiency at +26.72%: −21.08%" (= 1 − 1/1.2672), "Current Strength ×1.00", total −18 a month.
+  - 23 of them: −435 (0.024 × 23 ÷ 1.2672 = 0.4356).
+  - So **upkeep scales with current strength**, and efficiency divides it. The simulator does both.
 - **Checked on the 1342 save:**
   - Manpower upkeep matches to the man. Moldavia's 16 Horsemen cost 0.04 × 0.2 × 16 ÷ 1.0635 = 120 a month; with 9 a month of income, the save's net change is −111.2 (formula −111.3). Halych's 16 Footmen cost 150; the save's net change is −133.7 (formula −133.7).
   - Gold upkeep in the budget was about **68%** of the price-list value for both armies (20.8 vs 30.1, 25.2 vs 37.6). A common factor is missing (not traced).

@@ -11,6 +11,9 @@
 //  - Parity views: "regiments" = equal regiment count (recruitment locations/buildings are the limit); "manpower" = size x
 //    (1 + manpower modifier) x (1 + maintenance efficiency) / (1 + unit maintenance cost modifier) (manpower upkeep is
 //    divided by maintenance efficiency, checked on a save); "gold" = size x (1 + maintenance efficiency) / (1 + cost modifier).
+//  - Both sides start from BASE_MAINT army maintenance efficiency (Spain 1547: 26.7%), so +10% is worth 1.35/1.25.
+//  - The user (2026-10-28): from the Reformation (1550+) gold is no limit and manpower is; the final table therefore
+//    scores ages II-III by gold and ages IV-VI by manpower.
 const path = require('path');
 const { ages } = require('../../focus_picks/focus_data.js');
 const N = +process.argv[2] || 300;
@@ -31,10 +34,12 @@ const branchMods = br => {
 	return o;
 };
 const AGES = ages.map(a => ({ n: a.n, branches: a.mil.map(b => ({ name: b.name, mods: branchMods(b) })) }));
+const BASE_MAINT = 0.25;
+const eff = m => (1 + BASE_MAINT + (m.maint || 0)) / (1 + BASE_MAINT);
 const VIEWS = {
 	regiments: () => 1,
-	manpower: (m, cat) => (1 + (m.manpower || 0)) * (1 + (m.maint || 0)) / (1 + (m['maintCost.' + cat] || 0)),
-	gold: (m, cat) => (1 + (m.maint || 0)) / (1 + (m['maintCost.' + cat] || 0)),
+	manpower: (m, cat) => (1 + (m.manpower || 0)) * eff(m) / (1 + (m['maintCost.' + cat] || 0)),
+	gold: (m, cat) => eff(m) / (1 + (m['maintCost.' + cat] || 0)),
 };
 const CHAR = { adm: 55, dip: 58, mil: 62 }, TRAINED = 37 + 40;
 const relevant = (mods, age, view) => {
@@ -107,6 +112,11 @@ rec(0, []);
 			console.log(`  age ${a.n} picks (average over paths): ${by.join(', ')}`);
 		}
 	}
+	// realistic mix: gold matters until age III, manpower from age IV (Reformation)
+	const G = Object.fromEntries(report.gold.ranked.map(x => [x.path, x.per])), M = Object.fromEntries(report.manpower.ranked.map(x => [x.path, x.per]));
+	const mix = Object.keys(G).map(p => { const per = [G[p][0], G[p][1], M[p][2], M[p][3], M[p][4]]; return { path: p, per, avg: per.reduce((a, b) => a + b, 0) / 5 }; }).sort((x, y) => y.avg - x.avg);
+	console.log('\n=== gold until age III, manpower from age IV');
+	mix.slice(0, 6).forEach(r => console.log(`  ${r.path.padEnd(72)}${r.per.map(x => String(Math.round(100 * x)).padStart(4)).join('')}  avg ${Math.round(100 * r.avg)}%`));
 	require('fs').writeFileSync(path.join(__dirname, 'focus_picks_results.json'), JSON.stringify(Object.fromEntries(Object.entries(report).map(([k, v]) => [k, v.ranked])), null, 1));
 	console.log(`\n${N} battles a pairing each way, ${pool.threads} threads, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
 	await pool.close();
