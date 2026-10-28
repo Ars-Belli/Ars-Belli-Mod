@@ -24,7 +24,6 @@
 		}
 	}
 
-
 	court_of_appeals = {
 		unique = yes
 		potential = {
@@ -117,6 +116,7 @@
 			tolerance_heathen = -1
 			court_language_is_liturgical_language_importance_modifier = 3.0
 			disallows_female_rulers = yes
+			global_max_bureaucracy_slots = 1
 		}
 		estate_preferences = {
 			clergy_estate
@@ -347,6 +347,7 @@
 		allow = {
 			has_embraced_institution = institution:legalism
 		}
+		# Ars Belli: estate power bonuses replaced by a pull towards centralization and a smaller peasants penalty.
 		country_modifier = {
 			government_size = 1
 			monthly_towards_centralization = societal_value_monthly_move
@@ -400,7 +401,6 @@
 		}
 		country_modifier = {
 			government_reform_slots = 1
-			global_max_bureaucracy_slots = 1
 			clergy_estate_target_satisfaction = small_permanent_target_satisfaction
 			monthly_towards_centralization = societal_value_monthly_move
 		}
@@ -485,6 +485,23 @@
 			}
 			tax_income_efficiency = large_tax_income_efficiency_bonus 
 			nobles_estate_target_satisfaction = medium_permanent_target_satisfaction_penalty
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+
+	mll_leges_palatinae = { 
+		unique = yes
+		potential = {
+			has_or_had_tag = MLL
+			has_unlocked_policy_trigger = { type = mll_leges_palatinae }
+		}
+		country_modifier = {
+			global_crown_estate_power = 0.10
+			monthly_legitimacy = 0.1
+			country_cabinet_efficiency = 0.20
 		}
 		estate_preferences = {
 			crown_estate
@@ -1072,7 +1089,7 @@ sharia_law = {
 		}
 
 		country_modifier = {
-			selling_efficiency = small_trade_efficiency_bonus
+			selling_efficiency = small_selling_efficiency_bonus
 			monthly_towards_free_trade = societal_value_minor_monthly_move
 		}
 		years = 2
@@ -1160,5 +1177,5 @@ sharia_law = {
 		}
 		years = 2
 	}
-	
+
 }

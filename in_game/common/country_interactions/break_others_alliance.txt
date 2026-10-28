@@ -13,9 +13,6 @@ break_others_alliance =  {
 			#so, how many favours are we going to owe them? Depends on the relations we're asking them to break
 			value = "scope:recipient.favors_needed_to_annul_relations_with(scope:target)"
 		}
-		else = {
-			value = 20 #default
-		}
 	}
 
 	allow = {
@@ -28,8 +25,9 @@ break_others_alliance =  {
 		looking_for_a = country
 		target_flag = recipient
 		name = "choose_country"
+		default_sort = will
 		column = {
-			data = name
+			data = country_diplomacy_info_influence
 		}
 		visible = {
 			scope:actor ?= {
@@ -49,6 +47,10 @@ break_others_alliance =  {
 		interaction_source_list = {
 			scope:recipient = {
 				every_country_with_relation_that_can_be_annulled = {
+					limit = {
+						NOT = { is_subject_of = scope:recipient }
+						NOT = { scope:recipient.overlord ?= this }
+					}
 					add_to_list = source
 				}
 			}
@@ -60,6 +62,17 @@ break_others_alliance =  {
 		}
 		column = {
 			data = population
+		}
+		visible = {
+			trigger_if = {
+				limit = {
+					is_subject = yes
+				}
+				not = {
+					overlord = scope:recipient
+				}
+			}
+			NOT = { scope:recipient.overlord ?= root }
 		}
 	}
 
