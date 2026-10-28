@@ -201,8 +201,11 @@ abm_the_genoese_arsenal = {
 
 	# galley_cost = -0.33
 	
+	global_burghers_estate_power = -0.25
+	possible_frontage_modifier = 0.10
+
 	unlock_building = abm_gazarian_arsenal
-	unlock_building = abm_gazarian_headquarters
+	#unlock_building = abm_gazarian_headquarters
 }
 
 abm_overhauled_bureaucracy = {
@@ -763,150 +766,6 @@ abm_kaz_ambition = {
 
 	# cavalry_flanking = 0.5
 	army_initiative = 0.20
-}
-
-
-
-# Theodoro's advance set. The tag itself always qualifies; anyone else must be
-# Gothic, and must not be BYZ or TRE - both sit in greek_group alongside the
-# Goths, so their players could otherwise adopt gothic_culture purely to farm
-# these six advances on top of their own. Same exclusion vanilla applies to the
-# greek_group_* ladder in culture_group_greek.txt.
-REPLACE:feo_gothic_hellenic_synthesis_advance = {
-	age = age_1_traditions
-	icon = cultural_acceptance_advance
-
-	potential = {
-		OR = {
-			has_or_had_tag = FEO
-			AND = {
-				culture = culture:gothic_culture
-				NOR = {
-					has_or_had_tag = BYZ
-					has_or_had_tag = TRE
-				}
-			}
-		}
-	}
-
-	accepted_culture_maintenance_cost_modifier = -0.2
-	cultures_capacity = 1
-
-	requires = cultural_acceptance_advance
-}
-
-REPLACE:feo_the_gothic_red_guard_advance = {
-	age = age_2_renaissance
-	icon = glorious_arms
-
-	potential = {
-		OR = {
-			has_or_had_tag = FEO
-			AND = {
-				culture = culture:gothic_culture
-				NOR = {
-					has_or_had_tag = BYZ
-					has_or_had_tag = TRE
-				}
-			}
-		}
-	}
-
-	discipline = 0.05
-
-	requires = drill_army_advance
-}
-
-REPLACE:feo_black_sea_fur_trade_advance = {
-	age = age_3_discovery
-	icon = global_trade_routes_advance
-
-	potential = {
-		OR = {
-			has_or_had_tag = FEO
-			AND = {
-				culture = culture:gothic_culture
-				NOR = {
-					has_or_had_tag = BYZ
-					has_or_had_tag = TRE
-				}
-			}
-		}
-	}
-
-	global_trades_per_burgher = 0.2
-	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
-
-	requires = new_world_advance
-}
-
-REPLACE:feo_the_northern_star_of_greece_advance = {
-	age = age_4_reformation
-	icon = crown_power_advance_renaissance
-
-	potential = {
-		OR = {
-			has_or_had_tag = FEO
-			AND = {
-				culture = culture:gothic_culture
-				NOR = {
-					has_or_had_tag = BYZ
-					has_or_had_tag = TRE
-				}
-			}
-		}
-	}
-
-	monthly_devotion = 0.1
-	monthly_legitimacy = 0.1
-	monthly_republican_tradition = 0.1
-	monthly_religious_influence = 0.1
-
-	requires = confessionalism_advance
-}
-
-REPLACE:feo_the_bastion_of_mangup_advance = {
-	age = age_5_absolutism
-	icon = feo_the_bastion_of_mangup_advance
-
-	potential = {
-		OR = {
-			has_or_had_tag = FEO
-			AND = {
-				culture = culture:gothic_culture
-				NOR = {
-					has_or_had_tag = BYZ
-					has_or_had_tag = TRE
-				}
-			}
-		}
-	}
-
-	global_defensive = 0.20
-
-	requires = absolute_rulership
-}
-
-REPLACE:feo_the_iron_harvest_advance = {
-	age = age_6_revolutions
-	icon = imperial_ambitions
-
-	potential = {
-		OR = {
-			has_or_had_tag = FEO
-			AND = {
-				culture = culture:gothic_culture
-				NOR = {
-					has_or_had_tag = BYZ
-					has_or_had_tag = TRE
-				}
-			}
-		}
-	}
-
-	global_war_score_efficiency = 0.2
-
-	requires = hot_blast_furnace
 }
 
 #############################################

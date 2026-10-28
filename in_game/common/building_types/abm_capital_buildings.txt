@@ -123,10 +123,16 @@ abm_gazarian_arsenal = {
 	}
 	build_time = medium_port_building_time
 	modifier = {
-		can_build_ships_in_this_location = yes
-		max_ships_built_at_same_time = 3
 		harbor_suitability = 0.15
-		local_sailors_modifier = 0.30
+
+		local_manpower = 0.030
+		local_manpower_modifier = 0.10
+		
+		local_defensive = 0.10
+
+		max_ships_built_at_same_time = 2
+		can_recruit_regiment_in_this_location = yes
+		can_build_ships_in_this_location = yes
 	}
 	
 	capital_country_modifier = {
@@ -148,59 +154,59 @@ abm_gazarian_arsenal = {
 	construction_demand = port_building_construction
 }
 
-abm_gazarian_headquarters = {
-	audio_tier = 2
-	is_foreign = no
-	pop_type = soldiers
-	max_levels = 1
-	icon = order_headquarters # placeholder — replace with custom abm_gazarian_headquarters.dds when ready
+# abm_gazarian_headquarters = {
+# 	audio_tier = 2
+# 	is_foreign = no
+# 	pop_type = soldiers
+# 	max_levels = 1
+# 	icon = order_headquarters # placeholder — replace with custom abm_gazarian_headquarters.dds when ready
 	
-	category = military_category
+# 	category = military_category
 	
-	employment_size = manpower_employment
+# 	employment_size = manpower_employment
 	
-	rural_settlement = no
-	town = yes
-	city = yes
-	megalopolis = yes
+# 	rural_settlement = no
+# 	town = yes
+# 	city = yes
+# 	megalopolis = yes
 	
-	expensive = yes
-	build_time = large_capital_build_time
+# 	expensive = yes
+# 	build_time = large_capital_build_time
 	
-	location_potential = {
-		is_capital = yes
-	}
+# 	location_potential = {
+# 		is_capital = yes
+# 	}
 
 
-	country_potential = {
-		has_advance = abm_the_genoese_arsenal
-	}
+# 	country_potential = {
+# 		has_advance = abm_the_genoese_arsenal
+# 	}
 	
-	capital_modifier = {
-		local_manpower = 0.030
-		local_manpower_modifier = 0.10
-		local_defensive = 0.10
-		can_recruit_regiment_in_this_location = yes
-	}
+# 	capital_modifier = {
+# 		local_manpower = 0.030
+# 		local_manpower_modifier = 0.10
+# 		local_defensive = 0.10
+# 		can_recruit_regiment_in_this_location = yes
+# 	}
 	
-	capital_country_modifier = {
-		possible_frontage_modifier = 0.10
-	}
+# 	capital_country_modifier = {
+# 		possible_frontage_modifier = 0.10
+# 	}
 	
-	unique_production_methods = {
-		order_headquarters_requirements = {
-			lumber = 0.1
-			tools = 0.1
-			glass = 0.1
-			fine_cloth = 0.1
-			beeswax = 0.05
-			books = 0.05
-			weaponry = 0.1
-			category = building_maintenance
-		}
-	}
+# 	unique_production_methods = {
+# 		order_headquarters_requirements = {
+# 			lumber = 0.1
+# 			tools = 0.1
+# 			glass = 0.1
+# 			fine_cloth = 0.1
+# 			beeswax = 0.05
+# 			books = 0.05
+# 			weaponry = 0.1
+# 			category = building_maintenance
+# 		}
+# 	}
 
-	graphical_tags = { palace }
+# 	graphical_tags = { palace }
 
-	construction_demand = early_capital_building_construction
-}
+# 	construction_demand = early_capital_building_construction
+# }

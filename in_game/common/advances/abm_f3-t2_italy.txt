@@ -464,11 +464,22 @@ REPLACE:ligurian_coastal_seafarers = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
+			# Gazaria keeps the Ligurian civic inheritance when it takes up one
+			# of the two identities offered by abm_gazaria_culture_choice - the
+			# counting-houses and the seafaring tradition do not vanish because
+			# the captains changed their name. Any OTHER culture loses them.
+			AND = {
+				has_or_had_tag = GAZ
+				OR = {
+					culture = culture:gothic_culture
+					culture = culture:pontic_greek_culture
+				}
+			}
 		}
 	}
 
 	navy_galley_power = 0.15
-	cultures_capacity = 2
+	cultures_capacity = 1
 
 	requires = trade_advance_age_of_trad
 }
@@ -483,6 +494,17 @@ REPLACE:ligurian_merchant_diaspora = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
+			# Gazaria keeps the Ligurian civic inheritance when it takes up one
+			# of the two identities offered by abm_gazaria_culture_choice - the
+			# counting-houses and the seafaring tradition do not vanish because
+			# the captains changed their name. Any OTHER culture loses them.
+			AND = {
+				has_or_had_tag = GAZ
+				OR = {
+					culture = culture:gothic_culture
+					culture = culture:pontic_greek_culture
+				}
+			}
 		}
 	}
 
@@ -502,11 +524,22 @@ REPLACE:ligurian_spirit_of_navigation = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
+			# Gazaria keeps the Ligurian civic inheritance when it takes up one
+			# of the two identities offered by abm_gazaria_culture_choice - the
+			# counting-houses and the seafaring tradition do not vanish because
+			# the captains changed their name. Any OTHER culture loses them.
+			AND = {
+				has_or_had_tag = GAZ
+				OR = {
+					culture = culture:gothic_culture
+					culture = culture:pontic_greek_culture
+				}
+			}
 		}
 	}
 
 	export_efficiency = small_trade_efficiency_bonus
-	global_merchant_power = 0.1
+	global_merchant_power = 0.10
 
 	requires = diplomatic_training
 }
@@ -521,6 +554,17 @@ REPLACE:ligurian_artisan_craft = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
+			# Gazaria keeps the Ligurian civic inheritance when it takes up one
+			# of the two identities offered by abm_gazaria_culture_choice - the
+			# counting-houses and the seafaring tradition do not vanish because
+			# the captains changed their name. Any OTHER culture loses them.
+			AND = {
+				has_or_had_tag = GAZ
+				OR = {
+					culture = culture:gothic_culture
+					culture = culture:pontic_greek_culture
+				}
+			}
 		}
 	}
 
@@ -538,6 +582,17 @@ REPLACE:ligurian_communal_councils = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
+			# Gazaria keeps the Ligurian civic inheritance when it takes up one
+			# of the two identities offered by abm_gazaria_culture_choice - the
+			# counting-houses and the seafaring tradition do not vanish because
+			# the captains changed their name. Any OTHER culture loses them.
+			AND = {
+				has_or_had_tag = GAZ
+				OR = {
+					culture = culture:gothic_culture
+					culture = culture:pontic_greek_culture
+				}
+			}
 		}
 	}
 
@@ -556,6 +611,17 @@ REPLACE:ligurian_enlightenment = {
 		OR = {
 			culture = culture:ligurian
 			culture = { merged_culture_group_contains_culture = culture:ligurian }
+			# Gazaria keeps the Ligurian civic inheritance when it takes up one
+			# of the two identities offered by abm_gazaria_culture_choice - the
+			# counting-houses and the seafaring tradition do not vanish because
+			# the captains changed their name. Any OTHER culture loses them.
+			AND = {
+				has_or_had_tag = GAZ
+				OR = {
+					culture = culture:gothic_culture
+					culture = culture:pontic_greek_culture
+				}
+			}
 		}
 	}
 
@@ -563,18 +629,4 @@ REPLACE:ligurian_enlightenment = {
 	stability_cost_efficiency = 0.1
 
 	requires = modern_bureaucracy
-}
-
-gen_free_port = {
-	age = age_6_revolutions
-	icon = port_customs
-
-	potential = {
-		has_or_had_tag = GEN
-	}
-
-	global_trade_through_owned_territory_efficiency = 0.20
-	global_trade_center_power = 0.10
-
-	requires = industrialization_advance
 }
