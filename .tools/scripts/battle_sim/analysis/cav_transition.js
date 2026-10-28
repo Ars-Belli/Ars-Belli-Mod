@@ -1,12 +1,12 @@
 // node .tools/scripts/battle_sim/analysis/cav_transition.js [battles, default 2000]
 // Can a cavalry-heavy country keep fielding cavalry after the infantry switch? Pure heavy cavalry vs pure heavy infantry of
-// the same age, with cavalry power bonuses, at frontage 10. Both generals 55/58/62 (typical characters).
+// the same age, with cavalry power bonuses, at frontage 10. Both generals 60/59/61 (average commanding general in Europe, 1547 save).
 // Views: equal regiments (30 vs 30); equal manpower upkeep (cavalry 0.04 x men a month, infantry 0.02 x men: cavalry gets
 // more regiments); equal recruitment manpower (regiments cost their men; the pool limits the first army).
 const pool = require('../pool.js')();
 const S = require('../engine.js');
 const N = +process.argv[2] || 2000;
-const GEN = { adm: 55, dip: 58, mil: 62 };
+const GEN = { adm: 60, dip: 59, mil: 61 };
 const size = (c, age) => S.AGE[c][age - 1][1];
 const army = (c, age, n, bonus = 0) => ({ name: c, general: GEN, country: bonus ? { power: { [c]: bonus } } : {}, units: [{ type: `generic:${c}:${age}`, count: n }] });
 const pct = x => (100 * x).toFixed(0) + '%';

@@ -3,12 +3,16 @@
 //      [--war same|budget [--wars 200]]  score by wars of attrition (simulateWar) instead of battles: same base manpower
 //          income for both, income x (1 + manpower modifier); "same" = 30 regiments each (cheaper upkeep keeps more surplus),
 //          "budget" = each side builds regiments until upkeep is 75% of its income. 48 months, a battle every 2 months.
+//          Wars track experience: battle gains (30 x own losses / own men), each pick's monthly gain and decay.
+//      [--interval months|ready] [--months 48]  war battle spacing; ready = fight once both are fully reinforced
+//      [--republic]  no Military Traditions (monarchy age III advance, experience decay -1%); default: monarchies
 // Military focus picks: at each age every distinct battle-relevant pick state fights every other (both sides alternating as
 // attacker), under three parity views. A state's score = expected win rate against a random opponent path (states weighted
 // by how many of the 3^k paths reach them).
 // Meta armies (the user's MP meta): ages 2-4 thirty heavy cavalry, ages 5-6 thirty heavy infantry; frontage 10.
 // Assumptions (2026-10-28, from the user and a 1547 Spain save):
-//  - Generals are characters, typically 55/58/62 (adm/dip/mil; median of Spain's field generals). Without Leadership,
+//  - Generals are characters: 60/59/61 (adm/dip/mil), the average of the 161 generals commanding armies in Europe in
+//    the 1547 Spain save (from_save.js --generals). Without Leadership,
 //    trained generals average 37 at army tradition 14, so nobody trains. Leadership: trained generals +40 a skill, i.e. 77
 //    on average (better than most characters), plus +0.2 army tradition a month, taken as +20 by mid-age (+4% morale).
 //  - Experience starts near 0 (Spain 1547: 0.37), so experience-gain picks barely count.
@@ -26,7 +30,9 @@ const N = +pos[0] || 300;
 const pool = require('../pool.js')(+pos[1] || undefined);
 const DRILL = opt('--drill') || 0, WAIT = opt('--wait') || 0;
 const WAR = (() => { const i = argv.indexOf('--war'); return i < 0 ? null : argv[i + 1]; })(), WARS = opt('--wars') || 200;
+const INTERVAL = (() => { const i = argv.indexOf('--interval'); return i < 0 ? 2 : argv[i + 1] === 'ready' ? 'ready' : +argv[i + 1]; })(), WAR_MONTHS = opt('--months') || 48;
 const exp = require('../engine.js').drilledExperience;
+const MON = argv.includes('--republic') ? 0 : -0.01, monDecay = age => age >= 3 ? MON : 0;
 const MAP = {
 	discipline: 'discipline', military_tactics: 'tactics', land_morale_modifier: 'moraleMod', land_morale: 'moraleFlat',
 	army_initiative: 'initiativeMod', combat_speed_modifier: 'speedMod', possible_frontage_modifier: 'frontageMod',
@@ -51,7 +57,7 @@ const VIEWS = WAR ? { ['war (' + WAR + ')']: () => 1 } : {
 	manpower: (m, cat) => (1 + (m.manpower || 0)) * eff(m) / (1 + (m['maintCost.' + cat] || 0)),
 	gold: (m, cat) => eff(m) / (1 + (m['maintCost.' + cat] || 0)),
 };
-const CHAR = { adm: 55, dip: 58, mil: 62 }, TRAINED = 37 + 40;
+const CHAR = { adm: 60, dip: 59, mil: 61 }, TRAINED = 37 + 40;
 const relevant = (mods, age, view) => {
 	const o = { ...mods }; const cat = age <= 4 ? 'hc' : 'hi';
 	for (const k of Object.keys(o)) if (/^(power|maintCost)\./.test(k) && !k.endsWith(cat)) delete o[k];
@@ -69,7 +75,7 @@ function side(mods, age, view) {
 	const g = mods.genAbility ? { adm: Math.max(CHAR.adm, TRAINED), dip: Math.max(CHAR.dip, TRAINED), mil: Math.max(CHAR.mil, TRAINED) } : CHAR;
 	const c = { tactics: 1 + (mods.tactics || 0), discipline: mods.discipline || 0, moraleMod: (mods.moraleMod || 0) + (mods.atGain ? 0.04 : 0), moraleFlat: mods.moraleFlat || 0,
 		initiativeMod: mods.initiativeMod || 0, speedMod: mods.speedMod || 0, frontageMod: mods.frontageMod || 0,
-		experience: DRILL || WAIT ? exp({ gain: mods.expGain || 0, decay: mods.expDecay || 0, drill: DRILL, wait: WAIT }) : 0.37, power: {} };
+		experience: DRILL || WAIT ? exp({ gain: mods.expGain || 0, decay: (mods.expDecay || 0) + monDecay(age), drill: DRILL, wait: WAIT }) : 0.37, power: {} };
 	if (mods['power.' + cat]) c.power[cat] = mods['power.' + cat];
 	if (WAR) {
 		c.maintenanceEfficiency = BASE_MAINT + (mods.maint || 0); c.reinforceSpeed = mods.reinforceSpeed || 0;
@@ -103,7 +109,7 @@ rec(0, []);
 				if (WAR) {
 					const cat = a.n <= 4 ? 'hc' : 'hi', inc = m => baseIncome(cat, a.n) * (1 + (m.manpower || 0));
 					jobs.push(pool.wars({ location: { frontage: 10 }, attacker: { armies: [side(A, a.n, view)] }, defender: { armies: [side(B, a.n, view)] } }, WARS,
-						{ months: 48, interval: 2, sides: [{ income: inc(A) }, { income: inc(B) }] }, 7).then(w => [i, j, w.collapsed[1] + w.undecided / 2]));
+						{ months: WAR_MONTHS, interval: INTERVAL, sides: [A, B].map(m => ({ income: inc(m), expGain: m.expGain || 0, expDecay: 0.04 + (m.expDecay || 0) + monDecay(a.n) })) }, 7).then(w => [i, j, w.collapsed[1] + w.undecided / 2]));
 					continue;
 				}
 				jobs.push(Promise.all([
@@ -146,7 +152,7 @@ rec(0, []);
 	mix.slice(0, 6).forEach(r => console.log(`  ${r.path.padEnd(72)}${r.per.map(x => String(Math.round(100 * x)).padStart(4)).join('')}  avg ${Math.round(100 * r.avg)}%`));
 	}
 	require('fs').writeFileSync(path.join(__dirname, 'focus_picks_results.json'), JSON.stringify(Object.fromEntries(Object.entries(report).map(([k, v]) => [k, v.ranked])), null, 1));
-	if (DRILL || WAIT) console.log(`\nExperience after drilling ${DRILL} months and waiting ${WAIT}: no picks ${exp({ drill: DRILL, wait: WAIT }).toFixed(1)}, Standing Forces ${exp({ gain: 0.25, drill: DRILL, wait: WAIT }).toFixed(1)}, Leadership ${exp({ gain: 0.5, decay: -0.02, drill: DRILL, wait: WAIT }).toFixed(1)}, both ${exp({ gain: 0.75, decay: -0.02, drill: DRILL, wait: WAIT }).toFixed(1)}`);
+	if (DRILL || WAIT) console.log(`\nExperience after drilling ${DRILL} months and waiting ${WAIT}: (age III+${MON ? ', monarchy' : ''}) no picks ${exp({ decay: MON, drill: DRILL, wait: WAIT }).toFixed(1)}, Standing Forces ${exp({ gain: 0.25, decay: MON, drill: DRILL, wait: WAIT }).toFixed(1)}, Leadership ${exp({ gain: 0.5, decay: -0.02 + MON, drill: DRILL, wait: WAIT }).toFixed(1)}, both ${exp({ gain: 0.75, decay: -0.02 + MON, drill: DRILL, wait: WAIT }).toFixed(1)}`);
 	console.log(`\n${N} battles a pairing each way, ${pool.threads} threads, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
 	await pool.close();
 })();

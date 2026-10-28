@@ -141,6 +141,27 @@ if (args.includes('--list')) {
 	}
 	process.exit(0);
 }
+// --generals [continent]: skills of the generals commanding armies on a continent (default europe), for analysis defaults
+if (args.includes('--generals')) {
+	const want = (flag('--generals') && !flag('--generals').startsWith('--') ? flag('--generals') : 'europe');
+	const continentOf = {};
+	let depth = 0, cont = null;
+	for (const tok of fs.readFileSync(path.join(GAME, 'in_game/map_data/definitions.txt'), 'utf8').replace(/^﻿/, '').replace(/#[^\n]*/g, '').match(/\{|\}|[^\s{}=]+/g)) {
+		if (tok === '{') depth++;
+		else if (tok === '}') depth--;
+		else if (depth === 0) cont = tok;
+		else if (depth === 5) continentOf[tok] = cont; // continent > subcontinent > region > area > province { locations }
+	}
+	const gens = armies.filter(a => a.u.leader && continentOf[locKey(a.u.location)] === want).map(a => ({ a, g: generalMods(a.u.leader) })).filter(x => x.g);
+	const stat = k => { const v = gens.map(x => x.g[k]).sort((p, q) => p - q); return { mean: v.reduce((s, x) => s + x, 0) / v.length, median: v[v.length >> 1], min: v[0], max: v[v.length - 1] }; };
+	console.log(`${gens.length} armies with a general in ${want}`);
+	for (const k of ['adm', 'dip', 'mil']) { const s = stat(k); console.log(`  ${k}: mean ${s.mean.toFixed(1)}, median ${s.median}, range ${s.min}-${s.max}`); }
+	const tr = {};
+	for (const { g } of gens) for (const t of g.traits) tr[t] = (tr[t] || 0) + 1;
+	console.log('  traits: ' + Object.entries(tr).sort((p, q) => q[1] - p[1]).map(([t, n]) => `${t} ${n}`).join(', '));
+	if (args.includes('--verbose')) for (const { a, g } of gens) console.log(`  ${tagOf(a.u.country)} ${g.name}: ${g.adm}/${g.dip}/${g.mil} ${g.traits.join(' ')}`);
+	process.exit(0);
+}
 const pick = q => {
 	if (!q) throw new Error('give --attacker and --defender (an army id from --list, or a country tag for all its armies)');
 	const byId = armies.filter(a => a.id === q);

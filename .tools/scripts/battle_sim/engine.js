@@ -18,6 +18,7 @@
 		COMBINED_PER_TYPE: 0.025, COMBINED_MIN: 0.1, COMBINED_MAX: 0.5,
 		BASE_FRONTAGE: 10, MIN_FRONTAGE: 2, MOVEMENT_COST: 0.0069, MAX_DAYS: 120,
 		REINFORCE_EFF_FLOOR: -0.5, MAINT_EFF_FLOOR: -0.95, LEVY_MAINTENANCE: 0.01, MONTHLY_REINFORCE: 0.25, MAX_MANPOWER_YEARS: 5, PRICE_SCALE: 0.1,
+		EXPERIENCE_GAIN: 30, EXPERIENCE_DECAY: 0.05, REGULAR_DECAY: -0.01, // NCombat / country base value / is_army_regular
 	};
 	const CAT = {
 		li: { name: 'Light infantry', dt: 1.0, sdd: -0.1, mdt: 0.1, i: 5, cs: 3, fl: 1.1, sf: 0.05 },
@@ -422,7 +423,9 @@
 	// Regiment experience over months (0x143485830): each month
 	//   E += monthly_experience_gain - max(0, experience_decay) x E x (2 - goods access) [+ 1 on a mission]
 	// Drilling (unit ability drill_army) adds 2.5 a month (and costs -90% morale and -25% maintenance efficiency while on).
-	// Decay: country base 5%, regulars -1%, levies +2%. gain/decay here are the country's extra modifiers.
+	// Decay: country base 5%, regulars -1%, levies +2%; monarchies -1% more from age III (Military Traditions). gain/decay here
+	// are the country's extra modifiers. In-game check (Spain 1547, monarchy, age III): a regiment at 0.20 drilled one month
+	// = 0.20 + 2.5 - 3% x 0.20 = 2.694 ("Reduces Damage in combat by 1.34%", next month "+2.41%").
 	function drilledExperience({ gain = 0, decay = 0, drill = 0, wait = 0, start = 0, goods = 1, levy = false } = {}) {
 		const d = Math.max(0, 0.05 + (levy ? 0.02 : -0.01) + decay);
 		let E = start;
@@ -616,22 +619,39 @@
 	//   pool -= manpower upkeep: price x men x current strength / (1 + maintenance efficiency)   (game tooltip, Spain 1547)
 	//   reinforcement: up to MONTHLY_REINFORCE x (1 + reinforce speed) of each regiment a month, one manpower a man (x reinforce
 	//   cost modifier), while the pool lasts; regiments destroyed in a wipe are rebuilt without the monthly cap.
+	// Experience (eu5.exe 0x14249c2d0 battle end, 0x142475d80): after a land battle every regiment of a side gains the same
+	//   EXPERIENCE_GAIN 30 x max(0.01, side's men lost / (side's men at the start + 1))   (thousands of men)
+	// so the side that bleeds more learns more. Monthly: E += expGain - expDecay x E (0x143485830, full goods access). Refilled
+	// men keep the regiment's experience (the reinforcement setter 0x1423fbcc0 only writes strength); wiped regiments are
+	// rebuilt from scratch at 0. opts.experience = false turns this off.
 	// A side whose army is under collapseAt (default 50%) of its full men when a battle is due has lost the war.
-	// opts = { months, interval, collapseAt, sides: [{ income, max, pool }] } (men a month / men).
+	// opts = { months, interval, collapseAt, experience, sides: [{ income, max, pool, expDecay, expGain }] } (men a month / men;
+	// expDecay default 0.04 = base 5% - 1% regulars; monarchies get another -1% from Military Traditions in age III).
 	function simulateWar(scnIn, opts = {}, seed) {
 		const scn = JSON.parse(JSON.stringify(scnIn)), ns = normalize(scn);
-		const months = opts.months || 36, interval = Math.max(1, opts.interval || 2), collapseAt = opts.collapseAt != null ? opts.collapseAt : 0.5;
+		// interval 'ready': the next battle comes once both sides are back to readyAt (default 99%) of their men, or once one side
+		// has been ready for maxWait months (default 6) and forces it (players fight when fully reinforced)
+		const ready = opts.interval === 'ready', readyAt = opts.readyAt != null ? opts.readyAt : 0.99, maxWait = opts.maxWait || 6;
+		const months = opts.months || 36, interval = ready ? 1 : Math.max(1, +opts.interval || 2), collapseAt = opts.collapseAt != null ? opts.collapseAt : 0.5;
+		const useExp = opts.experience !== false;
 		const sides = [0, 1].map(i => {
 			const w = (opts.sides || [])[i] || {}, income = (+w.income || 0) / 1000;
 			const max = w.max != null ? w.max / 1000 : income * D.MAX_MANPOWER_YEARS * 12;
-			return { income, max, pool: w.pool != null ? w.pool / 1000 : max, upkeep: 0, reinforce: 0, won: 0, lost: 0 };
+			const expDecay = Math.max(0, w.expDecay != null ? w.expDecay : D.EXPERIENCE_DECAY + D.REGULAR_DECAY);
+			return { income, max, pool: w.pool != null ? w.pool / 1000 : max, upkeep: 0, reinforce: 0, won: 0, lost: 0, expDecay, expGain: w.expGain || 0 };
 		});
+		// the battle scenario shares these unit objects, so experience written here is what the next battle uses
 		const G = [0, 1].map(i => ns.sides[i].armies.flatMap((a, j) => {
 			const c = country(a.country, ns.countries);
-			return (a.units || []).map((g, k) => { const x = unitCost(g, c, scnIn.costs); return { g, j, k, x, c, total: x.size * (g.count | 0) }; });
+			return (a.units || []).map((g, k) => {
+				const x = unitCost(g, c, scnIn.costs);
+				if (useExp && g.experience == null) g.experience = (g.levy != null ? g.levy : x.levy) ? c.levyExperience : c.experience;
+				return { g, j, k, x, c, total: x.size * (g.count | 0) };
+			});
 		}));
 		const str = g => g.strength != null ? g.strength : 1;
 		const men = i => G[i].reduce((t, x) => t + x.total * str(x.g), 0);
+		const avgExp = i => { const t = G[i].reduce((s, x) => s + x.total, 0); return t ? G[i].reduce((s, x) => s + x.total * (x.g.experience || 0), 0) / t : 0; };
 		const full = [men(0), men(1)];
 		let battles = 0, loser = -1, month = 0;
 		const trace = [];
@@ -641,6 +661,7 @@
 			const att = battles % 2; // side that attacks this battle
 			const bscn = att === 0 ? scn : { ...scn, attacker: scn.defender, defender: scn.attacker };
 			const r = simulateScenario(bscn, { seed: seed != null ? seed * 1009 + battles : undefined });
+			const before = [men(0), men(1)], lostNow = [0, 0];
 			for (const s of [0, 1]) {
 				const i = att === 0 ? s : 1 - s;
 				r.groups[s].forEach((ag, j) => ag.forEach((L, k) => {
@@ -648,27 +669,42 @@
 					if (!x || !x.total) return;
 					x.g.strength = Math.max(0, (x.total * str(x.g) - L.lost) / x.total);
 					if (L.wiped > 0) x.rebuild = true;
-					sides[i].lost += L.lost;
+					x.wipedNow = L.wiped;
+					sides[i].lost += L.lost; lostNow[i] += L.lost;
 				}));
+			}
+			if (useExp) for (const i of [0, 1]) {
+				const gain = D.EXPERIENCE_GAIN * Math.max(0.01, lostNow[i] / (before[i] + 1));
+				// survivors gain; regiments destroyed in a wipe come back as new ones with no experience
+				for (const x of G[i]) if (x.total) x.g.experience = Math.min(100, (x.g.experience || 0) + gain) * Math.max(0, 1 - (x.wipedNow || 0) / x.total);
 			}
 			if (r.winner >= 0) sides[att === 0 ? r.winner : 1 - r.winner].won++;
 			battles++;
-			for (let m = 0; m < interval && month < months; m++, month++) for (const i of [0, 1]) {
+			const tick = i => {
 				const P = sides[i];
+				if (useExp) for (const x of G[i]) x.g.experience = Math.min(100, Math.max(0, x.g.experience + P.expGain - P.expDecay * x.g.experience));
 				P.pool = Math.min(P.max, P.pool + P.income);
 				const up = G[i].reduce((t, x) => t + x.x.upkeepManpower * (x.g.count | 0) * str(x.g), 0);
 				P.upkeep += Math.min(up, P.pool); P.pool = Math.max(0, P.pool - up);
 				const asks = G[i].filter(x => x.total && str(x.g) < 1 - 1e-9).map(x => ({ x, men: Math.min(x.total * (1 - str(x.g)), x.rebuild ? Infinity : x.total * D.MONTHLY_REINFORCE * (1 + (x.c.reinforceSpeed || 0))) }));
 				const cost = asks.reduce((t, a) => t + a.men * a.x.x.reinforceManpower, 0);
-				if (cost <= 0) continue;
+				if (cost <= 0) return;
 				const share = Math.min(1, P.pool / cost);
 				for (const a of asks) { a.x.g.strength = Math.min(1, str(a.x.g) + a.men * share / a.x.total); if (str(a.x.g) >= 1 - 1e-9) a.x.rebuild = false; }
 				P.pool -= cost * share; P.reinforce += cost * share;
-			}
-			trace.push({ battle: battles, month, men: [men(0), men(1)], pool: sides.map(p => p.pool) });
+			};
+			if (ready) {
+				const readyFor = [0, 0];
+				while (month < months) {
+					tick(0); tick(1); month++;
+					for (const i of [0, 1]) readyFor[i] = men(i) >= readyAt * full[i] ? readyFor[i] + 1 : 0;
+					if ((readyFor[0] && readyFor[1]) || Math.max(...readyFor) >= maxWait) break;
+				}
+			} else for (let m = 0; m < interval && month < months; m++, month++) { tick(0); tick(1); }
+			trace.push({ battle: battles, month, men: [men(0), men(1)], pool: sides.map(p => p.pool), exp: [0, 1].map(avgExp) });
 		}
 		return { loser, battles, months: month, won: sides.map(p => p.won), lost: sides.map(p => p.lost), upkeep: sides.map(p => p.upkeep), reinforce: sides.map(p => p.reinforce),
-			end: [men(0) / full[0], men(1) / full[1]], pool: sides.map(p => p.pool), full, trace };
+			end: [men(0) / full[0], men(1) / full[1]], pool: sides.map(p => p.pool), exp: [0, 1].map(avgExp), full, trace };
 	}
 	// many wars: P(collapse) per side with 95% intervals, battle win share, average ending strength, manpower spent
 	function summarizeWars(list) {
@@ -678,7 +714,7 @@
 		const won = [0, 1].map(i => list.reduce((t, w) => t + w.won[i], 0));
 		return { n, collapsed: col.map(c => c / n), collapsedCI: col.map(c => wilson(c, n)), undecided: (n - col[0] - col[1]) / n,
 			battleShare: won.map(w => w / Math.max(1, battles)), battleShareCI: won.map(w => wilson(w, Math.max(1, battles))), battles: battles / n,
-			lost: s('lost'), upkeep: s('upkeep'), reinforce: s('reinforce'), end: s('end'), pool: s('pool') };
+			lost: s('lost'), upkeep: s('upkeep'), reinforce: s('reinforce'), end: s('end'), pool: s('pool'), exp: s('exp') };
 	}
 
 	// ---- Simple mode on top of the scenario engine

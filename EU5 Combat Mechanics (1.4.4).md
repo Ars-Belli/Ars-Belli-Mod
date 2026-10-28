@@ -248,14 +248,40 @@ Matching regulars needs a smaller levy discipline penalty, which the mod can set
   ```
   E += monthly_experience_gain - max(0, experience_decay) x E x (2 - goods access) + EXPERIENCE_GAIN_FROM_MISSIONS 1.0 (on a mission)
   ```
-  - **Decay** is a share of current experience: base `experience_decay` 5% (country base values), regulars −1% (so 4%), levies +2% (7%). A regiment short of goods decays up to twice as fast.
+  - **Decay** is a share of current experience: base `experience_decay` 5% (country base values), regulars −1% (so 4%), levies +2% (7%). Monarchies get another −1% from the vanilla age III advance **Military Traditions** (so 3%). A regiment short of goods decays up to twice as fast.
   - **Gain is flat and constant**, not only while drilling: Ars Belli's Standing Forces +0.25 a month, Leadership +0.5 (and −2% decay), Voluntary Service +0.25.
   - Mercenaries get +0.15 a month and start with the age's `mercenary_starting_experience`.
-- **Drilling** (unit ability `drill_army`, unlocked by Drill Army in the Renaissance): +2.5 experience a month while on. While on it also costs −90% land morale and −25% maintenance efficiency, which raises manpower upkeep too. It needs a commander and stops on moving or combat.
-- **Drill 24 months, then idle 6** (full goods access): no picks 31, Standing Forces 35, Leadership 54, both 60. Drill 48 then idle 6: 42 / 48 / 85 / 93. The engine's `drilledExperience({ gain, decay, drill, wait })` computes this.
-- **Effect on focus picks** (`analysis/focus_picks_round_robin.js --drill 24 --wait 6`): Leadership rises from 43% to 56% at equal regiments, but Quality still leads. With 48 months of drilling, Leadership becomes the best age III pick in every parity view, and Standing Forces > Leadership paths top all three (80–87%). The more players drill, the stronger Leadership.
-- Not traced: whether reinforcement dilutes experience, and whether it carries over when regiments upgrade to a new age's unit.
-- `NCombat.EXPERIENCE_GAIN` = 30 is the experience gained from battles *(defines only)*.
+  - **Checked in game** (Spain 1547, a monarchy in age III, the user's tooltips): a Lanzas regiment at 0.20 experience drilled for one month reads 2.694 = 0.20 + 2.5 − 3% × 0.20. The tooltip shows "Reduces Damage in combat by 1.34%" (= 0.5 × 2.69), and the next month "+2.41%" (Drill Army +250% = +2.5, Experience Decays −0.08%). The game shows experience as a fraction (0.02) and the monthly change in points.
+- **Battle experience** *(code, `0x14249c2d0` → `0x142475d80`)*: at the end of a land battle, every regiment of a side gains the same amount:
+  ```
+  gain = EXPERIENCE_GAIN 30 x max(0.01, the side's men lost / (the side's men at the start + 1))     (men in thousands)
+  ```
+  - The side that bleeds more learns more: losing 20% of the army gives +6, losing 60% gives +18. A small army (cavalry, few regiments) loses a bigger share for the same men and learns faster.
+  - It goes to the regiments still in the army at the end, clamped at 100. Regiments destroyed in a stack wipe are rebuilt from nothing.
+  - It matters in wars: two equal 28-regiment infantry armies fighting every two months reach about 55–60 experience after 4 battles (−28% to −30% damage taken). `simulateWar` tracks it (section 16).
+  - The battle report's "Gained Experience" line (`BATTLE_COUNTRY_STATS_TT_EXPERIENCE`) shows the same number. *Not yet checked in game.*
+- **Reinforcement does not dilute experience** *(code)*: the strength setter (`0x1423fbcc0`) only writes the regiment's men, so new men take the regiment's experience.
+- **Consolidate Regiments** *(code, `0x1423f8be0`)* moves men from a donor into a same-type regiment and sets the receiver's experience to:
+  ```
+  E_receiver x its men + E_donor x men moved        (thousands of men, REGIMENT_SIZE 1000; not divided by the new total)
+  ```
+  - This is a true average only when 1,000-man regiments end up full. A 600-man Lanzas regiment can keep at most 0.6× the average. A 1,500-man Halberdier regiment gets up to 1.5×, and age V infantry (2,500) up to 2.5×, capped at 100.
+  - Example: two Halberdier regiments at 750 men and 40 experience consolidate into one at 1,500 men with 60. Two Lanzas at 300 men and 40 give one at 600 men with 24.
+  - The user remembers older patches adding the two experiences together. The 1.4.4 code multiplies by men instead. *Not yet checked in game.*
+- **Drilling** (unit ability `drill_army`, unlocked by Drill Army in the Renaissance) *(data + the user's tooltips)*:
+  - +2.5 experience a month (`monthly_experience_gain` 2.5, shown "+250%").
+  - −90% land morale.
+  - `force_army_maintenance` (shown "Army Maintenance Minimum 100%: Yes"): the army pays full maintenance whatever the budget slider says.
+  - −25% army maintenance efficiency, added to the country's. Spain went from 26.72% to 1.72%, and 23 Lanzas' manpower upkeep from 435 to 542 a month (+25%). At 0% efficiency the extra cost would be +33%.
+  - It needs a commander, and it ends on moving, combat, siege or exile.
+  - Morale recovers at 5% of maximum a day (tooltip `MAX_RECOVERY_DUE_TO`: "Daily Recovery"), more in friendly territory, so the −90% is gone within weeks of stopping.
+- **Drill 24 months, then idle 6** (full goods access, monarchy decay 3%): no picks 36, Standing Forces 41, Leadership 63, both 70. Drill 48 then idle 6: 53 / 60 / 97 / 99. A republic (4% decay) gets 31 / 35 / 54 / 60 and 42 / 48 / 85 / 93. While drilling, experience levels off at 2.5 ÷ decay: 83 for a monarchy, 63 for a republic. The engine's `drilledExperience({ gain, decay, drill, wait })` computes this.
+- **Effect on focus picks** (`analysis/focus_picks_round_robin.js --drill 24 --wait 6`; monarchies, generals 60/59/61):
+  - Without drilling, Leadership averages 42% in age III at equal regiments.
+  - **24 months of drilling:** 59% at equal regiments (Quality 70%), and 58% with equal gold, just ahead of Quality's 56%.
+  - **48 months:** Leadership is the best age III pick in every parity view: 71% equal regiments, 59% manpower, 70% gold. Standing Forces > Leadership paths top the rankings at 78–86%.
+  - The more players drill, the stronger Leadership. `--republic` drops the Military Traditions decay.
+- Not traced: whether experience carries over when regiments upgrade to a new age's unit.
 
 ---
 
@@ -333,6 +359,20 @@ Early on, cavalry's 0.30 damage taken and 2.6 power outweigh infantry's size. By
 - **Cavalry is cheap in manpower per frontage slot.** It needs 4% of its men a month against infantry's 2%, but its regiments are a third to two fifths the size: 32 against 40 men a month per regiment in age IV, and 48 against 60 in age VI. It also never loses more men than the infantry: infantry loses 1.0× (age VI, equal regiments, no bonus) to 9.8× as many.
 - **At equal regiments**, the multiplayer meta appears: in the Reformation, cavalry with about +10% power still beats infantry, so cavalry-bonus countries can keep cavalry one more age. From Absolutism, infantry wins unless cavalry has +50%.
 - **At equal manpower**, cavalry stays ahead into Absolutism, and in age VI breaks even at +20% power. If manpower were the only limit after 1550, cavalry should still win. That the meta switches suggests regiment count is the real limit: recruitment locations, supply weight, horses on the market, or frontage-filling stacks.
+
+**Morale, discipline and tactics in the Reformation** (`analysis/stat_sweep_cav_inf.js 4 3000`: 30 heavy cavalry vs 30 heavy infantry of age IV, frontage 10, generals 60/59/61, both seat orders, 6,000 battles a cell). Cavalry win rate with the bonus given to the infantry or to the cavalry:
+
+| Bonus | To infantry | To cavalry | Equal upkeep (38 cav vs 30 inf), to infantry |
+|---|---|---|---|
+| none | 43% | 43% | 95% |
+| morale +10% / +20% / +30% / +50% | 32% / 22% / 15% / 6% | 56% / 66% / 75% / 88% | 91% / 86% / 80% / 66% |
+| discipline +5% / +10% / +20% | 31% / 20% / 7% | 57% / 70% / 88% | 90% / 83% / 63% |
+| tactics +0.25 / +0.5 / +1 | 14% / 3% / 0% | 76% / 94% / 100% | 79% / 53% / 12% |
+
+- **Both sides lose by morale.** Every lost battle ends with the line broken and the army shattered (average morale under 0.5), never a stack wipe, for cavalry and infantry alike.
+- **So morale helps infantry about as much as it helps cavalry**, not more: +10% morale moves the result 11 points when the infantry gets it and 13 when the cavalry does.
+- **Exchange rates here:** +10% morale ≈ +5% discipline; +0.25 tactics ≈ +12% discipline (tactics divides damage taken by 1 + the gap).
+- At equal regiments, infantry needs no bonus to win the Reformation (57%). At equal upkeep it needs about +50% morale, +20% discipline or +0.5 tactics to get near even.
 
 ---
 
@@ -542,23 +582,43 @@ Equal manpower is about **upkeep and reinforcement**, not the one-time recruitme
 - Each month per side: income into the pool (capped at 5 years of income), then manpower upkeep (price × men × current strength ÷ (1 + maintenance efficiency)).
 - Then reinforcement: up to 25% × (1 + reinforce speed) of each regiment a month, one manpower a man × the reinforce cost modifier. Wiped regiments are rebuilt without the monthly cap.
 - A side under 50% of its men when a battle is due has lost the war.
-- `summarizeWars` gives collapse chances with 95% intervals, battles won, men lost and manpower spent. `pool.wars(scn, n, opts, seed)` runs them on all cores.
+- **Experience** (section 9): after each battle every regiment of a side gains 30 × the side's men lost ÷ (its men + 1,000); each month it decays by the side's `expDecay` (default 4%) and gains `expGain`. Wiped regiments come back at 0. `opts.experience = false` turns it off.
+- **Battle spacing:** `interval: n` fights every n months. `interval: 'ready'` fights once both sides are back to 99% of their men, or once one side has waited 6 months (`maxWait`) for the other. Players fight when fully reinforced, so `ready` is closer to play; it gives surplus and reinforcement time to matter.
+- `summarizeWars` gives collapse chances with 95% intervals, battles won, men lost, manpower spent and ending experience. `pool.wars(scn, n, opts, seed)` runs them on all cores.
+- Not modelled: unpaid upkeep. The pool can't go below 0 (no country had negative manpower in either save), and an army whose upkeep the pool can't pay keeps its men.
 
-`analysis/attrition_war.js`: heavy cavalry vs heavy infantry of the same age, the same manpower income, 48-month wars, a battle every 2 months, 600 wars a row. Share of wars won by cavalry (the other side collapses):
+`analysis/attrition_war.js [wars] [months] [interval|ready]`: heavy cavalry vs heavy infantry of the same age, the same manpower income, generals 60/59/61, 600 wars a row. Share of wars won by cavalry (the infantry collapses):
 
-| Age | Same regiments (30 each) | 75/25 upkeep (38 cavalry vs 30 infantry) |
+| Age | Same regiments (30 each): every 2 months, 48 months / ready, 120 months | 75/25 upkeep (38 cav vs 30 inf): every 2 months / ready |
 |---|---|---|
-| III | 100% | 100% |
-| IV | 97% (cavalry wins only 38% of the battles: infantry bleeds out) | 100% |
-| V | 17% | 95% |
-| VI | 0% | 34% (cavalry +20% power: 79%) |
-| III, Lanzas de Castilla vs Halberdiers | 100% | 100% |
+| III | 100% / 100% | 100% / 100% |
+| IV | 100% (cavalry wins 49% of the battles) / 100% | 100% / 100% |
+| V | 67% (cavalry wins 6% of the battles) / 100% | 100% / 100% |
+| VI | 2% / 98% (cavalry wins 14% of the battles) | 59% / 100% |
+| VI, cavalry +20% power | 27% / 100% | 95% / 100% |
+| III, Lanzas de Castilla vs Halberdiers | 100% / 100% | 100% / 100% |
 
-At equal upkeep, cavalry wins wars of attrition through Absolutism, and in Revolutions with about +20% power. It loses fewer men and its regiments cost less upkeep each (Lanzas 24 vs Halberdiers 30 a month).
+- **Infantry wins Absolutism and Revolution battles but loses the war**: it loses more men in absolute terms (age VI ready: 259k vs 187k), and its 90,000-man army empties the pool before the 36,000-man cavalry army does.
+- **Battle experience favours cavalry too**: the gain is losses ÷ own men, and the smaller cavalry army loses a bigger share of itself, so it learns faster. Without battle experience (the earlier run, every 2 months, generals 55/58/62), infantry won ages V and VI at the same regiments (83% and 100%).
+- **The battle spacing decides the late ages.** Fighting every 2 months, infantry wins Revolutions at the same regiments; fighting when fully reinforced, cavalry wins everywhere. Treat the age V–VI rows as model-dependent: the real meta switches to infantry from Absolutism, so something outside this model (regiment caps, frontage-filling stacks, supply, horses) is likely binding.
 
-**Focus picks as wars** (`focus_picks_round_robin.js --war same|budget`):
-- **Same regiments:** Quantity's extra surplus doesn't save it. Quality wins age III (76% vs Quantity 32%), and Voluntary Service age VI (66% vs Conscription 42%). Battles decide the war before surplus matters, because reinforcement is capped at 25% a month.
-- **75/25 budgets:** Quantity wins age III (70%), Conscription age VI (71%), and Standing Forces > Quantity > * > Firepower > Conscription tops the ranking at 84%.
+**Focus picks as wars** (`focus_picks_round_robin.js --war same|budget [--interval ready --months 120]`; each pick's experience gain and decay, monarchy −1% decay from age III):
+- **Same regiments:** Quality wins age III (75% vs Quantity 32–33%) and Voluntary Service age VI (66% vs Conscription 42%), with battles every 2 months or when fully reinforced. Quantity's surplus doesn't save it: more surplus doesn't buy more regiments, and the 5-year pool already covers the reinforcements.
+- **75/25 budgets:** Quantity wins age III (69–70%), Conscription age VI (71%), and Standing Forces > Quantity > * > Firepower > Conscription tops the ranking at 83–84%.
+- Quantity's +15% `global_manpower_modifier` is in both: the income and the 5-year pool are 15% bigger. Its +20% `army_reinforce_efficiency` cuts reinforcement gold only (section 15), so it doesn't count in manpower-bound wars.
+
+**How much manpower to leave as surplus** (`analysis/surplus_war.js [wars] [months] [interval|ready] [--unit] [--no-exp]`; age V heavy infantry, 120-month wars, pool full at the start, 300 wars a pairing):
+- **Equal incomes:** each upkeep share (40–100% of income) plays every other. The bigger army wins at every pairing. 100% upkeep is the best answer to every share from 50% up, with battles every 2 months (90% against the field) or when fully reinforced (82%). Age III heavy cavalry gives the same answer (92% / 85%).
+
+  | Row beats column (ready, infantry) | 60% | 70% | 80% | 90% | 100% |
+  |---|---|---|---|---|---|
+  | 70% upkeep (28 regiments) | 81% | 50% | 29% | 18% | 5% |
+  | 100% upkeep (40 regiments) | 98% | 95% | 74% | 56% | 50% |
+
+- **The reserve is the pool, not the surplus.** The pool holds 5 years of income; a war is decided in 4–8 battles. Monthly surplus refills only a few percent of an army between battles, while a bigger army wins the battles. Spending all income on upkeep in peace keeps the pool full and the army as large as possible.
+- **Weaker side, 1.5× income enemy at 75% upkeep (45 regiments):** a small army with a big surplus never wins (0% from 40% to 90% upkeep). Building up to match (113% of income, 45 regiments) wins 28% with battles every 2 months and wins 39–51% of the battles; 125% (50 regiments) wins 48–50%. When fighting only at full strength, the richer side refills faster and the weaker one wins at most 2% of the wars at any size, though matching still wins 39% of the battles. Against 2× income nothing works (best 18%, at matching size).
+- Wars nobody lost by month 120 count as half a win; that is why a tiny 16-regiment cavalry army that keeps getting wiped and rebuilt scores 11–13% against 1.5× and 2× income.
+- Experience doesn't change the answer: with it off the equal-income table moves by at most 3 points.
 
 ### Ordered retreats in scenarios
 `attacker.retreatDay` / `defender.retreatDay`: that side orders a retreat at the end of that day (never before day 5). It loses 10% of its men and the battle. `analysis/artillery_raid.js` uses it.
@@ -590,11 +650,13 @@ Reads both kinds of save:
 
 ```
 node .tools/scripts/battle_sim/from_save.js <save.eu5|latest> --list
+node .tools/scripts/battle_sim/from_save.js <save|latest> --generals [continent] [--verbose]
 node .tools/scripts/battle_sim/from_save.js <save|latest> --attacker <army id|TAG> --defender <army id|TAG> [--at <location>] [--out scenarios/x.json]
 ```
 
 - **Regiments:** type, men, current morale (`moraleAbs`, absolute), experience, levy flag, and section from the stored box.
 - **Generals:** traits plus skill modifiers, as a per-army country entry.
+- **`--generals [continent]`** averages the skills of the generals commanding armies on a continent (default `europe`, from `map_data/definitions.txt`) and counts their traits. Spain 1547: 161 armies, adm/dip/mil mean 60.1 / 58.6 / 61.4 (median 59 / 55 / 60). The analysis scripts use 60/59/61 as the typical general; Leadership's trained generals (77 each) beat it.
 - **Location:** template terrain and rank. The river crossing comes from `locations.png` + `rivers.png`: a river along the border between the attacker's location and the battle location.
 - **Countries:** combat values summed from these sources, each listed under `notes`:
   - base values, army tradition and war exhaustion;
@@ -660,6 +722,10 @@ Kit: `E:\Tools\ghidra-scripts` (README there). Addresses change every patch; re-
 | Battle frontage W | `0x14247a0d0` | reads location modifier `local_frontage_allowed` (index `0x14f0a37ea`) |
 | Regiment maintenance | `0x14357a730` | `LEVY_MAINTENANCE_FACTOR`, `MOTHBALL_MAINTENANCE_FACTOR`; labels `SUBUNIT_MAINTENANCE_FACTOR`, `LEVY_MAINTENANCE_RATE_TOOLTIP` |
 | Reinforcement rate / cost | `0x143491290` / `0x14352ed50` | `MONTHLY_REINFORCE`; `army_reinforce_efficiency` (`0x14f0a3676`) |
+| Regiment strength setter | `0x1423fbcc0` | writes strength (+0x40) only, so refilled men keep the regiment's experience (+0x60) |
+| Battle end: experience, war exhaustion, tradition | `0x14249c2d0` | `EXPERIENCE_GAIN` × side losses (stats +0x38, `GetTotalLossesValue`) ÷ (side men (stats +0x20) + 1), min 0.01; land if a side's first unit has flag +0xa46 |
+| Experience to every regiment of a side | `0x142475d80` | adds a flat amount to each regiment, clamped 0–100 |
+| Consolidate regiments | `0x1423f8be0` (command thunk `0x143546300`; check `0x14352af80`) | `REGIMENT_SIZE` 1000; experience = E_receiver × its men + E_donor × men moved (thousands), not divided by the new total |
 | Overrun check (stack wipe) | `0x14248ed60` | called at start with `INITIAL_OVERRUN_FACTOR` (no morale check); on days 1–4 with `MORALE_OVERRUN_FACTOR` then 10 (loser line morale ≤ 0.05); from day 5 only with 10, after the empty-line check |
 | Minimum battle length | `0x142493100` | `MINIMUM_COMBAT_DAYS` / `MINIMUM_NAVAL_COMBAT_DAYS` + a location modifier, compared with battle days (+0x34) |
 | Lost battle, no retreat possible | `0x14248fc80` | called when a side's line is empty and none of its armies can retreat |

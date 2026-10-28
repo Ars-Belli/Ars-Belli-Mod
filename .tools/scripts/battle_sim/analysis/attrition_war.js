@@ -1,15 +1,15 @@
-// node .tools/scripts/battle_sim/analysis/attrition_war.js [wars, default 600] [months, default 48] [interval, default 2]
+// node .tools/scripts/battle_sim/analysis/attrition_war.js [wars, default 600] [months, default 48] [interval months | ready, default 2]
 // Cavalry vs infantry in wars of attrition at equal manpower INCOME (simulateWar: sampled battles, monthly upkeep and
 // reinforcement from the pool). Upkeep is what counts, not the one-time recruitment.
 // Setups:
 //   same regiments - 30 regiments each; income = the dearer army's upkeep / 0.75, so the cheaper army keeps more surplus
 //   75/25          - each side builds until upkeep is 75% of the same income (infantry 30 regiments)
-// Pool starts full (5 years of income). Generals 55/58/62 both. A side under 50% of its men when a battle is due collapses.
+// Pool starts full (5 years of income). Generals 60/59/61 both (average commanding general in Europe, 1547 save). A side under 50% of its men when a battle is due collapses.
 const pool = require('../pool.js')();
 const S = require('../engine.js');
 S.setUnitDB(require('../units.json'));
-const [WARS, MONTHS, INTERVAL] = [+process.argv[2] || 600, +process.argv[3] || 48, +process.argv[4] || 2];
-const GEN = { adm: 55, dip: 58, mil: 62 };
+const [WARS, MONTHS, INTERVAL] = [+process.argv[2] || 600, +process.argv[3] || 48, process.argv[4] === 'ready' ? 'ready' : +process.argv[4] || 2];
+const GEN = { adm: 60, dip: 59, mil: 61 };
 const upkeepPerReg = type => S.armyCosts({ attacker: { armies: [{ units: [{ type, count: 1 }] }] }, defender: { armies: [] } })[0].upkeepManpower * 1000; // men a month, no efficiency
 const pct = x => `${Math.round(100 * x)}%`;
 const MATCHES = [
