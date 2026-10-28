@@ -54,7 +54,7 @@
 		actor = $first$
 		recipient = $second$
 	}
-	# 1.4 vanilla checks (kept as vanilla): no alliances across the Hussite Wars sides, no two hegemons.
+	# 1.4 vanilla check (kept as vanilla): no alliances across the Hussite Wars sides.
 	trigger_if = {
 		limit = {
 			situation:hussite_wars ?= { situation_is_active = yes }
@@ -69,14 +69,6 @@
 			}
 		}
 	}
-	NOT = {
-		AND = {
-			$first$ = {
-				is_hegemon = yes
-			}
-			$second$ = {
-				is_hegemon = yes
-			}
-		}
-	}
+	# Ars Belli: vanilla's "no two hegemons" check (NOT = { $first$ and $second$ both is_hegemon })
+	# is left out on purpose - hegemons may ally each other (bdfd863).
 }
