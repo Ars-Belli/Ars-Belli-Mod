@@ -30,10 +30,13 @@ if (flag('--json')) { console.log(JSON.stringify(m, null, 1)); process.exit(0); 
 
 const t = S.terrainInfo(scn.location || {});
 console.log(`${scn.name || path.basename(file)} - ${runs} battles, frontage ${t.frontage}, attacker dice ${t.attackerDice >= 0 ? '+' : ''}${t.attackerDice}`);
-console.log(`  Attacker wins ${(100 * m.wins[0] / runs).toFixed(1)}%  (wipes out the defender ${(100 * m.overrun[1] / runs).toFixed(1)}%, defender shattered ${(100 * m.shattered[1] / runs).toFixed(1)}%)`);
-console.log(`  Defender wins ${(100 * m.wins[1] / runs).toFixed(1)}%  (wipes out the attacker ${(100 * m.overrun[0] / runs).toFixed(1)}%, attacker shattered ${(100 * m.shattered[0] / runs).toFixed(1)}%)`);
+const ci = ([a, b], f = x => (100 * x).toFixed(1)) => `${f(a)}-${f(b)}`;
+console.log(`  Attacker wins ${(100 * m.wins[0] / runs).toFixed(1)}% (95% CI ${ci(m.winsCI[0])})  (wipes out the defender ${(100 * m.overrun[1] / runs).toFixed(1)}%, defender shattered ${(100 * m.shattered[1] / runs).toFixed(1)}%)`);
+console.log(`  Defender wins ${(100 * m.wins[1] / runs).toFixed(1)}% (95% CI ${ci(m.winsCI[1])})  (wipes out the attacker ${(100 * m.overrun[0] / runs).toFixed(1)}%, attacker shattered ${(100 * m.shattered[0] / runs).toFixed(1)}%)`);
 if (m.draws) console.log(`  Undecided ${(100 * m.draws / runs).toFixed(1)}%`);
-console.log(`  Average length ${m.days.toFixed(1)} days; losses attacker ${men(m.losses[0])} of ${men(m.start[0])}, defender ${men(m.losses[1])} of ${men(m.start[1])}`);
+console.log(`  Average length ${m.days.toFixed(1)} days (${ci(m.daysCI, x => x.toFixed(1))}); losses attacker ${men(m.losses[0])} (${ci(m.lossesCI[0], men)}) of ${men(m.start[0])}, defender ${men(m.losses[1])} (${ci(m.lossesCI[1], men)}) of ${men(m.start[1])}`);
+if (m.exchangeCI) console.log(`  Defender losses per attacker loss ${m.exchange.toFixed(2)} (${ci(m.exchangeCI, x => x.toFixed(2))}): above 1 the attacker trades men better`);
+console.log('  (ranges: 95% confidence for the sampling noise of these battles; they shrink by half with 4x the battles)');
 ['Attacker', 'Defender'].forEach((s, i) => m.armies[i].forEach(a => console.log(`    ${s}: ${a.name} - lost ${men(a.lost)} of ${men(a.start)}`)));
 const gold = x => x.toFixed(1);
 const costs = S.armyCosts(scn), bc = S.battleCosts(scn, m);

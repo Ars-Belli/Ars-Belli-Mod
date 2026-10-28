@@ -93,7 +93,7 @@
 	function buildArmy(army, sideIdx, armyIdx, countries) {
 		const c = withGeneral(country(army.country, countries), army.general);
 		const regs = [];
-		const maxMor = D.LAND_MORALE * (1 + c.moraleMod) + c.moraleFlat;
+		const maxMor = (D.LAND_MORALE + c.moraleFlat) * (1 + c.moraleMod); // flat land_morale before the % (game tooltip)
 		const startMorFrac = army.morale != null ? army.morale : Math.max(0, 1 - (army.marchDays || 0) * c.movementCost);
 		for (const [gi, g] of (army.units || []).entries()) {
 			const u = unitStats(g.type);
@@ -368,15 +368,45 @@
 		return finish(-1, D.MAX_DAYS, null);
 	}
 
+	// ---- How sure is a Monte Carlo result? 95% intervals for the sampling noise of n battles (not for errors in the
+	// inputs or in the rules). Win rates: Wilson score interval. Averages: mean +- 1.96 x standard error.
+	const Z95 = 1.96;
+	function wilson(k, n, z = Z95) {
+		if (!n) return [0, 1];
+		const p = k / n, d = 1 + z * z / n, c = (p + z * z / (2 * n)) / d, h = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d;
+		return [Math.max(0, c - h), Math.min(1, c + h)];
+	}
+	const meanCI = (mean, meanSq, n) => { const se = Math.sqrt(Math.max(0, meanSq - mean * mean) / Math.max(1, n - 1)); return [mean - Z95 * se, mean + Z95 * se]; };
+	// Exchange ratio = defender losses / attacker losses (above 1: the attacker trades men better), with a delta-method
+	// interval from the losses' variances and covariance (needs lossesProd = mean of attacker x defender losses).
+	function exchange(m) {
+		const [a, b] = m.losses;
+		if (!(a > 0) || m.lossesProd == null) return { exchange: a > 0 ? b / a : null, exchangeCI: null };
+		const r = b / a, va = m.lossesSq[0] - a * a, vb = m.lossesSq[1] - b * b, cov = m.lossesProd - a * b;
+		const se = Math.sqrt(Math.max(0, r * r * (vb / (b * b || 1) + va / (a * a) - 2 * cov / (a * (b || 1)))) / Math.max(1, m.n - 1));
+		return { exchange: r, exchangeCI: [Math.max(0, r - Z95 * se), r + Z95 * se] };
+	}
+	// from a result with n, wins, draws, days/daysSq and losses/lossesSq (means)
+	function confidence(m) {
+		return {
+			winsCI: [0, 1].map(i => wilson(m.wins[i], m.n)),
+			shareCI: [0, 1].map(i => wilson(m.wins[i] + m.draws / 2, m.n)), // draws counted as half a win
+			daysCI: meanCI(m.days, m.daysSq, m.n),
+			lossesCI: [0, 1].map(i => meanCI(m.losses[i], m.lossesSq[i], m.n)),
+			...exchange(m),
+		};
+	}
+
 	function monteCarloScenario(scn, n, opts = {}) {
-		const out = { n, wins: [0, 0], draws: 0, days: 0, losses: [0, 0], lossesRegular: [0, 0], lossesLevy: [0, 0], overrunLosses: [0, 0], overrun: [0, 0], shattered: [0, 0], start: null, armies: null, groups: null };
+		const out = { n, wins: [0, 0], draws: 0, days: 0, daysSq: 0, losses: [0, 0], lossesSq: [0, 0], lossesProd: 0, lossesRegular: [0, 0], lossesLevy: [0, 0], overrunLosses: [0, 0], overrun: [0, 0], shattered: [0, 0], start: null, armies: null, groups: null };
 		for (let k = 0; k < n; k++) {
 			const r = simulateScenario(scn, { ...opts, seed: opts.seed != null ? opts.seed + k : undefined });
 			if (r.winner < 0) out.draws++;
 			else { out.wins[r.winner]++; if (r.overrun) out.overrun[1 - r.winner]++; if (r.shattered) out.shattered[1 - r.winner]++; }
-			out.days += r.days; out.start = r.start;
+			out.days += r.days; out.daysSq += r.days * r.days; out.start = r.start;
+			out.lossesProd += r.losses[0] * r.losses[1];
 			for (const i of [0, 1]) {
-				out.losses[i] += r.losses[i]; out.lossesRegular[i] += r.lossesRegular[i]; out.lossesLevy[i] += r.lossesLevy[i];
+				out.losses[i] += r.losses[i]; out.lossesSq[i] += r.losses[i] * r.losses[i]; out.lossesRegular[i] += r.lossesRegular[i]; out.lossesLevy[i] += r.lossesLevy[i];
 				if (r.overrun && r.winner === 1 - i) out.overrunLosses[i] += r.lossesRegular[i];
 			}
 			if (!out.armies) out.armies = r.armies.map(s => s.map(a => ({ name: a.name, start: a.start, lost: 0 })));
@@ -384,8 +414,9 @@
 			if (!out.groups) out.groups = r.groups.map(s => s.map(a => a.map(() => ({ lost: 0, wiped: 0 }))));
 			r.groups.forEach((s, i) => s.forEach((a, j) => a.forEach((g, k) => { out.groups[i][j][k].lost += g.lost; out.groups[i][j][k].wiped += g.wiped; })));
 		}
-		for (const k of ['losses', 'lossesRegular', 'lossesLevy', 'overrunLosses']) out[k] = out[k].map(x => x / n);
-		out.days /= n;
+		for (const k of ['losses', 'lossesSq', 'lossesRegular', 'lossesLevy', 'overrunLosses']) out[k] = out[k].map(x => x / n);
+		out.days /= n; out.daysSq /= n; out.lossesProd /= n;
+		Object.assign(out, confidence(out));
 		out.armies = out.armies.map(s => s.map(a => ({ ...a, lost: a.lost / n })));
 		out.groups = out.groups.map(s => s.map(a => a.map(g => ({ lost: g.lost / n, wiped: g.wiped / n }))));
 		return out;
@@ -566,13 +597,13 @@
 	function hitBreakdown(attType, defType, attCountry, defCountry, o = {}) {
 		const mk = (type, c, levy) => {
 			const u = unitStats(type), cc = country(c), lv = levy != null ? levy : !!u.levy;
-			return { u, c: cc, cat: u.c, levy: lv, maxStr: u.s, str: u.s, maxMor: D.LAND_MORALE * (1 + cc.moraleMod) + cc.moraleFlat, disc: cc.discipline + (lv ? D.LEVY_DISCIPLINE : 0), exp: lv ? cc.levyExperience : cc.experience, engaged: o.targetEngaged !== false };
+			return { u, c: cc, cat: u.c, levy: lv, maxStr: u.s, str: u.s, maxMor: (D.LAND_MORALE + cc.moraleFlat) * (1 + cc.moraleMod), disc: cc.discipline + (lv ? D.LEVY_DISCIPLINE : 0), exp: lv ? cc.levyExperience : cc.experience, engaged: o.targetEngaged !== false };
 		};
 		const A = mk(attType, attCountry, o.attLevy), B = mk(defType, defCountry, o.defLevy);
 		const r = hit(A, B, { dice: o.dice || 0, flanking: !!o.flanking, secured: o.secured || 0, combinedA: o.combined || 0, terr: o.location ? terrainInfo(o.location) : null, breakdown: true });
 		return { ...r, target: B };
 	}
 
-	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
+	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BattleSim = api;
 })(typeof window !== 'undefined' ? window : globalThis);

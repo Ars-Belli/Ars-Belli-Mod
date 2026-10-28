@@ -175,7 +175,7 @@ Category combat speed: light infantry 3, heavy infantry 2, cavalry 5, artillery 
 ## 7. Morale
 
 ### Maximum morale
-- Base land and naval morale: 3.0 (`NUnit.LAND_MORALE` / `NAVAL_MORALE`), changed by `land_morale_modifier` (%) and `land_morale` (flat) *(the order they combine in was not traced)*.
+- Base land and naval morale: 3.0 (`NUnit.LAND_MORALE` / `NAVAL_MORALE`). **Max morale = (3.0 + flat `land_morale`) × (1 + `land_morale_modifier`)**: the flat bonuses join the base before the percentages. The game's tooltip shows this; Spain 1547 has (3.00 + 0.25 Pike and Shot + 0.25 Medieval Military) × (1 + 2.73% army tradition + 5% Offensive Military Doctrine + 5.30% ruler) = 3.95.
 - Country auto modifiers (`auto_modifiers/country.txt`): war exhaustion −2.5% land morale per point; army tradition up to +20% (at 100); revolutionary +25%; horde army expectation −50% (−10% in Ars Belli).
 - **Locked armies:** while an army is "locked" (a date stored on the army is still in the future, e.g. after a retreat; *which events set it was not traced*), its maximum morale is capped at `LOCKED_MORALE_CAP` = **50%**. *(code, `0x1434f47a0`)*
 
@@ -499,6 +499,14 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
   - `surplusManpower` is the net gain a month after all the country's army upkeep (may be negative). It defaults to max ÷ 60 minus the upkeep of the armies in the scenario.
   - `currentManpower` defaults to the max.
 - Country `costMod` (`{ build: { hc: -0.2 }, reinforce: {…}, maintenance: {…} }`) and `frontageMod` (possible frontage) are filled by `from_save.js`.
+
+### How sure a result is
+Every Monte Carlo result carries 95% intervals for its sampling noise: the spread you would see if you ran the same battles again.
+- **Win rates:** Wilson score interval. With n battles the half-width is about 1.96 × √(p(1−p)/n): ±3 points at 1,000 battles and p = 50%, ±1.4 at 5,000. It halves with 4× the battles.
+- **Average losses and length:** mean ± 1.96 × standard error.
+- **Losses traded** (enemy losses per own loss): delta-method interval from both sides' variances and their covariance.
+- They do not cover wrong inputs or mechanics the simulator does not model. A difference between two options is only reliable when their intervals don't overlap, or when the same comparison holds across repeated runs.
+- The page shows them as "95% range" in the tiles, as whiskers on both stat-worth charts (win rate, and enemy losses per own loss), and as a column in the war table. `sim.js` prints them too.
 
 ### Costs and the war of attrition
 - **Per army:** recruitment manpower (regular regiments' full size) and gold, monthly upkeep, and reinforcement gold per 1,000 men (section 15).
