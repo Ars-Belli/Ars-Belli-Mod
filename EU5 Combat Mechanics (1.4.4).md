@@ -315,6 +315,7 @@ Matching regulars needs a smaller levy discipline penalty, which the mod can set
 - **Effect on focus picks** (`analysis/focus_picks_round_robin.js --drill 24 --wait 6`; monarchies, generals 60/59/61):
   - Without drilling, Leadership averages 42% in age III at equal regiments.
   - **24 months of drilling:** 59% at equal regiments (Quality 70%), and 58% with equal gold, just ahead of Quality's 56%.
+  - **After the 2026-10-29 Leadership buff** (+45 trained generals at army tradition 70, +0.75 experience a month, +30% Correct Section Chance), 24 months of drilling (Leadership 70 experience vs 36–41) make Leadership the best age III pick in every view: 71% equal regiments, 60% manpower-bound, 71% equal gold. Quality gets 60 / 36 / 49 and Quantity 18 / 54 / 30. Without drilling it is 52 / 38 / 51.
   - **48 months:** Leadership is the best age III pick in every parity view: 71% equal regiments, 59% manpower, 70% gold. Standing Forces > Leadership paths top the rankings at 78–86%.
   - The more players drill, the stronger Leadership. `--republic` drops the Military Traditions decay.
 - Not traced: whether experience carries over when regiments upgrade to a new age's unit.
