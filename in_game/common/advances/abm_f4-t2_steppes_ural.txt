@@ -57,7 +57,7 @@ abm_abtau_steppe_warriors = {
 	}
 	requires = ship_building_techniques_discovery
 
-	combined_bonus_per_type = 0.01	#change if the same bonus is added for Italian culture group
+	army_maintenance_efficiency = 0.10
 	army_movement_speed = 0.10
 }
 
@@ -70,7 +70,7 @@ abm_abtau_emporia_of_the_steppe = {
 	requires = rgo_logistics_discovery
 
 	trade_range_modifier = 0.20
-	global_trades_per_burgher = 0.20
+	trade_income = 0.10
 }
 
 abm_abtau_tauric_granaries = {
@@ -82,7 +82,7 @@ abm_abtau_tauric_granaries = {
 	requires = crown_power_advance_reformation
 
 	global_monthly_prosperity = 0.001
-	global_foreign_build_buildings_efficiency = 0.10
+	building_upkeep_efficiency = 0.10
 }
 
 abm_abtau_commune_of_caffa = {
@@ -147,6 +147,8 @@ abm_gen_ideas_tradition_2 = {
 
 	# interest = -0.5
 	bank_interest = -0.01
+	global_monthly_development = 0.001
+
 	unlock_building = galley_barracks
 }
 
@@ -160,7 +162,7 @@ abm_reunited_genoa = {
 
 	# stability_cost_modifier = -0.10
 	# justify_trade_conflict_cost = -0.10
-	stability_cost_efficiency = 0.10
+	court_spending_efficiency = 0.10
 	global_pop_assimilation_speed_modifier = 0.25
 }
 
@@ -174,7 +176,7 @@ abm_lessons_of_chiogga = {
 
 	# naval_morale = 0.20
 	naval_morale_modifier = 0.10
-	own_coast_naval_combat_bonus = 0.10
+	naval_damage_taken = -0.10
 }
 
 abm_genoese_trade = {
@@ -200,7 +202,6 @@ abm_the_genoese_arsenal = {
 	requires = rgo_logistics_discovery
 
 	# galley_cost = -0.33
-	
 	global_burghers_estate_power = -0.25
 	possible_frontage_modifier = 0.10
 
@@ -806,4 +807,126 @@ abm_settle_the_steppe_advance = {
 
 	requires = city_building_advance
 	unlock_cabinet_action = abm_settle_the_steppe
+}
+
+REPLACE:feo_gothic_hellenic_synthesis_advance = {
+	age = age_1_traditions
+	icon = cultural_acceptance_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_reform = $REFORM_NAME
+				culture = culture:gothic_culture
+			}
+		}
+
+	}
+
+	accepted_culture_maintenance_cost_modifier = -0.25
+	cultures_capacity = 2
+
+	requires = cultural_acceptance_advance
+}
+
+REPLACE:feo_the_bastion_of_mangup_advance = {
+	age = age_2_renaissance
+	icon = feo_the_bastion_of_mangup_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_reform = $REFORM_NAME
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	global_defensive = 0.20
+
+
+	requires = drill_army_advance
+}
+
+REPLACE:feo_black_sea_fur_trade_advance = {
+	age = age_3_discovery
+	icon = global_trade_routes_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_reform = $REFORM_NAME
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	global_trades_per_burgher = 0.20
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+
+	requires = new_world_advance
+}
+
+REPLACE:feo_the_northern_star_of_greece_advance = {
+	age = age_4_reformation
+	icon = crown_power_advance_renaissance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_reform = $REFORM_NAME
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	monthly_devotion = 0.1
+	monthly_legitimacy = 0.1
+	monthly_republican_tradition = 0.1
+
+	monthly_religious_influence = 0.1
+
+	requires = confessionalism_advance
+}
+
+REPLACE:feo_the_gothic_red_guard_advance = {
+	age = age_5_absolutism
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_reform = $REFORM_NAME
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	discipline = 0.05
+
+	requires = absolute_rulership
+}
+
+REPLACE:feo_the_iron_harvest_advance = {
+	age = age_6_revolutions
+	icon = imperial_ambitions
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_reform = $REFORM_NAME
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	global_war_score_efficiency = 0.2
+
+	requires = hot_blast_furnace
 }
