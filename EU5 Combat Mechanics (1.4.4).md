@@ -32,7 +32,7 @@ Regiment **A** hits regiment **B**. Every hit produces a **strength loss** (men,
 ### Base
 
 ```
-roll  = die (1-10) + COMBAT_BASE 5 + dice modifiers          (section 3)
+roll  = raw die (0-9, shown in game as 1-10) + COMBAT_BASE 5 + dice modifiers   (section 3)
 roll  = min(roll, COMBAT_MAX 15);  roll <= 0 counts as 1
 base  = roll x COMBAT_DAMAGE_MULT 0.12
 strength_loss = base x LAND_STRENGTH_DAMAGE_MODIFIER 0.04     (naval 0.0625)   [CT_STR_BASE]
@@ -79,11 +79,12 @@ Naval combat swaps in `NAVAL_DAMAGE_DONE`, `OWN_COAST`, `GUNS_VS_HULL` and `NAVA
 
 ## 3. Dice *(code)*
 
-- Roll = random 0–9 (`COMBAT_DICE_SIDE` = 10), +1 in the formula = **1 to 10**, re-rolled per side every phase (4 days).
+- Roll = random 0–9 (`COMBAT_DICE_SIDE` = 10), re-rolled per side every phase (4 days). The tooltip shows it +1 (1–10), but the damage code adds the raw 0–9, so rolls run **5–14** before bonuses.
 - Dice modifiers for a side:
   - **Commander:** the `commander_combat_bonus` of the side's commander, rounded to whole dice. The commander is the best-rated leader among the side's armies; traits give this modifier. Raw general skill was not seen adding dice directly.
   - **Attacker only:** river crossing −1 (`RIVER_CROSSING_DICE`), strait −2 (`STRAIT_CROSSING_DICE`), landing from the sea −1 (`SEA_LANDING_DICE`).
-- The roll caps at 15 (`COMBAT_MAX`). A natural 10 already reaches it (10 + 5), so bonus dice are wasted on a 10 and only help on lower rolls.
+- The roll caps at 15 (`COMBAT_MAX`), which only a dice bonus can reach (14 + 1). Each extra die is worth the same until the cap.
+- The non-die entries of the side's dice list are summed into the dice modifier for every hit that side deals. *(code, `0x142481230`)*
 
 ---
 
@@ -115,9 +116,15 @@ Category combat speed: light infantry 3, heavy infantry 2, cavalry 5, artillery 
 
 ---
 
-## 6. Frontage *(code)*
+## 6. Frontage, sections and targeting *(code)*
 
-Each section holds `section width x MAX_FRONTAGE_OVERSTACKING 1.25` worth of regiments. A regiment (frontage 1 for all land categories; galleys 0.5) can enter a section only if the free frontage left is at least its own. Reserves pick the section with the most room. The location sets the battle's frontage (`local_frontage_allowed`); how the width is split into sections, and where `possible_frontage_modifier` enters, was not traced.
+- **Battle frontage W** is the location's `local_frontage_allowed`: 10 base (static modifier on every location), mountains −4, hills −3, wetlands −3, plateau −1, forests −2 to −4 (vegetation), never below 2 (`MIN_FRONTAGE_AFTER_TERRAIN`). `possible_frontage_modifier` is read in the same code (where exactly was not traced).
+- **Three sections**, left, centre and right, each holding **1.25 × W** frontage of engaged regiments (`MAX_FRONTAGE_OVERSTACKING`, also `max_frontage = 1.25` per section in `unit_formation_preference`). Every land regiment has frontage 1.
+- **Deployment** (`AddUnit`): each regiment goes to the section its army's formation preference points to (`unit_formation_preference/army.txt`: `balanced_army` lets every category use any section; `cav_inf_cav` puts cavalry on the flanks and infantry and artillery in the centre), if that section has room; otherwise it waits in reserve. Auxiliaries always go to reserve.
+- **Reserves** (`HandleReserves`): each day a side spends a frontage budget of W on reserve regiments. Each considered regiment scores every section as *enemy engaged frontage facing it + our free room* and moves into the best one with its combat-speed chance (section 5).
+- **Targets** (`0x142481230`): an engaged regiment hits the enemy section **facing** it (left faces their right, centre faces centre). It keeps its last target while that target is still in the section; otherwise it picks a random enemy there. If the facing section is empty it hits another section, and that hit counts as a **flank attack** (× flanking ability).
+- **Secured flanks** (the `SECURED_FLANKS` factor): a target on a flank counts 1 secured flank if its own centre is occupied; a target in the centre counts one per occupied flank. Infantry take 5% less damage per secured flank.
+- **Bombard** (`0x142481ba0`): artillery rolls `BOMBARD_BASE_CHANCE 0.2 × (1 + its bombard bonus)` per day to hit a regiment in the facing section, through the same damage function.
 
 ---
 
@@ -151,6 +158,11 @@ Levy vs regular trade (damage dealt ÷ damage taken, same unit type, no experien
 | +100% (cap) | 1.0 | 80% | 125% | 64% |
 
 Matching regulars needs a smaller levy discipline penalty, which the mod can set through `is_army_levy`.
+
+**Changing it for one country only.** `is_army_levy` is a static modifier with no trigger, so it applies to every country's levies. Two ways to give only some countries (e.g. a focus pick) better levies:
+
+1. **Their own levy units** (data only, recommended). A levy can be gated with `country_allow = { … }` or unlocked by an advance (`unlock_levy`), and each pop raises the eligible levy with the highest total combat power (`levies/readme.txt`). A per-age set of "drilled" levy unit types with `strength_damage_done +0.25`, `morale_damage_done +0.25`, `strength_damage_taken −0.20`, `morale_damage_taken −0.20` cancels the −20% discipline exactly against regulars at base discipline: 0.8 × 1.25 = 1 dealt, 1.25 × 0.8 = 1 taken. Those stats also raise the unit's total combat power, so the drilled version wins the pick automatically. Side effect: they also out-power flavour levies, which then stop raising for that country.
+2. **`add_unit_modifier` on levy armies** (script). Armies have an `is_levy` trigger, and a unit modifier with `discipline = 0.2` can be put on them from an on_action or a monthly pulse. But unit modifiers cover the whole army, so a levy merged into a regular army would hand the bonus to regulars too, and it needs refreshing whenever levies are raised.
 
 ---
 
@@ -207,7 +219,7 @@ Size is `max_strength` (1.0 = 1000 men). Light and heavy versions of a category 
 
 ## 11. Worked example: why MP armies go cavalry first, infantry later
 
-Same die (6 + 5 = 11, base 1.32), both engaged, equal discipline and tactics, no terrain, full-strength regiments.
+Same roll of 11 (raw die 6, shown as 7; base 1.32), both engaged, equal discipline and tactics, no terrain, full-strength regiments.
 
 **Renaissance** (infantry power 1, size 1.0; cavalry power 2.6, size 0.4):
 
@@ -224,6 +236,30 @@ Same die (6 + 5 = 11, base 1.32), both engaged, equal discipline and tactics, no
 | Cavalry hits infantry | 1.32 × 0.04 × 1.0 × 3.25 × 1.0 = 0.172 | 6.9% of 2500 | 1.32 × 0.25 × 0.4 × 3.25 × 1.0 = 0.43 |
 
 Early on, cavalry's 0.30 damage taken and 2.6 power outweigh infantry's size. By Absolutism, infantry's power and size growth flip it: infantry deal more morale damage and lose a smaller share of their men. Cavalry also cost more frontage per man and more upkeep.
+
+---
+
+## 11a. What a stat is worth
+
+Analytically, against an equal enemy:
+- **+5% discipline:** you deal ×1.05 and take ÷1.05, a trade of ×1.10.
+- **+0.1 military tactics:** you take ÷1.1 and deal the same, a trade of ×1.10.
+- **Tactics only counts as a gap:** each +0.1 is worth ÷(1 + gap), so it shrinks a little when one side already leads. Discipline also shrinks slightly as its base grows.
+
+Simulated with the battle simulator (2,000 battles, equal armies of heavy infantry, heavy cavalry and artillery, one side with the bonus):
+
+| Bonus | Win rate, Renaissance | Win rate, Absolutism | Enemy losses ÷ own losses |
+|---|---|---|---|
+| none | 50% | 49% | 0.99 |
+| +5% discipline | 64.2% | 59.8% | 1.18 |
+| +0.1 tactics | 64.3% | 60.0% | 1.17 |
+| +10% discipline | 77.6% | 69.7% | 1.39 |
+| +0.2 tactics | 76.2% | 68.8% | 1.36 |
+| +10% morale | 63.1% | 59.0% | 1.05 |
+| +1 commander die | 64.6% | 60.2% | 1.19 |
+| +20 experience | 66.2% | 60.3% | 1.19 |
+
+So **+0.1 tactics ≈ +5% discipline**. Discipline edges ahead at larger amounts because it scales both sides of the trade. Morale wins battles without trading better (it keeps regiments in the line longer).
 
 ---
 
@@ -272,6 +308,46 @@ Early on, cavalry's 0.30 damage taken and 2.6 power outweigh infantry's size. By
 
 ---
 
+## 15. Upkeep and reinforcement *(code, `0x14357a730`, `0x143491290`, `0x14352ed50`)*
+
+**Maintenance** of one regiment, per month:
+
+```
+cost = goods(maintenance_demand) x current strength
+       x army maintenance slider ("Investment in Maintenance")
+       x category maintenance cost multipliers (army_*_maintenance_cost_modifier)
+       / (1 + army_maintenance_efficiency)        (efficiency floored at -95%)
+       x 0.5 if mothballed (MOTHBALL_MAINTENANCE_FACTOR)
+       x prisoners factor if it is a prisoner unit (PRISONERS_MAINTENANCE_FACTOR 0.3)
+levy:      x LEVY_MAINTENANCE_FACTOR 0.01 x (1 + levy_maintenance_modifier)
+mercenary: x MERCENARY_MONTHLY_MAINTENANCE_MULTIPLIER 1.35, efficiency = mercenary_maintenance_efficiency
+```
+
+- **Goods, not gold.** Upkeep is a basket of goods bought at market prices (`goods_demand/army_demands.txt`). Per regiment: infantry 0.1 firearms + 0.1 weaponry + 0.06 leather (early infantry has no firearms); heavy cavalry 1.0 horses + 0.2 weaponry + 0.2 tools + 0.1 leather + 0.1 cloth; light cavalry 0.5 horses + …; artillery 1.0 cannons + 0.2 copper + 0.1 tin. Cavalry and artillery cost follows horse and cannon prices.
+- **Efficiency divides.** +25% maintenance efficiency means paying 80%, not 75% (confirmed in game with mercenaries: 6.24 → 5.49 when efficiency went 10% → 25%).
+- **Levies cost 1%** of a regular's upkeep, so `levy_maintenance_modifier` −50% saves half of almost nothing.
+- **Recruitment** uses `construction_demand` (e.g. infantry 0.2 firearms + 0.2 weaponry + 0.1 leather; heavy cavalry 2.0 horses + …; artillery 2.0 cannons + 2.0 copper + 0.2 tin).
+
+**Reinforcement**, per month:
+
+```
+rate    = situation factor x MONTHLY_REINFORCE 0.25 x (1 + regiment_reinforcement_speed)
+amount  = min(missing men, rate x max strength)
+cost    = goods for those men (bought from the market) / (1 + army_reinforce_efficiency)   (floored at -50%)
+```
+
+- A regiment refills at most 25% of its size a month before speed bonuses. The situation factor (supply, location, at war or not) was not traced.
+- Navies use `navy_repair_efficiency` the same way.
+- Category `army_*_reinforce_cost_modifier` also exists (where it enters was not traced).
+
+---
+
+## 16. Battle simulator
+
+`.tools/scripts/battle_sim/` holds `engine.js` (the rules above as code; runs in Node: `node -e "const S=require('./engine.js'); console.log(S.monteCarlo(S.defaultSide(), S.defaultSide(), 500))"`) and `battle-sim.html`, the interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi. Its approximations: bombard only in the first 3 days, the order of steps inside a day, deployment, the combined-arms bonus, the end of battle, and the 90-day cap; terrain, river, religion and general traits other than dice are left out.
+
+---
+
 ## Appendix: where it lives in eu5.exe 1.4.4
 
 Kit: `E:\Tools\ghidra-scripts` (README there). Addresses change every patch; re-derive them from the define-name strings, loc labels and assert strings, which stay stable.
@@ -289,6 +365,11 @@ Kit: `E:\Tools\ghidra-scripts` (README there). Addresses change every patch; re-
 | Unit placement, side strength | `0x142473ae0` | `MORALE_COLLAPSE_THRESHOLD`, `LAND_LEVY_COMBAT_IMPACT`, `NAVAL_LEVY_IMPACT` |
 | Overrun check | `0x14248ed60` | called with `INITIAL_OVERRUN_FACTOR` / `MORALE_OVERRUN_FACTOR` |
 | Retreat / battle end | `0x142477570` | `FOOD_PERCENTAGE_LOST_AT_RETREAT`, `NAVAL_LOW_MORALE_THRESHOLD` |
+| Melee targeting, flanks, secured flanks | `0x142481230` | caller of the damage wrapper |
+| Bombard hits | `0x142481ba0` | `BOMBARD_BASE_CHANCE` |
+| Battle frontage W | `0x14247a0d0` | reads location modifier `local_frontage_allowed` (index `0x14f0a37ea`) |
+| Regiment maintenance | `0x14357a730` | `LEVY_MAINTENANCE_FACTOR`, `MOTHBALL_MAINTENANCE_FACTOR`; labels `SUBUNIT_MAINTENANCE_FACTOR`, `LEVY_MAINTENANCE_RATE_TOOLTIP` |
+| Reinforcement rate / cost | `0x143491290` / `0x14352ed50` | `MONTHLY_REINFORCE`; `army_reinforce_efficiency` (`0x14f0a3676`) |
 | Siege / assault tick | `0x143475730` | all `SIEGE_*` / `ASSAULT_*` defines (not decompiled) |
 | Modifier registration | `0x144c840f0` | each modifier name string is followed by a store of its index, e.g. discipline `0x14f0a37c2`, military_tactics `0x14f0a37ce`, levy_combat_efficiency `0x14f0a389e`, commander_combat_bonus `0x14f0a37d0`, army_initiative `0x14f0a37ee`, combat_speed_modifier `0x14f0a37f2` |
 

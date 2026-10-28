@@ -1,0 +1,435 @@
+<title>Ars Belli Battle Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral+SC:wght@500;600&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a war-room worksheet. Two army sheets side by side, a run bar, then results: odds, one sample battle day by day, one hit taken apart, and what each stat is worth. Same identity as the Focus Picks pages. */
+:root {
+	--bg: #eef0ee;
+	--surface: #fbfcfa;
+	--ink: #1d2422;
+	--muted: #5c6662;
+	--line: #d3d9d5;
+	--chip: #e2e6e3;
+	--accent: #9a3324;
+	--side-a: #2a78d6;
+	--side-b: #eb6834;
+	--good: #2f6b3a;
+	--bad: #a1372a;
+	--grid: #e3e7e4;
+	--tip-bg: #1d2422;
+	--tip-fg: #f2f5f3;
+	--font-display: "Spectral SC", "Palatino Linotype", Palatino, Georgia, serif;
+	--font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+	--font-num: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835; --chip: #26302d;
+		--accent: #e8826f; --side-a: #3987e5; --side-b: #d95926; --good: #86c890; --bad: #f08a7a; --grid: #262e2b;
+		--tip-bg: #e5ebe8; --tip-fg: #141917; color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835; --chip: #26302d;
+	--accent: #e8826f; --side-a: #3987e5; --side-b: #d95926; --good: #86c890; --bad: #f08a7a; --grid: #262e2b;
+	--tip-bg: #e5ebe8; --tip-fg: #141917; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; }
+h2 { font-size: clamp(22px, 3vw, 28px); }
+h3 { font-size: 18px; }
+.lede { max-width: 70ch; margin: 10px 0 0; font-size: 16.5px; }
+.sub { color: var(--muted); max-width: 72ch; margin: 4px 0 0; }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+.armies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .armies { grid-template-columns: minmax(0, 1fr); } }
+.army { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--side); border-radius: 6px; padding: 14px 16px 16px; min-width: 0; display: grid; gap: 12px; }
+.army.a { --side: var(--side-a); }
+.army.b { --side: var(--side-b); }
+.army-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; justify-content: space-between; }
+.army-head h3 { display: flex; align-items: center; gap: 8px; }
+.army-head h3::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--side); }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0; margin-bottom: 6px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px 10px; }
+.field { display: grid; gap: 2px; min-width: 0; }
+.field label { font-size: 13px; color: var(--muted); }
+.field input, .field select {
+	font: inherit; font-family: var(--font-num); font-size: 14px; width: 100%; min-width: 0;
+	padding: 5px 8px; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink);
+}
+.field select { font-family: var(--font-body); }
+.field input:focus-visible, .field select:focus-visible, button:focus-visible { outline: 2px solid var(--side, var(--accent)); outline-offset: 1px; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 0; }
+
+button { font: inherit; font-weight: 600; border-radius: 6px; cursor: pointer; padding: 7px 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+button:disabled { opacity: 0.5; cursor: progress; }
+.runbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: end; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; }
+.runbar .field { width: 130px; }
+.progress { font-size: 13px; color: var(--muted); }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; min-width: 0; }
+.tile .label { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.tile .label i { width: 10px; height: 10px; border-radius: 2px; background: var(--side); display: inline-block; }
+.tile .value { font-family: var(--font-num); font-size: 28px; font-weight: 500; margin-top: 2px; }
+.tile .note { font-size: 13px; color: var(--muted); }
+.tile.a { --side: var(--side-a); } .tile.b { --side: var(--side-b); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px 16px; min-width: 0; display: grid; gap: 10px; }
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .charts { grid-template-columns: minmax(0, 1fr); } }
+.chart { position: relative; min-width: 0; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .title { font-weight: 700; font-size: 14px; }
+.legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend span::before { content: ""; width: 14px; height: 2px; background: var(--c); border-radius: 1px; }
+.axis text { fill: var(--muted); font-family: var(--font-num); font-size: 11px; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.tip { position: absolute; pointer-events: none; background: var(--tip-bg); color: var(--tip-fg); border-radius: 6px; padding: 6px 9px; font-size: 12.5px; line-height: 1.35; white-space: nowrap; transform: translate(-50%, -110%); box-shadow: 0 6px 18px rgb(0 0 0 / 0.25); }
+.tip b { font-family: var(--font-num); font-weight: 500; }
+details summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 13px; min-width: 100%; }
+th, td { padding: 4px 10px; text-align: right; border-bottom: 1px solid var(--line); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; font-family: var(--font-body); }
+th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
+
+.hitgrid { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 760px) { .hitgrid { grid-template-columns: minmax(0, 1fr); } }
+.factors { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.factors li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.factors li .v { font-family: var(--font-num); font-size: 13px; }
+.factors li.up .v { color: var(--good); } .factors li.down .v { color: var(--bad); }
+.factors li.total { font-weight: 700; border-bottom: 0; padding-top: 8px; }
+
+.notes { columns: 2 320px; column-gap: 28px; font-size: 14px; color: var(--muted); }
+.notes p { margin: 0 0 10px; break-inside: avoid; }
+.notes b { color: var(--ink); }
+@media (prefers-reduced-motion: no-preference) { button { transition: background 0.15s; } }
+</style>
+
+<div class="wrap">
+	<header>
+		<h1>Ars Belli Battle Simulator</h1>
+		<p class="lede">Pit two armies against each other with the land combat rules of Europa Universalis V 1.4.4, read from the game code. Run hundreds of battles to see the odds, watch one battle day by day, take a single hit apart, and measure what a stat is really worth.</p>
+		<p class="sub">Dice re-roll every 4 days, regiments engage by initiative, reserves move up by combat speed, and every hit runs the game's damage formula. A few steps the code reading did not cover are approximated; they are listed at the bottom.</p>
+	</header>
+
+	<section class="armies" aria-label="Armies">
+		<div class="army a" id="army-a"></div>
+		<div class="army b" id="army-b"></div>
+	</section>
+
+	<div class="runbar">
+		<div class="field"><label for="width">Battle frontage</label><input id="width" type="number" min="2" max="20" step="1" value="10"></div>
+		<div class="field"><label for="runs">Battles to run</label><input id="runs" type="number" min="50" max="5000" step="50" value="500"></div>
+		<button class="primary" id="run" type="button">Run battles</button>
+		<button id="copy-ab" type="button">Copy A to B</button>
+		<span class="progress" id="progress" aria-live="polite"></span>
+	</div>
+	<p class="hint">Frontage is 10 on open ground; mountains −4, hills and wetlands −3, forests −2 to −4, never below 2. Each of the three sections (left, centre, right) holds 1.25 × frontage of fighting regiments.</p>
+
+	<section aria-labelledby="odds-title" style="display:grid;gap:12px">
+		<h2 id="odds-title">Odds</h2>
+		<div class="tiles" id="tiles"></div>
+	</section>
+
+	<section class="panel" aria-labelledby="sample-title">
+		<h2 id="sample-title">One battle, day by day</h2>
+		<p class="sub" id="sample-sub">A single battle with the same armies. Strength is men still standing; morale is the average of regiments still on the field.</p>
+		<div class="charts">
+			<div class="chart" id="chart-str"></div>
+			<div class="chart" id="chart-mor"></div>
+		</div>
+		<details><summary>Show the battle as a table</summary><div class="tablewrap" id="sample-table"></div></details>
+		<div><button id="resample" type="button">Fight another sample battle</button></div>
+	</section>
+
+	<section class="panel" aria-labelledby="hit-title">
+		<h2 id="hit-title">One hit, taken apart</h2>
+		<p class="sub">A full-strength regiment of side A hitting one of side B, both engaged, with every factor the damage function applies, in the order it applies them.</p>
+		<div class="hitgrid">
+			<div style="display:grid;gap:8px">
+				<div class="field"><label for="hit-a">Attacker (side A)</label><select id="hit-a"></select></div>
+				<div class="field"><label for="hit-b">Target (side B)</label><select id="hit-b"></select></div>
+				<div class="field"><label for="hit-die">Die shown in game (1–10)</label><input id="hit-die" type="number" min="1" max="10" value="5"></div>
+				<div class="field"><label for="hit-flank">Attack from a flank</label><select id="hit-flank"><option value="0">No</option><option value="1">Yes</option></select></div>
+				<p class="hint">The code adds the raw die (shown value − 1) to the base of 5, so rolls run 5 to 14 before dice bonuses, capped at 15.</p>
+			</div>
+			<ul class="factors" id="factors"></ul>
+		</div>
+	</section>
+
+	<section class="panel" aria-labelledby="worth-title">
+		<h2 id="worth-title">What is a stat worth?</h2>
+		<p class="sub">Side A fights an exact copy of itself; only side A gets the bonus. 50% means the bonus did nothing. Uses side A's army and the battle count above.</p>
+		<div><button id="measure" type="button">Measure the bonuses</button> <span class="progress" id="measure-progress" aria-live="polite"></span></div>
+		<div class="chart" id="chart-worth"></div>
+		<details><summary>Show the results as a table</summary><div class="tablewrap" id="worth-table"></div></details>
+	</section>
+
+	<section class="notes" aria-label="How the simulator works">
+		<p><b>Damage per hit.</b> (raw die + 5 + dice bonuses, capped at 15) × 0.12, then × 0.04 for strength and × 0.25 for morale. Then: morale × attacker's current/max strength and × attacker size ÷ target size (0.25 to 4); × (1 + unit power); × flanking ability on flank attacks; × (1 + attacker discipline) ÷ (1 + target discipline); × combat power; ÷ (1 + tactics gap) when the target has more tactics; × levy factor when a levy hits a regular; strength × attacker's men; × (1 − 0.5 × target experience/100); × target category damage taken (cavalry 0.30); × combined arms; secured flanks; category damage done/taken; +10% strength and +20% morale damage against a target that is not engaged.</p>
+		<p><b>Each day.</b> Reserves move into the section with the most room and enemy pressure, with a chance of combat speed × 0.1, until a daily frontage budget runs out. Regiments not yet engaged engage with a chance of 60% + initiative bonus (up to 30%) + 3% per day. Engaged regiments hit the section facing them (left faces right) and keep their target while it stands. Everyone loses 0.03 morale a day. Regiments below 5% morale leave the field.</p>
+		<p><b>Levies.</b> −20% discipline, and when they hit regulars their damage × (0.75 + 0.25 × levy combat efficiency), capped at 1.0.</p>
+		<p><b>Approximated.</b> Artillery bombardment is modelled as a 20% daily extra hit during the first 3 days. The order of steps inside a day, deployment by formation, the combined-arms bonus (2.5% per category holding 10–50% of the army), the end of battle (a side loses when nothing of it can fight; overrun when the winner has twice its strength) and the 90-day cap are close readings, not exact ones. Terrain, river and religion combat modifiers, generals' traits other than dice, and retreat to a neighbouring province are left out.</p>
+		<p><b>Source.</b> Formulas and addresses are in “EU5 Combat Mechanics (1.4.4).md” in the Ars Belli repository. Values: game 1.4.4 defines, unit categories and age unit templates.</p>
+	</section>
+</div>
+
+<script src="engine.js"></script>
+<script>
+(function () {
+	'use strict';
+	const S = window.BattleSim;
+	const AGES = ['I Traditions', 'II Renaissance', 'III Discovery', 'IV Reformation', 'V Absolutism', 'VI Revolutions'];
+	const CAT_LABEL = { li: 'Light infantry', hi: 'Heavy infantry', lc: 'Light cavalry', hc: 'Heavy cavalry', art: 'Artillery', aux: 'Auxiliary' };
+	const fmtMen = x => Math.round(x * 1000).toLocaleString('en-US');
+	const pct = x => (100 * x).toFixed(1) + '%';
+
+	// Field schema: [key, label, kind, default, extra]
+	const SCHEMA = [
+		['General', [
+			['age', 'Age', 'age', 2],
+			['formation', 'Formation', 'formation', 'balanced'],
+			['crossing', 'Attacks across', 'crossing', 'none'],
+			['commanderDice', 'Commander dice', 'int', 0],
+		]],
+		['Regiments', [
+			['u.li', 'Light infantry', 'int', 4], ['u.hi', 'Heavy infantry', 'int', 14], ['u.lc', 'Light cavalry', 'int', 2],
+			['u.hc', 'Heavy cavalry', 'int', 6], ['u.art', 'Artillery', 'int', 2], ['u.aux', 'Auxiliary', 'int', 0],
+		]],
+		['Levies', [
+			['l.li', 'Light inf. levies', 'int', 0], ['l.hi', 'Heavy inf. levies', 'int', 0],
+			['levyCE', 'Levy combat eff. %', 'pct', 0], ['levyExperience', 'Levy experience', 'num', 0],
+		]],
+		['Stats', [
+			['discipline', 'Discipline %', 'pct', 0], ['tactics', 'Military tactics', 'num', 1.0],
+			['moraleMod', 'Morale %', 'pct', 0], ['moraleFlat', 'Morale (flat)', 'num', 0],
+			['experience', 'Experience', 'num', 0], ['initiativeMod', 'Army initiative %', 'pct', 0],
+			['speedMod', 'Combat speed %', 'pct', 0],
+		]],
+		['Unit power', [
+			['p.li', 'Light inf. %', 'pct', 0], ['p.hi', 'Heavy inf. %', 'pct', 0], ['p.lc', 'Light cav. %', 'pct', 0],
+			['p.hc', 'Heavy cav. %', 'pct', 0], ['p.art', 'Artillery %', 'pct', 0],
+		]],
+	];
+	const defaultsB = { 'u.li': 4, 'u.hi': 14, 'u.lc': 2, 'u.hc': 6, 'u.art': 2 };
+
+	function buildArmyForm(el, id, title) {
+		const head = document.createElement('div'); head.className = 'army-head';
+		head.innerHTML = `<h3>${title}</h3>`;
+		el.appendChild(head);
+		for (const [group, fields] of SCHEMA) {
+			const fs = document.createElement('fieldset');
+			fs.innerHTML = `<legend>${group}</legend>`;
+			const g = document.createElement('div'); g.className = 'grid';
+			for (const [key, label, kind, def] of fields) {
+				const fid = `${id}-${key.replace('.', '-')}`;
+				const f = document.createElement('div'); f.className = 'field';
+				let input;
+				if (kind === 'age') input = `<select id="${fid}">${AGES.map((a, i) => `<option value="${i + 1}"${i + 1 === def ? ' selected' : ''}>${a}</option>`).join('')}</select>`;
+				else if (kind === 'formation') input = `<select id="${fid}"><option value="balanced">Balanced</option><option value="cav_inf_cav">Cavalry on flanks</option></select>`;
+				else if (kind === 'crossing') input = `<select id="${fid}"><option value="none">Nothing</option><option value="river">River (−1 die)</option><option value="strait">Strait (−2 dice)</option><option value="landing">Sea landing (−1 die)</option></select>`;
+				else input = `<input id="${fid}" type="number" step="${kind === 'num' && key === 'tactics' ? '0.05' : kind === 'int' ? '1' : 'any'}" value="${def}">`;
+				f.innerHTML = `<label for="${fid}">${label}</label>${input}`;
+				g.appendChild(f);
+			}
+			fs.appendChild(g);
+			el.appendChild(fs);
+		}
+	}
+	buildArmyForm(document.getElementById('army-a'), 'a', 'Side A');
+	buildArmyForm(document.getElementById('army-b'), 'b', 'Side B');
+	for (const [k, v] of Object.entries(defaultsB)) document.getElementById('b-' + k.replace('.', '-')).value = v;
+	// Example starting state: side B has 5% more discipline
+	document.getElementById('b-discipline').value = 5;
+
+	function readSide(id) {
+		const s = S.defaultSide();
+		s.units = {}; s.levies = {}; s.power = {};
+		for (const [, fields] of SCHEMA) for (const [key, , kind] of fields) {
+			const el = document.getElementById(`${id}-${key.replace('.', '-')}`);
+			let v = el.tagName === 'SELECT' ? el.value : parseFloat(el.value);
+			if (el.tagName !== 'SELECT' && !Number.isFinite(v)) v = 0;
+			if (kind === 'pct') v = v / 100;
+			if (kind === 'int' || kind === 'age') v = Math.max(0, Math.round(+v));
+			const [a, b] = key.split('.');
+			if (b) s[{ u: 'units', l: 'levies', p: 'power' }[a]][b] = v; else s[a] = v;
+		}
+		return s;
+	}
+	const width = () => Math.max(2, Math.min(30, parseFloat(document.getElementById('width').value) || 10));
+	const runs = () => Math.max(50, Math.min(5000, parseInt(document.getElementById('runs').value, 10) || 500));
+
+	// Chunked Monte Carlo so the page stays responsive
+	function runMany(a, b, n, onDone, onProgress) {
+		const acc = { n: 0, wins: [0, 0], draws: 0, days: 0, losses: [0, 0], overruns: [0, 0], start: [0, 0] };
+		const step = () => {
+			const k = Math.min(50, n - acc.n);
+			for (let i = 0; i < k; i++) {
+				const r = S.simulate(a, b, { width: width() });
+				if (r.winner < 0) acc.draws++; else { acc.wins[r.winner]++; if (r.overrun) acc.overruns[1 - r.winner]++; }
+				acc.days += r.days; acc.losses[0] += r.losses[0]; acc.losses[1] += r.losses[1]; acc.start = r.start;
+			}
+			acc.n += k;
+			if (onProgress) onProgress(acc.n / n);
+			if (acc.n < n) setTimeout(step, 0); else onDone({ ...acc, days: acc.days / n, losses: acc.losses.map(x => x / n) });
+		};
+		step();
+	}
+
+	function renderTiles(m) {
+		const t = (cls, label, value, note) => `<div class="tile ${cls}"><div class="label">${cls ? '<i></i>' : ''}${label}</div><div class="value">${value}</div><div class="note">${note}</div></div>`;
+		document.getElementById('tiles').innerHTML =
+			t('a', 'Side A wins', pct(m.wins[0] / m.n), `${m.overruns[1]} wiped out the enemy`) +
+			t('b', 'Side B wins', pct(m.wins[1] / m.n), `${m.overruns[0]} wiped out the enemy`) +
+			t('', 'Average length', m.days.toFixed(1) + ' days', `${m.draws} undecided after 90 days`) +
+			t('a', 'Side A losses', fmtMen(m.losses[0]), `of ${fmtMen(m.start[0])} men`) +
+			t('b', 'Side B losses', fmtMen(m.losses[1]), `of ${fmtMen(m.start[1])} men`);
+	}
+
+	// ---- Line chart (two series, shared x = day), hover crosshair + tooltip
+	function lineChart(el, title, series, fmt, yMaxHint) {
+		const W = 520, H = 230, L = 46, R = 70, T = 12, B = 26;
+		const days = series[0].pts.length - 1;
+		const yMax = Math.max(yMaxHint || 0, ...series.flatMap(s => s.pts)) || 1;
+		const nice = n => { const p = Math.pow(10, Math.floor(Math.log10(n))); const m = n / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; };
+		const step = nice(yMax / 4), top = Math.ceil(yMax / step) * step;
+		const x = d => L + (W - L - R) * (days ? d / days : 0), y = v => T + (H - T - B) * (1 - v / top);
+		let g = '';
+		for (let v = 0; v <= top + 1e-9; v += step) g += `<line class="gridline" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${fmt(v, true)}</text>`;
+		const xt = Math.max(1, Math.ceil(days / 6));
+		for (let d = 0; d <= days; d += xt) g += `<text x="${x(d)}" y="${H - 8}" text-anchor="middle">${d}</text>`;
+		let paths = '', ends = '';
+		const endY = series.map(s => y(s.pts[days]));
+		if (Math.abs(endY[0] - endY[1]) < 14) { const mid = (endY[0] + endY[1]) / 2; endY[0] = mid - 7 * Math.sign(endY[0] - endY[1] || -1); endY[1] = mid + 7 * Math.sign(endY[0] - endY[1] || -1); }
+		series.forEach((s, i) => {
+			paths += `<path d="${s.pts.map((v, d) => (d ? 'L' : 'M') + x(d).toFixed(1) + ' ' + y(v).toFixed(1)).join('')}" fill="none" stroke="var(${s.c})" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+			ends += `<circle cx="${x(days)}" cy="${y(s.pts[days])}" r="4" fill="var(${s.c})" stroke="var(--surface)" stroke-width="2"/><text x="${x(days) + 8}" y="${endY[i] + 4}" style="fill:var(--ink);font-family:var(--font-num);font-size:11px">${fmt(s.pts[days])}</text>`;
+		});
+		el.innerHTML = `<div class="title">${title}</div><div class="legend">${series.map(s => `<span style="--c:var(${s.c})">${s.name}</span>`).join('')}</div>
+			<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${title} by day"><g class="axis">${g}</g>${paths}${ends}<line class="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/><rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent"/></svg>`;
+		const svg = el.querySelector('svg'), cross = svg.querySelector('.cross'), hit = svg.querySelector('rect');
+		const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; el.appendChild(tip);
+		const move = ev => {
+			const r = svg.getBoundingClientRect(); const px = (ev.clientX - r.left) * W / r.width;
+			const d = Math.max(0, Math.min(days, Math.round((px - L) / ((W - L - R) / (days || 1)))));
+			cross.setAttribute('x1', x(d)); cross.setAttribute('x2', x(d)); cross.setAttribute('visibility', 'visible');
+			tip.hidden = false; tip.innerHTML = `Day ${d}<br>${series.map(s => `${s.name} <b>${fmt(s.pts[d])}</b>`).join('<br>')}`;
+			tip.style.left = (x(d) * r.width / W) + 'px'; tip.style.top = (r.top - el.getBoundingClientRect().top + y(Math.max(...series.map(s => s.pts[d]))) * r.height / H) + 'px';
+		};
+		hit.addEventListener('pointermove', move); hit.addEventListener('pointerleave', () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); });
+	}
+
+	function renderSample() {
+		const a = readSide('a'), b = readSide('b');
+		const r = S.simulate(a, b, { width: width() });
+		const tl = r.timeline;
+		const who = r.winner < 0 ? 'No side won' : `Side ${'AB'[r.winner]} won`;
+		document.getElementById('sample-sub').textContent = `${who} after ${r.days} days${r.overrun ? ', wiping out the enemy' : ''}. Side A lost ${fmtMen(r.losses[0])} men, side B ${fmtMen(r.losses[1])}. Strength is men still standing; morale is the average of regiments still on the field.`;
+		lineChart(document.getElementById('chart-str'), 'Men standing', [{ name: 'Side A', c: '--side-a', pts: tl.map(t => t.str[0]) }, { name: 'Side B', c: '--side-b', pts: tl.map(t => t.str[1]) }], (v, axis) => axis ? (v >= 1 ? (v).toFixed(0) + 'K' : Math.round(v * 1000)) : fmtMen(v));
+		lineChart(document.getElementById('chart-mor'), 'Average morale', [{ name: 'Side A', c: '--side-a', pts: tl.map(t => t.mor[0]) }, { name: 'Side B', c: '--side-b', pts: tl.map(t => t.mor[1]) }], v => Math.round(v * 100) + '%', 1);
+		document.getElementById('sample-table').innerHTML = `<table><thead><tr><th>Day</th><th>A men</th><th>B men</th><th>A morale</th><th>B morale</th><th>A roll</th><th>B roll</th></tr></thead><tbody>${tl.map(t => `<tr><td>${t.day}</td><td>${fmtMen(t.str[0])}</td><td>${fmtMen(t.str[1])}</td><td>${Math.round(t.mor[0] * 100)}%</td><td>${Math.round(t.mor[1] * 100)}%</td><td>${t.dice[0] + 5}</td><td>${t.dice[1] + 5}</td></tr>`).join('')}</tbody></table>`;
+	}
+
+	// ---- One hit
+	for (const id of ['hit-a', 'hit-b']) document.getElementById(id).innerHTML = Object.entries(CAT_LABEL).map(([k, v]) => `<option value="${k}">${v}</option>`).join('') + '<option value="levy-hi">Heavy inf. levy</option>';
+	document.getElementById('hit-b').value = 'hc';
+	document.getElementById('hit-a').value = 'hi';
+	function renderHit() {
+		const a = readSide('a'), b = readSide('b');
+		const mk = (cfg, sel) => {
+			const levy = sel === 'levy-hi', cat = levy ? 'hi' : sel;
+			const [power, size] = S.AGE[cat][Math.min(6, Math.max(1, cfg.age)) - 1];
+			return { cat, levy, power, maxStr: size, str: size, disc: cfg.discipline + (levy ? S.D.LEVY_DISCIPLINE : 0), exp: levy ? cfg.levyExperience : cfg.experience, engaged: true };
+		};
+		const A = mk(a, document.getElementById('hit-a').value), B = mk(b, document.getElementById('hit-b').value);
+		const die = Math.max(1, Math.min(10, parseInt(document.getElementById('hit-die').value, 10) || 5));
+		const dice = die - 1 + (a.commanderDice | 0) + ({ river: -1, strait: -2, landing: -1 }[a.crossing] || 0);
+		const h = S.hit(A, B, { cfgA: a, cfgB: b, dice, flanking: document.getElementById('hit-flank').value === '1', secured: 0, combinedA: 0, breakdown: true });
+		const rows = [`<li><span>Roll ${h.roll} × 0.12 = base ${h.base.toFixed(2)}</span><span class="v">str ${(h.base * S.D.STR_MOD).toFixed(4)} · mor ${(h.base * S.D.MOR_MOD).toFixed(3)}</span></li>`];
+		for (const [k, x] of h.factors) if (Math.abs(x - 1) > 1e-9) rows.push(`<li class="${x > 1 ? 'up' : 'down'}"><span>${k}</span><span class="v">× ${x.toFixed(3)}</span></li>`);
+		rows.push(`<li class="total"><span>Per day: ${fmtMen(h.s)} men and ${h.m.toFixed(3)} morale</span><span class="v">${pct(h.s / B.maxStr)} of the regiment · ${pct(h.m / (S.D.LAND_MORALE * (1 + b.moraleMod) + b.moraleFlat))} of its morale</span></li>`);
+		document.getElementById('factors').innerHTML = rows.join('');
+	}
+
+	// ---- Stat worth (horizontal bars, one series)
+	const BONUSES = [
+		['+5% discipline', s => { s.discipline += 0.05; }],
+		['+0.1 military tactics', s => { s.tactics += 0.1; }],
+		['+10% morale', s => { s.moraleMod += 0.10; }],
+		['+1 commander die', s => { s.commanderDice += 1; }],
+		['+20 experience', s => { s.experience += 20; s.levyExperience += 20; }],
+		['+25% army initiative', s => { s.initiativeMod += 0.25; }],
+		['+25% combat speed', s => { s.speedMod += 0.25; }],
+		['+10% infantry power', s => { s.power.li += 0.1; s.power.hi += 0.1; }],
+		['+10% cavalry power', s => { s.power.lc += 0.1; s.power.hc += 0.1; }],
+		['+10% artillery power', s => { s.power.art += 0.1; }],
+	];
+	function renderWorth(results) {
+		const el = document.getElementById('chart-worth');
+		const W = 620, rowH = 30, L = 170, R = 60, T = 8, H = T + results.length * rowH + 22;
+		const x = v => L + (W - L - R) * v;
+		let g = '';
+		for (let v = 0; v <= 1.0001; v += 0.25) g += `<line class="gridline" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H - 20}"/><text x="${x(v)}" y="${H - 6}" text-anchor="middle">${v * 100}%</text>`;
+		let bars = '';
+		results.forEach(([name, w], i) => {
+			const yy = T + i * rowH + 6, h = 18, wv = Math.max(0.002, w);
+			bars += `<text x="${L - 8}" y="${yy + 13}" text-anchor="end" style="fill:var(--ink);font-family:var(--font-body);font-size:13px">${name}</text>
+				<path d="M${x(0)} ${yy}H${x(wv) - 4}a4 4 0 0 1 4 4v${h - 8}a4 4 0 0 1 -4 4H${x(0)}Z" fill="var(--side-a)"><title>${name}: side A wins ${pct(w)}</title></path>
+				<text x="${x(wv) + 6}" y="${yy + 13}" style="fill:var(--ink);font-family:var(--font-num);font-size:12px">${pct(w)}</text>`;
+		});
+		el.innerHTML = `<div class="title">Side A win rate against its own copy</div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Win rate per bonus"><g class="axis">${g}</g><line x1="${x(0.5)}" x2="${x(0.5)}" y1="${T}" y2="${H - 20}" stroke="var(--muted)" stroke-width="1"/>${bars}</svg>`;
+		document.getElementById('worth-table').innerHTML = `<table><thead><tr><th>Bonus</th><th>Side A wins</th></tr></thead><tbody>${results.map(([n, w]) => `<tr><td>${n}</td><td>${pct(w)}</td></tr>`).join('')}</tbody></table>`;
+	}
+	function measure() {
+		const btn = document.getElementById('measure'), prog = document.getElementById('measure-progress');
+		btn.disabled = true;
+		const base = readSide('a'), n = runs(), out = [];
+		let i = 0;
+		const next = () => {
+			if (i >= BONUSES.length) { btn.disabled = false; prog.textContent = `Done: ${n} battles per bonus.`; renderWorth(out); return; }
+			const [name, mod] = BONUSES[i];
+			const a = JSON.parse(JSON.stringify(base)); mod(a);
+			runMany(a, base, n, m => { out.push([name, (m.wins[0] + m.draws / 2) / m.n]); i++; renderWorth(out); next(); }, f => { prog.textContent = `${name}: ${Math.round(f * 100)}%`; });
+		};
+		next();
+	}
+
+	function run() {
+		const btn = document.getElementById('run'), prog = document.getElementById('progress');
+		btn.disabled = true;
+		runMany(readSide('a'), readSide('b'), runs(), m => { renderTiles(m); prog.textContent = `${m.n} battles fought.`; btn.disabled = false; }, f => { prog.textContent = `Fighting… ${Math.round(f * 100)}%`; });
+		renderSample(); renderHit();
+	}
+
+	document.getElementById('run').addEventListener('click', run);
+	document.getElementById('resample').addEventListener('click', renderSample);
+	document.getElementById('measure').addEventListener('click', measure);
+	document.getElementById('copy-ab').addEventListener('click', () => {
+		for (const [, fields] of SCHEMA) for (const [key] of fields) document.getElementById('b-' + key.replace('.', '-')).value = document.getElementById('a-' + key.replace('.', '-')).value;
+		run();
+	});
+	for (const id of ['hit-a', 'hit-b', 'hit-die', 'hit-flank']) document.getElementById(id).addEventListener('input', renderHit);
+	document.querySelectorAll('.army input, .army select').forEach(el => el.addEventListener('change', renderHit));
+
+	// Open in a working state: run the example and a quick worth table with fewer battles
+	run();
+	(function quickWorth() {
+		const base = readSide('a'), out = [];
+		for (const [name, mod] of BONUSES) { const a = JSON.parse(JSON.stringify(base)); mod(a); const m = S.monteCarlo(a, base, 80, { width: width() }); out.push([name, (m.wins[0] + m.draws / 2) / m.n]); }
+		renderWorth(out);
+		document.getElementById('measure-progress').textContent = 'Showing a quick 80-battle estimate. Measure for the full count.';
+	})();
+})();
+</script>
