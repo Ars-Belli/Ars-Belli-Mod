@@ -9,7 +9,8 @@ node .tools/scripts/eu5_save/eu5save.js <command> <save> [args]
 
 `<save>` is a `.eu5` file, an already extracted folder, or `latest` (newest save in
 `Documents/Paradox Interactive/Europa Universalis V/save games`). A `.eu5` is extracted once to
-`%TEMP%/eu5save/<name>-<mtime>/` and reused.
+`.cache/<name>-<mtime>/` next to the script (gitignored; set `EU5SAVE_CACHE` to put it elsewhere)
+and reused - about 300 MB per save, delete old ones when done.
 
 | Command | What it prints |
 |---|---|

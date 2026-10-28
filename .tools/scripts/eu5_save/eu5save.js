@@ -35,8 +35,9 @@ function extract(save, outdir) {
 	return outdir;
 }
 
-// <save> -> folder with gamestate + string_lookup. A .eu5 is extracted once into the temp folder
-// (cache keyed by name + mtime); "latest" is the newest .eu5 in the save games folder.
+// <save> -> folder with gamestate + string_lookup. A .eu5 is extracted once into .cache/ next to
+// this script (gitignored; EU5SAVE_CACHE overrides it), keyed by name + mtime; "latest" is the
+// newest .eu5 in the save games folder.
 function resolveSave(arg) {
 	if (!arg) throw new Error('missing <save>');
 	if (arg === 'latest') {
@@ -48,7 +49,7 @@ function resolveSave(arg) {
 	}
 	if (fs.statSync(arg).isDirectory()) return arg;
 	const st = fs.statSync(arg);
-	const dir = path.join(os.tmpdir(), 'eu5save', path.basename(arg, '.eu5') + '-' + Math.floor(st.mtimeMs));
+	const dir = path.join(process.env.EU5SAVE_CACHE || path.join(__dirname, '.cache'), path.basename(arg, '.eu5') + '-' + Math.floor(st.mtimeMs));
 	if (!fs.existsSync(path.join(dir, 'string_lookup'))) { console.error('extracting to', dir); extract(arg, dir); }
 	return dir;
 }
