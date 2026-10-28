@@ -5,6 +5,7 @@
 //          "budget" = each side builds regiments until upkeep is 75% of its income. 48 months, a battle every 2 months.
 //          Wars track experience: battle gains (30 x own losses / own men), each pick's monthly gain and decay.
 //      [--interval months|ready] [--months 48]  war battle spacing; ready = fight once both are fully reinforced
+//      [--reinf-eff-manpower]  army_reinforce_efficiency also divides reinforcement manpower (the in-game tooltip says so)
 //      [--republic]  no Military Traditions (monarchy age III advance, experience decay -1%); default: monarchies
 // Military focus picks: at each age every distinct battle-relevant pick state fights every other (both sides alternating as
 // attacker), under three parity views. A state's score = expected win rate against a random opponent path (states weighted
@@ -32,13 +33,14 @@ const DRILL = opt('--drill') || 0, WAIT = opt('--wait') || 0;
 const WAR = (() => { const i = argv.indexOf('--war'); return i < 0 ? null : argv[i + 1]; })(), WARS = opt('--wars') || 200;
 const INTERVAL = (() => { const i = argv.indexOf('--interval'); return i < 0 ? 2 : argv[i + 1] === 'ready' ? 'ready' : +argv[i + 1]; })(), WAR_MONTHS = opt('--months') || 48;
 const exp = require('../engine.js').drilledExperience;
+const PATCH = argv.includes('--reinf-eff-manpower') ? { D: { REINFORCE_EFF_MANPOWER: true } } : undefined;
 const MON = argv.includes('--republic') ? 0 : -0.01, monDecay = age => age >= 3 ? MON : 0;
 const MAP = {
 	discipline: 'discipline', military_tactics: 'tactics', land_morale_modifier: 'moraleMod', land_morale: 'moraleFlat',
 	army_initiative: 'initiativeMod', combat_speed_modifier: 'speedMod', possible_frontage_modifier: 'frontageMod',
 	army_heavy_infantry_power: 'power.hi', army_heavy_cavalry_power: 'power.hc',
 	army_maintenance_efficiency: 'maint', army_heavy_cavalry_maintenance_cost_modifier: 'maintCost.hc', army_heavy_infantry_maintenance_cost_modifier: 'maintCost.hi',
-	global_manpower_modifier: 'manpower', regiment_reinforcement_speed: 'reinforceSpeed',
+	global_manpower_modifier: 'manpower', regiment_reinforcement_speed: 'reinforceSpeed', army_reinforce_efficiency: 'reinfEff',
 	army_heavy_infantry_reinforce_cost_modifier: 'reinfCost.hi', army_heavy_cavalry_reinforce_cost_modifier: 'reinfCost.hc', monthly_experience_gain: 'expGain', experience_decay: 'expDecay', train_general_ability: 'genAbility', monthly_army_tradition: 'atGain',
 };
 const branchMods = br => {
@@ -62,7 +64,7 @@ const relevant = (mods, age, view) => {
 	const o = { ...mods }; const cat = age <= 4 ? 'hc' : 'hi';
 	for (const k of Object.keys(o)) if (/^(power|maintCost)\./.test(k) && !k.endsWith(cat)) delete o[k];
 	if (view === 'regiments') { delete o.maint; delete o.manpower; delete o['maintCost.' + cat]; }
-	if (!WAR) { delete o.reinforceSpeed; delete o['reinfCost.hi']; delete o['reinfCost.hc']; } else if (!o['reinfCost.' + cat]) { delete o['reinfCost.hi']; delete o['reinfCost.hc']; }
+	if (!WAR) { delete o.reinfEff; delete o.reinforceSpeed; delete o['reinfCost.hi']; delete o['reinfCost.hc']; } else if (!o['reinfCost.' + cat]) { delete o['reinfCost.hi']; delete o['reinfCost.hc']; }
 	if (view === 'gold') delete o.manpower;
 	return JSON.stringify(Object.keys(o).sort().map(k => [k, +o[k].toFixed(4)]));
 };
@@ -78,7 +80,7 @@ function side(mods, age, view) {
 		experience: DRILL || WAIT ? exp({ gain: mods.expGain || 0, decay: (mods.expDecay || 0) + monDecay(age), drill: DRILL, wait: WAIT }) : 0.37, power: {} };
 	if (mods['power.' + cat]) c.power[cat] = mods['power.' + cat];
 	if (WAR) {
-		c.maintenanceEfficiency = BASE_MAINT + (mods.maint || 0); c.reinforceSpeed = mods.reinforceSpeed || 0;
+		c.maintenanceEfficiency = BASE_MAINT + (mods.maint || 0); c.reinforceSpeed = mods.reinforceSpeed || 0; c.reinforceEfficiency = mods.reinfEff || 0;
 		c.costMod = { maintenance: { [cat]: mods['maintCost.' + cat] || 0 }, reinforce: { [cat]: mods['reinfCost.' + cat] || 0 } };
 		return { name: 'x', country: c, general: g, units: [{ type: `generic:${cat}:${age}`, count: warRegs(mods, cat, age) }] };
 	}
@@ -109,7 +111,7 @@ rec(0, []);
 				if (WAR) {
 					const cat = a.n <= 4 ? 'hc' : 'hi', inc = m => baseIncome(cat, a.n) * (1 + (m.manpower || 0));
 					jobs.push(pool.wars({ location: { frontage: 10 }, attacker: { armies: [side(A, a.n, view)] }, defender: { armies: [side(B, a.n, view)] } }, WARS,
-						{ months: WAR_MONTHS, interval: INTERVAL, sides: [A, B].map(m => ({ income: inc(m), expGain: m.expGain || 0, expDecay: 0.04 + (m.expDecay || 0) + monDecay(a.n) })) }, 7).then(w => [i, j, w.collapsed[1] + w.undecided / 2]));
+						{ months: WAR_MONTHS, interval: INTERVAL, sides: [A, B].map(m => ({ income: inc(m), expGain: m.expGain || 0, expDecay: 0.04 + (m.expDecay || 0) + monDecay(a.n) })) }, 7, PATCH).then(w => [i, j, w.collapsed[1] + w.undecided / 2]));
 					continue;
 				}
 				jobs.push(Promise.all([

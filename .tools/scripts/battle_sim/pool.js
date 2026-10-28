@@ -54,13 +54,13 @@ if (!isMainThread) {
 				}
 				return S.mergeMC(await Promise.all(parts));
 			},
-			// n sampled wars (simulateWar), split across the workers; returns summarizeWars of all of them
-			async wars(scn, n, war, seed) {
+			// n sampled wars (simulateWar), split across the workers; returns summarizeWars of all of them (patch: as for mc)
+			async wars(scn, n, war, seed, patch) {
 				const chunks = Math.max(1, Math.min(threads * 2, Math.floor(n / 10)));
 				const parts = [];
 				for (let c = 0, start = 0; c < chunks; c++) {
 					const k = Math.floor(n / chunks) + (c < n % chunks ? 1 : 0);
-					parts.push(run(scn, k, { war, seed: seed != null ? seed + start : undefined }, 'war'));
+					parts.push(run(scn, k, { war, patch, seed: seed != null ? seed + start : undefined }, 'war'));
 					start += k;
 				}
 				return S.summarizeWars((await Promise.all(parts)).flat());

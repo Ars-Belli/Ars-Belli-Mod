@@ -19,6 +19,9 @@
 		BASE_FRONTAGE: 10, MIN_FRONTAGE: 2, MOVEMENT_COST: 0.0069, MAX_DAYS: 120,
 		REINFORCE_EFF_FLOOR: -0.5, MAINT_EFF_FLOOR: -0.95, LEVY_MAINTENANCE: 0.01, MONTHLY_REINFORCE: 0.25, MAX_MANPOWER_YEARS: 5, PRICE_SCALE: 0.1,
 		EXPERIENCE_GAIN: 30, EXPERIENCE_DECAY: 0.05, REGULAR_DECAY: -0.01, // NCombat / country base value / is_army_regular
+		// army_reinforce_efficiency on reinforcement manpower too? The game's tooltip says ducats and manpower; the traced code
+		// (0x14352ed50) only showed it dividing the goods basket, and the manpower charge was not found. Off = gold only.
+		REINFORCE_EFF_MANPOWER: false,
 	};
 	const CAT = {
 		li: { name: 'Light infantry', dt: 1.0, sdd: -0.1, mdt: 0.1, i: 5, cs: 3, fl: 1.1, sf: 0.05 },
@@ -220,9 +223,19 @@
 		const timeline = [];
 		const dice = [0, 0];
 		let curDay = 0;
-		const arrived = i => sides[i].filter(a => (a.army.arrivalDay || 0) <= curDay);
+		// arrivalDay 'needed': the army waits next door and comes in (one a day, in list order) once its side has no fighting
+		// regiment left in reserve, so big stacks are fed in as the line needs them instead of draining morale in reserve
+		const arrivedAt = sides.map(s => s.map(a => a.army.arrivalDay === 'needed' ? Infinity : (+a.army.arrivalDay || 0)));
+		const arrived = i => sides[i].filter((a, j) => arrivedAt[i][j] <= curDay);
 		const leadCountry = i => (arrived(i)[0] || sides[i][0]).c;
-		const arrive = (i, day) => { for (const a of sides[i]) if ((a.army.arrivalDay || 0) === day) deploy(a.regs, a.army.formation || 'balanced', Ws[i], all[i], day > 0, rng); };
+		const arrive = (i, day) => {
+			sides[i].forEach((a, j) => { if (arrivedAt[i][j] === day) deploy(a.regs, a.army.formation || 'balanced', Ws[i], all[i], day > 0, rng); });
+			const next = arrivedAt[i].indexOf(Infinity);
+			if (day > 0 && next >= 0 && !all[i].some(r => r.section === 'reserve' && canFight(r) && !r.u.aux)) {
+				arrivedAt[i][next] = day;
+				deploy(sides[i][next].regs, sides[i][next].army.formation || 'balanced', Ws[i], all[i], true, rng);
+			}
+		};
 		const sideDice = i => Math.max(0, ...arrived(i).map(a => a.c.commanderDice | 0)) + (i === 0 ? terr.attackerDice : 0);
 		const roll = () => { for (const i of [0, 1]) dice[i] = Math.floor(rng() * D.DICE_SIDES); };
 		const lineStrength = (i, s) => all[i].filter(r => r.section === s).reduce((t, r) => t + r.str, 0);
@@ -482,7 +495,7 @@
 		const upkeepManpower = levy ? 0 : pr.m[1] * size * mod('maintenance') / maintDiv;
 		// per 1,000 men put back into the regiment
 		const reinforce = (o.reinforceGold != null ? o.reinforceGold : pr.r[0] / D.PRICE_SCALE * mod('reinforce')) / reinfDiv;
-		const reinforceManpower = pr.r[1] * mod('reinforce');
+		const reinforceManpower = pr.r[1] * mod('reinforce') / (D.REINFORCE_EFF_MANPOWER ? reinfDiv : 1);
 		return { u, levy, size, build, buildManpower, upkeep, upkeepManpower, reinforce, reinforceManpower };
 	}
 	function armyCosts(scnIn) {
@@ -625,7 +638,9 @@
 	// men keep the regiment's experience (the reinforcement setter 0x1423fbcc0 only writes strength); wiped regiments are
 	// rebuilt from scratch at 0. opts.experience = false turns this off.
 	// A side whose army is under collapseAt (default 50%) of its full men when a battle is due has lost the war.
-	// opts = { months, interval, collapseAt, experience, sides: [{ income, max, pool, expDecay, expGain }] } (men a month / men;
+	// opts.endOn = 'manpower' instead: the war goes on (months default 600) until a side has exhausted its manpower, i.e. its pool
+	// is empty while its army is still short of men; that side has lost (both in the same month: the one with fewer men left).
+	// opts = { months, interval, collapseAt, endOn, experience, sides: [{ income, max, pool, expDecay, expGain }] } (men a month / men;
 	// expDecay default 0.04 = base 5% - 1% regulars; monarchies get another -1% from Military Traditions in age III).
 	function simulateWar(scnIn, opts = {}, seed) {
 		const scn = JSON.parse(JSON.stringify(scnIn)), ns = normalize(scn);
@@ -635,7 +650,8 @@
 		// the other side's state; the other side can only force a battle after forceAfter months (default 12) without one.
 		const ready = opts.interval === 'ready', readyAt = opts.readyAt != null ? opts.readyAt : 0.99, maxWait = opts.maxWait || 6;
 		const decides = opts.decides === 0 || opts.decides === 1 ? opts.decides : -1, forceAfter = opts.forceAfter || 12;
-		const months = opts.months || 36, interval = ready ? 1 : Math.max(1, +opts.interval || 2), collapseAt = opts.collapseAt != null ? opts.collapseAt : 0.5;
+		const endOnManpower = opts.endOn === 'manpower';
+		const months = opts.months || (endOnManpower ? 600 : 36), interval = ready ? 1 : Math.max(1, +opts.interval || 2), collapseAt = opts.collapseAt != null ? opts.collapseAt : 0.5;
 		const useExp = opts.experience !== false;
 		const sides = [0, 1].map(i => {
 			const w = (opts.sides || [])[i] || {}, income = (+w.income || 0) / 1000;
@@ -659,7 +675,7 @@
 		let battles = 0, loser = -1, month = 0;
 		const trace = [];
 		for (;;) {
-			for (const i of [0, 1]) if (loser < 0 && men(i) < collapseAt * full[i]) loser = i;
+			if (!endOnManpower) for (const i of [0, 1]) if (loser < 0 && men(i) < collapseAt * full[i]) loser = i;
 			if (loser >= 0 || month >= months) break;
 			const att = battles % 2; // side that attacks this battle
 			const bscn = att === 0 ? scn : { ...scn, attacker: scn.defender, defender: scn.attacker };
@@ -696,14 +712,21 @@
 				for (const a of asks) { a.x.g.strength = Math.min(1, str(a.x.g) + a.men * share / a.x.total); if (str(a.x.g) >= 1 - 1e-9) a.x.rebuild = false; }
 				P.pool -= cost * share; P.reinforce += cost * share;
 			};
+			const exhausted = () => {
+				if (!endOnManpower || loser >= 0) return loser >= 0;
+				const ex = [0, 1].filter(i => sides[i].pool <= 1e-9 && men(i) < readyAt * full[i]);
+				if (ex.length) loser = ex.length === 1 ? ex[0] : (men(0) / full[0] <= men(1) / full[1] ? 0 : 1);
+				return loser >= 0;
+			};
 			if (ready) {
 				const readyFor = [0, 0];
 				for (let waited = 1; month < months; waited++) {
 					tick(0); tick(1); month++;
+					if (exhausted()) break;
 					for (const i of [0, 1]) readyFor[i] = men(i) >= readyAt * full[i] ? readyFor[i] + 1 : 0;
 					if (decides >= 0 ? readyFor[decides] || (waited >= forceAfter && readyFor[1 - decides]) : (readyFor[0] && readyFor[1]) || Math.max(...readyFor) >= maxWait) break;
 				}
-			} else for (let m = 0; m < interval && month < months; m++, month++) { tick(0); tick(1); }
+			} else for (let m = 0; m < interval && month < months; m++) { tick(0); tick(1); month++; if (exhausted()) break; }
 			trace.push({ battle: battles, month, men: [men(0), men(1)], pool: sides.map(p => p.pool), exp: [0, 1].map(avgExp) });
 		}
 		return { loser, battles, months: month, won: sides.map(p => p.won), lost: sides.map(p => p.lost), upkeep: sides.map(p => p.upkeep), reinforce: sides.map(p => p.reinforce),
@@ -716,6 +739,7 @@
 		const battles = list.reduce((t, w) => t + w.battles, 0);
 		const won = [0, 1].map(i => list.reduce((t, w) => t + w.won[i], 0));
 		return { n, collapsed: col.map(c => c / n), collapsedCI: col.map(c => wilson(c, n)), undecided: (n - col[0] - col[1]) / n,
+			months: list.reduce((t, w) => t + w.months, 0) / n,
 			battleShare: won.map(w => w / Math.max(1, battles)), battleShareCI: won.map(w => wilson(w, Math.max(1, battles))), battles: battles / n,
 			lost: s('lost'), upkeep: s('upkeep'), reinforce: s('reinforce'), end: s('end'), pool: s('pool'), exp: s('exp') };
 	}
