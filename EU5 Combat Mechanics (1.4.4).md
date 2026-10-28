@@ -270,14 +270,14 @@ Matching regulars needs a smaller levy discipline penalty, which the mod can set
   - **Gain is flat and constant**, not only while drilling: Ars Belli's Standing Forces +0.25 a month, Leadership +0.5 (and −2% decay), Voluntary Service +0.25.
   - Mercenaries get +0.15 a month and start with the age's `mercenary_starting_experience`.
   - **Checked in game** (Spain 1547, a monarchy in age III, the user's tooltips): a Lanzas regiment at 0.20 experience drilled for one month reads 2.694 = 0.20 + 2.5 − 3% × 0.20. The tooltip shows "Reduces Damage in combat by 1.34%" (= 0.5 × 2.69), and the next month "+2.41%" (Drill Army +250% = +2.5, Experience Decays −0.08%). The game shows experience as a fraction (0.02) and the monthly change in points.
-- **Battle experience** *(code, `0x14249c2d0` → `0x142475d80`)*: at the end of a land battle, every regiment of a side gains the same amount:
+- **Battle experience** *(code, `0x14249c2d0` → `0x142475d80`; checked in game)*: at the end of a land battle, every regiment of a side gains the same amount:
   ```
   gain = EXPERIENCE_GAIN 30 x max(0.01, the side's men lost / (the side's men at the start + 1))     (men in thousands)
   ```
   - The side that bleeds more learns more: losing 20% of the army gives +6, losing 60% gives +18. A small army (cavalry, few regiments) loses a bigger share for the same men and learns faster.
   - It goes to the regiments still in the army at the end, clamped at 100. Regiments destroyed in a stack wipe are rebuilt from nothing.
   - It matters in wars: two equal 28-regiment infantry armies fighting every two months reach about 55–60 experience after 4 battles (−28% to −30% damage taken). `simulateWar` tracks it (section 16).
-  - The battle report's "Gained Experience" line (`BATTLE_COUNTRY_STATS_TT_EXPERIENCE`) shows the same number. *Not yet checked in game.*
+  - **Checked in game** (the battle report's experience number, `BATTLE_COUNTRY_STATS_TT_EXPERIENCE`): Moldavia 3,200 cavalry lost 1,009 → 30 × 1.009 ÷ 4.2 = 7.21, shown +7.20; Halych 8,000 infantry lost 2,051 → 30 × 2.051 ÷ 9.0 = 6.84, shown +6.83. The "+1" is 1,000 men.
 - **Reinforcement does not dilute experience** *(code)*: the strength setter (`0x1423fbcc0`) only writes the regiment's men, so new men take the regiment's experience.
 - **Consolidate Regiments** *(code, `0x1423f8be0`)* moves men from a donor into a same-type regiment and sets the receiver's experience to:
   ```
