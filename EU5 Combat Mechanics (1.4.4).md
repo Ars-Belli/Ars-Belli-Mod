@@ -10,18 +10,33 @@ All engine math is fixed-point: 100000 = 1.0.
 
 ## 1. One day of battle
 
-Combat ticks once per day (1.3 ticked per "hour"; see section 13).
+Combat ticks once per day (1.3 ticked per "hour"; see section 13). The daily tick is `0x1424a77f0`; this is its order. *(code)*
 
-1. **Battle start.** Both sides roll dice. If one side's strength is at least `INITIAL_OVERRUN_FACTOR` = **10×** the other's, the weaker side is overrun at once. *(code)*
-2. **Bombard phase.** The first `BOMBARD_DAYS` = **3** days are a bombard phase. *(code: the phase flag; what differs inside it was not traced)*
-3. **Phases.** Every `DAYS_PER_PHASE` = **4** days a new phase starts and **both sides re-roll their dice**. *(code)*
-4. **Reserves move up** (`HandleReserves`). Each regiment in reserve picks the battle section (left, centre, right) with the most free frontage, and moves in with a daily chance equal to its combat speed (section 5). *(code)*
-5. **Engaging** (`AttemptInitiative`). Each regiment in a section that is not yet engaged rolls its initiative chance (section 4); on success it becomes engaged. *(code)*
-6. **Damage.** Engaged regiments hit enemy regiments (section 2). Strength losses and morale losses are collected per target and applied together. Strength loss can't exceed the men the target has left. *(code)*
-7. **Morale drain.** Every regiment in the battle loses `COMBAT_DAILY_MORALE_TICK` = **0.03** morale per day on top of combat damage. *(code)*
-8. **End.** A battle lasts at least `MINIMUM_COMBAT_DAYS` = **5** days. A regiment with morale below `MORALE_COLLAPSE_THRESHOLD` = **5%** (or no men) drops out of the line. When a side's morale has collapsed and the other side has at least `MORALE_OVERRUN_FACTOR` = **2×** its strength, the beaten side is overrun. *(code)*
+**Battle start**
+1. Every regiment of the armies in the location is placed (`AddUnit`, section 6): into its formation's section while that section has room, otherwise into reserve.
+2. Both sides roll dice.
+3. **Stack wipe at the start:** if one side's men are at least `INITIAL_OVERRUN_FACTOR` = **10×** the other's, the weaker side is overrun at once, with no morale check. The battle screen warns about this with "They/We have a big enough army to instantly eliminate…" (`COMBAT_IMMINENT_STACKWIPE_*`).
 
-"Strength" for the overrun ratios is a side total in which levies count at their levy factor (section 8) and naval levies at `NAVAL_LEVY_IMPACT` = 5%. *(code)*
+**Every day**
+1. Once the battle is older than `BOMBARD_DAYS` = **3** days, the bombard phase ends.
+2. Every `DAYS_PER_PHASE` = **4** days a new phase starts and **both sides re-roll their dice**. The dice modifiers (commander, terrain, crossings) are recomputed every day.
+3. **Bombard phase (days 1–3): only artillery fires.** Each artillery regiment rolls `0.2 × (1 + bombard efficiency)` to hit the section facing it. No reserves move, no regiment engages, no melee, no daily morale drain.
+4. **From day 4:** side 1 moves reserves up (`HandleReserves`) and rolls initiative in each section (`AttemptInitiative`), then side 2 does the same. Then both sides' engaged regiments hit (side 1, then side 2), and every regiment in the battle loses `COMBAT_DAILY_MORALE_TICK` = **0.03** morale.
+5. The day's collected strength and morale losses are applied together. Strength loss can't exceed the men a regiment has left.
+6. Each section drops regiments that can no longer fight: morale below `MORALE_COLLAPSE_THRESHOLD` = **0.05** (absolute morale points, 1.7% of base morale 3.0) or almost no men left.
+7. **End checks**, only once the battle has lasted `MINIMUM_COMBAT_DAYS` = **5** days:
+   - **Morale-collapse overrun:** a side whose morale has collapsed is wiped out if the other side has at least `MORALE_OVERRUN_FACTOR` = **2×** its men.
+   - Then the 10× check again.
+   - Otherwise the side that broke loses and **retreats**. It is a **shattered retreat** if the army's average morale is below `LOW_MORALE_THRESHOLD` = **0.5** (absolute, 17% of base morale); navies use 1.5.
+
+**Armies joining later.** An army that reaches the location while the battle runs joins it as fresh reserves (the game's own hint: "You can bring neighboring armies to reinforce ongoing battles. If they arrive in time, they will join the fight as fresh reserves"). From there they move up by combat speed like any reserve. They arrive with whatever morale their march left them (section 7).
+
+**"Men" in the overrun ratios** is each army's men still alive (current strength), with levies counted at their levy factor (section 8) (`0x143519150`). Navies count cannons instead, and naval levies at `NAVAL_LEVY_IMPACT` = 5%.
+
+**What this means:**
+- **A stack wipe needs 10:1 at the start, or 2:1 once the enemy's morale has collapsed.** Most wipes happen at the end of a long battle, when the loser's line breaks while the winner still has twice its men.
+- To avoid being wiped, keep your remaining men above half the winner's, or retreat before the line breaks.
+- Reinforcements that arrive in time count towards both the 2:1 ratio and the line.
 
 ---
 
@@ -83,6 +98,7 @@ Naval combat swaps in `NAVAL_DAMAGE_DONE`, `OWN_COAST`, `GUNS_VS_HULL` and `NAVA
 - Dice modifiers for a side:
   - **Commander:** the `commander_combat_bonus` of the side's commander, rounded to whole dice. The commander is the best-rated leader among the side's armies; traits give this modifier. Raw general skill was not seen adding dice directly.
   - **Attacker only:** river crossing −1 (`RIVER_CROSSING_DICE`), strait −2 (`STRAIT_CROSSING_DICE`), landing from the sea −1 (`SEA_LANDING_DICE`).
+  - **Attacker only, terrain:** minus the `defender` value of the location's topography, vegetation and climate. Mountains −2; hills, plateau, wetlands and narrows −1; woods, forest and jungle −1; climates 0. So an attack into forested mountains is −3 dice, plus −1 across a river.
 - The roll caps at 15 (`COMBAT_MAX`), which only a dice bonus can reach (14 + 1). Each extra die is worth the same until the cap.
 - The non-die entries of the side's dice list are summed into the dice modifier for every hit that side deals. *(code, `0x142481230`)*
 
@@ -130,10 +146,39 @@ Category combat speed: light infantry 3, heavy infantry 2, cavalry 5, artillery 
 
 ## 7. Morale
 
+### Maximum morale
 - Base land and naval morale: 3.0 (`NUnit.LAND_MORALE` / `NAVAL_MORALE`), changed by `land_morale_modifier` (%) and `land_morale` (flat) *(the order they combine in was not traced)*.
-- Losses: combat morale damage (section 2) + 0.03 per day just for being in the battle.
-- Below 5% morale a regiment leaves the line.
 - Country auto modifiers (`auto_modifiers/country.txt`): war exhaustion −2.5% land morale per point; army tradition up to +20% (at 100); revolutionary +25%; horde army expectation −50% (−10% in Ars Belli).
+- **Locked armies:** while an army is "locked" (a date stored on the army is still in the future, e.g. after a retreat; *which events set it was not traced*), its maximum morale is capped at `LOCKED_MORALE_CAP` = **50%**. *(code, `0x1434f47a0`)*
+
+### In battle *(code)*
+- Losses: combat morale damage (section 2) + 0.03 per day just for being in the battle (not during the 3-day bombard phase).
+- At 0.05 morale (absolute) a regiment leaves the line; a side with nobody left able to fight has lost.
+
+### Outside battle: one daily change *(code, `0x1434f47a0`; the tooltip calls it "Daily Change")*
+
+```
+daily change = max morale x ( recovery - movement cost - attrition cost x current attrition )
+recovery      = land_morale_recovery (base 5%)  x (1 + morale_recovery_in_friendly 25%) in friendly territory
+                = 0 while the army is moving ("While an army is moving, it can not recover morale")
+movement cost = land_morale_movement_cost (base 0.0069 = 0.69% of max morale per day), only while moving
+attrition cost = land_morale_attrition_cost (base 0.01) x the army's current attrition
+```
+
+Base values are in `country_base_values`. So standing still, an army recovers **5% of its max morale a day (6.25% at home)**, about 16–20 days from empty to full. On the march it recovers nothing and loses 0.69% a day.
+
+### What a movement-cost modifier is worth
+There is no waiting time before a battle starts. A battle begins as soon as hostile armies share a location, so movement cost only matters through the **morale an army arrives with**. Ars Belli's Trained March and Unrelenting Advance each give **−0.14%** (0.69% → 0.55%; both → 0.41%).
+
+| Days marched | Base 0.69%/day | One advance (0.55%) | Both (0.41%) |
+|---|---|---|---|
+| 5 | arrives at 96.5% | 97.3% | 98.0% |
+| 10 | 93.1% | 94.5% | 95.9% |
+| 20 | 86.2% | 89.0% | 91.8% |
+
+- **Recovery time:** 10 days of marching cost 6.9% of max morale, which takes 1.4 days of rest to win back (5%/day). One advance cuts that by 0.3 days, both by 0.6 days.
+- **Simulated** (equal Renaissance armies, 3,000 battles each, the attacker marched before the battle): attacker win rate after 10 days' march, base 38.6% → one advance 40.6% → both 43.4% (no march: 49.2%). After 20 days: 28.4% → 32.1% → 36.8%.
+- So each −0.14% is worth about **+2 to 4 points of win rate per 10 to 20 days of marching** into a battle. The longer the march, the more it matters, and it is worthless for armies that rest before attacking.
 
 ---
 
@@ -250,14 +295,16 @@ Simulated with the battle simulator (2,000 battles, equal armies of heavy infant
 
 | Bonus | Win rate, Renaissance | Win rate, Absolutism | Enemy losses ÷ own losses |
 |---|---|---|---|
-| none | 50% | 49% | 0.99 |
-| +5% discipline | 64.2% | 59.8% | 1.18 |
-| +0.1 tactics | 64.3% | 60.0% | 1.17 |
-| +10% discipline | 77.6% | 69.7% | 1.39 |
-| +0.2 tactics | 76.2% | 68.8% | 1.36 |
-| +10% morale | 63.1% | 59.0% | 1.05 |
-| +1 commander die | 64.6% | 60.2% | 1.19 |
-| +20 experience | 66.2% | 60.3% | 1.19 |
+| none | 52.2% | 48.5% | 1.02 |
+| +5% discipline | 66.0% | 62.1% | 1.21 |
+| +0.1 tactics | 67.0% | 62.1% | 1.20 |
+| +10% discipline | 78.8% | 72.1% | 1.41 |
+| +0.2 tactics | 78.4% | 71.3% | 1.40 |
+| +10% morale | 66.8% | 61.3% | 1.07 |
+| +1 commander die | 67.8% | 62.2% | 1.21 |
+| +20 experience | 68.5% | 63.1% | 1.22 |
+
+(Simulator v2 with the 3-day bombard phase and absolute morale thresholds. "None" is not exactly 50% because side 1 moves reserves and engages first each day.)
 
 So **+0.1 tactics ≈ +5% discipline**. Discipline edges ahead at larger amounts because it scales both sides of the trade. Morale wins battles without trading better (it keeps regiments in the line longer).
 
@@ -302,6 +349,8 @@ So **+0.1 tactics ≈ +5% discipline**. Discipline edges ahead at larger amounts
 ## 14. Ars Belli changes that touch combat
 
 - Levy combat efficiency on the focus picks: Designated Instruction +30% (worth +7.5% levy damage vs regulars), Nationalistic Enthusiasm +10%.
+- Levy focus, Enforced Service: Nobles Levy Size +30% (nobles raise the cavalry levies; France's French Heritage gives the same). Levy knights (Mailed Knights, Plated Knights, Cavaliers…) take 25% less strength and morale damage than regular heavy cavalry, which offsets part of the levy penalties.
+- Army Morale Movement Cost −0.14% on Trained March (Quality) and Unrelenting Advance (Maneuver); see section 7 for what it is worth.
 - `high_horde_unity`: discipline +5% (vanilla +10%). `horde_army_expectation`: land morale −10% (vanilla −50%).
 - Mercenary hiring costs back to vanilla (2026-10-28).
 - No combat defines are overridden (`01_abm_defines.txt` only touches war score, war worth, food depots and loans).
@@ -344,7 +393,54 @@ cost    = goods for those men (bought from the market) / (1 + army_reinforce_eff
 
 ## 16. Battle simulator
 
-`.tools/scripts/battle_sim/` holds `engine.js` (the rules above as code; runs in Node: `node -e "const S=require('./engine.js'); console.log(S.monteCarlo(S.defaultSide(), S.defaultSide(), 500))"`) and `battle-sim.html`, the interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi. Its approximations: bombard only in the first 3 days, the order of steps inside a day, deployment, the combined-arms bonus, the end of battle, and the 90-day cap; terrain, river, religion and general traits other than dice are left out.
+Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battle and Full battle tabs). Files in `.tools/scripts/battle_sim/`:
+
+| File | What it is |
+|---|---|
+| `engine.js` | The rules of this document as code. Runs in the browser and in Node. |
+| `units.json` | Every army unit type of vanilla 1.4.4 + Ars Belli with its effective stats, plus terrain. Rebuild with `node .tools/scripts/battle_sim/build_units.js` after a game update or a unit change. |
+| `sim.js` | Command line: `node .tools/scripts/battle_sim/sim.js <scenario.json> [--runs 2000] [--seed 1] [--sample] [--json]`; `--units <text>` lists unit types matching a key or name. |
+| `scenarios/` | Scenario files; `example_river_hills.json` shows every field. |
+| `battle-sim.html` | The page (publish with `engine.js` and `units.json` as supporting files). |
+
+**Unit stats are additive** (vanilla `levies/readme.txt`): every numeric stat line adds to what the unit inherited through `copy_from`, and the category's value is added on top. Writing `initiative = 2` on a unit whose parent already has 5, in a category with 5, gives 12, not 2. `build_units.js` follows this rule.
+
+### Scenario format
+
+```json
+{
+  "name": "…", "runs": 2000,
+  "location": { "topography": "hills", "vegetation": "forest", "climate": "continental",
+                "crossing": "none|river|strait|landing", "river": true, "coastal": false, "frontage": null },
+  "countries": { "FRA": { "discipline": 0.05, "tactics": 1.1, "moraleMod": 0.1, "moraleFlat": 0,
+                 "commanderDice": 1, "experience": 0, "levyCE": 0.3, "levyExperience": 0,
+                 "initiativeMod": 0, "speedMod": 0, "movementCost": 0.0069,
+                 "power": { "li": 0, "hi": 0, "lc": 0, "hc": 0.1, "art": 0 },
+                 "sdd": 0, "sdt": 0, "mdd": 0, "mdt": 0,
+                 "religion": "catholic", "religionGroup": "christian", "vsHeretic": 0, "vsHeathen": 0 } },
+  "attacker": { "armies": [ { "name": "…", "country": "FRA", "formation": "balanced|cav_inf_cav",
+                "arrivalDay": 0, "marchDays": 6, "morale": null,
+                "units": [ { "type": "a_musketeers", "count": 10, "section": "L|C|R|reserve",
+                             "strength": 0.8, "morale": 0.9, "experience": 25, "levy": false } ] } ] },
+  "defender": { "armies": [ … ] }
+}
+```
+
+- Percentages are fractions: 0.05 = +5%. `tactics` is the absolute value (base 1.0). `commanderDice` is the side commander's `commander_combat_bonus`; the side uses the highest among its armies present.
+- `morale` (army or unit) is a fraction of max morale and overrides `marchDays`. Use it when a screenshot shows an army's current morale.
+- `arrivalDay` > 0 means the army joins on that day as reserves. Defenders coming from a neighbouring location also march, so give them `marchDays`.
+- `type` is a unit key from `units.json` (`sim.js --units musket` to search), or `generic:<li|hi|lc|hc|art|aux>:<age 1-6>`.
+
+### From an in-game screenshot to a scenario
+Read, per army, the regiments by type (the unit names map to keys; names are in `units.json`), their count, and if visible each one's men and morale. Per country, read discipline, military tactics, morale, combat speed, initiative, unit power and levy combat efficiency from the military tab or modifier tooltips; read the general's combat bonus. For the location, read topography, vegetation, a river and whether the attacker crossed one. Then run `sim.js` and compare the day-by-day sample with the game's battle screen.
+
+### Approximated in the simulator
+- the order regiments are placed inside one formation;
+- the combined-arms bonus (2.5% per category holding 10–50% of the side; the exact rule lives in `0x142486dd0`);
+- reinforcements always joining as reserves;
+- the 120-day cap.
+
+Not modelled: general traits other than dice, country-specific per-terrain unit modifiers, battles at a fort, naval combat.
 
 ---
 
@@ -370,6 +466,10 @@ Kit: `E:\Tools\ghidra-scripts` (README there). Addresses change every patch; re-
 | Battle frontage W | `0x14247a0d0` | reads location modifier `local_frontage_allowed` (index `0x14f0a37ea`) |
 | Regiment maintenance | `0x14357a730` | `LEVY_MAINTENANCE_FACTOR`, `MOTHBALL_MAINTENANCE_FACTOR`; labels `SUBUNIT_MAINTENANCE_FACTOR`, `LEVY_MAINTENANCE_RATE_TOOLTIP` |
 | Reinforcement rate / cost | `0x143491290` / `0x14352ed50` | `MONTHLY_REINFORCE`; `army_reinforce_efficiency` (`0x14f0a3676`) |
+| Overrun check (stack wipe) | `0x14248ed60` | called at start with `INITIAL_OVERRUN_FACTOR` (no morale check), daily with `MORALE_OVERRUN_FACTOR` and again 10 (loser morale ≤ 0.05) |
+| Land army strength for overruns | `0x143519150` | men, levies × levy factor |
+| Daily morale change outside battle | `0x1434f47a0` | recovery `0x143493940` (labels `CAN_NOT_RECOVER_WHILE_MOVING`, `UNIT_MORALE_RECOVERY_IN_FRIENDLY`), movement cost `land_morale_movement_cost` (`0x14f0a367e`), attrition cost; `LOCKED_MORALE_CAP` |
+| Retreat after a lost battle | `0x142477570` | shattered if average morale < `LOW_MORALE_THRESHOLD` 0.5 (navy 1.5) |
 | Siege / assault tick | `0x143475730` | all `SIEGE_*` / `ASSAULT_*` defines (not decompiled) |
 | Modifier registration | `0x144c840f0` | each modifier name string is followed by a store of its index, e.g. discipline `0x14f0a37c2`, military_tactics `0x14f0a37ce`, levy_combat_efficiency `0x14f0a389e`, commander_combat_bonus `0x14f0a37d0`, army_initiative `0x14f0a37ee`, combat_speed_modifier `0x14f0a37f2` |
 

@@ -1,0 +1,44 @@
+{
+	"name": "Example: river crossing into hills, a late reinforcement on each side",
+	"runs": 2000,
+	"location": { "topography": "hills", "vegetation": "farmland", "climate": "continental", "crossing": "river", "river": true },
+	"countries": {
+		"FRA": { "discipline": 0.05, "tactics": 1.1, "moraleMod": 0.10, "commanderDice": 1, "levyCE": 0.30, "power": { "hc": 0.10 } },
+		"BUR": { "discipline": 0.0, "tactics": 1.0, "moraleMod": 0.0, "commanderDice": 0, "experience": 20 },
+		"SWI": { "discipline": 0.05, "tactics": 1.0, "moraleMod": 0.05 }
+	},
+	"attacker": {
+		"armies": [
+			{
+				"name": "Royal Army", "country": "FRA", "formation": "cav_inf_cav", "marchDays": 6,
+				"units": [
+					{ "type": "a_halberdiers", "count": 10 },
+					{ "type": "a_early_arquebusiers", "count": 4 },
+					{ "type": "a_lancers", "count": 6 },
+					{ "type": "a_cavaliers", "count": 4 },
+					{ "type": "a_falconet", "count": 3 }
+				]
+			},
+			{
+				"name": "Second Army", "country": "FRA", "arrivalDay": 7, "marchDays": 10,
+				"units": [ { "type": "a_matchlock_levy", "count": 8 }, { "type": "a_lancers", "count": 2 } ]
+			}
+		]
+	},
+	"defender": {
+		"armies": [
+			{
+				"name": "Army of Burgundy", "country": "BUR", "formation": "balanced",
+				"units": [
+					{ "type": "a_halberdiers", "count": 12 },
+					{ "type": "a_lancers", "count": 4 },
+					{ "type": "a_falconet", "count": 2 }
+				]
+			},
+			{
+				"name": "Swiss allies", "country": "SWI", "arrivalDay": 5, "marchDays": 4,
+				"units": [ { "type": "a_reislaufer", "count": 6 } ]
+			}
+		]
+	}
+}
