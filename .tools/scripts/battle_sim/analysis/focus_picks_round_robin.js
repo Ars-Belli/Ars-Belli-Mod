@@ -5,7 +5,7 @@
 //          "budget" = each side builds regiments until upkeep is 75% of its income. 48 months, a battle every 2 months.
 //          Wars track experience: battle gains (30 x own losses / own men), each pick's monthly gain and decay.
 //      [--interval months|ready] [--months 48]  war battle spacing; ready = fight once both are fully reinforced
-//      [--reinf-eff-manpower]  army_reinforce_efficiency also divides reinforcement manpower (the in-game tooltip says so)
+//      [--reinf-eff-gold-only]  army_reinforce_efficiency divides reinforcement gold only (the game divides manpower too)
 //      [--republic]  no Military Traditions (monarchy age III advance, experience decay -1%); default: monarchies
 // Military focus picks: at each age every distinct battle-relevant pick state fights every other (both sides alternating as
 // attacker), under three parity views. A state's score = expected win rate against a random opponent path (states weighted
@@ -13,9 +13,9 @@
 // Meta armies (the user's MP meta): ages 2-4 thirty heavy cavalry, ages 5-6 thirty heavy infantry; frontage 10.
 // Assumptions (2026-10-28, from the user and a 1547 Spain save):
 //  - Generals are characters: 60/59/61 (adm/dip/mil), the average of the 161 generals commanding armies in Europe in
-//    the 1547 Spain save (from_save.js --generals). Without Leadership,
-//    trained generals average 37 at army tradition 14, so nobody trains. Leadership: trained generals +40 a skill, i.e. 77
-//    on average (better than most characters), plus +0.2 army tradition a month, taken as +20 by mid-age (+4% morale).
+//    the 1547 Spain save (from_save.js --generals). Without Leadership trained generals average 40 at army tradition 20, so
+//    nobody trains. Leadership (+40 a skill, +0.2 tradition a month) is played to army tradition ~60: trained generals 95,
+//    and +12% morale from tradition against +4% for everyone else.
 //  - Experience starts near 0 (Spain 1547: 0.37), so experience-gain picks barely count.
 //  - Parity views: "regiments" = equal regiment count (recruitment locations/buildings are the limit); "manpower" = size x
 //    (1 + manpower modifier) x (1 + maintenance efficiency) / (1 + unit maintenance cost modifier) (manpower upkeep is
@@ -33,7 +33,7 @@ const DRILL = opt('--drill') || 0, WAIT = opt('--wait') || 0;
 const WAR = (() => { const i = argv.indexOf('--war'); return i < 0 ? null : argv[i + 1]; })(), WARS = opt('--wars') || 200;
 const INTERVAL = (() => { const i = argv.indexOf('--interval'); return i < 0 ? 2 : argv[i + 1] === 'ready' ? 'ready' : +argv[i + 1]; })(), WAR_MONTHS = opt('--months') || 48;
 const exp = require('../engine.js').drilledExperience;
-const PATCH = argv.includes('--reinf-eff-manpower') ? { D: { REINFORCE_EFF_MANPOWER: true } } : undefined;
+const PATCH = argv.includes('--reinf-eff-gold-only') ? { D: { REINFORCE_EFF_MANPOWER: false } } : undefined;
 const MON = argv.includes('--republic') ? 0 : -0.01, monDecay = age => age >= 3 ? MON : 0;
 const MAP = {
 	discipline: 'discipline', military_tactics: 'tactics', land_morale_modifier: 'moraleMod', land_morale: 'moraleFlat',
@@ -59,7 +59,12 @@ const VIEWS = WAR ? { ['war (' + WAR + ')']: () => 1 } : {
 	manpower: (m, cat) => (1 + (m.manpower || 0)) * eff(m) / (1 + (m['maintCost.' + cat] || 0)),
 	gold: (m, cat) => eff(m) / (1 + (m['maintCost.' + cat] || 0)),
 };
-const CHAR = { adm: 60, dip: 59, mil: 61 }, TRAINED = 37 + 40;
+const CHAR = { adm: 60, dip: 59, mil: 61 };
+// Army tradition settles at monthly gain / 0.005 (it decays 0.5% of itself a month): about 20 for most countries, about 60 for
+// a Leadership player maximising it (+0.2 a month). +0.2% morale a point. Trained generals roll each skill in
+// [10 + AT/2, 50 + AT/2] + train_general_ability, capped at 100 (generic_actions/train_general.txt): Leadership at AT 60 = 95.
+const AT_BASE = 20, AT_LEADERSHIP = 60;
+const trained = (at, ability) => { let t = 0, n = 0; for (let x = Math.ceil(10 + at / 2); x <= Math.floor(50 + at / 2); x++, n++) t += Math.min(100, x + ability); return t / n; };
 const relevant = (mods, age, view) => {
 	const o = { ...mods }; const cat = age <= 4 ? 'hc' : 'hi';
 	for (const k of Object.keys(o)) if (/^(power|maintCost)\./.test(k) && !k.endsWith(cat)) delete o[k];
@@ -74,8 +79,9 @@ const baseIncome = (cat, age) => 30 * upkeepReg({}, cat, age) / 0.75;
 const warRegs = (mods, cat, age) => WAR === 'budget' ? Math.round(0.75 * baseIncome(cat, age) * (1 + (mods.manpower || 0)) / upkeepReg(mods, cat, age)) : 30;
 function side(mods, age, view) {
 	const cat = age <= 4 ? 'hc' : 'hi';
-	const g = mods.genAbility ? { adm: Math.max(CHAR.adm, TRAINED), dip: Math.max(CHAR.dip, TRAINED), mil: Math.max(CHAR.mil, TRAINED) } : CHAR;
-	const c = { tactics: 1 + (mods.tactics || 0), discipline: mods.discipline || 0, moraleMod: (mods.moraleMod || 0) + (mods.atGain ? 0.04 : 0), moraleFlat: mods.moraleFlat || 0,
+	const tg = mods.genAbility ? trained(mods.atGain ? AT_LEADERSHIP : AT_BASE, mods.genAbility) : 0;
+	const g = { adm: Math.max(CHAR.adm, tg), dip: Math.max(CHAR.dip, tg), mil: Math.max(CHAR.mil, tg) };
+	const c = { tactics: 1 + (mods.tactics || 0), discipline: mods.discipline || 0, moraleMod: (mods.moraleMod || 0) + 0.002 * (mods.atGain ? AT_LEADERSHIP : AT_BASE), moraleFlat: mods.moraleFlat || 0,
 		initiativeMod: mods.initiativeMod || 0, speedMod: mods.speedMod || 0, frontageMod: mods.frontageMod || 0,
 		experience: DRILL || WAIT ? exp({ gain: mods.expGain || 0, decay: (mods.expDecay || 0) + monDecay(age), drill: DRILL, wait: WAIT }) : 0.37, power: {} };
 	if (mods['power.' + cat]) c.power[cat] = mods['power.' + cat];

@@ -536,13 +536,16 @@ So **+0.1 tactics ≈ +5% discipline ≈ +1 commander die ≈ +20 experience**, 
 ```
 rate    = situation factor x MONTHLY_REINFORCE 0.25 x (1 + regiment_reinforcement_speed)
 amount  = min(missing men, rate x max strength)
-cost    = reinforce price for those men (gold and manpower) + a goods basket / (1 + army_reinforce_efficiency)   (floored at -50%)
+cost    = (reinforce price for those men: gold and manpower, plus a goods basket) / (1 + army_reinforce_efficiency)   (floored at -50%)
 ```
 
 - A regiment refills at most 25% of its size a month before speed bonuses. The situation factor (supply, location, at war or not) was not traced.
-- **Reinforce efficiency: the tooltip says it cuts "Ducats and Manpower".** The code traced (`0x14352ed50`) only shows it dividing the goods basket bought from the market. That routine charges neither gold nor manpower: it sets the regiment's men or queues it on a country list (+0x5228). The gold and manpower charge was not found, so the tooltip may well be right. *Unverified either way.*
-  - The simulator divides gold only, unless `D.REINFORCE_EFF_MANPOWER = true` (`focus_picks_round_robin.js --reinf-eff-manpower`). With it on, Quantity's +20% moves the focus-pick war scores by at most 1 point; head to head at equal armies it is worth about +11 points (0.46 → 0.57).
-  - In-game check: with Quantity's +20%, see whether the manpower tooltip's "Armies Reinforcing" line is the men put back or the men ÷ 1.2.
+- **Reinforce efficiency divides both the gold and the manpower** *(game tooltip, checked on a save)*: the modifier tooltip says "reducing its Ducats and Manpower cost". Spain 1527 (+20% reinforce efficiency, the user's screenshots) matches it:
+  - A Falconet at 403 of 600 men takes 178 men a month: 600 × 25% × (1 + 10% Early Military Logistics + 10% Permanent Field Training) × 0.99 for lacking goods = 178.2.
+  - The 1er Ejército's 7 Falconets therefore take about 1,247 men a month, and their "Reinforce and Repair" line costs **1,043 manpower**: 1,247 ÷ 1.196 ≈ ÷ (1 + 20%).
+  - The army's reinforcement total (2,823) is the sum of its "Reinforce and Repair" lines (1,741 + 1,043 + 37). The "Maintenance" lines listed with them are not part of it.
+  - The traced reinforcement routine (`0x14352ed50`) also divides the goods basket by it; the gold and manpower are charged elsewhere (not traced).
+  - So each man put back costs 1 ÷ (1 + reinforce efficiency) manpower (× the reinforce cost modifier). The simulator does this (`D.REINFORCE_EFF_MANPOWER`, on).
 - Navies use `navy_repair_efficiency` the same way.
 
 **Manpower pool.**
@@ -644,7 +647,7 @@ Equal manpower is about **upkeep and reinforcement**, not the one-time recruitme
 **Focus picks as wars** (`focus_picks_round_robin.js --war same|budget [--interval ready --months 120]`; each pick's experience gain and decay, monarchy −1% decay from age III):
 - **Same regiments:** Quality wins age III (75% vs Quantity 32–33%) and Voluntary Service age VI (66% vs Conscription 42%), with battles every 2 months or when fully reinforced. Quantity's surplus doesn't save it: more surplus doesn't buy more regiments, and the 5-year pool already covers the reinforcements.
 - **75/25 budgets:** Quantity wins age III (69–70%), Conscription age VI (71%), and Standing Forces > Quantity > * > Firepower > Conscription tops the ranking at 83–84%.
-- Quantity's +15% `global_manpower_modifier` is in both: the income and the 5-year pool are 15% bigger. Its +20% `army_reinforce_efficiency` divides reinforcement gold; whether it also divides manpower is unverified (section 15), and counting it on manpower moves the scores by at most 1 point.
+- Quantity's +15% `global_manpower_modifier` is in both: the income and the 5-year pool are 15% bigger. Its +20% `army_reinforce_efficiency` divides reinforcement gold and manpower (checked on a save, section 15); at 30-regiment armies that moves these scores by at most 1 point.
 
 **How much manpower to leave as surplus** (`analysis/surplus_war.js [wars] [months] [interval|ready] [--unit] [--no-exp]`; age V heavy infantry, 120-month wars, pool full at the start, 300 wars a pairing):
 - **Equal incomes:** each upkeep share (40–100% of income) plays every other. The bigger army wins at every pairing. 100% upkeep is the best answer to every share from 50% up, with battles every 2 months (90% against the field) or when fully reinforced (82%). Age III heavy cavalry gives the same answer (92% / 85%).
@@ -659,25 +662,35 @@ Equal manpower is about **upkeep and reinforcement**, not the one-time recruitme
 - Wars nobody lost by month 120 count as half a win; that is why a tiny 16-regiment cavalry army that keeps getting wiped and rebuilt scores 11–13% against 1.5× and 2× income.
 - Experience doesn't change the answer: with it off the equal-income table moves by at most 3 points.
 
-**Quality vs Quantity vs Leadership at Spain's size** (`analysis/age3_picks_war.js [wars] [battles] [armies] [--reinf-eff-manpower]`; each after Standing Forces, age III heavy cavalry).
-- **Setup:**
-  - 6 armies of 30 regiments a side; Spain 1547 had 8 armies with 182 Lanzas.
-  - Each side brings 2 armies; the rest arrive one by one as its reserve runs empty (`arrivalDay: 'needed'`, a 1-day march), so every regiment fights. A battle lasts about 66 days and costs each side about 46% of its men. The 1527 war had 152k vs 129k losing 75k / 99k (Kavála) and 165k vs 124k losing 40k / 67k (Xánthia).
-  - The war goes on until one side has exhausted its manpower (`endOn: 'manpower'`: pool empty while still short of men). Both sides fight once fully reinforced, with battle experience.
-  - 200 wars and 2,000 battles a cell.
-- **Results.** A's first-battle win rate / A's war win rate. The war column first assumes reinforce efficiency cuts gold only, then manpower too (the in-game tooltip):
+**Quality vs Quantity vs Leadership at Spain's size** (`analysis/age3_picks_war.js [wars] [battles] [armies] [--reinf-eff-gold-only]`; each after Standing Forces, age III heavy cavalry).
+- **Armies:**
+  - 6 of 30 regiments a side; Spain 1547 had 8 armies with 182 Lanzas.
+  - Each side brings 2 armies and feeds the rest in as its reserve runs empty (`arrivalDay: 'needed'`), so every regiment fights. A battle lasts about 66 days and costs each side about 46% of its men; the 1527 war's Kavála and Xánthia cost 49–77% and 24–54%.
+- **Army tradition** settles at monthly gain ÷ 0.005: about 20 for most countries (+4% morale), about 60 for a Leadership player who maximises it (+12% morale).
+  - Trained generals roll each skill in [10 + AT/2, 50 + AT/2] + `train_general_ability`, capped at 100 (`train_general.txt`), so Leadership's average 95.
+  - Others keep their 60/59/61 characters (a trained one would average 40).
+- **Measure:** each side's manpower pool after 12 / 24 / 48 months of war, after paying for the men its army still misses, as a share of its max pool. The table gives the first pick's reserve minus the second's, in points; the first column is the first pick's first-battle win rate. Both sides fight once fully reinforced. 200 wars and 2,000 battles a cell; the 95% intervals are under 1 point.
 
-  | | Same regiments | 75/25 budgets (Quality 186, Quantity 246, Leadership 198 regiments) |
-  |---|---|---|
-  | Quality vs Quantity | 99% / 91%, manpower too 0% | 24% / 58%, manpower too 0% |
-  | Quality vs Leadership | 99% / 100% | 94% / 100% |
-  | Quantity vs Leadership | 41% / 99%, manpower too 100% | 99% / 100% |
-  | *drilled 48 months:* Quality vs Leadership | 25% / 98% | 6% / 88% |
-  | *drilled:* Quantity vs Leadership | 0% / 32%, manpower too 100% | 20% / 85%, manpower too 100% |
+  | | First battle | 12 months | 24 months | 48 months |
+  |---|---|---|---|---|
+  | **Same regiments** | | | | |
+  | Quality vs Quantity | 99% | −8 | −18 | −36 |
+  | Quality vs Leadership | 91% | +14 | +10 | +4 |
+  | Quantity vs Leadership | 11% | +18 | +26 | +42 |
+  | **75/25 budgets** (Quality 186, Quantity 246, Leadership 198 regiments) | | | | |
+  | Quality vs Quantity | 23% | −15 | −19 | −21 |
+  | Quality vs Leadership | 72% | +14 | +14 | +8 |
+  | Quantity vs Leadership | 92% | +28 | +34 | +42 |
+  | **Same regiments, all drilled 48 months** (experience 60 / 60 / 99) | | | | |
+  | Quality vs Quantity | 100% | −8 | −15 | −27 |
+  | Quality vs Leadership | 3% | −6 | +1 | −2 |
+  | Quantity vs Leadership | 0% | +3 | +14 | +26 |
 
-- **Leadership is a glass cannon, but only when drilled.** Drilled to 99 experience against 60, it wins most first battles (75–100%) and still loses most wars. Battles at this size give each side about +13 experience, so everyone is near 100 after 3–4 battles and Leadership's lead is gone. Undrilled, it loses both battles and wars.
-- **The long war is an exhaustion race.** The winner of a big battle loses almost as many men as the loser, so the war goes to whoever has more manpower per man lost. Quality bleeds less, which beats Quantity's +15% manpower if reinforce efficiency cuts gold only. If it cuts manpower too (+20% for Quantity), Quantity wins every war, even when it loses every battle.
-- Battle war score is not counted: the war ends only on manpower. A side winning nearly every battle would gain war score long before that.
+- **Quantity wins long wars.** It loses nearly every battle at equal regiments, yet its reserve lead grows every month: 36 points of its max pool ahead of Quality after 4 years. The levers are +15% manpower, reinforcement ÷ 1.2 and +10% maintenance efficiency. On budgets it also wins most battles.
+- **Leadership is the glass cannon.** Drilled, it wins the first battles against everyone (97–100%) and leads Quality's reserve early (+6 at 12 months), but the lead is gone by 24 months. Battles at this size give each side about +13 experience, so everyone is near 100 after 3–4 battles. Undrilled, it beats Quantity in battle (89%) but falls behind in manpower.
+- **Quality is in the middle.** It wins battles against Quantity (99%) and undrilled Leadership (91%), but bleeds manpower against Quantity.
+- With reinforce efficiency counted on gold only (`--reinf-eff-gold-only`, wrong per section 15), Quality would stay ahead of Quantity: +5 / +3 / −2 at equal regiments. The confirmed manpower rule is what makes Quantity the long-war pick.
+- **30-regiment battles with the same tradition model** (`focus_picks_round_robin.js`): Leadership's age III score rises from 42% to 50% at equal regiments, 29% to 36% when manpower-bound and 41% to 48% at equal gold. Quality 75% / 48% / 61%; Quantity 25% / 67% / 40%.
 
 **Battle spacing and picking the moment** (`analysis/surplus_interval.js [wars] [months] [--unit]`; equal incomes, 300 wars a pairing, 120 months). `simulateWar` `decides: i` lets side i pick the moment: it gives battle as soon as it is back to full, and the enemy can only force one after 12 months (`forceAfter`).
 - **Fixed spacing from 1 to 12 months changes nothing for age V infantry.** 100% upkeep is the best answer to every share at every spacing, and the scores move by 1–2 points. A battle costs tens of thousands of men, while 30% of a 2,000-a-month income is 600 men a month. Reinforcement refills a regiment in 4 months anyway, so longer gaps only add surplus, and the surplus is too small to matter. The pool decides.
@@ -765,7 +778,7 @@ What the game shows, and what the code actually does:
 | Battle die shown as 1–10 | The damage code adds the raw die, 0–9. Rolls run 5–14 before modifiers (section 3). |
 | Levy combat efficiency +X% | Levies hitting regulars deal 0.75 + 0.25 × levy CE, capped at 1.0. So +40% levy CE is worth +10% damage, and nothing past +100% (section 8). |
 | "Army Morale Movement Cost" (description says every hour) | Applied once a day, as a share of max morale (0.69% a day base) (section 7). |
-| Maintenance / reinforce efficiency +25% | Divides the cost: 1 ÷ 1.25 = 80%, not 75% (section 15). Reinforce efficiency: the tooltip says ducats and manpower; the traced code only showed goods (section 15, unverified). |
+| Maintenance / reinforce efficiency +25% | Divides the cost: 1 ÷ 1.25 = 80%, not 75% (section 15). Reinforce efficiency divides gold and manpower alike (section 15, checked on a save). |
 | Military tactics | Only the gap counts, and only on the side with less tactics: it cuts the damage that side deals ÷ (1 + gap). Equal tactics do nothing (section 2). |
 | Combat speed | Only the daily chance that a reserve moves into the line (speed × 0.1). It never changes damage (section 5). |
 | Initiative / army initiative | A daily chance to engage, capped at +30% on top of the 60% base and +3% a day; worth nothing once the initiative part reaches 30% (section 4). |

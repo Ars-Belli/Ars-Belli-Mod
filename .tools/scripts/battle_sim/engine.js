@@ -19,9 +19,9 @@
 		BASE_FRONTAGE: 10, MIN_FRONTAGE: 2, MOVEMENT_COST: 0.0069, MAX_DAYS: 120,
 		REINFORCE_EFF_FLOOR: -0.5, MAINT_EFF_FLOOR: -0.95, LEVY_MAINTENANCE: 0.01, MONTHLY_REINFORCE: 0.25, MAX_MANPOWER_YEARS: 5, PRICE_SCALE: 0.1,
 		EXPERIENCE_GAIN: 30, EXPERIENCE_DECAY: 0.05, REGULAR_DECAY: -0.01, // NCombat / country base value / is_army_regular
-		// army_reinforce_efficiency on reinforcement manpower too? The game's tooltip says ducats and manpower; the traced code
-		// (0x14352ed50) only showed it dividing the goods basket, and the manpower charge was not found. Off = gold only.
-		REINFORCE_EFF_MANPOWER: false,
+		// army_reinforce_efficiency divides reinforcement gold AND manpower (the modifier tooltip says so; checked on Spain 1527:
+		// 7 Falconets taking 178.2 men a month each = 1,247 men cost 1,043 manpower = / 1.196 with +20% efficiency).
+		REINFORCE_EFF_MANPOWER: true,
 	};
 	const CAT = {
 		li: { name: 'Light infantry', dt: 1.0, sdd: -0.1, mdt: 0.1, i: 5, cs: 3, fl: 1.1, sf: 0.05 },
@@ -730,7 +730,9 @@
 			trace.push({ battle: battles, month, men: [men(0), men(1)], pool: sides.map(p => p.pool), exp: [0, 1].map(avgExp) });
 		}
 		return { loser, battles, months: month, won: sides.map(p => p.won), lost: sides.map(p => p.lost), upkeep: sides.map(p => p.upkeep), reinforce: sides.map(p => p.reinforce),
-			end: [men(0) / full[0], men(1) / full[1]], pool: sides.map(p => p.pool), exp: [0, 1].map(avgExp), full, trace };
+			end: [men(0) / full[0], men(1) / full[1]], pool: sides.map(p => p.pool), exp: [0, 1].map(avgExp), full, trace,
+			// pool share of max once the army is refilled (pool - missing men x reinforce manpower): how hard the war is being won
+			reserve: [0, 1].map(i => (sides[i].pool - G[i].reduce((t, x) => t + x.total * (1 - str(x.g)) * x.x.reinforceManpower, 0)) / (sides[i].max || 1)) };
 	}
 	// many wars: P(collapse) per side with 95% intervals, battle win share, average ending strength, manpower spent
 	function summarizeWars(list) {
@@ -740,6 +742,9 @@
 		const won = [0, 1].map(i => list.reduce((t, w) => t + w.won[i], 0));
 		return { n, collapsed: col.map(c => c / n), collapsedCI: col.map(c => wilson(c, n)), undecided: (n - col[0] - col[1]) / n,
 			months: list.reduce((t, w) => t + w.months, 0) / n,
+			// side 0's reserve minus side 1's (share of max pool, after refilling), mean and 95% interval over the wars
+			...(() => { const d = list.map(w => w.reserve[0] - w.reserve[1]), m = d.reduce((t, x) => t + x, 0) / n;
+				const sd = Math.sqrt(d.reduce((t, x) => t + (x - m) ** 2, 0) / Math.max(1, n - 1)); return { reserveDiff: m, reserveDiffCI: [m - 1.96 * sd / Math.sqrt(n), m + 1.96 * sd / Math.sqrt(n)] }; })(),
 			battleShare: won.map(w => w / Math.max(1, battles)), battleShareCI: won.map(w => wilson(w, Math.max(1, battles))), battles: battles / n,
 			lost: s('lost'), upkeep: s('upkeep'), reinforce: s('reinforce'), end: s('end'), pool: s('pool'), exp: s('exp') };
 	}

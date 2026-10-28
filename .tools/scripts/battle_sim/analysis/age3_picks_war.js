@@ -1,10 +1,11 @@
-// node .tools/scripts/battle_sim/analysis/age3_picks_war.js [wars, default 200] [battles, default 1000] [armies, default 6] [--reinf-eff-manpower]
+// node .tools/scripts/battle_sim/analysis/age3_picks_war.js [wars, default 200] [battles, default 1000] [armies, default 6] [--reinf-eff-gold-only]
 // Quality vs Quantity vs Leadership (each after Standing Forces), at the army size of the 1547 Spain save: 6 armies of 30
 // heavy cavalry a side (Spain: 8 armies, 182 Lanzas). Does a pick win early and lose long wars, or the other way round?
 // Each side brings 2 armies and feeds the rest in as its reserve runs empty (arrivalDay 'needed', 1 day's march), so every
-// regiment fights. Columns: the first battle, and the war, which goes on until one side has exhausted its manpower (pool
-// empty while short of men); both sides fight once fully reinforced (interval 'ready'), with battle experience, each pick's
-// experience gain and decay, monarchy -1% decay.
+// regiment fights. Columns: A's first-battle win rate, then the gap in manpower reserve after 12 / 24 / 48 months of war: each
+// side's pool, after paying for the men its army still misses, as a share of its max pool (5 years of income), A minus B, in
+// points (+30 = A has 30% of its max pool more left). Both sides fight once fully reinforced (interval 'ready'), with battle
+// experience, each pick's experience gain and decay, monarchy -1% decay.
 // Views: same regiments, and 75/25 budgets (manpower x maintenance efficiency buys regiments; Quantity gets more).
 // Drilling: none (experience 0.37) or 48 months then 6 idle, both sides. Generals 60/59/61; Leadership's trained 77.
 const pool = require('../pool.js')();
@@ -12,10 +13,18 @@ const S = require('../engine.js');
 S.setUnitDB(require('../units.json'));
 const { ages } = require('../../focus_picks/focus_data.js');
 const [WARS, N, K] = [+process.argv[2] || 200, +process.argv[3] || 1000, +process.argv[4] || 6];
-// --reinf-eff-manpower: army_reinforce_efficiency also divides reinforcement manpower (what the in-game tooltip says)
-const PATCH = process.argv.includes('--reinf-eff-manpower') ? { D: { REINFORCE_EFF_MANPOWER: true } } : undefined;
+// --reinf-eff-gold-only: army_reinforce_efficiency divides reinforcement gold only (the game divides manpower too)
+const MONTHS = [12, 24, 48];
+const PATCH = process.argv.includes('--reinf-eff-gold-only') ? { D: { REINFORCE_EFF_MANPOWER: false } } : undefined;
 const AGE = 3, CAT = 'hc', UNIT = `generic:${CAT}:${AGE}`, BASE_MAINT = 0.25, MON = -0.01;
-const CHAR = { adm: 60, dip: 59, mil: 61 }, TRAINED = 77;
+const CHAR = { adm: 60, dip: 59, mil: 61 };
+// Army tradition decays 0.5% of itself a month (auto_modifiers), so it settles at monthly gain / 0.005. Typical sources: Martial
+// Society +0.05, army experience ~+0.01, advances like Castile's Masters of the Orders +0.05: about AT 20. Leadership adds +0.2 a
+// month and its player maximises tradition: about AT 60. Tradition gives +0.2% morale a point. Trained generals
+// (generic_actions/train_general.txt) roll each skill in [10 + AT/2, 50 + AT/2] + train_general_ability, capped at 100.
+const AT_BASE = 20, AT_LEADERSHIP = 60;
+const trained = (at, ability) => { let t = 0, n = 0; for (let x = Math.ceil(10 + at / 2); x <= Math.floor(50 + at / 2); x++, n++) t += Math.min(100, x + ability); return t / n; };
+const AT = m => m.atGain ? AT_LEADERSHIP : AT_BASE;
 const MAP = {
 	discipline: 'discipline', military_tactics: 'tactics', land_morale_modifier: 'moraleMod', land_morale: 'moraleFlat',
 	army_initiative: 'initiativeMod', combat_speed_modifier: 'speedMod', possible_frontage_modifier: 'frontageMod',
@@ -41,13 +50,14 @@ const perArmy = (m, view) => view === 'budget' ? Math.round(0.75 * income(m) / u
 function side(m, view, drill) {
 	const decay = (m.expDecay || 0) + MON;
 	const c = {
-		tactics: 1 + (m.tactics || 0), discipline: m.discipline || 0, moraleMod: (m.moraleMod || 0) + (m.atGain ? 0.04 : 0), moraleFlat: m.moraleFlat || 0,
+		tactics: 1 + (m.tactics || 0), discipline: m.discipline || 0, moraleMod: (m.moraleMod || 0) + 0.002 * AT(m), moraleFlat: m.moraleFlat || 0,
 		initiativeMod: m.initiativeMod || 0, speedMod: m.speedMod || 0, frontageMod: m.frontageMod || 0, power: m.power ? { [CAT]: m.power } : {},
 		experience: drill ? S.drilledExperience({ gain: m.expGain || 0, decay, drill: 48, wait: 6 }) : 0.37,
 		maintenanceEfficiency: BASE_MAINT + (m.maint || 0), reinforceSpeed: m.reinforceSpeed || 0, reinforceEfficiency: m.reinfEff || 0,
 		costMod: { maintenance: { [CAT]: m.maintCost || 0 }, reinforce: { [CAT]: m.reinfCost || 0 } },
 	};
-	const g = m.genAbility ? { adm: Math.max(CHAR.adm, TRAINED), dip: Math.max(CHAR.dip, TRAINED), mil: Math.max(CHAR.mil, TRAINED) } : CHAR;
+	const tg = m.genAbility ? trained(AT(m), m.genAbility) : 0;
+	const g = { adm: Math.max(CHAR.adm, tg), dip: Math.max(CHAR.dip, tg), mil: Math.max(CHAR.mil, tg) };
 	return { armies: Array.from({ length: K }, (_, k) => ({ general: g, country: c, units: [{ type: UNIT, count: perArmy(m, view) }], ...(k < 2 ? {} : { arrivalDay: 'needed', marchDays: 1 }) })) };
 }
 const warSide = m => ({ income: income(m), expGain: m.expGain || 0, expDecay: Math.max(0, 0.04 + (m.expDecay || 0) + MON) });
@@ -59,18 +69,23 @@ const pct = x => `${Math.round(100 * x)}%`.padStart(6);
 	for (const drill of [false, true]) for (const view of ['same', 'budget']) {
 		console.log(`\n=== ${view === 'same' ? 'same regiments' : '75/25 budgets'}, ${drill ? 'drilled 48 months + 6 idle' : 'no drilling'}` +
 			`  (regiments a side: ${PICKS.map(p => `${p.name} ${K * perArmy(p.mods, view)}`).join(', ')}; experience: ${PICKS.map(p => side(p.mods, view, drill).armies[0].country.experience.toFixed(0)).join(' / ')})`);
-		console.log('A beats B                       first battle   war (B runs out of manpower first)   battles   months   end experience A / B');
+		console.log('A vs B                       1st battle   A minus B manpower reserve, points of max pool (battles fought), after ' + MONTHS.map(m => m + ' months').join(' / '));
 		for (let i = 0; i < PICKS.length; i++) for (let j = i + 1; j < PICKS.length; j++) {
 			const A = side(PICKS[i].mods, view, drill), B = side(PICKS[j].mods, view, drill);
 			const [m1, m2] = await Promise.all([pool.mc({ location: { frontage: 10 }, attacker: A, defender: B }, N, { seed: 3 }), pool.mc({ location: { frontage: 10 }, attacker: B, defender: A }, N, { seed: 3 })]);
 			const battle = ((m1.wins[0] + m1.draws / 2) + (m2.wins[1] + m2.draws / 2)) / (2 * N);
-			const opt = sd => ({ endOn: 'manpower', interval: 'ready', sides: sd });
-			const [w1, w2] = await Promise.all([
-				pool.wars({ location: { frontage: 10 }, attacker: A, defender: B }, WARS, opt([warSide(PICKS[i].mods), warSide(PICKS[j].mods)]), 5, PATCH),
-				pool.wars({ location: { frontage: 10 }, attacker: B, defender: A }, WARS, opt([warSide(PICKS[j].mods), warSide(PICKS[i].mods)]), 5, PATCH),
-			]);
-			const war = ((w1.collapsed[1] + w1.undecided / 2) + (w2.collapsed[0] + w2.undecided / 2)) / 2;
-			console.log(`  ${(PICKS[i].name + ' vs ' + PICKS[j].name).padEnd(28)}${pct(battle).padStart(14)}${pct(war).padStart(22)}${((w1.battles + w2.battles) / 2).toFixed(1).padStart(22)}${((w1.months + w2.months) / 2).toFixed(0).padStart(9)}${((w1.exp[0] + w2.exp[1]) / 2).toFixed(0).padStart(12)} / ${((w1.exp[1] + w2.exp[0]) / 2).toFixed(0)}`);
+			const cells = [];
+			for (const months of MONTHS) {
+				const opt = sd => ({ months, endOn: 'none', interval: 'ready', collapseAt: 0, sides: sd });
+				const [w1, w2] = await Promise.all([
+					pool.wars({ location: { frontage: 10 }, attacker: A, defender: B }, WARS, opt([warSide(PICKS[i].mods), warSide(PICKS[j].mods)]), 5, PATCH),
+					pool.wars({ location: { frontage: 10 }, attacker: B, defender: A }, WARS, opt([warSide(PICKS[j].mods), warSide(PICKS[i].mods)]), 5, PATCH),
+				]);
+				// A's reserve minus B's, both seat orders; half-width of the 95% interval from the two halves
+				const d = (w1.reserveDiff - w2.reserveDiff) / 2, h = ((w1.reserveDiffCI[1] - w1.reserveDiffCI[0]) + (w2.reserveDiffCI[1] - w2.reserveDiffCI[0])) / 8;
+				cells.push(`${d >= 0 ? '+' : ''}${Math.round(100 * d)} ±${Math.round(100 * h)}`.padStart(11) + ` (${((w1.battles + w2.battles) / 2).toFixed(1)})`);
+			}
+			console.log(`  ${(PICKS[i].name + ' vs ' + PICKS[j].name).padEnd(28)}${pct(battle).padStart(8)}  ${cells.join('  ')}`);
 		}
 	}
 	console.log(`\n${pool.threads} threads, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
