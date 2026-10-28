@@ -28,6 +28,7 @@ defensive_league = {
 			add = {
 				desc = "UPKEEP_TOTAL_ECO_BASE"
 				value = international_organization_economical_base
+				subtract = root.country_economical_base
 				multiply = 0.0005
 			}
 		}
@@ -42,14 +43,14 @@ defensive_league = {
 			always = yes
 		}
 	}
-
+	
 	modifier = {
 	}
 
 	show_on_diplomatic_map = yes
 	#leader_color = define:NMapColors|DIPLOMACY_DEFENSIVE_LEAGUE_COLOR
 	#member_color = define:NMapColors|DIPLOMACY_DEFENSIVE_LEAGUE_COLOR
-
+	
 	can_join_trigger = {
 		#can only be in one of these
 		is_subject = no
@@ -102,7 +103,7 @@ defensive_league = {
 			}
 		}
 	}
-
+	
 	auto_leave_trigger = {
 		or = {
 			is_subject = yes
@@ -114,7 +115,7 @@ defensive_league = {
 			is_rebel_country = yes
 		}
 	}
-
+	
 	auto_disband_trigger = {
 		total_members < 2
 	}
@@ -203,7 +204,7 @@ defensive_league = {
 							}
 						}
 					}
-
+					
                 }
             }
 			if = {
@@ -215,7 +216,7 @@ defensive_league = {
 				subtract = {
 					desc = "ORGANIZATION_SIZE"
 					value = "scope:recipient.total_members"
-					multiply = 15
+					multiply = 8
 					add = {
 						value = 0
 						scope:recipient = {
@@ -223,9 +224,9 @@ defensive_league = {
 								add = country_economical_base
 							}
 						}
-						divide = "scope:actor.country_economical_base"
-						multiply = 40
-						max = 200
+						divide = "root.country_economical_base"
+						multiply = 20
+						max = 100
 					}
 				}
 				add = {
@@ -251,7 +252,7 @@ defensive_league = {
 			}
 			add = {
 				desc = "AVERAGE_ECONOMICAL_BASE"
-				value = 0
+				value = 0			
 				add = scope:actor.country_economical_base
 				#avg great power score compared to new country. If smaller we wanna join, if bigger we don't
 				subtract = root.country_economical_base
@@ -332,9 +333,25 @@ defensive_league = {
 							}
 							subtract = {
 								value = military_strength
+								#countries further away mean less
+								divide = {
+									value = 1
+									add = {
+										value = "border_distance_to(scope:actor)"
+										divide = 600
+									}
+									min = 1
+								}
 							}
 						}
-						divide = military_strength
+						if = {
+							limit = {
+								NOT = {
+									military_strength <= 0
+								}
+							}
+							divide = military_strength
+						}
 						multiply = 10
 					}
 				}
@@ -361,7 +378,7 @@ defensive_league = {
 			}
 		}
 	}
-
+	
 	ai_desire_to_allow_new_member = {
 		add = {
 			desc = "WE_WANT_THE_ORGANIZATION_TO_GROW"

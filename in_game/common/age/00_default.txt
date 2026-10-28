@@ -3,9 +3,13 @@
 	price_stability = 0.1
 	max_price = 3
 	known_goods_demand_threshold = 100
+	burgher_max_trade_range = 600
+	bureaucracy_maintenance_multiplier = 0.6
 
 	modifier = {
-		lack_of_control_impact_on_warscore = 0.2
+		expected_navy_size_modifier = -0.8	# expected navy size at 20% of its demographic value; ramps to 100% by Age of Revolutions
+
+		lack_of_control_impact_on_warscore = 0.2	# Ars Belli: vanilla 0.1
 	}
 
 	goods_demand = {
@@ -15,6 +19,8 @@
 		global_sugar_pop_demand     = -0.25	# luxury spice, very limited supply
 		global_tea_pop_demand       = -0.25	# confined to East Asia; negligible Old World demand
 	}
+
+	mercenary_starting_experience = 25
 
 	efficiency = 1.0
 
@@ -49,6 +55,8 @@ age_2_renaissance = {
 	price_stability = 0.1
 	max_price = 3
 	known_goods_demand_threshold = 80
+	burgher_max_trade_range = 700
+	bureaucracy_maintenance_multiplier = 0.7
 
 	months_for_exploration_spread = 1800
 
@@ -58,9 +66,10 @@ age_2_renaissance = {
 	}
 	modifier = {
 		expected_army_size_modifier = 1.0
+		expected_navy_size_modifier = -0.64	# expected navy size at 36%
 		levy_maintenance_modifier = 0.1
 
-		lack_of_control_impact_on_warscore = 0.4
+		lack_of_control_impact_on_warscore = 0.4	# Ars Belli: vanilla 0.2
 
 		global_navy_levy_size_modifier = -0.2
 
@@ -76,6 +85,7 @@ age_2_renaissance = {
 	}
 
 	mercenaries = 0.25
+	mercenary_starting_experience = 30
 	efficiency = 0.8
 
 	victory_card = 1
@@ -85,7 +95,7 @@ age_2_renaissance = {
 		clergy_estate = 8
 		burghers_estate = 9
 		peasants_estate = 5
-		dhimmi_estate = 6
+		dhimmi_estate = 7
 		tribes_estate = 5
 		cossacks_estate = 5
 	}
@@ -106,6 +116,8 @@ age_3_discovery = {
 	max_price = 4
 	hegemons_allowed = yes
 	known_goods_demand_threshold = 60
+	burgher_max_trade_range = 800
+	bureaucracy_maintenance_multiplier = 0.8
 
 	months_for_exploration_spread = 1800
 	unique = {
@@ -115,9 +127,10 @@ age_3_discovery = {
 
 	modifier = {
 		expected_army_size_modifier = 2.0
+		expected_navy_size_modifier = -0.48	# expected navy size at 52%
 		levy_maintenance_modifier = 0.25
 
-		lack_of_control_impact_on_warscore = 0.6
+		lack_of_control_impact_on_warscore = 0.6	# Ars Belli: vanilla 0.4
 
 		global_navy_levy_size_modifier = -0.75
 
@@ -133,6 +146,7 @@ age_3_discovery = {
 	}
 
 	war_score_from_battles = -0.05
+	mercenary_starting_experience = 25
 	efficiency = 0.6
 
 	victory_card = 2
@@ -163,7 +177,9 @@ age_4_reformation = {
 	max_price = 5
 	hegemons_allowed = yes
 	known_goods_demand_threshold = 40
+	burgher_max_trade_range = 900
 	months_for_exploration_spread = 1200
+	bureaucracy_maintenance_multiplier = 0.9
 
 	unique = {
 		global_pop_conversion_speed_modifier = 0.33
@@ -172,9 +188,12 @@ age_4_reformation = {
 
 	modifier = {
 		expected_army_size_modifier = 4.0
+		expected_navy_size_modifier = -0.32	# expected navy size at 68%
 		levy_maintenance_modifier = 0.5
 
-		lack_of_control_impact_on_warscore = 0.8
+		global_free_building_levels_modifier = 0.25
+
+		lack_of_control_impact_on_warscore = 0.8	# Ars Belli: vanilla 0.6
 
 		global_navy_levy_size_modifier = -1.0
 
@@ -192,6 +211,7 @@ age_4_reformation = {
 	}
 
 	war_score_from_battles = -0.1
+	mercenary_starting_experience = 20
 	efficiency = 0.4
 	victory_card = 3
 
@@ -224,7 +244,9 @@ age_5_absolutism = {
 	max_price = 5
 	hegemons_allowed = yes
 	known_goods_demand_threshold = 20
+	burgher_max_trade_range = 1000
 	months_for_exploration_spread = 600
+	bureaucracy_maintenance_multiplier = 1.0
 
 	unique = {
 		revoke_privilege_cost_modifier = -0.33
@@ -234,15 +256,18 @@ age_5_absolutism = {
 
 	modifier = {
 		expected_army_size_modifier = 8.0
+		expected_navy_size_modifier = -0.16	# expected navy size at 84%
 		levy_maintenance_modifier = 0.75
 
 		estate_building_destruction_satisfaction_impact = -0.2
 
-		lack_of_control_impact_on_warscore = 1.0
+		lack_of_control_impact_on_warscore = 1.0	# Ars Belli: vanilla 0.8
 
 		global_war_score_efficiency = 0.2
 
 		construction_center_max_level = 2
+
+		global_free_building_levels_modifier = 0.5
 
 		subject_pays_colonial_cost_modifier = 1.0
 
@@ -266,6 +291,7 @@ age_5_absolutism = {
 
 	war_score_from_battles = -0.15
 	mercenaries = -0.40
+	mercenary_starting_experience = 10
 	efficiency = 0.2
 	victory_card = 4
 
@@ -298,10 +324,12 @@ age_6_revolutions = {
 	max_price = 5
 	hegemons_allowed = yes
 	known_goods_demand_threshold = 10
+	burgher_max_trade_range = 1100
+	bureaucracy_maintenance_multiplier = 1.1
 
 	months_for_exploration_spread = 300
 	unique = {
-		global_war_score_efficiency = 0.5
+		global_war_score_efficiency = 1.0
 		subject_loyalty = -30
 	}
 
@@ -314,6 +342,8 @@ age_6_revolutions = {
 		estate_building_destruction_satisfaction_impact = -0.4
 
 		construction_center_max_level = 5
+
+		global_free_building_levels_modifier = 1.0
 
 		global_navy_levy_size_modifier = -2.0
 
@@ -333,6 +363,7 @@ age_6_revolutions = {
 	}
 
 	mercenaries = -0.9
+	mercenary_starting_experience = 5
 	war_score_from_battles = -0.2
 
 
