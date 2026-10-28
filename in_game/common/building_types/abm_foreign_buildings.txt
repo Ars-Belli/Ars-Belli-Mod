@@ -1,0 +1,57 @@
+﻿# Ars Belli: trade_office = vanilla 1.4.4 + the per-location trade office limit in allow
+# (abm_trade_office_slot_free, scripted_triggers/abm_trade_office_triggers.txt; the limit is
+# the "Trade Offices per Location" game rule).
+#
+# feature/update-tradeoffices also replaces trade_office in a file of this name. When the two
+# meet, keep that branch's block and add the one line `abm_trade_office_slot_free = yes` to its
+# allow - nothing else here differs from vanilla except the standalone production method.
+#
+# The production method is the standalone abm_trade_office_requirements
+# (production_methods/abm_trade_office_inputs.txt) because redefining vanilla's inline
+# trade_office_requirements inside a REPLACE: block logs "duplicated production method name".
+REPLACE:trade_office = {
+	audio_tier = 2
+	is_foreign = yes
+	stronger_power_projection = no
+	max_levels = trade_office_max_level
+	need_good_relation = yes
+	pop_type = burghers
+
+	category = trade_category
+
+	employment_size = foreign_trade_employment
+	pop_size_created = foreign_trade_employment
+
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	country_potential = {
+		NOR = {
+			AND = {
+				has_reform = government_reform:japanese_imperial_family
+				country_type = building
+			}
+			has_reform = government_reform:japanese_clan
+		}
+	}
+
+	allow = {
+		market = { in_trade_range_of = scope:actor }
+		# Ars Belli: at most "Trade Offices per Location" offices here, all countries together
+		abm_trade_office_slot_free = yes
+	}
+
+	build_time = trade_post_build_time
+
+	possible_production_methods = {
+		abm_trade_office_requirements
+	}
+
+	modifier = {
+		merchant_capacity_from_building = 0.6
+		building_owner_maritime_presence = 0.05
+		merchant_power_from_building = 0.2
+	}
+}

@@ -1,0 +1,11 @@
+﻿# Ars Belli: upkeep for REPLACE:trade_office (building_types/abm_foreign_buildings.txt).
+# Standalone instead of inline unique_production_methods, because redefining a vanilla
+# production method name inside a REPLACE: block logs "duplicated production method name"
+# (building_type.cpp) - the same approach as abm_training_fields_maintenance.
+abm_trade_office_requirements = { # vanilla 1.4.4 trade_office_requirements
+	paper = 0.03
+	cloth = 0.035
+	salt = 0.025
+
+	category = building_maintenance
+}

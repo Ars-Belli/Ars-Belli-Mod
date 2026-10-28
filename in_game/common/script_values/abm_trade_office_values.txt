@@ -1,0 +1,21 @@
+﻿# Ars Belli trade office limit: how many trade offices one location can hold, all countries
+# together. Read straight from the game rule with has_game_rule, which is a plain bool and safe
+# while building triggers are validated at load, so it never depends on a global variable that
+# on_game_start may not have set yet (a loaded save skips it). Any scope.
+abm_trade_office_limit_value = {
+	value = 10
+	if =      { limit = { has_game_rule = abm_trade_offices_2 }  value = 2 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_3 }  value = 3 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_4 }  value = 4 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_5 }  value = 5 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_6 }  value = 6 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_7 }  value = 7 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_8 }  value = 8 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_9 }  value = 9 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_10 } value = 10 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_12 } value = 12 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_14 } value = 14 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_16 } value = 16 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_18 } value = 18 }
+	else_if = { limit = { has_game_rule = abm_trade_offices_20 } value = 20 }
+}

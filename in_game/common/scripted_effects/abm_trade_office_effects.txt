@@ -1,0 +1,59 @@
+﻿# Ars Belli trade office limit: keep the location variable abm_trade_office_count equal to the
+# number of trade offices in the location (one per owning country), counting offices that are
+# still under construction so a started office holds its slot straight away. Read by
+# abm_trade_office_slot_free (scripted_triggers/abm_trade_office_triggers.txt).
+
+# Location scope.
+abm_recount_trade_offices = {
+	set_variable = { name = abm_trade_office_count value = 0 }
+	every_foreign_buildings_in_location = {
+		limit = {
+			building_type = building_type:trade_office
+			OR = {
+				building_level >= 1
+				building_levels_under_construction >= 1
+			}
+		}
+		location = { change_variable = { name = abm_trade_office_count add = 1 } }
+	}
+	if = {
+		limit = { var:abm_trade_office_count <= 0 }
+		remove_variable = abm_trade_office_count
+	}
+}
+
+# Location scope, from on_building_destroyed (root = the destroyed building): the same count
+# without root, in case the engine still lists the building while the on_action runs.
+abm_recount_trade_offices_without_root = {
+	set_variable = { name = abm_trade_office_count value = 0 }
+	every_foreign_buildings_in_location = {
+		limit = {
+			building_type = building_type:trade_office
+			NOT = { this = root }
+			OR = {
+				building_level >= 1
+				building_levels_under_construction >= 1
+			}
+		}
+		location = { change_variable = { name = abm_trade_office_count add = 1 } }
+	}
+	if = {
+		limit = { var:abm_trade_office_count <= 0 }
+		remove_variable = abm_trade_office_count
+	}
+}
+
+# Country scope: recount every owned location that has a trade office, or still carries a
+# count from one that is gone. Game start and yearly safety net for anything the building
+# on_actions miss (e.g. a location changing owner along with its offices).
+abm_recount_owned_trade_offices = {
+	every_owned_location = {
+		limit = {
+			OR = {
+				has_building = building_type:trade_office
+				has_variable = abm_trade_office_count
+			}
+		}
+		abm_recount_trade_offices = yes
+	}
+}
