@@ -109,16 +109,19 @@ abm_gazaria_culture_choice = {
 		}
 	}
 
-	# c: become Pontic Greek - the inheritance of the Black Sea Greeks, who are
-	# already the largest population in most of our towns.
-	option = {
-		name = abm_gazaria_culture_choice.c
-		ai_chance = { value = 0 }
-
-		effect = {
-			change_culture = culture:pontic_greek_culture
-			add_accepted_culture = culture:ligurian
-			custom_tooltip = abm_gazaria_culture_choice.c.tt
-		}
-	}
+	# c: become Pontic Greek - DISABLED FOR NOW. Kept here so the text, the
+	# effect and the tooltip keys survive; uncomment the block to restore it.
+	# The Pontic culture legacy (sharing TRE's advances) is not implemented yet
+	# either, so offering the culture without its inheritance would be a trap.
+	#
+	# option = {
+	#	name = abm_gazaria_culture_choice.c
+	#	ai_chance = { value = 0 }
+	#
+	#	effect = {
+	#		change_culture = culture:pontic_greek_culture
+	#		add_accepted_culture = culture:ligurian
+	#		custom_tooltip = abm_gazaria_culture_choice.c.tt
+	#	}
+	# }
 }
