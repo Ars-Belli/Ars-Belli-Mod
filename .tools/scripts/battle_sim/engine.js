@@ -630,8 +630,11 @@
 	function simulateWar(scnIn, opts = {}, seed) {
 		const scn = JSON.parse(JSON.stringify(scnIn)), ns = normalize(scn);
 		// interval 'ready': the next battle comes once both sides are back to readyAt (default 99%) of their men, or once one side
-		// has been ready for maxWait months (default 6) and forces it (players fight when fully reinforced)
+		// has been ready for maxWait months (default 6) and forces it (players fight when fully reinforced).
+		// opts.decides = 0 | 1 (with 'ready'): that side picks the moment. It gives battle as soon as it is back to readyAt, whatever
+		// the other side's state; the other side can only force a battle after forceAfter months (default 12) without one.
 		const ready = opts.interval === 'ready', readyAt = opts.readyAt != null ? opts.readyAt : 0.99, maxWait = opts.maxWait || 6;
+		const decides = opts.decides === 0 || opts.decides === 1 ? opts.decides : -1, forceAfter = opts.forceAfter || 12;
 		const months = opts.months || 36, interval = ready ? 1 : Math.max(1, +opts.interval || 2), collapseAt = opts.collapseAt != null ? opts.collapseAt : 0.5;
 		const useExp = opts.experience !== false;
 		const sides = [0, 1].map(i => {
@@ -695,10 +698,10 @@
 			};
 			if (ready) {
 				const readyFor = [0, 0];
-				while (month < months) {
+				for (let waited = 1; month < months; waited++) {
 					tick(0); tick(1); month++;
 					for (const i of [0, 1]) readyFor[i] = men(i) >= readyAt * full[i] ? readyFor[i] + 1 : 0;
-					if ((readyFor[0] && readyFor[1]) || Math.max(...readyFor) >= maxWait) break;
+					if (decides >= 0 ? readyFor[decides] || (waited >= forceAfter && readyFor[1 - decides]) : (readyFor[0] && readyFor[1]) || Math.max(...readyFor) >= maxWait) break;
 				}
 			} else for (let m = 0; m < interval && month < months; m++, month++) { tick(0); tick(1); }
 			trace.push({ battle: battles, month, men: [men(0), men(1)], pool: sides.map(p => p.pool), exp: [0, 1].map(avgExp) });

@@ -249,6 +249,24 @@ Matching regulars needs a smaller levy discipline penalty, which the mod can set
   E += monthly_experience_gain - max(0, experience_decay) x E x (2 - goods access) + EXPERIENCE_GAIN_FROM_MISSIONS 1.0 (on a mission)
   ```
   - **Decay** is a share of current experience: base `experience_decay` 5% (country base values), regulars −1% (so 4%), levies +2% (7%). Monarchies get another −1% from the vanilla age III advance **Military Traditions** (so 3%). A regiment short of goods decays up to twice as fast.
+  - **The total is floored at 0** (`max(0, decay)`): at 0 experience never decays, and going below 0 adds nothing.
+  - **All sources of `experience_decay`** (vanilla 1.4.4 and Ars Belli):
+
+    | Source | Decay | Scope and duration |
+    |---|---|---|
+    | Country base value | +5% | everyone |
+    | Regulars / levies | −1% / +2% | per regiment |
+    | Military Traditions (vanilla advance, monarchy, age III) | −1% | country, permanent |
+    | Leadership (Ars Belli, age III) | −2% | country, permanent |
+    | Hellenism Imperial Cult aspect (Fate of the Phoenix DLC) | −1% | country |
+    | Receiving Military Support (subject relation from the overlord) | −1% | country; the relation breaks on war |
+    | Ars Belli country advances: Chu Veteran Cadre System, North China Veteran Training Corps, Somalia Istunka Tournament, Ito Prepare for War | −1% each | country, permanent |
+    | In battle | −5% | unit, while fighting |
+    | Sieging | −3% | unit, while sieging (blockading −3% for fleets) |
+    | Extensive Training (Italian Wars parliament action; the largest army) | −2.5%, also +0.1 experience a month and +5% discipline | unit, 5 years |
+    | Battle-Hardened Veterans (Italian Wars event 21, option a; one army at 25–100% experience) | −5%, also +5% discipline and +10% morale | unit, 10 years |
+
+  - A Leadership monarchy sits at 1%. Any one more −1% (the Hellenist Imperial Cult, an Ars Belli country advance, military support in peace) brings it to 0, and so does sieging. The Italian Wars modifiers do it for one army.
   - **Gain is flat and constant**, not only while drilling: Ars Belli's Standing Forces +0.25 a month, Leadership +0.5 (and −2% decay), Voluntary Service +0.25.
   - Mercenaries get +0.15 a month and start with the age's `mercenary_starting_experience`.
   - **Checked in game** (Spain 1547, a monarchy in age III, the user's tooltips): a Lanzas regiment at 0.20 experience drilled for one month reads 2.694 = 0.20 + 2.5 − 3% × 0.20. The tooltip shows "Reduces Damage in combat by 1.34%" (= 0.5 × 2.69), and the next month "+2.41%" (Drill Army +250% = +2.5, Experience Decays −0.08%). The game shows experience as a fraction (0.02) and the monthly change in points.
@@ -619,6 +637,22 @@ Equal manpower is about **upkeep and reinforcement**, not the one-time recruitme
 - **Weaker side, 1.5× income enemy at 75% upkeep (45 regiments):** a small army with a big surplus never wins (0% from 40% to 90% upkeep). Building up to match (113% of income, 45 regiments) wins 28% with battles every 2 months and wins 39–51% of the battles; 125% (50 regiments) wins 48–50%. When fighting only at full strength, the richer side refills faster and the weaker one wins at most 2% of the wars at any size, though matching still wins 39% of the battles. Against 2× income nothing works (best 18%, at matching size).
 - Wars nobody lost by month 120 count as half a win; that is why a tiny 16-regiment cavalry army that keeps getting wiped and rebuilt scores 11–13% against 1.5× and 2× income.
 - Experience doesn't change the answer: with it off the equal-income table moves by at most 3 points.
+
+**Battle spacing and picking the moment** (`analysis/surplus_interval.js [wars] [months] [--unit]`; equal incomes, 300 wars a pairing, 120 months). `simulateWar` `decides: i` lets side i pick the moment: it gives battle as soon as it is back to full, and the enemy can only force one after 12 months (`forceAfter`).
+- **Fixed spacing from 1 to 12 months changes nothing for age V infantry.** 100% upkeep is the best answer to every share at every spacing, and the scores move by 1–2 points. A battle costs tens of thousands of men, while 30% of a 2,000-a-month income is 600 men a month. Reinforcement refills a regiment in 4 months anyway, so longer gaps only add surplus, and the surplus is too small to matter. The pool decides.
+- **Age III heavy cavalry (600-man regiments) is the same up to 4 months.** From 9–12 months nobody collapses within 10 years: the surplus refills the small losses between battles, and every war ends undecided.
+- **Picking the moment helps by about 10 points but doesn't overturn size.** Challenger's share of wars won against an enemy at 100% upkeep (wars nobody lost by month 120 count half; the undecided share in brackets):
+
+  | Challenger | Both fight when full | Challenger picks the moment | Enemy picks the moment |
+  |---|---|---|---|
+  | Infantry 70% (28 vs 40 regiments) | 6% (8%) | 12% (21%) | 0% (1%) |
+  | Infantry 90% (36 vs 40) | 44% (73%) | 50% (64%) | 21% (30%) |
+  | Infantry 100% (same size) | 50% | 62% | 38% |
+  | Cavalry age III 70% | 1% (1%) | 45% (89%) | 0% (0%) |
+  | Cavalry age III 90% | 37% (73%) | 49% (82%) | 7% (13%) |
+
+  - A smaller army that waits for full strength almost never wins outright: 70% infantry wins about 2% of the wars decisively, 70% cavalry about 0.5%. Cheap cavalry turns its defeats into stalemates (89% undecided). While it waits, the bigger army holds the field, sieges and takes war score, which the model doesn't count.
+  - Picking the moment is worth most between equal armies: 62% against 38%.
 
 ### Ordered retreats in scenarios
 `attacker.retreatDay` / `defender.retreatDay`: that side orders a retreat at the end of that day (never before day 5). It loses 10% of its men and the battle. `analysis/artillery_raid.js` uses it.
