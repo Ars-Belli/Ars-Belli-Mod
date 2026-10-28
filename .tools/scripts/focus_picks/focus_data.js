@@ -186,12 +186,12 @@ module.exports = {
       ['bookkeeping', 'bank_interest = -0.01\nmax_bonds = 1'],
     ]},
     { id: 'diplomatic', art: 'situation/treaty_of_tordesillas', name: 'Diplomatic', desc: 'The diplomacy of conquest.', adv: [
-      ['flexible_negotiation', 'global_war_score_efficiency = 0.2'],
-      ['formal_diplomacy', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\nimprove_relation_impact = 0.30'],
-      ['diplomatic_influence', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\ndiplomatic_capacity = 1'],
+      ['flexible_negotiation', 'global_war_score_efficiency = 0.2\npeace_offer_negotiation_power = 0.15'],
+      ['formal_diplomacy', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\nimprove_relation_impact = 0.30\nantagonism_monthly_change_modifier = 0.1'],
+      ['diplomatic_influence', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\ndiplomatic_capacity = 2'],
       ['adaptability', 'antagonism_received_modifier = -0.3'],
-      ['diplomatic_corps', 'monthly_diplomats = 0.1\ncasus_belli_creation_speed_modifier = 0.25'],
-      ['indirect_rule', 'global_separatism = -0.1\nglobal_integration_speed_modifier = 0.1'],
+      ['diplomatic_corps', 'monthly_diplomats = 0.1\ncasus_belli_creation_speed_modifier = 0.25\nwar_no_cb_cost_modifier = -0.25'],
+      ['indirect_rule', 'global_separatism = -0.1\nglobal_integration_speed_modifier = 0.25'],
     ]},
    ],
    mil: [
