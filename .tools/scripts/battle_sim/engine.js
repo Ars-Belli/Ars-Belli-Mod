@@ -75,8 +75,7 @@
 		const m = /^generic:(li|hi|lc|hc|art|aux):([1-6])$/.exec(type || '');
 		if (!m) throw new Error('unknown unit type ' + type + (DB ? '' : ' (no unit database loaded)'));
 		const c = CAT[m[1]], [p, s] = AGE[m[1]][+m[2] - 1];
-		const cost = (DB && DB.catCost && DB.catCost[m[1]]) || {};
-		return { n: `${c.name} (age ${m[2]})`, c: m[1], a: +m[2], levy: 0, p, s, i: c.i, cs: c.cs, f: 1, fl: c.fl, sf: c.sf, dt: c.dt, sdd: c.sdd, sdt: 0, mdd: 0, mdt: c.mdt, be: 0, bombard: c.bombard || 0, aux: c.aux || 0, ct: c.ct, bg: cost.bg || 0, ug: cost.ug || 0 };
+		return { n: `${c.name} (age ${m[2]})`, c: m[1], a: +m[2], levy: 0, p, s, i: c.i, cs: c.cs, f: c.f || 1, fl: c.fl, sf: c.sf, dt: c.dt, sdd: c.sdd, sdt: 0, mdd: c.mdd || 0, mdt: c.mdt, be: 0, bombard: c.bombard || 0, aux: c.aux || 0, ct: c.ct };
 	}
 	function terrainInfo(loc) {
 		const t = (layer, key) => {
