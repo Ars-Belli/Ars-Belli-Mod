@@ -70,7 +70,7 @@ potential = {
 1. **`split_traditions_ambitions.py`** — splits age_1 double-modifier into tradition_1/2, renames last to ambition
 2. **`update_advance_names_icons_requires.py`** — updates names/icons/requires based on modifier-to-vanilla mapping
 3. **`diversify_icons.py`** — assigns unique vanilla icons via global round-robin
-4. **`sync_messagetypes.py`** — rebuilds `main_menu/gui/messagetypes.txt` from the current vanilla file + the Ars Belli message-type block. `--check` reports drift without writing. Run after every game patch: EU5 only registers message types from the hardcoded path `gui/messagetypes.txt`, so our copy must be re-synced wholesale.
+4. **`sync_messagetypes.py`** — regenerates `main_menu/gui/messagetypes/abm_messagetypes.txt` (the Ars Belli message types only) from the tables in the script. `--check` reports drift without writing. Since game 1.4.4 message types load from the `gui/messagetypes/` folder (all files, later key wins), so no vanilla copy is needed and nothing to re-sync on patches; add new actions to the tables.
 
 ## Key Modifier Categories → Icon/Requires Mapping
 - **trade** → `red_sea_trade`/`saharan_gold_trade` → `guilds`
