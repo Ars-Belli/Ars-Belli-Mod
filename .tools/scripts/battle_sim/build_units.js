@@ -5,51 +5,13 @@
 // its parent's accumulated value (copy_from) plus its own line, and the category value is added on top.
 const fs = require('fs');
 const path = require('path');
-const GAME = process.argv[2] || 'E:/Steam/steamapps/common/Europa Universalis V/game';
-const MOD = path.resolve(__dirname, '../../..');
+if (process.argv[2]) process.env.EU5_GAME = process.argv[2];
+const { GAME, MOD, loadDb } = require('./paradox.js');
 const OUT = path.join(__dirname, 'units.json');
 
 const ADDITIVE = new Set(['max_strength', 'combat_power', 'frontage', 'combat_speed', 'initiative', 'flanking_ability',
 	'secure_flanks_defense', 'morale_damage_taken', 'strength_damage_taken', 'morale_damage_done', 'strength_damage_done',
 	'bombard_efficiency', 'artillery_barrage', 'damage_taken', 'movement_speed', 'attrition_loss', 'supply_weight']);
-
-// Minimal Paradox script parser: returns [[key, value]] where value is a string or a nested list.
-function parse(text) {
-	const toks = text.replace(/^\uFEFF/, '').replace(/#[^\n]*/g, '').match(/"[^"]*"|[{}=]|[^\s{}=]+/g) || [];
-	let i = 0;
-	const block = () => {
-		const out = [];
-		while (i < toks.length && toks[i] !== '}') {
-			const k = toks[i++];
-			if (toks[i] === '=') {
-				i++;
-				if (toks[i] === '{') { i++; out.push([k, block()]); i++; } else out.push([k, (toks[i++] || '').replace(/"/g, '')]);
-			} else if (k === '{') { block(); i++; } else out.push([k, true]);
-		}
-		return out;
-	};
-	return block();
-}
-
-// Load a database folder from vanilla then the mod; a mod file with the same name replaces the vanilla file.
-function loadDb(rel) {
-	const files = new Map();
-	for (const root of [GAME, MOD]) {
-		const dir = path.join(root, rel);
-		if (!fs.existsSync(dir)) continue;
-		for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.txt')).sort()) files.set(f.toLowerCase(), path.join(dir, f));
-	}
-	const db = {};
-	for (const [, file] of [...files.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
-		for (const [k, v] of parse(fs.readFileSync(file, 'utf8'))) {
-			if (!Array.isArray(v)) continue;
-			const m = k.match(/^(REPLACE|INJECT|TRY_REPLACE|REPLACE_OR_CREATE|INJECT_OR_CREATE):(.+)$/);
-			if (m && m[1].startsWith('INJECT') && db[m[2]]) db[m[2]] = db[m[2]].concat(v);
-			else db[m ? m[2] : k] = v;
-		}
-	}
-	return db;
-}
 
 const cats = loadDb('in_game/common/unit_categories');
 const types = loadDb('in_game/common/unit_types');

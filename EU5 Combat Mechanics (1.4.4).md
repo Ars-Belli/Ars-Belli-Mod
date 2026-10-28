@@ -28,7 +28,9 @@ Combat ticks once per day (1.3 ticked per "hour"; see section 13). The daily tic
    - **Days 1–4 (shorter than the minimum): only overruns.** A side whose battle-line morale has collapsed (≤ 0.05) is wiped out if the other side has at least `MORALE_OVERRUN_FACTOR` = **2×** its men; then the same check with 10×. Otherwise the battle goes on, even when one side's line is already empty.
    - **Day 5 on: the line decides.** If the attacker's three sections hold no men (each under 0.01 strength), the attacker **loses and retreats**; then the same check for the defender. A side is **destroyed** instead only if none of its armies can retreat. The retreat is **shattered** if the army's average morale is below `LOW_MORALE_THRESHOLD` = **0.5** (absolute, 17% of base morale; navies 1.5). If neither line is empty, the 10× overrun check (with collapsed morale) runs.
 
-**Armies joining later.** An army that reaches the location while the battle runs joins it as fresh reserves (the game's own hint: "You can bring neighboring armies to reinforce ongoing battles. If they arrive in time, they will join the fight as fresh reserves"). From there they move up by combat speed like any reserve. They arrive with whatever morale their march left them (section 7).
+**Retreat losses.** `RETREAT_STRENGTH_DAMAGE` = 10% applies only to the **manual shattered retreat** order (the army's Shatter button: "a full retreat makes the army lose X% of its current strength"; `0x143521670`). Losing a battle costs no strength beyond the battle itself; the loser's armies lose `FOOD_PERCENTAGE_LOST_AT_RETREAT` = 50% of their food (`0x142477570`).
+
+**Armies joining later.** An army that reaches the location while the battle runs joins it as fresh reserves (unless its correct section chance puts a regiment straight into its box, section 6) (the game's own hint: "You can bring neighboring armies to reinforce ongoing battles. If they arrive in time, they will join the fight as fresh reserves"). From there they move up by combat speed like any reserve. They arrive with whatever morale their march left them (section 7).
 
 **"Men" in the overrun ratios** is each army's men still alive (current strength), with levies counted at their levy factor (section 8) (`0x143519150`). Navies count cannons instead, and naval levies at `NAVAL_LEVY_IMPACT` = 5%.
 
@@ -73,7 +75,7 @@ morale_loss   = base x LAND_MORALE_DAMAGE_MODIFIER 0.25       (naval 0.05)     [
 | `CATEGORY_TAKEN` | both | × B category `damage_taken` | infantry 1.0, **cavalry 0.30**, artillery 1.25, auxiliary 1.25 |
 | `COMBINED_ARMS` | both | × (1 + A side's combined-arms bonus) | *(code, `0x142486dd0`)* counts **regiments** per category over the side's armies, auxiliaries excluded. If any category is ≥ `combined_arms_max_threshold` 50% of them, the bonus is **0**. Otherwise each category with ≥ `combined_arms_min_percent_for_bonus` 10% adds `combined_bonus_per_type` 0.025 (at most 5 categories, so ≤ 12.5%). An army that is half heavy infantry gets nothing |
 | `SECURED_FLANKS` | both | × max(0.05, 1 − n × B `secure_flanks_defense`), n = secured flanks | infantry 0.05 per secured flank, others 0 |
-| `TOPOGRAPHY`, `VEGETATION`, `CLIMATE` | both | × (1 + A's terrain modifier + A unit type `combat = { … }` entry) for the battle location | e.g. cavalry −10% in mountains, wetlands, jungle |
+| `TOPOGRAPHY`, `VEGETATION`, `CLIMATE` | both | × (1 + A's regiment terrain value + A unit type `combat = { … }` entry) for the battle location, one factor per layer | e.g. cavalry −10% in mountains, wetlands, jungle. The only data that feeds these is the `combat` blocks of unit categories and unit types (added together). No country-level terrain modifier type exists in 1.4.4 (checked modifier definitions, localization and exe strings) |
 | `COASTAL` / `INLAND` | both | × (1 + A coastal or inland bonus) | |
 | `RIVER` | both | × (1 + A river modifier), if the location has a river | heavy cavalry −10% |
 | `STRENGTH_DAMAGE_DONE` | strength | × (1 + A `strength_damage_done`) | unit type + category (light units −10%) |
@@ -96,11 +98,26 @@ Naval combat swaps in `NAVAL_DAMAGE_DONE`, `OWN_COAST`, `GUNS_VS_HULL` and `NAVA
 
 - Roll = random 0–9 (`COMBAT_DICE_SIDE` = 10), re-rolled per side every phase (4 days). The tooltip shows it +1 (1–10), but the damage code adds the raw 0–9, so rolls run **5–14** before bonuses.
 - Dice modifiers for a side:
-  - **Commander:** the `commander_combat_bonus` of the side's commander, rounded to whole dice. The commander is the best-rated leader among the side's armies; traits give this modifier. Raw general skill was not seen adding dice directly.
+  - **Commander:** the `commander_combat_bonus` of the side's commander, rounded to whole dice. The commander is the best-rated leader among the side's armies. **Only traits give it** (Offensive Planner +1, others ±1 or +2); skill adds no dice. Confirmed on 9 live battles in three 1342 saves: each side's untyped dice entry is just the die shown (last raw die + 1), and a separate `COMMANDER` entry appears only for generals with such a trait.
   - **Attacker only:** river crossing −1 (`RIVER_CROSSING_DICE`), strait −2 (`STRAIT_CROSSING_DICE`), landing from the sea −1 (`SEA_LANDING_DICE`).
   - **Attacker only, terrain:** minus the `defender` value of the location's topography, vegetation and climate. Mountains −2; hills, plateau, wetlands and narrows −1; woods, forest and jungle −1; climates 0. So an attack into forested mountains is −3 dice, plus −1 across a river.
 - The roll caps at 15 (`COMBAT_MAX`), which only a dice bonus can reach (14 + 1). Each extra die is worth the same until the cap.
 - The non-die entries of the side's dice list are summed into the dice modifier for every hit that side deals. *(code, `0x142481230`)*
+
+---
+
+### Generals
+A general's skills scale static modifiers on his army (`static_modifiers/character.txt`, per skill point):
+
+| Skill | Per point | At 75 |
+|---|---|---|
+| Military (`general_mil`) | discipline +0.1%, combat speed +0.5%, movement speed +0.2% | +7.5% discipline, +37.5% combat speed |
+| Diplomatic (`general_dip`) | land morale +0.2%, army initiative +1%, food consumption −0.5% | +15% morale, +75% initiative (the initiative bonus saturates near +30% of chance, section 4) |
+| Administrative (`general_adm`) | siege ability +0.1%, correct section chance +0.1%, logistics distance +0.5%, possible frontage +0.1% | +7.5% siege ability, +7.5% correct section chance |
+
+Traits add their own modifiers (e.g. Defensive Planner +0.1 military tactics).
+
+Simulated (v3, 3,000 even Renaissance battles, 16 heavy infantry + 6 heavy cavalry + 2 artillery a side, one side with the general): a **75/75/75 general wins 88%**. Military 75 alone wins 71%, and so does diplomatic 75 alone. For comparison, +0.1 tactics wins 65% and +0.2 tactics 77%. A good general is worth more than any single country modifier.
 
 ---
 
@@ -134,9 +151,19 @@ Category combat speed: light infantry 3, heavy infantry 2, cavalry 5, artillery 
 
 ## 6. Frontage, sections and targeting *(code)*
 
-- **Battle frontage W** is the location's `local_frontage_allowed`: 10 base (static modifier on every location), mountains −4, hills −3, wetlands −3, plateau −1, forests −2 to −4 (vegetation), never below 2 (`MIN_FRONTAGE_AFTER_TERRAIN`). `possible_frontage_modifier` is read in the same code (where exactly was not traced).
+- **Battle frontage W** is the location's `local_frontage_allowed` (`0x14247a0d0`), never below 2 (`MIN_FRONTAGE_AFTER_TERRAIN`):
+  - 10 base (static modifier on every location);
+  - terrain: mountains −4, hills −3, wetlands −3, plateau −1, forests −2 to −4 (vegetation);
+  - location rank (`location_ranks`): town −1, city −2, megalopolis −3.
+  - `possible_frontage_modifier` (advances, generals' administrative skill) is not read there.
+- **Forts don't touch field battles.** The engine's dice modifier types are DICE, TOPOGRAPHY, VEGETATION, CLIMATE, RIVER_CROSSING, STRAIT_CROSSING, SEA_LANDING and COMMANDER: no fort entry. No fort modifier changes frontage. Forts matter for sieges and zones of control only.
 - **Three sections**, left, centre and right, each holding **1.25 × W** frontage of engaged regiments (`MAX_FRONTAGE_OVERSTACKING`, also `max_frontage = 1.25` per section in `unit_formation_preference`). Every land regiment has frontage 1.
-- **Deployment** (`AddUnit`): each regiment goes to the section its army's formation preference points to (`unit_formation_preference/army.txt`: `balanced_army` lets every category use any section; `cav_inf_cav` puts cavalry on the flanks and infantry and artillery in the centre), if that section has room; otherwise it waits in reserve. Auxiliaries always go to reserve.
+- **Boxes.** Every regiment carries a `box` (Left / Center / Right; no box stored = Center), set when its army is formed by the army's formation (`unit_formation_preference/army.txt`, "autobalance").
+  - Saves show `balanced_army` dealing identical regiments out in a snake: C L R R L C C L R R L C…, so 16 regiments make 5 C, 5 L and 6 R.
+  - `cav_inf_cav` weights cavalry 10 on each flank and infantry 20 in the centre.
+  - The autobalance code itself was not found. The rule above is read from 535 armies in a 1342 save. Boxes persist, so armies that gained and lost regiments over time show mixed patterns.
+- **Deployment** (`AddUnit`, `0x142473ae0`, *code*): a regiment enters its box while that section holds **less than** 1.25 × W frontage (so the last one may overfill it slightly); otherwise it waits in reserve. Auxiliaries go to reserve.
+- **Late arrivals:** an army that is not there at the start reaches its box only with `correct_box_chance` ("Correct Section Chance": "the chance of a unit late to a battle joining their intended section"); otherwise it goes to reserve. The base is 0. Several age advances give +10%, and a general gives +0.1% per administrative point.
 - **Reserves** (`HandleReserves`): each day a side spends a frontage budget of W on reserve regiments. Each considered regiment scores every section as *enemy engaged frontage facing it + our free room* and moves into the best one with its combat-speed chance (section 5).
 - **Targets** (`0x142481230`): an engaged regiment hits the enemy section **facing** it (left faces their right, centre faces centre). It keeps its last target while that target is still in the section; otherwise it picks a random enemy there. If the facing section is empty, it looks in this order: the enemy centre, left, right, reserve, then any other enemy regiment in the battle.
 - **Flank attack** (× flanking ability): the target is not in the section facing the attacker, the attacker's side has regiments facing the target's section, and the enemy section facing the attacker is empty. In short: a section whose opposite number is gone helps a neighbouring fight from the side.
@@ -447,7 +474,8 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 {
   "name": "…", "runs": 2000,
   "location": { "topography": "hills", "vegetation": "forest", "climate": "continental",
-                "crossing": "none|river|strait|landing", "river": true, "coastal": false, "frontage": null },
+                "crossing": "none|river|strait|landing", "river": true, "coastal": false, "frontage": null,
+                "rankFrontage": -1 },
   "countries": { "FRA": { "discipline": 0.05, "tactics": 1.1, "moraleMod": 0.1, "moraleFlat": 0,
                  "commanderDice": 1, "experience": 0, "levyCE": 0.3, "levyExperience": 0,
                  "initiativeMod": 0, "speedMod": 0, "movementCost": 0.0069,
@@ -457,8 +485,9 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
                  "maintenanceEfficiency": 0, "levyMaintenance": 0, "reinforceEfficiency": 0, "reinforceSpeed": 0 } },
   "attacker": { "armies": [ { "name": "…", "country": "FRA", "formation": "balanced|cav_inf_cav",
                 "arrivalDay": 0, "marchDays": 6, "morale": null,
+                "general": { "adm": 60, "dip": 70, "mil": 80, "dice": 1 },
                 "units": [ { "type": "a_musketeers", "count": 10, "section": "L|C|R|reserve",
-                             "strength": 0.8, "morale": 0.9, "experience": 25, "levy": false } ] } ] },
+                             "strength": 0.8, "morale": 0.9, "moraleAbs": 2.6, "experience": 25, "levy": false } ] } ] },
   "defender": { "armies": [ … ] },
   "costs": { "hc": { "buildGold": 12, "upkeepGold": 3, "reinforceGold": 20 }, "a_musketeers": { … } },
   "war": { "battles": 8, "monthsBetweenBattles": 3,
@@ -467,7 +496,9 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 ```
 
 - Percentages are fractions: 0.05 = +5%. `tactics` is the absolute value (base 1.0). `commanderDice` is the side commander's `commander_combat_bonus`; the side uses the highest among its armies present.
-- `morale` (army or unit) is a fraction of max morale and overrides `marchDays`. Use it when a screenshot shows an army's current morale.
+- `morale` (army or unit) is a fraction of max morale and overrides `marchDays`. Use it when a screenshot shows an army's current morale. `moraleAbs` is current morale in absolute points (what saves store) and overrides both.
+- `general` adds the skill modifiers of section 3 to that army only; `dice` is its trait dice (`commander_combat_bonus`). A country's `correctBoxChance` sets how often late regiments reach their box.
+- `rankFrontage` is the location rank's frontage change (town −1, city −2, megalopolis −3).
 - `arrivalDay` > 0 means the army joins on that day as reserves. Defenders coming from a neighbouring location also march, so give them `marchDays`.
 - `type` is a unit key from `units.json` (`sim.js --units musket` to search), or `generic:<li|hi|lc|hc|art|aux>:<age 1-6>`.
 - `costs` (optional) overrides the base-price gold per unit key or category: `buildGold` per regiment, `upkeepGold` per regiment a month at full strength, `reinforceGold` per 1,000 men. Use it when market prices are far from base.
@@ -483,18 +514,37 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
   - A side is **worn down** once it can no longer refill its army past half strength before the next battle.
   - It is an expected-value model: each battle uses averages from a fresh Monte Carlo of the armies as they stand.
 
+### From a save to a scenario (`from_save.js`)
+Needs a **text** save: debug-mode saves start with `SAV0300` (binary ones with `SAV0303`).
+
+```
+node .tools/scripts/battle_sim/from_save.js <save.eu5|latest> --list
+node .tools/scripts/battle_sim/from_save.js <save|latest> --attacker <army id|TAG> --defender <army id|TAG> [--at <location>] [--out scenarios/x.json]
+```
+
+- **Regiments:** type, men, current morale (`moraleAbs`, absolute), experience, levy flag, and section from the stored box.
+- **Generals:** traits plus skill modifiers, as a per-army country entry.
+- **Location:** template terrain and rank. The river crossing comes from `locations.png` + `rivers.png`: a river along the border between the attacker's location and the battle location.
+- **Countries:** combat values summed from these sources, each listed under `notes`:
+  - base values, army tradition and war exhaustion;
+  - the proper-culture nobles ratio (up to +10% discipline);
+  - advances, law policies, estate privileges, timed modifiers and societal values.
+  - Not counted: religion, culture, rulers and cabinet, government reforms, situations, and conditional auto-modifiers. Compare the notes with the military tab and edit the numbers if they differ.
+- **Manpower:** max, monthly income and current pool.
+- `paradox.js` holds the shared script and save readers. The binary-save reader `eu5save.js` lives on branch `feature/trade-office-limit-1.4`.
+
 ### From an in-game screenshot to a scenario
 Read, per army, the regiments by type (the unit names map to keys; names are in `units.json`), their count, and if visible each one's men and morale. Per country, read discipline, military tactics, morale, combat speed, initiative, unit power and levy combat efficiency from the military tab or modifier tooltips; read the general's combat bonus. For the location, read topography, vegetation, a river and whether the attacker crossed one. Then run `sim.js` and compare the day-by-day sample with the game's battle screen.
 
 ### Approximated in the simulator
-- the order regiments are placed inside one formation;
-- reinforcements always joining as reserves;
+- formation boxes in hand-made scenarios (the snake rule read from saves; scenarios built from a save carry the exact boxes);
+- which regiments overflow into reserve when a section is full (the game sorts them first; the order was not decoded);
 - the 120-day cap;
 - the reinforcement goods basket, and the war of attrition's expected-value steps (section above).
 
 Exact since v3 (2026-10-28): the end rules (section 1, step 7), bombard (W guns per section, one roll per gun, target forgotten on a miss), the melee fallback order and flank rule, combined arms by regiment count with the 50% cut-off, and the dice re-roll when the bombard phase ends.
 
-Not modelled: general traits other than dice, country-specific per-terrain unit modifiers, battles at a fort, naval combat.
+Generals are modelled through skills plus trait dice (`general: { adm, dip, mil, dice }` on an army); other trait modifiers come in through `from_save.js`. There are no country-level terrain modifiers to model, and forts don't change field battles. Not modelled: naval combat.
 
 ---
 

@@ -57,8 +57,17 @@
 		commanderDice: 0, movementCost: D.MOVEMENT_COST, experience: 0, levyExperience: 0,
 		power: {}, sdd: 0, sdt: 0, mdd: 0, mdt: 0, vsHeretic: 0, vsHeathen: 0, religion: null, religionGroup: null,
 		combinedPerType: D.COMBINED_PER_TYPE, combinedMin: D.COMBINED_MIN, combinedMax: D.COMBINED_MAX,
-		reinforceEfficiency: 0, maintenanceEfficiency: 0, reinforceSpeed: 0, levyMaintenance: 0,
+		reinforceEfficiency: 0, maintenanceEfficiency: 0, reinforceSpeed: 0, levyMaintenance: 0, correctBoxChance: 0,
 	};
+	// a general's skills (static_modifiers/character.txt general_adm/dip/mil, per point) and trait dice, on his army only
+	const GENERAL_PER_POINT = { mil: { discipline: 0.001, speedMod: 0.005 }, dip: { moraleMod: 0.002, initiativeMod: 0.01 }, adm: { correctBoxChance: 0.001 } };
+	function withGeneral(c, g) {
+		if (!g) return c;
+		const o = { ...c, power: { ...c.power } };
+		for (const [skill, mods] of Object.entries(GENERAL_PER_POINT)) for (const [k, x] of Object.entries(mods)) o[k] = (o[k] || 0) + x * (+g[skill] || 0);
+		o.commanderDice = (o.commanderDice || 0) + (+g.dice || 0);
+		return o;
+	}
 	const country = (spec, countries) => { const c = typeof spec === 'string' ? (countries && countries[spec]) || {} : spec || {}; return { ...COUNTRY_DEFAULTS, ...c, power: { ...(c.power || {}) } }; };
 
 	function unitStats(type) {
@@ -76,13 +85,14 @@
 			return (TERRAIN_FALLBACK[layer] || {})[key] || [0, 0];
 		};
 		const topo = t('topography', loc.topography || 'flatland'), veg = t('vegetation', loc.vegetation || 'farmland'), cli = t('climate', loc.climate || '');
-		const frontage = loc.frontage != null ? loc.frontage : Math.max(D.MIN_FRONTAGE, D.BASE_FRONTAGE + topo[1] + veg[1] + cli[1]);
+		// local_frontage_allowed: 10 + terrain + location rank (town -1, city -2, megalopolis -3), at least 2 (0x14247a0d0)
+		const frontage = loc.frontage != null ? loc.frontage : Math.max(D.MIN_FRONTAGE, D.BASE_FRONTAGE + topo[1] + veg[1] + cli[1] + (+loc.rankFrontage || 0));
 		const crossing = { river: 1, strait: 2, landing: 1 }[loc.crossing] || 0;
 		return { frontage, attackerDice: -(topo[0] + veg[0] + cli[0]) - crossing, keys: [loc.topography, loc.vegetation, loc.climate].filter(Boolean), river: !!loc.river, coastal: !!loc.coastal };
 	}
 
 	function buildArmy(army, sideIdx, armyIdx, countries) {
-		const c = country(army.country, countries);
+		const c = withGeneral(country(army.country, countries), army.general);
 		const regs = [];
 		const maxMor = D.LAND_MORALE * (1 + c.moraleMod) + c.moraleFlat;
 		const startMorFrac = army.morale != null ? army.morale : Math.max(0, 1 - (army.marchDays || 0) * c.movementCost);
@@ -95,7 +105,7 @@
 				if (str < D.MIN_STRENGTH) continue; // an emptied regiment does not take part
 				regs.push({
 					side: sideIdx, army: armyIdx, grp: gi, type: g.type, name: u.n, cat: u.c, levy, u, c, maxStr, str, start: str,
-					maxMor, mor: maxMor * (g.morale != null ? g.morale : startMorFrac),
+					maxMor: Math.max(maxMor, +g.moraleAbs || 0), mor: g.moraleAbs != null ? +g.moraleAbs : maxMor * (g.morale != null ? g.morale : startMorFrac),
 					disc: c.discipline + (levy ? D.LEVY_DISCIPLINE : 0) + (g.discipline || 0),
 					exp: g.experience != null ? g.experience : (levy ? c.levyExperience : c.experience),
 					prefSection: g.section || null, section: 'absent', engaged: false, target: null, pendStr: 0, pendMor: 0,
@@ -112,19 +122,28 @@
 	// overrun "men": every regiment of the side's armies in the battle, levies at their factor (0x143519150)
 	const sideMen = regs => regs.reduce((t, r) => t + (r.section === 'absent' ? 0 : r.str * (r.levy ? levyFactor(r.c) : 1)), 0);
 
-	// AddUnit: section by formation (or the unit's own section) while it has room (1.25 x W), else reserve
-	function deploy(armyRegs, formation, width, sideRegs, toReserve) {
+	// Formation boxes (the army's autobalance, as stored in saves): "balanced" deals regiments out in a snake,
+	// C L R R L C C L R ...; "cav_inf_cav" snakes cavalry over L R R L ... and puts the rest in the centre.
+	const SNAKE3 = ['C', 'L', 'R', 'R', 'L', 'C'], SNAKE2 = ['L', 'R', 'R', 'L'];
+	function boxes(armyRegs, formation) {
+		let i = 0, j = 0;
+		for (const r of armyRegs) {
+			if (r.u.aux) { r.box = null; continue; }
+			if (r.prefSection) { r.box = r.prefSection; continue; }
+			r.box = formation === 'cav_inf_cav' ? ((r.cat === 'lc' || r.cat === 'hc') ? SNAKE2[j++ % 4] : 'C') : SNAKE3[i++ % 6];
+		}
+	}
+	// AddUnit (0x142473ae0): a regiment enters its box while that section holds less than 1.25 x W frontage, else
+	// reserve. Armies arriving after the start reach their box only with correct_box_chance, else reserve.
+	function deploy(armyRegs, formation, width, sideRegs, late, rng) {
 		const cap = D.OVERSTACK * width;
 		const used = s => sideRegs.filter(x => x.section === s && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0);
-		let rr = 0;
+		boxes(armyRegs, formation);
 		for (const r of armyRegs) {
 			r.section = 'reserve';
-			if (toReserve || r.u.aux) continue;
-			let prefs;
-			if (r.prefSection) prefs = [r.prefSection];
-			else if (formation === 'cav_inf_cav') prefs = (r.cat === 'lc' || r.cat === 'hc') ? (rr++ % 2 ? ['R', 'L'] : ['L', 'R']) : ['C'];
-			else prefs = [['C', 'L', 'R'][rr++ % 3]];
-			for (const s of prefs) { if (s === 'reserve') break; if (used(s) + (r.u.f || 1) <= cap) { r.section = s; break; } }
+			if (!r.box || r.box === 'reserve') continue;
+			if (late && !(rng() < (r.c.correctBoxChance || 0))) continue;
+			if (used(r.box) < cap) r.section = r.box;
 		}
 	}
 
@@ -199,7 +218,7 @@
 		let curDay = 0;
 		const arrived = i => sides[i].filter(a => (a.army.arrivalDay || 0) <= curDay);
 		const leadCountry = i => (arrived(i)[0] || sides[i][0]).c;
-		const arrive = (i, day) => { for (const a of sides[i]) if ((a.army.arrivalDay || 0) === day) deploy(a.regs, a.army.formation || 'balanced', W, all[i], day > 0); };
+		const arrive = (i, day) => { for (const a of sides[i]) if ((a.army.arrivalDay || 0) === day) deploy(a.regs, a.army.formation || 'balanced', W, all[i], day > 0, rng); };
 		const sideDice = i => Math.max(0, ...arrived(i).map(a => a.c.commanderDice | 0)) + (i === 0 ? terr.attackerDice : 0);
 		const roll = () => { for (const i of [0, 1]) dice[i] = Math.floor(rng() * D.DICE_SIDES); };
 		const lineStrength = (i, s) => all[i].filter(r => r.section === s).reduce((t, r) => t + r.str, 0);
@@ -537,6 +556,6 @@
 		return { ...r, target: B };
 	}
 
-	const api = { D, CAT, CATS, AGE, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
+	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BattleSim = api;
 })(typeof window !== 'undefined' ? window : globalThis);
