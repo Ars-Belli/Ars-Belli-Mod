@@ -50,6 +50,41 @@ ABTAU_f = {
 	}
 }
 
+ABGOT_f = {
+
+	level = 2	
+	required_locations_fraction = 100
+	rule = historical
+
+	potential = {
+		OR = {
+			culture = culture:gothic_culture
+			culture = culture:ligurian
+		}
+		original_capital ?= { region = region:steppes_region }
+	}
+	
+	allow = {
+		owns = area:crimea_area
+	}
+	
+	color = map_FEO
+	
+	areas = {
+		crimea_area
+	}
+	form_effect = {
+		# A Ligurian state that unites Gothia takes the Gothic name. The old
+		# culture stays accepted, so the Genoese towns keep their rights - the
+		# same pairing as vanilla's lordship_of_ireland.
+		if = {
+			limit = { culture = culture:ligurian }
+			change_culture = culture:gothic_culture
+			add_accepted_culture = culture:ligurian
+		}
+	}
+}
+
 GLH_f = { #Golden Horde formable
 	level = 4
 	required_locations_fraction = 0.6
