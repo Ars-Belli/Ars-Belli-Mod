@@ -120,8 +120,10 @@ function countryContext(cid) {
 		addBlock(acc, notes, `societal value ${sv} ${x > 0 ? '+' : ''}${x.toFixed(0)}`, get(societal[sv], x < 0 ? 'left_modifier' : 'right_modifier'), Math.abs(x) / 100);
 	}
 	const econ = c.economy || {};
+	const year = +String(save.date() || '1337').split('.')[0];
+	const age = +Object.keys(DATA.ages).filter(a => DATA.ages[a].year <= year).sort((a, b) => b - a)[0] || 1;
 	return {
-		id: +cid, tag: tags[cid], capital: N(c.capital), primaryCulture: N(c.primary_culture), acceptedCultures: list(c.accepted_cultures).map(Number),
+		id: +cid, tag: tags[cid], year, age, advances: Object.keys(c.researched_advances || {}), capital: N(c.capital), primaryCulture: N(c.primary_culture), acceptedCultures: list(c.accepted_cultures).map(Number),
 		religion: N(c.primary_religion), government: gov.type,
 		taxRates: Object.fromEntries(Object.entries(econ.tax_rates || {}).map(([k, v]) => [k, +v])),
 		// estates: satisfaction, wealth impact and last month's income lines (estate_manager)
@@ -221,6 +223,8 @@ function locationScenario(lid, country) {
 			integration: l.integration || (l.cores && list(l.cores).map(Number).includes(+l.owner) ? 'core' : 'conquered'),
 			capital: +country.capital === lid, marketCenter: !!market && +market.center === lid, roadToCapital: l.road_to_capital === 'yes',
 			port: !!l.port, rgoWorkers: N(l.max_raw_material_workers), garrison: N(l.garrison),
+			// timed location modifiers (event modifiers such as quality_merino_wool) with their size
+			timedModifiers: list((l.timed_modifiers || {}).timed_modifiers).filter(t => t && t.modifier).map(t => [t.modifier, N(t.size) ?? 1]),
 			province: N(l.province), market: N(l.market), marketAccess: N(l.market_access),
 			pops, buildings,
 		},
@@ -239,6 +243,7 @@ const pricesOf = id => {
 	if (m && m.goods) for (const [g, v] of Object.entries(m.goods)) if (v && v.price !== undefined) prices[g] = +v.price;
 	return prices;
 };
+const foodPriceOf = id => { const m = id ? marketOf(id) : null; return m && m.price !== undefined ? +m.price : undefined; };
 const write = scenario => {
 	const out = flag('--out');
 	if (out) { fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true }); fs.writeFileSync(out, JSON.stringify(scenario, null, '\t')); console.log('wrote', out); }
@@ -257,7 +262,7 @@ if (flag('--country')) {
 		if (!s) continue;
 		locations.push(s.location);
 		observed[lid] = s.observed;
-		if (s.location.market && !markets[s.location.market]) markets[s.location.market] = { prices: pricesOf(s.location.market) };
+		if (s.location.market && !markets[s.location.market]) markets[s.location.market] = { prices: pricesOf(s.location.market), foodPrice: foodPriceOf(s.location.market) };
 	}
 	write({ name: `${tags[cid]} ${save.date()}`, source: path.basename(file), capital: country.capital, country, locations, markets, observed });
 	process.exit(0);
@@ -272,4 +277,4 @@ if (!first) throw new Error('no location ' + q);
 const country = countryContext(first.owner);
 const s = locationScenario(lid, country);
 write({ name: `${s.location.key} (${tags[first.owner]}) ${save.date()}`, source: path.basename(file), location: s.location, country,
-	market: { id: s.location.market, prices: pricesOf(s.location.market) }, observed: s.observed });
+	market: { id: s.location.market, prices: pricesOf(s.location.market), foodPrice: foodPriceOf(s.location.market) }, observed: s.observed });

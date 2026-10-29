@@ -243,6 +243,21 @@ for (const m of readText('in_game/map_data/location_templates.txt')[0].matchAll(
 	const o = {}; for (const kv of m[2].matchAll(/(\w+)\s*=\s*([\w.]+)/g)) o[kv[1]] = kv[2];
 	locations.push([m[1], o.topography || '', o.vegetation || '', o.climate || '', o.raw_material || '', o.natural_harbor_suitability ? +o.natural_harbor_suitability : 0, o.culture || '', o.religion || '', 0, 0]);
 }
+// province and area of every location (map_data/definitions.txt: continent > subcontinent > region > area > province { locations });
+// appended as [10] province index into `provinces`, [11] area index into `areas`
+const provinces = [], areas = [];
+{
+	const idOf = new Map(locations.map((l, i) => [l[0], i]));
+	const stack = [];
+	for (const tok of readText('in_game/map_data/definitions.txt')[0].replace(/^﻿/, '').replace(/#[^\n]*/g, '').match(/\{|\}|[^\s{}=]+/g)) {
+		if (tok === '{') continue;
+		if (tok === '}') { stack.pop(); continue; }
+		if (stack.length === 5) { const i = idOf.get(tok); if (i !== undefined) { locations[i][10] = provinces.length - 1; locations[i][11] = areas.length - 1; } continue; }
+		stack.push(tok);
+		if (stack.length === 4) areas.push(tok);
+		if (stack.length === 5) provinces.push(tok);
+	}
+}
 const WATER = new Set(['ocean', 'deep_ocean', 'coastal_ocean', 'inland_sea', 'narrows', 'lakes', 'high_lakes', 'ocean_wasteland']);
 for (const [id, ml] of Object.entries(MAPJ)) {
 	const l = locations[id - 1];
@@ -263,6 +278,13 @@ for (const root of [GAME, MOD]) {
 				scalar(gd, 'category') || 'all', get(v, 'boolean') === 'yes' ? 1 : 0];
 		}
 }
+
+// ---- ages: start year, production efficiency multiplier of building levels, market price stability and price clamps
+// (min_price is not set by any age file; 0.1 x default price is the engine default fitted from the 1547 save)
+const ages = {};
+for (const [k, v] of Object.entries(loadDb('in_game/common/age')))
+	if (AGE_N[k]) ages[AGE_N[k]] = { key: k, year: scalar(v, 'year'), efficiency: scalar(v, 'efficiency') ?? 1, priceStability: scalar(v, 'price_stability') ?? 0.1,
+		maxPrice: scalar(v, 'max_price') ?? 3, minPrice: scalar(v, 'min_price') ?? 0.1 };
 
 // ---- English names for everything kept
 const loc = {};
@@ -294,10 +316,10 @@ for (const k of used) if (scripted[k]) keptScripted[k] = scripted[k];
 const data = {
 	built: new Date().toISOString().slice(0, 10), game: '1.4.4',
 	defines: Object.fromEntries(KEEP_DEFINES.filter(s => defines[s]).map(s => [s, defines[s]])),
-	values, scripted: keptScripted, pops, estates, ranks, static: staticMods, countryBase,
+	values, scripted: keptScripted, pops, estates, ranks, ages, static: staticMods, countryBase,
 	goods, methods, demands, prices, buildings, levies,
 	terrain: { topography: terrain('in_game/common/topography'), vegetation: terrain('in_game/common/vegetation'), climate: terrain('in_game/common/climates') },
-	locations, modifierTypes, names,
+	locations, provinces, areas, modifierTypes, names,
 };
 fs.writeFileSync(OUT, JSON.stringify(data));
 console.log('wrote', OUT, (fs.statSync(OUT).size / 1024).toFixed(0) + ' KB:', Object.keys(buildings).length, 'buildings,', Object.keys(methods).length,
