@@ -74,7 +74,7 @@ yearly = local_population_growth + global_population_growth                  (al
 
 ## 3. Manpower and sailors
 
-*(code, `0x1427892e0`; save: Spain −6.2%, see Section 9)*
+*(code, `0x1427892e0`; save: Spain +0.1%; Sevilla equals the in-game tooltip)*
 
 ```
 location manpower = local_manpower × (1 + local_manpower_modifier) × max(control, 0.10)
@@ -83,6 +83,8 @@ max manpower      = income × 60  (MAX_MANPOWER_YEARS 5) + flat max_manpower
 ```
 - **`local_manpower` comes only from buildings**, scaled by staffing (Section 1). Armory 0.01 and training fields 0.01–0.025 per level, sergeantry 0.015 in the capital. Soldiers pops staff them. So manpower = soldiers in barracks, not population.
 - **Control below 10% still counts as 10%** (`NCountry.MILITARY_CONTROL_FLOOR`, a define missing from the define file). The same floor applies to sailors and levies.
+- The location panel adds local and country bonuses in one bracket (Sevilla: 85 × 1.34 = 113.9); the country's income multiplies the country bonus on top (85 × 1.24 × 1.10 = 115.9).
+- Town rights count: Sevilla's Fortress Town gives +20% local manpower.
 - Sailors are the same with `local_sailors` (docks 0.016 … 0.2 per level).
 
 ---
@@ -142,7 +144,7 @@ crown income         = Σ estate tax base × tax rate × tax efficiency
 ```
 - **Enfranchisement**: country base 0.25, `serfdom_vs_free_subjects` ±0.33, privileges ±0.05–0.10; location: rank (rural −0.2, town +0.1, city +0.25, megalopolis +0.5) and `control` +0.5 × control. Sevilla: 0.7823, exactly the save's.
 - **Uncontrolled wealth** (wealth × (1 − control)) goes to the estates untaxed.
-- **Tax efficiency**: Spain's `paid_taxes = taxable income × rate × 1.2475` for every estate. Its summed `tax_income_efficiency` is only +0.15, so 0.0975 of it is unexplained *(open; the tooltip also lists "Estate Enrichment")*. A missing estate in `tax_rates` pays nothing (Spain's clergy are exempt).
+- **Tax efficiency** *(code `0x14278b0b0`)*: the crown receives taxes × (1 − `estate_enrichment`) × (1 + `tax_income_efficiency`); the location panel lists the taxes before it (Sevilla 35.77). Spain 1547: 1.05 × 1.16 = 1.218 against the save's 1.2475 (2.4% unexplained). A missing estate in `tax_rates` pays nothing (Spain's clergy are exempt).
 
 ---
 
@@ -152,7 +154,18 @@ crown income         = Σ estate tax base × tax rate × tax efficiency
 
 **Monthly change** *(code `0x1430edf80`; save: 291 of 518 locations at exactly −0.005)*: below max, `+ local + global monthly_control` (base 0.0005, core 0.001, road to the capital 0.0005); above max, `−min(control − max, 0.01, local + global monthly_control_decline)` (base 0.005).
 
-**Proximity** *(partly decoded; research continuing)*: 100 at the capital, minus a cost per step. Base cost 40 overland, 20 on a road, 30 at sea, with terrain making it worse (floor 0.25 speed). Development speeds propagation (+0.5% a point). Other sources: historical capital 80, **Local Governor** 80 (city only, needs a road to the capital, capped by `num_local_governors`, 1 at base), Lieutenancy and Itinerant Court Seat 75.
+**Proximity** *(code `0x143158bf0`, `0x1427175b0`; save: Spain June 1547, median error 0.34, 472 of 522 within 1)*:
+- **Sources**: `min(100, local_proximity_source) × (1 + local_proximity_source_modifier)`: the capital 100, a historical capital 80, a **Local Governor** 80 (city only, needs a road to the capital, capped by `num_local_governors`, 1 at base). Building sources scale with staffing and input coverage, so an understaffed governor gives less.
+- **Spread**: every location takes the best "source strength minus the sum of jump costs" through the country's own land and every sea zone and lake, never foreign land.
+- **Jump cost** = base × factor ÷ (1 + speed), at least 0.01:
+  - base: plain land 40, divided by the start location's terrain speed (mountains 0.5, hills and wetlands 0.75, plateau 0.875; vegetation 0.5–0.95 on plain land only; floor 0.25); road 20 minus its bonus (paved 15); a river 12 when cheaper; sea 30, falling toward 5 with full maritime presence; landing or embarking at the location's own port 35, elsewhere 35 with no port factor;
+  - factor: own-port jumps × (1 + port modifiers − 0.5 × harbor suitability), at least 0.05;
+  - speed: the country's `global_distance_from_capital_speed_propagation` (centralization, laws, the Supreme Court, ruler administration) + the start location's own (0.005 × development, bridges, canals).
+- A governor only helps where its 80 beats what the capital already reaches: a governor in Lisbon, reached at 86 by sea, changes nothing. Spain 1547 with a governor in Zaragoza (proximity 32): control +2.1 points within two years, crown tax +3%, manpower +150 a month, levies +7,000.
+
+**Development and prosperity** *(code `0x1430cc5b0`, `0x1430cb200`; consecutive saves within rounding)*, once a month:
+- development += (local + global monthly development) × (1 + local modifier) × (1 + global modifier); the modifiers only scale a positive change; prosperity adds 0.004 × prosperity a month;
+- prosperity += local + global monthly prosperity − decay (1% of prosperity at base); below zero it recovers by the devastation recovery instead; clamped to −1…1.
 
 ---
 
@@ -186,19 +199,21 @@ Who pays for traded food and the 1.33 pop-income scale are open.
 
 ---
 
-## 9. Checked against the save (Spain, 1 April 1547)
+## 9. Checked against the save (Spain, 1 June 1547, game 1.4.4)
 
-`node .tools/scripts/location_sim/check.js scenarios/local/spain_1547.json`
+`node .tools/scripts/location_sim/check.js scenarios/local/spain_1547_06.json`
 
 | Number | Save | Simulated | |
 |---|---|---|---|
-| Wealth, all 522 locations | 14,116 | 14,042 | −0.5% |
-| … with the save's building profits | | 13,857 | −1.8% (burgher trade) |
-| Estate shares | | | median error 0.03 points, 90th percentile 0.44 |
-| Crown tax income a month | 5,441 | 4,956 | −8.9% (tax efficiency, Section 6) |
-| Manpower a month | 6,764 | 6,343 | −6.2% (local modifiers not all counted) |
-| Sailors a month | 1,495 | 1,565 | +4.7% |
-| Births a month | 4,316 | 4,346 | +0.7% |
+| Wealth, all 522 locations | 14,379 | 14,086 | −2.0% (burgher trade, not modelled) |
+| Estate shares | | | median error 0.03 points, 90th percentile 0.21 |
+| Crown tax income a month | 5,499 | 5,206 | −5.3% (tax efficiency 2.4% unexplained, plus wealth) |
+| Manpower a month | 6,747 | 6,751 | +0.1% |
+| Sailors a month | 1,496 | 1,525 | +2.0% |
+| Births a month | 4,405 | 4,402 | −0.1% |
+| Proximity | | | median error 0.34, 472 of 522 within 1 point |
+
+Sevilla against the in-game tooltips (June 1547): wealth 80.89 vs 80.99; estate shares 16.58 / 7.98 / 50.73 / 5.59 vs 16.48 / 7.93 / 51.01 / 5.55; location taxes 35.72 vs 35.77; building maintenance 31.68 vs 31.87; monthly manpower 113.9 vs 113 (85 from buildings × (1 + 10% Crown of Castile + 4% soldier literacy + 20% Fortress Town)).
 
 ---
 
@@ -266,11 +281,11 @@ Files in `.tools/scripts/location_sim/`:
 ## 12. Open questions
 
 1. Tax efficiency: 0.0975 of Spain's ×1.2475 is unexplained.
-2. Manpower −6.2%: local manpower modifiers (literacy, privileges' location modifiers) not all counted.
-3. RGO size formula (Sevilla 16 vs ~14.9 from `local_max_rgo_size` × (1 + modifier)).
+2. Proximity: 0.015 of Spain's speed term, and river links (approximated from the river map, about 2% wrong).
+3. Burgher trade (about 2% of wealth, all to the burghers).
 4. Building input rationing, pop demand and burgher trade (market research).
 5. Food: production, consumption, storage and the province–market exchange.
-6. Proximity cost and propagation; development and prosperity changes (research continuing).
+6. Pop demand growth beyond population, and scarce-goods rationing in the market.
 
 ## Appendix: where it lives in eu5.exe 1.4.4
 

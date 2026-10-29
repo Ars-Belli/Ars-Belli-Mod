@@ -1,5 +1,6 @@
 // Country report for sim.js: a country scenario (from_save.js --country TAG) month by month.
 //   node .tools/scripts/location_sim/sim.js <country scenario.json> [--months 120] [--markets fixed|closed|off] [--food on|off] [--top 12]
+//        [--add <location key>:<building type>[:level]]...   what-if: build something first (e.g. lisbon:local_governor)
 const CS = require('./country.js');
 const E = require('./engine.js');
 
@@ -11,10 +12,14 @@ module.exports = (scn, flag) => {
 	const months = +(flag('--months', 120) === true ? 120 : flag('--months', 120));
 	const mode = flag('--markets', (scn.options || {}).markets || 'fixed');
 	const foodMode = flag('--food', (scn.options || {}).food || 'on');
+	// --add location:building[:level], repeatable: the building starts fully staffed
+	const argv = process.argv.slice(2), added = [];
+	argv.forEach((a, i) => { if (a !== '--add') return; const [key, type, lvl] = String(argv[i + 1] || '').split(':'); const loc = scn.locations.find(l => l.key === key); if (!loc || !DB.buildings[type]) throw new Error('--add ' + argv[i + 1] + ': unknown location or building'); const level = +(lvl || 1), size = E.employmentSize(type, E.locationState({ location: loc })); loc.buildings.push({ type, level, employed: level * size }); added.push(nm(type) + ' in ' + nm(key)); });
 	const { timeline, state } = CS.project({ ...scn, options: { ...(scn.options || {}), markets: mode, food: foodMode } }, months);
 	const t0 = timeline[0], tN = timeline[timeline.length - 1];
 	const capital = scn.locations.find(l => l.id === scn.capital);
-	console.log(`${scn.name}: ${scn.locations.length} locations, capital ${capital ? nm(capital.key) : '?'}; markets ${mode}` +
+	if (added.length) console.log('What-if: ' + added.join(', '));
+	console.log(`${scn.name}: ${scn.locations.length} locations, capital ${capital ? nm(capital.key) : '?'}; markets ${mode}; proximity ${state.proxMode}` +
 		(mode === 'fixed' ? ' (trade with other markets held at the save)' : mode === 'closed' ? ' (no trade with other markets)' : ' (prices frozen)'));
 	console.log(`  population ${men(t0.population)}; control ${(100 * t0.control).toFixed(1)}% (wealth-weighted)`);
 	console.log(`  manpower ${men(t0.manpower)} a month, max ${men(t0.maxManpower)}; army upkeep held at ${men(state.manpowerExpense)} a month; sailors ${men(t0.sailors)} a month`);
