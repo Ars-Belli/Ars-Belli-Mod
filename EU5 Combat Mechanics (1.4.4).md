@@ -153,7 +153,7 @@ chance = INITIATIVE_BASE_CHANCE 0.60
 
 Category initiative: light infantry 5, heavy infantry 1, light cavalry 5, heavy cavalry 2, artillery 1, auxiliary 1, plus unit-type bonuses (e.g. Winged Hussars +2, Caroleans +5).
 
-The initiative part saturates at an effective initiative of 12, so `army_initiative` stops mattering past that. Engaged regiments deal damage, and an unengaged target takes the `NOT_ENGAGED` bonus damage, so initiative decides who hits first and who gets hit while unprepared.
+The initiative part saturates at an effective initiative of 12, so `army_initiative` stops mattering past that. **For heavy units it barely matters:** heavy cavalry (initiative 2) gets 0.050 → 0.0625 from +25% army initiative, +1.25 points on a daily chance that starts at 60% and rises 3 points a day; heavy infantry (1) gets +0.6. Measured on the page (age III cavalry, Spain size): +25% army initiative trades 1.00 ±0.01. Only light units (initiative 5, +3 points) show anything. Engaged regiments deal damage, and an unengaged target takes the `NOT_ENGAGED` bonus damage, so initiative decides who hits first and who gets hit while unprepared.
 
 ---
 
@@ -701,7 +701,7 @@ Equal manpower is about **upkeep and reinforcement**, not the one-time recruitme
   | 75/25 budgets (age III 180 vs 228 regiments; age V 174 vs 216) | 1% | +4 | +8 | +6 | 39% | +6 | +9 | +9 |
   | Same regiments, drilled | 88% | +10 | +16 | +11 | 72% | +14 | +14 | +10 |
 
-- **The Quality value is better for regular armies.** It wins most battles at equal regiments and stays ahead in manpower in every setup. Its tactics cut the damage taken by ÷1.1, and that outweighs the upkeep.
+- **The Quality value is better for regular armies.** It wins most battles at equal regiments and stays ahead in manpower in every setup. This is all its tactics, which cut the damage taken by ÷1.1 and outweigh the upkeep. The ±25% initiative on either end does next to nothing for heavy units (section 4).
 - **The Quantity value's cheaper upkeep buys about 25% more regiments**, which win the first battles (99% at age III), yet it still trails in manpower over a war.
 - **Its +50% levy size is not modelled**, so for a levy-heavy army it is worth more than shown.
 
