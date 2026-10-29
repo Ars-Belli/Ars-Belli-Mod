@@ -140,6 +140,11 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	<!-- FULL -->
 	<section id="mode-full" hidden style="display:grid;gap:20px">
 		<p class="sub">Any number of armies per side, real unit types from any age (including unique units), countries with their own stats, terrain, river crossings, marching morale and reinforcements arriving later. Import or paste a scenario file, or build one here.</p>
+		<div class="bar">
+			<span class="hint">Big battle presets (1547 Spain size: 6 armies of 30 a side, 2 at the start, the rest come in as the reserve runs empty):</span>
+			<button id="preset-cav3" type="button">Age III heavy cavalry</button>
+			<button id="preset-inf5" type="button">Age V heavy infantry</button>
+		</div>
 		<div class="card">
 			<div class="card-head"><h3>Location</h3><span class="hint" id="loc-summary"></span></div>
 			<div class="grid" id="loc-fields"></div>
@@ -158,11 +163,6 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 			<button id="f-swap" type="button" title="The defender attacks instead, in the same location (check the river crossing)">Swap attacker and defender</button>
 			<label class="field" style="width:auto"><span class="hint">Import a scenario file</span><input id="f-file" type="file" accept=".json,application/json"></label>
 			<span class="progress" id="f-progress" aria-live="polite"></span>
-		</div>
-		<div class="bar">
-			<span class="hint">Big battle presets (1547 Spain size: 6 armies of 30 a side, 2 at the start, the rest come in as the reserve runs empty):</span>
-			<button id="preset-cav3" type="button">Age III heavy cavalry</button>
-			<button id="preset-inf5" type="button">Age V heavy infantry</button>
 		</div>
 		<datalist id="arrival-opts"><option value="needed"></option><option value="0"></option></datalist>
 		<details class="panel" id="json-panel">
