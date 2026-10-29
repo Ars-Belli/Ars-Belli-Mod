@@ -3,6 +3,7 @@
 //        [--modifier <key>]     one modifier taken apart by source (local + the owner's global counterpart)
 //        [--modifiers]          every modifier of the location with its total
 //        [--buildings]          every building with its level, cap and staffing
+//   A country scenario (from_save.js --country TAG) prints the country report: [--months N] [--markets fixed|closed|off]
 // Scenario format: "EU5 Location Mechanics (1.4.4).md" in the repo root; from_save.js builds one from a save.
 // Pops, men and manpower are thousands in the engine; this prints people.
 const fs = require('fs');
@@ -16,6 +17,7 @@ const flag = (k, d) => { const i = args.indexOf(k); return i < 0 ? d : (args[i +
 const file = args.find(a => !a.startsWith('--') && a.endsWith('.json'));
 if (!file) { console.error('usage: node sim.js <scenario.json> [--months N] [--modifier key] [--modifiers] [--buildings] [--json]'); process.exit(1); }
 const scn = JSON.parse(fs.readFileSync(file, 'utf8'));
+if (Array.isArray(scn.locations)) { require('./country_report.js')(scn, flag); process.exit(0); }
 const r = E.evaluate(scn);
 const { L, M } = r;
 const nm = k => DB.names[k] || k;

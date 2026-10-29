@@ -474,7 +474,7 @@
 		// the save shows ~0.39 in 1547 where this gives 0.385 for Spain (economy_control.md 2.3, close but not exact)
 		const upkeepMult = (C.mods.raw('building_upkeep_multiplier') + 0.001 * Math.max(0, L.year - 1337)) / (1 + C.mods.raw('building_upkeep_efficiency'));
 		const rows = [];
-		for (const b of L.buildings) {
+		for (const [idx, b] of L.buildings.entries()) {
 			const t = DB.buildings[b.type], pm = methodOf(b);
 			if (!t || !pm || !b.level) continue;
 			const e = J.E.get(b) ?? 1;
@@ -489,8 +489,8 @@
 				// output x (1 + production efficiency + the good's output modifier): Spain's lumber mill needs +50% lumber output on top
 				const goodMod = M.get('local_' + pm.out + '_output_modifier');
 				const profit = b.level * throughput * (pm.n * price * (1 + pe + goodMod) - inCost);
-				rows.push({ type: b.type, level: b.level, foreign: !!b.foreign, employment: e, produces: pm.out, output: b.level * throughput * pm.n * (1 + pe + goodMod), pe, goodMod, profit, savedProfit: b.profit });
-			} else rows.push({ type: b.type, level: b.level, foreign: !!b.foreign, employment: e, upkeep: b.level * inCost * upkeepMult, savedUpkeep: b.upkeep });
+				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, produces: pm.out, output: b.level * throughput * pm.n * (1 + pe + goodMod), pe, goodMod, profit, savedProfit: b.profit });
+			} else rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, upkeep: b.level * inCost * upkeepMult, savedUpkeep: b.upkeep });
 		}
 		return { rows, upkeepMult };
 	}
@@ -527,7 +527,7 @@
 	// ---------------------------------------------------------------- one month, as numbers
 	function evaluate(scn, state) {
 		const L = state && state.L || locationState(scn), C = state && state.C || countryState(scn);
-		const obs = state ? null : ((scn.observed || {}).popStats || null);
+		const obs = state ? (state.obs ?? null) : ((scn.observed || {}).popStats || null);
 		const { M, J, capacity: cap } = locationModifiers(L, C, obs);
 		const r = { L, C, M, J, capacity: cap };
 		r.growth = growth(L, M);
@@ -548,6 +548,36 @@
 	// ---------------------------------------------------------------- month by month
 	// Pops grow by their births, control moves toward its max, manpower accumulates. Development, prosperity, prices and food
 	// stay as given until their formulas are in (research open).
+	// One month of change for a location, given this month's evaluation r: control moves toward its max, births join the
+	// pops, buildings lay off or rehire by profit. Development, prosperity and food stay (research open).
+	function advance(L, r) {
+		L.control = clamp(L.control + r.control.delta, 0, 1);
+		// births go to the eligible pops of each type in proportion to their size
+		for (const [type, n] of Object.entries(r.growth.births)) {
+			const group = L.pops.filter(p => p.type === type && ['Primary', 'Accepted', 'Tolerated'].includes(p.status));
+			const tot = group.reduce((a, p) => a + p.size, 0);
+			if (tot > 0) for (const p of group) p.size = Math.max(0, p.size + n * p.size / tot);
+			else if (n > 0) L.pops.push({ type, size: n, status: 'Primary', satisfaction: 0.5, literacy: 0, estate: ESTATE_OF(type) });
+		}
+		L.population = L.pops.reduce((a, p) => a + p.size, 0);
+		// staffing: an unprofitable building lays off UNPROFITABLE_BUILDING_WORKERS_LAID_OFF_PERCENTAGE (10%) of its workers a
+		// month, a profitable one rehires PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE (10%) of its jobs, as far as pops allow
+		const off = def('NEconomy', 'UNPROFITABLE_BUILDING_WORKERS_LAID_OFF_PERCENTAGE', 10) / 100, hire = def('NEconomy', 'PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE', 10) / 100;
+		const free = {};
+		for (const [type, n] of Object.entries(r.J.pops)) free[type] = n - (r.J.employed[type] || 0);
+		const rowOf = new Map(r.buildings.rows.map(x => [x.idx, x]));
+		for (const [idx, b] of L.buildings.entries()) {
+			const t = DB.buildings[b.type];
+			if (!t || !t.pop || !b.size) continue;
+			const e = r.J.E.get(b) ?? 1, row = rowOf.get(idx);
+			let next = row && row.profit !== undefined && row.profit < 0 ? e * (1 - off) : Math.min(1, e + hire);
+			const extra = (next - e) * b.level * b.size;
+			if (extra > 0) { const take = Math.min(extra, Math.max(0, free[t.pop] || 0)); free[t.pop] = (free[t.pop] || 0) - take; next = e + take / (b.level * b.size); }
+			b.employed = next * b.level * b.size;
+		}
+	}
+
+	// month by month for one location; manpower accumulates up to its max manpower share
 	function project(scn, months = 120) {
 		const L = locationState(scn), C = countryState(scn);
 		const timeline = [];
@@ -558,29 +588,7 @@
 				sailors: r.sailors.monthly, levies: r.levies.army, wealth: r.wealth.total, crownTax: r.tax.crown, control: L.control, maxControl: r.control.max, manpowerPool });
 			if (mth === months) break;
 			manpowerPool = Math.min(r.manpower.max, manpowerPool + r.manpower.monthly);
-			L.control = clamp(L.control + r.control.delta, 0, 1);
-			// births go to the eligible pops of each type in proportion to their size
-			for (const [type, n] of Object.entries(r.growth.births)) {
-				const group = L.pops.filter(p => p.type === type && ['Primary', 'Accepted', 'Tolerated'].includes(p.status));
-				const tot = group.reduce((a, p) => a + p.size, 0);
-				if (tot > 0) for (const p of group) p.size = Math.max(0, p.size + n * p.size / tot);
-				else if (n > 0) L.pops.push({ type, size: n, status: 'Primary', satisfaction: 0.5, literacy: 0, estate: ESTATE_OF(type) });
-			}
-			L.population = L.pops.reduce((a, p) => a + p.size, 0);
-			// staffing: an unprofitable building lays off UNPROFITABLE_BUILDING_WORKERS_LAID_OFF_PERCENTAGE (10%) of its workers a
-			// month, a profitable one rehires PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE (10%) of its jobs, as far as pops allow
-			const off = def('NEconomy', 'UNPROFITABLE_BUILDING_WORKERS_LAID_OFF_PERCENTAGE', 10) / 100, hire = def('NEconomy', 'PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE', 10) / 100;
-			const free = {};
-			for (const [type, n] of Object.entries(r.J.pops)) free[type] = n - (r.J.employed[type] || 0);
-			for (const b of L.buildings) {
-				const t = DB.buildings[b.type];
-				if (!t || !t.pop || !b.size) continue;
-				const e = r.J.E.get(b) ?? 1, row = r.buildings.rows.find(x => x.type === b.type && x.level === b.level);
-				let next = row && row.profit !== undefined && row.profit < 0 ? e * (1 - off) : Math.min(1, e + hire);
-				const extra = (next - e) * b.level * b.size;
-				if (extra > 0) { const take = Math.min(extra, Math.max(0, free[t.pop] || 0)); free[t.pop] = (free[t.pop] || 0) - take; next = e + take / (b.level * b.size); }
-				b.employed = next * b.level * b.size;
-			}
+			advance(L, r);
 		}
 		return timeline;
 	}
@@ -598,7 +606,7 @@
 	const priceStep = (p, target) => p + def('NMarket', 'MONTHLY_PRICE_CHANGE', 0.05) * (target - p);
 
 	const api = { setData, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
-		maxLevel, employmentSize, methodOf, isProducing, growth, military, levies, rgo, buildingEconomy, tax, control, evaluate, project, targetPrice, priceStep,
+		maxLevel, employmentSize, methodOf, isProducing, growth, military, levies, rgo, buildingEconomy, tax, control, evaluate, advance, project, targetPrice, priceStep,
 		MILITARY_CONTROL_FLOOR, get DB() { return DB; } };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.LocationSim = api;
 })(typeof self !== 'undefined' ? self : this);

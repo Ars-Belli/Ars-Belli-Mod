@@ -244,6 +244,16 @@ const pricesOf = id => {
 	return prices;
 };
 const foodPriceOf = id => { const m = id ? marketOf(id) : null; return m && m.price !== undefined ? +m.price : undefined; };
+// a market's goods as the save has them: price, supply and demand by source, stockpile (for the country mode's market layer)
+const num1 = o => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [k, +v]));
+function marketDetail(id) {
+	const m = id ? marketOf(id) : null;
+	if (!m) return {};
+	const goods = {};
+	for (const [g, v] of Object.entries(m.goods || {})) if (v && typeof v === 'object' && v.price !== undefined)
+		goods[g] = { price: +v.price, supplied: num1(v.supplied), production: num1(v.production_supplied), demanded: num1(v.demanded), stockpile: N(v.stockpile) ?? 0 };
+	return { center: N(m.center), members: list(m.members).map(Number), foodPrice: foodPriceOf(id), food: N(m.food), maxFood: N(m.max), goods };
+}
 const write = scenario => {
 	const out = flag('--out');
 	if (out) { fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true }); fs.writeFileSync(out, JSON.stringify(scenario, null, '\t')); console.log('wrote', out); }
@@ -262,7 +272,7 @@ if (flag('--country')) {
 		if (!s) continue;
 		locations.push(s.location);
 		observed[lid] = s.observed;
-		if (s.location.market && !markets[s.location.market]) markets[s.location.market] = { prices: pricesOf(s.location.market), foodPrice: foodPriceOf(s.location.market) };
+		if (s.location.market && !markets[s.location.market]) markets[s.location.market] = { prices: pricesOf(s.location.market), ...marketDetail(s.location.market) };
 	}
 	write({ name: `${tags[cid]} ${save.date()}`, source: path.basename(file), capital: country.capital, country, locations, markets, observed });
 	process.exit(0);
