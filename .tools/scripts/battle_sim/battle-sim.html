@@ -128,7 +128,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		<div class="cols"><div class="card side a" id="q-a"></div><div class="card side b" id="q-b"></div></div>
 		<div class="bar">
 			<div class="field"><label for="q-width">Battle frontage</label><input id="q-width" type="number" min="2" max="20" value="10"></div>
-			<div class="field"><label for="q-runs">Battles to run</label><input id="q-runs" type="number" min="50" max="5000" step="50" value="500"></div>
+			<div class="field"><label for="q-runs">Battles to run</label><input id="q-runs" type="number" min="50" max="10000" step="50" value="500"></div>
 			<button class="primary" id="q-run" type="button">Run battles</button>
 			<button id="q-copy" type="button">Copy A to B</button>
 			<button id="q-swap" type="button">Swap sides</button>
@@ -158,7 +158,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 			<div class="card side b"><div class="card-head"><h3>Defender</h3><button class="small" type="button" data-add-army="defender">Add army</button></div><div id="armies-defender" style="display:grid;gap:10px"></div></div>
 		</div>
 		<div class="bar">
-			<div class="field"><label for="f-runs">Battles to run</label><input id="f-runs" type="number" min="50" max="5000" step="50" value="500"></div>
+			<div class="field"><label for="f-runs">Battles to run</label><input id="f-runs" type="number" min="50" max="10000" step="50" value="500"></div>
 			<button class="primary" id="f-run" type="button">Run battles</button>
 			<button id="f-swap" type="button" title="The defender attacks instead, in the same location (check the river crossing)">Swap attacker and defender</button>
 			<label class="field" style="width:auto"><span class="hint">Import a scenario file</span><input id="f-file" type="file" accept=".json,application/json"></label>
@@ -240,7 +240,10 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	<section class="panel" id="worth" aria-labelledby="worth-title">
 		<h2 id="worth-title">What is a stat worth?</h2>
 		<p class="sub" id="worth-sub">Quick-battle side A fights an exact copy of itself; only side A gets the bonus. On the left, how often side A wins (50% means the bonus did nothing); on the right, how many enemy men fall for each man side A loses (1.0 is an even trade). A bonus can win battles and still cost more men than it saves.</p>
-		<div><button id="measure" type="button">Measure the bonuses</button> <span class="progress" id="measure-progress" aria-live="polite"></span></div>
+		<div class="bar">
+			<div class="field"><label for="w-runs">Battles per bonus</label><input id="w-runs" type="number" min="50" max="10000" step="50" value="500"></div>
+			<button id="measure" type="button">Measure the bonuses</button> <span class="progress" id="measure-progress" aria-live="polite"></span>
+		</div>
 		<div class="charts"><div class="chart" id="chart-worth"></div><div class="chart" id="chart-worth-loss"></div></div>
 		<details><summary>Show the results as a table</summary><div class="tablewrap" id="worth-table"></div></details>
 	</section>
@@ -281,7 +284,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		$('mode-quick').hidden = m !== 'quick'; $('mode-full').hidden = m !== 'full';
 		$('mode-quick').style.display = m === 'quick' ? 'grid' : 'none'; $('mode-full').style.display = m === 'full' ? 'grid' : 'none';
 		$('worth-sub').textContent = m === 'full'
-			? 'Full battle: every attacker army gets the bonus, the defender stays as set up. The first row is the battle as it stands; the grey lines mark it, so each bonus reads as a change from there. On the left, how often the attacker wins; on the right, how many enemy men fall for each man the attacker loses. Big battles take a while: lower "Battles to run" for a first look.'
+			? 'Full battle: every attacker army gets the bonus, the defender stays as set up. The first row is the battle as it stands; the grey lines mark it, so each bonus reads as a change from there. On the left, how often the attacker wins; on the right, how many enemy men fall for each man the attacker loses. Big battles take a while: lower "Battles per bonus" for a first look.'
 			: 'Quick-battle side A fights an exact copy of itself; only side A gets the bonus. On the left, how often side A wins (50% means the bonus did nothing); on the right, how many enemy men fall for each man side A loses (1.0 is an even trade). A bonus can win battles and still cost more men than it saves.';
 		if (worthMode && worthMode !== m) { $('chart-worth').innerHTML = ''; $('chart-worth-loss').innerHTML = ''; $('worth-table').innerHTML = ''; $('measure-progress').textContent = 'Measure the bonuses for this battle.'; }
 		worthMode = m;
@@ -547,7 +550,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		setHitOptions(scn);
 		runMany(scn, n, m => { renderOdds(m); renderCosts(scn, m); progEl.textContent = `${m.n} battles fought.`; btn.disabled = false; }, f => { progEl.textContent = `Fighting… ${Math.round(f * 100)}%`; });
 	}
-	$('q-run').onclick = () => runScenario(quickScenario(), Math.max(50, Math.min(5000, +$('q-runs').value || 500)), $('q-progress'), $('q-run'));
+	$('q-run').onclick = () => runScenario(quickScenario(), Math.max(50, Math.min(10000, +$('q-runs').value || 500)), $('q-progress'), $('q-run'));
 	$('q-copy').onclick = () => { for (const [, f] of QSCHEMA) for (const [key] of f) $('b-' + key.replace('.', '-')).value = $('a-' + key.replace('.', '-')).value; $('q-run').click(); };
 	const swapValues = (x, y) => { const a = $(x), b = $(y), t = a.value; a.value = b.value; b.value = t; const d = a.dataset.set; a.dataset.set = b.dataset.set || ''; b.dataset.set = d || ''; };
 	const swapWar = () => { for (const k of ['max', 'sur', 'cur']) swapValues(`w-${k}-0`, `w-${k}-1`); };
@@ -655,9 +658,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		};
 		next();
 	}
-	$('measure').onclick = () => mode === 'full'
-		? measureFull(Math.max(50, Math.min(5000, +$('f-runs').value || 500)))
-		: measure(Math.max(50, Math.min(5000, +$('q-runs').value || 500)));
+	$('measure').onclick = () => { const n = Math.max(50, Math.min(10000, +$('w-runs').value || 500)); if (mode === 'full') measureFull(n); else measure(n); };
 
 	// ---------- FULL mode: scenario state and editor
 	const EXAMPLE = {
@@ -838,7 +839,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	};
 	$('preset-cav3').onclick = () => loadScenario(bigPreset('hc', 3));
 	$('preset-inf5').onclick = () => loadScenario(bigPreset('hi', 5));
-	$('f-run').onclick = () => runScenario(JSON.parse(JSON.stringify(scn)), Math.max(50, Math.min(5000, +$('f-runs').value || 500)), $('f-progress'), $('f-run'));
+	$('f-run').onclick = () => runScenario(JSON.parse(JSON.stringify(scn)), Math.max(50, Math.min(10000, +$('f-runs').value || 500)), $('f-progress'), $('f-run'));
 	$('q-to-full').onclick = () => {
 		const q = quickScenario();
 		q.countries = { A: q.attacker.armies[0].country, B: q.defender.armies[0].country };
