@@ -16,7 +16,7 @@
 		NOT_ENG_STR: 1.1, NOT_ENG_MOR: 1.2, INITIAL_OVERRUN: 10, MORALE_OVERRUN: 2,
 		BOMBARD_CHANCE: 0.2, LAND_MORALE: 3, LEVY_DISCIPLINE: -0.2, RETREAT_STRENGTH_DAMAGE: 0.1,
 		COMBINED_PER_TYPE: 0.025, COMBINED_MIN: 0.1, COMBINED_MAX: 0.5,
-		BASE_FRONTAGE: 10, MIN_FRONTAGE: 2, MOVEMENT_COST: 0.0069, MAX_DAYS: 120,
+		BASE_FRONTAGE: 10, MIN_FRONTAGE: 2, MOVEMENT_COST: 0.0069, MAX_DAYS: 400, // MAX_DAYS: a safety stop only (no game cap is known); Spain-size battles with high morale and experience run past 120 days
 		REINFORCE_EFF_FLOOR: -0.5, MAINT_EFF_FLOOR: -0.95, LEVY_MAINTENANCE: 0.01, MONTHLY_REINFORCE: 0.25, MAX_MANPOWER_YEARS: 5, PRICE_SCALE: 0.1,
 		EXPERIENCE_GAIN: 30, EXPERIENCE_DECAY: 0.05, REGULAR_DECAY: -0.01, // NCombat / country base value / is_army_regular
 		// army_reinforce_efficiency divides reinforcement gold AND manpower (the modifier tooltip says so; checked on Spain 1527:
