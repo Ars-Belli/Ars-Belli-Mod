@@ -238,4 +238,4 @@ const latestSave = () => {
 	return fs.readdirSync(dir).filter(f => f.endsWith('.eu5')).map(f => path.join(dir, f)).sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)[0];
 };
 
-module.exports = { GAME, MOD, tokenize, parse, loadDb, get, TextSave, BinarySave, openSave, latestSave, binaryDate };
+module.exports = { GAME, MOD, tokenize, parse, parseSaveTokens, loadDb, get, TextSave, BinarySave, openSave, latestSave, binaryDate };

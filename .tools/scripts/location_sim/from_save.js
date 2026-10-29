@@ -1,12 +1,13 @@
 // Builds a location simulator scenario from an EU5 save (normal binary save or debug-mode text save).
 //   node .tools/scripts/location_sim/from_save.js <save.eu5|latest> --list <TAG> [--top 40]     a country's locations
 //   node .tools/scripts/location_sim/from_save.js <save> --location <id|key> [--out scenario.json]
+//   node .tools/scripts/location_sim/from_save.js <save> --country <TAG> [--out scenario.json]     every owned location
 // The scenario holds the location as the save has it (rank, development, control, pops, buildings, market prices), its
 // owner's country modifiers (summed from base values, advances, laws, privileges, reforms, timed modifiers and societal
 // values; "notes" lists every source) and an "observed" block with the game's own numbers to check the simulator against.
 const fs = require('fs');
 const path = require('path');
-const { loadDb, get, openSave, latestSave } = require('../battle_sim/paradox.js');
+const { loadDb, get, openSave, latestSave, tokenize, parseSaveTokens } = require('../battle_sim/paradox.js');
 const DATA = JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'));
 
 const args = process.argv.slice(2);
@@ -123,7 +124,12 @@ function countryContext(cid) {
 		id: +cid, tag: tags[cid], capital: N(c.capital), primaryCulture: N(c.primary_culture), acceptedCultures: list(c.accepted_cultures).map(Number),
 		religion: N(c.primary_religion), government: gov.type,
 		taxRates: Object.fromEntries(Object.entries(econ.tax_rates || {}).map(([k, v]) => [k, +v])),
-		estates: Object.fromEntries(Object.entries(gov.estates || {}).map(([k, v]) => [k, typeof v === 'object' ? Object.fromEntries(Object.entries(v).filter(([, x]) => typeof x !== 'object').map(([f, x]) => [f, N(x) ?? x])) : v])),
+		// estates: satisfaction, wealth impact and last month's income lines (estate_manager)
+		estates: Object.fromEntries(Object.entries(gov.estates || {}).map(([k, eid]) => {
+			const e = entry('estate_manager', eid) || {};
+			return [k, { satisfaction: N(e.satisfaction), wealthImpact: N(e.wealth_impact), gold: N(e.gold), autoTaxRate: e.auto_tax_rate === 'yes',
+				lastMonth: Object.fromEntries(Object.entries(e.last_month || {}).map(([a, b]) => [a, +b])) }];
+		}).filter(([, e]) => e.satisfaction !== undefined)),
 		modifiers: strip(acc), sources: acc.__src || {}, locationModifiers: strip(locMods), locationSources: locMods.__src || {},
 		notes: [...notes, ...locNotes, 'Not counted: religion, culture, ruler and cabinet, estates satisfaction and power effects, situations, international organizations, conditional auto modifiers.'],
 		observed: {
@@ -152,55 +158,118 @@ if (flag('--list')) {
 	process.exit(0);
 }
 
+// ---- fast lookups for many locations (text saves: one pass over the section, then parse single entries)
+const indexes = {};
+function topIndex(section) {
+	if (indexes[section]) return indexes[section];
+	const t = save.sectionText(section), at = new Map(), re = /\n(\d+)=\{/g;
+	let m;
+	while ((m = re.exec(t))) at.set(m[1], m.index + 1);
+	return (indexes[section] = { t, at });
+}
+function rawParse(t, start) {
+	let d = 0, k = t.indexOf('{', start);
+	for (; k < t.length; k++) { if (t[k] === '{') d++; else if (t[k] === '}') { d--; if (!d) break; } }
+	return parseSaveTokens(tokenize(t.slice(t.indexOf('{', start) + 1, k)));
+}
+function popEntry(pid) {
+	if (!isText) return entry('population', pid);
+	const ix = topIndex('population'), s = ix.at.get(String(pid));
+	return s === undefined ? null : rawParse(ix.t, s);
+}
+let buildingsByLocation = null;
+function buildingsOf(lid) {
+	if (!isText) return buildingsAt(lid);
+	if (!buildingsByLocation) {
+		buildingsByLocation = new Map();
+		const ix = topIndex('building_manager'), starts = [...ix.at.entries()].sort((a, b) => a[1] - b[1]);
+		for (let i = 0; i < starts.length; i++) {
+			const [id, s] = starts[i], e = i + 1 < starts.length ? starts[i + 1][1] : ix.t.length;
+			const m = /\n\tlocation=(\d+)/.exec(ix.t.slice(s, Math.min(e, s + 4000)));
+			if (m) (buildingsByLocation.get(m[1]) || buildingsByLocation.set(m[1], []).get(m[1])).push([id, s]);
+		}
+	}
+	return (buildingsByLocation.get(String(lid)) || []).map(([id, s]) => ({ id, ...rawParse(indexes.building_manager.t, s) }));
+}
+const marketCache = new Map();
+const marketOf = id => { if (!marketCache.has(id)) marketCache.set(id, entry('market_manager', id)); return marketCache.get(id); };
+
+// ---- one location: its scenario fields and the game's own numbers
+function locationScenario(lid, country) {
+	const l = entry('locations', lid);
+	if (!l) return null;
+	const [key, topography, vegetation, climate, rawTemplate, harbor] = DATA.locations[lid - 1];
+	const pops = [];
+	for (const pid of list((l.population || {}).pops)) {
+		const p = popEntry(pid);
+		if (!p) continue;
+		pops.push({ type: p.type, estate: p.estate, size: N(p.size), status: p.status || 'none', culture: N(p.culture), religion: N(p.religion),
+			satisfaction: N(p.satisfaction) ?? 0, literacy: N(p.literacy) ?? 0, ...(p.building ? { building: N(p.building) } : {}) });
+	}
+	const buildings = buildingsOf(lid).map(b => {
+		const pm = Object.keys(b).find(k => b[k] && typeof b[k] === 'object' && DATA.methods[k]);
+		return { type: b.type, level: N(b.level), employed: N(b.employed), owner: N(b.owner), ...(+b.owner !== +l.owner ? { foreign: 1 } : {}),
+			...(pm ? { method: pm } : {}), ...(b.last_months_profit !== undefined ? { profit: N(b.last_months_profit) } : {}), ...(b.upkeep !== undefined ? { upkeep: N(b.upkeep) } : {}) };
+	});
+	const market = l.market ? marketOf(l.market) : null;
+	const province = l.province ? entry('provinces', l.province) : null;
+	const stats = (l.population || {}).pop_stats || {};
+	return {
+		location: {
+			id: lid, key, rank: l.rank, topography, vegetation, climate, rawMaterial: l.raw_material || rawTemplate, harbor,
+			development: N(l.development), prosperity: N(l.prosperity) ?? 0, control: N(l.control) ?? 0, proximity: N(l.proximity) ?? 0,
+			integration: l.integration || (l.cores && list(l.cores).map(Number).includes(+l.owner) ? 'core' : 'conquered'),
+			capital: +country.capital === lid, marketCenter: !!market && +market.center === lid, roadToCapital: l.road_to_capital === 'yes',
+			port: !!l.port, rgoWorkers: N(l.max_raw_material_workers), garrison: N(l.garrison),
+			province: N(l.province), market: N(l.market), marketAccess: N(l.market_access),
+			pops, buildings,
+		},
+		observed: {
+			tax: N(l.tax), possibleTax: N(l.possible_tax), estateTax: Object.fromEntries(Object.entries(l.estate_tax || {}).map(([k, v]) => [k, +v])),
+			estatePossibleTax: Object.fromEntries(Object.entries(l.estate_possible_tax || {}).map(([k, v]) => [k, +v])), valueFlow: N(l.value_flow),
+			proximityPropagation: N(l.local_proximity_propagation),
+			popStats: Object.fromEntries(Object.entries(stats).map(([t, s]) => [t, Object.fromEntries(Object.entries(s).map(([k, v]) => [k, typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([a, b]) => [a, +b])) : +v]))])),
+			province: province ? { food: N((province.food || {}).current), maxFood: N(province.max_food_value), foodChange: N(province.cached_food_change),
+				surplusGrowth: N(province.food_surplus_growth_term), storageGrowth: N(province.food_storage_growth_term), levies: province.army_levies || undefined } : undefined,
+		},
+	};
+}
+const pricesOf = id => {
+	const m = id ? marketOf(id) : null, prices = {};
+	if (m && m.goods) for (const [g, v] of Object.entries(m.goods)) if (v && v.price !== undefined) prices[g] = +v.price;
+	return prices;
+};
+const write = scenario => {
+	const out = flag('--out');
+	if (out) { fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true }); fs.writeFileSync(out, JSON.stringify(scenario, null, '\t')); console.log('wrote', out); }
+	else console.log(JSON.stringify(scenario, null, '\t'));
+};
+
+// ---- --country TAG: every owned location (the country mode), markets by id
+if (flag('--country')) {
+	const cid = idOfTag(flag('--country'));
+	if (!cid) throw new Error('no country ' + flag('--country'));
+	const country = countryContext(cid);
+	const c = entry('countries', cid);
+	const locations = [], observed = {}, markets = {};
+	for (const lid of list(c.owned_locations)) {
+		const s = locationScenario(+lid, country);
+		if (!s) continue;
+		locations.push(s.location);
+		observed[lid] = s.observed;
+		if (s.location.market && !markets[s.location.market]) markets[s.location.market] = { prices: pricesOf(s.location.market) };
+	}
+	write({ name: `${tags[cid]} ${save.date()}`, source: path.basename(file), capital: country.capital, country, locations, markets, observed });
+	process.exit(0);
+}
+
 // ---- --location: one location as a scenario
 const q = flag('--location');
-if (!q) { console.error('usage: from_save.js <save|latest> --list TAG | --location <id|key> [--out file.json]'); process.exit(1); }
+if (!q) { console.error('usage: from_save.js <save|latest> --list TAG | --location <id|key> | --country TAG  [--out file.json]'); process.exit(1); }
 const lid = locId(q);
-const l = entry('locations', lid);
-if (!l) throw new Error('no location ' + q);
-const [key, topography, vegetation, climate, rawTemplate, harbor] = DATA.locations[lid - 1];
-const country = countryContext(l.owner);
-const cultureStatus = p => p.status || 'none';
-const pops = [];
-for (const pid of list((l.population || {}).pops)) {
-	const p = entry('population', pid);
-	if (!p) continue;
-	pops.push({ type: p.type, estate: p.estate, size: N(p.size), status: cultureStatus(p), culture: N(p.culture), religion: N(p.religion),
-		satisfaction: N(p.satisfaction) ?? 0, literacy: N(p.literacy) ?? 0, ...(p.building ? { building: N(p.building) } : {}) });
-}
-const buildings = buildingsAt(lid).map(b => {
-	const pm = Object.keys(b).find(k => b[k] && typeof b[k] === 'object' && DATA.methods[k]);
-	return { type: b.type, level: N(b.level), employed: N(b.employed), owner: N(b.owner), ...(+b.owner !== +l.owner ? { foreign: 1 } : {}),
-		...(pm ? { method: pm } : {}), ...(b.last_months_profit !== undefined ? { profit: N(b.last_months_profit) } : {}), ...(b.upkeep !== undefined ? { upkeep: N(b.upkeep) } : {}) };
-});
-const market = l.market ? entry('market_manager', l.market) : null;
-const prices = {};
-if (market && market.goods) for (const [g, v] of Object.entries(market.goods)) if (v && v.price !== undefined) prices[g] = +v.price;
-const province = l.province ? entry('provinces', l.province) : null;
-const stats = (l.population || {}).pop_stats || {};
-const scenario = {
-	name: `${key} (${tags[l.owner]}) ${save.date()}`,
-	source: path.basename(file),
-	location: {
-		id: lid, key, rank: l.rank, topography, vegetation, climate, rawMaterial: l.raw_material || rawTemplate, harbor,
-		development: N(l.development), prosperity: N(l.prosperity) ?? 0, control: N(l.control) ?? 0, proximity: N(l.proximity) ?? 0,
-		integration: l.integration || (l.cores && list(l.cores).map(Number).includes(+l.owner) ? 'core' : 'conquered'),
-		capital: +country.capital === lid, marketCenter: !!market && +market.center === lid, roadToCapital: l.road_to_capital === 'yes',
-		port: !!l.port, rgoWorkers: N(l.max_raw_material_workers), garrison: N(l.garrison),
-		province: N(l.province), market: N(l.market), marketAccess: N(l.market_access),
-		pops, buildings,
-	},
-	country,
-	market: { id: N(l.market), prices },
-	observed: {
-		tax: N(l.tax), possibleTax: N(l.possible_tax), estateTax: Object.fromEntries(Object.entries(l.estate_tax || {}).map(([k, v]) => [k, +v])),
-		estatePossibleTax: Object.fromEntries(Object.entries(l.estate_possible_tax || {}).map(([k, v]) => [k, +v])), valueFlow: N(l.value_flow),
-		proximityPropagation: N(l.local_proximity_propagation),
-		popStats: Object.fromEntries(Object.entries(stats).map(([t, s]) => [t, Object.fromEntries(Object.entries(s).map(([k, v]) => [k, typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([a, b]) => [a, +b])) : +v]))])),
-		province: province ? { food: N((province.food || {}).current), maxFood: N(province.max_food_value), foodChange: N(province.cached_food_change),
-			surplusGrowth: N(province.food_surplus_growth_term), storageGrowth: N(province.food_storage_growth_term), levies: province.army_levies || undefined } : undefined,
-	},
-};
-const out = flag('--out');
-if (out) { fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true }); fs.writeFileSync(out, JSON.stringify(scenario, null, '\t')); console.log('wrote', out); }
-else console.log(JSON.stringify(scenario, null, '\t'));
+const first = entry('locations', lid);
+if (!first) throw new Error('no location ' + q);
+const country = countryContext(first.owner);
+const s = locationScenario(lid, country);
+write({ name: `${s.location.key} (${tags[first.owner]}) ${save.date()}`, source: path.basename(file), location: s.location, country,
+	market: { id: s.location.market, prices: pricesOf(s.location.market) }, observed: s.observed });
