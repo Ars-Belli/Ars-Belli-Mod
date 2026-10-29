@@ -238,6 +238,9 @@
 		return keys.map(k => [k, DB.methods[k]]).filter(([, m]) => m);
 	}
 	const methodOf = b => { const m = methodsOf(b)[0]; return m ? m[1] : null; };
+	// input fill of a building's slot i (the save's input=): one recorded while nobody worked there (idleFill) no longer
+	// holds once the building has workers
+	const fillOf = (b, i, e) => (b.idleFill && e > 0 ? 1 : (b.inputFill || [])[i] ?? 1);
 	const isProducing = b => methodsOf(b).some(([, m]) => m.out);
 
 	// ---------------------------------------------------------------- modifiers of a location (eu5.exe 0x143194700 + 0x143edcc30)
@@ -388,7 +391,7 @@
 		for (const b of L.buildings) {
 			const t = DB.buildings[b.type];
 			if (!t || !b.level) continue;
-			const access = b.goodsAccess ?? (b.inputFill ? b.inputFill.reduce((a, x) => a + x, 0) / b.inputFill.length : 1), e = J.E.get(b) ?? 1;
+			const e = J.E.get(b) ?? 1, access = b.goodsAccess ?? (b.inputFill ? b.inputFill.reduce((a, x, i) => a + fillOf(b, i, e), 0) / b.inputFill.length : 1);
 			const name = `${DB.names[b.type] || b.type} ${b.level}`;
 			const S = b.level * access * e, Lv = b.level * access;
 			m.block(t.mod, S, name);
@@ -529,7 +532,7 @@
 				const throughput = L.marketAccess * e;
 				let value = 0, cost = 0, made = 0, goodMod = 0, produces = null;
 				for (const [i, [, pm]] of pms.entries()) {
-					const fill = (b.inputFill || [])[i] ?? 1;
+					const fill = fillOf(b, i, e);
 					cost += fill * Object.entries(pm.in || {}).reduce((a, [g, n]) => a + n * priceOf(g), 0);
 					if (pm.out) {
 						// output x (1 + production efficiency + the good's output modifier): Spain's lumber mills need its +50% lumber output
@@ -582,7 +585,7 @@
 			const b = L.buildings[row.idx];
 			if (!b || row.profit === undefined) continue;
 			for (const [i, [, pm]] of methodsOf(b).entries())
-				if (pm.out && goods[pm.out] && goods[pm.out].food) bldFood += b.level * row.employment * ((b.inputFill || [])[i] ?? 1) * pm.n * goods[pm.out].food;
+				if (pm.out && goods[pm.out] && goods[pm.out].food) bldFood += b.level * row.employment * fillOf(b, i, row.employment) * pm.n * goods[pm.out].food;
 		}
 		const base = bldFood + M.get('local_monthly_food') + def('NLocation', 'SUBSISTENCE_AGRICULTURE', 0.8) * subsist + rgoFood;
 		const productivity = 1 + M.get('local_monthly_food_modifier') + (rgoGood && rgoGood.food ? M.get('local_' + L.rawMaterial + '_output_modifier') : 0);
@@ -706,7 +709,7 @@
 	const priceStep = (p, target) => p + def('NMarket', 'MONTHLY_PRICE_CHANGE', 0.05) * (target - p);
 
 	const api = { setData, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
-		maxLevel, employmentSize, methodOf, methodsOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, devProsperity, maxRgo, tax, control, evaluate, advance, project, targetPrice, priceStep,
+		maxLevel, employmentSize, methodOf, methodsOf, fillOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, devProsperity, maxRgo, tax, control, evaluate, advance, project, targetPrice, priceStep,
 		MILITARY_CONTROL_FLOOR, get DB() { return DB; } };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.LocationSim = api;
 })(typeof self !== 'undefined' ? self : this);

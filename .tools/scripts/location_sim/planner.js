@@ -95,11 +95,16 @@ function trig(ctx, block, L, any = false) {
 // ---- prices in gold: base x (1 + inflation) x (1 + market price impact) x (1 + cost modifiers), each a factor ("Upgrade to
 // Town": 500 x 1.018 x 1.0361 x 0.9 = 474 in Toledo). The market price impact is the amount-weighted mean of the
 // construction goods' price against their base price in the location's market (Lisbon city: +20.89%).
+// a good's price impact on costs (markets_food.md 1.6): price / default - 1, clamped to MIN/MAX_PRICE_IMPACT (-0.33..3)
+function goodImpact(g, price) {
+	const b = (DB().goods[g] || {}).price, N = DB().defines.NMarket || {};
+	return b ? Math.max(N.MIN_PRICE_IMPACT ?? -0.33, Math.min(N.MAX_PRICE_IMPACT ?? 3, price / b - 1)) : 0;
+}
 function marketImpact(demandKey, L) {
 	const d = demandKey && DB().demands[demandKey];
 	if (!d || !d.goods) return 0;
 	let num = 0, den = 0;
-	for (const [g, a] of Object.entries(d.goods)) { const b = (DB().goods[g] || {}).price; if (!b) continue; num += a * ((L.prices[g] ?? b) / b - 1); den += a; }
+	for (const [g, a] of Object.entries(d.goods)) { const b = (DB().goods[g] || {}).price; if (!b) continue; num += a * goodImpact(g, L.prices[g] ?? b); den += a; }
 	return den ? num / den : 0;
 }
 function buildingPrice(ctx, t, level, L) {
@@ -128,6 +133,10 @@ function buildingOptions(ctx, site, opts = {}) {
 		if (t.unlock && !t.unlock.some(a => ctx.advances.has(a))) continue;
 		const existing = L0.buildings.find(b => b.type === type && !b.foreign);
 		const level = existing ? existing.level : 0;
+		// a staffed building the save shows starved of its inputs (every output slot filled 0) would add levels that make
+		// nothing (input rationing is not simulated: the fill stays as saved)
+		const outs = existing && !existing.idleFill ? E.methodsOf(existing).map(([, pm], i) => [pm, ((existing.inputFill || [])[i] ?? 1)]).filter(([pm]) => pm.out) : [];
+		if (outs.length && outs.every(([, fill]) => fill <= 0)) continue;
 		const pot = trig(ctx, t.locPot, L0), allow = trig(ctx, t.allow, L0);
 		if (pot === 0 || allow === 0) continue;
 		const cap = E.maxLevel(type, L0, r0.M), capV = typeof cap === 'number' ? cap : cap.value;
@@ -281,4 +290,40 @@ function urbanOption(ctx, site, cache = new Map()) {
 		verdict: shortage ? 'shortage' : growthLoss < -1e-6 ? 'costs growth' : 'food-safe' };
 }
 
-module.exports = { urbanOption, context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };
+// ---- prices (economy.js): how a location's crown tax minus upkeep moves with each good's price, in gold a month per gold
+// of price, at fixed employment. The crown takes tau of the wealth (control x each estate's share x rate x efficiency); RGO
+// and producing buildings' wealth moves with their output and input prices, other buildings' upkeep with their inputs.
+function priceSensitivity(r) {
+	const L = r.L, sens = {};
+	const add = (g, x) => { if (g && x) sens[g] = (sens[g] || 0) + x; };
+	let tau = 0;
+	for (const e of Object.values(r.tax.estates)) tau += e.share * L.control * e.rate * r.tax.efficiency;
+	if (r.rgo.good) add(r.rgo.good, tau * r.rgo.output * L.marketAccess);
+	for (const row of r.buildings.rows) {
+		const b = L.buildings[row.idx];
+		if (row.foreign || !b) continue;
+		const pms = E.methodsOf(b);
+		if (row.profit !== undefined) {
+			const k = tau * b.level * L.marketAccess * row.employment;
+			for (const [i, [, pm]] of pms.entries()) {
+				const fill = E.fillOf(b, i, row.employment);
+				for (const [g, n] of Object.entries(pm.in || {})) add(g, -k * fill * n);
+				if (pm.out) add(pm.out, k * fill * pm.n * (1 + row.pe + r.M.get('local_' + pm.out + '_output_modifier')));
+			}
+		} else for (const [, pm] of pms) for (const [g, n] of Object.entries(pm.in || {})) add(g, -b.level * n * r.buildings.upkeepMult);
+	}
+	return sens;
+}
+// what a change does to its market and to the location's price sensitivity: own supply and demand added per good (units
+// a month, CS.flows) and sensitivity added, after minus before; several changes add up with addFlow
+const subObj = (a, b) => { const o = {}; for (const g of new Set([...Object.keys(a), ...Object.keys(b)])) { const x = (a[g] || 0) - (b[g] || 0); if (Math.abs(x) > 1e-12) o[g] = x; } return o; };
+function flowDelta(rNew, rOld) {
+	const a = CS.flows(rNew), b = CS.flows(rOld);
+	return { dS: subObj(a.s, b.s), dD: subObj(a.d, b.d), sens: subObj(priceSensitivity(rNew), priceSensitivity(rOld)) };
+}
+function addFlow(into, f, sign = 1) {
+	for (const k of ['dS', 'dD', 'sens']) for (const [g, x] of Object.entries(f[k] || {})) into[k][g] = (into[k][g] || 0) + sign * x;
+	return into;
+}
+
+module.exports = { goodImpact, priceSensitivity, flowDelta, addFlow, urbanOption, context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };

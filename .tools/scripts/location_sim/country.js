@@ -13,6 +13,12 @@
 //   'fixed'  - imports and exports stay at the save's values
 //   'closed' - no trade with other markets
 //   'off'    - no market at all: prices stay where they are
+// Constructions (scn.constructions from the save, and economy.js's own) buy their demand's goods every month until they
+// are done: the save's are taken out of the held demand and run out as they finish.
+// options.marketCalibration: 'rest' (default) starts every market at rest - its target equal to today's price - since one
+// month's supply and demand are noisy (in Spain's June 1547 save 40% of the goods have a target 25%+ away from their
+// price, while their 119-month price histories are flat); 'snapshot' keeps the month as it is (its target reproduces the
+// save's next price step).
 // Pop demand and food are not simulated yet (research open), so prices react to production and building demand only.
 (function (root) {
 	'use strict';
@@ -80,7 +86,8 @@
 		// options.proximity: 'computed' recomputes every location's proximity each month (needs map.json and the roads),
 		// 'given' keeps the scenario's values
 		const proxMode = (scn.options || {}).proximity || (scn.roads ? 'computed' : 'given');
-		const state = { scn, C, mode, food: (scn.options || {}).food !== 'off', proxMode, sites, markets, month: 0, manpowerPool: obs.manpower ?? 0, manpowerExpense: expense, history: [] };
+		const calibration = (scn.options || {}).marketCalibration || 'rest';
+		const state = { scn, C, mode, calibration, food: (scn.options || {}).food !== 'off', proxMode, sites, markets, month: 0, manpowerPool: obs.manpower ?? 0, manpowerExpense: expense, history: [] };
 		const first = evaluateAll(state, true);
 		// provinces (food stores): the save's province id, else the map's province of the location
 		const provinces = {};
@@ -99,17 +106,15 @@
 			if (p.current === null) p.current = 0.75 * (p.maxSave ?? p.cap0);
 		}
 		state.provinces = provinces;
+		const marketOfLoc = new Map(sites.map(site => [+site.loc.id, site.loc.market]));
+		state.constructions = (scn.constructions || []).map(c => ({ market: marketOfLoc.get(+c.location), goods: (E.DB.demands[c.demand] || {}).goods || {}, months: c.days / 30.4 }))
+			.filter(c => c.market !== undefined && Object.keys(c.goods).length);
+		const built = constructionDemand(state);
 		for (const mk of Object.values(markets)) {
 			mk.food = mk.src.food ?? 0; mk.maxFood0 = mk.src.maxFood ?? 0; mk.foodTrade = mk.src.foodTrade ?? 0;
 			mk.ownCap0 = Object.values(provinces).filter(p => String(p.market) === String(mk.id)).reduce((a, p) => a + (p.maxSave ?? p.cap0), 0);
 		}
-		const own = {};
-		for (const site of sites) {
-			const f = flows(first.results.get(site));
-			const o = (own[site.loc.market] ??= { s: {}, d: {} });
-			for (const [g, x] of Object.entries(f.s)) o.s[g] = (o.s[g] || 0) + x;
-			for (const [g, x] of Object.entries(f.d)) o.d[g] = (o.d[g] || 0) + x;
-		}
+		const own = ownFlows(first.results);
 		for (const mk of Object.values(markets)) {
 			const o = own[mk.id] || { s: {}, d: {} };
 			mk.pop0 = sites.filter(site => String(site.loc.market) === String(mk.id)).reduce((a, site) => a + site.L.population, 0);
@@ -117,12 +122,13 @@
 			for (const [g, x] of Object.entries(mk.src.goods || {})) {
 				const sup = x.supplied || {}, dem = x.demanded || {};
 				const prod = sup.Production ?? sumObj(x.production);
-				const demand = sumObj(dem) - (dem.Trade || 0) - (dem.BurgherTrades || 0), pops = dem.Pops || 0;
+				const demand = sumObj(dem) - (dem.Trade || 0) - (dem.BurgherTrades || 0) - ((built[mk.id] || {})[g] || 0), pops = dem.Pops || 0;
 				mk.goods[g] = {
 					// pop demand kept apart: its base (before price elasticity) is fixed, the elasticity follows the price
 					price: x.price, otherS: prod - (o.s[g] || 0), otherD: demand - pops - (o.d[g] || 0), popBase: pops / elasticity(g, x.price),
 					trade: { Tin: sup.Trade || 0, Tout: dem.Trade || 0, BTin: sup.BurgherTrades || 0, BTout: dem.BurgherTrades || 0 },
 				};
+				if (DB().goods[g]) calibrate(state, mk, g, mk.goods[g], (o.s[g] || 0), (o.d[g] || 0) + ((built[mk.id] || {})[g] || 0));
 			}
 		}
 		return state;
@@ -172,35 +178,99 @@
 		return out;
 	}
 
-	// market prices for next month from this month's own flows
-	function stepMarkets(state, results) {
-		if (state.mode === 'off') return;
+	// the goods every market's constructions under way buy this month
+	function constructionDemand(state) {
+		const out = {};
+		for (const c of state.constructions || []) { const x = (out[c.market] ??= {}); for (const [g, a] of Object.entries(c.goods)) x[g] = (x[g] || 0) + a * Math.min(1, c.months); }
+		return out;
+	}
+	// the own supply and demand of every market (flows summed over the country's locations in it)
+	function ownFlows(results) {
 		const own = {};
 		for (const [site, r] of results) {
 			const f = flows(r), o = (own[site.loc.market] ??= { s: {}, d: {} });
 			for (const [g, x] of Object.entries(f.s)) o.s[g] = (o.s[g] || 0) + x;
 			for (const [g, x] of Object.entries(f.d)) o.d[g] = (o.d[g] || 0) + x;
 		}
-		const age = state.sites[0] ? state.sites[0].L.age : 1;
-		const v = state.C.mods.raw('export_impact_on_demand');
-		const none = { Tin: 0, Tout: 0, BTin: 0, BTout: 0 };
+		return own;
+	}
+	// pop demand scales with the population of the country's locations in the market (foreign members held), each good
+	// weighted by every pop type's demand for it: promoted burghers, nobles and clergy raise what they buy most
+	function popScales(state, mk) {
+		const pop = state.sites.filter(site => String(site.loc.market) === String(mk.id)).reduce((a, site) => a + site.L.population, 0);
+		const popScale = mk.pop0 > 0 ? pop / mk.pop0 : 1;
+		const typed = mk.typed0 ? typedPop(state.sites, mk.id) : null;
+		return g => (typed && mk.typed0[g] > 0 ? typed[g] / mk.typed0[g] : popScale);
+	}
+	const NO_TRADE = { Tin: 0, Tout: 0, BTin: 0, BTout: 0 };
+	// a good's target price from its supply, its demand without pops (Dn) and the pops' demand before elasticity (popD)
+	function target(state, mk, g, S, Dn, popD, price) {
+		const x = mk.goods[g], age = state.sites[0] ? state.sites[0].L.age : 1;
+		const { sEff, dEff } = effective(Math.max(0, S), Math.max(0, Dn + popD * elasticity(g, price)), state.mode === 'closed' ? NO_TRADE : x.trade, state.C.mods.raw('export_impact_on_demand'));
+		return E.targetPrice(g, Math.max(0, sEff + (x.calS || 0)), Math.max(0, dEff + (x.calD || 0)), age, mk.foodPrice ?? 0.05);
+	}
+	// 'rest' calibration: effective supply and demand moved to the ratio whose target is today's price, their sum kept
+	// (R = (k Sp + Dp) / (k Dp + Sp) = p / default gives Dp / Sp = (R - k) / (1 - R k); Sp, Dp include the +1 offset and
+	// the food x1.25). A price at the age's clamp stays as the month has it.
+	function calibrate(state, mk, g, x, ownS, ownD) {
+		x.calS = 0; x.calD = 0;
+		if (state.calibration === 'snapshot' || state.mode === 'off' || !(x.price > 0)) return;
+		const good = DB().goods[g], age = state.sites[0] ? state.sites[0].L.age : 1, a = DB().ages[age] || DB().ages[1];
+		const k = Math.min(a.priceStability, 1), R = x.price / good.price;
+		if (!(R > a.minPrice && R < a.maxPrice && R > k && R * k < 1)) return;
+		const D = Math.max(0, x.otherD + ownD + x.popBase * elasticity(g, x.price));
+		const { sEff, dEff } = effective(Math.max(0, x.otherS + ownS), D, state.mode === 'closed' ? NO_TRADE : x.trade, state.C.mods.raw('export_impact_on_demand'));
+		const off = (DB().defines.NEconomy || {}).SUPPLY_AND_DEMAND_STABILITY_OFFSET_CONSTANT ?? 1;
+		const f = good.food > 0 && (mk.foodPrice ?? 0.05) > ((DB().defines.NMarket || {}).FOOD_PRICE ?? 0.05) ? 1 + ((DB().defines.NMarket || {}).FOOD_PRICE_IMPACT_ON_PRICES ?? 0.25) : 1;
+		const Sp = sEff + off, Dp = dEff * f + off, rho = (R - k) / (1 - R * k), Sp2 = (Sp + Dp) / (1 + rho);
+		x.calS = Sp2 - Sp; x.calD = (rho * Sp2 - Dp) / f;
+	}
+
+	// market prices for next month from this month's own flows
+	function stepMarkets(state, results) {
+		if (state.mode === 'off') return;
+		const own = ownFlows(results), built = constructionDemand(state);
 		for (const mk of Object.values(state.markets)) {
-			const o = own[mk.id] || { s: {}, d: {} };
-			// pop demand scales with the population of the country's locations in the market (foreign members held), each good
-			// weighted by every pop type's demand for it: promoted burghers, nobles and clergy raise what they buy most
-			const pop = state.sites.filter(site => String(site.loc.market) === String(mk.id)).reduce((a, site) => a + site.L.population, 0);
-			const popScale = mk.pop0 > 0 ? pop / mk.pop0 : 1;
-			const typed = mk.typed0 ? typedPop(state.sites, mk.id) : null;
+			const o = own[mk.id] || { s: {}, d: {} }, b = built[mk.id] || {}, scale = popScales(state, mk);
 			for (const [g, x] of Object.entries(mk.goods)) {
 				if (!DB().goods[g]) continue;
-				const scale = typed && mk.typed0[g] > 0 ? typed[g] / mk.typed0[g] : popScale;
-				const S = Math.max(0, x.otherS + (o.s[g] || 0)), D = Math.max(0, x.otherD + x.popBase * scale * elasticity(g, x.price) + (o.d[g] || 0));
-				const { sEff, dEff } = effective(S, D, state.mode === 'closed' ? none : x.trade, v);
-				x.supply = S; x.demand = D; x.target = E.targetPrice(g, sEff, dEff, age, mk.foodPrice ?? 0.05);
+				const S = Math.max(0, x.otherS + (o.s[g] || 0)), Dn = x.otherD + (o.d[g] || 0) + (b[g] || 0), popD = x.popBase * scale(g);
+				x.supply = S; x.demand = Math.max(0, Dn + popD * elasticity(g, x.price));
+				x.target = target(state, mk, g, S, Dn, popD, x.price);
 				x.price = E.priceStep(x.price, x.target);
 				mk.prices[g] = x.price;
 			}
 		}
+		// a month of construction done
+		for (const c of state.constructions || []) c.months -= 1;
+		state.constructions = (state.constructions || []).filter(c => c.months > 1e-9);
+	}
+
+	// planning view of the markets (economy.js): the price a good settles at - where the monthly steps lead with nothing
+	// else changing - with extra own supply dS and demand dD (units a month), pop demand following the price. With
+	// markets off prices never move.
+	function marketView(state, results) {
+		const own = ownFlows(results), built = constructionDemand(state), scales = {}, memo = new Map();
+		for (const mk of Object.values(state.markets)) scales[mk.id] = popScales(state, mk);
+		function settled(mkId, g, dS = 0, dD = 0) {
+			const mk = state.markets[mkId], x = mk && mk.goods[g];
+			if (!x || !DB().goods[g]) return null;
+			if (state.mode === 'off') return x.price;
+			const key = mkId + '|' + g + '|' + dS + '|' + dD;
+			if (memo.has(key)) return memo.get(key);
+			const o = own[mkId] || { s: {}, d: {} };
+			const S = x.otherS + (o.s[g] || 0) + dS, Dn = x.otherD + (o.d[g] || 0) + ((built[mkId] || {})[g] || 0) + dD, popD = x.popBase * scales[mkId](g);
+			// the target falls as the price rises (pop demand shrinks above the base price): damped fixed point
+			let p = x.price;
+			for (let i = 0; i < 60; i++) {
+				const q = target(state, mk, g, S, Dn, popD, p);
+				if (Math.abs(q - p) <= 1e-7 * Math.max(1e-9, q)) { p = q; break; }
+				p = 0.5 * (p + q);
+			}
+			memo.set(key, p);
+			return p;
+		}
+		return { own, settled, price: (mkId, g) => ((state.markets[mkId] || {}).goods || {})[g] ? state.markets[mkId].goods[g].price : null };
 	}
 
 	// Food (demand_food.md 3): each province applies its month (production - consumption - decay) to its store, sells what is
@@ -385,6 +455,6 @@
 		return { state, results, totals: totals(state, results) };
 	}
 
-	const api = { create, evaluate, project, flows, effective, elasticity, stepFood, stepMarkets, evaluateAll, totals, proximity, setMap, popWeight };
+	const api = { create, evaluate, project, flows, ownFlows, constructionDemand, effective, elasticity, stepFood, stepMarkets, marketView, evaluateAll, totals, proximity, setMap, popWeight };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.CountrySim = api;
 })(typeof self !== 'undefined' ? self : this);
