@@ -21,14 +21,17 @@
 	const ESTATE_OF = type => (DB.pops[type] && DB.pops[type].estate) || 'peasants_estate';
 
 	// ---------------------------------------------------------------- modifiers
-	// Sums modifier values by key and remembers every source, like the game's tooltips.
+	// Sums modifier values by key and remembers every source, like the game's tooltips. setTracking(false) stops recording
+	// sources (the values are the same): a long simulation needs no tooltips, and the lists cost about a third of its time.
+	let tracking = true;
+	const setTracking = on => { tracking = !!on; };
 	class Mods {
 		constructor() { this.v = {}; this.src = {}; }
 		add(key, x, source) {
-			if (x === 'yes') { this.v[key] = 'yes'; (this.src[key] ??= []).push([source, 'yes']); return; }
+			if (x === 'yes') { this.v[key] = 'yes'; if (tracking) (this.src[key] ??= []).push([source, 'yes']); return; }
 			if (typeof x !== 'number' || !x || !Number.isFinite(x)) return;
 			this.v[key] = (this.v[key] || 0) + x;
-			(this.src[key] ??= []).push([source, x]);
+			if (tracking) (this.src[key] ??= []).push([source, x]);
 		}
 		block(block, scale, source) {
 			if (!block || !scale) return;
@@ -381,7 +384,7 @@
 		// RGO size first (it decides laborer jobs); building RGO-size modifiers count at full staffing here
 		const pre = new Mods();
 		// own copies of the source lists: the pre-pass must not add its full-staffing building lines to the location's tooltips
-		pre.v = { ...base.v }; pre.src = Object.fromEntries(Object.entries(base.src).map(([k, a]) => [k, [...a]]));
+		pre.v = { ...base.v }; if (tracking) pre.src = Object.fromEntries(Object.entries(base.src).map(([k, a]) => [k, [...a]]));
 		for (const b of L.buildings) { const t = DB.buildings[b.type]; if (t) pre.block(t.mod, b.level, b.type); }
 		const rs = rgoSize(L, new LocationMods(pre, C.mods));
 		L.rgoMax = rs.value; L.rgoMaxPossible = rs.max;
@@ -712,7 +715,7 @@
 	}
 	const priceStep = (p, target) => p + def('NMarket', 'MONTHLY_PRICE_CHANGE', 0.05) * (target - p);
 
-	const api = { setData, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
+	const api = { setData, setTracking, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
 		maxLevel, employmentSize, methodOf, methodsOf, fillOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, devProsperity, maxRgo, tax, control, evaluate, advance, project, targetPrice, priceStep,
 		MILITARY_CONTROL_FLOOR, get DB() { return DB; } };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.LocationSim = api;

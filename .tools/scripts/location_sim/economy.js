@@ -27,6 +27,7 @@ const os = require('os');
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 const E = require('./engine.js');
 E.setData(JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8')));
+E.setTracking(false); // no tooltips: modifier sources are not recorded
 const CS = require('./country.js');
 CS.setMap(require('./map.json'));
 const plan = require('./planner.js');
