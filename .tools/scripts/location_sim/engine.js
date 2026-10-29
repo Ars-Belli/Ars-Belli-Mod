@@ -138,7 +138,9 @@
 			marketCenter: !!s.marketCenter, port: s.port ?? (tpl ? !!tpl[12] : false), coastal: s.coastal ?? (tpl ? !!tpl[9] : !!s.port), river: s.river ?? (tpl ? tpl[8] : 0), road: s.road ?? !!s.roadToCapital,
 			roadToCapital: !!s.roadToCapital, marketAccess: s.marketAccess ?? 1, rgoWorkers: s.rgoWorkers,
 			pops: (s.pops || []).map(p => ({ satisfaction: 0.5, literacy: 0, status: 'Primary', ...p, estate: p.estate || ESTATE_OF(p.type) })),
-			buildings: (s.buildings || []).map(b => ({ level: 1, ...b })),
+			// a closed building (the save's open = no) works, produces, employs and costs nothing; its levels still exist
+			buildings: (s.buildings || []).filter(b => !b.closed).map(b => ({ level: 1, ...b })),
+			closedLevels: (s.buildings || []).filter(b => b.closed).reduce((a, b) => a + (b.level ?? 1), 0),
 			situation: s.situation || {},
 			prices, foodPrice: (scn.market || {}).foodPrice ?? def('NMarket', 'FOOD_PRICE', 0.05),
 			// province food factors for growth (0..1 each): from the scenario, the save's province, or full storage and no surplus
@@ -399,6 +401,7 @@
 		L.harborSuitability = Math.min(1, L.harbor + (L.coastal ? 0.05 * L.river : 0)) + m.raw('harbor_suitability');
 		if (L.port) m.block(st('harbor'), Math.max(0, L.harborSuitability), `harbor suitability ${L.harborSuitability.toFixed(2)}`);
 		const free = Math.max(0, m.raw('free_building_levels') * (1 + C.mods.raw('global_free_building_levels_modifier')));
+		total += L.closedLevels || 0;
 		if (total > free) m.block(st('unsupported_building_levels'), total - free, `${(total - free).toFixed(1)} building levels over the free ${free.toFixed(1)}`);
 		if (L.rgoMax) m.block(st('rgo_level'), L.rgoMax, `RGO size ${L.rgoMax}`);
 		// jobs left open (not tribesmen, slaves or peasants), capped at POP_JOB_SURPLUS_SCALE_CAP thousand

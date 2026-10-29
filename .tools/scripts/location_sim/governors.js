@@ -54,6 +54,12 @@ if (roadsMode === 'best' && bestRoad) {
 	for (const l of scn.locations) { if (adj.has(l.id)) l.road = true; l.roadToCapital = seen.has(l.id) && l.id !== scn.capital ? true : l.roadToCapital; }
 }
 
+// --open armory[,type...] | all: reopen closed buildings of those types first (staffed from the pops like any other)
+const openTypes = flag('--open') ? String(flag('--open')).split(',') : [];
+let reopened = 0;
+if (openTypes.length) for (const l of scn.locations) for (const b of l.buildings) if (b.closed && (openTypes.includes('all') || openTypes.includes(b.type))) { delete b.closed; delete b.employed; reopened += b.level || 1; }
+if (reopened) console.log(`Reopened ${reopened} closed building levels (${openTypes.join(', ')})`);
+
 // ---- the current governors of the kind being placed come out: everything is scored against none of them
 const naval = args.includes('--naval');
 const TYPE = naval ? 'naval_governor' : 'local_governor', LABEL = naval ? 'naval governor' : 'governor';
@@ -61,16 +67,20 @@ const isGovernor = b => b.type === TYPE;
 const current = scn.locations.filter(l => l.buildings.some(isGovernor)).map(l => l.id);
 for (const l of scn.locations) l.buildings = l.buildings.filter(b => !isGovernor(b));
 const building = type => ({ type, level: 1, employed: DB.buildings[type].emp, methods: [...(DB.buildings[type].slots || [[]]).map(s => s[0]).filter(Boolean)] });
-if (naval && flag('--local')) {
-	// the Local Governors where --local puts them
-	const want = String(flag('--local')).split(',');
+// the other kind of governor where --local / --naval-at puts it (to alternate between the two searches)
+const placeOther = (opt, type) => {
+	if (!flag(opt)) return;
+	const want = String(flag(opt)).split(',');
 	for (const l of scn.locations) {
-		l.buildings = l.buildings.filter(b => b.type !== 'local_governor');
-		if (want.includes(l.key)) l.buildings.push(building('local_governor'));
+		l.buildings = l.buildings.filter(b => b.type !== type);
+		if (want.includes(l.key)) l.buildings.push(building(type));
 	}
-}
+};
+if (naval) placeOther('--local', 'local_governor'); else placeOther('--naval-at', 'naval_governor');
+// local governors share their cap with lieutenancies, itinerant court seats and king's manors (they stay where they are)
+const sharing = scn.locations.reduce((n, l) => n + l.buildings.filter(b => ['lieutenancy', 'itinerant_court_seat', 'kings_manor'].includes(b.type)).reduce((x, b) => x + (b.level || 0), 0), 0);
 const allowed = naval ? scn.country.modifiers.num_naval_governors || 0
-	: Math.max(scn.country.modifiers.num_local_governors || 1, scn.country.modifiers.minimum_num_local_governors || 0);
+	: Math.max(scn.country.modifiers.num_local_governors || 1, scn.country.modifiers.minimum_num_local_governors || 0) - sharing;
 // naval: connected to the capital through the country's own land (straits count), and the capital's continent
 const connected = new Set([scn.capital]);
 {

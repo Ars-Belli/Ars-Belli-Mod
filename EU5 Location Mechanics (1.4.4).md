@@ -216,6 +216,7 @@ Who pays for traded food and the 1.33 pop-income scale are open.
 | Manpower a month | 6,747 | 6,751 | +0.1% |
 | Sailors a month | 1,496 | 1,525 | +2.0% |
 | Births a month | 4,405 | 4,402 | −0.1% |
+| Great Britain (same save) | | | wealth −2.8%, crown tax −3.0%, manpower −0.1%, sailors +0.1%, births +0.7%; proximity median 0.04 (the save's Glasgow governor had less input at its last rebuild); Chester 58.60 = the in-game tooltip, step by step |
 | Proximity | | | all 522 within 1 point; median error 0.313 at today's speed term, 0.001 at the stored values' 0.485 |
 
 Sevilla against the in-game tooltips (June 1547): wealth 79.84 vs 80.99 (buildings 74.25 vs the save's 74.92 after the Burghers' −0.33% production efficiency; the rest is burgher trade); estate shares 16.37 / 7.88 / 50.08 / 5.52 vs 16.48 / 7.93 / 51.01 / 5.55; location taxes 35.25 vs 35.77; building maintenance 31.68 vs 31.87; monthly manpower 113.9 vs 113 (85 from buildings × (1 + 10% Crown of Castile + 4% soldier literacy + 20% Fortress Town)); food productivity 1.864 vs 1.864, subsistence 42.01 vs 42.01, consumption 306.53 vs 306.52; development 0.0092 vs 0.0092 a month; prosperity −0.06% vs −0.06%.
@@ -267,7 +268,7 @@ Files in `.tools/scripts/location_sim/`:
 ```
 - Sizes and men are thousands. `status` is the pop's culture status (`Primary`, `Accepted`, `Tolerated`, anything else counts as another culture).
 - `employed` (thousands) fixes a building's staffing; without it jobs fill from the pops. `rgoWorkers` is the RGO size; without it, the formula estimate (open).
-- `country.modifiers` is the owner's full modifier sum. `from_save.js` fills it from base values, advances, laws, privileges, reforms, timed modifiers, societal values, the state religion, the ruler's skills and traits, cabinet traits and the capital's buildings, with every source in `sources`; the engine adds each estate's satisfaction effects from `estates`. `location.trade` (`{ "exports": 320, "imports": 378 }`) is the trade routed through the location. Base values are added for hand-written scenarios unless `baseValues: false`.
+- `country.modifiers` is the owner's full modifier sum. `from_save.js` fills it from base values, advances, laws, privileges, reforms, timed modifiers, societal values, the state religion, the ruler's skills and traits, cabinet traits and the capital's buildings, with every source in `sources`; the engine adds each estate's satisfaction effects from `estates`. `location.trade` (`{ "exports": 320, "imports": 378 }`) is the trade routed through the location. A building with `closed: 1` (the save's `open = no`) gives nothing but keeps its levels; one with level 0 is under construction. Advances count only while their `potential` holds (variable checks; Ars Belli's focus-pick advances need `abm_focus_<x>`). Base values are added for hand-written scenarios unless `baseValues: false`.
 - Without `advances`, levies unlock by `age`. Without `taxRates`, every estate pays 35%.
 - `market.prices` default to the goods' base prices.
 
@@ -286,6 +287,12 @@ Files in `.tools/scripts/location_sim/`:
 Moving Aurillac's governor to Montauban: the Toulouse basin gains (Verdun-sur-Garonne, Toulouse, Villefranche, Castelnaudary, Lavaur), the Auvergne loses a little (Châteauneuf-de-Randon, Aurillac). Month by month, with the year of construction: −52 crown tax and −55 manpower a month in year 1, even in year 2, +94 and +74 a month by year 10; the construction year is paid back after 3 years and the switch nets +7,500 gold and +5,900 men over 10 years. Moving all three costs more while building (−149 crown tax, −204 manpower a month in year 1), pays back after 5.2 years and ends with almost no manpower gain. With the save's roads the same set (Valladolid, Toledo, Montauban) is best on all three counts.
 
 **Naval Governors** (`--naval`): the same building effect (`local_proximity_source` 80, upkeep adds naval supplies) with its own cap (Spain 3: Exploration Fleets, Harbor Administration, Administration of Shipyards), only in a port city **not** connected to the capital through the country's land (straits count) and not overseas (taken as: on the capital's continent); it is removed if the location becomes connected. Spain can place one: Île d'Oléron (the game's build menu agrees). With the Local Governors in Valladolid, Toledo and Montauban it adds +22 crown tax, +26 manpower a month and +1,300 levies at settled control (Oléron 62 -> 80, the Médoc and Bordeaux coast, Navarre by sea) for about 15 gold a month of upkeep at today's prices; with Aurillac's governor kept, +28 / +33 / +1,700. A Balearic city would add only +2 (the islands are already 63-72 by sea); the Canaries and Madeira are on the African continent and have no city.
+
+### Where to put governors (Great Britain, same save)
+
+`governors.js scenarios/local/gbr_1547_06.json --open armory [--naval]` (its closed armories reopened). Britain has 3 + 3: the Local Governor cap is shared with its **King's Manor** in York (also an 80 source), so two governors (Bristol, Glasgow); naval governors in Tancarville, Nantes and Leer. With paved roads everywhere:
+- **Land: keep Bristol and Glasgow** (the best pair for crown tax; Glasgow + Coventry trades 1.4 gold for 2 manpower). York's manor is worth keeping: a governor in Coventry instead adds +9 crown tax and +9 manpower a month but costs about 13 gold more upkeep (manor 1.5, governor 14.7).
+- **Naval: move Tancarville's to La Rochelle.** London reaches Normandy by sea at 80 or more, so Tancarville's governor adds nothing; La Rochelle covers Poitou, Saintonge and the Angoumois (control 0-45% today). La Rochelle, Nantes, Leer: +97 crown tax, +39 manpower a month, +5,800 levies at settled control against +56 / +28 / +4,150 now; nothing is lost while it is built (+33 crown tax a month by year 10, about +2,250 net gold over 10 years). Leer -> Vannes as well trades 2 gold for 6 manpower.
 
 ### Country mode
 

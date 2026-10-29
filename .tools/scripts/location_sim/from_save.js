@@ -100,7 +100,22 @@ function countryContext(cid) {
 	// the country rank's rank_modifier (an Empire gets +1 local governor), from the last rank change
 	const rank = (list(c.country_rank_history).filter(x => x && x.country_rank).slice(-1)[0] || {}).country_rank;
 	if (rank && ranksDb[rank]) addBlock(acc, notes, `country rank ${rank}`, get(ranksDb[rank], 'rank_modifier'));
-	for (const adv of Object.keys(c.researched_advances || {})) addBlock(acc, notes, `advance ${adv}`, advances[adv]);
+	// an advance counts only while its potential holds: the game re-checks it (Ars Belli's focus picks gate advances with
+	// has_variable = abm_focus_<x>; Great Britain 1547 has State Efficiency researched but no focus variable, and its
+	// proximity tooltip leaves it out). Only variable checks are evaluated; other conditions held when it was researched.
+	const vars = new Set(list((c.variables || {}).data).map(v => v && v.flag).filter(Boolean));
+	// three-valued: 1 true, 0 false, null not evaluated (stays unknown through NOT; only a definite 0 drops the advance)
+	const holds = (block, any = false) => {
+		const r = (block || []).map(([k, v]) => k === 'has_variable' ? (vars.has(String(v)) ? 1 : 0)
+			: k === 'NOT' ? (x => x === null ? null : 1 - x)(holds(v, true)) : k === 'OR' ? holds(v, true) : k === 'AND' ? holds(v) : null);
+		if (any) return r.includes(1) ? 1 : r.includes(null) ? null : 0;
+		return r.includes(0) ? 0 : r.includes(null) ? null : 1;
+	};
+	for (const adv of Object.keys(c.researched_advances || {})) {
+		const pot = advances[adv] && get(advances[adv], 'potential');
+		if (Array.isArray(pot) && holds(pot) === 0) { notes.push(`advance ${adv}: inactive (its potential fails)`); continue; }
+		addBlock(acc, notes, `advance ${adv}`, advances[adv]);
+	}
 	const gov = c.government || {};
 	for (const [law, v] of Object.entries(gov.implemented_laws || {})) {
 		const p = policies[v.object] || [];
@@ -164,7 +179,7 @@ function countryContext(cid) {
 	// capital buildings' capital_country_modifier, x level x staffing x goods access (building_types readme, location_modifier_scales.md)
 	if (c.capital) for (const b of buildingsOf(c.capital)) {
 		const t = DATA.buildings[b.type];
-		if (!t || !t.capCountry || +b.owner !== +cid) continue;
+		if (!t || !t.capCountry || +b.owner !== +cid || !(+b.level > 0)) continue; // not under construction
 		const size = typeof t.emp === 'number' ? t.emp : 0;
 		const staffing = size && b.level ? Math.min(1, (+b.employed || 0) / (size * +b.level)) : 1;
 		const pms = Object.keys(b).filter(k => b[k] && typeof b[k] === 'object' && DATA.methods[k]);
@@ -284,7 +299,9 @@ function locationScenario(lid, country) {
 		// every active production method (one per slot) and its input fill fraction (input=, 1 when nothing is missing)
 		const pms = Object.keys(b).filter(k => b[k] && typeof b[k] === 'object' && DATA.methods[k]);
 		const fills = pms.map(k => N(b[k].input) ?? 1);
-		return { type: b.type, level: N(b.level), employed: N(b.employed), owner: N(b.owner), ...(+b.owner !== +l.owner ? { foreign: 1 } : {}),
+		// a building under construction has no level yet: level 0 (the engine would otherwise count it as a finished level 1)
+		return { type: b.type, level: N(b.level) ?? 0, employed: N(b.employed), owner: N(b.owner), ...(+b.owner !== +l.owner ? { foreign: 1 } : {}),
+			...(b.open === 'no' ? { closed: 1 } : {}),
 			...(pms.length ? { methods: pms } : {}), ...(fills.some(x => x < 1) ? { inputFill: fills } : {}), ...(b.last_months_profit !== undefined ? { profit: N(b.last_months_profit) } : {}), ...(b.upkeep !== undefined ? { upkeep: N(b.upkeep) } : {}) };
 	});
 	const market = l.market ? marketOf(l.market) : null;
