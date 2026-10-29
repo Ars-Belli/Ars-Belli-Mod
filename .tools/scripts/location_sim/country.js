@@ -188,11 +188,12 @@
 		for (const c of state.constructions || []) { const x = (out[c.market] ??= {}); for (const [g, a] of Object.entries(c.goods)) x[g] = (x[g] || 0) + a * Math.min(1, c.months); }
 		return out;
 	}
-	// the own supply and demand of every market (flows summed over the country's locations in it)
+	// the own supply and demand of every market (flows summed over the country's locations in it; a shard's summary of a
+	// location carries its flows already)
 	function ownFlows(results) {
 		const own = {};
 		for (const [site, r] of results) {
-			const f = flows(r), o = (own[site.loc.market] ??= { s: {}, d: {} });
+			const f = r.ownFlows || flows(r), o = (own[site.loc.market] ??= { s: {}, d: {} });
 			for (const [g, x] of Object.entries(f.s)) o.s[g] = (o.s[g] || 0) + x;
 			for (const [g, x] of Object.entries(f.d)) o.d[g] = (o.d[g] || 0) + x;
 		}
@@ -270,11 +271,18 @@
 			const o = own[mkId] || { s: {}, d: {} };
 			const S = x.otherS + (o.s[g] || 0) + dS, Dn = x.otherD + (o.d[g] || 0) + ((built[mkId] || {})[g] || 0) + dD, popD = x.popBase * scales[mkId](g);
 			// the target falls as the price rises (pop demand shrinks above the base price, trade responds), so
-			// target(p) - p falls and has one root: bisection between the age's price clamps
+			// f(p) = target(p) - p falls and has one root between the age's price clamps: false position, Illinois variant
+			// (a few steps where bisection takes about 36)
 			const base = DB().goods[g].price, a = DB().ages[state.sites[0] ? state.sites[0].L.age : 1] || DB().ages[1];
-			let lo = base * a.minPrice * 0.999, hi = base * a.maxPrice * 1.001 + Math.abs(x.price);
-			for (let i = 0; i < 60 && hi - lo > 1e-9 * hi; i++) { const mid = (lo + hi) / 2; if (target(state, mk, g, S, Dn, popD, mid) > mid) lo = mid; else hi = mid; }
-			const p = (lo + hi) / 2;
+			const f = q => target(state, mk, g, S, Dn, popD, q) - q;
+			let lo = base * a.minPrice * 0.999, hi = base * a.maxPrice * 1.001 + Math.abs(x.price), flo = f(lo), fhi = f(hi), p = (lo + hi) / 2;
+			for (let i = 0, side = 0; i < 100 && hi - lo > 1e-9 * hi; i++) {
+				p = flo - fhi > 0 ? (lo * fhi - hi * flo) / (fhi - flo) : (lo + hi) / 2;
+				if (!(p > lo && p < hi)) p = (lo + hi) / 2;
+				const fp = f(p);
+				if (Math.abs(fp) <= 1e-10 * p) break;
+				if (fp > 0) { lo = p; flo = fp; if (side === 1) fhi /= 2; side = 1; } else { hi = p; fhi = fp; if (side === -1) flo /= 2; side = -1; }
+			}
 			memo.set(key, p);
 			return p;
 		}
