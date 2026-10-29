@@ -144,7 +144,7 @@ crown income         = Σ estate tax base × tax rate × tax efficiency
 ```
 - **Enfranchisement**: country base 0.25, `serfdom_vs_free_subjects` ±0.33, privileges ±0.05–0.10; location: rank (rural −0.2, town +0.1, city +0.25, megalopolis +0.5) and `control` +0.5 × control. Sevilla: 0.7823, exactly the save's.
 - **Uncontrolled wealth** (wealth × (1 − control)) goes to the estates untaxed.
-- **Tax efficiency** *(code `0x14278b0b0`)*: the crown receives taxes × (1 − `estate_enrichment`) × (1 + `tax_income_efficiency`); the location panel lists the taxes before it (Sevilla 35.77). Spain 1547: 1.05 × 1.16 = 1.218 against the save's 1.2475 (2.4% unexplained). A missing estate in `tax_rates` pays nothing (Spain's clergy are exempt).
+- **Tax efficiency** *(code `0x14278b0b0`)*: the crown receives taxes × (1 − `estate_enrichment`) × (1 + `tax_income_efficiency`); the location panel lists the taxes before it (Sevilla 35.77). Spain June 1547: tax efficiency +19% (advances, laws, privileges, Lutheranism +3%, the cabinet's Tax Optimizer +1%, as the in-game tooltip lists), estate enrichment −5%, so 1.05 × 1.19 = 1.2495 against the save's 1.2475. A missing estate in `tax_rates` pays nothing (Spain's clergy are exempt).
 
 ---
 
@@ -205,9 +205,9 @@ Who pays for traded food and the 1.33 pop-income scale are open.
 
 | Number | Save | Simulated | |
 |---|---|---|---|
-| Wealth, all 522 locations | 14,379 | 14,086 | −2.0% (burgher trade, not modelled) |
+| Wealth, all 522 locations | 14,379 | 14,423 | +0.3% |
 | Estate shares | | | median error 0.03 points, 90th percentile 0.21 |
-| Crown tax income a month | 5,499 | 5,206 | −5.3% (tax efficiency 2.4% unexplained, plus wealth) |
+| Crown tax income a month | 5,499 | 5,516 | +0.3% (tax efficiency 19% = the in-game tooltip) |
 | Manpower a month | 6,747 | 6,751 | +0.1% |
 | Sailors a month | 1,496 | 1,525 | +2.0% |
 | Births a month | 4,405 | 4,402 | −0.1% |
@@ -258,7 +258,7 @@ Files in `.tools/scripts/location_sim/`:
 ```
 - Sizes and men are thousands. `status` is the pop's culture status (`Primary`, `Accepted`, `Tolerated`, anything else counts as another culture).
 - `employed` (thousands) fixes a building's staffing; without it jobs fill from the pops. `rgoWorkers` is the RGO size; without it, the formula estimate (open).
-- `country.modifiers` is the owner's full modifier sum. `from_save.js` fills it from base values, advances, laws, privileges, reforms, timed modifiers and societal values, with every source in `sources`. Base values are added for hand-written scenarios unless `baseValues: false`.
+- `country.modifiers` is the owner's full modifier sum. `from_save.js` fills it from base values, advances, laws, privileges, reforms, timed modifiers, societal values, the state religion, the ruler's skills and traits, cabinet traits and the capital's buildings, with every source in `sources`. Base values are added for hand-written scenarios unless `baseValues: false`.
 - Without `advances`, levies unlock by `age`. Without `taxRates`, every estate pays 35%.
 - `market.prices` default to the goods' base prices.
 

@@ -70,6 +70,8 @@ const laws = loadDb('in_game/common/laws');
 const privileges = loadDb('in_game/common/estate_privileges');
 const reforms = loadDb('in_game/common/government_reforms');
 const societal = loadDb('in_game/common/societal_values');
+const religionsDb = loadDb('in_game/common/religions');
+const traitsDb = loadDb('in_game/common/traits');
 const policies = {};
 for (const law of Object.values(laws)) for (const [k, v] of law) if (Array.isArray(v) && (get(v, 'country_modifier') || get(v, 'location_modifier'))) policies[k] = v;
 // adds a modifier block to acc, with each key's sources in acc.__src (key -> [[source, value]])
@@ -119,11 +121,24 @@ function countryContext(cid) {
 		if (!Number.isFinite(x) || x <= -999 || !x || !societal[sv]) continue;
 		addBlock(acc, notes, `societal value ${sv} ${x > 0 ? '+' : ''}${x.toFixed(0)}`, get(societal[sv], x < 0 ? 'left_modifier' : 'right_modifier'), Math.abs(x) / 100);
 	}
-	// the ruler's skills: static ruler_adm / ruler_dip / ruler_mil x the skill
+	// the ruler's skills (static ruler_adm / ruler_dip / ruler_mil x the skill) and ruler traits
+	const character = id => save.entry('character_db', id, isText ? '' : undefined) || (isText ? null : (save.section('character_db').database || {})[id]);
 	if (gov.ruler && gov.ruler !== '0') {
-		const ch = save.entry('character_db', gov.ruler, isText ? '' : undefined) || (isText ? null : (save.section('character_db').database || {})[gov.ruler]);
+		const ch = character(gov.ruler);
 		if (ch) for (const sk of ['adm', 'dip', 'mil']) if (ch[sk] !== undefined && DATA.static['ruler_' + sk])
 			addBlock(acc, notes, `ruler ${sk} ${ch[sk]}`, Object.entries(DATA.static['ruler_' + sk].m).map(([k, v]) => [k, String(v)]), +ch[sk]);
+		if (ch) for (const t of list(ch.traits)) if (get(traitsDb[t] || [], 'category') === 'ruler') addBlock(acc, notes, `ruler trait ${t}`, get(traitsDb[t], 'modifier'));
+	}
+	// cabinet members' cabinet traits (Tax Optimizer +1% tax efficiency...)
+	for (const eid of list(gov.cabinet_entries)) {
+		const ce = entry('cabinet_manager', eid), ch = ce && ce.character ? character(ce.character) : null;
+		if (ch) for (const t of list(ch.traits)) if (get(traitsDb[t] || [], 'category') === 'cabinet') addBlock(acc, notes, `cabinet trait ${t}`, get(traitsDb[t], 'modifier'));
+	}
+	// the state religion's definition_modifier (Lutheranism +3% tax efficiency...)
+	if (c.primary_religion !== undefined) {
+		const rel = isText ? save.entry('religion_manager', c.primary_religion, '') : ((save.section('religion_manager') || {}).database || {})[c.primary_religion];
+		const key = rel && (rel.key || rel.definition);
+		if (key && religionsDb[key]) addBlock(acc, notes, `religion ${key}`, get(religionsDb[key], 'definition_modifier'));
 	}
 	// capital buildings' capital_country_modifier, x level x staffing x goods access (building_types readme, location_modifier_scales.md)
 	if (c.capital) for (const b of buildingsOf(c.capital)) {
@@ -149,7 +164,7 @@ function countryContext(cid) {
 				lastMonth: Object.fromEntries(Object.entries(e.last_month || {}).map(([a, b]) => [a, +b])) }];
 		}).filter(([, e]) => e.satisfaction !== undefined)),
 		modifiers: strip(acc), sources: acc.__src || {}, locationObjects: locObjects,
-		notes: [...notes, ...locObjects.map(k => `location modifier from ${k}`), 'Not counted: religion, culture, cabinet, estates satisfaction and power effects, situations, international organizations, conditional auto modifiers.'],
+		notes: [...notes, ...locObjects.map(k => `location modifier from ${k}`), 'Not counted: culture, religious aspects and schools, estates satisfaction and power effects, situations, international organizations, conditional auto modifiers.'],
 		observed: {
 			manpowerIncome: N(c.last_month_manpower_income), manpowerNet: N(c.monthly_manpower), maxManpower: N(c.max_manpower),
 			sailorsIncome: N(c.last_month_sailors_income), maxSailors: N(c.max_sailors), taxIncome: N(c.last_months_tax_income),
