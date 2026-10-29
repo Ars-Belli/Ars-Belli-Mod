@@ -105,7 +105,8 @@
 			if (k === 'AND' || k === 'OR' || k === 'NOT' || k === 'NOR' || k === 'NAND') {
 				const inner = trigger(v, ctx, k === 'OR' || k === 'NOR' ? 'OR' : 'AND');
 				r = k === 'NOT' || k === 'NOR' || k === 'NAND' ? !inner : inner;
-			} else if (k === 'always') r = v === 'yes';
+			} else if (k === 'custom_tooltip' && Array.isArray(v)) r = trigger(v.filter(([x]) => x !== 'text'), ctx);
+			else if (k === 'always') r = v === 'yes';
 			else if (k === 'location_rank') r = ('location_rank:' + ctx.rank) === v;
 			else if (Array.isArray(v)) { (ctx.unknown ??= new Set()).add(k); r = false; }
 			else if (v === 'yes' || v === 'no') { const x = ctx.flag(k); if (x === undefined) { (ctx.unknown ??= new Set()).add(k); r = false; } else r = x === (v === 'yes'); }
@@ -134,7 +135,7 @@
 			rawMaterial: s.rawMaterial || (tpl && tpl[4]) || '', harbor: s.harbor ?? (tpl ? tpl[5] : 0),
 			development: s.development ?? 10, prosperity: s.prosperity ?? 0, control: s.control ?? 1, proximity: s.proximity ?? 100,
 			integration: s.integration || 'core', capital: !!s.capital, provinceCapital: !!s.provinceCapital, historicalCapital: !!s.historicalCapital,
-			marketCenter: !!s.marketCenter, port: !!s.port, coastal: s.coastal ?? (tpl ? !!tpl[9] : !!s.port), river: s.river ?? (tpl ? tpl[8] : 0), road: s.road ?? !!s.roadToCapital,
+			marketCenter: !!s.marketCenter, port: s.port ?? (tpl ? !!tpl[12] : false), coastal: s.coastal ?? (tpl ? !!tpl[9] : !!s.port), river: s.river ?? (tpl ? tpl[8] : 0), road: s.road ?? !!s.roadToCapital,
 			roadToCapital: !!s.roadToCapital, marketAccess: s.marketAccess ?? 1, rgoWorkers: s.rgoWorkers,
 			pops: (s.pops || []).map(p => ({ satisfaction: 0.5, literacy: 0, status: 'Primary', ...p, estate: p.estate || ESTATE_OF(p.type) })),
 			buildings: (s.buildings || []).map(b => ({ level: 1, ...b })),
@@ -144,6 +145,7 @@
 			food: { surplus: (s.food || {}).surplusFactor ?? obsProv.surplusGrowth ?? 0, storage: (s.food || {}).storageFactor ?? obsProv.storageGrowth ?? 1, starving: !!(s.food || {}).starving },
 			levyRecovery: s.levyRecovery ?? 1,
 			timedModifiers: s.timedModifiers || [],
+			townRights: s.townRights || [],
 			burgherTrade: s.burgherTrade ?? 0,
 			// raw materials of the province's locations (buildings get raw_material_in_province_impact for inputs made there)
 			provinceRaw: s.provinceRaw || (tpl && tpl[10] !== undefined ? [...new Set(DB.locations.filter(l => l[10] === tpl[10]).map(l => l[4]).filter(Boolean))] : null),
@@ -191,6 +193,8 @@
 					case 'is_port': return L.port;
 					case 'is_market_center': return L.marketCenter;
 					case 'has_road_to_capital': return L.roadToCapital;
+					case 'is_city': return L.rank !== 'rural_settlement';
+					case 'is_rural': return L.rank === 'rural_settlement';
 					default: return undefined;
 				}
 			},
@@ -279,7 +283,7 @@
 		if (L.situation.looted) m.block(st('looted'), 1, 'looted');
 		if (L.situation.underSiege) m.block(st('under_siege'), 1, 'under siege');
 		if (L.situation.blockade) m.block(st('is_blockaded_by_enemies'), L.situation.blockade, 'blockaded');
-		if (L.port) m.block(st('harbor'), Math.max(0, L.harbor), `harbor suitability ${L.harbor}`);
+
 		// market food price and raw material price
 		const fp = def('NMarket', 'FOOD_PRICE', 0.05), r = (L.foodPrice - fp) / fp;
 		if (r > 0) m.block(st('expensive_food_in_location'), Math.min(0.5, r), 'expensive food');
@@ -292,6 +296,12 @@
 		// timed location modifiers (events), and the location's historical base modifier (location_historical_base_values: almaden_base...)
 		for (const [k, size] of L.timedModifiers) if (st(k)) m.block(st(k), size, (DB.names[k] || k) + ' (timed)');
 		if (st(L.key + '_base')) m.block(st(L.key + '_base'), 1, 'historical base: ' + L.key);
+		for (const tr of L.townRights) m.block(DB.townRights[tr], 1, 'town right: ' + (DB.names[tr] || tr));
+		// the owner's policies, privileges and reforms that give locations a modifier (with their potential_trigger)
+		for (const key of C.raw.locationObjects || []) for (const blk of DB.locationObjects[key] || []) {
+			if (blk.trigger && !trigger(blk.trigger, valueContext(L))) continue;
+			m.block(blk.m, 1, (DB.names[key] || key) + ' (location modifier)');
+		}
 		for (const [k, x] of Object.entries(C.locationModifiers || {})) {
 			const parts = C.raw.locationSources && C.raw.locationSources[k];
 			if (parts) for (const [src, y] of parts) m.add(k, y, src); else m.add(k, x, 'country location modifiers');
@@ -299,12 +309,18 @@
 		return m;
 	}
 
-	// RGO size in thousands of workers. The save's max_raw_material_workers when given; otherwise
-	// local_max_rgo_size x (1 + local_max_rgo_size_modifier): research open (Sevilla: formula 14.9 vs save 16).
+	// RGO size in thousands of workers (0x1425fd6d0): the max is local_max_rgo_size x (1 + local + global max_rgo_size_modifier +
+	// the country's in_rural or in_non_rural one). The save's max_raw_material_workers is the current RGO level (expanded by
+	// estates up to the max), used when given.
+	function maxRgo(L, M) {
+		const urban = L.rank !== 'rural_settlement';
+		return M.get('local_max_rgo_size') * (1 + M.get('local_max_rgo_size_modifier') + M.cty(urban ? 'global_max_rgo_size_modifier_in_non_rural' : 'global_max_rgo_size_modifier_in_rural'));
+	}
 	function rgoSize(L, M) {
-		if (L.rgoWorkers !== undefined) return { value: L.rgoWorkers, from: 'save' };
-		if (!L.rawMaterial) return { value: 0, from: 'none' };
-		return { value: Math.max(0, Math.floor(M.get('local_max_rgo_size') * (1 + M.get('local_max_rgo_size_modifier')))), from: 'formula (approximate)' };
+		if (!L.rawMaterial) return { value: 0, max: 0, from: 'none' };
+		const max = maxRgo(L, M);
+		if (L.rgoWorkers !== undefined) return { value: L.rgoWorkers, max, from: 'save' };
+		return { value: Math.max(0, Math.floor(max)), max, from: 'max' };
 	}
 
 	// Who works where. A building employs only its pop type; laborers also work the RGO (1,000 per level).
@@ -319,15 +335,18 @@
 			jobs[t.pop] = (jobs[t.pop] || 0) + b.level * b.size;
 		}
 		const rgoFromSave = obs && obs.laborers && obs.laborers.employed_in_rgo !== undefined ? obs.laborers.employed_in_rgo : undefined;
+		// only laborers work the RGO, and they fill it before any building job
+		const rgoTake = rgoFromSave ?? Math.min(rgoMax, pops.laborers || 0);
+		const avail = { ...pops, laborers: Math.max(0, (pops.laborers || 0) - rgoTake) };
+		const fill = type => jobs[type] ? Math.min(1, (avail[type] || 0) / jobs[type]) : 0;
 		jobs.laborers = (jobs.laborers || 0) + rgoMax;
-		const fill = type => jobs[type] ? Math.min(1, (pops[type] || 0) / jobs[type]) : 0;
 		for (const b of L.buildings) {
 			const t = DB.buildings[b.type];
 			if (!t || !b.level) continue;
 			if (b.employed !== undefined && b.size) E.set(b, clamp(b.employed / (b.level * b.size), 0, 1));
 			else E.set(b, t.pop ? fill(t.pop) : 1);
 		}
-		const rgoWorkers = rgoFromSave ?? rgoMax * fill('laborers');
+		const rgoWorkers = rgoTake;
 		const employed = {};
 		for (const b of L.buildings) { const t = DB.buildings[b.type]; if (t && t.pop) employed[t.pop] = (employed[t.pop] || 0) + b.level * (b.size || 0) * E.get(b); }
 		employed.laborers = (employed.laborers || 0) + rgoWorkers;
@@ -344,14 +363,15 @@
 		const pre = new Mods();
 		pre.v = { ...base.v }; pre.src = { ...base.src };
 		for (const b of L.buildings) { const t = DB.buildings[b.type]; if (t) pre.block(t.mod, b.level, b.type); }
-		L.rgoMax = rgoSize(L, new LocationMods(pre, C.mods)).value;
+		const rs = rgoSize(L, new LocationMods(pre, C.mods));
+		L.rgoMax = rs.value; L.rgoMaxPossible = rs.max;
 		const J = employment(L, L.rgoMax, obs);
 		const m = base;
 		let staffed = 0, total = 0;
 		for (const b of L.buildings) {
 			const t = DB.buildings[b.type];
 			if (!t || !b.level) continue;
-			const access = b.goodsAccess ?? 1, e = J.E.get(b) ?? 1;
+			const access = b.goodsAccess ?? (b.inputFill ? b.inputFill.reduce((a, x) => a + x, 0) / b.inputFill.length : 1), e = J.E.get(b) ?? 1;
 			const name = `${DB.names[b.type] || b.type} ${b.level}`;
 			const S = b.level * access * e, Lv = b.level * access;
 			m.block(t.mod, S, name);
@@ -361,6 +381,8 @@
 			if (!b.foreign) { staffed += b.level * e; total += b.level + (b.queued || 0); }
 		}
 		m.block(st('building_levels'), staffed, `${staffed.toFixed(1)} staffed building levels`);
+		L.harborSuitability = Math.min(1, L.harbor + (L.coastal ? 0.05 * L.river : 0)) + m.raw('harbor_suitability');
+		if (L.port) m.block(st('harbor'), Math.max(0, L.harborSuitability), `harbor suitability ${L.harborSuitability.toFixed(2)}`);
 		const free = Math.max(0, m.raw('free_building_levels') * (1 + C.mods.raw('global_free_building_levels_modifier')));
 		if (total > free) m.block(st('unsupported_building_levels'), total - free, `${(total - free).toFixed(1)} building levels over the free ${free.toFixed(1)}`);
 		if (L.rgoMax) m.block(st('rgo_level'), L.rgoMax, `RGO size ${L.rgoMax}`);
@@ -461,7 +483,7 @@
 		const good = L.rawMaterial;
 		if (!good || !DB.goods[good]) return { good, workers: 0, output: 0, profit: 0 };
 		const outMod = M.get('local_raw_material_output') + M.get(`local_${good}_output_modifier`);
-		const output = J.rgoWorkers * (1 + outMod);
+		const output = J.rgoWorkers * Math.max(0, 1 + outMod);
 		const price = L.prices[good] ?? DB.goods[good].price;
 		return { good, workers: J.rgoWorkers, size: J.rgoMax, outMod, output, price, profit: output * price * L.marketAccess, food: output * (DB.goods[good].food || 0) };
 	}
@@ -517,15 +539,16 @@
 		for (const p of L.pops) { const e = DB.estates[p.estate]; if (e) w[p.estate] = (w[p.estate] || 0) + p.size * e.taxPerPop; }
 		if (w.peasants_estate) { w.nobles_estate = (w.nobles_estate || 0) + w.peasants_estate * (1 - E); w.peasants_estate *= E; }
 		const sum = Object.values(w).reduce((a, x) => a + x, 0);
-		const shared = wealth - L.burgherTrade, eff = 1 + C.mods.raw('tax_income_efficiency');
+		const shared = wealth - L.burgherTrade, eff = (1 - C.mods.raw('estate_enrichment')) * (1 + Math.max(-1, C.mods.raw('tax_income_efficiency')));
 		const estates = {};
 		for (const [e, x] of Object.entries(w)) {
 			const possible = (sum ? x / sum : 0) * shared + (e === 'burghers_estate' ? L.burgherTrade : 0);
 			const base = possible * L.control, rate = C.taxRates[e] || 0;
-			estates[e] = { weight: x, share: sum ? x / sum : 0, possible, base, rate, crown: base * rate * eff };
+			// tax = base x rate is what the location panel lists; the crown receives it x (1 - estate enrichment) x (1 + tax efficiency)
+			estates[e] = { weight: x, share: sum ? x / sum : 0, possible, base, rate, tax: base * rate, crown: base * rate * eff };
 		}
-		const crown = Object.values(estates).reduce((a, e) => a + e.crown, 0);
-		return { enfranchisement: E, wealth, base: wealth * L.control, efficiency: eff, estates, crown };
+		const taxes = Object.values(estates).reduce((a, e) => a + e.tax, 0), crown = Object.values(estates).reduce((a, e) => a + e.crown, 0);
+		return { enfranchisement: E, wealth, base: wealth * L.control, efficiency: eff, estates, taxes, crown };
 	}
 
 	// Food of a location (demand_food.md 3.6/3.7, 0x1430f3300 / 0x1430f24a0): production and pop consumption a month.
@@ -557,6 +580,17 @@
 			capacity, preservation: M.loc('local_food_preservation_efficiency_modifier'), decay: M.loc('local_food_decay') };
 	}
 
+	// Development (0x1430cc5b0) and prosperity (0x1430cb200) a month. Development's modifiers only scale a positive change.
+	function devProsperity(L, M) {
+		const urban = L.rank !== 'rural_settlement';
+		let dev = M.loc('local_monthly_development') + M.cty('global_monthly_development') + (urban ? M.cty('global_non_rural_monthly_development') : 0);
+		if (dev > 0) dev *= (1 + Math.max(-1, M.loc('local_monthly_development_modifier'))) * (1 + Math.max(-1, M.cty('global_monthly_development_modifier')));
+		let pros = M.loc('local_monthly_prosperity') + M.cty('global_monthly_prosperity') + (urban ? M.cty('global_non_rural_monthly_prosperity') : 0);
+		if (L.prosperity < 0) pros += M.loc('local_devastation_recovery') + M.cty('global_devastation_recovery');
+		else if (L.prosperity > 0) pros -= (M.loc('local_prosperity_decay') + M.cty('global_prosperity_decay')) * L.prosperity;
+		return { development: dev, prosperity: pros };
+	}
+
 	// Control (0x1430ed2f0 max, 0x1430edf80 monthly change)
 	function control(L, M) {
 		const urban = L.rank !== 'rural_settlement';
@@ -586,16 +620,19 @@
 		r.tax = tax(L, M, C, r.wealth.total);
 		r.control = control(L, M);
 		r.food = food(L, M, J, r.rgo, r.buildings);
+		r.change = devProsperity(L, M);
 		return r;
 	}
 
 	// ---------------------------------------------------------------- month by month
 	// Pops grow by their births, control moves toward its max, manpower accumulates. Development, prosperity, prices and food
 	// stay as given until their formulas are in (research open).
-	// One month of change for a location, given this month's evaluation r: control moves toward its max, births join the
-	// pops, buildings lay off or rehire by profit. Development, prosperity and food stay (research open).
+	// One month of change for a location, given this month's evaluation r: control moves toward its max, development and
+	// prosperity change, births join the pops, buildings lay off or rehire by profit.
 	function advance(L, r) {
 		L.control = clamp(L.control + r.control.delta, 0, 1);
+		L.development = Math.max(0, L.development + r.change.development);
+		L.prosperity = clamp(L.prosperity + r.change.prosperity, def('NLocation', 'PROSPERITY_MIN', -1), def('NLocation', 'PROSPERITY_MAX', 1));
 		// births go to the eligible pops of each type in proportion to their size
 		for (const [type, n] of Object.entries(r.growth.births)) {
 			const group = L.pops.filter(p => p.type === type && ['Primary', 'Accepted', 'Tolerated'].includes(p.status));
@@ -628,7 +665,7 @@
 		let manpowerPool = 0;
 		for (let mth = 0; mth <= months; mth++) {
 			const r = evaluate(scn, { L, C });
-			timeline.push({ month: mth, population: L.population, capacity: r.capacity, growth: r.growth.yearly, manpower: r.manpower.monthly, maxManpower: r.manpower.max,
+			timeline.push({ month: mth, population: L.population, capacity: r.capacity, growth: r.growth.yearly, development: L.development, prosperity: L.prosperity, manpower: r.manpower.monthly, maxManpower: r.manpower.max,
 				sailors: r.sailors.monthly, levies: r.levies.army, wealth: r.wealth.total, crownTax: r.tax.crown, control: L.control, maxControl: r.control.max, manpowerPool });
 			if (mth === months) break;
 			manpowerPool = Math.min(r.manpower.max, manpowerPool + r.manpower.monthly);
@@ -650,7 +687,7 @@
 	const priceStep = (p, target) => p + def('NMarket', 'MONTHLY_PRICE_CHANGE', 0.05) * (target - p);
 
 	const api = { setData, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
-		maxLevel, employmentSize, methodOf, methodsOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, tax, control, evaluate, advance, project, targetPrice, priceStep,
+		maxLevel, employmentSize, methodOf, methodsOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, devProsperity, maxRgo, tax, control, evaluate, advance, project, targetPrice, priceStep,
 		MILITARY_CONTROL_FLOOR, get DB() { return DB; } };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.LocationSim = api;
 })(typeof self !== 'undefined' ? self : this);

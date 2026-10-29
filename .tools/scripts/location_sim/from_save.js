@@ -91,24 +91,24 @@ function addBlock(acc, notes, source, block, scale = 1) {
 const strip = o => Object.fromEntries(Object.entries(o).filter(([k]) => k !== '__src'));
 function countryContext(cid) {
 	const c = entry('countries', cid);
-	const acc = {}, notes = [], locMods = {}, locNotes = [];
+	const acc = {}, notes = [], locMods = {}, locNotes = [], locObjects = [];
 	addBlock(acc, notes, 'base values', Object.entries(DATA.countryBase).map(([k, v]) => [k, String(v)]));
 	for (const adv of Object.keys(c.researched_advances || {})) addBlock(acc, notes, `advance ${adv}`, advances[adv]);
 	const gov = c.government || {};
 	for (const [law, v] of Object.entries(gov.implemented_laws || {})) {
 		const p = policies[v.object] || [];
 		addBlock(acc, notes, `law ${law} = ${v.object}`, get(p, 'country_modifier'));
-		addBlock(locMods, locNotes, `law ${law} = ${v.object} (location_modifier)`, get(p, 'location_modifier'));
+		if (DATA.locationObjects[v.object]) locObjects.push(v.object);
 	}
 	for (const p of list(gov.implemented_privileges)) {
 		const d = privileges[p.object] || [];
 		addBlock(acc, notes, `privilege ${p.object}`, get(d, 'country_modifier'));
-		addBlock(locMods, locNotes, `privilege ${p.object} (location_modifier)`, get(d, 'location_modifier'));
+		if (DATA.locationObjects[p.object]) locObjects.push(p.object);
 	}
 	for (const r of list(gov.implemented_reforms)) {
 		const d = reforms[r.object] || [];
 		addBlock(acc, notes, `reform ${r.object}`, get(d, 'country_modifier'));
-		addBlock(locMods, locNotes, `reform ${r.object} (location_modifier)`, get(d, 'location_modifier'));
+		if (DATA.locationObjects[r.object]) locObjects.push(r.object);
 	}
 	for (const t of list((c.timed_modifiers || {}).timed_modifiers)) {
 		const s = DATA.static[t.modifier];
@@ -118,6 +118,22 @@ function countryContext(cid) {
 		const x = +val;
 		if (!Number.isFinite(x) || x <= -999 || !x || !societal[sv]) continue;
 		addBlock(acc, notes, `societal value ${sv} ${x > 0 ? '+' : ''}${x.toFixed(0)}`, get(societal[sv], x < 0 ? 'left_modifier' : 'right_modifier'), Math.abs(x) / 100);
+	}
+	// the ruler's skills: static ruler_adm / ruler_dip / ruler_mil x the skill
+	if (gov.ruler && gov.ruler !== '0') {
+		const ch = save.entry('character_db', gov.ruler, isText ? '' : undefined) || (isText ? null : (save.section('character_db').database || {})[gov.ruler]);
+		if (ch) for (const sk of ['adm', 'dip', 'mil']) if (ch[sk] !== undefined && DATA.static['ruler_' + sk])
+			addBlock(acc, notes, `ruler ${sk} ${ch[sk]}`, Object.entries(DATA.static['ruler_' + sk].m).map(([k, v]) => [k, String(v)]), +ch[sk]);
+	}
+	// capital buildings' capital_country_modifier, x level x staffing x goods access (building_types readme, location_modifier_scales.md)
+	if (c.capital) for (const b of buildingsOf(c.capital)) {
+		const t = DATA.buildings[b.type];
+		if (!t || !t.capCountry || +b.owner !== +cid) continue;
+		const size = typeof t.emp === 'number' ? t.emp : 0;
+		const staffing = size && b.level ? Math.min(1, (+b.employed || 0) / (size * +b.level)) : 1;
+		const pms = Object.keys(b).filter(k => b[k] && typeof b[k] === 'object' && DATA.methods[k]);
+		const fill = pms.length ? pms.reduce((a, k) => a + (N(b[k].input) ?? 1), 0) / pms.length : 1;
+		addBlock(acc, notes, `capital building ${b.type} ${b.level}`, Object.entries(t.capCountry).map(([k, v]) => [k, String(v)]), +b.level * staffing * fill);
 	}
 	const econ = c.economy || {};
 	const year = +String(save.date() || '1337').split('.')[0];
@@ -132,8 +148,8 @@ function countryContext(cid) {
 			return [k, { satisfaction: N(e.satisfaction), wealthImpact: N(e.wealth_impact), gold: N(e.gold), autoTaxRate: e.auto_tax_rate === 'yes',
 				lastMonth: Object.fromEntries(Object.entries(e.last_month || {}).map(([a, b]) => [a, +b])) }];
 		}).filter(([, e]) => e.satisfaction !== undefined)),
-		modifiers: strip(acc), sources: acc.__src || {}, locationModifiers: strip(locMods), locationSources: locMods.__src || {},
-		notes: [...notes, ...locNotes, 'Not counted: religion, culture, ruler and cabinet, estates satisfaction and power effects, situations, international organizations, conditional auto modifiers.'],
+		modifiers: strip(acc), sources: acc.__src || {}, locationObjects: locObjects,
+		notes: [...notes, ...locObjects.map(k => `location modifier from ${k}`), 'Not counted: religion, culture, cabinet, estates satisfaction and power effects, situations, international organizations, conditional auto modifiers.'],
 		observed: {
 			manpowerIncome: N(c.last_month_manpower_income), manpowerNet: N(c.monthly_manpower), maxManpower: N(c.max_manpower),
 			sailorsIncome: N(c.last_month_sailors_income), maxSailors: N(c.max_sailors), taxIncome: N(c.last_months_tax_income),
@@ -224,7 +240,8 @@ function locationScenario(lid, country) {
 			development: N(l.development), prosperity: N(l.prosperity) ?? 0, control: N(l.control) ?? 0, proximity: N(l.proximity) ?? 0,
 			integration: l.integration || (l.cores && list(l.cores).map(Number).includes(+l.owner) ? 'core' : 'conquered'),
 			capital: +country.capital === lid, marketCenter: !!market && +market.center === lid, roadToCapital: l.road_to_capital === 'yes',
-			port: !!l.port, rgoWorkers: N(l.max_raw_material_workers), garrison: N(l.garrison),
+			rgoWorkers: N(l.max_raw_material_workers), garrison: N(l.garrison),
+			...(townRightsOf(lid).length ? { townRights: townRightsOf(lid) } : {}),
 			// timed location modifiers (event modifiers such as quality_merino_wool) with their size
 			timedModifiers: list((l.timed_modifiers || {}).timed_modifiers).filter(t => t && t.modifier).map(t => [t.modifier, N(t.size) ?? 1]),
 			province: N(l.province), market: N(l.market), marketAccess: N(l.market_access),
@@ -262,6 +279,38 @@ const write = scenario => {
 	else console.log(JSON.stringify(scenario, null, '\t'));
 };
 
+// town rights by location (townrights_manager: id = { location type })
+let rightsByLocation = null;
+function townRightsOf(lid) {
+	if (!rightsByLocation) {
+		rightsByLocation = new Map();
+		const add = (loc, type) => { if (loc && type && type !== 'none') (rightsByLocation.get(String(loc)) || rightsByLocation.set(String(loc), []).get(String(loc))).push(type); };
+		if (isText) for (const m of save.sectionText('townrights_manager').matchAll(/\n\d+=\{\n\tlocation=(\d+)\n\ttype=([a-z_0-9]+)/g)) add(m[1], m[2]);
+		else for (const r of Object.values((save.section('townrights_manager') || {}).database || {})) if (r && typeof r === 'object') add(r.location, r.type);
+	}
+	return rightsByLocation.get(String(lid)) || [];
+}
+
+// ---- roads between the given locations ([a, b, type]) and the country's maritime presence per sea zone (0-100), for proximity
+function roadsAmong(ids) {
+	const own = new Set(ids.map(Number)), out = [];
+	if (isText) {
+		for (const m of save.sectionText('road_network').matchAll(/from=(\d+)\s+to=(\d+)\s+type=([a-z_]+)/g))
+			if (own.has(+m[1]) && own.has(+m[2])) out.push([+m[1], +m[2], m[3]]);
+	} else for (const r of list((save.section('road_network') || {}).roads)) if (own.has(+r.from) && own.has(+r.to)) out.push([+r.from, +r.to, r.type]);
+	return out;
+}
+function maritimeOf(cid) {
+	const out = {};
+	if (isText) {
+		const t = save.sectionText('maritime_manager'), re = /\n\t\t(\d+)=\{([\s\S]*?)\n\t\t\}/g;
+		let m;
+		while ((m = re.exec(t))) for (const p of m[2].matchAll(/power=([\d.\-]+)\s+country=(\d+)/g)) if (p[2] === String(cid)) out[m[1]] = +p[1];
+	} else for (const [z, o] of Object.entries((save.section('maritime_manager') || {}).objects || {}))
+		for (const p of list((o || {}).presences)) if (String(p.country) === String(cid)) out[z] = +p.power;
+	return out;
+}
+
 // ---- --country TAG: every owned location (the country mode), markets by id
 if (flag('--country')) {
 	const cid = idOfTag(flag('--country'));
@@ -276,7 +325,11 @@ if (flag('--country')) {
 		observed[lid] = s.observed;
 		if (s.location.market && !markets[s.location.market]) markets[s.location.market] = { prices: pricesOf(s.location.market), ...marketDetail(s.location.market) };
 	}
-	write({ name: `${tags[cid]} ${save.date()}`, source: path.basename(file), capital: country.capital, country, locations, markets, observed });
+	write({ name: `${tags[cid]} ${save.date()}`, source: path.basename(file), capital: country.capital, country, locations, markets, observed,
+		roads: roadsAmong(locations.map(l => l.id)), maritime: maritimeOf(cid),
+		// the save's proximity tree (parent of each node; sea zones keep their value), to check the proximity search
+		proximityCache: Object.fromEntries(Object.entries(c.proximity_persistent_cache || {}).filter(([, v]) => v && typeof v === 'object')
+			.map(([k, v]) => [k, { parent: N(v.proximity_parent), sea: N(v.sea_zone_proximity) }])) });
 	process.exit(0);
 }
 

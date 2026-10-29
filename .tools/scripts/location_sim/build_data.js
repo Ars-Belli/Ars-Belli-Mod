@@ -226,7 +226,8 @@ function terrain(rel) {
 		const p = get(v, 'proximity');
 		out[k] = {
 			movement: scalar(v, 'movement_cost') ?? 1, defender: scalar(v, 'defender') ?? 0,
-			proximity: Array.isArray(p) ? mods(p) : p !== undefined ? resolve(p) : undefined,
+			// topography proximity: { default, override: { <to topography>: speed } } (plateau to plateau is free); vegetation: a number
+			proximity: Array.isArray(p) ? { default: num(get(p, 'default')) ?? 0, override: Object.fromEntries(all(p, 'override').filter(Array.isArray).map(o => [scalar(o, 'to'), num(get(o, 'speed')) ?? 0])) } : p !== undefined ? resolve(p) : undefined,
 			winter: scalar(v, 'winter'), modifier: modsAll(v, 'location_modifier'),
 		};
 		for (const f of Object.keys(out[k])) if (out[k][f] === undefined) delete out[k][f];
@@ -259,6 +260,9 @@ const provinces = [], areas = [];
 	}
 }
 const WATER = new Set(['ocean', 'deep_ocean', 'coastal_ocean', 'inland_sea', 'narrows', 'lakes', 'high_lakes', 'ocean_wasteland']);
+// [12]: the location has a port (a sea zone in map_data/ports.csv, via map.json)
+const MAP_PORTS = fs.existsSync(path.join(__dirname, 'map.json')) ? JSON.parse(fs.readFileSync(path.join(__dirname, 'map.json'), 'utf8')).ports || {} : {};
+for (const [id, l] of locations.entries()) l[12] = MAP_PORTS[id + 1] ? 1 : 0;
 for (const [id, ml] of Object.entries(MAPJ)) {
 	const l = locations[id - 1];
 	if (!l) continue;
@@ -285,6 +289,30 @@ const ages = {};
 for (const [k, v] of Object.entries(loadDb('in_game/common/age')))
 	if (AGE_N[k]) ages[AGE_N[k]] = { key: k, year: scalar(v, 'year'), efficiency: scalar(v, 'efficiency') ?? 1, priceStability: scalar(v, 'price_stability') ?? 0.1,
 		maxPrice: scalar(v, 'max_price') ?? 3, minPrice: scalar(v, 'min_price') ?? 0.1 };
+
+// ---- location_modifier blocks of policies (inside laws), privileges and reforms, with their potential_trigger (kept with
+// operators for the engine's trigger evaluator): { <object key>: { m, trigger } }
+const locationObjects = {};
+{
+	const opsMods = block => { const o = {}; for (const [k, op, v] of block) if (!Array.isArray(v) && k !== 'potential_trigger') { const r = resolve(v); o[k] = typeof r === 'number' ? +(((o[k] || 0) + r).toFixed(6)) : r; } return o; };
+	const take = (key, body) => {
+		for (const [k, , v] of body) if (k === 'location_modifier' && Array.isArray(v)) {
+			const trig = (v.find(([x]) => x === 'potential_trigger') || [])[2];
+			const m = opsMods(v);
+			if (Object.keys(m).length) (locationObjects[key] ??= []).push({ m, ...(trig ? { trigger: trig } : {}) });
+		}
+	};
+	for (const [lk, law] of Object.entries(loadDbOps('in_game/common/laws'))) for (const [pk, , pv] of law) if (Array.isArray(pv)) take(pk, pv);
+	for (const rel of ['in_game/common/estate_privileges', 'in_game/common/government_reforms']) for (const [k, v] of Object.entries(loadDbOps(rel))) take(k, v);
+}
+
+// ---- town rights: the modifier a right gives its location
+const townRights = {};
+for (const [k, v] of Object.entries(loadDb('in_game/common/town_rights'))) { const m = modsAll(v, 'location_modifier'); if (m) townRights[k] = m; }
+
+// ---- road types: proximity bonus (a road segment costs road_cost_on_distance_from_capital minus it)
+const roadTypes = {};
+for (const [k, v] of Object.entries(loadDb('in_game/common/road_types'))) roadTypes[k] = { level: scalar(v, 'level') ?? 0, proximity: scalar(v, 'proximity') ?? 0 };
 
 // ---- English names for everything kept
 const loc = {};
@@ -316,7 +344,7 @@ for (const k of used) if (scripted[k]) keptScripted[k] = scripted[k];
 const data = {
 	built: new Date().toISOString().slice(0, 10), game: '1.4.4',
 	defines: Object.fromEntries(KEEP_DEFINES.filter(s => defines[s]).map(s => [s, defines[s]])),
-	values, scripted: keptScripted, pops, estates, ranks, ages, static: staticMods, countryBase,
+	values, scripted: keptScripted, pops, estates, ranks, ages, roadTypes, townRights, locationObjects, static: staticMods, countryBase,
 	goods, methods, demands, prices, buildings, levies,
 	terrain: { topography: terrain('in_game/common/topography'), vegetation: terrain('in_game/common/vegetation'), climate: terrain('in_game/common/climates') },
 	locations, provinces, areas, modifierTypes, names,

@@ -1,5 +1,6 @@
 // Builds map.json for the location simulator from the game's map images: for every location its size in pixels,
-// centre, rivers inside it, and its neighbours (with the length of the shared border).
+// centre, river size, and its neighbours (shared border length and whether a river links the two), plus the sea straits
+// (adjacencies.csv) and each land location's port sea zone (ports.csv).
 //   node .tools/scripts/location_sim/build_map.js [gameDir]      (about a minute; rerun after a game update)
 // Location id = line order in location_templates.txt (from 1); colours come from map_data/named_locations.
 const fs = require('fs');
@@ -81,10 +82,45 @@ for (let i = 0; i < w * h; i++) {
 }
 console.log('rivers', riverPx.size, 'locations; palette use', JSON.stringify(hist), ((Date.now() - t0) / 1000).toFixed(1) + 's');
 
+// River links between neighbours (proximity: a river crossing costs 12 instead of 40, proximity_development.md 1.4). The game
+// builds them when it loads the map; the closest rule found from the image: each location has river pixels within 4 px of
+// the other (on 423 checked links: 124 right, 5 false, 4 missed).
+const near = new Map(); // a * 65536 + b -> min (Chebyshev) distance from a river pixel of a to a pixel of b
+const offs = [];
+for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) if (dx || dy) offs.push([dx, dy, Math.max(Math.abs(dx), Math.abs(dy))]); // Chebyshev distance
+for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+	const i = y * w + x;
+	if (riv.px[i] >= 254) continue;
+	const a = ids[i];
+	if (!a) continue;
+	for (const [dx, dy, d2] of offs) {
+		const yy = y + dy;
+		if (yy < 0 || yy >= h) continue;
+		const b = ids[yy * w + (x + dx + w) % w];
+		if (!b || b === a) continue;
+		const k = a * 65536 + b, old = near.get(k);
+		if (old === undefined || d2 < old) near.set(k, d2);
+	}
+}
+const riverLink = (a, b) => near.has(a * 65536 + b) && near.has(b * 65536 + a);
+console.log('river links searched', ((Date.now() - t0) / 1000).toFixed(1) + 's');
 const riverSize = h => { let best = 0; for (const v of Object.keys(h || {}).map(Number)) if (v >= 3 && v <= 253) best = Math.max(best, Math.min(4, Math.floor((v - 3) / 3)) + 1); return best; };
 const neighbours = Array.from({ length: n }, () => []);
-for (const [k, c] of border) { const a = Math.floor(k / 65536), b = k % 65536; neighbours[a].push([b, c]); neighbours[b].push([a, c]); }
-const out = { built: new Date().toISOString().slice(0, 10), width: w, height: h, riverPalette: hist, locations: {} };
+for (const [k, c] of border) { const a = Math.floor(k / 65536), b = k % 65536, r = riverLink(a, b) ? 1 : 0; neighbours[a].push(r ? [b, c, 1] : [b, c]); neighbours[b].push(r ? [a, c, 1] : [a, c]); }
+// straits (land-land crossings through a sea zone) and ports (a land location's port sea zone)
+const straits = [], ports = {};
+for (const line of fs.readFileSync(path.join(MAP, 'adjacencies.csv'), 'utf8').split('\n').slice(1)) {
+	const f = line.split(';');
+	if (f.length < 4 || f[2] !== 'sea') continue;
+	const a = idOf.get(f[0]), b = idOf.get(f[1]), z = idOf.get(f[3]);
+	if (a && b && z) straits.push([a, b, z]);
+}
+for (const line of fs.readFileSync(path.join(MAP, 'ports.csv'), 'utf8').split('\n').slice(1)) {
+	const f = line.split(';');
+	const a = idOf.get(f[0]), z = idOf.get(f[1]);
+	if (a && z) ports[a] = z;
+}
+const out = { built: new Date().toISOString().slice(0, 10), width: w, height: h, riverPalette: hist, straits, ports, locations: {} };
 for (let id = 1; id < n; id++) {
 	if (!size[id]) continue;
 	out.locations[id] = {

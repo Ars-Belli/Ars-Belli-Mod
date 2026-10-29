@@ -18,6 +18,10 @@
 	'use strict';
 	const E = typeof module !== 'undefined' && module.exports ? require('./engine.js') : root.LocationSim;
 	const DB = () => E.DB;
+	// map.json (build_map.js): neighbours with river links, straits, ports. Node loads it; the page passes it with setMap().
+	let MAP = null;
+	const setMap = m => { MAP = m; };
+	const mapData = () => MAP || (typeof module !== 'undefined' && module.exports ? (MAP = require('./map.json')) : null);
 	const sumObj = o => Object.values(o || {}).reduce((a, x) => a + (+x || 0), 0);
 
 	// a location of the country scenario as a single-location scenario
@@ -73,7 +77,10 @@
 		const obs = C.raw.observed || {};
 		const expense = (scn.options || {}).manpowerExpense ?? (obs.manpowerIncome !== undefined && obs.manpowerNet !== undefined ? obs.manpowerIncome - obs.manpowerNet : 0);
 		// options.food: 'on' (default) simulates province stores and market food; 'off' keeps the growth food terms as given
-		const state = { scn, C, mode, food: (scn.options || {}).food !== 'off', sites, markets, month: 0, manpowerPool: obs.manpower ?? 0, manpowerExpense: expense, history: [] };
+		// options.proximity: 'computed' recomputes every location's proximity each month (needs map.json and the roads),
+		// 'given' keeps the scenario's values
+		const proxMode = (scn.options || {}).proximity || (scn.roads ? 'computed' : 'given');
+		const state = { scn, C, mode, food: (scn.options || {}).food !== 'off', proxMode, sites, markets, month: 0, manpowerPool: obs.manpower ?? 0, manpowerExpense: expense, history: [] };
 		const first = evaluateAll(state, true);
 		// provinces (food stores): the save's province id, else the map's province of the location
 		const provinces = {};
@@ -246,6 +253,85 @@
 		}
 	}
 
+	// Proximity (proximity_development.md 1): every source (capital 100, Local Governor 80 x its staffing...) spreads
+	// strength minus the cost of each jump through the country's own land and every sea zone and lake, never foreign land;
+	// a location takes the best value over all sources. Jump cost = base x factor / (1 + speed), at least 0.01.
+	const LAKES = new Set(['lakes', 'high_lakes', 'salt_pans']), SEAS = new Set(['ocean', 'deep_ocean', 'coastal_ocean', 'inland_sea', 'narrows', 'atoll']);
+	function proximity(state, results) {
+		const map = mapData();
+		if (!map) return null;
+		const T = id => E.DB.locations[id - 1] || [];
+		const own = new Map(state.sites.map(site => [site.loc.id, site]));
+		const isLake = id => LAKES.has(T(id)[1]), isWater = id => LAKES.has(T(id)[1]) || SEAS.has(T(id)[1]);
+		const m = k => state.C.mods.raw(k);
+		const c = { land: m('land_cost_on_distance_from_capital'), road: m('road_cost_on_distance_from_capital'), down: m('land_cost_going_downstream'),
+			sea: m('sea_cost_on_distance_from_capital'), seaM: m('sea_cost_on_distance_from_capital_when_maritime'), port: m('port_cost_distance_from_capital'),
+			trans: m('sea_land_transition_cost_distance_from_capital'), G: m('global_distance_from_capital_speed_propagation'), Gl: m('land_cost_on_distance_from_capital_speed_propagation') };
+		const floor = (E.DB.defines.NCountry || {}).PROXIMITY_TERRAIN_SPEED_FLOOR ?? 0.25;
+		if (!state.roadIndex) {
+			state.roadIndex = new Map();
+			for (const [a, b, t] of state.scn.roads || []) { state.roadIndex.set(a + ',' + b, t); state.roadIndex.set(b + ',' + a, t); }
+			state.straits = new Map();
+			for (const [a, b, z] of map.straits || []) { state.straits.set(a + ',' + b, z); state.straits.set(b + ',' + a, z); }
+		}
+		const presence = z => isLake(z) ? 1 : ((state.scn.maritime || {})[z] || 0) / 100;
+		const seaCost = z => c.seaM * presence(z) + c.sea * (1 - presence(z));
+		const mods = id => results.get(own.get(id)).M;
+		const river = (a, b) => ((map.locations[a] || {}).nb || []).some(n => n[0] === b && n[2]);
+		function cost(a, b) {
+			const la = own.has(a), lb = own.has(b);
+			let base, factor = 1, plain = false, S = c.G + (la ? mods(a).loc('local_distance_from_capital_speed_propagation') : 0);
+			if (la && lb) {
+				const z = state.straits.get(a + ',' + b);
+				if (z) base = seaCost(z);
+				else {
+					base = c.land; plain = true;
+					const r = state.roadIndex.get(a + ',' + b);
+					if (r) { base = c.road - ((E.DB.roadTypes[r] || {}).proximity || 0); plain = false; }
+					if (river(a, b) && c.down < base) { base = c.down; plain = false; }
+				}
+				const ta = T(a)[1], tb = T(b)[1], tp = (E.DB.terrain.topography[ta] || {}).proximity;
+				let tv = tp && typeof tp === 'object' ? (tb in (tp.override || {}) ? tp.override[tb] : tp.default) : 0;
+				tv *= 1 + m(ta + '_proximity_impact');
+				const veg = (E.DB.terrain.vegetation[T(a)[2]] || {}).proximity;
+				const speed = Math.max(floor, (plain ? 1 + (typeof veg === 'number' ? veg : 0) : 1) + Math.min(0, tv));
+				base /= speed; S += c.Gl;
+			} else if (isLake(a) || isLake(b)) base = c.seaM;
+			else if (!la && !lb) base = seaCost(a);
+			else {
+				const land = la ? a : b, sea = la ? b : a;
+				if (String(map.ports[land]) === String(sea)) { base = c.port; factor = Math.max(0.05, 1 + mods(land).loc('local_port_cost_distance_impact')); }
+				else base = c.trans;
+			}
+			return Math.max(0.01, base * factor / (1 + Math.max(-0.95, S)));
+		}
+		const strait = new Map();
+		for (const k of state.straits.keys()) { const [x, y] = k.split(',').map(Number); (strait.get(x) || strait.set(x, []).get(x)).push(y); }
+		const nbs = id => ((map.locations[id] || {}).nb || []).map(n => n[0]).concat(strait.get(id) || []);
+		// sources and a max-first search (Dijkstra on -value)
+		const best = new Map(), heap = [];
+		const push = (v, id) => { heap.push([v, id]); let i = heap.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (heap[p][0] >= heap[i][0]) break; [heap[p], heap[i]] = [heap[i], heap[p]]; i = p; } };
+		const pop = () => { const top = heap[0], last = heap.pop(); if (heap.length) { heap[0] = last; let i = 0; for (;;) { const l = 2 * i + 1, r = l + 1; let k = i; if (l < heap.length && heap[l][0] > heap[k][0]) k = l; if (r < heap.length && heap[r][0] > heap[k][0]) k = r; if (k === i) break; [heap[k], heap[i]] = [heap[i], heap[k]]; i = k; } } return top; };
+		const sources = [];
+		for (const [id, site] of own) {
+			const M = results.get(site).M, lps = M.loc('local_proximity_source');
+			if (lps <= 0) continue;
+			const v = Math.min(100, lps) * (1 + Math.max(-1, M.loc('local_proximity_source_modifier')));
+			sources.push([id, v]); best.set(id, v); push(v, id);
+		}
+		while (heap.length) {
+			const [v, id] = pop();
+			if (v < (best.get(id) ?? 0) || v <= 0) continue;
+			for (const nb of nbs(id)) {
+				if (!own.has(nb) && !isWater(nb)) continue;
+				const nv = v - cost(id, nb);
+				if (nv > (best.get(nb) ?? 0)) { best.set(nb, nv); push(nv, nb); }
+			}
+		}
+		for (const [id, site] of own) site.L.proximity = Math.max(0, best.get(id) || 0);
+		return { sources, cost, best };
+	}
+
 	// month by month for the whole country
 	function project(scn, months = 120) {
 		const state = create(scn);
@@ -260,6 +346,7 @@
 			if (mth === months) break;
 			state.manpowerPool = Math.max(0, Math.min(t.maxManpower, state.manpowerPool + t.manpower - state.manpowerExpense));
 			for (const [site, r] of results) E.advance(site.L, r);
+			if (state.proxMode === 'computed') proximity(state, results);
 			if (state.food) stepFood(state, results);
 			stepMarkets(state, results);
 		}
@@ -273,6 +360,6 @@
 		return { state, results, totals: totals(state, results) };
 	}
 
-	const api = { create, evaluate, project, flows, effective, elasticity, stepFood };
+	const api = { create, evaluate, project, flows, effective, elasticity, stepFood, proximity, setMap };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.CountrySim = api;
 })(typeof self !== 'undefined' ? self : this);

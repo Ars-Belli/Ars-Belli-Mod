@@ -59,8 +59,8 @@ console.log('  jobs filled: ' + Object.entries(J.jobs).filter(([, n]) => n > 0).
 
 // ---- military
 const mp = r.manpower, sl = r.sailors;
-console.log(`\nManpower ${men(mp.monthly)} a month to the country (max manpower +${men(mp.max)})`);
-console.log(`  = buildings ${men(mp.flat)} x (1 ${pct(mp.localMod)} local) x control ${(100 * mp.control).toFixed(0)}% (floor 10%) x (1 ${pct(mp.globalMod)} country)`);
+console.log(`\nManpower ${num(mp.locationView * 1000, 1)} a month in the location panel = buildings ${men(mp.flat)} x (1 ${pct(mp.localMod)} local ${pct(mp.globalMod)} country) x control ${(100 * mp.control).toFixed(0)}% (floor 10%)`);
+console.log(`  counted in the country's income as ${num(mp.monthly * 1000, 1)} (the country bonus multiplies: x(1 ${pct(mp.localMod)}) x(1 ${pct(mp.globalMod)})); max manpower +${men(mp.max)}`);
 if (sl.monthly || sl.flat) console.log(`Sailors ${men(sl.monthly)} a month (max sailors +${men(sl.max)})`);
 const lv = r.levies;
 console.log(`Levies: ${men(lv.army)} army${lv.navy ? `, ${men(lv.navy)} navy` : ''} (control ${(100 * lv.control).toFixed(0)}%)`);
@@ -89,10 +89,10 @@ if (prod.length) {
 }
 console.log(`Building upkeep ${num(r.upkeep, 2)} gold a month (multiplier ${r.buildings.upkeepMult.toFixed(3)})`);
 const t = r.tax;
-console.log(`\nWealth ${num(r.wealth.total, 2)} gold a month; tax base ${num(t.base, 2)} at control ${(100 * L.control).toFixed(0)}%; crown takes ${num(t.crown, 2)} (tax efficiency x${t.efficiency.toFixed(3)})`);
+console.log(`\nWealth ${num(r.wealth.total, 2)} gold a month; tax base ${num(t.base, 2)} at control ${(100 * L.control).toFixed(0)}%; taxes ${num(t.taxes, 2)} (the location panel's tax income); the crown receives ${num(t.crown, 2)} after tax efficiency x${t.efficiency.toFixed(3)}`);
 console.log(`  peasant enfranchisement ${(100 * t.enfranchisement).toFixed(1)}% (the nobles take the rest of the peasants' share)`);
-console.log('  estate            share   wealth  tax base   rate    crown');
-for (const [e, x] of Object.entries(t.estates)) console.log(`  ${nm(e).padEnd(16)} ${(100 * x.share).toFixed(1).padStart(5)}%  ${num(x.possible, 2).padStart(7)}  ${num(x.base, 2).padStart(8)}  ${(100 * x.rate).toFixed(1).padStart(5)}%  ${num(x.crown, 2).padStart(7)}`);
+console.log('  estate            share   wealth  tax base   rate    taxes    crown');
+for (const [e, x] of Object.entries(t.estates)) console.log(`  ${nm(e).padEnd(16)} ${(100 * x.share).toFixed(1).padStart(5)}%  ${num(x.possible, 2).padStart(7)}  ${num(x.base, 2).padStart(8)}  ${(100 * x.rate).toFixed(2).padStart(6)}%  ${num(x.tax, 2).padStart(6)}  ${num(x.crown, 2).padStart(7)}`);
 const c = r.control;
 console.log(`\nControl ${(100 * L.control).toFixed(1)}%, max ${(100 * c.max).toFixed(1)}% (${c.urban ? 'urban' : 'rural'}), ${c.delta >= 0 ? '+' : ''}${(100 * c.delta).toFixed(2)} points a month`);
 
