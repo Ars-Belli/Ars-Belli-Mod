@@ -311,7 +311,7 @@ function priceSensitivity(r) {
 				for (const [g, n] of Object.entries(pm.in || {})) add(g, -k * fill * n);
 				if (pm.out) add(pm.out, k * fill * pm.n * (1 + row.pe + r.M.get('local_' + pm.out + '_output_modifier')));
 			}
-		} else for (const [, pm] of pms) for (const [g, n] of Object.entries(pm.in || {})) add(g, -b.level * n * r.buildings.upkeepMult);
+		} else for (const [i, [, pm]] of pms.entries()) for (const [g, n] of Object.entries(pm.in || {})) add(g, -b.level * E.fillOf(b, i, row.employment) * n * r.buildings.upkeepMult * row.staffing);
 	}
 	return sens;
 }
@@ -323,7 +323,7 @@ function flowDelta(rNew, rOld) {
 	return { dS: subObj(a.s, b.s), dD: subObj(a.d, b.d), sens: subObj(priceSensitivity(rNew), priceSensitivity(rOld)) };
 }
 function addFlow(into, f, sign = 1) {
-	for (const k of ['dS', 'dD', 'sens']) for (const [g, x] of Object.entries(f[k] || {})) into[k][g] = (into[k][g] || 0) + sign * x;
+	for (const k of ['dS', 'dD', 'sens']) for (const [g, x] of Object.entries(f[k] || {})) (into[k] ??= {})[g] = ((into[k] || {})[g] || 0) + sign * x;
 	return into;
 }
 
@@ -344,10 +344,42 @@ function withFlows(ctx, o) {
 	o.demandKey = demandKeyOf(o);
 	if (o.kind === 'building' || o.kind === 'rank') {
 		const r0 = ctx.base.get(o.site).r;
-		o.flowOwn = o.flow = flowDelta(o.r, r0);
-		if (o.best) { o.flow = addFlow({ dS: {}, dD: {}, sens: {} }, o.flowOwn); for (const b of o.best) addFlow(o.flow, flowDelta(b.r, o.r)); }
+		o.flowOwn = o.flow = addFlow(flowDelta(o.r, r0), { dD: o.kind === 'rank' ? popDemand(ctx, o.mk, rankDesiredDelta(o.from, o.rank)) : promotedDemand(ctx, o, r0) });
+		if (o.best) {
+			o.flow = addFlow({ dS: {}, dD: {}, sens: {} }, o.flowOwn);
+			for (const b of o.best) addFlow(addFlow(o.flow, flowDelta(b.r, o.r)), { dD: promotedDemand(ctx, b, o.r) });
+		}
 	}
 	return o;
+}
+// what a building's new workers buy once its jobs are filled: the peasants promoted into them (beyond the idle pops of its
+// type, who already buy) change the market's pop demand as country.js weighs it - each type's demand per good (a burgher
+// buys about 20 times a peasant's cloth), pop demand scaled by the country's typed pops in the market, at today's price
+function promotedDemand(ctx, o, rBase) {
+	const t = DB().buildings[o.type];
+	if (!t || !t.pop || t.pop === 'peasants' || !o.hire) return {};
+	const promoted = Math.max(0, o.hire - Math.max(0, ((rBase.J || {}).unemployed || {})[t.pop] || 0));
+	return promoted > 0 ? popDemand(ctx, o.mk, { [t.pop]: promoted }) : {};
+}
+// the market's pop demand change when peasants become other pop types (thousands per type)
+function popDemand(ctx, mkId, dPops) {
+	const mk = ctx.state.markets[mkId], dD = {};
+	const moved = Object.entries(dPops).filter(([type, n]) => type !== 'peasants' && n);
+	if (!mk || !mk.typed0 || !moved.length) return dD;
+	for (const [g, x] of Object.entries(mk.goods)) {
+		if (!DB().goods[g] || !(mk.typed0[g] > 0) || !x.popBase) continue;
+		const w = moved.reduce((a, [type, n]) => a + n * (CS.popWeight(type, g) - CS.popWeight('peasants', g)), 0);
+		if (w) dD[g] = x.popBase * w / mk.typed0[g] * CS.elasticity(g, x.price);
+	}
+	return dD;
+}
+// the pops a rank wants beyond the one before it (local_<type>_desired_pop: a town 200 burghers, 200 laborers, 100
+// soldiers, 25 nobles, 50 clergy; a city five times that), which promotion fills from peasants over time
+function rankDesiredDelta(from, to) {
+	const d = {}, mod = r => ((DB().ranks[r] || {}).modifier || {});
+	for (const [k, v] of Object.entries(mod(to))) { const m = /^local_(\w+)_desired_pop$/.exec(k); if (m) d[m[1]] = (d[m[1]] || 0) + v; }
+	for (const [k, v] of Object.entries(mod(from))) { const m = /^local_(\w+)_desired_pop$/.exec(k); if (m) d[m[1]] = (d[m[1]] || 0) - v; }
+	return d;
 }
 function demandKeyOf(o) {
 	if (o.kind === 'building') return (DB().buildings[o.type] || {}).demand;
@@ -398,4 +430,4 @@ function marketValue(M, o, parts) {
 // an option bought: its market effects join the plan
 const commit = (M, o) => { if (o.flowOwn) addFlow(M.plannedOf(o.mk), o.flowOwn); };
 
-module.exports = { markets, withFlows, demandKeyOf, constructionWeights, setFuture, marketValue, commit, goodImpact, priceSensitivity, flowDelta, addFlow, urbanOption, context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };
+module.exports = { promotedDemand, popDemand, rankDesiredDelta, markets, withFlows, demandKeyOf, constructionWeights, setFuture, marketValue, commit, goodImpact, priceSensitivity, flowDelta, addFlow, urbanOption, context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };

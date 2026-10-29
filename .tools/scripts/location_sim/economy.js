@@ -1,18 +1,22 @@
 // Economy simulator: a country month by month for decades, spending its surplus gold the way a player would, to compare
 // the long-run effect of modifiers (+20% building efficiency, +20% urban building efficiency, +3% tax efficiency...).
-//   node .tools/scripts/location_sim/economy.js <country scenario.json> [--years 30] [--decide 12] [--reserve 6]
-//        [--promotion 0.05] [--max-payback 40] [--roads-every 5] [--full-every 5] [--build-share 0.33]
+//   node .tools/scripts/location_sim/economy.js <country scenario.json> [--years 30] [--decide 12] [--reserve 0]
+//        [--promotion 0.05] [--max-payback years] [--roads-every 5] [--full-every 5] [--build-share 0.33]
 //        [--mod key=+x]...                         change a country modifier for the run (repeatable)
 //        [--compare "key=+x" "key2=+y,key3=-z"...] a baseline run and one run per variant, side by side
 //        [--idle]                                  also a run that never invests (what investing gains)
 //        [--serial]                                runs one after another (by default each runs in its own thread)
 //        [--explain 20]                            the first N purchases of every decision, their value in parts
-// Books: income = crown tax (simulated) + other income held at the save's (trade, tariffs...); expenses = court, army,
-// navy, forts and food held at the save's + building upkeep (simulated). Every --decide months the treasury above
-// --reserve months of expenses buys the best options by gain per gold (planner.js: building levels with jobs filled by
-// promotion, food-safe urbanisation valued with the buildings it unlocks, roads every --roads-every years), at most one per
-// location per decision; each finishes after its build time. Every month idle peasants promote into --promotion of the
-// open jobs (the game's formula is not decoded), which shifts market demand toward what burghers, nobles and clergy buy.
+// Books: income = crown tax (simulated) + other income held at the save's (minting, trade, food sales...); expenses =
+// building upkeep (simulated, as the game charges it), the court and the stability investment, which scale with the
+// economic base at the save's slider positions (NEconomy: 0.5 x wealth + 0.015 x population + trade terms, x (1 + 0.066 a
+// embraced institution); legitimacy and stability then move as they did), and army, navy, forts and food held. Every
+// --decide months the whole treasury above --reserve months of expenses (0: everything is invested, so a modifier's
+// extra surplus compounds) buys the best options by value per gold (planner.js: building levels with jobs filled by
+// promotion and their new workers' demand, food-safe urbanisation valued with the buildings it unlocks, roads every
+// --roads-every years), at most one per location per decision; each finishes after its build time. Every month idle
+// peasants promote into --promotion of the open jobs (the game's formula is not decoded), which shifts market demand
+// toward what burghers, nobles and clergy buy.
 const fs = require('fs');
 const path = require('path');
 const E = require('./engine.js');
@@ -31,8 +35,8 @@ const file = args.find(a => a.endsWith('.json'));
 if (!file) { console.error('usage: node economy.js <country scenario.json> [--years 30] [--mod key=+x] [--compare "key=+x" ...]'); process.exit(1); }
 const scn0 = JSON.parse(fs.readFileSync(file, 'utf8'));
 const opt = {
-	years: +flag('--years', 30), decide: +flag('--decide', 12), reserve: +flag('--reserve', 6), promotion: +flag('--promotion', 0.05),
-	maxPayback: +flag('--max-payback', 40), buildShare: +flag('--build-share', 1 / 3), roadsEvery: +flag('--roads-every', 5), fullEvery: +flag('--full-every', 5), quiet: args.includes('--quiet'), explain: +flag('--explain', 0),
+	years: +flag('--years', 30), decide: +flag('--decide', 12), reserve: +flag('--reserve', 0), promotion: +flag('--promotion', 0.05),
+	maxPayback: +flag('--max-payback', Infinity), buildShare: +flag('--build-share', 1 / 3), roadsEvery: +flag('--roads-every', 5), fullEvery: +flag('--full-every', 5), quiet: args.includes('--quiet'), explain: +flag('--explain', 0),
 };
 const num = (x, d = 0) => (+x).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
 const nm = k => DB.names[k] || k;
@@ -69,8 +73,18 @@ function run(variant, label, invest = true) {
 	const state = CS.create(scn);
 	const obs = scn.country.observed || {};
 	const maint = obs.maintenance || {};
-	const fixed = Object.entries(maint).filter(([k]) => k !== 'UpkeepMaintenance').reduce((a, [, v]) => a + v, 0);
+	// held: army, navy, forts, food (and colonies, exploration...); with the economic base: the court, and the stability
+	// investment (last month's expense minus the maintenance list, which leaves it out)
+	const SCALED = new Set(['UpkeepMaintenance', 'CourtMaintenance']);
+	const fixed = Object.entries(maint).filter(([k]) => !SCALED.has(k)).reduce((a, [, v]) => a + v, 0);
+	const court0 = maint.CourtMaintenance || 0;
+	const stability0 = obs.expense !== undefined ? Math.max(0, obs.expense - Object.values(maint).reduce((a, v) => a + v, 0)) : 0;
 	const otherIncome = (obs.goldIncome || 0) - (obs.taxIncome || 0);
+	// the economic base (NEconomy): wealth regardless of control, population, and the rest (trade, tariffs, subjects...)
+	// held at what the save's value leaves over; x (1 + 0.066 a embraced institution)
+	const NE = DB.defines.NEconomy || {}, instScale = 1 + (NE.ECONOMICAL_BASE_SCALE_FROM_EACH_INSTITUTION ?? 0.066) * (obs.institutions || 0);
+	const ecoOwn = t => (NE.ECONOMICAL_BASE_FROM_TAX_BASE ?? 0.5) * t.wealth + (NE.ECONOMICAL_BASE_FROM_POP ?? 0.015) * t.population;
+	let ecoRest = null, eco0 = null;
 	const book = { treasury: obs.treasury || 0, invested: 0, crownTotal: 0, netTotal: 0, built: { building: 0, rank: 0, road: 0 }, types: {}, bought: [] };
 	const queue = [];
 	const years = [];
@@ -84,17 +98,19 @@ function run(variant, label, invest = true) {
 		const { results } = CS.evaluateAll(state, m === 0);
 		if (m === 0) for (const s of state.sites) s.obs = null; // after month 0 employment follows the pops, not the save
 		const t = CS.totals(state, results);
-		const income = t.crownTax + otherIncome, expenses = fixed + t.upkeep;
+		if (ecoRest === null) { eco0 = obs.economicBase || ecoOwn(t) * instScale; ecoRest = eco0 / instScale - ecoOwn(t); }
+		const eco = (ecoOwn(t) + ecoRest) * instScale, scaled = (court0 + stability0) * eco / eco0;
+		const income = t.crownTax + otherIncome, expenses = fixed + scaled + t.upkeep;
 		book.treasury += income - expenses;
 		book.crownTotal += t.crownTax; book.netTotal += income - expenses;
 		if (m % 12 === 0) {
 			const pops = {}; for (const s of state.sites) for (const p of s.L.pops) pops[p.type] = (pops[p.type] || 0) + p.size;
 			const devAvg = state.sites.reduce((a, s) => a + s.L.development, 0) / state.sites.length;
-			yearStats = { year: m / 12, treasury: book.treasury, crown: t.crownTax, upkeep: t.upkeep, net: income - expenses, population: t.population, burghers: pops.burghers || 0,
+			yearStats = { year: m / 12, treasury: book.treasury, crown: t.crownTax, upkeep: t.upkeep, net: income - expenses, eco, courtStability: scaled, population: t.population, burghers: pops.burghers || 0,
 				manpower: t.manpower, control: t.control, development: devAvg, invested: book.invested, built: { ...book.built },
 				towns: state.sites.filter(s => s.L.rank !== 'rural_settlement').length };
 			years.push(yearStats);
-			if (!opt.quiet) console.log(`  [${label}] year ${String(m / 12).padStart(2)}: crown tax ${num(t.crownTax, 0)}/mo, net ${num(income - expenses, 0)}/mo, treasury ${num(book.treasury)}, invested ${num(book.invested)}, built ${book.built.building} levels / ${book.built.road} roads / ${book.built.rank} ranks`);
+			if (!opt.quiet) console.log(`  [${label}] year ${String(m / 12).padStart(2)}: crown tax ${num(t.crownTax, 0)}/mo, upkeep ${num(t.upkeep, 0)}, court+stability ${num(scaled, 0)}, net ${num(income - expenses, 0)}/mo, economic base ${num(eco)}, treasury ${num(book.treasury)}, invested ${num(book.invested)}, built ${book.built.building} levels / ${book.built.road} roads / ${book.built.rank} ranks`);
 		}
 		if (m === months) break;
 		if (invest && m % opt.decide === 0) decide(m, results, income - expenses);
@@ -188,6 +204,8 @@ function run(variant, label, invest = true) {
 		} });
 		else if (o.kind === 'rank') queue.push({ done, site: o.site, mk: o.mk, flow: o.flowOwn, apply: () => {
 			const L = o.site.L;
+			// the new rank's extra desired pops become promotion targets
+			for (const [type, n] of Object.entries(plan.rankDesiredDelta(L.rank, o.rank))) (o.site.desired ??= {})[type] = (o.site.desired[type] || 0) + n;
 			L.rank = o.rank;
 			// the RGO shrinks to its new maximum (a town loses the rural +100%)
 			const r = E.evaluate(o.site.scn, { L, C: state.C, obs: null });
@@ -201,7 +219,8 @@ function run(variant, label, invest = true) {
 			book.built.road++;
 		} });
 	}
-	// ---- idle peasants promote into open jobs of the other types, a share of the open jobs a month
+	// ---- idle peasants promote into open jobs of the other types (and a new rank's extra desired pops), a share of the
+	// open places a month
 	function promote(results) {
 		if (!(opt.promotion > 0)) return;
 		for (const [site, r] of results) {
@@ -209,7 +228,7 @@ function run(variant, label, invest = true) {
 			let idle = Math.max(0, (J.unemployed || {}).peasants || 0);
 			if (idle <= 1e-6) continue;
 			for (const type of ['burghers', 'laborers', 'soldiers', 'clergy', 'nobles']) {
-				const open = (J.jobs[type] || 0) - (J.pops[type] || 0);
+				const open = (J.jobs[type] || 0) + ((site.desired || {})[type] || 0) - (J.pops[type] || 0);
 				if (open <= 1e-6 || idle <= 1e-6) continue;
 				let n = Math.min(open * opt.promotion, idle);
 				idle -= n;
@@ -257,17 +276,17 @@ async function report() {
 	}
 
 	console.log(`
-${scn0.name}: ${opt.years} years; decisions every ${opt.decide} months, reserve ${opt.reserve} months of expenses, promotion ${100 * opt.promotion}% of open jobs a month`);
+${scn0.name}: ${opt.years} years; decisions every ${opt.decide} months, reserve ${opt.reserve} months of expenses${Number.isFinite(opt.maxPayback) ? `, payback within ${opt.maxPayback} years` : ''}, promotion ${100 * opt.promotion}% of open jobs a month`);
 	const at = (r, y) => r.years.find(x => x.year === y) || r.years[r.years.length - 1];
 	const marks = [...new Set([5, 10, 20, opt.years].filter(y => y <= opt.years))];
-	const head = ['run'.padEnd(34), ...marks.map(y => `crown tax y${y}`.padStart(15)), 'crown tax total'.padStart(17), 'net total'.padStart(12), 'invested'.padStart(10), 'treasury'.padStart(10), 'pop'.padStart(12), 'burghers'.padStart(10), 'towns'.padStart(6), 'manpower/mo'.padStart(12)];
+	const head = ['run'.padEnd(34), ...marks.map(y => `crown tax y${y}`.padStart(15)), 'crown tax total'.padStart(17), `surplus y${opt.years}`.padStart(12), `eco base y${opt.years}`.padStart(13), 'invested'.padStart(10), 'treasury'.padStart(10), 'pop'.padStart(12), 'burghers'.padStart(10), 'towns'.padStart(6), 'manpower/mo'.padStart(12)];
 	console.log(head.join(' '));
 	const base = runs[0];
 	for (const r of runs) {
 		const end = at(r, opt.years);
 		const d = (x, b) => (r === base ? '' : ` (${x >= b ? '+' : '−'}${num(Math.abs(100 * (x / b - 1)), 1)}%)`);
 		console.log([r.label.slice(0, 34).padEnd(34), ...marks.map(y => num(at(r, y).crown).padStart(15)), (num(r.book.crownTotal) + d(r.book.crownTotal, base.book.crownTotal)).padStart(17),
-			num(r.book.netTotal).padStart(12), num(r.book.invested).padStart(10), num(end.treasury).padStart(10), num(end.population * 1000).padStart(12), num(end.burghers * 1000).padStart(10), String(end.towns).padStart(6), num(end.manpower * 1000).padStart(12)].join(' '));
+			num(end.net).padStart(12), num(end.eco).padStart(13), num(r.book.invested).padStart(10), num(end.treasury).padStart(10), num(end.population * 1000).padStart(12), num(end.burghers * 1000).padStart(10), String(end.towns).padStart(6), num(end.manpower * 1000).padStart(12)].join(' '));
 	}
 	for (const r of runs) if (Object.keys(r.book.types).length) console.log(`  ${r.label}: most built ${mostBuilt(r)}`);
 	console.log(`(${((Date.now() - t0) / 1000).toFixed(0)} s)`);

@@ -513,9 +513,12 @@
 	function buildingEconomy(L, M, C, J) {
 		const age = DB.ages[L.age] || DB.ages[1];
 		const provinceRaw = new Set(L.provinceRaw || [L.rawMaterial]);
-		// upkeep multiplier: base 0.2 + 0.001 a year (static years_since_game_start), divided by (1 + building_upkeep_efficiency);
-		// the save shows ~0.39 in 1547 where this gives 0.385 for Spain (economy_control.md 2.3, close but not exact)
-		const upkeepMult = (C.mods.raw('building_upkeep_multiplier') + 0.001 * Math.max(0, L.year - 1337)) / (1 + C.mods.raw('building_upkeep_efficiency'));
+		// upkeep multiplier: base 0.2 + 0.001 a year (static years_since_game_start) = the share of the cost "taken by the
+		// country" (41% in 1547), divided by (1 + building_upkeep_efficiency), x (1 + inflation). A building pays for the inputs
+		// it receives (fill) at its staffing, unless it always demands: Spain June 1547, 2,558 of 2,739 buildings within 1% of
+		// the save's upkeep, 2,781 against 2,765 in all
+		const upkeepMult = (C.mods.raw('building_upkeep_multiplier') + 0.001 * Math.max(0, L.year - 1337)) / (1 + C.mods.raw('building_upkeep_efficiency'))
+			* (1 + ((C.raw || {}).inflation || 0));
 		const rows = [];
 		const priceOf = g => L.prices[g] ?? (DB.goods[g] || {}).price ?? 0;
 		for (const [idx, b] of L.buildings.entries()) {
@@ -545,8 +548,9 @@
 				const profit = b.level * throughput * (value - cost);
 				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, produces, output: b.level * e * made, pe, goodMod, profit, savedProfit: b.profit });
 			} else {
-				const inCost = pms.reduce((a, [, pm]) => a + Object.entries(pm.in || {}).reduce((x, [g, n]) => x + n * priceOf(g), 0), 0);
-				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, upkeep: b.level * inCost * upkeepMult, savedUpkeep: b.upkeep });
+				const inCost = pms.reduce((a, [, pm], i) => a + fillOf(b, i, e) * Object.entries(pm.in || {}).reduce((x, [g, n]) => x + n * priceOf(g), 0), 0);
+				const staffing = t.alwaysDemand ? 1 : e;
+				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, staffing, upkeep: b.level * inCost * upkeepMult * staffing, savedUpkeep: b.upkeep });
 			}
 		}
 		return { rows, upkeepMult };

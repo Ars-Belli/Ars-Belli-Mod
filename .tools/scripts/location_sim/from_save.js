@@ -212,6 +212,12 @@ function countryContext(cid) {
 			// economy simulator's books
 			treasury: N((c.currency_data || {}).gold),
 			maintenance: Object.fromEntries(Object.entries(c.last_month_maintenance || {}).map(([k, v]) => [k, +v])),
+			// last month's total income and expense (the expense also holds the stability investment, which the maintenance list
+			// leaves out), the economic base (its yearly history, last entry), embraced institutions and the budget sliders
+			income: N((c.economy || {}).income), expense: N((c.economy || {}).expense),
+			economicBase: N(list(c.historical_economical_base).slice(-1)[0]),
+			institutions: Object.values(c.institutions || {}).filter(v => v === 'yes').length,
+			sliders: { ...Object.fromEntries(Object.entries((c.economy || {}).maintenances || {}).map(([k, v]) => [k, +v])), StabilityInvestment: N((c.economy || {}).stability_investment) },
 		},
 	};
 }

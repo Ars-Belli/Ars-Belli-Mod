@@ -14,7 +14,7 @@ const file = args.find(a => a.endsWith('.json'));
 if (!file) { console.error('usage: node check.js <country scenario.json> [--worst 15]'); process.exit(1); }
 const S = JSON.parse(fs.readFileSync(file, 'utf8'));
 const rows = [];
-let manpower = 0, sailors = 0, crown = 0, crownSaved = 0, births = 0, birthsSaved = 0, armyLevies = 0;
+let manpower = 0, sailors = 0, crown = 0, crownSaved = 0, births = 0, birthsSaved = 0, armyLevies = 0, upkeep = 0;
 for (const loc of S.locations) {
 	const scn = { location: loc, country: S.country, market: S.markets[loc.market] || {}, observed: S.observed[loc.id] || {} };
 	const r = E.evaluate(scn);
@@ -24,7 +24,7 @@ for (const loc of S.locations) {
 	// the same estate split applied to the saved-profit wealth
 	const t2 = E.tax(r.L, r.M, r.C, wealthSaved);
 	manpower += r.manpower.monthly; sailors += r.sailors.monthly; armyLevies += r.levies.army;
-	crown += r.tax.crown; crownSaved += t2.crown;
+	crown += r.tax.crown; crownSaved += t2.crown; upkeep += r.upkeep;
 	births += r.growth.pool;
 	birthsSaved += Object.values(o.popStats || {}).reduce((a, s) => a + ((s.changes || {}).Reproduction || 0), 0);
 	rows.push({ key: loc.key, control: loc.control, possible: o.possibleTax || 0, sim: r.wealth.total, simSaved: wealthSaved,
@@ -45,6 +45,7 @@ shareErr.sort((a, b) => a - b);
 console.log(`Estate shares: median error ${(100 * shareErr[shareErr.length >> 1]).toFixed(2)} points, 90th percentile ${(100 * shareErr[Math.floor(shareErr.length * 0.9)]).toFixed(2)} points (${shareErr.length} estate rows)`);
 const c = S.country.observed || {};
 console.log(`Crown tax income: save ${c.taxIncome?.toFixed(1)}; simulated ${crown.toFixed(1)} (${pct(crown, c.taxIncome)}); with the save's building profits ${crownSaved.toFixed(1)} (${pct(crownSaved, c.taxIncome)})`);
+if ((c.maintenance || {}).UpkeepMaintenance !== undefined) console.log(`Building upkeep: save ${c.maintenance.UpkeepMaintenance.toFixed(1)}; simulated ${upkeep.toFixed(1)} (${pct(upkeep, c.maintenance.UpkeepMaintenance)})`);
 console.log(`Manpower a month: save ${c.manpowerIncome?.toFixed(3)}k; simulated ${manpower.toFixed(3)}k (${pct(manpower, c.manpowerIncome)}); max manpower save ${c.maxManpower?.toFixed(1)}k, simulated ${(60 * manpower).toFixed(1)}k`);
 console.log(`Sailors a month: save ${c.sailorsIncome?.toFixed(3)}k; simulated ${sailors.toFixed(3)}k (${pct(sailors, c.sailorsIncome)})`);
 console.log(`Births a month (Reproduction): save ${birthsSaved.toFixed(3)}k; simulated ${births.toFixed(3)}k (${pct(births, birthsSaved)})`);
