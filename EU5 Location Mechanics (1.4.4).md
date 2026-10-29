@@ -165,7 +165,7 @@ crown income         = Σ estate tax base × tax rate × tax efficiency
 **Monthly change** *(code `0x1430edf80`; save: 291 of 518 locations at exactly −0.005)*: below max, `+ local + global monthly_control` (base 0.0005, core 0.001, road to the capital 0.0005); above max, `−min(control − max, 0.01, local + global monthly_control_decline)` (base 0.005).
 
 **Proximity** *(code `0x143158bf0`, `0x1427175b0`; save: Spain June 1547, all 522 within 1 point, median error 0.001 with the save's speed term; Ussel 50.91 = the in-game tooltip)*:
-- **Sources**: `min(100, local_proximity_source) × (1 + local_proximity_source_modifier)`: the capital 100, a historical capital 80, a **Local Governor** 80 (city only, needs a road to the capital, capped by `num_local_governors`, 1 at base). Building sources scale with staffing and input coverage, so an understaffed governor gives less.
+- **Sources**: `min(100, local_proximity_source) × (1 + local_proximity_source_modifier)`: the capital 100, a historical capital 80, a **Local Governor** 80 (city only, needs a road to the capital, capped by `num_local_governors`, 1 at base). Building sources scale with staffing and input coverage, so an understaffed governor gives less. The monarchy policy **Itinerant Court** (laws/00_monarchy.txt) takes 20 off the capital unless it has an Itinerant Court Seat: Spain's capital is a source of 80 in 1448 (save-checked: every location reached from Sevilla was 20 too high before).
 - **Spread**: every location takes the best "source strength minus the sum of jump costs" through the country's own land and every sea zone and lake, never foreign land.
 - **Jump cost** = base × factor ÷ (1 + speed), at least 0.01:
   - base: plain land 40, divided by the start location's terrain speed (mountains 0.5, hills and wetlands 0.75, plateau 0.875; vegetation 0.5–0.95 on plain land only; floor 0.25); road 20 minus its bonus (paved 15); a river 12 (downstream or upstream) when cheaper; sea 30, falling toward 5 with full maritime presence; landing or embarking at the location's own port 35, elsewhere 35 with no port factor;
@@ -230,6 +230,7 @@ Who pays for traded food and the 1.33 pop-income scale are open.
 | Births a month | 4,405 | 4,402 | −0.1% |
 | Great Britain (same save) | | | wealth −2.8%, crown tax −3.0%, manpower −0.1%, sailors +0.1%, births +0.7%; proximity median 0.04 (the save's Glasgow governor had less input at its last rebuild); Chester 58.60 = the in-game tooltip, step by step |
 | Proximity | | | all 522 within 1 point; median error 0.313 at today's speed term, 0.001 at the stored values' 0.485 |
+| Spain, 1 June 1448 (a second save, same game) | | | 390 locations: wealth +0.1%, crown tax 0.0%, building upkeep +1.9%, manpower +0.1%, sailors −0.6%, births −4.4%; proximity all 390 within 1 point (median 0.001) once the Itinerant Court policy is applied (below) |
 
 Sevilla against the in-game tooltips (June 1547): wealth 79.84 vs 80.99 (buildings 74.25 vs the save's 74.92 after the Burghers' −0.33% production efficiency; the rest is burgher trade); estate shares 16.37 / 7.88 / 50.08 / 5.52 vs 16.48 / 7.93 / 51.01 / 5.55; location taxes 35.25 vs 35.77; building maintenance 31.68 vs 31.87; monthly manpower 113.9 vs 113 (85 from buildings × (1 + 10% Crown of Castile + 4% soldier literacy + 20% Fortress Town)); food productivity 1.864 vs 1.864, subsistence 42.01 vs 42.01, consumption 306.53 vs 306.52; development 0.0092 vs 0.0092 a month; prosperity −0.06% vs −0.06%.
 
@@ -345,23 +346,37 @@ Each month, idle peasants promote into a share (`--promotion`, 5%) of the open p
 
 **Choosing.** The simulator buys the best value per gold first, valued by `planner.marketValue` as in investments.js: the settled gain, the option's own goods at their settled prices, the change for our other locations, and cheaper construction. The demand of the peasants an option promotes counts too: building jobs, and a new rank's desired pops. It is small: a town's 575 pops add about 0.2 units of demand a month across 47 goods, worth about +0.05 crown tax a month, a tenth of the town's own gain. Future building is valued at the pace of spending so far, with `--build-share` of the surplus (1/3) as a three-year prior. Each option is re-valued against what was bought since, just before it is bought, so a market fills up: valued at today's prices alone, Spain's first two years bought 80 Cannon Makers.
 
-Options: `--explain N` prints each decision's first N purchases with their value in parts; `--idle` adds a run that never invests; `--mod key=+x` changes a country modifier. `--compare` runs a baseline and each variant side by side, each in its own thread. A decision prices the locations' options in a pool of worker threads (`planner_worker.js`), each holding its own copy of the country (about 240 MB) and pricing whole provinces; the runs side by side share `--threads` (default: the CPU's threads less one). Roads go to the pool in two passes, and each location's price sensitivity comes back from it. The results match a one-thread run (`--threads 1`) exactly. Modifier sources (tooltips) are not recorded (`setTracking(false)`), which makes a month about a quarter faster. On a 28-thread CPU (i7-14700K) a 20-year Spain run takes about 45 s (one thread: about 165 s), and the five-run comparison below 95 s (it was 168 s). The monthly simulation is still one thread per run: about 16 s of a single run, 31 s each with five side by side. `--profile` prints where a run's time went.
+Options: `--explain N` prints each decision's first N purchases with their value in parts; `--idle` adds a run that never invests; `--mod key=+x` changes a country modifier. `--compare` runs a baseline and each variant side by side, each in its own thread.
 
-**Spain, 20 years from June 1547**, every gold invested, no stability investment (`--idle --compare global_build_buildings_efficiency=+0.2 global_urban_build_buildings_efficiency=+0.2 tax_income_efficiency=+0.03`):
+**Threads.** A run splits the country into shards (`planner_worker.js`): worker threads that own whole provinces for the whole run, each with its own copy of the country (about 240 MB), and keep those locations up to date. Each month a shard evaluates its locations and sends a summary of each (`months.js`: the totals' terms, food, the four modifiers proximity reads, market flows), then advances them and runs promotion. The main thread keeps the country: budget, proximity, province food, markets. At a decision the shards price their own locations' options (buildings, towns, roads in two passes, price sensitivities), and the main thread values them and chooses. Runs side by side share `--threads` (default: the CPU's threads less one), and the results match a one-thread run (`--threads 1`) exactly. Modifier sources (tooltips) are not recorded (`setTracking(false)`), which makes a month about a quarter faster; settled prices take a few false-position steps. Between five-yearly full passes, building types and town options are priced only where they were candidates at the last one. On a 28-thread CPU (i7-14700K) a 50-year five-run comparison takes 152 s for Spain from 1547 (522 locations) and 102 s from 1448 (390); most of it is the decisions' option pricing, which the five runs share. `--profile` prints where a run's time went.
 
-| run | crown tax a month, year 5 | year 10 | year 20 | crown tax over 20 years | surplus a month, year 20 | economic base, year 20 | invested |
+**Spain, 50 years**, every gold invested, no stability investment (`--years 50 --idle --compare global_build_buildings_efficiency=+0.2 global_urban_build_buildings_efficiency=+0.2 tax_income_efficiency=+0.03`). Tax base is wealth × control summed over the country's locations: the economy itself, whatever the crown takes.
+
+From June 1547 (522 locations):
+
+| run | crown tax a month, year 10 | year 25 | year 50 | crown tax over 50 years | tax base, year 50 | surplus a month, year 50 | invested |
 |---|---|---|---|---|---|---|---|
-| baseline (investing) | 5,933 | 6,065 | 6,304 | 1,456,466 | 2,395 | 12,896 | 536,927 |
-| no investment | 5,759 | 5,783 | 5,817 | 1,389,526 (−4.6%) | 1,808 | 12,188 | 0 (485,270 saved) |
-| +20% construction efficiency | 5,951 | 6,111 | 6,397 | 1,467,751 (+0.8%) | 2,511 | 13,077 | 550,166 |
-| +20% urban construction efficiency | 5,934 | 6,075 | 6,324 | 1,459,596 (+0.2%) | 2,445 | 12,956 | 543,955 |
-| +3% tax efficiency | 6,086 | 6,232 | 6,478 | 1,495,487 (+2.7%) | 2,570 | 12,926 | 573,776 |
+| baseline (investing) | 6,065 | 6,419 | 6,980 | 3,848,004 | 11,932 | 3,131 | 1,523,576 |
+| no investment | 5,783 | 5,835 | 5,914 | 3,501,456 (−9.0%) | 10,123 (−15.2%) | 1,859 | 0 (1,145,223 saved) |
+| +20% construction efficiency | 6,111 | 6,533 | 7,175 | 3,917,445 (+1.8%) | 12,279 (+2.9%) | 3,393 | 1,609,435 |
+| +20% urban construction efficiency | 6,075 | 6,453 | 7,064 | 3,873,295 (+0.7%) | 12,098 (+1.4%) | 3,260 | 1,565,291 |
+| +3% tax efficiency | 6,232 | 6,603 | 7,209 | 3,960,368 (+2.9%) | 12,025 (+0.8%) | 3,364 | 1,633,621 |
 
-- **Investing everything pays back slowly.** 537,000 gold over 20 years (bog iron smelters, masons, lumber mills, tools and papermakers' guilds, charcoal kilns, tanneries, roads) raises crown tax by 487 a month by year 20 and the surplus by 587. The run that saves instead ends with 457,000 more gold, which takes about 65 more years to make up: about 1.5% a year for the crown, less than with a third of the gold (2%), as the best options run out. The economy-wide return is about 2.6 times that (the crown taxes about 38% of wealth). The court grows with the economy: +6% more than without investing.
-- **+3% tax efficiency is worth the most**: +2.7% crown tax over 20 years (about 1,950 gold a year), with a surplus 7% higher by year 20 that is reinvested. Reinvesting adds little to the +2.5% it gives directly, because reinvestment earns little.
-- **+20% construction efficiency** (Spain's 17% → 37%: buildings cost about a quarter less) buys about a third more building levels with the same gold. That is +0.8% crown tax over 20 years and +1.5% by year 20, rising.
-- **+20% urban construction efficiency** (any building in a town or city; 278 of Spain's 522 locations) gives +0.2%, because the best buildings (bog iron smelters, lumber mills) are mostly rural.
-- **No towns are built** in any run, even with every gold invested. A town's value per gold (85+ years: its own gain, its unlocked buildings, 575 desired pops' demand, 25 free building levels) never beats the next building level (20–60 years), and 20 years of building does not fill enough locations past their free levels.
+From June 1448 (390 locations; more to build):
+
+| run | crown tax a month, year 10 | year 25 | year 50 | crown tax over 50 years | tax base, year 50 | surplus a month, year 50 | invested |
+|---|---|---|---|---|---|---|---|
+| baseline (investing) | 865 | 926 | 1,045 | 560,124 | 2,271 | 650 | 317,517 |
+| no investment | 806 | 814 | 829 | 490,755 (−12.4%) | 1,840 (−18.9%) | 407 | 0 (244,703 saved) |
+| +20% construction efficiency | 870 | 947 | 1,099 | 574,391 (+2.5%) | 2,387 (+5.1%) | 702 | 331,608 |
+| +20% urban construction efficiency | 854 | 925 | 1,055 | 559,951 (−0.0%) | 2,303 (+1.4%) | 665 | 320,666 |
+| +3% tax efficiency | 893 | 958 | 1,084 | 579,636 (+3.5%) | 2,291 (+0.9%) | 686 | 335,445 |
+
+- **Investing grows the economy more than the crown's income.** In 50 years, investing everything lifts the tax base 18% (from 1547) and 23% (from 1448) over saving, and crown tax 18% and 26% by year 50. As a return on the gold the crown gives up, it is slow: from 1547 the saving run ends 1.1 million gold richer, which the investing run's +1,272 surplus a month takes about 70 more years to make up.
+- **+3% tax efficiency gives the most crown tax over the 50 years** (+2.9% and +3.5%), mostly from the first month, but grows the economy least (tax base +0.8% and +0.9%: only what its extra surplus builds).
+- **+20% construction efficiency grows the economy most** (tax base +2.9% and +5.1%), and its crown tax keeps climbing: +2.8% and +5.2% by year 50, against tax efficiency's +3.3% and +3.7%. From 1448, with more to build, it overtakes tax efficiency before year 50, though tax efficiency's head start keeps it ahead over the whole run.
+- **+20% urban construction efficiency** does about half as much for the tax base (+1.4% in both) and little for the crown, because the best buildings (bog iron smelters, lumber mills, masons) are mostly rural.
+- **Towns**: none from 1547. From 1448 the investing runs build 3 to 5 in 50 years (133 → 136–138), once the better building levels run short.
 - Population, burghers and manpower barely differ between the runs.
 
 Not yet: new advances and ages (the run keeps 1547's advances, so nothing new unlocks), the game's promotion formula and desired pops, the estates' own building and road spending, other income growing with the economy, development from buildings, events and wars.
