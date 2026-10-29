@@ -88,10 +88,10 @@ module.exports = {
     ]},
    ],
    mil: [
-    { id: 'quality', art: 'disaster/succession_crisis', name: 'Quality', desc: 'Better-drilled troops and crews that take less damage. Elite cavalry and great ships cost more to keep.', adv: [
+    { id: 'quality', art: 'disaster/succession_crisis', name: 'Quality', desc: 'Steadier, harder troops and crews that take less damage. Elite cavalry and great ships cost more to keep.', adv: [
       ['military_drill', 'land_morale_modifier = 0.10', { raw: 'ai_weight = { add = 10 }' }],
       ['naval_drill', 'naval_morale_modifier = 0.10', { icon: 'naval_morale_advance_1' }],
-      ['abm_strict_discipline', 'discipline = 0.05', { icon: 'glorious_arms', name: 'Strict Discipline', desc: 'Harsh drill and harsher punishment keep our ranks steady and in order when the shot starts flying.' }],
+      ['abm_strict_discipline', 'discipline = 0.05', { icon: 'glorious_arms', name: 'Strict Discipline', desc: 'Strict articles of war and harsher punishment keep our ranks steady and in order when the shot starts flying.' }],
       ['abm_hardened_ranks', 'military_tactics = 0.10\nnaval_damage_taken = -0.10', { icon: 'defensive_army', name: 'Hardened Ranks', desc: 'Soldiers who know how to take cover and crews who know how to fight their ship lose fewer men to every volley and broadside.' }],
       // land_morale_movement_cost: 1.4 vanilla scaled it x7 (base 0.001 -> 0.0069, advances -0.0001 -> -0.0007); was -0.0002 on 1.3.
       ['abm_trained_march', 'land_morale_movement_cost = -0.0014', { icon: 'expanded_supply_trains', name: 'Trained March', desc: 'Regulated marching pace and rest halts keep our columns in good order and good spirits on the road.' }],
@@ -105,7 +105,7 @@ module.exports = {
       ['grand_navy', 'navy_galley_build_cost_modifier = -0.15\nnavy_heavy_ship_build_cost_modifier = -0.15\nnavy_light_ship_build_cost_modifier = -0.15'],
       ['grand_army', 'global_manpower_modifier = 0.15\nglobal_sailors_modifier = 0.15'],
     ]},
-    { id: 'leadership', art: 'army/army_full_flip', name: 'Leadership', desc: 'Generals, admirals, and the officers and sergeants who serve under them.', adv: [
+    { id: 'leadership', art: 'army/army_full_flip', name: 'Leadership', desc: 'Generals, admirals, and the officers and drill sergeants who serve under them: our men are drilled into veterans faster, and keep what they learn.', adv: [
       ['formalized_officer_corps', 'army_initiative = 0.25\nnavy_initiative = 0.50'],
       ['quality_education', 'monthly_army_tradition = 0.2\nmonthly_navy_tradition = 0.2\narmy_tradition_decay = -0.001\nnavy_tradition_decay = -0.001'],
       ['administrative_leadership', 'hire_advisor_cost_modifier = -0.25\ntrain_general_cost_modifier = -0.40\ntrain_admiral_cost_modifier = -0.40'],
