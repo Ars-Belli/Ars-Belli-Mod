@@ -2,23 +2,28 @@
 // the long-run effect of modifiers (+20% building efficiency, +20% urban building efficiency, +3% tax efficiency...).
 //   node .tools/scripts/location_sim/economy.js <country scenario.json> [--years 30] [--decide 12] [--reserve 0]
 //        [--promotion 0.05] [--max-payback years] [--roads-every 5] [--full-every 5] [--build-share 0.33]
+//        [--stability 0|save]                      the stability investment: none (default) or the save's, with the economy
+//        [--threads N]                             worker threads in all (default: the CPU's threads less one)
 //        [--mod key=+x]...                         change a country modifier for the run (repeatable)
 //        [--compare "key=+x" "key2=+y,key3=-z"...] a baseline run and one run per variant, side by side
 //        [--idle]                                  also a run that never invests (what investing gains)
 //        [--serial]                                runs one after another (by default each runs in its own thread)
 //        [--explain 20]                            the first N purchases of every decision, their value in parts
 // Books: income = crown tax (simulated) + other income held at the save's (minting, trade, food sales...); expenses =
-// building upkeep (simulated, as the game charges it), the court and the stability investment, which scale with the
-// economic base at the save's slider positions (NEconomy: 0.5 x wealth + 0.015 x population + trade terms, x (1 + 0.066 a
+// building upkeep (simulated, as the game charges it), the court (and with --stability save the stability investment), which
+// scale with the economic base at the save's slider positions (NEconomy: 0.5 x wealth + 0.015 x population + trade terms, x (1 + 0.066 a
 // embraced institution); legitimacy and stability then move as they did), and army, navy, forts and food held. Every
 // --decide months the whole treasury above --reserve months of expenses (0: everything is invested, so a modifier's
 // extra surplus compounds) buys the best options by value per gold (planner.js: building levels with jobs filled by
 // promotion and their new workers' demand, food-safe urbanisation valued with the buildings it unlocks, roads every
 // --roads-every years), at most one per location per decision; each finishes after its build time. Every month idle
 // peasants promote into --promotion of the open jobs (the game's formula is not decoded), which shifts market demand
-// toward what burghers, nobles and clergy buy.
+// toward what burghers, nobles and clergy buy. A decision prices the locations' options in worker threads
+// (planner_worker.js), each with its own copy of the country; runs side by side share the threads.
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
+const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 const E = require('./engine.js');
 E.setData(JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8')));
 const CS = require('./country.js');
@@ -37,6 +42,7 @@ const scn0 = JSON.parse(fs.readFileSync(file, 'utf8'));
 const opt = {
 	years: +flag('--years', 30), decide: +flag('--decide', 12), reserve: +flag('--reserve', 0), promotion: +flag('--promotion', 0.05),
 	maxPayback: +flag('--max-payback', Infinity), buildShare: +flag('--build-share', 1 / 3), roadsEvery: +flag('--roads-every', 5), fullEvery: +flag('--full-every', 5), quiet: args.includes('--quiet'), explain: +flag('--explain', 0),
+	stability: flag('--stability', '0'), threads: +flag('--threads', Math.max(1, os.availableParallelism() - 1)),
 };
 const num = (x, d = 0) => (+x).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
 const nm = k => DB.names[k] || k;
@@ -63,7 +69,16 @@ class Heap {
 	}
 }
 
-function run(variant, label, invest = true) {
+// a planner worker: one decision at a time
+function newPlanner(scn) {
+	const w = new Worker(path.join(__dirname, 'planner_worker.js'), { workerData: { scn } });
+	let pending = null;
+	w.on('message', m => { const p = pending; pending = null; if (p) p.res(m); });
+	w.on('error', e => { const p = pending; pending = null; if (p) p.rej(e); else throw e; });
+	return { run: msg => new Promise((res, rej) => { pending = { res, rej }; w.postMessage(msg); }), terminate: () => w.terminate() };
+}
+
+async function run(variant, label, invest = true) {
 	const scn = JSON.parse(JSON.stringify(scn0));
 	scn.options = { ...(scn.options || {}), markets: 'fixed', food: 'on' };
 	for (const [k, v] of variant) {
@@ -78,7 +93,9 @@ function run(variant, label, invest = true) {
 	const SCALED = new Set(['UpkeepMaintenance', 'CourtMaintenance']);
 	const fixed = Object.entries(maint).filter(([k]) => !SCALED.has(k)).reduce((a, [, v]) => a + v, 0);
 	const court0 = maint.CourtMaintenance || 0;
-	const stability0 = obs.expense !== undefined ? Math.max(0, obs.expense - Object.values(maint).reduce((a, v) => a + v, 0)) : 0;
+	// the stability investment: none by default (most players pay it only for a while, e.g. to clear a disaster); --stability save
+	// keeps the save's (Spain 908 a month, paid to reach 30 stability)
+	const stability0 = opt.stability === 'save' && obs.expense !== undefined ? Math.max(0, obs.expense - Object.values(maint).reduce((a, v) => a + v, 0)) : 0;
 	const otherIncome = (obs.goldIncome || 0) - (obs.taxIncome || 0);
 	// the economic base (NEconomy): wealth regardless of control, population, and the rest (trade, tariffs, subjects...)
 	// held at what the save's value leaves over; x (1 + 0.066 a embraced institution)
@@ -92,6 +109,10 @@ function run(variant, label, invest = true) {
 	let yearStats = null;
 	const siteOf = new Map(state.sites.map(s => [s.loc.id, s]));
 	const worth = new Map(), rankChanged = new Set(); // building types that paid off per location; locations that rose a rank
+	const siteIndex = new Map(state.sites.map((s, i) => [s, i]));
+	const nPool = invest ? Math.floor(opt.threads / opt.runs) : 0;
+	const pool = nPool > 1 ? Array.from({ length: nPool }, () => newPlanner(scn)) : null;
+	try {
 	for (let m = 0; m <= months; m++) {
 		// projects that finish this month
 		for (const p of queue.filter(q => q.done === m)) p.apply();
@@ -113,7 +134,7 @@ function run(variant, label, invest = true) {
 			if (!opt.quiet) console.log(`  [${label}] year ${String(m / 12).padStart(2)}: crown tax ${num(t.crownTax, 0)}/mo, upkeep ${num(t.upkeep, 0)}, court+stability ${num(scaled, 0)}, net ${num(income - expenses, 0)}/mo, economic base ${num(eco)}, treasury ${num(book.treasury)}, invested ${num(book.invested)}, built ${book.built.building} levels / ${book.built.road} roads / ${book.built.rank} ranks`);
 		}
 		if (m === months) break;
-		if (invest && m % opt.decide === 0) decide(m, results, income - expenses);
+		if (invest && m % opt.decide === 0) await decide(m, results, income - expenses);
 		// the month: manpower, pops, control, development, staffing; promotion; proximity, food, markets
 		state.manpowerPool = Math.max(0, Math.min(t.maxManpower, state.manpowerPool + t.manpower - state.manpowerExpense));
 		for (const [site, r] of results) E.advance(site.L, r);
@@ -122,13 +143,14 @@ function run(variant, label, invest = true) {
 		if (state.food) CS.stepFood(state, results);
 		CS.stepMarkets(state, results);
 	}
+	} finally { if (pool) for (const w of pool) w.terminate(); }
 	return { label, variant, years, book };
 
 	// ---- spend the treasury above the reserve, best value per gold first. An option's value is its gain once control has
 	// settled, at the prices its output and inputs settle at in its market (with what is already planned there), minus what
 	// those price moves cost our other locations, plus what cheaper construction goods save on future building. Values fall
 	// as a market fills up, so the best option is re-valued against what was bought before it is bought (lazy greedy).
-	function decide(m, results, netNow) {
+	async function decide(m, results, netNow) {
 		const reserve = opt.reserve * (fixed + [...results.values()].reduce((a, r) => a + r.upkeep, 0));
 		let budget = book.treasury - reserve;
 		if (budget < 100) return;
@@ -138,12 +160,31 @@ function run(variant, label, invest = true) {
 		// every --full-every years all building types are priced; in between only the types that paid off last time (and
 		// everything where the rank changed), which keeps a decision to a few seconds
 		const full = !(m % (opt.fullEvery * 12)) || !worth.size;
-		for (const site of state.sites) {
-			if (queue.some(q => q.site === site && q.done > m)) continue; // one project at a time per location
+		const busy = new Set(queue.filter(q => q.done > m && q.site).map(q => q.site)); // one project at a time per location
+		const jobs = state.sites.filter(site => !busy.has(site)).map(site => {
 			const known = worth.get(site), fresh = full || !known || rankChanged.has(site);
-			const types = fresh ? undefined : (k => known.has(k));
-			const found = plan.buildingOptions(ctx, site, { staffing: 'promotion', types });
-			if (fresh) { worth.set(site, new Set(found.filter(o => o.gain > 0).map(o => o.type))); rankChanged.delete(site); }
+			return [site, fresh ? null : [...known]];
+		});
+		if (pool) {
+			// the workers take the locations and markets as they stand and price a share of the locations each
+			const snap = JSON.stringify({ sites: state.sites.map(x => [x.loc.id, x.L]),
+				markets: Object.fromEntries(Object.entries(state.markets).map(([id, mk]) => [id, { prices: mk.prices, goods: mk.goods, foodPrice: mk.foodPrice }])) });
+			// whole provinces to a worker (a town's value needs its province's food), the biggest first to the least loaded
+			const byProvince = new Map();
+			for (const [site, types] of jobs) { const p = plan.provinceOf(site.loc.id); (byProvince.get(p) || byProvince.set(p, []).get(p)).push([site.loc.id, types]); }
+			const parts = pool.map(() => []);
+			for (const group of [...byProvince.values()].sort((a, b) => b.length - a.length)) parts.reduce((a, b) => (b.length < a.length ? b : a)).push(...group);
+			const replies = await Promise.all(pool.map((w, i) => w.run({ snap, jobs: parts[i] })));
+			for (const r of replies) {
+				for (const [id, types] of r.worth) { const site = siteOf.get(id); worth.set(site, new Set(types)); rankChanged.delete(site); }
+				for (const o of r.options) { o.site = siteOf.get(o.siteId); options.push(o); }
+			}
+			// the order of the one-thread run (by location), so ties fall the same way
+			options.sort((a, b) => siteIndex.get(a.site) - siteIndex.get(b.site));
+		} else for (const [site, types] of jobs) {
+			const only = types ? new Set(types) : null;
+			const found = plan.buildingOptions(ctx, site, { staffing: 'promotion', types: only ? (k => only.has(k)) : undefined });
+			if (!only) { worth.set(site, new Set(found.filter(o => o.gain > 0).map(o => o.type))); rankChanged.delete(site); }
 			for (const o of found) if (o.gain > 0) options.push(plan.withFlows(ctx, { ...o, worth: o.gain, cost2: o.cost }));
 			// an urbanisation is valued with the buildings it unlocks; only the rise itself joins the market plan
 			const u = plan.urbanOption(ctx, site, cache);
@@ -250,14 +291,15 @@ function run(variant, label, invest = true) {
 }
 
 // ---- runs and report: several runs go to worker threads, one each (--serial runs them one after another)
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 const variants = [['baseline', parseMods(all('--mod').join(','))]];
 if (args.includes('--idle')) variants.push(['no investment', parseMods(all('--mod').join(',')), false]);
 for (const v of after('--compare')) variants.push([v, [...parseMods(all('--mod').join(',')), ...parseMods(v)]]);
 const mostBuilt = r => Object.entries(r.book.types).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([k, n]) => `${nm(k)} ${n}`).join(', ');
 const summary = r => ({ label: r.label, years: r.years, book: { crownTotal: r.book.crownTotal, netTotal: r.book.netTotal, invested: r.book.invested, types: r.book.types, built: r.book.built } });
-const runOne = ([label, v, invest]) => summary(run(v, label, invest !== false));
-if (!isMainThread) parentPort.postMessage(runOne(variants[workerData.i]));
+// runs side by side share the planner threads
+opt.runs = variants.length > 1 && !args.includes('--serial') ? variants.filter(v => v[2] !== false).length : 1;
+const runOne = async ([label, v, invest]) => summary(await run(v, label, invest !== false));
+if (!isMainThread) runOne(variants[workerData.i]).then(r => parentPort.postMessage(r));
 else report();
 
 async function report() {
@@ -266,7 +308,7 @@ async function report() {
 	const go = (x, i) => (parallel ? new Promise((res, rej) => {
 		const w = new Worker(__filename, { argv: process.argv.slice(2), workerData: { i } });
 		w.on('message', res); w.on('error', rej);
-	}) : Promise.resolve(runOne(x)));
+	}) : runOne(x));
 	const runs = [];
 	for (const p of variants.map((x, i) => (parallel ? go(x, i) : null))) runs.push(p);
 	for (let i = 0; i < variants.length; i++) {

@@ -25,14 +25,18 @@ function context(scn, given = {}) {
 		advances: new Set(scn.country.advances || []), inflation: scn.country.inflation || 0, capital: scn.capital,
 		age: AGES[Math.max(1, Math.min(6, scn.country.age || 1)) - 1],
 		siteOf: new Map(state.sites.map(s => [s.loc.id, s])),
-		base: new Map(),
 	};
-	// each location's settled numbers (control at its maximum)
-	for (const site of state.sites) {
-		const L = clone(site.L);
-		const r = settle(ctx, site, L, site.obs);
-		ctx.base.set(site, { r, L, crown: r.tax.crown, upkeep: r.upkeep, manpower: r.manpower.monthly });
-	}
+	// each location's settled numbers (control at its maximum), worked out the first time they are asked for (a worker
+	// pricing a share of the locations settles only those and their province's)
+	const base = new Map();
+	ctx.base = { get(site) {
+		let b = base.get(site);
+		if (!b) {
+			const L = clone(site.L), r = settle(ctx, site, L, site.obs);
+			base.set(site, b = { r, L, crown: r.tax.crown, upkeep: r.upkeep, manpower: r.manpower.monthly });
+		}
+		return b;
+	} };
 	return ctx;
 }
 
