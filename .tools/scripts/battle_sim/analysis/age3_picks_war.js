@@ -1,5 +1,5 @@
 // node .tools/scripts/battle_sim/analysis/age3_picks_war.js [wars, default 200] [battles, default 1000] [armies, default 6]
-//      [--age 3 --cat hc] [--reinf-eff-gold-only] [--societal]
+//      [--age 3 --cat hc] [--reinf-eff-gold-only] [--societal] [--adjust "Pick.key=delta,..."]
 // Quality vs Quantity vs Leadership (each after Standing Forces), at the army size of the 1547 Spain save: 6 armies of 30
 // heavy cavalry a side (Spain: 8 armies, 182 Lanzas). Does a pick win early and lose long wars, or the other way round?
 // Each side brings 2 armies and feeds the rest in as its reserve runs empty (arrivalDay 'needed', 1 day's march), so every
@@ -60,6 +60,13 @@ const PICKS = process.argv.includes('--societal')
 	? [['Quality value', { tactics: 0.1, initiativeMod: 0.25, maint: -0.10 }], ['Quantity value', { initiativeMod: -0.25, maint: 0.20 }]]
 		.map(([name, m]) => ({ name, mods: add(branch(2, 'Standing Forces'), m) }))
 	: ['Quality', 'Quantity', 'Leadership'].map(p => ({ name: p, mods: add(branch(2, 'Standing Forces'), branch(3, p)) }));
+// --adjust "Leadership.correctBox=-0.2,Leadership.expGain=-0.25": add to a pick's modifiers (to try balance changes)
+for (const kv of (argOf('--adjust') || '').split(',').filter(Boolean)) {
+	const [, pick, key, v] = /^([A-Za-z ]+?)\.([A-Za-z.]+)=(-?[\d.]+)$/.exec(kv.trim()) || [];
+	const p = PICKS.find(x => x.name === pick);
+	if (!p) throw new Error('bad --adjust ' + kv);
+	p.mods[key] = (p.mods[key] || 0) + +v;
+}
 const upkeep = m => UPKEEP_PRICE * S.AGE[CAT][AGE - 1][1] * 1000 * (1 + (m.maintCost || 0)) / (1 + BASE_MAINT + (m.maint || 0)); // men a month a regiment
 const BASE_INCOME = K * 30 * upkeep({}) / 0.75;
 const income = m => BASE_INCOME * (1 + (m.manpower || 0));

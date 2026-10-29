@@ -691,6 +691,21 @@ Equal manpower is about **upkeep and reinforcement**, not the one-time recruitme
 - **Drilled Leadership wins every first battle in both eras.** With cavalry it ends roughly level with Quality (−6) and loses the long war to Quantity (+25). With infantry it stays far ahead of Quality (+38) and is close to Quantity (+10).
 - **Undrilled Leadership** is about level with Quality in manpower and loses to Quantity.
 
+**Balance tries for Leadership at age V** (`age3_picks_war.js --adjust "Pick.key=delta"`, 150 wars, Spain's baseline). Gap after 48 months, drilled sides (positive = the first pick has more manpower left):
+
+| Change | Age III: Quality vs L | Age III: Quantity vs L | Age V: Quality vs L | Age V: Quantity vs L |
+|---|---|---|---|---|
+| Current Leadership | −6 | +25 | −38 | +10 |
+| Aides-de-Camp +30% → +10% / removed | −6 / −6 | +25 / +25 | −38 / −37 | +10 / +10 |
+| Drill Sergeants decay −2% → −1% | +1 | +37 | −30 | +17 |
+| Drill Sergeants decay bonus removed | +12 | +46 | −15 | +31 |
+| Drill Sergeants gain +0.75 → +0.5 | −4 | +28 | −35 | +12 |
+| Quantity: −10% heavy infantry maintenance cost (infantry only, so age III unchanged) | −6 | +25 | −38 | +11 (75/25 budgets: +2 → +8) |
+
+- Leadership's age V strength is drilled experience: 100 against 60 means −50% damage taken against −30%. Infantry wars have fewer battles (about 5 in 4 years against 9 with cavalry), so the others take longer to catch up through battle experience.
+- No Leadership stat separates the two eras: each experience trim weakens it by a similar amount at both ages, and Correct Section Chance hardly matters once everyone has the vanilla +40%.
+- An infantry-only stat on Quantity or Quality moves age V and leaves the age III cavalry meta alone.
+
 **The vanilla societal value, Quality vs Quantity** (`age3_picks_war.js --societal`; each end of the slider at full, otherwise identical sides with Spain's baseline):
 - **Quality end:** +0.1 military tactics, +25% initiative, −10% maintenance efficiency (and +2% morale recovery, not modelled).
 - **Quantity end:** +20% maintenance efficiency, −25% initiative (food −10% and levy size +50% are not modelled).
