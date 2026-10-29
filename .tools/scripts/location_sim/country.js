@@ -23,11 +23,12 @@
 	// a location of the country scenario as a single-location scenario
 	const locationScenario = (scn, loc) => ({ location: loc, country: scn.country, market: (scn.markets || {})[loc.market] || {}, observed: (scn.observed || {})[loc.id] || {} });
 
-	// own supply and demand of one evaluated location, per good (units a month)
+	// own supply and demand of one evaluated location, per good (units a month; demand_food.md 2): goods put on the market
+	// carry no market-access factor, goods bought do
 	function flows(r) {
 		const s = {}, d = {};
 		const add = (o, g, x) => { if (g && x) o[g] = (o[g] || 0) + x; };
-		if (r.rgo.good) add(s, r.rgo.good, r.rgo.output * r.L.marketAccess);
+		if (r.rgo.good) add(s, r.rgo.good, r.rgo.output);
 		const rowOf = new Map(r.buildings.rows.map(x => [x.idx, x]));
 		for (const [idx, b] of r.L.buildings.entries()) {
 			const t = DB().buildings[b.type], pm = E.methodOf(b), row = rowOf.get(idx);
@@ -35,7 +36,7 @@
 			if (pm.out) {
 				add(s, pm.out, row.output);
 				for (const [g, n] of Object.entries(pm.in || {})) add(d, g, b.level * r.L.marketAccess * row.employment * n);
-			} else for (const [g, n] of Object.entries(pm.in || {})) add(d, g, b.level * (t.alwaysDemand ? 1 : row.employment) * n);
+			} else for (const [g, n] of Object.entries(pm.in || {})) add(d, g, b.level * r.L.marketAccess * (t.alwaysDemand ? 1 : row.employment) * n);
 		}
 		return { s, d };
 	}
@@ -104,6 +105,7 @@
 		}
 		for (const mk of Object.values(markets)) {
 			const o = own[mk.id] || { s: {}, d: {} };
+			mk.pop0 = sites.filter(site => String(site.loc.market) === String(mk.id)).reduce((a, site) => a + site.L.population, 0);
 			for (const [g, x] of Object.entries(mk.src.goods || {})) {
 				const sup = x.supplied || {}, dem = x.demanded || {};
 				const prod = sup.Production ?? sumObj(x.production);
@@ -158,9 +160,12 @@
 		const none = { Tin: 0, Tout: 0, BTin: 0, BTout: 0 };
 		for (const mk of Object.values(state.markets)) {
 			const o = own[mk.id] || { s: {}, d: {} };
+			// pop demand scales with the population of the country's locations in the market (foreign members held)
+			const pop = state.sites.filter(site => String(site.loc.market) === String(mk.id)).reduce((a, site) => a + site.L.population, 0);
+			const popScale = mk.pop0 > 0 ? pop / mk.pop0 : 1;
 			for (const [g, x] of Object.entries(mk.goods)) {
 				if (!DB().goods[g]) continue;
-				const S = Math.max(0, x.otherS + (o.s[g] || 0)), D = Math.max(0, x.otherD + x.popBase * elasticity(g, x.price) + (o.d[g] || 0));
+				const S = Math.max(0, x.otherS + (o.s[g] || 0)), D = Math.max(0, x.otherD + x.popBase * popScale * elasticity(g, x.price) + (o.d[g] || 0));
 				const { sEff, dEff } = effective(S, D, state.mode === 'closed' ? none : x.trade, v);
 				x.supply = S; x.demand = D; x.target = E.targetPrice(g, sEff, dEff, age, mk.foodPrice ?? 0.05);
 				x.price = E.priceStep(x.price, x.target);
