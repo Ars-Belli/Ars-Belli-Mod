@@ -48,6 +48,8 @@ function parse(text) {
 }
 
 // A database folder from vanilla then the mod; a mod file with the same name replaces the vanilla file.
+// REPLACE:/INJECT: entries apply after every plain definition, whatever the file order: a mod file such as
+// abm_country.txt sorts before vanilla's country.txt and must still override it.
 function loadDb(rel) {
 	const files = new Map();
 	for (const root of [GAME, MOD]) {
@@ -55,14 +57,17 @@ function loadDb(rel) {
 		if (!fs.existsSync(dir)) continue;
 		for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.txt')).sort()) files.set(f.toLowerCase(), path.join(dir, f));
 	}
-	const db = {};
+	const db = {}, overrides = [];
 	for (const [, file] of [...files.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
 		for (const [k, v] of parse(fs.readFileSync(file, 'utf8'))) {
 			if (!Array.isArray(v)) continue;
-			const m = k.match(/^(REPLACE|INJECT|TRY_REPLACE|REPLACE_OR_CREATE|INJECT_OR_CREATE):(.+)$/);
-			if (m && m[1].startsWith('INJECT') && db[m[2]]) db[m[2]] = db[m[2]].concat(v);
-			else db[m ? m[2] : k] = v;
+			const m = k.match(/^(REPLACE|INJECT|TRY_REPLACE|TRY_INJECT|REPLACE_OR_CREATE|INJECT_OR_CREATE):(.+)$/);
+			if (m) overrides.push([m[1], m[2], v]); else db[k] = v;
 		}
+	}
+	for (const [op, k, v] of overrides) {
+		if (op.startsWith('TRY_') && !db[k]) continue;
+		db[k] = op.includes('INJECT') && db[k] ? db[k].concat(v) : v;
 	}
 	return db;
 }
