@@ -140,20 +140,29 @@ for (const [cid, es] of edgesOf) {
 const Gs = [...Gof.values()].sort((a, b) => a - b), Gdefault = Gs.length ? Gs[Gs.length >> 1] : 0;
 
 // ---- compare with the map's guess and write the fixes
-const fixes = fs.existsSync(OUT) ? JSON.parse(fs.readFileSync(OUT, 'utf8')) : { notes: '', river: {} };
-let tp = 0, fp = 0, fn = 0, tn = 0, conflicts = 0;
+// Labels from earlier saves are kept; a pair two saves disagree on goes to `conflicts` and back to the image guess.
+const fixes = fs.existsSync(OUT) ? JSON.parse(fs.readFileSync(OUT, 'utf8')) : { notes: '', saves: [], river: {}, conflicts: [] };
+fixes.saves ??= []; fixes.conflicts ??= [];
+const conflictSet = new Set(fixes.conflicts);
+let tp = 0, fp = 0, fn = 0, tn = 0, inSave = 0, added = 0, agreed = 0, disagreed = 0;
 const changes = [];
 for (const [k, v] of verdict) {
-	if (v.conflict) { conflicts++; continue; }
-	const [a, b] = k.split(',').map(Number), m = mapRiver(a, b);
+	if (v.conflict) { inSave++; continue; }
+	const [a, b] = k.split(',').map(Number), m = mapRiver(a, b), name = `${key(a)},${key(b)}`;
 	if (v.river && m) tp++; else if (v.river && !m) fn++; else if (!v.river && m) fp++; else tn++;
-	if (v.river !== m) changes.push([a, b, v.river, v.why]);
-	fixes.river[`${key(a)},${key(b)}`] = v.river ? 1 : 0;
+	if (conflictSet.has(name)) continue;
+	const prev = fixes.river[name];
+	if (prev === undefined) { added++; fixes.river[name] = v.river ? 1 : 0; if (v.river !== m) changes.push([a, b, v.river, v.why]); }
+	else if (!!prev === v.river) agreed++;
+	else { disagreed++; delete fixes.river[name]; conflictSet.add(name); changes.push([a, b, null, `${v.why}, but an earlier save said ${prev ? 'river' : 'no river'}`]); }
 }
-fixes.notes = 'River links the game has (1) or does not have (0), from the proximity trees of the saves read by river_calibrate.js; build_map.js applies them over its rivers.png guess. Last: ' + path.basename(file);
+fixes.conflicts = [...conflictSet].sort();
+if (!fixes.saves.includes(path.basename(file))) fixes.saves.push(path.basename(file));
+fixes.notes = 'River links the game has (1) or does not have (0), from the proximity trees of the saves read by river_calibrate.js; build_map.js applies them over its rivers.png guess. Pairs the saves disagree on are in conflicts and use the guess.';
 fs.writeFileSync(OUT, JSON.stringify(fixes, null, '\t'));
-console.log(`G: ${Gof.size} countries fitted, median ${Gdefault.toFixed(3)}; tree steps priced ${priced}, unclear ${unclear}; refuted map rivers ${refuted}; conflicting labels ${conflicts}`);
-console.log(`map guess vs the game on ${tp + fp + fn + tn} labelled pairs: rivers right ${tp}, false ${fp}, missed ${fn}; no-river right ${tn}`);
+console.log(`G: ${Gof.size} countries fitted, median ${Gdefault.toFixed(3)}; tree steps priced ${priced}, unclear ${unclear}; refuted map rivers ${refuted}; conflicting within this save ${inSave}`);
+console.log(`map.json (image guess + earlier fixes) vs this save on ${tp + fp + fn + tn} pairs: rivers right ${tp}, false ${fp}, missed ${fn}; no-river right ${tn}`);
+console.log(`merged: ${added} new pairs, ${agreed} agree with earlier saves, ${disagreed} disagree (now conflicts, ${fixes.conflicts.length} in all)`);
 const n = +flag('--report', 30);
-for (const [a, b, r, why] of changes.slice(0, n)) console.log(`  ${r ? 'add   ' : 'remove'} ${key(a)}-${key(b)}: ${why}`);
-console.log(`wrote ${path.relative(process.cwd(), OUT)} (${Object.keys(fixes.river).length} pairs); rerun build_map.js`);
+for (const [a, b, r, why] of changes.slice(0, n)) console.log(`  ${r === null ? 'drop  ' : r ? 'add   ' : 'remove'} ${key(a)}-${key(b)}: ${why}`);
+console.log(`wrote ${path.relative(process.cwd(), OUT)} (${Object.keys(fixes.river).length} pairs from ${fixes.saves.length} saves); rerun build_map.js`);

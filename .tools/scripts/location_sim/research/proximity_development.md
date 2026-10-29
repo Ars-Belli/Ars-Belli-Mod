@@ -266,6 +266,16 @@ countries with/without hills impact), plateau/sparse -> mountains 0.9162 (= coun
    stricter variant does worse (touch: 90.7%), so the game's links are not an image rule (river map mode: links follow
    the flow between location centres and alternate banks where the river is a border). With the labels Spain is
    522/522 within 1 point, median 0.001 at the stored G.
+   **Where the links live**: no text, CSV or PNG-metadata list exists (adjacencies.csv holds only sea straits and canals;
+   `gfx/lines/river.lines` is only the style of the river map mode's flow arrows; rivers.png's tIME chunk is 2026-08, so
+   patches redraw the bitmap). The links are built by the map loader from rivers.png. Players describe them as directed
+   chains drawn per connection (a->b->c, parallel chains where a river splits). The river map mode around Ussel fits a
+   **bank rule** (untested): along a river that forms a border, each bank links downstream to the next location on the
+   same bank (La Tour d'Auvergne -> Mauriac east, Ussel -> Ventadour west) and the two banks link across (La Tour
+   d'Auvergne -> Ussel, Ventadour -> Mauriac), never diagonally (no Ussel-Mauriac). Upstream and downstream both cost 12
+   (country base values; nothing modifies them), so direction does not matter for proximity.
+   Labels merged from three 1.4.4 saves (June 1547, Oct 1527, a 1342 campaign): 11,631 pairs; the 1547/1527 saves agree on
+   99.7% of shared pairs, the 1342 save on 97%; the 79 pairs saves disagree on fall back to the image rule.
 3. The full list of dirty-flag triggers (FUN_1426f0d10, FUN_142d6e490/eaa0, FUN_143166bb0/7550, FUN_143ab7e50 not
    read) and the exact tick of FUN_1425bfcd0 / FUN_14279f400 (daily or monthly).
 4. Frozen-water branch (location+0x13d0 == 1, cost F) and `Gl` were read in code only (Spain has neither).
