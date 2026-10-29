@@ -2,8 +2,9 @@
 // build or upgrade, and every rank upgrade, priced in gold and scored by what it adds to the country's crown tax a month
 // minus the upkeep it adds, once control has settled at its maximum (today's prices; a new level hires idle pops of its
 // type only, so where none are idle a production building adds nothing until pops grow).
-//   node .tools/scripts/location_sim/investments.js <country scenario.json> [--top 30] [--kinds buildings,roads,ranks]
+//   node .tools/scripts/location_sim/investments.js <country scenario.json> [--top 100] [--kinds buildings,roads,ranks]
 //        [--location key]   only that location's buildings and rank (roads stay country-wide)
+//        [--per-kind 10]    also the best of each kind      [--csv file.csv]   every option that pays back, ranked
 // Prices: a building costs build_price_age_of_<age> (expensive ones expensive_build_price_age_of_<age>) x (1 + per-level
 // increase x its levels) x (1 - construction efficiency) x (1 + inflation); a road its price per unit distance x the segment
 // length (fitted on 838 roads under construction: centre distance x 0.45 flatland ... 0.67 mountains, about +-12%).
@@ -96,15 +97,24 @@ function trig(block, L, any = false) {
 	return r.includes(0) ? 0 : r.includes(null) ? null : 1;
 }
 
-// ---- building price in gold
+// ---- prices in gold: base x (1 + inflation) x (1 + market price impact) x (1 + cost modifiers), each a factor (the game's
+// "Upgrade to Town" tooltip: 500 x 1.018 x 1.0361 x 0.9 = 474 in Toledo). The market price impact is the amount-weighted
+// mean of the construction goods' price against their base price in the location's market (Lisbon city: +20.89%).
+const marketImpact = (demandKey, L) => {
+	const d = demandKey && DB.demands[demandKey];
+	if (!d || !d.goods) return 0;
+	let num = 0, den = 0;
+	for (const [g, a] of Object.entries(d.goods)) { const b = (DB.goods[g] || {}).price; if (!b) continue; num += a * ((L.prices[g] ?? b) / b - 1); den += a; }
+	return den ? num / den : 0;
+};
 const SOURCES = new Set(['local_governor', 'naval_governor', 'kings_manor', 'lieutenancy', 'itinerant_court_seat']); // governors.js
-function buildingPrice(t, level) {
+function buildingPrice(t, level, L) {
 	if (t.price) return null; // estate, religious and special prices
 	const p = DB.values[(t.expensive ? 'expensive_' : '') + 'build_price_age_of_' + AGE];
 	if (p === undefined) return null;
 	const eff = mods('global_build_buildings_efficiency') + (t.cat === 'defense_category' ? mods('global_fort_build_buildings_efficiency') : 0)
 		+ (t.cat === 'naval_category' ? mods('global_port_build_buildings_efficiency') : 0) + (!(t.ranks || {}).rural_settlement ? mods('global_urban_build_buildings_efficiency') : 0);
-	return p * (1 + (t.inc || 0) * level) * Math.max(0.1, 1 - eff) * (1 + inflation);
+	return p * (1 + (t.inc || 0) * level) * (1 + inflation) * (1 + marketImpact(t.demand, L)) * Math.max(0.1, 1 - eff);
 }
 
 const rows = [];
@@ -121,7 +131,7 @@ if (kinds.has('buildings')) for (const site of state.sites) {
 		if (pot === 0 || allow === 0) continue;
 		const cap = E.maxLevel(type, L0, b0.r.M), capV = typeof cap === 'number' ? cap : cap.value;
 		if (!(level < capV)) continue;
-		const cost = buildingPrice(t, level);
+		const cost = buildingPrice(t, level, L0);
 		if (!cost) continue;
 		// staff the new level from idle pops of its type
 		const size = E.employmentSize(type, L0), idle = t.pop ? Math.max(0, (J.unemployed || {})[t.pop] || 0) : 0;
@@ -156,7 +166,7 @@ if (kinds.has('ranks')) for (const site of state.sites) {
 	if (rank === 'megalopolis' && !(L0.capital && L0.marketCenter)) continue;
 	const L = clone(L0); L.rank = rank;
 	const r = settle(site, L, site.obs);
-	const cost = rd.upgradePrice * (1 + mods(rank + '_upgrade_cost_modifier')) * (1 + inflation);
+	const cost = rd.upgradePrice * (1 + inflation) * (1 + marketImpact(rd.demand, L0)) * (1 + mods(rank + '_upgrade_cost_modifier'));
 	rows.push({ kind: 'rank', what: `${nm(L0.rank)} -> ${nm(rank)}`, where: site.loc.key, cost, gain: net(r) - net(b0.r), crown: r.tax.crown - b0.crown, upkeep: r.upkeep - b0.upkeep, manpower: r.manpower.monthly - b0.manpower, note: '' });
 }
 
@@ -209,7 +219,9 @@ if (kinds.has('roads')) {
 		const f = x => TERRAIN[(DB.locations[x - 1] || [])[1]] ?? 0.5;
 		return Math.hypot(dx, dy) * (f(a) + f(b)) / 2;
 	};
-	const roadPrice = best[1].price * (1 + mods('build_' + best[0] + '_cost_modifier')) * (1 + inflation);
+	// a road is priced in its starting location's market (its construction goods: lumber, masonry, sand...)
+	const siteOf = new Map(state.sites.map(s => [s.loc.id, s]));
+	const roadPrice = a => best[1].price * (1 + inflation) * (1 + marketImpact(best[0] && 'build_' + best[0] + '_demand', siteOf.get(a).L)) * (1 + mods('build_' + best[0] + '_cost_modifier'));
 	for (const a of own) for (const [b] of (MAP.locations[a] || {}).nb || []) {
 		if (b <= a || !own.has(b)) continue;
 		const cur = state.roadIndex.get(a + ',' + b);
@@ -217,14 +229,14 @@ if (kinds.has('roads')) {
 		state.roadIndex.set(a + ',' + b, best[0]); state.roadIndex.set(b + ',' + a, best[0]);
 		const [crown, mp] = score(search());
 		if (cur) { state.roadIndex.set(a + ',' + b, cur); state.roadIndex.set(b + ',' + a, cur); } else { state.roadIndex.delete(a + ',' + b); state.roadIndex.delete(b + ',' + a); }
-		const cost = roadPrice * length(a, b);
+		const cost = roadPrice(a) * length(a, b);
 		const roadName = k => (DB.names[k] || k.replace(/_/g, ' ')).replace(/^./, c => c.toUpperCase());
 		rows.push({ kind: 'road', what: `${roadName(best[0])}${cur ? ` (now ${roadName(cur).toLowerCase()})` : ''}`, where: `${nm(DB.locations[a - 1][0])} – ${nm(DB.locations[b - 1][0])}`, cost, gain: crown - crown0, crown: crown - crown0, upkeep: 0, manpower: mp - mp0, note: 'cost +-12%' });
 	}
 }
 
 // ---- report
-const top = +flag('--top', 30);
+const top = +flag('--top', 100);
 const ranked = rows.filter(r => r.gain > 0.01).sort((a, b) => b.gain / b.cost - a.gain / a.cost);
 console.log(`${scn.name}: ${rows.length} options checked (${((Date.now() - t0) / 1000).toFixed(0)} s); age ${AGE} prices, inflation ${num(100 * inflation, 1)}%, construction efficiency ${num(100 * mods('global_build_buildings_efficiency'), 1)}%`);
 console.log('Gains once control has settled, at today\'s prices; net = crown tax minus the upkeep it adds; payback = cost / net.\n');
@@ -240,4 +252,13 @@ Best ${k}s:`); list.slice(0, tops).forEach((r, i) => console.log(row(r, i))); }
 for (const k of ['building', 'road', 'rank']) {
 	const of = ranked.filter(r => r.kind === k);
 	if (of.length) console.log(`\n${k}s: ${of.length} pay back at all; best ${of[0].what} in ${nm(of[0].where)} (${num(of[0].cost / of[0].gain / 12, 1)} years)`);
+}
+
+// --csv: every option that pays back, best first (for a spreadsheet)
+if (flag('--csv')) {
+	const q = x => `"${String(x).replace(/"/g, '""')}"`;
+	const lines = ['rank,kind,investment,where,cost,crown_tax_month,upkeep_month,net_month,payback_years,manpower_month,note'];
+	ranked.forEach((r, i) => lines.push([i + 1, r.kind, q(r.what), q(nm(r.where)), r.cost.toFixed(1), r.crown.toFixed(3), r.upkeep.toFixed(3), r.gain.toFixed(3), (r.cost / r.gain / 12).toFixed(2), (r.manpower * 1000).toFixed(1), q((r.note || '').trim())].join(',')));
+	fs.writeFileSync(flag('--csv'), lines.join('\n') + '\n');
+	console.log(`\nwrote ${flag('--csv')} (${ranked.length} options)`);
 }
