@@ -166,7 +166,23 @@ R     = (k × (S + 1) + (D + 1)) ÷ (k × (D + 1) + (S + 1)),   k = age price st
 R     = clamp(R, 0.1, age max price 3 / 3 / 4 / 5 / 5 / 5) (+ tariff impact after the clamp)
 target = default price × R;   price += 5% × (target − price) each month
 ```
-Pop demand, building input rationing and food are still being researched *(open)*.
+**Building and RGO goods** *(save: `demand_food.md` 2)*: a building demands `level × input × staffing × market access` and supplies `level × output × staffing × input fill` (no market access on what it sells into the market); an RGO supplies `workers × (1 + output modifiers)`; unemployed peasants add `base_production` × their number (clay, sand, stone, lumber, wool). A building runs one production method per slot (e.g. the fine cloth guild's alum slot, the gunsmith's ammunition slot), and a method short of one input runs at that fill fraction for all its inputs.
+
+**Pop demand** *(code; fits markets within ~5%)*: per 1,000 pops `(all + type + upper) × type and upper multipliers`, then religion, culture, location (winter, climate, region), literacy, country, development `× (1 + 0.05 × development)`, estate wealth, price elasticity `clamp(1 − 0.4 × (price/default − 1), 0.35, 1)`, starving ×2.5, food deficit ×1.5; gated by the estate's wealth reaching the good's threshold and by the age's known goods. Who gets scarce goods is open.
+
+## 8b. Food
+
+*(code `0x14333cf60`, `0x14333e040`, `0x1432365b0`, `0x1430f3300`; save: provinces end where these rules say in 80% of 3,367 cases)*
+
+- **Location production**: `(building food + local_monthly_food + 0.8 × unemployed peasants and laborers (subsistence) + RGO workers × (1 + raw output) × the good's food value) × (1 + local and global monthly_food_modifier [+ the RGO good's output modifier]) × (1 + local_food_production_mult)`. Towns −10%, cities −20%, megalopolises −30%. Food values: wheat 8, fish 5, olives 4.
+- **Consumption**: pops × `pop_food_consumption` (nobles 20, clergy and soldiers 5, burghers 4, laborers, peasants and slaves 1, tribesmen 0) × (1 + consumption modifiers, at least 0.05).
+- **Province store**: capacity from `local_food_capacity` (50 a location, town 250, city 500, granary 500 a level) × (1 + capacity modifier). Each month the store takes the balance minus decay: `stock × (local + global food_decay (0.005)) ÷ (1 + preservation)`; granaries preserve 5% a level.
+- **Market exchange**: a province above 75% of its capacity sells the surplus to the market; a province below 75% with a deficit asks to be refilled. The market then refills buyers to 75%, and tops up the sellers to full (or by 3 months of their deficit) from its food above 25% of its own capacity. Shortages are rationed pro rata.
+- **Starvation**: an empty store, or one that cannot cover a month of deficit with nothing bought, applies `province_starving` (−5% growth a year).
+- **Food price**: heads 5% a month toward `0.05 × R`, floor 0.01. R = 5 ÷ months of stock left when food flows out, else `0.1 + 0.9 × (1 − store/capacity)`. Above 0.05 food goods get ×1.25 demand and locations get `expensive_food_in_location`.
+- **Growth**: the store gives the food terms in Section 2 (surplus over consumption, months of stock).
+
+Who pays for traded food and the 1.33 pop-income scale are open.
 
 ---
 
@@ -242,7 +258,8 @@ Files in `.tools/scripts/location_sim/`:
   - Everything else in the market at month 0 (foreign members, construction, armies, roads) is calibrated as the difference from the save and held.
   - Pop demand is kept apart and follows the decoded price elasticity: `clamp(1 − 0.4 × (price/default − 1), 0.35, 1)`.
   - Trade with other markets: `fixed` holds the save's imports and exports; `closed` removes them; `off` freezes prices.
-- **Limits**: pop demand does not grow with population yet, food is not simulated, and proximity is taken from the scenario (Local Governors need the proximity research). Thin goods can swing hard: with everything else fixed, a good drifts to the target its saved supply and demand imply, and buildings the model gets wrong lay off workers.
+- **Food** (`--food on`, the default; Section 8b): every province keeps its store, sells its surplus to the market and buys back to 75% when short; the market moves its food price; the stores drive growth and starvation. With `--markets off` provinces cannot share food, so deficit provinces (Sevilla's) slowly starve. `--food off` keeps the scenario's food terms for a quick run.
+- **Limits**: pop demand does not grow with population yet, and proximity is taken from the scenario (Local Governors need the proximity research). Thin goods can swing hard: with everything else fixed, a good drifts to the target its saved supply and demand imply.
 
 ---
 

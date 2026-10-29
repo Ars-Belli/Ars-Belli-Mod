@@ -528,6 +528,35 @@
 		return { enfranchisement: E, wealth, base: wealth * L.control, efficiency: eff, estates, crown };
 	}
 
+	// Food of a location (demand_food.md 3.6/3.7, 0x1430f3300 / 0x1430f24a0): production and pop consumption a month.
+	// The province adds the locations up, keeps the store and trades with the market (country.js).
+	function food(L, M, J, rg, bld) {
+		const goods = DB.goods;
+		const subsist = Math.max(0, (J.unemployed.laborers || 0) + (J.unemployed.peasants || 0));
+		const rgoGood = goods[L.rawMaterial];
+		const rgoFood = rgoGood && rgoGood.food ? J.rgoWorkers * Math.max(0, 1 + M.get('local_raw_material_output')) * rgoGood.food : 0;
+		let bldFood = 0;
+		for (const row of bld.rows) {
+			const b = L.buildings[row.idx];
+			if (!b || row.profit === undefined) continue;
+			for (const [i, [, pm]] of methodsOf(b).entries())
+				if (pm.out && goods[pm.out] && goods[pm.out].food) bldFood += b.level * row.employment * ((b.inputFill || [])[i] ?? 1) * pm.n * goods[pm.out].food;
+		}
+		const base = bldFood + M.get('local_monthly_food') + def('NLocation', 'SUBSISTENCE_AGRICULTURE', 0.8) * subsist + rgoFood;
+		const productivity = 1 + M.get('local_monthly_food_modifier') + (rgoGood && rgoGood.food ? M.get('local_' + L.rawMaterial + '_output_modifier') : 0);
+		const production = Math.max(0, base * productivity * (1 + M.get('local_food_production_mult') + M.get('hostile_food_multiplier')));
+		let consumption = 0, baseConsumption = 0;
+		for (const p of L.pops) {
+			const per = (DB.pops[p.type] || {}).food || 0;
+			baseConsumption += p.size * per;
+			consumption += p.size * per * Math.max(0.05, 1 + M.loc(`local_${p.type}_food_consumption`) + M.cty(`global_${p.type}_food_consumption`) + M.get('local_pop_food_consumption'));
+		}
+		// this location's part of its province's food capacity and preservation
+		const capacity = M.loc('local_food_capacity') * Math.max(0, 1 + M.get('local_food_capacity_modifier'));
+		return { subsist, rgoFood, bldFood, flat: M.get('local_monthly_food'), productivity, production, consumption, baseConsumption, balance: production - consumption,
+			capacity, preservation: M.loc('local_food_preservation_efficiency_modifier'), decay: M.loc('local_food_decay') };
+	}
+
 	// Control (0x1430ed2f0 max, 0x1430edf80 monthly change)
 	function control(L, M) {
 		const urban = L.rank !== 'rural_settlement';
@@ -556,6 +585,7 @@
 		r.upkeep = r.buildings.rows.filter(b => b.upkeep !== undefined && !b.foreign).reduce((a, b) => a + b.upkeep, 0);
 		r.tax = tax(L, M, C, r.wealth.total);
 		r.control = control(L, M);
+		r.food = food(L, M, J, r.rgo, r.buildings);
 		return r;
 	}
 
@@ -620,7 +650,7 @@
 	const priceStep = (p, target) => p + def('NMarket', 'MONTHLY_PRICE_CHANGE', 0.05) * (target - p);
 
 	const api = { setData, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
-		maxLevel, employmentSize, methodOf, methodsOf, isProducing, growth, military, levies, rgo, buildingEconomy, tax, control, evaluate, advance, project, targetPrice, priceStep,
+		maxLevel, employmentSize, methodOf, methodsOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, tax, control, evaluate, advance, project, targetPrice, priceStep,
 		MILITARY_CONTROL_FLOOR, get DB() { return DB; } };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.LocationSim = api;
 })(typeof self !== 'undefined' ? self : this);

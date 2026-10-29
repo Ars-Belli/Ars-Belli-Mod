@@ -254,7 +254,7 @@ function marketDetail(id) {
 	const goods = {};
 	for (const [g, v] of Object.entries(m.goods || {})) if (v && typeof v === 'object' && v.price !== undefined)
 		goods[g] = { price: +v.price, supplied: num1(v.supplied), production: num1(v.production_supplied), demanded: num1(v.demanded), stockpile: N(v.stockpile) ?? 0 };
-	return { center: N(m.center), members: list(m.members).map(Number), foodPrice: foodPriceOf(id), food: N(m.food), maxFood: N(m.max), goods };
+	return { center: N(m.center), members: list(m.members).map(Number), foodPrice: foodPriceOf(id), food: N(m.food), maxFood: N(m.max), foodTrade: N(m.trade) ?? 0, goods };
 }
 const write = scenario => {
 	const out = flag('--out');

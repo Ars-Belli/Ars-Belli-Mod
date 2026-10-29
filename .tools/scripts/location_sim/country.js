@@ -71,8 +71,30 @@
 		// income minus its net change
 		const obs = C.raw.observed || {};
 		const expense = (scn.options || {}).manpowerExpense ?? (obs.manpowerIncome !== undefined && obs.manpowerNet !== undefined ? obs.manpowerIncome - obs.manpowerNet : 0);
-		const state = { scn, C, mode, sites, markets, month: 0, manpowerPool: obs.manpower ?? 0, manpowerExpense: expense, history: [] };
+		// options.food: 'on' (default) simulates province stores and market food; 'off' keeps the growth food terms as given
+		const state = { scn, C, mode, food: (scn.options || {}).food !== 'off', sites, markets, month: 0, manpowerPool: obs.manpower ?? 0, manpowerExpense: expense, history: [] };
 		const first = evaluateAll(state, true);
+		// provinces (food stores): the save's province id, else the map's province of the location
+		const provinces = {};
+		for (const site of sites) {
+			const tpl = E.DB.locations[(site.loc.id || 0) - 1];
+			const pid = site.loc.province ?? (tpl ? 'p' + tpl[10] : 'p?');
+			const p = (provinces[pid] ??= { id: pid, sites: [], current: null, maxSave: null, market: site.loc.market });
+			p.sites.push(site);
+			const o = (site.scn.observed || {}).province || {};
+			if (p.current === null && o.food !== undefined) { p.current = o.food; p.maxSave = o.maxFood; }
+			if (site.loc.provinceCapital || site.L.capital) p.capitalSite = site;
+		}
+		for (const p of Object.values(provinces)) {
+			p.capitalSite ??= p.sites[0];
+			p.cap0 = p.sites.reduce((a, site) => a + first.results.get(site).food.capacity, 0);
+			if (p.current === null) p.current = 0.75 * (p.maxSave ?? p.cap0);
+		}
+		state.provinces = provinces;
+		for (const mk of Object.values(markets)) {
+			mk.food = mk.src.food ?? 0; mk.maxFood0 = mk.src.maxFood ?? 0; mk.foodTrade = mk.src.foodTrade ?? 0;
+			mk.ownCap0 = Object.values(provinces).filter(p => String(p.market) === String(mk.id)).reduce((a, p) => a + (p.maxSave ?? p.cap0), 0);
+		}
 		const own = {};
 		for (const site of sites) {
 			const f = flows(first.results.get(site));
@@ -108,11 +130,12 @@
 	}
 
 	function totals(state, results) {
-		const t = { population: 0, manpower: 0, sailors: 0, armyLevies: 0, navyLevies: 0, wealth: 0, taxBase: 0, crownTax: 0, upkeep: 0, births: 0, controlWeighted: 0 };
+		const t = { population: 0, manpower: 0, sailors: 0, armyLevies: 0, navyLevies: 0, wealth: 0, taxBase: 0, crownTax: 0, upkeep: 0, births: 0, controlWeighted: 0, foodProduction: 0, foodConsumption: 0 };
 		for (const [site, r] of results) {
 			t.population += site.L.population; t.manpower += r.manpower.monthly; t.sailors += r.sailors.monthly;
 			t.armyLevies += r.levies.army; t.navyLevies += r.levies.navy; t.wealth += r.wealth.total; t.taxBase += r.tax.base;
 			t.crownTax += r.tax.crown; t.upkeep += r.upkeep; t.births += r.growth.pool; t.controlWeighted += site.L.control * r.wealth.total;
+			t.foodProduction += r.food.production; t.foodConsumption += r.food.consumption;
 		}
 		const years = (E.DB.defines.NCountry || {}).MAX_MANPOWER_YEARS ?? 5;
 		t.maxManpower = t.manpower * years * 12 + state.C.mods.raw('max_manpower');
@@ -146,6 +169,78 @@
 		}
 	}
 
+	// Food (demand_food.md 3): each province applies its month (production - consumption - decay) to its store, sells what is
+	// above 75% of its capacity to the market or asks to be refilled to 75% when it runs a deficit; the market then refills
+	// buyers to 75% and tops its sellers back up (to full, or by 3 months of deficit) from its food above 25% of capacity, and
+	// moves its food price. With markets off, each province keeps its own store. Foreign members' food is not simulated.
+	function stepFood(state, results) {
+		const N = E.DB.defines.NMarket || {}, global = state.C.mods.raw('global_food_decay');
+		const reserveRatio = N.FOOD_PROVINCE_LOCAL_RESERVE_RATIO ?? 0.75;
+		const lists = {};
+		for (const p of Object.values(state.provinces)) {
+			const rs = p.sites.map(site => results.get(site));
+			const simCap = rs.reduce((a, r) => a + r.food.capacity, 0);
+			p.cap = p.maxSave !== null && p.cap0 > 0 ? p.maxSave * simCap / p.cap0 : simCap;
+			p.current = Math.min(Math.max(p.current, 0), p.cap);
+			p.base = rs.reduce((a, r) => a + r.food.baseConsumption, 0);
+			p.consumption = rs.reduce((a, r) => a + r.food.consumption, 0);
+			p.production = rs.reduce((a, r) => a + r.food.production, 0);
+			p.structural = p.production - p.consumption;
+			const pres = Math.max(0, rs.reduce((a, r) => a + r.food.preservation, 0));
+			const capR = results.get(p.capitalSite);
+			p.decay = Math.max(0, p.current) * ((capR ? capR.food.decay : 0) + global) / (1 + pres);
+			p.change = p.structural - p.decay;
+			p.current = Math.min(Math.max(p.current + p.change, 0), 2 * p.cap);
+			p.trade = 0;
+			if (state.mode === 'off' || !state.markets[p.market]) continue;
+			const mk = state.markets[p.market], l = (lists[p.market] ??= { buyers: [], sellers: [], produced: 0, added: 0 });
+			const reserve = reserveRatio * p.cap;
+			if (p.current > reserve) { const sold = p.current - reserve; mk.food += sold; l.produced += sold; p.trade = -sold; p.current = reserve; l.sellers.push(p); }
+			else if (p.structural < 0 && p.current < reserve) l.buyers.push(p);
+		}
+		for (const mk of Object.values(state.markets)) {
+			mk.maxFood = mk.maxFood0 + Object.values(state.provinces).filter(p => String(p.market) === String(mk.id)).reduce((a, p) => a + p.cap, 0) - mk.ownCap0;
+			const l = lists[mk.id] || { buyers: [], sellers: [], produced: 0, added: 0 };
+			if (state.mode !== 'off') {
+				const pass = (list, needOf, avail) => {
+					const w = list.map(p => [p, Math.max(0, needOf(p))]).filter(([, x]) => x > 0);
+					const total = w.reduce((a, [, x]) => a + x, 0);
+					const scale = total > 0 && avail < total ? Math.max(0, avail) / total : 1;
+					for (const [p, x] of w) { const t = Math.min(x * scale, mk.food); mk.food -= t; l.added += t; p.trade += t; p.current = Math.min(p.current + t, p.cap); }
+				};
+				pass(l.buyers, p => reserveRatio * p.cap - p.current, mk.food);
+				const months = N.FOOD_PASS2_MAX_MONTHS_OF_DEFICIT ?? 3;
+				pass(l.sellers, p => { const x = months * Math.max(0, -p.structural), room = p.cap - p.current; return x < 1 ? room : Math.min(x, room); },
+					mk.food - (N.FOOD_PROPORTION_TO_PRESERVE_IN_MARKET_IF_POSSIBLE ?? 0.25) * mk.maxFood);
+				const trade = state.mode === 'fixed' ? mk.foodTrade : 0;
+				mk.food = Math.min(Math.max(mk.food + trade, 0), mk.maxFood);
+				// food price (3.8): heads for 0.05 x R, R from months of stock left (net outflow) or how empty the store is
+				const age = E.DB.ages[state.sites[0].L.age] || E.DB.ages[1];
+				const flow = l.produced - l.added + trade;
+				let R;
+				if (mk.maxFood <= 0) R = 1;
+				else if (flow < 0) { const m = mk.food / -flow; R = m <= 0 ? age.maxPrice : 5 / m; }
+				else R = age.minPrice + (1 - age.minPrice) * (1 - Math.min(1, Math.max(0, mk.food / mk.maxFood)));
+				R = Math.min(age.maxPrice, Math.max(age.minPrice, R));
+				const target = Math.max(0.01, (N.FOOD_PRICE ?? 0.05) * R);
+				mk.foodPrice = (mk.foodPrice ?? 0.05) + (N.MONTHLY_PRICE_CHANGE ?? 0.05) * (target - (mk.foodPrice ?? 0.05));
+				mk.foodFlow = flow;
+			}
+		}
+		// growth terms and starvation for next month, from the store after the exchange
+		for (const p of Object.values(state.provinces)) {
+			p.current = Math.min(Math.max(p.current, 0), p.cap);
+			p.starving = p.current < 1 || (p.structural <= 0 && p.current <= -p.structural && p.trade >= 0 && p.trade + p.structural < 1);
+			const surplus = p.base > 0 ? Math.min(1, Math.max(0, p.structural / p.base / 0.25)) : 0;
+			const storage = p.base > 0 ? Math.min(p.current / (12 * p.base), 2) / 2 : 0;
+			for (const site of p.sites) {
+				site.L.food = { surplus, storage, starving: p.starving };
+				const mk = state.markets[site.loc.market];
+				if (mk && mk.foodPrice !== undefined) site.L.foodPrice = mk.foodPrice;
+			}
+		}
+	}
+
 	// month by month for the whole country
 	function project(scn, months = 120) {
 		const state = create(scn);
@@ -153,10 +248,14 @@
 		for (let mth = 0; mth <= months; mth++) {
 			const { results } = evaluateAll(state, mth === 0);
 			const t = totals(state, results);
-			timeline.push({ month: mth, ...t, manpowerPool: state.manpowerPool, prices: Object.fromEntries(Object.entries(state.markets).map(([id, m]) => [id, { ...m.prices }])) });
+			const provs = Object.values(state.provinces);
+			timeline.push({ month: mth, ...t, manpowerPool: state.manpowerPool, prices: Object.fromEntries(Object.entries(state.markets).map(([id, m]) => [id, { ...m.prices }])),
+				foodStored: provs.reduce((a, p) => a + p.current, 0), foodCapacity: provs.reduce((a, p) => a + (p.cap ?? p.maxSave ?? p.cap0), 0), starving: provs.filter(p => p.starving).length,
+				marketFood: Object.fromEntries(Object.entries(state.markets).map(([id, m]) => [id, { food: m.food, max: m.maxFood ?? m.maxFood0, price: m.foodPrice }])) });
 			if (mth === months) break;
 			state.manpowerPool = Math.max(0, Math.min(t.maxManpower, state.manpowerPool + t.manpower - state.manpowerExpense));
 			for (const [site, r] of results) E.advance(site.L, r);
+			if (state.food) stepFood(state, results);
 			stepMarkets(state, results);
 		}
 		return { timeline, state };
@@ -169,6 +268,6 @@
 		return { state, results, totals: totals(state, results) };
 	}
 
-	const api = { create, evaluate, project, flows, effective, elasticity };
+	const api = { create, evaluate, project, flows, effective, elasticity, stepFood };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.CountrySim = api;
 })(typeof self !== 'undefined' ? self : this);

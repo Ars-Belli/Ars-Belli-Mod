@@ -1,5 +1,5 @@
 // Country report for sim.js: a country scenario (from_save.js --country TAG) month by month.
-//   node .tools/scripts/location_sim/sim.js <country scenario.json> [--months 120] [--markets fixed|closed|off] [--top 12]
+//   node .tools/scripts/location_sim/sim.js <country scenario.json> [--months 120] [--markets fixed|closed|off] [--food on|off] [--top 12]
 const CS = require('./country.js');
 const E = require('./engine.js');
 
@@ -10,7 +10,8 @@ module.exports = (scn, flag) => {
 	const men = x => num(x * 1000);
 	const months = +(flag('--months', 120) === true ? 120 : flag('--months', 120));
 	const mode = flag('--markets', (scn.options || {}).markets || 'fixed');
-	const { timeline, state } = CS.project({ ...scn, options: { ...(scn.options || {}), markets: mode } }, months);
+	const foodMode = flag('--food', (scn.options || {}).food || 'on');
+	const { timeline, state } = CS.project({ ...scn, options: { ...(scn.options || {}), markets: mode, food: foodMode } }, months);
 	const t0 = timeline[0], tN = timeline[timeline.length - 1];
 	const capital = scn.locations.find(l => l.id === scn.capital);
 	console.log(`${scn.name}: ${scn.locations.length} locations, capital ${capital ? nm(capital.key) : '?'}; markets ${mode}` +
@@ -18,13 +19,15 @@ module.exports = (scn, flag) => {
 	console.log(`  population ${men(t0.population)}; control ${(100 * t0.control).toFixed(1)}% (wealth-weighted)`);
 	console.log(`  manpower ${men(t0.manpower)} a month, max ${men(t0.maxManpower)}; army upkeep held at ${men(state.manpowerExpense)} a month; sailors ${men(t0.sailors)} a month`);
 	console.log(`  army levies ${men(t0.armyLevies)} men; wealth ${num(t0.wealth, 1)}, tax base ${num(t0.taxBase, 1)}, crown tax ${num(t0.crownTax, 1)}, building upkeep ${num(t0.upkeep, 1)} gold a month`);
+	if (foodMode !== 'off') console.log(`  food ${num(t0.foodProduction)} produced and ${num(t0.foodConsumption)} eaten a month; ${num(t0.foodStored)} stored of ${num(t0.foodCapacity)} in ${Object.keys(state.provinces).length} provinces`);
+	else console.log("  food not simulated (--food off): growth keeps the save's food terms");
 	const o = scn.country.observed || {};
 	if (o.taxIncome !== undefined) console.log(`  save: tax income ${num(o.taxIncome, 1)}, manpower ${men(o.manpowerIncome)} a month, max ${men(o.maxManpower)}, pool ${men(o.manpower)}`);
 
-	console.log(`\nProjection, ${months} months (development, prosperity and food held constant; pop demand fixed at the save)`);
-	console.log('  year   population  manpower/mo  manpower pool  levies    wealth  crown tax  upkeep  control');
+	console.log(`\nProjection, ${months} months (development and prosperity held constant; pop demand fixed at the save with its price elasticity)`);
+	console.log('  year   population  births/mo  manpower/mo  manpower pool  levies    wealth  crown tax  upkeep  control  food stored  starving');
 	for (const p of timeline.filter(x => x.month % 12 === 0 || x.month === months))
-		console.log(`  ${String(p.month / 12).padStart(4)}  ${men(p.population).padStart(11)}  ${men(p.manpower).padStart(11)}  ${men(p.manpowerPool).padStart(13)}  ${men(p.armyLevies).padStart(7)}  ${num(p.wealth, 1).padStart(8)}  ${num(p.crownTax, 1).padStart(9)}  ${num(p.upkeep, 1).padStart(6)}  ${(100 * p.control).toFixed(1).padStart(6)}%`);
+		console.log(`  ${String(p.month / 12).padStart(4)}  ${men(p.population).padStart(11)}  ${men(p.births).padStart(9)}  ${men(p.manpower).padStart(11)}  ${men(p.manpowerPool).padStart(13)}  ${men(p.armyLevies).padStart(7)}  ${num(p.wealth, 1).padStart(8)}  ${num(p.crownTax, 1).padStart(9)}  ${num(p.upkeep, 1).padStart(6)}  ${(100 * p.control).toFixed(1).padStart(6)}%  ${foodMode === 'off' ? '         -' : (100 * p.foodStored / p.foodCapacity).toFixed(0).padStart(10) + '%'}  ${String(foodMode === 'off' ? '-' : p.starving).padStart(8)}`);
 
 	if (mode !== 'off') {
 		const top = +flag('--top', 12);
