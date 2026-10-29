@@ -209,9 +209,11 @@ function locationScenario(lid, country) {
 			satisfaction: N(p.satisfaction) ?? 0, literacy: N(p.literacy) ?? 0, ...(p.building ? { building: N(p.building) } : {}) });
 	}
 	const buildings = buildingsOf(lid).map(b => {
-		const pm = Object.keys(b).find(k => b[k] && typeof b[k] === 'object' && DATA.methods[k]);
+		// every active production method (one per slot) and its input fill fraction (input=, 1 when nothing is missing)
+		const pms = Object.keys(b).filter(k => b[k] && typeof b[k] === 'object' && DATA.methods[k]);
+		const fills = pms.map(k => N(b[k].input) ?? 1);
 		return { type: b.type, level: N(b.level), employed: N(b.employed), owner: N(b.owner), ...(+b.owner !== +l.owner ? { foreign: 1 } : {}),
-			...(pm ? { method: pm } : {}), ...(b.last_months_profit !== undefined ? { profit: N(b.last_months_profit) } : {}), ...(b.upkeep !== undefined ? { upkeep: N(b.upkeep) } : {}) };
+			...(pms.length ? { methods: pms } : {}), ...(fills.some(x => x < 1) ? { inputFill: fills } : {}), ...(b.last_months_profit !== undefined ? { profit: N(b.last_months_profit) } : {}), ...(b.upkeep !== undefined ? { upkeep: N(b.upkeep) } : {}) };
 	});
 	const market = l.market ? marketOf(l.market) : null;
 	const province = l.province ? entry('provinces', l.province) : null;

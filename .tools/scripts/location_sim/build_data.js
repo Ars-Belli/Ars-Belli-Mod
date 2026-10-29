@@ -179,8 +179,8 @@ const RANKS = ['rural_settlement', 'town', 'city', 'megalopolis'];
 const buildings = {};
 for (const [k, v] of Object.entries(loadDb('in_game/common/building_types'))) {
 	const slots = all(v, 'possible_production_methods').map(list => list.map(([x]) => x));
-	const unique = get(v, 'unique_production_methods');
-	if (Array.isArray(unique)) {
+	// each unique_production_methods block is one slot (e.g. the fine cloth guild's cloth slot and its alum slot)
+	for (const unique of all(v, 'unique_production_methods')) if (Array.isArray(unique)) {
 		const keys = [];
 		for (const [pk, pv] of unique) if (Array.isArray(pv)) { methods[pk] = methodOf(pv); keys.push(pk); }
 		if (keys.length) slots.push(keys);

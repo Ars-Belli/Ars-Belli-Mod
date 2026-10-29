@@ -214,14 +214,14 @@
 		const v = scriptValue(t.max, ctx);
 		return { value: Math.floor(v), unknown: ctx.unknown ? [...ctx.unknown] : [] };
 	}
-	// the production method a building runs: the scenario's, else the first one of its first slot
-	function methodOf(b) {
+	// the production methods a building runs, one per slot: the scenario's (save), else the first of each slot
+	function methodsOf(b) {
 		const t = DB.buildings[b.type];
-		if (b.method && DB.methods[b.method]) return DB.methods[b.method];
-		const k = t && t.slots && t.slots[0] && t.slots[0][0];
-		return k ? DB.methods[k] : null;
+		const keys = b.methods || (b.method ? [b.method] : (t && t.slots || []).map(sl => sl[0]));
+		return keys.map(k => [k, DB.methods[k]]).filter(([, m]) => m);
 	}
-	const isProducing = b => { const pm = methodOf(b); return !!(pm && pm.out); };
+	const methodOf = b => { const m = methodsOf(b)[0]; return m ? m[1] : null; };
+	const isProducing = b => methodsOf(b).some(([, m]) => m.out);
 
 	// ---------------------------------------------------------------- modifiers of a location (eu5.exe 0x143194700 + 0x143edcc30)
 	// research/location_modifier_scales.md has every source and scale. Pass 1: everything that does not depend on staffing.
@@ -474,23 +474,37 @@
 		// the save shows ~0.39 in 1547 where this gives 0.385 for Spain (economy_control.md 2.3, close but not exact)
 		const upkeepMult = (C.mods.raw('building_upkeep_multiplier') + 0.001 * Math.max(0, L.year - 1337)) / (1 + C.mods.raw('building_upkeep_efficiency'));
 		const rows = [];
+		const priceOf = g => L.prices[g] ?? (DB.goods[g] || {}).price ?? 0;
 		for (const [idx, b] of L.buildings.entries()) {
-			const t = DB.buildings[b.type], pm = methodOf(b);
-			if (!t || !pm || !b.level) continue;
+			const t = DB.buildings[b.type], pms = methodsOf(b);
+			if (!t || !pms.length || !b.level) continue;
 			const e = J.E.get(b) ?? 1;
-			const inCost = Object.entries(pm.in || {}).reduce((a, [g, n]) => a + n * (L.prices[g] ?? (DB.goods[g] || {}).price ?? 0), 0);
-			if (pm.out) {
-				const inTotal = Object.values(pm.in || {}).reduce((a, n) => a + n, 0);
-				const inLocal = Object.entries(pm.in || {}).filter(([g]) => provinceRaw.has(g)).reduce((a, [, n]) => a + n, 0);
+			if (pms.some(([, pm]) => pm.out)) {
+				// each method (slot) adds its output and costs its inputs; a method short of inputs runs at its fill fraction
+				const allIn = Object.assign({}, ...pms.map(([, pm]) => pm.in || {}));
+				const inTotal = Object.values(allIn).reduce((a, n) => a + n, 0);
+				const inLocal = Object.entries(allIn).filter(([g]) => provinceRaw.has(g)).reduce((a, [, n]) => a + n, 0);
 				const pe = M.get('local_production_efficiency') + Math.max(0, b.level - 1) * def('NEconomy', 'PRODUCTION_EFFIENCY_BONUS_PER_LEVEL', 0.01) * age.efficiency
 					+ (inTotal ? C.mods.raw('raw_material_in_province_impact') * inLocal / inTotal : 0);
-				const price = L.prices[pm.out] ?? DB.goods[pm.out].price;
 				const throughput = L.marketAccess * e;
-				// output x (1 + production efficiency + the good's output modifier): Spain's lumber mill needs +50% lumber output on top
-				const goodMod = M.get('local_' + pm.out + '_output_modifier');
-				const profit = b.level * throughput * (pm.n * price * (1 + pe + goodMod) - inCost);
-				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, produces: pm.out, output: b.level * throughput * pm.n * (1 + pe + goodMod), pe, goodMod, profit, savedProfit: b.profit });
-			} else rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, upkeep: b.level * inCost * upkeepMult, savedUpkeep: b.upkeep });
+				let value = 0, cost = 0, made = 0, goodMod = 0, produces = null;
+				for (const [i, [, pm]] of pms.entries()) {
+					const fill = (b.inputFill || [])[i] ?? 1;
+					cost += fill * Object.entries(pm.in || {}).reduce((a, [g, n]) => a + n * priceOf(g), 0);
+					if (pm.out) {
+						// output x (1 + production efficiency + the good's output modifier): Spain's lumber mills need its +50% lumber output
+						goodMod = M.get('local_' + pm.out + '_output_modifier');
+						value += fill * pm.n * priceOf(pm.out) * (1 + pe + goodMod);
+						made += fill * pm.n * (1 + goodMod);
+						produces = produces || pm.out;
+					}
+				}
+				const profit = b.level * throughput * (value - cost);
+				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, produces, output: b.level * e * made, pe, goodMod, profit, savedProfit: b.profit });
+			} else {
+				const inCost = pms.reduce((a, [, pm]) => a + Object.entries(pm.in || {}).reduce((x, [g, n]) => x + n * priceOf(g), 0), 0);
+				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, upkeep: b.level * inCost * upkeepMult, savedUpkeep: b.upkeep });
+			}
 		}
 		return { rows, upkeepMult };
 	}
@@ -606,7 +620,7 @@
 	const priceStep = (p, target) => p + def('NMarket', 'MONTHLY_PRICE_CHANGE', 0.05) * (target - p);
 
 	const api = { setData, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
-		maxLevel, employmentSize, methodOf, isProducing, growth, military, levies, rgo, buildingEconomy, tax, control, evaluate, advance, project, targetPrice, priceStep,
+		maxLevel, employmentSize, methodOf, methodsOf, isProducing, growth, military, levies, rgo, buildingEconomy, tax, control, evaluate, advance, project, targetPrice, priceStep,
 		MILITARY_CONTROL_FLOOR, get DB() { return DB; } };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.LocationSim = api;
 })(typeof self !== 'undefined' ? self : this);
