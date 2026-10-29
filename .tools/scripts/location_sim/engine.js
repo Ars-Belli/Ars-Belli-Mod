@@ -567,7 +567,20 @@
 				else if (n > 0) L.pops.push({ type, size: n, status: 'Primary', satisfaction: 0.5, literacy: 0, estate: ESTATE_OF(type) });
 			}
 			L.population = L.pops.reduce((a, p) => a + p.size, 0);
-			for (const b of L.buildings) delete b.employed; // after the first month, staffing follows the pops
+			// staffing: an unprofitable building lays off UNPROFITABLE_BUILDING_WORKERS_LAID_OFF_PERCENTAGE (10%) of its workers a
+			// month, a profitable one rehires PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE (10%) of its jobs, as far as pops allow
+			const off = def('NEconomy', 'UNPROFITABLE_BUILDING_WORKERS_LAID_OFF_PERCENTAGE', 10) / 100, hire = def('NEconomy', 'PROFITABLE_BUILDING_WORKERS_REHIRED_PERCENTAGE', 10) / 100;
+			const free = {};
+			for (const [type, n] of Object.entries(r.J.pops)) free[type] = n - (r.J.employed[type] || 0);
+			for (const b of L.buildings) {
+				const t = DB.buildings[b.type];
+				if (!t || !t.pop || !b.size) continue;
+				const e = r.J.E.get(b) ?? 1, row = r.buildings.rows.find(x => x.type === b.type && x.level === b.level);
+				let next = row && row.profit !== undefined && row.profit < 0 ? e * (1 - off) : Math.min(1, e + hire);
+				const extra = (next - e) * b.level * b.size;
+				if (extra > 0) { const take = Math.min(extra, Math.max(0, free[t.pop] || 0)); free[t.pop] = (free[t.pop] || 0) - take; next = e + take / (b.level * b.size); }
+				b.employed = next * b.level * b.size;
+			}
 		}
 		return timeline;
 	}
