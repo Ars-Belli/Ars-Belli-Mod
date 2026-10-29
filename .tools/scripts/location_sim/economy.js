@@ -1,7 +1,7 @@
 // Economy simulator: a country month by month for decades, spending its surplus gold the way a player would, to compare
 // the long-run effect of modifiers (+20% building efficiency, +20% urban building efficiency, +3% tax efficiency...).
 //   node .tools/scripts/location_sim/economy.js <country scenario.json> [--years 30] [--decide 12] [--reserve 6]
-//        [--promotion 0.05] [--max-payback 40] [--roads-every 5] [--full-every 5]
+//        [--promotion 0.05] [--max-payback 40] [--roads-every 5] [--full-every 5] [--build-share 0.33]
 //        [--mod key=+x]...                         change a country modifier for the run (repeatable)
 //        [--compare "key=+x" "key2=+y,key3=-z"...] a baseline run and one run per variant, side by side
 //        [--idle]                                  also a run that never invests (what investing gains)
@@ -32,7 +32,7 @@ if (!file) { console.error('usage: node economy.js <country scenario.json> [--ye
 const scn0 = JSON.parse(fs.readFileSync(file, 'utf8'));
 const opt = {
 	years: +flag('--years', 30), decide: +flag('--decide', 12), reserve: +flag('--reserve', 6), promotion: +flag('--promotion', 0.05),
-	maxPayback: +flag('--max-payback', 40), roadsEvery: +flag('--roads-every', 5), fullEvery: +flag('--full-every', 5), quiet: args.includes('--quiet'), explain: +flag('--explain', 0),
+	maxPayback: +flag('--max-payback', 40), buildShare: +flag('--build-share', 1 / 3), roadsEvery: +flag('--roads-every', 5), fullEvery: +flag('--full-every', 5), quiet: args.includes('--quiet'), explain: +flag('--explain', 0),
 };
 const num = (x, d = 0) => (+x).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
 const nm = k => DB.names[k] || k;
@@ -135,11 +135,16 @@ function run(variant, label, invest = true) {
 		}
 		if (opt.roadsEvery > 0 && m % (opt.roadsEvery * 12) === 0) for (const o of plan.roadOptions(ctx)) if (o.gain > 0) options.push(plan.withFlows(ctx, { ...o, worth: o.gain, cost2: o.cost }));
 
-		// markets: settled prices, our sensitivity, what is under construction; future building is the surplus a month,
-		// shared as spent so far (or as the options on the table would spend it, the first time)
+		// markets: settled prices, our sensitivity, what is under construction. Future building (what cheaper construction
+		// goods save on): the pace of spending since the first decision (which spends the starting treasury), with
+		// --build-share of the surplus as a three-year prior; shared among markets and goods as spent so far (or as the
+		// options on the table would spend it, the first time). Spain spends about a third of its surplus: options that pay
+		// back within --max-payback run out before the gold does.
 		const M = plan.markets(ctx);
 		for (const q of queue) if (q.done > m && q.flow) plan.addFlow(M.plannedOf(q.mk), q.flow);
-		plan.setFuture(M, book.bought.length ? book.bought : options.map(o => ({ mk: o.mk, cost: o.cost, w: plan.constructionWeights(ctx, o) })), netNow);
+		const since = book.first ? m - book.first.month : 0, spent = book.first ? book.invested - book.first.spent : 0;
+		const pace = (36 * opt.buildShare * Math.max(0, netNow) + spent) / (36 + since);
+		plan.setFuture(M, book.bought.length ? book.bought : options.map(o => ({ mk: o.mk, cost: o.cost, w: plan.constructionWeights(ctx, o) })), pace);
 		const value = (o, parts) => plan.marketValue(M, o, parts);
 		const heap = new Heap();
 		for (const o of options) { o.value = value(o); if (o.value > 0) heap.push(o.value / o.cost2, o); }
@@ -168,6 +173,7 @@ function run(variant, label, invest = true) {
 			}
 			schedule(o, m);
 		}
+		if (!book.first) book.first = { month: m, spent: book.invested };
 	}
 	function schedule(o, m) {
 		const days = o.kind === 'road' ? 180 : (typeof o.bt === 'number' ? o.bt : DB.values[o.bt] ?? 365);
@@ -254,14 +260,14 @@ async function report() {
 ${scn0.name}: ${opt.years} years; decisions every ${opt.decide} months, reserve ${opt.reserve} months of expenses, promotion ${100 * opt.promotion}% of open jobs a month`);
 	const at = (r, y) => r.years.find(x => x.year === y) || r.years[r.years.length - 1];
 	const marks = [...new Set([5, 10, 20, opt.years].filter(y => y <= opt.years))];
-	const head = ['run'.padEnd(34), ...marks.map(y => `crown tax y${y}`.padStart(15)), 'crown tax total'.padStart(17), 'net total'.padStart(12), 'invested'.padStart(10), 'pop'.padStart(12), 'burghers'.padStart(10), 'towns'.padStart(6), 'manpower/mo'.padStart(12)];
+	const head = ['run'.padEnd(34), ...marks.map(y => `crown tax y${y}`.padStart(15)), 'crown tax total'.padStart(17), 'net total'.padStart(12), 'invested'.padStart(10), 'treasury'.padStart(10), 'pop'.padStart(12), 'burghers'.padStart(10), 'towns'.padStart(6), 'manpower/mo'.padStart(12)];
 	console.log(head.join(' '));
 	const base = runs[0];
 	for (const r of runs) {
 		const end = at(r, opt.years);
 		const d = (x, b) => (r === base ? '' : ` (${x >= b ? '+' : '−'}${num(Math.abs(100 * (x / b - 1)), 1)}%)`);
 		console.log([r.label.slice(0, 34).padEnd(34), ...marks.map(y => num(at(r, y).crown).padStart(15)), (num(r.book.crownTotal) + d(r.book.crownTotal, base.book.crownTotal)).padStart(17),
-			num(r.book.netTotal).padStart(12), num(r.book.invested).padStart(10), num(end.population * 1000).padStart(12), num(end.burghers * 1000).padStart(10), String(end.towns).padStart(6), num(end.manpower * 1000).padStart(12)].join(' '));
+			num(r.book.netTotal).padStart(12), num(r.book.invested).padStart(10), num(end.treasury).padStart(10), num(end.population * 1000).padStart(12), num(end.burghers * 1000).padStart(10), String(end.towns).padStart(6), num(end.manpower * 1000).padStart(12)].join(' '));
 	}
 	for (const r of runs) if (Object.keys(r.book.types).length) console.log(`  ${r.label}: most built ${mostBuilt(r)}`);
 	console.log(`(${((Date.now() - t0) / 1000).toFixed(0)} s)`);

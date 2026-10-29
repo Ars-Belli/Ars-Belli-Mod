@@ -3,8 +3,9 @@
 // minus the upkeep it adds, once control has settled at its maximum (a new level hires idle pops of its type only unless
 // --staffing promotion, where open jobs fill from idle peasants over time), plus its market effects (planner.marketValue):
 // its output and inputs at the prices they settle at once it is built, what those price moves do to the country's other
-// locations, and what cheaper construction goods save on future building (--build-rate gold a month, by default the
-// save's monthly balance). Each option is valued alone: two Cannon Makers in one market lower each other's price.
+// locations, and what cheaper construction goods save on future building (--build-rate gold a month, by default a third
+// of the save's monthly balance: what Spain's economy simulation spends). Each option is valued alone: two Cannon Makers
+// in one market lower each other's price.
 //   node .tools/scripts/location_sim/investments.js <country scenario.json> [--top 100] [--kinds buildings,roads,ranks]
 //        [--location key]   only that location's buildings and rank (roads stay country-wide)
 //        [--per-kind 10]    also the best of each kind      [--csv file.csv]   every option that pays back, ranked
@@ -41,7 +42,7 @@ const obs = scn.country.observed || {};
 const tot = CS.totals(ctx.state, ctx.results);
 const fixed = Object.entries(obs.maintenance || {}).filter(([k]) => k !== 'UpkeepMaintenance').reduce((a, [, v]) => a + v, 0);
 const balance = tot.crownTax + (obs.goldIncome || 0) - (obs.taxIncome || 0) - fixed - tot.upkeep;
-const buildRate = +flag('--build-rate', Math.max(0, balance));
+const buildRate = +flag('--build-rate', Math.max(0, balance) / 3);
 const rows = [];
 const sites = ctx.state.sites.filter(s => !onlyLoc || s.loc.key === onlyLoc);
 if (kinds.has('buildings')) for (const site of sites) for (const o of plan.buildingOptions(ctx, site, { staffing })) {

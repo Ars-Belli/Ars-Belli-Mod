@@ -112,8 +112,9 @@ function buildingPrice(ctx, t, level, L) {
 	const p = DB().values[(t.expensive ? 'expensive_' : '') + 'build_price_age_of_' + ctx.age];
 	if (p === undefined) return null;
 	const m = ctx.mods;
+	// urban construction efficiency: any building in a town or city ('in all urban locations')
 	const eff = m('global_build_buildings_efficiency') + (t.cat === 'defense_category' ? m('global_fort_build_buildings_efficiency') : 0)
-		+ (t.cat === 'naval_category' ? m('global_port_build_buildings_efficiency') : 0) + (!(t.ranks || {}).rural_settlement ? m('global_urban_build_buildings_efficiency') : 0);
+		+ (t.cat === 'naval_category' ? m('global_port_build_buildings_efficiency') : 0) + (L.rank !== 'rural_settlement' ? m('global_urban_build_buildings_efficiency') : 0);
 	return p * (1 + (t.inc || 0) * level) * (1 + ctx.inflation) * (1 + marketImpact(t.demand, L)) * Math.max(0.1, 1 - eff);
 }
 const nextRank = L => Object.entries(DB().ranks).find(([, r]) => r.upgradeFrom === L.rank || (L.rank === 'rural_settlement' && r.minPopulation !== undefined && !r.upgradeFrom));
