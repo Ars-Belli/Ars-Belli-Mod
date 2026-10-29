@@ -63,8 +63,8 @@ module.exports = {
  { age: 'age_3_discovery', n: 3,
    eco: [
     { id: 'infrastructure', art: 'situation/_default', name: 'Infrastructure', desc: 'Construction, roads and mining.', adv: [
-      ['organised_construction', 'global_build_buildings_efficiency = 0.2'],
-      ['efficient_construction_plans', 'global_urban_build_buildings_efficiency = 0.2'],
+      ['organised_construction', 'global_build_buildings_efficiency = 0.1'],
+      ['efficient_construction_plans', 'global_urban_build_buildings_efficiency = 0.1'],
       ['expanded_infrastructure_network', 'global_road_building_time = -0.1\nbuild_gravel_road_cost_modifier = -0.1\nbuild_paved_road_cost_modifier = -0.1\nbuild_modern_road_cost_modifier = -0.1'],
       ['efficient_mining', 'expand_rgo_mining_cost_modifier = -0.1\nglobal_iron_output_modifier = 0.1\nglobal_copper_output_modifier = 0.1'],
       ['rgo_logistics_mil_choice', 'raw_material_in_province_impact = 0.025'],
