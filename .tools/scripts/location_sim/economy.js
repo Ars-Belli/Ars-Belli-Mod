@@ -1,7 +1,7 @@
 // Economy simulator: a country month by month for decades, spending its surplus gold the way a player would, to compare
 // the long-run effect of modifiers (+20% building efficiency, +20% urban building efficiency, +3% tax efficiency...).
 //   node .tools/scripts/location_sim/economy.js <country scenario.json> [--years 30] [--decide 12] [--reserve 6]
-//        [--promotion 0.05] [--max-payback 40] [--roads-every 5]
+//        [--promotion 0.05] [--max-payback 40] [--roads-every 5] [--full-every 5]
 //        [--mod key=+x]...                         change a country modifier for the run (repeatable)
 //        [--compare "key=+x" "key2=+y,key3=-z"...] a baseline run and one run per variant, side by side
 // Books: income = crown tax (simulated) + other income held at the save's (trade, tariffs...); expenses = court, army,
@@ -22,12 +22,14 @@ const DB = E.DB;
 const args = process.argv.slice(2);
 const flag = (k, d) => { const i = args.indexOf(k); return i < 0 ? d : args[i + 1]; };
 const all = k => args.flatMap((a, i) => (a === k ? [args[i + 1]] : []));
+// every value after a flag up to the next flag: --compare "a=+1" "b=+2"
+const after = k => args.flatMap((a, i) => { const out = []; if (a === k) for (let j = i + 1; j < args.length && !args[j].startsWith('--') && !args[j].endsWith('.json'); j++) out.push(args[j]); return out; });
 const file = args.find(a => a.endsWith('.json'));
 if (!file) { console.error('usage: node economy.js <country scenario.json> [--years 30] [--mod key=+x] [--compare "key=+x" ...]'); process.exit(1); }
 const scn0 = JSON.parse(fs.readFileSync(file, 'utf8'));
 const opt = {
 	years: +flag('--years', 30), decide: +flag('--decide', 12), reserve: +flag('--reserve', 6), promotion: +flag('--promotion', 0.05),
-	maxPayback: +flag('--max-payback', 40), roadsEvery: +flag('--roads-every', 5), quiet: args.includes('--quiet'),
+	maxPayback: +flag('--max-payback', 40), roadsEvery: +flag('--roads-every', 5), fullEvery: +flag('--full-every', 5), quiet: args.includes('--quiet'),
 };
 const num = (x, d = 0) => (+x).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
 const nm = k => DB.names[k] || k;
@@ -47,12 +49,13 @@ function run(variant, label) {
 	const maint = obs.maintenance || {};
 	const fixed = Object.entries(maint).filter(([k]) => k !== 'UpkeepMaintenance').reduce((a, [, v]) => a + v, 0);
 	const otherIncome = (obs.goldIncome || 0) - (obs.taxIncome || 0);
-	const book = { treasury: obs.treasury || 0, invested: 0, crownTotal: 0, netTotal: 0, built: { building: 0, rank: 0, road: 0 } };
+	const book = { treasury: obs.treasury || 0, invested: 0, crownTotal: 0, netTotal: 0, built: { building: 0, rank: 0, road: 0 }, types: {} };
 	const queue = [];
 	const years = [];
 	const months = opt.years * 12;
 	let yearStats = null;
 	const siteOf = new Map(state.sites.map(s => [s.loc.id, s]));
+	const worth = new Map(), rankChanged = new Set(); // building types that paid off per location; locations that rose a rank
 	for (let m = 0; m <= months; m++) {
 		// projects that finish this month
 		for (const p of queue.filter(q => q.done === m)) p.apply();
@@ -91,9 +94,16 @@ function run(variant, label) {
 		const ctx = plan.context(scn, { state, results });
 		const options = [];
 		const cache = new Map();
+		// every --full-every years all building types are priced; in between only the types that paid off last time (and
+		// everything where the rank changed), which keeps a decision to a few seconds
+		const full = !(m % (opt.fullEvery * 12)) || !worth.size;
 		for (const site of state.sites) {
 			if (queue.some(q => q.site === site && q.done > m)) continue; // one project at a time per location
-			for (const o of plan.buildingOptions(ctx, site, { staffing: 'promotion' })) if (o.gain > 0) options.push({ ...o, score: o.gain / o.cost });
+			const known = worth.get(site), fresh = full || !known || rankChanged.has(site);
+			const types = fresh ? undefined : (k => known.has(k));
+			const found = plan.buildingOptions(ctx, site, { staffing: 'promotion', types });
+			if (fresh) { worth.set(site, new Set(found.filter(o => o.gain > 0).map(o => o.type))); rankChanged.delete(site); }
+			for (const o of found) if (o.gain > 0) options.push({ ...o, score: o.gain / o.cost });
 			const u = plan.urbanOption(ctx, site, cache);
 			if (u && u.verdict === 'food-safe' && u.value > 0) options.push({ ...u, score: u.value / u.valueCost });
 		}
@@ -118,7 +128,7 @@ function run(variant, label) {
 		if (o.kind === 'building') queue.push({ done, site: o.site, apply: () => {
 			const L = o.site.L, b = L.buildings.find(x => x.type === o.type && !x.foreign);
 			if (b) b.level += 1; else L.buildings.push({ type: o.type, level: 1, employed: 0, ...(o.methods ? { methods: o.methods } : {}) });
-			book.built.building++;
+			book.built.building++; book.types[o.type] = (book.types[o.type] || 0) + 1;
 		} });
 		else if (o.kind === 'rank') queue.push({ done, site: o.site, apply: () => {
 			const L = o.site.L;
@@ -126,6 +136,7 @@ function run(variant, label) {
 			// the RGO shrinks to its new maximum (a town loses the rural +100%)
 			const r = E.evaluate(o.site.scn, { L, C: state.C, obs: null });
 			if (L.rgoWorkers !== undefined) L.rgoWorkers = Math.min(L.rgoWorkers, Math.floor(E.maxRgo(L, r.M) + 1e-9));
+			rankChanged.add(o.site);
 			book.built.rank++;
 		} });
 		else if (o.kind === 'road') queue.push({ done, site: null, apply: () => {
@@ -165,9 +176,14 @@ function run(variant, label) {
 
 // ---- runs and report
 const variants = [['baseline', parseMods(all('--mod').join(','))]];
-for (const v of all('--compare')) variants.push([v, [...parseMods(all('--mod').join(',')), ...parseMods(v)]]);
+for (const v of after('--compare')) variants.push([v, [...parseMods(all('--mod').join(',')), ...parseMods(v)]]);
 const t0 = Date.now();
-const runs = variants.map(([label, v]) => { const r = run(v, label); if (!opt.quiet) console.log(`  [${label}] done (${((Date.now() - t0) / 1000).toFixed(0)} s)\n`); return r; });
+const mostBuilt = r => Object.entries(r.book.types).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([k, n]) => `${nm(k)} ${n}`).join(', ');
+const runs = variants.map(([label, v]) => {
+	const r = run(v, label);
+	if (!opt.quiet) console.log(`  [${label}] done (${((Date.now() - t0) / 1000).toFixed(0)} s); most built: ${mostBuilt(r)}\n`);
+	return r;
+});
 
 console.log(`\n${scn0.name}: ${opt.years} years; decisions every ${opt.decide} months, reserve ${opt.reserve} months of expenses, promotion ${100 * opt.promotion}% of open jobs a month`);
 const at = (r, y) => r.years.find(x => x.year === y) || r.years[r.years.length - 1];
