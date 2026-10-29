@@ -147,6 +147,8 @@
 			timedModifiers: s.timedModifiers || [],
 			townRights: s.townRights || [],
 			burgherTrade: s.burgherTrade ?? 0,
+			// trades routed through the location (their trade path's from_port / to_port): goods amount exported and imported
+			trade: { exports: (s.trade || {}).exports || 0, imports: (s.trade || {}).imports || 0 },
 			// raw materials of the province's locations (buildings get raw_material_in_province_impact for inputs made there)
 			provinceRaw: s.provinceRaw || (tpl && tpl[10] !== undefined ? [...new Set(DB.locations.filter(l => l[10] === tpl[10]).map(l => l[4]).filter(Boolean))] : null),
 		};
@@ -163,6 +165,15 @@
 			const parts = c.sources && c.sources[k];
 			if (parts && Math.abs(parts.reduce((a, [, y]) => a + y, 0) - x) < 1e-6) for (const [src, y] of parts) m.add(k, y, src);
 			else m.add(k, x, 'scenario');
+		}
+		// each estate's satisfaction block x (satisfaction - LOW_SATISFACTION_THRESHOLD), a penalty below 50% (estates/00_default.txt):
+		// Spain 1547's Commoners at 27% give -2.9% food. Skipped when the modifier sum already holds it.
+		const low = def('NEstate', 'LOW_SATISFACTION_THRESHOLD', 0.5);
+		const baked = Object.values(c.sources || {}).some(parts => parts.some(([src]) => /^estate w+ satisfaction/.test(src)));
+		if (!baked) for (const [e, x] of Object.entries(c.estates || {})) {
+			const d = DB.estates[e];
+			if (d && d.satisfaction && typeof x.satisfaction === 'number' && x.satisfaction !== low)
+				m.block(d.satisfaction, x.satisfaction - low, `${DB.names[e] || e} satisfaction ${(100 * x.satisfaction).toFixed(0)}%`);
 		}
 		const taxRates = Object.assign({ nobles_estate: 0.35, clergy_estate: 0.35, burghers_estate: 0.35, peasants_estate: 0.35 }, c.taxRates || {});
 		// save tax rates list only the taxed estates: a missing estate pays nothing (e.g. the clergy's tax exemption)
@@ -261,6 +272,9 @@
 		m.block(st('inverse_control'), 1 - L.control, `missing control ${(100 * (1 - L.control)).toFixed(0)}%`);
 		m.block(st('control_50'), L.control - 0.5, 'control - 50%');
 		if (L.marketCenter) m.block(st('market_center'), 1, 'market center');
+		// location_exports / location_imports x min(100, the routes' trade value): +2% development each at the cap
+		if (L.trade.exports > 0) m.block(st('location_exports'), Math.min(100, L.trade.exports), `exports ${L.trade.exports.toFixed(0)}`);
+		if (L.trade.imports > 0) m.block(st('location_imports'), Math.min(100, L.trade.imports), `imports ${L.trade.imports.toFixed(0)}`);
 		m.block(st('total_population'), L.population, `population ${L.population.toFixed(2)}k`);
 		if (L.population > 0) {
 			const avg = Math.min(1, L.pops.reduce((a, p) => a + p.size * (p.satisfaction || 0), 0) / L.population);
@@ -555,7 +569,8 @@
 	// The province adds the locations up, keeps the store and trades with the market (country.js).
 	function food(L, M, J, rg, bld) {
 		const goods = DB.goods;
-		const subsist = Math.max(0, (J.unemployed.laborers || 0) + (J.unemployed.peasants || 0));
+		// subsistence farming: unemployed peasants only (Sevilla June 1547: 52.5k idle peasants x 0.8 = the tooltip's 42.01)
+		const subsist = Math.max(0, J.unemployed.peasants || 0);
 		const rgoGood = goods[L.rawMaterial];
 		const rgoFood = rgoGood && rgoGood.food ? J.rgoWorkers * Math.max(0, 1 + M.get('local_raw_material_output')) * rgoGood.food : 0;
 		let bldFood = 0;

@@ -256,7 +256,7 @@ table.edit select.inline { font-size: 12.5px; padding: 1px 4px; max-width: 100%;
 					<fieldset>
 						<legend>Country modifiers</legend>
 						<div class="grid" id="cm-grid"></div>
-						<p class="hint">The owner's totals in %, base values included (Peasant Enfranchisement starts at 25%).</p>
+						<p class="hint">The owner's totals in %, base values and estate satisfaction effects included (Peasant Enfranchisement starts at 25%).</p>
 					</fieldset>
 					<fieldset>
 						<legend>Tax rates %</legend>
@@ -266,7 +266,7 @@ table.edit select.inline { font-size: 12.5px; padding: 1px 4px; max-width: 100%;
 					<fieldset>
 						<legend>Estate satisfaction %</legend>
 						<div class="grid" id="sat-grid"></div>
-						<p class="hint">The pops of an estate below 25% raise no levies.</p>
+						<p class="hint">The pops of an estate below 25% raise no levies. Each estate's satisfaction effects scale with satisfaction − 50% and turn negative below it: Commoners food, Burghers production efficiency.</p>
 					</fieldset>
 					<fieldset>
 						<legend>More modifiers</legend>
@@ -548,10 +548,21 @@ table.edit select.inline { font-size: 12.5px; padding: 1px 4px; max-width: 100%;
 	// The engine adds the game's base values to a hand-written scenario; a scenario from a save has them in its sums already.
 	P.baseAdded = c => c.baseValues !== false && !(c.notes || []).some(n => typeof n === 'string' && n.startsWith('base values'));
 	const baseOf = (c, k) => (P.baseAdded(c) && typeof DB.countryBase[k] === 'number' ? DB.countryBase[k] : 0);
-	P.countryTotal = (c, k) => (typeof (c.modifiers || {})[k] === 'number' ? c.modifiers[k] : 0) + baseOf(c, k);
+	// The engine also adds each estate's satisfaction block × (satisfaction − 50%), unless the sums already hold it.
+	const estateOf = (c, k) => {
+		if (Object.values(c.sources || {}).some(p => Array.isArray(p) && p.some(q => /^estate \w+ satisfaction/.test(String(q[0]))))) return 0;
+		const low = (DB.defines.NEstate || {}).LOW_SATISFACTION_THRESHOLD ?? 0.5;
+		let x = 0;
+		for (const [e, v] of Object.entries(c.estates || {})) {
+			const d = DB.estates[e];
+			if (d && d.satisfaction && typeof d.satisfaction[k] === 'number' && v && typeof v.satisfaction === 'number') x += d.satisfaction[k] * (v.satisfaction - low);
+		}
+		return x;
+	};
+	P.countryTotal = (c, k) => (typeof (c.modifiers || {})[k] === 'number' ? c.modifiers[k] : 0) + baseOf(c, k) + estateOf(c, k);
 	// Set a country modifier's total; the change is listed as its own source next to the scenario's.
 	P.setCountryTotal = (c, orig, k, V) => {
-		const x = V - baseOf(c, k), o = orig[k], delta = x - (o ? o.total : 0);
+		const x = V - baseOf(c, k) - estateOf(c, k), o = orig[k], delta = x - (o ? o.total : 0);
 		c.modifiers = c.modifiers || {};
 		if (Math.abs(delta) < 1e-12) {
 			if (o) { c.modifiers[k] = o.total; if (o.parts) (c.sources ??= {})[k] = o.parts.map(q => [...q]); else if (c.sources) delete c.sources[k]; }
@@ -855,7 +866,7 @@ table.edit select.inline { font-size: 12.5px; padding: 1px 4px; max-width: 100%;
 		let h = `<p class="lead">Makes <b>${fmt(f.production, 1)}</b> food a month and its pops eat <b>${fmt(f.consumption, 1)}</b>: ${f.balance >= 0 ? `<b>${fmt(f.balance, 1)}</b> left over` : `<b>${fmt(-f.balance, 1)}</b> short`} for the province's store.</p>`;
 		h += '<ul class="factors">'
 			+ li(rgoFoodGood ? `RGO: ${people(r.J.rgoWorkers)} workers × (1 + Raw Materials Output) × ${esc(nm(L.rawMaterial))} food value ${fmt(g.food, 0)}` : 'RGO: its raw material is not food', fmt(f.rgoFood, 1))
-			+ li(`Subsistence farming: ${people(f.subsist)} peasants and laborers without a job × ${fmt(sub, 1)}`, fmt(sub * f.subsist, 1))
+			+ li(`Subsistence farming: ${people(f.subsist)} peasants without a job × ${fmt(sub, 1)}`, fmt(sub * f.subsist, 1))
 			+ (f.bldFood ? li('Buildings that make food', fmt(f.bldFood, 1)) : '')
 			+ (f.flat ? li('Monthly Food of the location', fmt(f.flat, 1)) : '')
 			+ li(`× (1 + Monthly Food modifiers${rgoFoodGood ? ` + ${esc(nm(L.rawMaterial))} output` : ''})`, times(f.productivity))
@@ -1115,6 +1126,7 @@ table.edit select.inline { font-size: 12.5px; padding: 1px 4px; max-width: 100%;
 		setPath(work, path, v);
 		if (id === 'c-year') { work.country.age = P.ageForYear(v); $('c-age').value = work.country.age; }
 		if (id === 'loc-rank') $('bld-list').innerHTML = P.buildingOptions(v);
+		if (id.startsWith('sat-')) for (const k of P.COUNTRY_FIELDS) $('cm-' + k).value = show2(P.countryTotal(work.country, k) * 100);
 		schedule();
 	}
 	function fillForm() {

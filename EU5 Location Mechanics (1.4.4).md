@@ -40,12 +40,14 @@ A location's modifier set is rebuilt by `0x143194700` (plus the template part in
 | `expensive_food_in_location` / `cheap_food_in_location` | min(0.5, ±(market food price − 0.05)/0.05) |
 | `raw_material_relative_price` | (price − default)/default of the location's raw material |
 | `harbor` | max(0, harbor suitability), ports only |
+| `location_exports` / `location_imports` | min(100, trade value routed through the location: trade paths starting / ending there), +2% development each at the cap |
 
 Other sources *(code)*:
 - **Buildings:** `modifier` × level × goods access × staffing (staffing = employed ÷ (level × employment size)); `raw_modifier` × level × goods access; `capital_modifier` in the capital or historical capital and `market_center_modifier` in a market center, both × level × goods access × staffing. An empty barracks gives nothing.
 - **Pop types:** `pop_percentage_impact` × the type's share of the population; `literacy_impact` × the type's average literacy / 100.
 - Timed location modifiers (events, e.g. `quality_merino_wool`, +50% raw material output) × their size; the location's historical base modifier (`almaden_base`: +300% mercury); province modifiers (`province_base`, `province_starving`); town rights, holy sites, religious orders, cabinet actions, international organizations, diseases, culture groups.
 - The owner's `global_X` modifiers are read next to `local_X` by each getter (Section 2 onward says how).
+- **Estates** (country): each estate's `satisfaction` block × (satisfaction − 0.5), so an estate under 50% turns it into a penalty. Spain 1547: Commoners at 27% give −2.9% food, Tribes at 33% −0.9% food and raw material output, Burghers at 37% −0.3% production efficiency. The `high_power` / `low_power` blocks scale with estate power, which the save does not store (not counted).
 
 **River size** *(code, `0x1431c3f90`)*: the game traces `rivers.png`; a location gets the widest river pixel v (3–253) it touches: size = min(4, ⌊(v − 3)/3⌋) + 1. In the map, palette 4 and 5 give size 1 (Sevilla, Paris, London), 11 gives size 3 (Danube at Vienna, Nile at Cairo, Rhine), 15 gives size 5.
 
@@ -187,7 +189,7 @@ target = default price × R;   price += 5% × (target − price) each month
 
 *(code `0x14333cf60`, `0x14333e040`, `0x1432365b0`, `0x1430f3300`; save: provinces end where these rules say in 80% of 3,367 cases)*
 
-- **Location production**: `(building food + local_monthly_food + 0.8 × unemployed peasants and laborers (subsistence) + RGO workers × (1 + raw output) × the good's food value) × (1 + local and global monthly_food_modifier [+ the RGO good's output modifier]) × (1 + local_food_production_mult)`. Towns −10%, cities −20%, megalopolises −30%. Food values: wheat 8, fish 5, olives 4.
+- **Location production**: `(building food + local_monthly_food + 0.8 × unemployed peasants (subsistence; idle laborers do not farm) + RGO workers × (1 + raw output) × the good's food value) × (1 + local and global monthly_food_modifier [+ the RGO good's output modifier]) × (1 + local_food_production_mult)`. Towns −10%, cities −20%, megalopolises −30%. Food values: wheat 8, fish 5, olives 4.
 - **Consumption**: pops × `pop_food_consumption` (nobles 20, clergy and soldiers 5, burghers 4, laborers, peasants and slaves 1, tribesmen 0) × (1 + consumption modifiers, at least 0.05).
 - **Province store**: capacity from `local_food_capacity` (50 a location, town 250, city 500, granary 500 a level) × (1 + capacity modifier). Each month the store takes the balance minus decay: `stock × (local + global food_decay (0.005)) ÷ (1 + preservation)`; granaries preserve 5% a level.
 - **Market exchange**: a province above 75% of its capacity sells the surplus to the market; a province below 75% with a deficit asks to be refilled. The market then refills buyers to 75%, and tops up the sellers to full (or by 3 months of their deficit) from its food above 25% of its own capacity. Shortages are rationed pro rata.
@@ -205,15 +207,17 @@ Who pays for traded food and the 1.33 pop-income scale are open.
 
 | Number | Save | Simulated | |
 |---|---|---|---|
-| Wealth, all 522 locations | 14,379 | 14,423 | +0.3% |
+| Wealth, all 522 locations | 14,379 | 14,319 | −0.4% (−0.1% with the save's building profits) |
 | Estate shares | | | median error 0.03 points, 90th percentile 0.21 |
-| Crown tax income a month | 5,499 | 5,516 | +0.3% (tax efficiency 19% = the in-game tooltip) |
+| Crown tax income a month | 5,499 | 5,478 | −0.4% (tax efficiency 19% = the in-game tooltip) |
 | Manpower a month | 6,747 | 6,751 | +0.1% |
 | Sailors a month | 1,496 | 1,525 | +2.0% |
 | Births a month | 4,405 | 4,402 | −0.1% |
 | Proximity | | | median error 0.34, 472 of 522 within 1 point |
 
-Sevilla against the in-game tooltips (June 1547): wealth 80.89 vs 80.99; estate shares 16.58 / 7.98 / 50.73 / 5.59 vs 16.48 / 7.93 / 51.01 / 5.55; location taxes 35.72 vs 35.77; building maintenance 31.68 vs 31.87; monthly manpower 113.9 vs 113 (85 from buildings × (1 + 10% Crown of Castile + 4% soldier literacy + 20% Fortress Town)).
+Sevilla against the in-game tooltips (June 1547): wealth 79.84 vs 80.99 (buildings 74.25 vs the save's 74.92 after the Burghers' −0.33% production efficiency; the rest is burgher trade); estate shares 16.37 / 7.88 / 50.08 / 5.52 vs 16.48 / 7.93 / 51.01 / 5.55; location taxes 35.25 vs 35.77; building maintenance 31.68 vs 31.87; monthly manpower 113.9 vs 113 (85 from buildings × (1 + 10% Crown of Castile + 4% soldier literacy + 20% Fortress Town)); food productivity 1.864 vs 1.864, subsistence 42.01 vs 42.01, consumption 306.53 vs 306.52; development 0.0092 vs 0.0092 a month; prosperity −0.06% vs −0.06%.
+
+Buildings: across 2,190 producing buildings the production efficiency that would explain each saved profit is within 0.0002 of the simulated one at the median, but some goods are off as a group (fine cloth guilds +0.034, paper guilds +0.010, cannon makers −0.046, distillers −0.025), which leaves the building total 1.5% under the save.
 
 ---
 
@@ -258,7 +262,7 @@ Files in `.tools/scripts/location_sim/`:
 ```
 - Sizes and men are thousands. `status` is the pop's culture status (`Primary`, `Accepted`, `Tolerated`, anything else counts as another culture).
 - `employed` (thousands) fixes a building's staffing; without it jobs fill from the pops. `rgoWorkers` is the RGO size; without it, the formula estimate (open).
-- `country.modifiers` is the owner's full modifier sum. `from_save.js` fills it from base values, advances, laws, privileges, reforms, timed modifiers, societal values, the state religion, the ruler's skills and traits, cabinet traits and the capital's buildings, with every source in `sources`. Base values are added for hand-written scenarios unless `baseValues: false`.
+- `country.modifiers` is the owner's full modifier sum. `from_save.js` fills it from base values, advances, laws, privileges, reforms, timed modifiers, societal values, the state religion, the ruler's skills and traits, cabinet traits and the capital's buildings, with every source in `sources`; the engine adds each estate's satisfaction effects from `estates`. `location.trade` (`{ "exports": 320, "imports": 378 }`) is the trade routed through the location. Base values are added for hand-written scenarios unless `baseValues: false`.
 - Without `advances`, levies unlock by `age`. Without `taxRates`, every estate pays 35%.
 - `market.prices` default to the goods' base prices.
 
@@ -274,7 +278,7 @@ Files in `.tools/scripts/location_sim/`:
   - Pop demand is kept apart and follows the decoded price elasticity: `clamp(1 − 0.4 × (price/default − 1), 0.35, 1)`.
   - Trade with other markets: `fixed` holds the save's imports and exports; `closed` removes them; `off` freezes prices.
 - **Food** (`--food on`, the default; Section 8b): every province keeps its store, sells its surplus to the market and buys back to 75% when short; the market moves its food price; the stores drive growth and starvation. With `--markets off` provinces cannot share food, so deficit provinces (Sevilla's) slowly starve. `--food off` keeps the scenario's food terms for a quick run.
-- **Limits**: pop demand does not grow with population yet, and proximity is taken from the scenario (Local Governors need the proximity research). Thin goods can swing hard: with everything else fixed, a good drifts to the target its saved supply and demand imply.
+- **Limits**: pop demand grows with population only, not with wealth. Thin goods can swing hard: with everything else fixed, a good drifts to the target its saved supply and demand imply.
 
 ---
 
@@ -286,6 +290,9 @@ Files in `.tools/scripts/location_sim/`:
 4. Building input rationing, pop demand and burgher trade (market research).
 5. Food: production, consumption, storage and the province–market exchange.
 6. Pop demand growth beyond population, and scarce-goods rationing in the market.
+7. Estate power (for the `high_power` / `low_power` blocks) is not in the save.
+8. Which trade value `location_exports` / `location_imports` sum (the simulator uses goods amounts; Spain's six market centers are far above the cap).
+9. Building profits by good: fine cloth and paper guilds earn more in the save, cannon makers and distillers less.
 
 ## Appendix: where it lives in eu5.exe 1.4.4
 

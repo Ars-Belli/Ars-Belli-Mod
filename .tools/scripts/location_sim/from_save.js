@@ -3,8 +3,8 @@
 //   node .tools/scripts/location_sim/from_save.js <save> --location <id|key> [--out scenario.json]
 //   node .tools/scripts/location_sim/from_save.js <save> --country <TAG> [--out scenario.json]     every owned location
 // The scenario holds the location as the save has it (rank, development, control, pops, buildings, market prices), its
-// owner's country modifiers (summed from base values, advances, laws, privileges, reforms, timed modifiers and societal
-// values; "notes" lists every source) and an "observed" block with the game's own numbers to check the simulator against.
+// owner's country modifiers (summed from base values, advances, laws, privileges, reforms, timed modifiers, societal
+// values, ruler and cabinet traits and the state religion; "notes" lists every source; the engine adds the estates' satisfaction) and an "observed" block with the game's own numbers to check the simulator against.
 const fs = require('fs');
 const path = require('path');
 const { loadDb, get, openSave, latestSave, tokenize, parseSaveTokens } = require('../battle_sim/paradox.js');
@@ -157,14 +157,15 @@ function countryContext(cid) {
 		id: +cid, tag: tags[cid], year, age, advances: Object.keys(c.researched_advances || {}), capital: N(c.capital), primaryCulture: N(c.primary_culture), acceptedCultures: list(c.accepted_cultures).map(Number),
 		religion: N(c.primary_religion), government: gov.type,
 		taxRates: Object.fromEntries(Object.entries(econ.tax_rates || {}).map(([k, v]) => [k, +v])),
-		// estates: satisfaction, wealth impact and last month's income lines (estate_manager)
+		// estates that exist: satisfaction (the engine applies their satisfaction blocks), wealth impact and last month's income lines
 		estates: Object.fromEntries(Object.entries(gov.estates || {}).map(([k, eid]) => {
 			const e = entry('estate_manager', eid) || {};
+			if (e.existence !== 'yes') return [k, {}];
 			return [k, { satisfaction: N(e.satisfaction), wealthImpact: N(e.wealth_impact), gold: N(e.gold), autoTaxRate: e.auto_tax_rate === 'yes',
 				lastMonth: Object.fromEntries(Object.entries(e.last_month || {}).map(([a, b]) => [a, +b])) }];
 		}).filter(([, e]) => e.satisfaction !== undefined)),
 		modifiers: strip(acc), sources: acc.__src || {}, locationObjects: locObjects,
-		notes: [...notes, ...locObjects.map(k => `location modifier from ${k}`), 'Not counted: culture, religious aspects and schools, estates satisfaction and power effects, situations, international organizations, conditional auto modifiers.'],
+		notes: [...notes, ...locObjects.map(k => `location modifier from ${k}`), 'Estate satisfaction effects are applied by the engine from "estates". Not counted: culture, religious aspects and schools, estate power effects (power is not in the save), situations, international organizations, conditional auto modifiers.'],
 		observed: {
 			manpowerIncome: N(c.last_month_manpower_income), manpowerNet: N(c.monthly_manpower), maxManpower: N(c.max_manpower),
 			sailorsIncome: N(c.last_month_sailors_income), maxSailors: N(c.max_sailors), taxIncome: N(c.last_months_tax_income),
@@ -224,6 +225,25 @@ function buildingsOf(lid) {
 	}
 	return (buildingsByLocation.get(String(lid)) || []).map(([id, s]) => ({ id, ...rawParse(indexes.building_manager.t, s) }));
 }
+// trades routed through each location (their trade path's from_port exports, to_port imports), as goods amounts (size).
+// Which trade value the engine sums for location_exports / location_imports is not confirmed; market centers are far above the cap of 100.
+let tradePorts = null;
+function tradeThrough(lid) {
+	if (!tradePorts) {
+		tradePorts = new Map();
+		let paths = {}, trades = {};
+		try { paths = save.section('trade_path_manager').database || {}; trades = save.section('trade_manager').database || {}; } catch { /* older saves */ }
+		const add = (loc, k, x) => { if (!loc || loc === '0') return; const r = tradePorts.get(loc) || tradePorts.set(loc, { exports: 0, imports: 0 }).get(loc); r[k] += x; };
+		for (const t of Object.values(trades)) {
+			const p = t && paths[t.trade_path];
+			if (!p || typeof p !== 'object') continue;
+			add(p.from_port, 'exports', +t.size || 0);
+			add(p.to_port, 'imports', +t.size || 0);
+		}
+	}
+	const r = tradePorts.get(String(lid));
+	return r ? { exports: +r.exports.toFixed(3), imports: +r.imports.toFixed(3) } : null;
+}
 const marketCache = new Map();
 const marketOf = id => { if (!marketCache.has(id)) marketCache.set(id, entry('market_manager', id)); return marketCache.get(id); };
 
@@ -257,6 +277,7 @@ function locationScenario(lid, country) {
 			capital: +country.capital === lid, marketCenter: !!market && +market.center === lid, roadToCapital: l.road_to_capital === 'yes',
 			rgoWorkers: N(l.max_raw_material_workers), garrison: N(l.garrison),
 			...(townRightsOf(lid).length ? { townRights: townRightsOf(lid) } : {}),
+			...(tradeThrough(lid) ? { trade: tradeThrough(lid) } : {}),
 			// timed location modifiers (event modifiers such as quality_merino_wool) with their size
 			timedModifiers: list((l.timed_modifiers || {}).timed_modifiers).filter(t => t && t.modifier).map(t => [t.modifier, N(t.size) ?? 1]),
 			province: N(l.province), market: N(l.market), marketAccess: N(l.market_access),
