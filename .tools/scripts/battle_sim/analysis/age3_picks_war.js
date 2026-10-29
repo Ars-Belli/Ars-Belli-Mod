@@ -28,6 +28,11 @@ const CHAR = { adm: 60, dip: 59, mil: 61 };
 // Society +0.05, army experience ~+0.01, advances like Castile's Masters of the Orders +0.05: about AT 20. Leadership adds +0.2 a
 // month and its player maximises tradition: about AT 60. Tradition gives +0.2% morale a point. Trained generals
 // (generic_actions/train_general.txt) roll each skill in [10 + AT/2, 50 + AT/2] + train_general_ability, capped at 100.
+// Country baseline (Spain 1547, the user's tooltips): discipline +28.56% (nobles ratio, Aristocracy, Masters of the Orders, Military
+// Orders, Primacy of Nobility); morale +20.3% from laws, privileges and the ruler (Military Orders 10%, doctrine 5%, ruler 5.3%) on top
+// of army tradition; flat land morale from the vanilla age advances (Medieval Military, Pike and Shot, Maurician Infantry,
+// Gustavian Infantry, Impulse Warfare), cumulative by age. Spain 1547: (3 + 0.5) x 1.277 = 4.47 (game 4.46).
+const BASE_DISC = 0.2856, BASE_MORALE = 0.203, FLAT_MORALE = [0, 0.25, 0.5, 0.8, 1.15, 1.55];
 const AT_BASE = 20, AT_LEADERSHIP = 70; // Leadership: +0.2 a month and decay 0.4% (Quality Education -0.1%): ~0.29 / 0.004
 const trained = (at, ability) => { let t = 0, n = 0; for (let x = Math.ceil(10 + at / 2); x <= Math.floor(50 + at / 2); x++, n++) t += Math.min(100, x + ability); return t / n; };
 const AT = m => m.atGain ? AT_LEADERSHIP : AT_BASE;
@@ -56,7 +61,7 @@ const perArmy = (m, view) => view === 'budget' ? Math.round(0.75 * income(m) / u
 function side(m, view, drill) {
 	const decay = (m.expDecay || 0) + MON;
 	const c = {
-		tactics: 1 + (m.tactics || 0), discipline: m.discipline || 0, moraleMod: (m.moraleMod || 0) + 0.002 * AT(m), moraleFlat: m.moraleFlat || 0,
+		tactics: 1 + (m.tactics || 0), discipline: BASE_DISC + (m.discipline || 0), moraleMod: BASE_MORALE + (m.moraleMod || 0) + 0.002 * AT(m), moraleFlat: FLAT_MORALE[AGE - 1] + (m.moraleFlat || 0),
 		initiativeMod: m.initiativeMod || 0, speedMod: m.speedMod || 0, frontageMod: m.frontageMod || 0, power: m.power ? { [CAT]: m.power } : {},
 		experience: drill ? S.drilledExperience({ gain: m.expGain || 0, decay, drill: 48, wait: 6 }) : 0.37,
 		// correct section chance: vanilla age advances +10% each from the Renaissance (age II), plus picks (Leadership +30%)

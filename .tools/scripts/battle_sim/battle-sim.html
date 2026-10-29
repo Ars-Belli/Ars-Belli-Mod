@@ -827,10 +827,12 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		swapWar(); renderFull();
 	};
 	// Big battle preset (analysis/age3_picks_war.js setup): 6 armies of 30 a side on open ground, generals 60/59/61 (the average
-	// commanding general in Europe in the 1547 save), army tradition 20 (+4% morale), vanilla correct section chance +10% an age
+	// commanding general in Europe in the 1547 save), army tradition 20 (+4% morale) and Spain's other morale and discipline, vanilla correct section chance +10% an age
 	// from age II. Two armies start the battle; the other four march in (1 day) as each side's reserve runs empty.
 	const bigPreset = (cat, age) => {
-		const country = { moraleMod: 0.04, correctBoxChance: 0.1 * (age - 1) };
+		// Spain 1547 baseline: discipline +28.56%, morale +20.3% (laws, privileges, ruler) + 4% (army tradition 20), flat morale from the
+		// vanilla age advances (+0.25 II, +0.5 III, +0.8 IV, +1.15 V, +1.55 VI)
+		const country = { discipline: 0.2856, moraleMod: 0.243, moraleFlat: [0, 0.25, 0.5, 0.8, 1.15, 1.55][age - 1], correctBoxChance: 0.1 * (age - 1) };
 		const armies = tag => Array.from({ length: 6 }, (_, k) => ({ name: `${k + 1}. Army`, country: tag, formation: 'balanced',
 			general: { adm: 60, dip: 59, mil: 61 }, units: [{ type: `generic:${cat}:${age}`, count: 30 }], ...(k < 2 ? {} : { arrivalDay: 'needed', marchDays: 1 }) }));
 		return { name: `Big battle: age ${age} ${cat === 'hc' ? 'heavy cavalry' : 'heavy infantry'}, 6 x 30 a side`,

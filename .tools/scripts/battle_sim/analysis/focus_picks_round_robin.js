@@ -63,6 +63,11 @@ const CHAR = { adm: 60, dip: 59, mil: 61 };
 // Army tradition settles at monthly gain / 0.005 (it decays 0.5% of itself a month): about 20 for most countries, about 60 for
 // a Leadership player maximising it (+0.2 a month). +0.2% morale a point. Trained generals roll each skill in
 // [10 + AT/2, 50 + AT/2] + train_general_ability, capped at 100 (generic_actions/train_general.txt): Leadership at AT 60 = 95.
+// Country baseline (Spain 1547, the user's tooltips): discipline +28.56% (nobles ratio, Aristocracy, Masters of the Orders, Military
+// Orders, Primacy of Nobility); morale +20.3% from laws, privileges and the ruler (Military Orders 10%, doctrine 5%, ruler 5.3%) on top
+// of army tradition; flat land morale from the vanilla age advances (Medieval Military, Pike and Shot, Maurician Infantry,
+// Gustavian Infantry, Impulse Warfare), cumulative by age. Spain 1547: (3 + 0.5) x 1.277 = 4.47 (game 4.46).
+const BASE_DISC = 0.2856, BASE_MORALE = 0.203, FLAT_MORALE = [0, 0.25, 0.5, 0.8, 1.15, 1.55];
 const AT_BASE = 20, AT_LEADERSHIP = 70; // Leadership: +0.2 a month and decay 0.4% (Quality Education -0.1%): ~0.29 / 0.004
 const trained = (at, ability) => { let t = 0, n = 0; for (let x = Math.ceil(10 + at / 2); x <= Math.floor(50 + at / 2); x++, n++) t += Math.min(100, x + ability); return t / n; };
 const relevant = (mods, age, view) => {
@@ -81,7 +86,7 @@ function side(mods, age, view) {
 	const cat = age <= 4 ? 'hc' : 'hi';
 	const tg = mods.genAbility ? trained(mods.atGain ? AT_LEADERSHIP : AT_BASE, mods.genAbility) : 0;
 	const g = { adm: Math.max(CHAR.adm, tg), dip: Math.max(CHAR.dip, tg), mil: Math.max(CHAR.mil, tg) };
-	const c = { tactics: 1 + (mods.tactics || 0), discipline: mods.discipline || 0, moraleMod: (mods.moraleMod || 0) + 0.002 * (mods.atGain ? AT_LEADERSHIP : AT_BASE), moraleFlat: mods.moraleFlat || 0,
+	const c = { tactics: 1 + (mods.tactics || 0), discipline: BASE_DISC + (mods.discipline || 0), moraleMod: BASE_MORALE + (mods.moraleMod || 0) + 0.002 * (mods.atGain ? AT_LEADERSHIP : AT_BASE), moraleFlat: FLAT_MORALE[age - 1] + (mods.moraleFlat || 0),
 		initiativeMod: mods.initiativeMod || 0, speedMod: mods.speedMod || 0, frontageMod: mods.frontageMod || 0,
 		correctBoxChance: 0.1 * (age - 1) + (mods.correctBox || 0), // vanilla +10% an age from age II; only matters for late arrivals
 		experience: DRILL || WAIT ? exp({ gain: mods.expGain || 0, decay: (mods.expDecay || 0) + monDecay(age), drill: DRILL, wait: WAIT }) : 0.37, power: {} };
