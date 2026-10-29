@@ -705,6 +705,11 @@ Equal manpower is about **upkeep and reinforcement**, not the one-time recruitme
 - Leadership's age V strength is drilled experience: 100 against 60 means −50% damage taken against −30%. Infantry wars have fewer battles (about 5 in 4 years against 9 with cavalry), so the others take longer to catch up through battle experience.
 - No Leadership stat separates the two eras: each experience trim weakens it by a similar amount at both ages, and Correct Section Chance hardly matters once everyone has the vanilla +40%.
 - An infantry-only stat on Quantity or Quality moves age V and leaves the age III cavalry meta alone.
+- **Done (2026-10-29): Elite Companies now gives Quality heavy and light infantry power +10% and heavy infantry maintenance cost +5%, the same as its cavalry bonuses.** Age V after 48 months:
+  - Quality vs Quantity −43 → −30 at equal regiments (first battles 57% → 70%), and −40 → −27 on budgets.
+  - Quality vs undrilled Leadership −7 → +6.
+  - Quality vs drilled Leadership −38 → −24.
+  - Age III is unchanged (cavalry armies).
 
 **The vanilla societal value, Quality vs Quantity** (`age3_picks_war.js --societal`; each end of the slider at full, otherwise identical sides with Spain's baseline):
 - **Quality end:** +0.1 military tactics, +25% initiative, −10% maintenance efficiency (and +2% morale recovery, not modelled).
