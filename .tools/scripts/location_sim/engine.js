@@ -111,6 +111,8 @@
 			} else if (k === 'custom_tooltip' && Array.isArray(v)) r = trigger(v.filter(([x]) => x !== 'text'), ctx);
 			else if (k === 'always') r = v === 'yes';
 			else if (k === 'location_rank') r = ('location_rank:' + ctx.rank) === v;
+			// a built level (the Itinerant Court policy: the capital is a source of 80, not 100, unless it has the court's seat)
+			else if (k === 'has_building') r = !!(ctx.hasBuilding && ctx.hasBuilding(String(v).replace(/^building_type:/, '')));
 			else if (Array.isArray(v)) { (ctx.unknown ??= new Set()).add(k); r = false; }
 			else if (v === 'yes' || v === 'no') { const x = ctx.flag(k); if (x === undefined) { (ctx.unknown ??= new Set()).add(k); r = false; } else r = x === (v === 'yes'); }
 			else r = compare(operand(k, ctx), op, operand(v, ctx));
@@ -201,6 +203,7 @@
 					default: return k.startsWith('modifier:') && extra.mods ? extra.mods.get(k.slice(9)) : extra[k];
 				}
 			},
+			hasBuilding: type => (L.buildings || []).some(b => b.type === type && (b.level || 0) > 0 && !b.foreign),
 			flag(k) {
 				switch (k) {
 					case 'has_river': return L.river > 0;
