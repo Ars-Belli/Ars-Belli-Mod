@@ -192,6 +192,8 @@ function countryContext(cid) {
 	return {
 		id: +cid, tag: tags[cid], year, age, advances: Object.keys(c.researched_advances || {}), capital: N(c.capital), primaryCulture: N(c.primary_culture), acceptedCultures: list(c.accepted_cultures).map(Number),
 		religion: N(c.primary_religion), government: gov.type,
+		// inflation raises every gold price (buildings, roads, rank upgrades)
+		inflation: N((c.currency_data || {}).inflation) ?? 0,
 		taxRates: Object.fromEntries(Object.entries(econ.tax_rates || {}).map(([k, v]) => [k, +v])),
 		// estates that exist: satisfaction (the engine applies their satisfaction blocks), wealth impact and last month's income lines
 		estates: Object.fromEntries(Object.entries(gov.estates || {}).map(([k, eid]) => {

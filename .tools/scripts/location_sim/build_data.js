@@ -177,6 +177,12 @@ for (const [k, v] of Object.entries(loadDb('in_game/common/prices'))) { const m 
 // ---- buildings
 const RANKS = ['rural_settlement', 'town', 'city', 'megalopolis'];
 const buildings = {};
+// the advances that unlock each building (unlock_building), and the location_potential / allow triggers with their
+// operators, so a tool can check where a building may go (investments.js)
+const buildingUnlocks = {};
+for (const [ak, av] of Object.entries(loadDb('in_game/common/advances'))) for (const b of all(av, 'unlock_building')) (buildingUnlocks[b] ??= []).push(ak);
+const buildingOps = loadDbOps('in_game/common/building_types');
+const opsBlock = (v, key) => { const e = (v || []).find(([k]) => k === key); return e && Array.isArray(e[2]) ? e[2] : undefined; };
 for (const [k, v] of Object.entries(loadDb('in_game/common/building_types'))) {
 	const slots = all(v, 'possible_production_methods').map(list => list.map(([x]) => x));
 	// each unique_production_methods block is one slot (e.g. the fine cloth guild's cloth slot and its alum slot)
@@ -197,6 +203,9 @@ for (const [k, v] of Object.entries(loadDb('in_game/common/building_types'))) {
 		capCountry: modsAll(v, 'capital_country_modifier'), mcMod: modsAll(v, 'market_center_modifier'),
 		// the potential/allow triggers stay as text for the reader (the simulator does not check them)
 		...(get(v, 'location_potential') || get(v, 'allow') ? { needs: true } : {}),
+		expensive: scalar(v, 'expensive') === 'yes' ? 1 : undefined,
+		unlock: buildingUnlocks[k],
+		locPot: opsBlock(buildingOps[k], 'location_potential'), allow: opsBlock(buildingOps[k], 'allow'),
 	};
 	for (const f of Object.keys(buildings[k])) if (buildings[k][f] === undefined) delete buildings[k][f];
 }
@@ -316,6 +325,11 @@ const roadTypes = {};
 for (const [k, v] of Object.entries(loadDb('in_game/common/road_types'))) roadTypes[k] = { level: scalar(v, 'level') ?? 0, proximity: scalar(v, 'proximity') ?? 0 };
 // the advance that unlocks each road type (unlock_road_type), for the best road a country can build
 for (const [adv, v] of Object.entries(advancesDb)) { const r = scalar(v, 'unlock_road_type'); if (r && roadTypes[r]) roadTypes[r].advance = adv; }
+// gold prices (common/prices): a road costs its price_per_unit_distance x the segment's length; ranks upgrade at <rank>_upgrade
+const pricesDb = loadDb('in_game/common/prices');
+const goldOf = key => { const p = pricesDb[key]; const g = p && scalar(p, 'gold'); return g === undefined ? undefined : (typeof g === 'number' ? g : values[g]); };
+for (const [k, v] of Object.entries(loadDb('in_game/common/road_types'))) { const p = scalar(v, 'price_per_unit_distance'); if (p && goldOf(p) !== undefined) { roadTypes[k].price = goldOf(p); roadTypes[k].priceKey = p; } }
+for (const [k, r] of Object.entries(ranks)) { const g = goldOf(k + '_upgrade'); if (g !== undefined) r.upgradePrice = g; }
 
 // ---- English names for everything kept
 const loc = {};
