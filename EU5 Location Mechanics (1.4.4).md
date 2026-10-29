@@ -239,7 +239,7 @@ Files in `.tools/scripts/location_sim/`:
 | `engine.js` | The rules of this document as code; runs in Node and the browser. |
 | `data.json` | Game + mod data: pops, estates, ranks, ages, static modifiers, buildings, production methods, goods, levies, terrain, 28,573 locations with province, river size and coast. Rebuild with `node build_data.js` after a game or mod change (after `build_map.js`). |
 | `map.json` | Each location's size, centre, neighbours (shared border) and river links, from the map images and `river_fixes.json`. `node build_map.js` (5 s). |
-| `governors.js` | `node governors.js <country scenario> [--roads best|current] [--count N] [--years 10]`: every eligible city scored by crown tax, manpower and levies once control has settled at its new maximum, the best sets (exhaustive up to 3), and the current set against the best month by month with the build year. |
+| `governors.js` | `node governors.js <country scenario> [--roads best|current] [--count N] [--years 10] [--naval [--local key,key]]`: every eligible city scored by crown tax, manpower and levies once control has settled at its new maximum, the best sets (exhaustive up to 3), and the current set against the best month by month with the build year. |
 | `river_calibrate.js` | `node river_calibrate.js <save>`: river links the game uses, from every country's proximity tree, into `river_fixes.json`; rerun `build_map.js` after. |
 | `sim.js` | `node sim.js <scenario.json> [--months 120] [--buildings] [--modifier <key>] [--modifiers] [--json]` |
 | `from_save.js` | `node from_save.js <save|latest> --list TAG`, `--location <id|key>`, `--country TAG` (whole country to `scenarios/local/`, git-ignored) `[--out file]` |
@@ -284,6 +284,8 @@ Files in `.tools/scripts/location_sim/`:
 | Salamanca, Zaragoza, Montauban (most tax) | +624 | +779 | +33,300 |
 
 Moving Aurillac's governor to Montauban: the Toulouse basin gains (Verdun-sur-Garonne, Toulouse, Villefranche, Castelnaudary, Lavaur), the Auvergne loses a little (Châteauneuf-de-Randon, Aurillac). Month by month, with the year of construction: −52 crown tax and −55 manpower a month in year 1, even in year 2, +94 and +74 a month by year 10; the construction year is paid back after 3 years and the switch nets +7,500 gold and +5,900 men over 10 years. Moving all three costs more while building (−149 crown tax, −204 manpower a month in year 1), pays back after 5.2 years and ends with almost no manpower gain. With the save's roads the same set (Valladolid, Toledo, Montauban) is best on all three counts.
+
+**Naval Governors** (`--naval`): the same building effect (`local_proximity_source` 80, upkeep adds naval supplies) with its own cap (Spain 3: Exploration Fleets, Harbor Administration, Administration of Shipyards), only in a port city **not** connected to the capital through the country's land (straits count) and not overseas (taken as: on the capital's continent); it is removed if the location becomes connected. Spain can place one: Île d'Oléron (the game's build menu agrees). With the Local Governors in Valladolid, Toledo and Montauban it adds +22 crown tax, +26 manpower a month and +1,300 levies at settled control (Oléron 62 -> 80, the Médoc and Bordeaux coast, Navarre by sea) for about 15 gold a month of upkeep at today's prices; with Aurillac's governor kept, +28 / +33 / +1,700. A Balearic city would add only +2 (the islands are already 63-72 by sea); the Canaries and Madeira are on the African continent and have no city.
 
 ### Country mode
 

@@ -245,16 +245,17 @@ for (const m of readText('in_game/map_data/location_templates.txt')[0].matchAll(
 	locations.push([m[1], o.topography || '', o.vegetation || '', o.climate || '', o.raw_material || '', o.natural_harbor_suitability ? +o.natural_harbor_suitability : 0, o.culture || '', o.religion || '', 0, 0]);
 }
 // province and area of every location (map_data/definitions.txt: continent > subcontinent > region > area > province { locations });
-// appended as [10] province index into `provinces`, [11] area index into `areas`
-const provinces = [], areas = [];
+// appended as [10] province index into `provinces`, [11] area index into `areas`, [13] continent index into `continents`
+const provinces = [], areas = [], continents = [];
 {
 	const idOf = new Map(locations.map((l, i) => [l[0], i]));
 	const stack = [];
 	for (const tok of readText('in_game/map_data/definitions.txt')[0].replace(/^﻿/, '').replace(/#[^\n]*/g, '').match(/\{|\}|[^\s{}=]+/g)) {
 		if (tok === '{') continue;
 		if (tok === '}') { stack.pop(); continue; }
-		if (stack.length === 5) { const i = idOf.get(tok); if (i !== undefined) { locations[i][10] = provinces.length - 1; locations[i][11] = areas.length - 1; } continue; }
+		if (stack.length === 5) { const i = idOf.get(tok); if (i !== undefined) { locations[i][10] = provinces.length - 1; locations[i][11] = areas.length - 1; locations[i][13] = continents.length - 1; } continue; }
 		stack.push(tok);
+		if (stack.length === 1) continents.push(tok);
 		if (stack.length === 4) areas.push(tok);
 		if (stack.length === 5) provinces.push(tok);
 	}
@@ -351,7 +352,7 @@ const data = {
 	values, scripted: keptScripted, pops, estates, ranks, ages, roadTypes, townRights, locationObjects, static: staticMods, countryBase,
 	goods, methods, demands, prices, buildings, levies,
 	terrain: { topography: terrain('in_game/common/topography'), vegetation: terrain('in_game/common/vegetation'), climate: terrain('in_game/common/climates') },
-	locations, provinces, areas, modifierTypes, names,
+	locations, provinces, areas, continents, modifierTypes, names,
 };
 fs.writeFileSync(OUT, JSON.stringify(data));
 console.log('wrote', OUT, (fs.statSync(OUT).size / 1024).toFixed(0) + ' KB:', Object.keys(buildings).length, 'buildings,', Object.keys(methods).length,
