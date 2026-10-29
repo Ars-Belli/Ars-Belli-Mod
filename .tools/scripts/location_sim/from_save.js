@@ -208,6 +208,10 @@ function countryContext(cid) {
 			manpowerIncome: N(c.last_month_manpower_income), manpowerNet: N(c.monthly_manpower), maxManpower: N(c.max_manpower),
 			sailorsIncome: N(c.last_month_sailors_income), maxSailors: N(c.max_sailors), taxIncome: N(c.last_months_tax_income),
 			goldIncome: N(c.last_month_gold_income), population: N(c.last_months_population), manpower: N((c.currency_data || {}).manpower),
+			// the treasury and last month's maintenance by kind (CourtMaintenance, ArmyMaintenance... UpkeepMaintenance), for the
+			// economy simulator's books
+			treasury: N((c.currency_data || {}).gold),
+			maintenance: Object.fromEntries(Object.entries(c.last_month_maintenance || {}).map(([k, v]) => [k, +v])),
 		},
 	};
 }

@@ -113,6 +113,7 @@
 		for (const mk of Object.values(markets)) {
 			const o = own[mk.id] || { s: {}, d: {} };
 			mk.pop0 = sites.filter(site => String(site.loc.market) === String(mk.id)).reduce((a, site) => a + site.L.population, 0);
+			mk.typed0 = typedPop(sites, mk.id);
 			for (const [g, x] of Object.entries(mk.src.goods || {})) {
 				const sup = x.supplied || {}, dem = x.demanded || {};
 				const prod = sup.Production ?? sumObj(x.production);
@@ -153,6 +154,24 @@
 		return t;
 	}
 
+	// a pop type's weight in a good's demand (demand_food.md: per 1,000 pops (all + type + upper) x the type's and upper
+	// multipliers), and a market's pops summed with those weights, per good
+	const popWeights = {};
+	function popWeight(type, g) {
+		const key = type + '|' + g;
+		if (key in popWeights) return popWeights[key];
+		const good = DB().goods[g] || {}, add = good.demandAdd || {}, mul = good.demandMultiply || {}, upper = !!(DB().pops[type] || {}).upper;
+		const base = (add.all || 0) + (add[type] || 0) + (upper ? add.upper || 0 : 0);
+		return (popWeights[key] = base * (mul[type] ?? 1) * (upper ? (mul.upper ?? 1) : 1));
+	}
+	function typedPop(sites, marketId) {
+		const byType = {};
+		for (const site of sites) if (String(site.loc.market) === String(marketId)) for (const p of site.L.pops) byType[p.type] = (byType[p.type] || 0) + p.size;
+		const out = {};
+		for (const g of Object.keys(DB().goods)) { let w = 0; for (const [type, n] of Object.entries(byType)) w += n * popWeight(type, g); out[g] = w; }
+		return out;
+	}
+
 	// market prices for next month from this month's own flows
 	function stepMarkets(state, results) {
 		if (state.mode === 'off') return;
@@ -167,12 +186,15 @@
 		const none = { Tin: 0, Tout: 0, BTin: 0, BTout: 0 };
 		for (const mk of Object.values(state.markets)) {
 			const o = own[mk.id] || { s: {}, d: {} };
-			// pop demand scales with the population of the country's locations in the market (foreign members held)
+			// pop demand scales with the population of the country's locations in the market (foreign members held), each good
+			// weighted by every pop type's demand for it: promoted burghers, nobles and clergy raise what they buy most
 			const pop = state.sites.filter(site => String(site.loc.market) === String(mk.id)).reduce((a, site) => a + site.L.population, 0);
 			const popScale = mk.pop0 > 0 ? pop / mk.pop0 : 1;
+			const typed = mk.typed0 ? typedPop(state.sites, mk.id) : null;
 			for (const [g, x] of Object.entries(mk.goods)) {
 				if (!DB().goods[g]) continue;
-				const S = Math.max(0, x.otherS + (o.s[g] || 0)), D = Math.max(0, x.otherD + x.popBase * popScale * elasticity(g, x.price) + (o.d[g] || 0));
+				const scale = typed && mk.typed0[g] > 0 ? typed[g] / mk.typed0[g] : popScale;
+				const S = Math.max(0, x.otherS + (o.s[g] || 0)), D = Math.max(0, x.otherD + x.popBase * scale * elasticity(g, x.price) + (o.d[g] || 0));
 				const { sEff, dEff } = effective(S, D, state.mode === 'closed' ? none : x.trade, v);
 				x.supply = S; x.demand = D; x.target = E.targetPrice(g, sEff, dEff, age, mk.foodPrice ?? 0.05);
 				x.price = E.priceStep(x.price, x.target);
@@ -363,6 +385,6 @@
 		return { state, results, totals: totals(state, results) };
 	}
 
-	const api = { create, evaluate, project, flows, effective, elasticity, stepFood, proximity, setMap };
+	const api = { create, evaluate, project, flows, effective, elasticity, stepFood, stepMarkets, evaluateAll, totals, proximity, setMap, popWeight };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.CountrySim = api;
 })(typeof self !== 'undefined' ? self : this);

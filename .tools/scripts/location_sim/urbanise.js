@@ -49,37 +49,14 @@ function modTier(L, rank, taxBase) {
 	return 'first';
 }
 
-// the province food baseline, now and with every RGO full (cached per province)
-const foodBase = new Map();
-const baseFood = p => { if (!foodBase.has(p)) foodBase.set(p, { now: plan.provinceFood(ctx, p), full: plan.provinceFood(ctx, p, new Map(), true) }); return foodBase.get(p); };
-const isManpower = t => !!(t.mod && t.mod.local_manpower);
-
+const cache = new Map();
 const rows = [];
 for (const site of ctx.state.sites) {
-	const o = plan.rankOption(ctx, site);
-	if (!o || !o.cost || (onlyRank !== 'all' && o.rank !== onlyRank)) continue;
+	const o = plan.urbanOption(ctx, site, cache);
+	if (!o || (onlyRank !== 'all' && o.rank !== onlyRank)) continue;
 	const b0 = ctx.base.get(site), L0 = b0.L;
-	const province = plan.provinceOf(site.loc.id);
-	const fb = baseFood(province);
-	const replace = new Map([[site, o.L]]);
-	const after = plan.provinceFood(ctx, province, replace), afterFull = plan.provinceFood(ctx, province, replace, true);
-	// buildings the new rank allows and the old one did not, jobs filled by promotion; their manpower at full levels
-	const unlocked = plan.buildingOptions(ctx, site, { L: o.L, r: o.r, staffing: 'promotion', types: (k, t) => (t.ranks || {})[o.rank] && !(t.ranks || {})[o.from] });
-	const best = unlocked.filter(u => u.gain > 0).sort((a, b) => b.gain / b.cost - a.gain / a.cost).slice(0, 3);
-	const bestGain = best.reduce((a, u) => a + u.gain, 0), bestCost = best.reduce((a, u) => a + u.cost, 0);
-	let manpower = 0;
-	for (const u of unlocked.filter(x => isManpower(DB.buildings[x.type]) && x.manpower > 0)) {
-		const cap = E.maxLevel(u.type, o.L, o.r.M), levels = typeof cap === 'number' ? cap : cap.value;
-		manpower += u.manpower * Math.max(1, levels || 1);
-	}
-	const shortage = after.balance < 0 || afterFull.balance < 0;
-	const growthLoss = Math.min(after.growth - fb.now.growth, afterFull.growth - fb.full.growth);
-	const verdict = shortage ? 'shortage' : growthLoss < -1e-6 ? 'costs growth' : 'food-safe';
-	const value = o.gain + bestGain, cost = o.cost + bestCost;
-	rows.push({ site, key: site.loc.key, from: o.from, rank: o.rank, cost: o.cost, now: o.gain, manpowerNow: o.manpower, best, bestGain, manpower, value, valueCost: cost,
-		rgo: L0.rawMaterial ? `${nm(L0.rawMaterial)} ${L0.rgoWorkers ?? '?'}→${o.L.rgoWorkers ?? '?'}` : '-',
-		food: { before: fb.now.ratio, after: after.ratio, fullBefore: fb.full.ratio, fullAfter: afterFull.ratio, growthLoss },
-		verdict, tier: modTier(L0, o.rank, b0.r.tax.base) });
+	rows.push({ ...o, key: site.loc.key, now: o.gain,
+		rgo: L0.rawMaterial ? `${nm(L0.rawMaterial)} ${L0.rgoWorkers ?? '?'}→${o.L.rgoWorkers ?? '?'}` : '-', tier: modTier(L0, o.rank, b0.r.tax.base) });
 }
 const order = { 'food-safe': 0, 'costs growth': 1, shortage: 2 };
 rows.sort((a, b) => order[a.verdict] - order[b.verdict] || b.value / b.valueCost - a.value / a.valueCost);

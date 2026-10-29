@@ -177,13 +177,14 @@ function roadOptions(ctx) {
 	const { state, results, scn } = ctx;
 	const best = Object.entries(DB().roadTypes).filter(([, r]) => !r.advance || ctx.advances.has(r.advance)).sort((a, b) => b[1].level - a[1].level)[0];
 	if (!best) return [];
+	// the proximity the results were evaluated with (the search below overwrites it)
+	const evalProxOf = new Map(state.sites.map(s => [s.loc.id, s.L.proximity || 0]));
 	const P = CS.proximity(state, results);
 	const baseProx = new Map(state.sites.map(s => [s.loc.id, P.best.get(s.loc.id) || 0]));
 	const GRID = 20;
 	const info = state.sites.map(site => {
 		const r = results.get(site), M = r.M, urban = site.L.rank !== 'rural_settlement';
-		const evalProx = (scn.locations.find(l => l.id === site.loc.id) || {}).proximity || 0;
-		const B = M.get('local_max_control') + M.get(urban ? 'local_max_urban_control' : 'local_max_rural_control') - 0.75 * evalProx / 100;
+		const B = M.get('local_max_control') + M.get(urban ? 'local_max_urban_control' : 'local_max_rural_control') - 0.75 * evalProxOf.get(site.loc.id) / 100;
 		const L = clone(site.L), table = [];
 		for (let i = 0; i <= GRID; i++) { L.control = i / GRID; const x = E.evaluate(site.scn, { L, C: ctx.C, obs: site.obs }); table.push([x.tax.crown, x.manpower.monthly]); }
 		return { id: site.loc.id, B, table };
@@ -252,4 +253,32 @@ function provinceFood(ctx, province, replace = new Map(), rgoMax = false) {
 	return { production, consumption, balance: production - consumption, ratio, growth: FOOD_SURPLUS_POP_GROWTH * Math.max(0, Math.min(1, ratio / SURPLUS_FULL)) };
 }
 
-module.exports = { context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };
+// ---- urbanisation, long-sighted (urbanise.js): the rank's immediate effect, the best three buildings it unlocks (jobs filled
+// by promotion), the manpower those buildings allow, and the province's food now and with every RGO full. A rise that
+// leaves its province short (now or once RGOs are full) is a 'shortage'; one that lowers the province's food growth
+// (a surplus under 25%) 'costs growth'; otherwise 'food-safe'. cache: a Map reused across locations for province baselines.
+function urbanOption(ctx, site, cache = new Map()) {
+	const o = rankOption(ctx, site);
+	if (!o || !o.cost) return null;
+	const province = provinceOf(site.loc.id);
+	if (!cache.has(province)) cache.set(province, { now: provinceFood(ctx, province), full: provinceFood(ctx, province, new Map(), true) });
+	const fb = cache.get(province);
+	const replace = new Map([[site, o.L]]);
+	const after = provinceFood(ctx, province, replace), afterFull = provinceFood(ctx, province, replace, true);
+	const unlocked = buildingOptions(ctx, site, { L: o.L, r: o.r, staffing: 'promotion', types: (k, t) => (t.ranks || {})[o.rank] && !(t.ranks || {})[o.from] });
+	const best = unlocked.filter(u => u.gain > 0).sort((a, b) => b.gain / b.cost - a.gain / a.cost).slice(0, 3);
+	let manpower = 0;
+	for (const u of unlocked.filter(x => DB().buildings[x.type].mod && DB().buildings[x.type].mod.local_manpower && x.manpower > 0)) {
+		const cap = E.maxLevel(u.type, o.L, o.r.M), levels = typeof cap === 'number' ? cap : cap.value;
+		manpower += u.manpower * Math.max(1, levels || 1);
+	}
+	const shortage = after.balance < 0 || afterFull.balance < 0;
+	const growthLoss = Math.min(after.growth - fb.now.growth, afterFull.growth - fb.full.growth);
+	const bestGain = best.reduce((a, u) => a + u.gain, 0), bestCost = best.reduce((a, u) => a + u.cost, 0);
+	// manpowerNow: the rise itself; manpower: what its unlocked manpower buildings allow at full levels
+	return { ...o, manpowerNow: o.manpower, best, bestGain, manpower, value: o.gain + bestGain, valueCost: o.cost + bestCost,
+		food: { before: fb.now.ratio, after: after.ratio, fullBefore: fb.full.ratio, fullAfter: afterFull.ratio, growthLoss },
+		verdict: shortage ? 'shortage' : growthLoss < -1e-6 ? 'costs growth' : 'food-safe' };
+}
+
+module.exports = { urbanOption, context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };
