@@ -673,22 +673,38 @@ Equal manpower is about **upkeep and reinforcement**, not the one-time recruitme
   - Others keep their 60/59/61 characters (a trained one would average 40).
 - **Measure:** each side's manpower pool after 12 / 24 / 48 months of war, after paying for the men its army still misses, as a share of its max pool. The table gives the first pick's reserve minus the second's, in points; the first column is the first pick's first-battle win rate. Both sides fight once fully reinforced. 200 wars and 2,000 battles a cell; the 95% intervals are about 1 point.
 - **Leadership as of 2026-10-29:** trained generals +45 (99 at army tradition 70), +0.75 experience a month, −2% decay, +30% Correct Section Chance. Everyone has the vanilla +10% an age from age II.
+- **Country baseline on every side (Spain 1547):** discipline +28.56%, morale +20.3% from laws, privileges and the ruler (plus army tradition), and flat morale from the vanilla age advances. That is 4.35 morale at age III and 5.16 at age V. With this, drilled Spain-size battles last about 150 days (the simulator's safety cap is now 400 days).
 - **Age III heavy cavalry** (600-man regiments, 108,000 men a side), then **age V heavy infantry** (`--age 5 --cat hi`; 2,500-man regiments, 450,000 men a side):
 
   | | Age III: first battle | 12 mo | 24 mo | 48 mo | Age V: first battle | 12 mo | 24 mo | 48 mo |
   |---|---|---|---|---|---|---|---|---|
-  | Quality vs Quantity (same regiments) | 100% | −8 | −18 | −37 | 62% | −14 | −28 | −41 |
-  | Quantity vs Leadership (same regiments) | 7% | +16 | +23 | +36 | 24% | +14 | +20 | +27 |
-  | Quality vs Leadership (same regiments) | 86% | +11 | +6 | −2 | 31% | −5 | −11 | −15 |
-  | Quality vs Quantity, 75/25 budgets | 24% | −14 | −18 | −21 | 45% | −20 | −33 | −37 |
-  | Quality vs drilled Leadership | 1% | −8 | −5 | −7 | 5% | −38 | −51 | −51 |
-  | Quantity vs drilled Leadership | 0% | +2 | +12 | +20 | 3% | −14 | −15 | −13 |
+  | Quality vs Quantity (same regiments) | 100% | −12 | −21 | −40 | 57% | −27 | −37 | −43 |
+  | Quantity vs Leadership (same regiments) | 12% | +19 | +28 | +43 | 26% | +24 | +34 | +37 |
+  | Quality vs Leadership (same regiments) | 91% | +13 | +6 | −2 | 40% | −3 | −4 | −7 |
+  | Quality vs Quantity, 75/25 budgets | 10% | −21 | −26 | −29 | 28% | −36 | −41 | −40 |
+  | Quality vs drilled Leadership | 0% | −4 | −1 | −6 | 1% | −31 | −35 | −38 |
+  | Quantity vs drilled Leadership | 0% | +7 | +19 | +25 | 2% | +5 | +8 | +10 |
 
   Budgets: age III Quality 186, Quantity 246 regiments; age V Quality 186, Quantity 234.
 
-- **Quantity wins long wars against Quality in both eras**: by 37–41 points after 4 years. At age V it loses only 62% of the first battles at equal regiments, against 100% at age III.
-- **Leadership gets much stronger with infantry.** At age V it beats Quality in battle (69%) and in manpower (+15). Drilled, it beats both: Quality by 51 points, and even Quantity by 13–18. Experience cuts strength damage, and in big infantry battles strength losses are what drain the pool.
-- **With cavalry Leadership stays a glass cannon.** Drilled, it wins almost every first battle, stays ahead of Quality and loses the long war to Quantity.
+- **Quantity wins long wars against Quality in both eras**, by about 40 points after 4 years, even though at equal regiments it loses most first battles.
+- **Drilled Leadership wins every first battle in both eras.** With cavalry it ends roughly level with Quality (−6) and loses the long war to Quantity (+25). With infantry it stays far ahead of Quality (+38) and is close to Quantity (+10).
+- **Undrilled Leadership** is about level with Quality in manpower and loses to Quantity.
+
+**The vanilla societal value, Quality vs Quantity** (`age3_picks_war.js --societal`; each end of the slider at full, otherwise identical sides with Spain's baseline):
+- **Quality end:** +0.1 military tactics, +25% initiative, −10% maintenance efficiency (and +2% morale recovery, not modelled).
+- **Quantity end:** +20% maintenance efficiency, −25% initiative (food −10% and levy size +50% are not modelled).
+
+  | Quality value vs Quantity value | Age III: first battle | 12 mo | 24 mo | 48 mo | Age V: first battle | 12 mo | 24 mo | 48 mo |
+  |---|---|---|---|---|---|---|---|---|
+  | Same regiments | 84% | +11 | +8 | +5 | 65% | +11 | +12 | +8 |
+  | 75/25 budgets (age III 180 vs 228 regiments; age V 174 vs 216) | 1% | +4 | +8 | +6 | 39% | +6 | +9 | +9 |
+  | Same regiments, drilled | 88% | +10 | +16 | +11 | 72% | +14 | +14 | +10 |
+
+- **The Quality value is better for regular armies.** It wins most battles at equal regiments and stays ahead in manpower in every setup. Its tactics cut the damage taken by ÷1.1, and that outweighs the upkeep.
+- **The Quantity value's cheaper upkeep buys about 25% more regiments**, which win the first battles (99% at age III), yet it still trails in manpower over a war.
+- **Its +50% levy size is not modelled**, so for a levy-heavy army it is worth more than shown.
+
 - With reinforce efficiency counted on gold only (`--reinf-eff-gold-only`, wrong per section 15), Quality would stay ahead of Quantity: +5 / +3 / −2 at equal regiments. The confirmed manpower rule is what makes Quantity the long-war pick.
 - **30-regiment battles with the same tradition model** (`focus_picks_round_robin.js`): Leadership's age III score rises from 42% to 50% at equal regiments, 29% to 36% when manpower-bound and 41% to 48% at equal gold. Quality 75% / 48% / 61%; Quantity 25% / 67% / 40%.
 
