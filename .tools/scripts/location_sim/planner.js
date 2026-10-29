@@ -107,13 +107,17 @@ function marketImpact(demandKey, L) {
 	for (const [g, a] of Object.entries(d.goods)) { const b = (DB().goods[g] || {}).price; if (!b) continue; num += a * goodImpact(g, L.prices[g] ?? b); den += a; }
 	return den ? num / den : 0;
 }
-function buildingPrice(ctx, t, level, L) {
+function buildingPrice(ctx, t, level, L, M) {
 	if (t.price) return null; // estate, religious and special prices
 	const p = DB().values[(t.expensive ? 'expensive_' : '') + 'build_price_age_of_' + ctx.age];
 	if (p === undefined) return null;
 	const m = ctx.mods;
-	// urban construction efficiency: any building in a town or city ('in all urban locations')
-	const eff = m('global_build_buildings_efficiency') + (t.cat === 'defense_category' ? m('global_fort_build_buildings_efficiency') : 0)
+	// construction efficiency: the location's (M: the country's plus development, about +0.2% a point - Granada +26%),
+	// minus 5% for each building level over the free ones (unsupported_building_levels, local_build_new_buildings_efficiency:
+	// Limoux -59%, 41 of Spain's locations; the game says "new buildings", taken here for every new level); the country's
+	// fort, port and urban efficiencies (urban: any building in a town or city, 'in all urban locations')
+	const eff = (M ? M.get('local_build_buildings_efficiency') + M.get('local_build_new_buildings_efficiency') : m('global_build_buildings_efficiency'))
+		+ (t.cat === 'defense_category' ? m('global_fort_build_buildings_efficiency') : 0)
 		+ (t.cat === 'naval_category' ? m('global_port_build_buildings_efficiency') : 0) + (L.rank !== 'rural_settlement' ? m('global_urban_build_buildings_efficiency') : 0);
 	return p * (1 + (t.inc || 0) * level) * (1 + ctx.inflation) * (1 + marketImpact(t.demand, L)) * Math.max(0.1, 1 - eff);
 }
@@ -142,7 +146,7 @@ function buildingOptions(ctx, site, opts = {}) {
 		if (pot === 0 || allow === 0) continue;
 		const cap = E.maxLevel(type, L0, r0.M), capV = typeof cap === 'number' ? cap : cap.value;
 		if (!(level < capV)) continue;
-		const cost = buildingPrice(ctx, t, level, L0);
+		const cost = buildingPrice(ctx, t, level, L0, r0.M);
 		if (!cost) continue;
 		const size = E.employmentSize(type, L0);
 		const idle = t.pop ? Math.max(0, (J.unemployed || {})[t.pop] || 0) : 0, peasants = Math.max(0, (J.unemployed || {}).peasants || 0);
