@@ -18,6 +18,14 @@ for (const f of ['advances_l_english.yml']) {
 	const txt = fs.readFileSync(path.join(game, 'main_menu/localization/english', f), 'utf8');
 	for (const m of txt.matchAll(/^\s*([A-Za-z0-9_]+):\d*\s*"(.*)"\s*$/gm)) names[m[1]] = m[2];
 }
+// The mod's overrides of vanilla names (main_menu/localization/english/replace), e.g. Quality's renamed drill advances.
+{
+	const dir = path.join(__dirname, '../../../../main_menu/localization/english/replace');
+	for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.yml'))) {
+		const txt = fs.readFileSync(path.join(dir, f), 'utf8');
+		for (const m of txt.matchAll(/^\s*([A-Za-z0-9_]+):\d*\s*"(.*)"\s*$/gm)) names[m[1]] = m[2];
+	}
+}
 // All vanilla English loc, modifier names, descriptions (tooltips) and value formats.
 const { loc, clean, modInfo, modName, fmtValue } = require('./modloc.js')(game);
 
