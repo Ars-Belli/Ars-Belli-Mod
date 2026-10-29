@@ -190,24 +190,40 @@ function rankOption(ctx, site, opts = {}) {
 }
 
 // ---- roads: the best unlocked road on a land border without one (or with a worse one); the gain is the country's
-// settled crown tax with proximity recomputed (a location's settled control = its other terms + 0.75 x proximity / 100)
-function roadOptions(ctx) {
-	const { state, results, scn } = ctx;
-	const best = Object.entries(DB().roadTypes).filter(([, r]) => !r.advance || ctx.advances.has(r.advance)).sort((a, b) => b[1].level - a[1].level)[0];
-	if (!best) return [];
-	// the proximity the results were evaluated with (the search below overwrites it)
-	const evalProxOf = new Map(state.sites.map(s => [s.loc.id, s.L.proximity || 0]));
-	const P = CS.proximity(state, results);
-	const baseProx = new Map(state.sites.map(s => [s.loc.id, P.best.get(s.loc.id) || 0]));
-	const GRID = 20;
-	const info = state.sites.map(site => {
-		const r = results.get(site), M = r.M, urban = site.L.rank !== 'rural_settlement';
-		const B = M.get('local_max_control') + M.get(urban ? 'local_max_urban_control' : 'local_max_rural_control') - 0.75 * evalProxOf.get(site.loc.id) / 100;
+// settled crown tax with proximity recomputed (a location's settled control = its other terms + 0.75 x proximity / 100).
+// In parts, for worker threads: roadInfo (each location's crown tax and manpower over control), roadCandidates (the
+// borders), roadScores (each candidate's change, with every location's info), roadPriced (the cost).
+const ROAD_GRID = 20;
+const bestRoad = ctx => Object.entries(DB().roadTypes).filter(([, r]) => !r.advance || ctx.advances.has(r.advance)).sort((a, b) => b[1].level - a[1].level)[0];
+// with the proximity the locations were evaluated with: before any proximity search, which overwrites it
+function roadInfo(ctx, sites) {
+	return sites.map(site => {
+		const r = ctx.results.get(site), M = r.M, urban = site.L.rank !== 'rural_settlement';
+		const B = M.get('local_max_control') + M.get(urban ? 'local_max_urban_control' : 'local_max_rural_control') - 0.75 * (site.L.proximity || 0) / 100;
 		const L = clone(site.L), table = [];
-		for (let i = 0; i <= GRID; i++) { L.control = i / GRID; const x = E.evaluate(site.scn, { L, C: ctx.C, obs: site.obs }); table.push([x.tax.crown, x.manpower.monthly]); }
+		for (let i = 0; i <= ROAD_GRID; i++) { L.control = i / ROAD_GRID; const x = E.evaluate(site.scn, { L, C: ctx.C, obs: site.obs }); table.push([x.tax.crown, x.manpower.monthly]); }
 		return { id: site.loc.id, B, table };
 	});
-	const at = (inf, c) => { const x = Math.max(0, Math.min(1, c)) * GRID, i = Math.min(GRID - 1, Math.floor(x)), f = x - i; return inf.table[i].map((v, k) => v + (inf.table[i + 1][k] - v) * f); };
+}
+function roadCandidates(ctx) {
+	const { state } = ctx, best = bestRoad(ctx);
+	if (!best) return [];
+	if (!state.roadIndex) CS.proximity(state, ctx.results);
+	const own = new Set(state.sites.map(s => s.loc.id)), out = [];
+	for (const a of own) for (const [b] of (MAP.locations[a] || {}).nb || []) {
+		if (b <= a || !own.has(b)) continue;
+		const cur = state.roadIndex.get(a + ',' + b);
+		if (cur && DB().roadTypes[cur].level >= best[1].level) continue;
+		out.push([a, b, cur || null]);
+	}
+	return out;
+}
+// [a, b, crown tax change, manpower change, current road] per candidate
+function roadScores(ctx, info, pairs) {
+	const { state, results } = ctx, best = bestRoad(ctx);
+	const P = CS.proximity(state, results);
+	const baseProx = new Map(state.sites.map(s => [s.loc.id, P.best.get(s.loc.id) || 0]));
+	const at = (inf, c) => { const x = Math.max(0, Math.min(1, c)) * ROAD_GRID, i = Math.min(ROAD_GRID - 1, Math.floor(x)), f = x - i; return inf.table[i].map((v, k) => v + (inf.table[i + 1][k] - v) * f); };
 	const score = prox => { let crown = 0, mp = 0; for (const inf of info) { const v = at(inf, inf.B + 0.0075 * Math.max(0, Math.min(100, prox.get(inf.id) || 0))); crown += v[0]; mp += v[1]; } return [crown, mp]; };
 	const [crown0, mp0] = score(baseProx);
 	const own = new Set(state.sites.map(s => s.loc.id));
@@ -227,25 +243,29 @@ function roadOptions(ctx) {
 		}
 		return bestV;
 	};
+	return pairs.map(([a, b, cur]) => {
+		state.roadIndex.set(a + ',' + b, best[0]); state.roadIndex.set(b + ',' + a, best[0]);
+		const [crown, mp] = score(search());
+		if (cur) { state.roadIndex.set(a + ',' + b, cur); state.roadIndex.set(b + ',' + a, cur); } else { state.roadIndex.delete(a + ',' + b); state.roadIndex.delete(b + ',' + a); }
+		return [a, b, crown - crown0, mp - mp0, cur];
+	});
+}
+// a road is priced in its starting location's market (its construction goods: lumber, masonry, sand...)
+function roadPriced(ctx, scores) {
+	const best = bestRoad(ctx);
 	const length = (a, b) => {
 		const A = MAP.locations[a], B2 = MAP.locations[b];
 		const dx = Math.min(Math.abs(A.x - B2.x), MAP.width - Math.abs(A.x - B2.x)), dy = A.y - B2.y;
 		const f = x => ROAD_TERRAIN[(DB().locations[x - 1] || [])[1]] ?? 0.5;
 		return Math.hypot(dx, dy) * (f(a) + f(b)) / 2;
 	};
-	// a road is priced in its starting location's market (its construction goods: lumber, masonry, sand...)
 	const price = a => best[1].price * (1 + ctx.inflation) * (1 + marketImpact('build_' + best[0] + '_demand', ctx.siteOf.get(a).L)) * (1 + ctx.mods('build_' + best[0] + '_cost_modifier'));
-	const out = [];
-	for (const a of own) for (const [b] of (MAP.locations[a] || {}).nb || []) {
-		if (b <= a || !own.has(b)) continue;
-		const cur = state.roadIndex.get(a + ',' + b);
-		if (cur && DB().roadTypes[cur].level >= best[1].level) continue;
-		state.roadIndex.set(a + ',' + b, best[0]); state.roadIndex.set(b + ',' + a, best[0]);
-		const [crown, mp] = score(search());
-		if (cur) { state.roadIndex.set(a + ',' + b, cur); state.roadIndex.set(b + ',' + a, cur); } else { state.roadIndex.delete(a + ',' + b); state.roadIndex.delete(b + ',' + a); }
-		out.push({ kind: 'road', road: best[0], from: cur, a, b, cost: price(a) * length(a, b), gain: crown - crown0, crown: crown - crown0, upkeep: 0, manpower: mp - mp0 });
-	}
-	return out;
+	return scores.map(([a, b, crown, mp, cur]) => ({ kind: 'road', road: best[0], from: cur || undefined, a, b, cost: price(a) * length(a, b), gain: crown, crown, upkeep: 0, manpower: mp }));
+}
+function roadOptions(ctx) {
+	if (!bestRoad(ctx)) return [];
+	const info = roadInfo(ctx, ctx.state.sites);
+	return roadPriced(ctx, roadScores(ctx, info, roadCandidates(ctx)));
 }
 
 // ---- province food: production and pop consumption a month over the country's locations of each province, with some
@@ -339,11 +359,14 @@ function addFlow(into, f, sign = 1) {
 // prices (country.js marketView), our locations' price sensitivity per market and good, what is planned per market
 // (extra own supply, demand and sensitivity: projects under construction, options already bought) and future building
 // (gold a month per point of a construction good's cost impact, per market; setFuture).
-function markets(ctx) {
-	const sens = {};
-	for (const site of ctx.state.sites) { const x = (sens[site.loc.market] ??= {}); for (const [g, v] of Object.entries(priceSensitivity(ctx.base.get(site).r))) x[g] = (x[g] || 0) + v; }
+function markets(ctx, sens = marketSens(ctx, ctx.state.sites)) {
 	const planned = {};
 	return { view: CS.marketView(ctx.state, ctx.results), sens, planned, future: {}, plannedOf: mk => (planned[mk] ??= { dS: {}, dD: {}, sens: {} }) };
+}
+// our locations' price sensitivity summed per market and good (a worker sums its share; the shares add up)
+function marketSens(ctx, sites, into = {}) {
+	for (const site of sites) { const x = (into[site.loc.market] ??= {}); for (const [g, v] of Object.entries(priceSensitivity(ctx.base.get(site).r))) x[g] = (x[g] || 0) + v; }
+	return into;
 }
 // an option's market and its flows: what it adds to its market and to our price sensitivity once built (flowOwn), and for
 // valuing it (flow; an urbanisation adds the best buildings it unlocks)
@@ -438,4 +461,4 @@ function marketValue(M, o, parts) {
 // an option bought: its market effects join the plan
 const commit = (M, o) => { if (o.flowOwn) addFlow(M.plannedOf(o.mk), o.flowOwn); };
 
-module.exports = { promotedDemand, popDemand, rankDesiredDelta, markets, withFlows, demandKeyOf, constructionWeights, setFuture, marketValue, commit, goodImpact, priceSensitivity, flowDelta, addFlow, urbanOption, context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };
+module.exports = { roadInfo, roadCandidates, roadScores, roadPriced, marketSens, promotedDemand, popDemand, rankDesiredDelta, markets, withFlows, demandKeyOf, constructionWeights, setFuture, marketValue, commit, goodImpact, priceSensitivity, flowDelta, addFlow, urbanOption, context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };

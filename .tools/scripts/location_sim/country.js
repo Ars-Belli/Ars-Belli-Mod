@@ -371,6 +371,9 @@
 		if (!state.roadIndex) {
 			state.roadIndex = new Map();
 			for (const [a, b, t] of state.scn.roads || []) { state.roadIndex.set(a + ',' + b, t); state.roadIndex.set(b + ',' + a, t); }
+		}
+		// (apart: a planner worker is handed the road index)
+		if (!state.straits) {
 			state.straits = new Map();
 			for (const [a, b, z] of map.straits || []) { state.straits.set(a + ',' + b, z); state.straits.set(b + ',' + a, z); }
 		}

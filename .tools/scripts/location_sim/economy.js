@@ -4,6 +4,7 @@
 //        [--promotion 0.05] [--max-payback years] [--roads-every 5] [--full-every 5] [--build-share 0.33]
 //        [--stability 0|save]                      the stability investment: none (default) or the save's, with the economy
 //        [--threads N]                             worker threads in all (default: the CPU's threads less one)
+//        [--profile]                               where each run's time went
 //        [--mod key=+x]...                         change a country modifier for the run (repeatable)
 //        [--compare "key=+x" "key2=+y,key3=-z"...] a baseline run and one run per variant, side by side
 //        [--idle]                                  also a run that never invests (what investing gains)
@@ -42,7 +43,7 @@ const scn0 = JSON.parse(fs.readFileSync(file, 'utf8'));
 const opt = {
 	years: +flag('--years', 30), decide: +flag('--decide', 12), reserve: +flag('--reserve', 0), promotion: +flag('--promotion', 0.05),
 	maxPayback: +flag('--max-payback', Infinity), buildShare: +flag('--build-share', 1 / 3), roadsEvery: +flag('--roads-every', 5), fullEvery: +flag('--full-every', 5), quiet: args.includes('--quiet'), explain: +flag('--explain', 0),
-	stability: flag('--stability', '0'), threads: +flag('--threads', Math.max(1, os.availableParallelism() - 1)),
+	stability: flag('--stability', '0'), profile: args.includes('--profile'), threads: +flag('--threads', Math.max(1, os.availableParallelism() - 1)),
 };
 const num = (x, d = 0) => (+x).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
 const nm = k => DB.names[k] || k;
@@ -78,7 +79,11 @@ function newPlanner(scn) {
 	return { run: msg => new Promise((res, rej) => { pending = { res, rej }; w.postMessage(msg); }), terminate: () => w.terminate() };
 }
 
+// milliseconds spent per part of a run (--profile)
+const clock = () => { const T = {}; let t = Date.now(); return { T, lap(k) { const n = Date.now(); T[k] = (T[k] || 0) + n - t; t = n; } }; };
+
 async function run(variant, label, invest = true) {
+	const time = clock();
 	const scn = JSON.parse(JSON.stringify(scn0));
 	scn.options = { ...(scn.options || {}), markets: 'fixed', food: 'on' };
 	for (const [k, v] of variant) {
@@ -112,6 +117,7 @@ async function run(variant, label, invest = true) {
 	const siteIndex = new Map(state.sites.map((s, i) => [s, i]));
 	const nPool = invest ? Math.floor(opt.threads / opt.runs) : 0;
 	const pool = nPool > 1 ? Array.from({ length: nPool }, () => newPlanner(scn)) : null;
+	time.lap('start');
 	try {
 	for (let m = 0; m <= months; m++) {
 		// projects that finish this month
@@ -134,6 +140,7 @@ async function run(variant, label, invest = true) {
 			if (!opt.quiet) console.log(`  [${label}] year ${String(m / 12).padStart(2)}: crown tax ${num(t.crownTax, 0)}/mo, upkeep ${num(t.upkeep, 0)}, court+stability ${num(scaled, 0)}, net ${num(income - expenses, 0)}/mo, economic base ${num(eco)}, treasury ${num(book.treasury)}, invested ${num(book.invested)}, built ${book.built.building} levels / ${book.built.road} roads / ${book.built.rank} ranks`);
 		}
 		if (m === months) break;
+		time.lap('months');
 		if (invest && m % opt.decide === 0) await decide(m, results, income - expenses);
 		// the month: manpower, pops, control, development, staffing; promotion; proximity, food, markets
 		state.manpowerPool = Math.max(0, Math.min(t.maxManpower, state.manpowerPool + t.manpower - state.manpowerExpense));
@@ -144,6 +151,8 @@ async function run(variant, label, invest = true) {
 		CS.stepMarkets(state, results);
 	}
 	} finally { if (pool) for (const w of pool) w.terminate(); }
+	time.lap('months');
+	if (opt.profile) console.log(`  [${label}] time: ${Object.entries(time.T).map(([k, v]) => `${k} ${(v / 1000).toFixed(1)} s`).join(', ')}`);
 	return { label, variant, years, book };
 
 	// ---- spend the treasury above the reserve, best value per gold first. An option's value is its gain once control has
@@ -156,6 +165,7 @@ async function run(variant, label, invest = true) {
 		if (budget < 100) return;
 		const ctx = plan.context(scn, { state, results });
 		const options = [];
+		time.lap('months');
 		const cache = new Map();
 		// every --full-every years all building types are priced; in between only the types that paid off last time (and
 		// everything where the rank changed), which keeps a decision to a few seconds
@@ -165,22 +175,31 @@ async function run(variant, label, invest = true) {
 			const known = worth.get(site), fresh = full || !known || rankChanged.has(site);
 			return [site, fresh ? null : [...known]];
 		});
+		const roadsDue = opt.roadsEvery > 0 && m % (opt.roadsEvery * 12) === 0;
+		let sens = null, snap = null, parts = null;
 		if (pool) {
-			// the workers take the locations and markets as they stand and price a share of the locations each
-			const snap = JSON.stringify({ sites: state.sites.map(x => [x.loc.id, x.L]),
+			// the workers take the locations and markets as they stand; whole provinces to a worker (a town's value needs its
+			// province's food), the biggest first to the least loaded
+			snap = JSON.stringify({ sites: state.sites.map(x => [x.loc.id, x.L]),
 				markets: Object.fromEntries(Object.entries(state.markets).map(([id, mk]) => [id, { prices: mk.prices, goods: mk.goods, foodPrice: mk.foodPrice }])) });
-			// whole provinces to a worker (a town's value needs its province's food), the biggest first to the least loaded
 			const byProvince = new Map();
-			for (const [site, types] of jobs) { const p = plan.provinceOf(site.loc.id); (byProvince.get(p) || byProvince.set(p, []).get(p)).push([site.loc.id, types]); }
-			const parts = pool.map(() => []);
+			for (const site of state.sites) { const p = plan.provinceOf(site.loc.id); (byProvince.get(p) || byProvince.set(p, []).get(p)).push(site); }
+			parts = pool.map(() => []);
 			for (const group of [...byProvince.values()].sort((a, b) => b.length - a.length)) parts.reduce((a, b) => (b.length < a.length ? b : a)).push(...group);
-			const replies = await Promise.all(pool.map((w, i) => w.run({ snap, jobs: parts[i] })));
+			const jobOf = new Map(jobs);
+			const replies = await Promise.all(pool.map((w, i) => w.run({ snap, mine: parts[i].map(x => x.loc.id),
+				jobs: parts[i].filter(x => jobOf.has(x)).map(x => [x.loc.id, jobOf.get(x)]) })));
+			const sensOf = new Map();
 			for (const r of replies) {
 				for (const [id, types] of r.worth) { const site = siteOf.get(id); worth.set(site, new Set(types)); rankChanged.delete(site); }
 				for (const o of r.options) { o.site = siteOf.get(o.siteId); options.push(o); }
+				for (const [id, x] of r.sens) sensOf.set(id, x);
 			}
+			sens = {};
+			for (const site of state.sites) { const y = (sens[site.loc.market] ??= {}); for (const [g, v] of Object.entries(sensOf.get(site.loc.id) || {})) y[g] = (y[g] || 0) + v; }
 			// the order of the one-thread run (by location), so ties fall the same way
 			options.sort((a, b) => siteIndex.get(a.site) - siteIndex.get(b.site));
+			time.lap('decisions: options (threads)');
 		} else for (const [site, types] of jobs) {
 			const only = types ? new Set(types) : null;
 			const found = plan.buildingOptions(ctx, site, { staffing: 'promotion', types: only ? (k => only.has(k)) : undefined });
@@ -190,14 +209,30 @@ async function run(variant, label, invest = true) {
 			const u = plan.urbanOption(ctx, site, cache);
 			if (u && u.verdict === 'food-safe' && u.value > 0) options.push(plan.withFlows(ctx, { ...u, worth: u.value, cost2: u.valueCost }));
 		}
-		if (opt.roadsEvery > 0 && m % (opt.roadsEvery * 12) === 0) for (const o of plan.roadOptions(ctx)) if (o.gain > 0) options.push(plan.withFlows(ctx, { ...o, worth: o.gain, cost2: o.cost }));
+		time.lap('decisions: options');
+		if (roadsDue) {
+			let roads;
+			if (pool) {
+				// two passes: every location's crown tax over control (each worker its provinces), then a share of the borders each
+				const pairs = plan.roadCandidates(ctx), shares = pool.map(() => []); // (builds the road index the first time)
+				const roadIdx = [...state.roadIndex];
+				const info = (await Promise.all(pool.map((w, i) => w.run({ type: 'roadInfo', snap, roads: roadIdx, sites: parts[i].map(x => x.loc.id) })))).flatMap(r => r.info);
+				pairs.forEach((p, i) => shares[i % pool.length].push(p));
+				const scored = await Promise.all(pool.map((w, i) => w.run({ type: 'roadScores', info, pairs: shares[i] })));
+				// back in the one-thread order
+				const at = new Map(); scored.forEach((r, i) => r.scores.forEach((x, j) => at.set(x[0] + ',' + x[1], x)));
+				roads = plan.roadPriced(ctx, pairs.map(([a, b]) => at.get(a + ',' + b)));
+			} else roads = plan.roadOptions(ctx);
+			for (const o of roads) if (o.gain > 0) options.push(plan.withFlows(ctx, { ...o, worth: o.gain, cost2: o.cost }));
+		}
+		time.lap('decisions: roads');
 
 		// markets: settled prices, our sensitivity, what is under construction. Future building (what cheaper construction
 		// goods save on): the pace of spending since the first decision (which spends the starting treasury), with
 		// --build-share of the surplus as a three-year prior; shared among markets and goods as spent so far (or as the
 		// options on the table would spend it, the first time). Spain spends about a third of its surplus: options that pay
 		// back within --max-payback run out before the gold does.
-		const M = plan.markets(ctx);
+		const M = plan.markets(ctx, sens || undefined);
 		for (const q of queue) if (q.done > m && q.flow) plan.addFlow(M.plannedOf(q.mk), q.flow);
 		const since = book.first ? m - book.first.month : 0, spent = book.first ? book.invested - book.first.spent : 0;
 		const pace = (36 * opt.buildShare * Math.max(0, netNow) + spent) / (36 + since);
@@ -230,6 +265,7 @@ async function run(variant, label, invest = true) {
 			}
 			schedule(o, m);
 		}
+		time.lap('decisions: markets and choice');
 		if (!book.first) book.first = { month: m, spent: book.invested };
 	}
 	function schedule(o, m) {
