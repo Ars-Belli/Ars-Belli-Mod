@@ -37,7 +37,7 @@ const keys = [];
 for (const m of fs.readFileSync(path.join(MAP, 'location_templates.txt'), 'utf8').matchAll(/^([A-Za-z0-9_]+)\s*=\s*\{/gm)) keys.push(m[1]);
 const idOf = new Map(keys.map((k, i) => [k, i + 1]));
 const colorToId = new Int32Array(1 << 24).fill(0);
-for (const m of fs.readFileSync(path.join(MAP, 'named_locations/00_default.txt'), 'utf8').matchAll(/^\s*([A-Za-z0-9_]+)\s*=\s*([0-9a-fA-F]{6})/gm)) {
+for (const m of fs.readFileSync(path.join(MAP, 'named_locations/00_default.txt'), 'utf8').matchAll(/^\s*([A-Za-z0-9_]+)\s*=\s*([0-9a-fA-F]{1,6})\b/gm)) { // colours can drop leading zeros (lincoln = e4d0f)
 	const id = idOf.get(m[1]);
 	if (id) colorToId[parseInt(m[2], 16)] = id;
 }

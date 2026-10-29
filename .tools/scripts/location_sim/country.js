@@ -336,7 +336,10 @@
 	function project(scn, months = 120) {
 		const state = create(scn);
 		const timeline = [];
+		// options.schedule: [{ month, location, building }] finishes a building at the start of that month (a construction)
+		const schedule = (scn.options || {}).schedule || [];
 		for (let mth = 0; mth <= months; mth++) {
+			for (const ev of schedule) if (ev.month === mth) { const site = state.sites.find(x => x.loc.id === ev.location); if (site) site.L.buildings.push({ level: 1, ...ev.building }); }
 			const { results } = evaluateAll(state, mth === 0);
 			const t = totals(state, results);
 			const provs = Object.values(state.provinces);

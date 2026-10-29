@@ -74,7 +74,7 @@ if (S.roads && S.proximityCache) {
 	const show = r => `median error ${r.median.toFixed(3)}, 90th percentile ${r.p90.toFixed(3)}, worst ${r.max.toFixed(2)}, ${r.within1} of ${r.errs.length} within 1 point`;
 	const now = run(G0);
 	let best = now;
-	for (let G = Math.max(0, G0 - 0.06); G <= G0 + 0.06; G += 0.0025) { const r = run(G); if (r.median < best.median) best = r; }
+	for (let G = Math.max(0, G0 - 0.3); G <= G0 + 0.15; G += 0.005) { const r = run(G); if (r.median < best.median) best = r; }
 	for (let G = Math.max(0, best.G - 0.0025); G <= best.G + 0.0025; G += 0.0001) { const r = run(G); if (r.median < best.median) best = r; }
 	run(G0);
 	console.log(`Proximity, speed term ${G0.toFixed(4)} (the country's modifiers): ${show(now)}`);
