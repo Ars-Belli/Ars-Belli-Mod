@@ -201,11 +201,22 @@ for (const [k, v] of Object.entries(loadDb('in_game/common/building_types'))) {
 	for (const f of Object.keys(buildings[k])) if (buildings[k][f] === undefined) delete buildings[k][f];
 }
 
-// ---- levies
+// ---- levies, the advances that unlock them, and their units (stats from the battle simulator's units.json)
+// A pop raises the eligible levy whose unit has the highest total combat power (levies/readme.txt):
+// max_strength x combat_power x (1 + initiative x 0.025) x (1 + (flanking - 1) x 0.3) x (1 + mdd)(1 - mdt)(1 + sdd)(1 - sdt)
+const AGE_N = { age_1_traditions: 1, age_2_renaissance: 2, age_3_discovery: 3, age_4_reformation: 4, age_5_absolutism: 5, age_6_revolutions: 6 };
+const advancesDb = loadDb('in_game/common/advances');
+const unlockedBy = {};
+for (const [ak, av] of Object.entries(advancesDb))
+	for (const lv of all(av, 'unlock_levy')) (unlockedBy[lv] ??= []).push([ak, AGE_N[scalar(av, 'age')] || 0]);
+const UNITS = JSON.parse(fs.readFileSync(path.join(__dirname, '../battle_sim/units.json'), 'utf8')).units;
 const levies = {};
 for (const [k, v] of Object.entries(loadDb('in_game/common/levies'))) {
+	const u = UNITS[scalar(v, 'unit')];
 	levies[k] = { unit: scalar(v, 'unit'), size: scalar(v, 'size'), pops: all(v, 'allowed_pop_type'), cultures: all(v, 'allowed_culture'),
-		...(get(v, 'country_allow') ? { countryAllow: 1 } : {}), ...(get(v, 'allow') ? { allow: 1 } : {}) };
+		...(get(v, 'country_allow') ? { countryAllow: 1 } : {}), ...(get(v, 'allow') ? { allow: 1 } : {}), ...(get(v, 'allow_as_crew') ? { navy: 1 } : {}),
+		...(unlockedBy[k] ? { unlock: unlockedBy[k] } : {}),
+		...(u ? { cat: u.c, age: u.a, men: u.s, power: +(u.s * u.p * (1 + u.i * 0.025) * (1 + (u.fl - 1) * 0.3) * (1 + u.mdd) * (1 - u.mdt) * (1 + u.sdd) * (1 - u.sdt)).toFixed(5) } : {}) };
 }
 
 // ---- terrain
