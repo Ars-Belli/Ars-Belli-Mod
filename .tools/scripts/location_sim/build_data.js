@@ -313,6 +313,8 @@ for (const [k, v] of Object.entries(loadDb('in_game/common/town_rights'))) { con
 // ---- road types: proximity bonus (a road segment costs road_cost_on_distance_from_capital minus it)
 const roadTypes = {};
 for (const [k, v] of Object.entries(loadDb('in_game/common/road_types'))) roadTypes[k] = { level: scalar(v, 'level') ?? 0, proximity: scalar(v, 'proximity') ?? 0 };
+// the advance that unlocks each road type (unlock_road_type), for the best road a country can build
+for (const [adv, v] of Object.entries(advancesDb)) { const r = scalar(v, 'unlock_road_type'); if (r && roadTypes[r]) roadTypes[r].advance = adv; }
 
 // ---- English names for everything kept
 const loc = {};

@@ -165,6 +165,7 @@ crown income         = Σ estate tax base × tax rate × tax efficiency
   - speed: the country's `global_distance_from_capital_speed_propagation` (centralization, laws, the Supreme Court × goods access, 0.001 × the ruler's administration **with its character modifiers**: Spain's ruler is ADM 20 + 15 from the Order of the Ermine = +3.5%) + the start location's own (0.005 × development, bridges and canals × staffing × goods access).
 - **River links** are not a rule of the river image: a river along a border links the two banks unevenly (Ussel–La Tour d'Auvergne and La Tour d'Auvergne–Mauriac are linked, Ussel–Mauriac is not, though the river touches all three). `river_calibrate.js` reads every country's proximity tree in a save and labels the neighbour pairs the game priced as a river or could not have (7,681 pairs from the June 1547 save; the image rule gets 93% of them right). `build_map.js` takes those labels and the image rule for the rest.
 - The save stores proximity from the last rebuild, which only some changes trigger: Spain's stored values fit a speed of 0.485 (the Supreme Court at full goods access), the game recomputes 0.4707 once loaded.
+- **Local Governor rules** *(building_types/capital_buildings.txt)*: a city or megalopolis with a road to the capital, not the capital or a historical capital, no other proximity source building; at most `max(num_local_governors, minimum_num_local_governors)` minus lieutenancies, itinerant court seats and king's manors, **counting governors under construction** (365 days), so moving one means a year without it. Spain: base 1 + Empire rank 1 + `local_governor_advance` 1 = 3. Upkeep about 15 gold a month (paper, furniture, books, gold, fine cloth...).
 - A governor only helps where its 80 beats what the capital already reaches: a governor in Lisbon, reached at 86 by sea, changes nothing. Spain 1547 with a governor in Zaragoza (proximity 32): control +2.1 points within two years, crown tax +3%, manpower +150 a month, levies +7,000.
 
 **Development and prosperity** *(code `0x1430cc5b0`, `0x1430cb200`; consecutive saves within rounding)*, once a month:
@@ -238,6 +239,7 @@ Files in `.tools/scripts/location_sim/`:
 | `engine.js` | The rules of this document as code; runs in Node and the browser. |
 | `data.json` | Game + mod data: pops, estates, ranks, ages, static modifiers, buildings, production methods, goods, levies, terrain, 28,573 locations with province, river size and coast. Rebuild with `node build_data.js` after a game or mod change (after `build_map.js`). |
 | `map.json` | Each location's size, centre, neighbours (shared border) and river links, from the map images and `river_fixes.json`. `node build_map.js` (5 s). |
+| `governors.js` | `node governors.js <country scenario> [--roads best|current] [--count N] [--years 10]`: every eligible city scored by crown tax, manpower and levies once control has settled at its new maximum, the best sets (exhaustive up to 3), and the current set against the best month by month with the build year. |
 | `river_calibrate.js` | `node river_calibrate.js <save>`: river links the game uses, from every country's proximity tree, into `river_fixes.json`; rerun `build_map.js` after. |
 | `sim.js` | `node sim.js <scenario.json> [--months 120] [--buildings] [--modifier <key>] [--modifiers] [--json]` |
 | `from_save.js` | `node from_save.js <save|latest> --list TAG`, `--location <id|key>`, `--country TAG` (whole country to `scenarios/local/`, git-ignored) `[--out file]` |
@@ -270,6 +272,18 @@ Files in `.tools/scripts/location_sim/`:
 - `market.prices` default to the goods' base prices.
 
 **The projection** (`--months`): pops grow by their births, control moves toward its max, buildings lay off or rehire 10% a month by profit, manpower accumulates. Development, prosperity, prices and food are held constant until their research is done.
+
+### Where to put governors (Spain, June 1547)
+
+`governors.js` with paved roads on every land border (Spain's best road; modern roads come with the Age of Absolutism). Gains over no governor once control has settled:
+
+| Governors | Crown tax a month | Manpower a month | Levies |
+|---|---|---|---|
+| Valladolid, Toledo, Aurillac (now) | +537 | +781 | +30,800 |
+| Valladolid, Toledo, **Montauban** | +619 | +853 | +34,100 |
+| Salamanca, Zaragoza, Montauban (most tax) | +624 | +779 | +33,300 |
+
+Moving Aurillac's governor to Montauban: the Toulouse basin gains (Verdun-sur-Garonne, Toulouse, Villefranche, Castelnaudary, Lavaur), the Auvergne loses a little (Châteauneuf-de-Randon, Aurillac). Month by month, with the year of construction: −52 crown tax and −55 manpower a month in year 1, even in year 2, +94 and +74 a month by year 10; the construction year is paid back after 3 years and the switch nets +7,500 gold and +5,900 men over 10 years. Moving all three costs more while building (−149 crown tax, −204 manpower a month in year 1), pays back after 5.2 years and ends with almost no manpower gain. With the save's roads the same set (Valladolid, Toledo, Montauban) is best on all three counts.
 
 ### Country mode
 

@@ -73,6 +73,7 @@ const societal = loadDb('in_game/common/societal_values');
 const religionsDb = loadDb('in_game/common/religions');
 const traitsDb = loadDb('in_game/common/traits');
 const ordersDb = loadDb('in_game/common/chivalric_orders');
+const ranksDb = loadDb('in_game/common/country_ranks');
 const policies = {};
 for (const law of Object.values(laws)) for (const [k, v] of law) if (Array.isArray(v) && (get(v, 'country_modifier') || get(v, 'location_modifier'))) policies[k] = v;
 // adds a modifier block to acc, with each key's sources in acc.__src (key -> [[source, value]])
@@ -96,6 +97,9 @@ function countryContext(cid) {
 	const c = entry('countries', cid);
 	const acc = {}, notes = [], locMods = {}, locNotes = [], locObjects = [];
 	addBlock(acc, notes, 'base values', Object.entries(DATA.countryBase).map(([k, v]) => [k, String(v)]));
+	// the country rank's rank_modifier (an Empire gets +1 local governor), from the last rank change
+	const rank = (list(c.country_rank_history).filter(x => x && x.country_rank).slice(-1)[0] || {}).country_rank;
+	if (rank && ranksDb[rank]) addBlock(acc, notes, `country rank ${rank}`, get(ranksDb[rank], 'rank_modifier'));
 	for (const adv of Object.keys(c.researched_advances || {})) addBlock(acc, notes, `advance ${adv}`, advances[adv]);
 	const gov = c.government || {};
 	for (const [law, v] of Object.entries(gov.implemented_laws || {})) {
