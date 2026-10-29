@@ -239,7 +239,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	</section>
 	<section class="panel" id="worth" aria-labelledby="worth-title">
 		<h2 id="worth-title">What is a stat worth?</h2>
-		<p class="sub">Quick-battle side A fights an exact copy of itself; only side A gets the bonus. On the left, how often side A wins (50% means the bonus did nothing); on the right, how many enemy men fall for each man side A loses (1.0 is an even trade). A bonus can win battles and still cost more men than it saves.</p>
+		<p class="sub" id="worth-sub">Quick-battle side A fights an exact copy of itself; only side A gets the bonus. On the left, how often side A wins (50% means the bonus did nothing); on the right, how many enemy men fall for each man side A loses (1.0 is an even trade). A bonus can win battles and still cost more men than it saves.</p>
 		<div><button id="measure" type="button">Measure the bonuses</button> <span class="progress" id="measure-progress" aria-live="polite"></span></div>
 		<div class="charts"><div class="chart" id="chart-worth"></div><div class="chart" id="chart-worth-loss"></div></div>
 		<details><summary>Show the results as a table</summary><div class="tablewrap" id="worth-table"></div></details>
@@ -278,9 +278,15 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	function setMode(m) {
 		mode = m;
 		$('tab-quick').setAttribute('aria-selected', m === 'quick'); $('tab-full').setAttribute('aria-selected', m === 'full');
-		$('mode-quick').hidden = m !== 'quick'; $('mode-full').hidden = m !== 'full'; $('worth').hidden = m !== 'quick';
+		$('mode-quick').hidden = m !== 'quick'; $('mode-full').hidden = m !== 'full';
 		$('mode-quick').style.display = m === 'quick' ? 'grid' : 'none'; $('mode-full').style.display = m === 'full' ? 'grid' : 'none';
+		$('worth-sub').textContent = m === 'full'
+			? 'Full battle: every attacker army gets the bonus, the defender stays as set up. The first row is the battle as it stands; the grey lines mark it, so each bonus reads as a change from there. On the left, how often the attacker wins; on the right, how many enemy men fall for each man the attacker loses. Big battles take a while: lower "Battles to run" for a first look.'
+			: 'Quick-battle side A fights an exact copy of itself; only side A gets the bonus. On the left, how often side A wins (50% means the bonus did nothing); on the right, how many enemy men fall for each man side A loses (1.0 is an even trade). A bonus can win battles and still cost more men than it saves.';
+		if (worthMode && worthMode !== m) { $('chart-worth').innerHTML = ''; $('chart-worth-loss').innerHTML = ''; $('worth-table').innerHTML = ''; $('measure-progress').textContent = 'Measure the bonuses for this battle.'; }
+		worthMode = m;
 	}
+	let worthMode = null;
 	$('tab-quick').onclick = () => setMode('quick');
 	$('tab-full').onclick = () => { setMode('full'); renderFull(); };
 
@@ -554,9 +560,17 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		['+20 experience', s => { s.experience += 20; s.levyExperience += 20; }], ['+25% army initiative', s => { s.initiativeMod += 0.25; }],
 		['+25% combat speed', s => { s.speedMod += 0.25; }], ['+10% infantry power', s => { s.power.li += 0.1; s.power.hi += 0.1; }],
 		['+10% cavalry power', s => { s.power.lc += 0.1; s.power.hc += 0.1; }], ['+10% artillery power', s => { s.power.art += 0.1; }],
+		['+0.5 morale (flat)', s => { s.moraleFlat = (s.moraleFlat || 0) + 0.5; }],
+		['−10% strength damage taken', s => { s.sdt = (s.sdt || 0) - 0.1; }], ['+10% morale damage done', s => { s.mdd = (s.mdd || 0) + 0.1; }],
+		['+10% possible frontage', s => { s.frontageMod = (s.frontageMod || 0) + 0.1; }], ['+25% levy combat efficiency', s => { s.levyCE = (s.levyCE || 0) + 0.25; }],
+		// Full battle only: correct section chance acts on armies that arrive late; generals belong to armies
+		['+30% correct section chance', s => { s.correctBoxChance = (s.correctBoxChance || 0) + 0.3; }, { full: true }],
+		['+20 general skills (each)', null, { full: true, army: a => { const g = a.general = a.general || {}; for (const k of ['adm', 'dip', 'mil']) g[k] = Math.min(100, (g[k] || 0) + 20); } }],
 	];
-	function renderWorth(results) {
-		const W = 620, rowH = 30, L = 170, R = 60, T = 8, H = T + results.length * rowH + 22;
+	const QUICK_BONUSES = BONUSES.filter(b => !(b[2] && b[2].full));
+	// ref: where the grey reference lines go (quick: 50% and an even trade; full: the battle as set up, the first row)
+	function renderWorth(results, ref = { win: 0.5, trade: 1 }, who = 'Side A') {
+		const W = 620, rowH = 30, L = 190, R = 60, T = 8, H = T + results.length * rowH + 22;
 		const x = v => L + (W - L - R) * v;
 		let g = '';
 		for (let v = 0; v <= 1.0001; v += 0.25) g += `<line class="gridline" x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H - 20}"/><text x="${x(v)}" y="${H - 6}" text-anchor="middle">${v * 100}%</text>`;
@@ -565,19 +579,21 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 			const yy = T + i * rowH + 6, h = 18, wv = Math.max(0.01, w);
 			// 95% interval as a whisker across the bar end
 			const wh = ci ? `<path d="M${x(ci[0])} ${yy + h / 2}H${x(ci[1])}M${x(ci[0])} ${yy + 4}v${h - 8}M${x(ci[1])} ${yy + 4}v${h - 8}" stroke="var(--ink)" stroke-width="1.5" fill="none" opacity="0.75"/>` : '';
-			bars += `<text x="${L - 8}" y="${yy + 13}" text-anchor="end" style="fill:var(--ink);font-family:var(--font-body);font-size:13px">${name}</text><path d="M${x(0)} ${yy}H${x(wv) - 4}a4 4 0 0 1 4 4v${h - 8}a4 4 0 0 1 -4 4H${x(0)}Z" fill="var(--side-a)"><title>${name}: side A wins ${pct(w)}${ci ? ` (95% range ${pct(ci[0])} – ${pct(ci[1])})` : ''}</title></path>${wh}<text x="${x(Math.max(wv, ci ? ci[1] : 0)) + 6}" y="${yy + 13}" style="fill:var(--ink);font-family:var(--font-num);font-size:12px">${pct(w)}${ci ? ` ±${(50 * (ci[1] - ci[0])).toFixed(1)}` : ''}</text>`;
+			bars += `<text x="${L - 8}" y="${yy + 13}" text-anchor="end" style="fill:var(--ink);font-family:var(--font-body);font-size:13px">${name}</text><path d="M${x(0)} ${yy}H${x(wv) - 4}a4 4 0 0 1 4 4v${h - 8}a4 4 0 0 1 -4 4H${x(0)}Z" fill="var(--side-a)"><title>${name}: ${who.toLowerCase()} wins ${pct(w)}${ci ? ` (95% range ${pct(ci[0])} – ${pct(ci[1])})` : ''}</title></path>${wh}<text x="${x(Math.max(wv, ci ? ci[1] : 0)) + 6}" y="${yy + 13}" style="fill:var(--ink);font-family:var(--font-num);font-size:12px">${pct(w)}${ci ? ` ±${(50 * (ci[1] - ci[0])).toFixed(1)}` : ''}</text>`;
 		});
-		$('chart-worth').innerHTML = `<div class="title">Side A win rate against its own copy</div><div class="legend" style="--c:var(--ink)"><span>whiskers: 95% range for the battles run</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Win rate per bonus"><g class="axis">${g}</g><line x1="${x(0.5)}" x2="${x(0.5)}" y1="${T}" y2="${H - 20}" stroke="var(--muted)" stroke-width="1"/>${bars}</svg>`;
-		renderExchange(results);
+		const title = who === 'Side A' ? 'Side A win rate against its own copy' : `${who} win rate with each bonus`;
+		$('chart-worth').innerHTML = `<div class="title">${title}</div><div class="legend" style="--c:var(--ink)"><span>whiskers: 95% range for the battles run</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Win rate per bonus"><g class="axis">${g}</g><line x1="${x(ref.win)}" x2="${x(ref.win)}" y1="${T}" y2="${H - 20}" stroke="var(--muted)" stroke-width="1"/>${bars}</svg>`;
+		renderExchange(results, ref, who);
 		const ex = m => m && m.exchangeCI ? `${m.exchange.toFixed(2)} (${m.exchangeCI[0].toFixed(2)} – ${m.exchangeCI[1].toFixed(2)})` : '';
-		$('worth-table').innerHTML = `<table><thead><tr><th>Bonus</th><th>Side A wins</th><th>95% range</th><th>Side A losses</th><th>Side B losses</th><th>Enemy losses per own loss</th></tr></thead><tbody>${results.map(([n, w, ci, m]) => `<tr><td>${n}</td><td>${pct(w)}</td><td>${ci ? `${pct(ci[0])} – ${pct(ci[1])}` : ''}</td><td>${m ? fmtMen(m.losses[0]) : ''}</td><td>${m ? fmtMen(m.losses[1]) : ''}</td><td>${ex(m)}</td></tr>`).join('')}</tbody></table>`;
+		const foe = who === 'Side A' ? 'Side B' : 'Defender';
+		$('worth-table').innerHTML = `<table><thead><tr><th>Bonus</th><th>${who} wins</th><th>95% range</th><th>${who} losses</th><th>${foe} losses</th><th>Enemy losses per own loss</th></tr></thead><tbody>${results.map(([n, w, ci, m]) => `<tr><td>${n}</td><td>${pct(w)}</td><td>${ci ? `${pct(ci[0])} – ${pct(ci[1])}` : ''}</td><td>${m ? fmtMen(m.losses[0]) : ''}</td><td>${m ? fmtMen(m.losses[1]) : ''}</td><td>${ex(m)}</td></tr>`).join('')}</tbody></table>`;
 	}
 	// Casualties per bonus: how many enemy men fall for each of side A's (1 = an even trade). A bonus can win more battles
 	// and still cost more men, or win few more battles but bleed the enemy.
-	function renderExchange(results) {
+	function renderExchange(results, ref = { win: 0.5, trade: 1 }, who = 'Side A') {
 		const rows = results.filter(r => r[3] && r[3].exchangeCI);
 		if (!rows.length) { $('chart-worth-loss').innerHTML = ''; return; }
-		const W = 620, rowH = 30, L = 170, R = 90, T = 8, H = T + rows.length * rowH + 22;
+		const W = 620, rowH = 30, L = 190, R = 90, T = 8, H = T + rows.length * rowH + 22;
 		const top = Math.max(1.5, ...rows.map(r => r[3].exchangeCI[1])) * 1.05;
 		const x = v => L + (W - L - R) * v / top;
 		let g = '';
@@ -587,28 +603,61 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		rows.forEach(([name, , , m], i) => {
 			const yy = T + i * rowH + 6, h = 18, r = m.exchange, [lo, hi] = m.exchangeCI;
 			bars += `<text x="${L - 8}" y="${yy + 13}" text-anchor="end" style="fill:var(--ink);font-family:var(--font-body);font-size:13px">${name}</text>`
-				+ `<path d="M${x(0)} ${yy}H${x(r) - 4}a4 4 0 0 1 4 4v${h - 8}a4 4 0 0 1 -4 4H${x(0)}Z" fill="var(--side-a)"><title>${name}: ${r.toFixed(2)} enemy men lost per man of side A (95% range ${lo.toFixed(2)} – ${hi.toFixed(2)}); side A loses ${fmtMen(m.losses[0])}, side B ${fmtMen(m.losses[1])}</title></path>`
+				+ `<path d="M${x(0)} ${yy}H${x(r) - 4}a4 4 0 0 1 4 4v${h - 8}a4 4 0 0 1 -4 4H${x(0)}Z" fill="var(--side-a)"><title>${name}: ${r.toFixed(2)} enemy men lost per man of the ${who.toLowerCase()} (95% range ${lo.toFixed(2)} – ${hi.toFixed(2)}); the ${who.toLowerCase()} loses ${fmtMen(m.losses[0])}, the enemy ${fmtMen(m.losses[1])}</title></path>`
 				+ `<path d="M${x(lo)} ${yy + h / 2}H${x(hi)}M${x(lo)} ${yy + 4}v${h - 8}M${x(hi)} ${yy + 4}v${h - 8}" stroke="var(--ink)" stroke-width="1.5" fill="none" opacity="0.75"/>`
 				+ `<text x="${x(Math.max(r, hi)) + 6}" y="${yy + 13}" style="fill:var(--ink);font-family:var(--font-num);font-size:12px">${r.toFixed(2)} ±${((hi - lo) / 2).toFixed(2)}</text>`;
 		});
-		$('chart-worth-loss').innerHTML = `<div class="title">Enemy losses per man side A loses</div><div class="legend" style="--c:var(--ink)"><span>1.0 = even trade; whiskers: 95% range</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Loss exchange ratio per bonus"><g class="axis">${g}</g><line x1="${x(1)}" x2="${x(1)}" y1="${T}" y2="${H - 20}" stroke="var(--muted)" stroke-width="1"/>${bars}</svg>`;
+		$('chart-worth-loss').innerHTML = `<div class="title">Enemy losses per man the ${who.toLowerCase()} loses</div><div class="legend" style="--c:var(--ink)"><span>${who === 'Side A' ? '1.0 = even trade' : 'grey line: the battle as set up'}; whiskers: 95% range</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Loss exchange ratio per bonus"><g class="axis">${g}</g><line x1="${x(ref.trade)}" x2="${x(ref.trade)}" y1="${T}" y2="${H - 20}" stroke="var(--muted)" stroke-width="1"/>${bars}</svg>`;
 	}
 	function measure(n, quiet) {
 		const base = readQuick('a'), width = Math.max(2, +$('q-width').value || 10), out = [];
 		if (quiet) {
-			for (const [name, mod] of BONUSES) { const a = JSON.parse(JSON.stringify(base)); mod(a); const m = S.monteCarlo(a, base, n, { width }); out.push([name, (m.wins[0] + m.draws / 2) / m.n, S.wilson(m.wins[0] + m.draws / 2, m.n), m]); }
+			for (const [name, mod] of QUICK_BONUSES) { const a = JSON.parse(JSON.stringify(base)); mod(a); const m = S.monteCarlo(a, base, n, { width }); out.push([name, (m.wins[0] + m.draws / 2) / m.n, S.wilson(m.wins[0] + m.draws / 2, m.n), m]); }
 			renderWorth(out); return;
 		}
 		$('measure').disabled = true;
 		let i = 0;
 		const next = () => {
-			if (i >= BONUSES.length) { $('measure').disabled = false; $('measure-progress').textContent = `Done: ${n} battles per bonus.`; return; }
-			const [name, mod] = BONUSES[i]; const a = JSON.parse(JSON.stringify(base)); mod(a);
+			if (i >= QUICK_BONUSES.length) { $('measure').disabled = false; $('measure-progress').textContent = `Done: ${n} battles per bonus.`; return; }
+			const [name, mod] = QUICK_BONUSES[i]; const a = JSON.parse(JSON.stringify(base)); mod(a);
 			runMany(S.simpleScenario(a, base, { width }), n, m => { out.push([name, (m.wins[0] + m.draws / 2) / m.n, m.shareCI[0], m]); i++; renderWorth(out); next(); }, f => { $('measure-progress').textContent = `${name}: ${Math.round(f * 100)}%`; });
 		};
 		next();
 	}
-	$('measure').onclick = () => measure(Math.max(50, Math.min(5000, +$('q-runs').value || 500)));
+	// Full battle: every attacker army's country gets the bonus (a copy, so a country shared with the defender is untouched)
+	function measureFull(n) {
+		const base = JSON.parse(JSON.stringify(scn)), out = [];
+		const withBonus = (mod, opt) => {
+			const s = JSON.parse(JSON.stringify(base));
+			for (const a of s.attacker.armies) {
+				if (opt && opt.army) opt.army(a);
+				const code = a.country + ' (bonus)';
+				if (!s.countries[code]) {
+					const c = { ...JSON.parse(JSON.stringify(DEF_C)), ...JSON.parse(JSON.stringify(s.countries[a.country] || {})) };
+					c.power = { li: 0, hi: 0, lc: 0, hc: 0, art: 0, ...(c.power || {}) };
+					if (mod) mod(c);
+					s.countries[code] = c;
+				}
+				a.country = code;
+			}
+			return s;
+		};
+		const list = [['As set up (no bonus)', null], ...BONUSES];
+		$('measure').disabled = true;
+		let i = 0;
+		const next = () => {
+			if (i >= list.length) { $('measure').disabled = false; $('measure-progress').textContent = `Done: ${n} battles per bonus.`; return; }
+			const [name, mod, opt] = list[i];
+			runMany(withBonus(mod, opt), n, m => {
+				out.push([name, (m.wins[0] + m.draws / 2) / m.n, m.shareCI[0], m]); i++;
+				const b = out[0][3]; renderWorth(out, { win: out[0][1], trade: b && b.exchange ? b.exchange : 1 }, 'Attacker'); next();
+			}, f => { $('measure-progress').textContent = `${name}: ${Math.round(f * 100)}%`; });
+		};
+		next();
+	}
+	$('measure').onclick = () => mode === 'full'
+		? measureFull(Math.max(50, Math.min(5000, +$('f-runs').value || 500)))
+		: measure(Math.max(50, Math.min(5000, +$('q-runs').value || 500)));
 
 	// ---------- FULL mode: scenario state and editor
 	const EXAMPLE = {
