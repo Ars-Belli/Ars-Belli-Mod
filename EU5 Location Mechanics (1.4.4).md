@@ -242,6 +242,8 @@ Files in `.tools/scripts/location_sim/`:
 | `map.json` | Each location's size, centre, neighbours (shared border) and river links, from the map images and `river_fixes.json`. `node build_map.js` (5 s). |
 | `governors.js` | `node governors.js <country scenario> [--roads best|current] [--count N] [--years 10] [--naval [--local key,key]]`: every eligible city scored by crown tax, manpower and levies once control has settled at its new maximum, the best sets (exhaustive up to 3), and the current set against the best month by month with the build year. |
 | `investments.js` | `node investments.js <country scenario> [--top 100] [--kinds buildings,roads,ranks] [--location key] [--per-kind 10] [--csv file]`: every building level, road and rank upgrade the country can buy, ranked by crown tax gained per gold (at settled control, minus added upkeep). |
+| `urbanise.js` | `node urbanise.js <country scenario> [--top 40] [--rank town|city|all] [--csv file]`: every location that can rise a rank, long-sighted: the immediate change (RGO shrink included), the buildings the rank unlocks (jobs filled by promotion), manpower, and the province's food now and with every RGO full; food-safe candidates first. |
+| `planner.js` | Shared by investments.js, urbanise.js and the economy simulator: settled evaluation, location conditions, prices, options, province food. |
 | `river_calibrate.js` | `node river_calibrate.js <save>`: river links the game uses, from every country's proximity tree, into `river_fixes.json`; rerun `build_map.js` after. |
 | `sim.js` | `node sim.js <scenario.json> [--months 120] [--buildings] [--modifier <key>] [--modifiers] [--json]` |
 | `from_save.js` | `node from_save.js <save|latest> --list TAG`, `--location <id|key>`, `--country TAG` (whole country to `scenarios/local/`, git-ignored) `[--out file]` |
@@ -304,6 +306,12 @@ Moving Aurillac's governor to Montauban: the Toulouse basin gains (Verdun-sur-Ga
 - **Buildings pay back slowly for the crown**: it taxes only a slice of a building's profit (wealth × control × rate × efficiency), and most pops already work. Best: Cannon Makers in Castile, where construction goods are cheap (Valladolid 292 gold, +0.97, 25 years; Lisbon's second one 426 gold, +1.4, 25 years) — prices are held, so several in one market would lower the cannon price.
 - **Rank upgrades do not pay**: a town loses the rural rank's +100% max RGO size (Constantina's silver would fall from 17 levels to 7); town → city costs 2,000 for +5% max control.
 - Not counted: market price changes, development growth (roads, ranks), market access from roads, how long control takes to rise (about 0.2 points a month), RGO expansions (the game charged 263 at Constantina against the price file's 100; the scaling is open).
+
+### Urbanisation (Spain, June 1547)
+
+A town or city pays back slowly in crown tax: it loses the rural rank's +100% max RGO size and +7.5% food, makes 10% (city 20%) less food, and gains +5% max control, building slots, desired pops and town-only buildings (armories in Age II and barracks in Age IV are town-only; rural training fields come with Age III). Food decides where: a province's growth gets +0.15% a year at a surplus of 25% over consumption, less below it, and starves below zero, so a town must keep its province at or above 25% (or not lower its growth) now **and** once every RGO is built to its maximum.
+
+`urbanise.js` (Spain): 170 of 254 candidates are food-safe, 24 cost food growth, 60 would cause a shortage now or once RGOs are full. Mines and wool stay rural (Odemira's iron would fall from 17 levels to 8, −30 crown tax a month); the best are food locations in big-surplus provinces (Castrocalbón, wheat: the province stays at 37% now and 123% with full RGOs) and cheap-goods towns, each worth about +0.2 to +1.5 crown tax a month once its unlocked buildings are staffed. The long-run effects (promoted burghers' demand, population capacity, development) are for the economy simulator.
 
 ### Country mode
 
