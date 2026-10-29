@@ -375,7 +375,8 @@
 		const st = k => DB.static[k] && DB.static[k].m;
 		// RGO size first (it decides laborer jobs); building RGO-size modifiers count at full staffing here
 		const pre = new Mods();
-		pre.v = { ...base.v }; pre.src = { ...base.src };
+		// own copies of the source lists: the pre-pass must not add its full-staffing building lines to the location's tooltips
+		pre.v = { ...base.v }; pre.src = Object.fromEntries(Object.entries(base.src).map(([k, a]) => [k, [...a]]));
 		for (const b of L.buildings) { const t = DB.buildings[b.type]; if (t) pre.block(t.mod, b.level, b.type); }
 		const rs = rgoSize(L, new LocationMods(pre, C.mods));
 		L.rgoMax = rs.value; L.rgoMaxPossible = rs.max;
