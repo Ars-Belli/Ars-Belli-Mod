@@ -333,6 +333,8 @@ const nameKeys = [...Object.keys(pops), ...Object.keys(estates), ...Object.keys(
 for (const k of nameKeys) if (loc[k]) names[k] = clean(loc[k]);
 for (const k of Object.keys(modifierTypes)) if (loc['MODIFIER_TYPE_NAME_' + k]) names['m:' + k] = clean(loc['MODIFIER_TYPE_NAME_' + k]);
 for (const t of ['topography', 'vegetation', 'climates']) for (const k of Object.keys(loadDb('in_game/common/' + t))) if (loc[k]) names[k] = clean(loc[k]);
+// levy units, named as the battle simulator names them
+for (const l of Object.values(levies)) if (l.unit && UNITS[l.unit] && UNITS[l.unit].n) names[l.unit] = UNITS[l.unit].n;
 
 // script values the kept data refers to by name (max levels, sizes...) and that are formulas, not numbers
 const used = new Set();

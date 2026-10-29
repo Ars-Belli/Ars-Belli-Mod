@@ -1,0 +1,1518 @@
+<title>Ars Belli Location Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral+SC:wght@500;600&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a surveyor's ledger for one location. The sheet (place, pops, buildings, country) on the left and what the location yields pinned beside it; below, how each number comes about, the modifier inspector, the years ahead and what one more building level is worth. Same identity as the Battle Simulator and the Focus Picks pages. */
+:root {
+	--bg: #eef0ee; --surface: #fbfcfa; --ink: #1d2422; --muted: #5c6662; --line: #d3d9d5; --chip: #e2e6e3;
+	--accent: #9a3324; --side-a: #2a78d6; --side-b: #eb6834; --good: #2f6b3a; --bad: #a1372a; --grid: #e3e7e4;
+	--tip-bg: #1d2422; --tip-fg: #f2f5f3;
+	--font-display: "Spectral SC", "Palatino Linotype", Palatino, Georgia, serif;
+	--font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+	--font-num: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835; --chip: #26302d;
+		--accent: #e8826f; --side-a: #3987e5; --side-b: #d95926; --good: #86c890; --bad: #f08a7a; --grid: #262e2b;
+		--tip-bg: #e5ebe8; --tip-fg: #141917; color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835; --chip: #26302d;
+	--accent: #e8826f; --side-a: #3987e5; --side-b: #d95926; --good: #86c890; --bad: #f08a7a; --grid: #262e2b;
+	--tip-bg: #e5ebe8; --tip-fg: #141917; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; margin: 0; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 24px; }
+.wrap > * { min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; }
+h2 { font-size: clamp(22px, 3vw, 28px); }
+h3 { font-size: 18px; }
+.lede { max-width: 72ch; margin: 10px 0 0; font-size: 16.5px; }
+.sub { color: var(--muted); max-width: 76ch; margin: 4px 0 0; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 0; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.tabs .count { font-family: var(--font-num); font-size: 12px; font-weight: 500; margin-left: 5px; opacity: 0.8; }
+
+.stack { display: grid; gap: 16px; min-width: 0; }
+.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.cols .wide { grid-column: 1 / -1; }
+@media (max-width: 880px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px 16px; min-width: 0; display: grid; gap: 12px; }
+.card > *, .panel > * { min-width: 0; }
+.card-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: space-between; }
+.card-head h3 { display: flex; align-items: center; gap: 8px; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 8px; }
+legend { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0; margin-bottom: 6px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px 10px; align-items: end; }
+.field { display: grid; gap: 2px; min-width: 0; }
+.field label { font-size: 13px; color: var(--muted); }
+input, select, textarea { font: inherit; font-size: 14px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); width: 100%; min-width: 0; }
+input[type="number"], textarea { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+input[type="checkbox"] { width: auto; margin: 0; accent-color: var(--accent); }
+input[type="range"] { padding: 0; border: 0; background: none; accent-color: var(--accent); }
+input[aria-invalid="true"] { border-color: var(--bad); }
+input:disabled { opacity: 0.55; }
+textarea { min-height: 160px; font-size: 12.5px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, summary:focus-visible, svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+button { font: inherit; font-weight: 600; border-radius: 6px; cursor: pointer; padding: 6px 13px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+button.small { padding: 2px 9px; font-size: 13px; font-weight: 600; }
+button.link { border: 0; background: none; color: var(--muted); padding: 2px 4px; text-decoration: underline; font-weight: 600; font-size: 13px; }
+button:disabled { opacity: 0.5; cursor: progress; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 16px; }
+.bar .field { width: 140px; }
+.bar .field.wide { width: min(100%, 360px); }
+.progress { font-size: 13px; color: var(--muted); }
+.row { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.checks { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.checks label { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; }
+
+.top { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
+.top > * { min-width: 0; }
+.top .sheet { grid-column: 1; grid-row: 1; }
+.top .summary { grid-column: 2; grid-row: 1; }
+@media (min-width: 1041px) and (min-height: 700px) { .top .summary { position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); } }
+@media (max-width: 1040px) { .top { grid-template-columns: minmax(0, 1fr); } .top .sheet, .top .summary { grid-column: 1; grid-row: auto; } }
+.panelbody { display: grid; gap: 16px; min-width: 0; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.summary .tiles { grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 10px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; min-width: 0; }
+.summary .tile { background: var(--bg); padding: 9px 12px; }
+.tile .label { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.tile .value { font-family: var(--font-num); font-size: 26px; font-weight: 500; margin-top: 2px; line-height: 1.2; overflow-wrap: anywhere; }
+.tile .note { font-size: 13px; color: var(--muted); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px 16px; min-width: 0; display: grid; gap: 10px; }
+.out { display: grid; gap: 10px; min-width: 0; }
+.out p { margin: 0; }
+.lead b, .num { font-family: var(--font-num); font-weight: 500; font-variant-numeric: tabular-nums; }
+.lead .name { font-weight: 700; }
+code { font-family: var(--font-num); font-size: 0.9em; overflow-wrap: anywhere; }
+.pill { display: inline-block; font-family: var(--font-body); font-size: 12px; font-weight: 600; line-height: 1.5; padding: 0 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--chip); color: var(--ink); white-space: nowrap; }
+.pill.bad { border-color: var(--bad); color: var(--bad); background: var(--surface); }
+.vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+.chart { position: relative; min-width: 0; }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart .title { font-weight: 700; font-size: 14px; }
+.legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend span::before { content: ""; width: 14px; height: 2px; background: var(--c); border-radius: 1px; }
+.legend span.dash::before { height: 0; background: none; border-top: 2px dashed var(--c); border-radius: 0; }
+.axis text { fill: var(--muted); font-family: var(--font-num); font-size: 11px; font-variant-numeric: tabular-nums; }
+.axis .axis-title { font-family: var(--font-body); font-size: 12px; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.endlabel { fill: var(--ink); font-family: var(--font-num); font-size: 12px; }
+.tip { position: absolute; left: 0; top: 0; pointer-events: none; background: var(--tip-bg); color: var(--tip-fg); border-radius: 6px; padding: 6px 9px; font-size: 12.5px; line-height: 1.35; white-space: nowrap; box-shadow: 0 6px 18px rgb(0 0 0 / 0.25); z-index: 5; }
+.tip b { font-family: var(--font-num); font-weight: 500; }
+details summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+details[open] > summary { margin-bottom: 8px; }
+.tablewrap { overflow-x: auto; max-width: 100%; position: relative; }
+table { border-collapse: collapse; font-size: 13px; min-width: 100%; }
+th, td { padding: 4px 10px; text-align: right; border-bottom: 1px solid var(--line); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; font-family: var(--font-body); }
+th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
+td.l, th.l { text-align: left; font-family: var(--font-body); }
+td .hint { font-family: var(--font-body); }
+td.up { color: var(--good); } td.down { color: var(--bad); } td.zero { color: var(--muted); }
+tr.total td, tr.total th { font-weight: 600; border-bottom: 0; }
+table.edit th, table.edit td { padding: 3px 6px; text-align: left; vertical-align: middle; }
+table.edit input, table.edit select { font-size: 13.5px; padding: 4px 6px; }
+table.edit input[type="number"] { width: 92px; text-align: right; }
+table.edit select { width: auto; max-width: 190px; }
+table.edit input.w-type { width: 220px; }
+table.edit input.w-key { width: 250px; font-family: var(--font-num); font-size: 12.5px; }
+table.edit td.cap { font-family: var(--font-num); text-align: right; min-width: 44px; }
+table.edit td.cap.over { color: var(--bad); font-weight: 600; }
+table.edit tr.b-main td { border-bottom: 0; padding-bottom: 1px; }
+table.edit tr.b-info td { padding: 0 6px 7px; font-family: var(--font-body); font-size: 12.5px; color: var(--muted); }
+table.edit select.inline { font-size: 12.5px; padding: 1px 4px; max-width: 100%; }
+.factors { list-style: none; margin: 0; padding: 0; display: grid; }
+.factors li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.factors li .v { font-family: var(--font-num); font-size: 13px; font-variant-numeric: tabular-nums; text-align: right; }
+.factors li.up .v { color: var(--good); } .factors li.down .v { color: var(--bad); }
+.factors li.total { font-weight: 700; border-bottom: 0; padding-top: 8px; }
+.options { list-style: none; margin: 4px 0 0; padding: 4px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); max-height: 320px; overflow-y: auto; }
+.options li { padding: 5px 8px; border-radius: 4px; cursor: pointer; display: grid; }
+.options li[aria-selected="true"], .options li:hover { background: var(--chip); }
+.options li.none { cursor: default; color: var(--muted); }
+.notes { columns: 2 320px; column-gap: 28px; font-size: 14px; color: var(--muted); }
+.notes p { margin: 0 0 10px; break-inside: avoid; }
+.notes b { color: var(--ink); }
+.err { color: var(--bad); font-size: 13.5px; margin: 0; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+	<header>
+		<h1>Ars Belli Location Simulator</h1>
+		<p class="lede">Set up one location of Europa Universalis V 1.4.4 and see what it yields: manpower, levies, wealth and tax, population growth and control, with a projection month by month. The formulas come from the game code and were checked against a 1547 save of Spain.</p>
+	</header>
+
+	<p class="bar progress" id="status" role="status">Loading the game data (4.5 MB)…</p>
+
+	<div id="app" class="stack" hidden>
+		<div class="bar">
+			<div class="field wide"><label for="preset">Start from</label><select id="preset"></select></div>
+			<button type="button" id="reset">Reset to this start</button>
+			<span class="progress" id="preset-note" aria-live="polite"></span>
+		</div>
+
+		<div class="top">
+			<aside class="card summary" aria-labelledby="sum-title">
+				<div class="card-head"><h2 id="sum-title">What it yields</h2></div>
+				<p class="hint" id="sum-where"></p>
+				<div class="tiles" id="tiles"></div>
+				<p class="hint" id="sum-save" hidden></p>
+				<p class="err" id="calc-err" role="alert" hidden></p>
+			</aside>
+
+			<section class="card sheet" id="sheet" aria-labelledby="sheet-title">
+				<div class="card-head"><h2 id="sheet-title">Location sheet</h2><span class="hint">Everything recalculates as you type.</span></div>
+				<div class="tabs" role="tablist" aria-label="Location sheet">
+					<button type="button" role="tab" id="tab-place" aria-controls="panel-place" aria-selected="true">Location</button>
+					<button type="button" role="tab" id="tab-pops" aria-controls="panel-pops" aria-selected="false" tabindex="-1">Pops<span class="count" id="count-pops"></span></button>
+					<button type="button" role="tab" id="tab-bld" aria-controls="panel-bld" aria-selected="false" tabindex="-1">Buildings<span class="count" id="count-bld"></span></button>
+					<button type="button" role="tab" id="tab-country" aria-controls="panel-country" aria-selected="false" tabindex="-1">Country</button>
+				</div>
+
+				<div class="panelbody" role="tabpanel" id="panel-place" aria-labelledby="tab-place">
+					<fieldset>
+						<legend>Place on the map</legend>
+						<div class="field">
+							<label for="loc-search">Location: terrain, raw material, river and coast come from the game map</label>
+							<input id="loc-search" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="loc-results" placeholder="Type a name: Sevilla, Ulm, Kraków…">
+							<ul id="loc-results" class="options" role="listbox" aria-label="Matching locations" hidden></ul>
+						</div>
+						<p class="hint" id="loc-info"></p>
+					</fieldset>
+					<fieldset>
+						<legend>Location</legend>
+						<div class="grid">
+							<div class="field"><label for="loc-rank">Rank</label><select id="loc-rank"></select></div>
+							<div class="field"><label for="loc-dev">Development</label><input id="loc-dev" type="number" min="0" max="100" step="0.5"></div>
+							<div class="field"><label for="loc-pros">Prosperity %</label><input id="loc-pros" type="number" min="-100" max="100" step="1"></div>
+							<div class="field"><label for="loc-ctrl">Control %</label><input id="loc-ctrl" type="number" min="0" max="100" step="1"></div>
+							<div class="field"><label for="loc-prox">Proximity</label><input id="loc-prox" type="number" min="0" max="100" step="1"></div>
+							<div class="field"><label for="loc-integ">Integration</label><select id="loc-integ"></select></div>
+							<div class="field"><label for="loc-access">Market access %</label><input id="loc-access" type="number" min="0" max="100" step="1"></div>
+							<div class="field"><label for="loc-rgo">RGO size (thousand workers)</label><input id="loc-rgo" type="number" min="0" step="1"></div>
+						</div>
+						<p class="hint">Negative prosperity is devastation. Leave RGO size blank to use the location's max; a save gives the current size, which estates expand up to the max.</p>
+						<p class="hint" id="loc-change"></p>
+					</fieldset>
+					<fieldset>
+						<legend>Status</legend>
+						<div class="checks">
+							<label><input type="checkbox" id="loc-capital"> Capital</label>
+							<label><input type="checkbox" id="loc-pcap"> Province capital</label>
+							<label><input type="checkbox" id="loc-mc"> Market center</label>
+							<label id="loc-port-label"><input type="checkbox" id="loc-port"> Port</label>
+							<label><input type="checkbox" id="loc-road"> Road to the capital</label>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend>Date</legend>
+						<div class="grid">
+							<div class="field"><label for="c-year">Year</label><input id="c-year" type="number" min="1337" max="1837" step="1"></div>
+							<div class="field"><label for="c-age">Age</label><select id="c-age"></select></div>
+						</div>
+						<p class="hint">The age follows the year (ages begin in 1342, 1437, 1537, 1637 and 1737); pick it after the year to override. It decides the levy units (unless the scenario lists its advances) and how much each extra building level adds to Production Efficiency.</p>
+					</fieldset>
+					<details id="more-loc">
+						<summary>Food, burgher trade and raised levies</summary>
+						<div class="grid">
+							<div class="field"><label for="loc-surplus">Food surplus %</label><input id="loc-surplus" type="number" min="0" max="100" step="5"></div>
+							<div class="field"><label for="loc-storage">Food storage %</label><input id="loc-storage" type="number" min="0" max="100" step="5"></div>
+							<div class="field"><label for="loc-trade">Burgher trade (gold)</label><input id="loc-trade" type="number" min="0" step="0.1"></div>
+							<div class="field"><label for="loc-levyrec">Levies recovered %</label><input id="loc-levyrec" type="number" min="0" max="100" step="5"></div>
+						</div>
+						<div class="checks" style="margin-top:8px"><label><input type="checkbox" id="loc-starving"> Province starving</label></div>
+						<p class="hint" style="margin-top:6px">Food surplus 100% means the province makes a quarter more food than it eats (+0.15% growth a year); food storage 100% means two years of food stored (+0.1%). A starving province gets neither and loses 5% a year. Burgher trade is added to wealth and goes to the burghers. Levies recovered below 100% means levies were raised recently.</p>
+					</details>
+				</div>
+
+				<div class="panelbody" role="tabpanel" id="panel-pops" aria-labelledby="tab-pops" hidden>
+					<p class="hint">Each row is one pop: people of one type, culture and religion. Culture decides births and levies; satisfaction and literacy feed the location's modifiers.</p>
+					<div class="tablewrap" id="pops-table"></div>
+					<div class="row"><button type="button" class="small" id="pop-add">Add pop</button><span class="hint" id="pop-sum"></span></div>
+				</div>
+
+				<div class="panelbody" role="tabpanel" id="panel-bld" aria-labelledby="tab-bld" hidden>
+					<p class="hint">Cap is the game's max level for this location as it is now; ≈ means it also depends on things the simulator cannot check. Leave staffing blank to fill the jobs from the pops, as the game does; a number fixes it.</p>
+					<div class="tablewrap" id="bld-table"></div>
+					<div class="row"><button type="button" class="small" id="bld-add">Add building</button><span class="hint" id="bld-sum"></span></div>
+				</div>
+
+				<div class="panelbody" role="tabpanel" id="panel-country" aria-labelledby="tab-country" hidden>
+					<fieldset>
+						<legend>Country modifiers</legend>
+						<div class="grid" id="cm-grid"></div>
+						<p class="hint">The owner's totals in %, base values included (Peasant Enfranchisement starts at 25%).</p>
+					</fieldset>
+					<fieldset>
+						<legend>Tax rates %</legend>
+						<div class="grid" id="tax-grid"></div>
+						<p class="hint">Commoners are the peasants, laborers and soldiers.</p>
+					</fieldset>
+					<fieldset>
+						<legend>Estate satisfaction %</legend>
+						<div class="grid" id="sat-grid"></div>
+						<p class="hint">The pops of an estate below 25% raise no levies.</p>
+					</fieldset>
+					<fieldset>
+						<legend>More modifiers</legend>
+						<div class="tablewrap" id="ex-table"></div>
+						<div class="row"><button type="button" class="small" id="ex-add">Add a modifier</button></div>
+						<p class="hint">Any modifier key from the game, added on top of the rest. Location modifiers (<code>local_…</code>) apply to this location, the others to the country. Percent modifiers take %: 10 means +10%.</p>
+					</fieldset>
+				</div>
+
+				<details id="json-panel">
+					<summary>Scenario file (JSON): copy it, or load one made by from_save.js</summary>
+					<div class="stack">
+						<textarea id="scn-json" spellcheck="false" aria-label="Scenario as JSON"></textarea>
+						<div class="row">
+							<button type="button" id="json-load">Load this JSON</button>
+							<button type="button" id="json-copy">Copy</button>
+							<label class="field" style="width:auto"><span class="hint">Or open a scenario file</span><input id="json-file" type="file" accept=".json,application/json"></label>
+							<span class="progress" id="json-msg" aria-live="polite"></span>
+						</div>
+						<p class="hint">Format: “EU5 Location Mechanics (1.4.4).md”, section 11. Make one from your own save with <code>node from_save.js &lt;save&gt; --location &lt;key&gt;</code>.</p>
+					</div>
+				</details>
+			</section>
+		</div>
+
+		<section class="stack" aria-labelledby="detail-title">
+			<h2 id="detail-title">How the numbers come about</h2>
+			<div class="cols">
+				<section class="card" aria-labelledby="h-pop">
+					<div class="card-head"><h3 id="h-pop">Population</h3><button type="button" class="link" id="insp-pop" data-inspect="local_population_growth">Every growth source</button></div>
+					<div class="out" id="out-pop"></div>
+				</section>
+				<section class="card" aria-labelledby="h-mp">
+					<div class="card-head"><h3 id="h-mp">Manpower and sailors</h3><button type="button" class="link" id="insp-mp" data-inspect="local_manpower_modifier">Every Manpower source</button></div>
+					<div class="out" id="out-mp"></div>
+				</section>
+				<section class="card wide" aria-labelledby="h-lev">
+					<div class="card-head"><h3 id="h-lev">Levies</h3><button type="button" class="link" id="insp-lev" data-inspect="local_levy_size_modifier">Every Levy Size source</button></div>
+					<div class="out" id="out-lev"></div>
+				</section>
+				<section class="card wide" aria-labelledby="h-eco">
+					<div class="card-head"><h3 id="h-eco">Wealth and production</h3><button type="button" class="link" id="insp-eco" data-inspect="local_production_efficiency">Every Production Efficiency source</button></div>
+					<div class="out" id="out-eco"></div>
+				</section>
+				<section class="card" aria-labelledby="h-tax">
+					<div class="card-head"><h3 id="h-tax">Tax</h3><button type="button" class="link" id="insp-tax" data-inspect="local_peasant_enfranchisment">Every enfranchisement source</button></div>
+					<div class="out" id="out-tax"></div>
+				</section>
+				<section class="card" aria-labelledby="h-ctl">
+					<div class="card-head"><h3 id="h-ctl">Control</h3><button type="button" class="link" id="insp-ctl" data-inspect="local_monthly_control">Every Monthly Control source</button></div>
+					<div class="out" id="out-ctl"></div>
+				</section>
+				<section class="card" aria-labelledby="h-food">
+					<div class="card-head"><h3 id="h-food">Food</h3><button type="button" class="link" id="insp-food" data-inspect="local_food_capacity">Every food capacity source</button></div>
+					<div class="out" id="out-food"></div>
+				</section>
+				<section class="card" id="card-mod" aria-labelledby="h-mod">
+					<div class="card-head"><h3 id="h-mod">Modifier inspector</h3></div>
+					<div class="field" style="max-width:560px"><label for="mod-pick">Any modifier of this location with a value: its total and every source</label><select id="mod-pick"></select></div>
+					<div class="out" id="out-mod"></div>
+				</section>
+			</div>
+		</section>
+
+		<section class="panel" aria-labelledby="proj-title">
+			<h2 id="proj-title">The years ahead</h2>
+			<p class="sub" id="proj-sub">Month by month: pops grow by their births, control moves toward its max, and buildings lay off or rehire 10% of their workers a month as they lose or make money.</p>
+			<div class="bar">
+				<div class="field"><label for="proj-months">Months ahead</label><input id="proj-months" type="number" min="12" max="600" step="12" value="120"></div>
+				<div class="field" style="width:min(100%,260px)"><label for="proj-range">12 to 600 months</label><input id="proj-range" type="range" min="12" max="600" step="12" value="120"></div>
+				<div class="field" style="width:180px"><label for="proj-metric">Show</label><select id="proj-metric"></select></div>
+			</div>
+			<div class="chart" id="proj-chart"></div>
+			<details id="proj-details" open><summary>The projection as a table, every 12 months</summary><div class="tablewrap" id="proj-table"></div></details>
+		</section>
+
+		<section class="panel" aria-labelledby="worth-title">
+			<h2 id="worth-title">What is a building level worth?</h2>
+			<p class="sub">The change from one more level of each building this location owns, everything else as set. The new level is staffed like the others: the same staffing %, or from the pops when staffing is blank, so it can lower another number by taking workers from another building. Upkeep is what the owner pays.</p>
+			<div class="tablewrap" id="worth-table"></div>
+		</section>
+	</div>
+
+	<section class="notes" aria-label="How the simulator works">
+		<p><b>Manpower.</b> Only buildings give a location manpower: armories and barracks in towns and cities, training fields in rural settlements, the sergeantry in the capital, each scaled by how well soldiers staff it. That is multiplied by (1 + local Monthly Manpower), by control (counted as at least 10%) and by (1 + the country's Manpower). Max manpower holds five years of it. Sailors work the same way with docks.</p>
+		<p><b>Levies.</b> Each pop raises the strongest levy unit its country has: 2% of peasants, laborers and soldiers (and burghers from the Age of Discovery) as infantry, 10% of nobles as cavalry. Pops of a culture that is not primary or accepted raise a quarter. The Levy Size modifiers add up into one multiplier, control counts as at least 10%, and an estate below 25% satisfaction raises nothing.</p>
+		<p><b>Wealth and tax.</b> Wealth is what the RGO sells plus the profit of producing buildings (losses count). The Tax Base is wealth × control. Estates share it by their pops (nobles weigh 100 each, burghers 40, clergy 25, commoners 1); the commoners keep their Peasant Enfranchisement part and the nobility takes the rest. The crown takes each estate's tax rate × Tax Efficiency.</p>
+		<p><b>Growth.</b> Population Growth from the location and the country, plus up to +0.15% a year for a food surplus in the province and +0.1% for full food stores. From 60% of capacity growth slows. Births go to primary, accepted and tolerated pops, in proportion to their size.</p>
+		<p><b>Control.</b> Max control comes from proximity (× 0.75), the capital, rank, integration and pop satisfaction. Below the max, control rises by Monthly Control each month; above it, it falls by up to half a point a month.</p>
+		<p><b>Food.</b> A location makes food from its RGO (if the raw material is food), from peasants and laborers without a job (0.8 each) and from food buildings, scaled by Monthly Food and by the rank (towns −10%, cities −20%, megalopolises −30%). Every thousand pops eat a month: nobles 20, clergy and soldiers 5, burghers 4, peasants, laborers and slaves 1.</p>
+		<p><b>Approximate or left out.</b> The RGO size when no save gives it, tax efficiency (Spain's save pays about 10% more than its modifiers explain), burgher trade, the province's food store and its trade with the market (they need the whole country), and prices (the scenario's market or the base prices; they stay put in the projection). Input shortages of buildings come only from a save.</p>
+		<p><b>Source.</b> “EU5 Location Mechanics (1.4.4).md” in the Ars Belli repository, from eu5.exe 1.4.4 and the game files. Checked against Spain's 522 locations in a save of 1 April 1547: wealth within 0.5%, births within 0.7%, Monthly Manpower 6% low.</p>
+	</section>
+</div>
+
+<script src="engine.js"></script>
+<script id="page-model">
+// Pure parts of the page: presets, the scenario model, number formats and the HTML of every result. No DOM here, so
+// the same code runs in Node for testing (window.LocSimPage; init(engine) after the engine has its data).
+(function (root) {
+	'use strict';
+	let E = null, DB = null;
+	const P = {};
+	const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+	const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+	P.clamp = clamp; P.esc = esc;
+
+	// ---------- numbers. Pops, men and manpower are thousands in the engine; the page shows people.
+	const fmt = (x, d = 0) => {
+		if (typeof x !== 'number' || !Number.isFinite(x)) return '–';
+		const s = Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+		return (x < 0 && /[1-9]/.test(s) ? '−' : '') + s;
+	};
+	const signed = (x, d = 0) => { const s = fmt(x, d); return x > 0 && /[1-9]/.test(s) ? '+' + s : s; };
+	const smallDigits = v => (v !== 0 && Math.abs(v) < 10 ? 1 : 0);
+	const people = (k, d) => { const v = k * 1000; return fmt(v, d ?? smallDigits(v)); };
+	const speople = (k, d) => { const v = k * 1000; return signed(v, d ?? smallDigits(v)); };
+	const gold = x => fmt(x, Math.abs(x) >= 1000 ? 0 : 2);
+	const sgold = x => signed(x, Math.abs(x) >= 1000 ? 0 : x !== 0 && Math.abs(x) < 0.1 ? 3 : 2);
+	const pct = (x, d = 1) => fmt(100 * x, d) + '%';
+	const pctN = x => pct(x, Math.abs(100 * x - Math.round(100 * x)) < 0.05 ? 0 : 1);
+	const pdig = v => { const a = Math.abs(v); return a === 0 || a >= 10 ? 1 : a >= 1 ? 2 : 3; };
+	const spct = (x, d) => signed(100 * x, d ?? pdig(100 * x)) + '%';
+	const times = (x, d = 3) => '×\u202f' + fmt(x, d);
+	Object.assign(P, { fmt, signed, people, speople, gold, sgold, pct, pctN, spct, times });
+
+	// ---------- names
+	const titleCase = s => String(s).replace(/\b[a-z]/g, c => c.toUpperCase());
+	const pretty = k => String(k ?? '').replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
+	const nm = k => (k && DB.names[k]) || pretty(k);
+	const modName = k => DB.names['m:' + k] || pretty(k);
+	const unitName = u => DB.names[u] || titleCase(String(u || '').replace(/^a_/, '').replace(/^abm_/, '').replace(/_/g, ' '));
+	const placeName = k => titleCase(String(k || '').replace(/_(area|province)$/, '').replace(/_/g, ' '));
+	const catName = c => pretty(String(c || '').replace(/_category$/, '')).replace(/^Rgo\b/, 'RGO');
+	const CAT = { li: 'light infantry', hi: 'heavy infantry', lc: 'light cavalry', hc: 'heavy cavalry', art: 'artillery', aux: 'auxiliary' };
+	const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+	P.AGE_NAMES = { 1: 'I Traditions', 2: 'II Renaissance', 3: 'III Discovery', 4: 'IV Reformation', 5: 'V Absolutism', 6: 'VI Revolutions' };
+	P.INTEGRATION = [['core', 'Core'], ['integrated', 'Integrated'], ['conquered', 'Conquered'], ['colonized', 'Colonized']];
+	P.STATUS = [['Primary', 'Primary'], ['Accepted', 'Accepted'], ['Tolerated', 'Tolerated'], ['Other', 'Other culture']];
+	P.MAIN_ESTATES = ['nobles_estate', 'clergy_estate', 'burghers_estate', 'peasants_estate'];
+	// the owner's modifiers that matter most for a location; all percent modifiers in the game
+	P.COUNTRY_FIELDS = ['global_manpower_modifier', 'global_levy_size_modifier', 'global_army_levy_size_modifier', 'global_production_efficiency', 'global_raw_material_output',
+		'tax_income_efficiency', 'global_peasant_enfranchisment', 'global_population_growth', 'global_max_control', 'global_monthly_control'];
+	// modifiers stored in thousands of people
+	const THOUSANDS = new Set(['local_manpower', 'local_sailors', 'local_population_capacity', 'global_manpower', 'global_sailors']);
+	Object.assign(P, { nm, modName, unitName, placeName, catName });
+
+	// ---------- caches built once the data is in
+	let BLABEL = {}, BYLABEL = new Map(), LOCIDX = [], KEYIDX = new Map(), MODOPTS = '';
+	const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+	P.init = engine => {
+		E = engine; DB = engine.DB;
+		const byName = {};
+		for (const k of Object.keys(DB.buildings)) (byName[nm(k)] ??= []).push(k);
+		BLABEL = {}; BYLABEL = new Map();
+		for (const [n, ks] of Object.entries(byName)) for (const k of ks) { const l = ks.length > 1 ? `${n} (${k})` : n; BLABEL[k] = l; BYLABEL.set(l.toLowerCase(), k); }
+		for (const k of Object.keys(DB.buildings)) if (!BYLABEL.has(k.toLowerCase())) BYLABEL.set(k.toLowerCase(), k);
+		const WATER = new Set(['ocean', 'deep_ocean', 'coastal_ocean', 'inland_sea', 'narrows', 'lakes', 'high_lakes']);
+		LOCIDX = []; KEYIDX = new Map();
+		DB.locations.forEach((l, i) => {
+			KEYIDX.set(l[0], i);
+			if (WATER.has(l[1]) || /wasteland/.test(l[1])) return;
+			const name = DB.names[l[0]] || pretty(l[0]);
+			LOCIDX.push({ key: l[0], name, norm: norm(name), nkey: l[0].toLowerCase(), l });
+		});
+		MODOPTS = Object.keys(DB.modifierTypes).filter(k => ['location', 'country', 'all', 'province'].includes(DB.modifierTypes[k][2])).sort()
+			.map(k => `<option value="${esc(k)}">${esc(modName(k))}</option>`).join('');
+	};
+	P.modKeyOptions = () => MODOPTS;
+	P.buildingLabel = k => BLABEL[k] || k || '';
+	P.resolveBuilding = s => BYLABEL.get(String(s || '').trim().toLowerCase()) || null;
+	P.buildingOptions = rank => Object.keys(DB.buildings).filter(k => DB.buildings[k].ranks && DB.buildings[k].ranks[rank] === 1)
+		.map(k => BLABEL[k]).sort((a, b) => a.localeCompare(b)).map(l => `<option value="${esc(l)}"></option>`).join('');
+	P.ageForYear = y => { let a = 1; for (const [k, v] of Object.entries(DB.ages)) if (v.year <= y && +k > a) a = +k; return a; };
+	const tplOf = key => { const i = KEYIDX.get(key); return i === undefined ? null : DB.locations[i]; };
+	P.locName = key => (key && DB.names[key]) || (key ? pretty(key) : 'Custom location');
+	P.locDetail = l => [placeName(DB.areas[l[11]]), nm(l[1]), l[2] ? nm(l[2]) : '', nm(l[3]), l[4] ? nm(l[4]) : 'no raw material'].filter(Boolean).join(' · ');
+
+	// location search: exact name, then names starting with the text, then words starting with it, then anywhere; keys too
+	P.searchLocations = (q, limit = 15) => {
+		const n = norm(String(q).trim());
+		if (!n) return [];
+		const k = n.replace(/\s+/g, '_');
+		const hits = [];
+		for (const it of LOCIDX) {
+			let s = -1;
+			if (it.norm === n || it.nkey === k) s = 0;
+			else if (it.norm.startsWith(n)) s = 1;
+			else if (it.norm.includes(' ' + n) || it.norm.includes('-' + n)) s = 2;
+			else if (it.norm.includes(n)) s = 3;
+			else if (it.nkey.includes(k)) s = 4;
+			if (s >= 0) hits.push([s, it]);
+		}
+		hits.sort((a, b) => a[0] - b[0] || a[1].name.length - b[1].name.length || a[1].name.localeCompare(b[1].name));
+		return hits.slice(0, limit).map(([, it]) => ({ key: it.key, name: it.name, detail: P.locDetail(it.l) }));
+	};
+
+	// ---------- presets: one real location from a save, three hand-made examples
+	const pop = (type, peopleCount, status, satisfaction, literacy) => ({ type, size: peopleCount / 1000, status, satisfaction, literacy });
+	const EST = (n, c, b, p) => ({ nobles_estate: { satisfaction: n }, clergy_estate: { satisfaction: c }, burghers_estate: { satisfaction: b }, peasants_estate: { satisfaction: p } });
+	const TAX = (n, c, b, p) => ({ nobles_estate: n, clergy_estate: c, burghers_estate: b, peasants_estate: p });
+	P.PRESETS = [
+		{ id: 'sevilla', label: 'Sevilla 1547 (from a save)', file: 'sevilla_1547.json', note: 'The capital of Spain in 1547, read from a save of Ars Belli.' },
+		{ id: 'village', label: 'Example: farming village (Chaumont-en-Vexin, 1420)', note: 'Example numbers, not from a save: a French farming village of 25,000 people.', scenario: {
+			name: 'Example: farming village, Chaumont-en-Vexin 1420',
+			location: { key: 'chaumont_vexin', rank: 'rural_settlement', development: 15, prosperity: 0.15, control: 0.8, proximity: 90, integration: 'core', marketAccess: 0.8,
+				pops: [pop('peasants', 18700, 'Primary', 0.5, 5), pop('laborers', 4300, 'Primary', 0.5, 8), pop('soldiers', 1100, 'Primary', 0.55, 10),
+					pop('burghers', 450, 'Primary', 0.5, 30), pop('clergy', 300, 'Primary', 0.6, 80), pop('nobles', 150, 'Primary', 0.6, 50)],
+				buildings: [{ type: 'farming_village', level: 2 }, { type: 'training_fields', level: 1 }] },
+			country: { year: 1420, age: 2, modifiers: { global_manpower_modifier: 0.05 }, taxRates: TAX(0.3, 0.2, 0.35, 0.4), estates: EST(0.55, 0.6, 0.5, 0.45) },
+		} },
+		{ id: 'town', label: 'Example: market town (Ulm, 1500)', note: 'Example numbers, not from a save: a Swabian town of 39,000 with a linen guild and a marketplace.', scenario: {
+			name: 'Example: market town, Ulm 1500',
+			location: { key: 'ulm', rank: 'town', development: 28, prosperity: 0.3, control: 0.8, proximity: 85, integration: 'core', roadToCapital: true, marketAccess: 0.9,
+				pops: [pop('peasants', 24000, 'Primary', 0.5, 6), pop('laborers', 7000, 'Primary', 0.5, 12), pop('burghers', 4800, 'Primary', 0.55, 35),
+					pop('clergy', 1400, 'Primary', 0.6, 85), pop('soldiers', 1200, 'Primary', 0.5, 10), pop('nobles', 600, 'Primary', 0.6, 55)],
+				buildings: [{ type: 'marketplace', level: 1 }, { type: 'cloth_guild', level: 3, methods: ['fiber_crops_cloth_guild_maintenance'] }, { type: 'mason', level: 2 },
+					{ type: 'armory', level: 1 }, { type: 'temple', level: 1 }] },
+			country: { year: 1500, age: 3, modifiers: { global_manpower_modifier: 0.15, global_production_efficiency: 0.05, tax_income_efficiency: 0.1 },
+				taxRates: TAX(0.3, 0.2, 0.4, 0.4), estates: EST(0.5, 0.6, 0.55, 0.45) },
+		} },
+		{ id: 'frontier', label: 'Example: frontier conquest (Ronda, 1486)', note: 'Example numbers, not from a save: Ronda a year after Castile took it, its Andalusi pops of another culture.', scenario: {
+			name: 'Example: frontier conquest, Ronda 1486',
+			location: { key: 'ronda', rank: 'town', development: 12, prosperity: -0.15, control: 0.3, proximity: 60, integration: 'conquered', marketAccess: 0.5,
+				pops: [pop('peasants', 11500, 'Other', 0.25, 3), pop('laborers', 3200, 'Other', 0.25, 6), pop('burghers', 1200, 'Other', 0.3, 25),
+					pop('clergy', 450, 'Other', 0.2, 70), pop('soldiers', 1300, 'Primary', 0.55, 10), pop('nobles', 180, 'Primary', 0.6, 50)],
+				buildings: [{ type: 'armory', level: 1 }, { type: 'castle', level: 1 }] },
+			country: { year: 1486, age: 3, modifiers: { global_manpower_modifier: 0.1, global_levy_size_modifier: 0.1 }, taxRates: TAX(0.3, 0.2, 0.35, 0.4), estates: EST(0.5, 0.6, 0.45, 0.4) },
+		} },
+	];
+
+	// ---------- the scenario model
+	const empSize = type => { const t = DB.buildings[type]; return t && typeof t.emp === 'number' ? t.emp : 0; };
+	const num = (v, d) => (typeof v === 'number' && Number.isFinite(v) ? v : d);
+	const partsSum = parts => parts.reduce((a, q) => a + (typeof q[1] === 'number' ? q[1] : 0), 0);
+	// A scenario as the page edits it: every form field filled with what the engine would use anyway, building staffing as a
+	// share (the engine's `employed` is thousands of workers), and the country's own modifier sources kept for later edits.
+	P.prep = raw => {
+		if (!raw || typeof raw !== 'object' || !raw.location || typeof raw.location !== 'object')
+			throw new Error('this is not a location scenario: it needs a "location" object (whole-country files from from_save.js --country do not work here).');
+		const s = JSON.parse(JSON.stringify(raw));
+		const L = s.location;
+		const c = s.country = s.country && typeof s.country === 'object' ? s.country : {};
+		const obsProv = (s.observed && s.observed.province) || {};
+		L.rank = DB.ranks[L.rank] ? L.rank : 'rural_settlement';
+		L.development = num(L.development, 10); L.prosperity = num(L.prosperity, 0); L.control = num(L.control, 1); L.proximity = num(L.proximity, 100);
+		L.integration = ['core', 'integrated', 'conquered', 'colonized'].includes(L.integration) ? L.integration : 'core';
+		L.marketAccess = num(L.marketAccess, 1);
+		const f = L.food && typeof L.food === 'object' ? L.food : {};
+		L.food = { surplusFactor: num(f.surplusFactor, num(obsProv.surplusGrowth, 0)), storageFactor: num(f.storageFactor, num(obsProv.storageGrowth, 1)), starving: !!f.starving };
+		L.burgherTrade = num(L.burgherTrade, 0); L.levyRecovery = num(L.levyRecovery, 1);
+		if (L.rgoWorkers !== undefined && typeof L.rgoWorkers !== 'number') delete L.rgoWorkers;
+		L.pops = (Array.isArray(L.pops) ? L.pops : []).filter(p => p && typeof p === 'object')
+			.map(p => ({ ...p, type: String(p.type || 'peasants'), size: Math.max(0, num(+p.size, 0)), status: p.status || 'Primary', satisfaction: num(p.satisfaction, 0.5), literacy: num(p.literacy, 0) }));
+		L.buildings = (Array.isArray(L.buildings) ? L.buildings : []).filter(b => b && typeof b === 'object').map(b => {
+			const o = { ...b, type: String(b.type || ''), level: Math.max(1, Math.round(num(+b.level, 1))) };
+			if (o.employed !== undefined) { const size = empSize(o.type); o.staffing = size ? clamp(num(+o.employed, 0) / (o.level * size), 0, 1) : null; delete o.employed; }
+			// an older single `method` is what the engine runs as the only method
+			if (!Array.isArray(o.methods) && o.method) o.methods = [o.method];
+			delete o.method;
+			return o;
+		});
+		c.year = Math.round(num(c.year, 1337));
+		c.age = DB.ages[c.age] ? +c.age : P.ageForYear(c.year);
+		const given = !!(c.taxRates && typeof c.taxRates === 'object');
+		c.taxRates = { ...(given ? c.taxRates : {}) };
+		for (const e of P.MAIN_ESTATES) if (typeof c.taxRates[e] !== 'number') c.taxRates[e] = given ? 0 : 0.35; // the engine's defaults
+		c.estates = c.estates && typeof c.estates === 'object' ? { ...c.estates } : {};
+		for (const e of P.MAIN_ESTATES) { const x = c.estates[e] = { ...(c.estates[e] || {}) }; if (typeof x.satisfaction !== 'number') x.satisfaction = 0.5; }
+		c.modifiers = c.modifiers && typeof c.modifiers === 'object' ? c.modifiers : {};
+		const orig = {};
+		for (const [k, x] of Object.entries(c.modifiers)) {
+			if (typeof x !== 'number') continue;
+			const sp = c.sources && Array.isArray(c.sources[k]) ? c.sources[k] : null;
+			orig[k] = { total: x, parts: sp && Math.abs(partsSum(sp) - x) < 1e-6 ? sp.map(q => [...q]) : null };
+		}
+		return { scn: s, orig };
+	};
+	// The engine adds the game's base values to a hand-written scenario; a scenario from a save has them in its sums already.
+	P.baseAdded = c => c.baseValues !== false && !(c.notes || []).some(n => typeof n === 'string' && n.startsWith('base values'));
+	const baseOf = (c, k) => (P.baseAdded(c) && typeof DB.countryBase[k] === 'number' ? DB.countryBase[k] : 0);
+	P.countryTotal = (c, k) => (typeof (c.modifiers || {})[k] === 'number' ? c.modifiers[k] : 0) + baseOf(c, k);
+	// Set a country modifier's total; the change is listed as its own source next to the scenario's.
+	P.setCountryTotal = (c, orig, k, V) => {
+		const x = V - baseOf(c, k), o = orig[k], delta = x - (o ? o.total : 0);
+		c.modifiers = c.modifiers || {};
+		if (Math.abs(delta) < 1e-12) {
+			if (o) { c.modifiers[k] = o.total; if (o.parts) (c.sources ??= {})[k] = o.parts.map(q => [...q]); else if (c.sources) delete c.sources[k]; }
+			else { delete c.modifiers[k]; if (c.sources) delete c.sources[k]; }
+			return;
+		}
+		c.modifiers[k] = x;
+		const parts = o ? (o.parts ? o.parts.map(q => [...q]) : o.total ? [['scenario', o.total]] : []) : [];
+		(c.sources ??= {})[k] = [...parts, ['changed on this page', delta]];
+	};
+	P.extraInfo = row => {
+		const k = String((row && row.key) || '').trim();
+		if (!k) return { ok: false, msg: 'Type or pick a modifier key.' };
+		const t = DB.modifierTypes[k];
+		if (!t) return { ok: false, msg: 'No modifier by that key in the game.' };
+		const where = t[2] === 'location' ? 'location modifier' : ['country', 'all', 'province'].includes(t[2]) ? 'country modifier' : `${t[2]} modifier, no effect on a location`;
+		const unit = t[3] ? 'on or off: any number but 0 turns it on' : t[0] === 1 ? 'in %' : t[0] === 2 ? 'in %, as written' : 'a plain number';
+		return { ok: true, key: k, loc: t[2] === 'location', bool: !!t[3], pct: t[0] === 1, msg: `${modName(k)} · ${where} · ${unit}` };
+	};
+	P.extraValue = row => {
+		const i = P.extraInfo(row);
+		if (!i.ok) return null;
+		const x = parseFloat(row.value);
+		if (!Number.isFinite(x) || x === 0) return null;
+		return i.bool ? 'yes' : i.pct ? x / 100 : x;
+	};
+	function applyExtras(c, extras) {
+		c.modifiers = { ...(c.modifiers || {}) }; c.sources = { ...(c.sources || {}) };
+		c.locationModifiers = { ...(c.locationModifiers || {}) }; c.locationSources = { ...(c.locationSources || {}) };
+		for (const row of extras) {
+			const v = P.extraValue(row);
+			if (v === null) continue;
+			const k = String(row.key).trim();
+			if (DB.modifierTypes[k][2] === 'location') {
+				const had = c.locationModifiers[k];
+				const parts = Array.isArray(c.locationSources[k]) ? c.locationSources[k].map(q => [...q]) : had !== undefined ? [['country location modifiers', had]] : [];
+				c.locationModifiers[k] = v === 'yes' ? 'yes' : (typeof had === 'number' ? had : 0) + v;
+				c.locationSources[k] = [...parts, ['added on this page', v]];
+			} else if (v === 'yes') { c.modifiers[k] = 'yes'; delete c.sources[k]; }
+			else {
+				const had = typeof c.modifiers[k] === 'number' ? c.modifiers[k] : 0, sp = c.sources[k];
+				const parts = Array.isArray(sp) && Math.abs(partsSum(sp) - had) < 1e-6 ? sp.map(q => [...q]) : had ? [['scenario', had]] : [];
+				c.modifiers[k] = had + v; c.sources[k] = [...parts, ['added on this page', v]];
+			}
+		}
+	}
+	P.validBuilding = b => !!DB.buildings[b.type] && b.level >= 1;
+	// The scenario the engine runs: staffing back to employed workers, unknown buildings dropped, extra modifiers applied.
+	// The save's own numbers (observed) stay out, so an edit is never overruled by them.
+	P.toScenario = (work, extras) => {
+		const L = work.location;
+		const scn = { ...work, location: { ...L }, country: { ...work.country } };
+		delete scn.observed;
+		scn.location.pops = L.pops.filter(p => DB.pops[p.type]).map(p => ({ ...p }));
+		scn.location.buildings = L.buildings.filter(P.validBuilding).map(b => {
+			const o = { ...b };
+			delete o.staffing;
+			if (b.staffing != null && Number.isFinite(b.staffing)) { const size = empSize(b.type); if (size) o.employed = b.staffing * b.level * size; }
+			return o;
+		});
+		if (extras && extras.length) applyExtras(scn.country, extras);
+		return scn;
+	};
+	P.exportScenario = (work, extras) => { const s = P.toScenario(work, extras); if (work.observed) s.observed = work.observed; return s; };
+
+	// ---------- the sheet's tables
+	const opt = (v, label, sel) => `<option value="${esc(v)}"${v === sel ? ' selected' : ''}>${esc(label)}</option>`;
+	P.popsHTML = pops => {
+		if (!pops.length) return '<p class="hint">No pops. Add one below.</p>';
+		const types = Object.keys(DB.pops);
+		const rows = pops.map((p, i) => {
+			const st = ['Primary', 'Accepted', 'Tolerated'].includes(p.status) ? p.status : 'Other';
+			const n = i + 1;
+			return `<tr data-i="${i}">
+				<td><select id="pop-${i}-type" data-f="type" aria-label="Pop ${n}: type">${types.map(t => opt(t, nm(t), p.type)).join('')}</select></td>
+				<td><input id="pop-${i}-size" data-f="size" type="number" min="0" step="100" value="${Math.round(p.size * 1000)}" aria-label="Pop ${n}: people"></td>
+				<td><select id="pop-${i}-status" data-f="status" aria-label="Pop ${n}: culture">${P.STATUS.map(([v, l]) => opt(v, l, st)).join('')}</select></td>
+				<td><input id="pop-${i}-sat" data-f="satisfaction" type="number" min="0" max="100" step="1" value="${+(p.satisfaction * 100).toFixed(1)}" aria-label="Pop ${n}: satisfaction %"></td>
+				<td><input id="pop-${i}-lit" data-f="literacy" type="number" min="0" max="100" step="1" value="${+(+p.literacy).toFixed(1)}" aria-label="Pop ${n}: literacy"></td>
+				<td><button type="button" class="link" id="pop-${i}-del" data-del="pop" aria-label="Remove pop ${n}">✕</button></td></tr>`;
+		}).join('');
+		return `<table class="edit"><thead><tr><th scope="col">Pop type</th><th scope="col">People</th><th scope="col">Culture</th><th scope="col">Satisfaction %</th><th scope="col">Literacy</th><th scope="col"><span class="vh">Remove</span></th></tr></thead><tbody>${rows}</tbody></table>`;
+	};
+	// A building runs one production method per slot: the scenario's `methods` (from a save), else the first of each slot.
+	P.slotsOf = type => { const t = DB.buildings[type]; return t && t.slots ? t.slots.map(sl => sl.filter(k => DB.methods[k])) : []; };
+	const runKeys = b => (Array.isArray(b.methods) ? b.methods : P.slotsOf(b.type).map(sl => sl[0]));
+	const methodLabel = k => {
+		const m = DB.methods[k];
+		if (!m) return k;
+		if (!m.out) return `${nm(k)} (upkeep only)`;
+		const ins = Object.entries(m.in || {}).map(([g, n]) => `${fmt(n, 2)} ${nm(g)}`).join(' + ');
+		return `${nm(k)}: ${ins || 'nothing'} → ${fmt(m.n, 2)} ${nm(m.out)}`;
+	};
+	P.buildingStaticHTML = (b, i) => {
+		const t = DB.buildings[b.type];
+		if (!t) return '<span class="err">Pick a building from the list.</span>';
+		const bits = [esc(catName(t.cat)), t.pop ? `${esc(nm(t.pop))}, ${people(t.emp)} jobs a level` : 'no workers'];
+		const slots = P.slotsOf(b.type), keys = runKeys(b);
+		const ms = slots.map((sl, si) => {
+			const cur = keys[si];
+			if (!sl.length) return '';
+			if (!cur) return `<span class="hint">slot ${si + 1} not run</span>`;
+			const fill = Array.isArray(b.inputFill) && typeof b.inputFill[si] === 'number' && b.inputFill[si] < 1 ? ` <span class="pill">inputs ${pct(b.inputFill[si], 0)} in the save</span>` : '';
+			const list = sl.includes(cur) ? sl : [cur, ...sl];
+			return list.length > 1
+				? `<label class="vh" for="bld-${i}-m${si}">Building ${i + 1}: production method${slots.length > 1 ? ` ${si + 1}` : ''}</label><select class="inline" id="bld-${i}-m${si}" data-f="method" data-slot="${si}">${list.map(k => opt(k, methodLabel(k), cur)).join('')}</select>${fill}`
+				: esc(methodLabel(cur)) + fill;
+		}).filter(Boolean);
+		if (ms.length) bits.push(ms.join(' + '));
+		return bits.join(' · ');
+	};
+	// a new method for one slot: the other slots keep theirs; the save's input shortage was for the old method
+	P.setMethod = (b, si, key) => {
+		const slots = P.slotsOf(b.type), keys = runKeys(b);
+		b.methods = slots.map((sl, k) => keys[k] || sl[0] || null);
+		b.methods[si] = key;
+		if (Array.isArray(b.inputFill)) { b.inputFill = b.inputFill.slice(); b.inputFill[si] = 1; }
+		delete b.profit; delete b.method;
+	};
+	P.buildingsHTML = blds => {
+		if (!blds.length) return '<p class="hint">No buildings. Add one below.</p>';
+		return `<table class="edit"><thead><tr><th scope="col">Building</th><th scope="col">Level</th><th scope="col">Cap</th><th scope="col">Staffing %</th><th scope="col">Foreign</th><th scope="col"><span class="vh">Remove</span></th></tr></thead>${blds.map((b, i) => {
+			const t = DB.buildings[b.type], n = i + 1;
+			return `<tbody data-i="${i}"><tr class="b-main">
+				<td><input class="w-type" id="bld-${i}-type" data-f="type" list="bld-list" value="${esc(P.buildingLabel(b.type))}" autocomplete="off" spellcheck="false" aria-label="Building ${n}: type"></td>
+				<td><input id="bld-${i}-level" data-f="level" type="number" min="1" step="1" value="${b.level}" aria-label="Building ${n}: level"></td>
+				<td class="cap" id="bld-${i}-cap">–</td>
+				<td><input id="bld-${i}-staff" data-f="staffing" type="number" min="0" max="100" step="1" placeholder="auto" value="${b.staffing == null ? '' : +(b.staffing * 100).toFixed(1)}" aria-label="Building ${n}: staffing % (blank: from the pops)"${t && !t.pop ? ' disabled' : ''}></td>
+				<td><input id="bld-${i}-foreign" data-f="foreign" type="checkbox"${b.foreign ? ' checked' : ''} aria-label="Building ${n}: owned by another country"></td>
+				<td><button type="button" class="link" id="bld-${i}-del" data-del="bld" aria-label="Remove building ${n}">✕</button></td></tr>
+				<tr class="b-info"><td colspan="6"><span id="bld-${i}-static">${P.buildingStaticHTML(b, i)}</span> <span id="bld-${i}-live"></span></td></tr></tbody>`;
+		}).join('')}</table>`;
+	};
+	// a building's cap, staffing and warnings, after a run
+	P.buildingLive = (b, r, Lb) => {
+		const t = DB.buildings[b.type];
+		const cap = E.maxLevel(b.type, r.L, r.M);
+		const cv = cap && typeof cap === 'object' ? cap.value : cap, unk = cap && typeof cap === 'object' ? cap.unknown : [];
+		const capText = Number.isFinite(cv) ? (unk.length ? '≈' : '') + cv : '?';
+		const capTitle = unk.length ? `Also depends on ${unk.join(', ')}, which the simulator counts as not met.` : '';
+		const over = Number.isFinite(cv) && b.level > cv;
+		const bits = [];
+		if (t.pop) bits.push(`staffed ${pct(r.J.E.get(Lb) ?? 1, 0)}`);
+		if (!(t.ranks && t.ranks[r.L.rank] === 1)) bits.push(`<span class="pill bad">not built in a ${esc(nm(r.L.rank))}</span>`);
+		if (over) bits.push('<span class="pill" title="Levels built when the cap was higher stay.">above the cap</span>');
+		if (b.foreign) bits.push('owned by another country, so no wealth here');
+		return { capText, capTitle, cap: cv, over, html: bits.join(' · ') };
+	};
+	P.extraInfoHTML = row => { const i = P.extraInfo(row); return `<span class="${i.ok ? 'hint' : 'err'}">${esc(i.msg)}</span>`; };
+	P.extrasHTML = extras => {
+		if (!extras.length) return '<p class="hint">None yet.</p>';
+		return `<table class="edit"><thead><tr><th scope="col">Modifier key</th><th scope="col">Value</th><th scope="col">What it is</th><th scope="col"><span class="vh">Remove</span></th></tr></thead><tbody>${extras.map((x, i) => `<tr data-i="${i}">
+			<td><input class="w-key" id="ex-${i}-key" data-f="key" list="mod-keys" value="${esc(x.key)}" autocomplete="off" spellcheck="false" aria-label="Modifier ${i + 1}: key"></td>
+			<td><input id="ex-${i}-value" data-f="value" type="number" step="any" value="${esc(x.value)}" aria-label="Modifier ${i + 1}: value"></td>
+			<td id="ex-${i}-info">${P.extraInfoHTML(x)}</td>
+			<td><button type="button" class="link" id="ex-${i}-del" data-del="ex" aria-label="Remove modifier ${i + 1}">✕</button></td></tr>`).join('')}</tbody></table>`;
+	};
+	P.locInfo = r => {
+		const L = r.L, tpl = tplOf(L.key);
+		return [P.locName(L.key) + (tpl ? '' : ' (not on the map)'), tpl ? placeName(DB.areas[tpl[11]]) : '',
+			[nm(L.topography), L.vegetation ? nm(L.vegetation) : '', nm(L.climate)].filter(Boolean).join(', '),
+			L.rawMaterial ? `raw material ${nm(L.rawMaterial)}` : 'no raw material', L.river ? `river size ${L.river}` : 'no river',
+			L.coastal ? `coastal${(L.harborSuitability ?? L.harbor) ? `, harbor suitability ${fmt(L.harborSuitability ?? L.harbor, 2)}` : ''}` : 'inland'].filter(Boolean).join(' · ');
+	};
+
+	// ---------- results
+	const saveDate = name => { const m = /(\d{3,4})\.(\d{1,2})\.(\d{1,2})/.exec(String(name || '')); return m ? `${+m[3]} ${MONTHS[+m[2] - 1] || ''} ${m[1]}` : ''; };
+	P.whereText = r => `${P.locName(r.L.key)} · ${nm(r.L.rank)}${r.L.capital ? ' · capital' : ''} · Age ${P.AGE_NAMES[r.L.age] || r.L.age}, ${r.L.year}`;
+	P.saveNote = (work, r) => {
+		const o = work.observed;
+		if (!o || typeof o.possibleTax !== 'number') return '';
+		const born = Object.values(o.popStats || {}).reduce((a, s) => a + ((s.changes || {}).Reproduction || 0), 0);
+		const d = saveDate(work.name);
+		return `The save${d ? ` of ${d}` : ''}: wealth ${gold(o.possibleTax)} (simulated ${gold(r.wealth.total)}), Tax Base ${gold(o.tax)}, ${people(born, 1)} born a month (simulated ${people(r.growth.pool, 1)}). The save's numbers stay as they were while you edit.`;
+	};
+	const tile = (label, value, note) => `<div class="tile"><div class="label">${label}</div><div class="value">${value}</div><div class="note">${note}</div></div>`;
+	const regiments = rows => rows.reduce((a, x) => a + (x.regimentSize ? x.men / x.regimentSize : 0), 0);
+	P.tilesHTML = (r, work) => {
+		const mp = r.manpower, lv = r.levies, t = r.tax, g = r.growth, c = r.control, o = work && work.observed;
+		const regs = regiments(lv.rows.filter(x => x.kind === 'army'));
+		return tile('Monthly Manpower', people(mp.monthly), `people a month · adds ${people(mp.max)} to max manpower`)
+			+ tile('Army levies', people(lv.army), `men, about ${fmt(regs, 1)} regiments${lv.navy ? ` · navy ${people(lv.navy)}` : ''}`)
+			+ tile('Crown tax', gold(t.crown), `gold a month · Tax Base ${gold(t.base)}`)
+			+ tile('Wealth', gold(r.wealth.total), o && typeof o.possibleTax === 'number' ? `gold a month · the save: ${gold(o.possibleTax)}` : `gold a month · RGO ${gold(r.wealth.rgo)}, buildings ${gold(r.wealth.buildings)}`)
+			+ tile('Population growth', spct(g.yearly), `a year · ${speople(g.pool)} people a month`)
+			+ tile('Control', pctN(r.L.control), `max ${pctN(c.max)} · ${signed(100 * c.delta, 2)} points a month`);
+	};
+	const def = (sec, key, d) => { const s = DB.defines[sec]; return s && typeof s[key] === 'number' ? s[key] : d; };
+	const li = (label, value, cls = '') => `<li class="${cls}"><span>${label}</span><span class="v">${value}</span></li>`;
+	const srcLabel = s => String(s).replace(/^country \((\w+)\): /, (m, g) => `Country, ${modName(g)}: `).replace(/^country: /, 'Country: ');
+	const THEAD = cols => `<thead><tr>${cols.map((c, i) => `<th scope="col"${i && /^(Levy unit|Makes|Source|Note|Pop type|Estate|Building)$/.test(c) ? ' class="l"' : ''}>${c}</th>`).join('')}</tr></thead>`;
+
+	P.populationHTML = (r, work) => {
+		const L = r.L, g = r.growth, J = r.J, o = work && work.observed;
+		const sur = L.food.starving ? 0 : def('NPop', 'FOOD_SURPLUS_POP_GROWTH', 0.0015) * clamp(L.food.surplus, 0, 1);
+		const sto = L.food.starving ? 0 : def('NPop', 'FOOD_STORAGE_POP_GROWTH', 0.001) * clamp(L.food.storage, 0, 1);
+		const capped = g.local + g.global + g.foodTerms - g.yearly;
+		let h = `<p class="lead"><b>${people(L.population)}</b> people of a capacity of <b>${people(r.capacity)}</b> (${pct(r.capacity ? L.population / r.capacity : 0, 0)}).</p>`;
+		h += `<ul class="factors">${li('Population Growth from the location', spct(g.local))}${li('Population Growth from the country', spct(g.global))}`
+			+ (L.food.starving ? li('The province is starving: no food growth', spct(0))
+				: li(`Food surplus in the province, ${pct(clamp(L.food.surplus, 0, 1), 0)} of the bonus`, spct(sur)) + li(`Food stored in the province, ${pct(clamp(L.food.storage, 0, 1), 0)} of the bonus`, spct(sto)))
+			+ (capped > 1e-9 ? li('Growth capped at zero', spct(-capped)) : '')
+			+ li(`Growth a year: ${speople(g.pool)} people a month`, spct(g.yearly), 'total') + '</ul>';
+		if (r.capacity && L.population / r.capacity > def('NPop', 'GROWTH_DAMPING_START', 0.6)) h += '<p class="hint">Above 60% of capacity, growth slows: up to −0.5% a year at full capacity (in the location\'s growth above).</p>';
+		const types = Object.keys(DB.pops).filter(t => (J.pops[t] || 0) > 0 || (J.jobs[t] || 0) > 0);
+		const rep = t => o && o.popStats && o.popStats[t] && o.popStats[t].changes ? o.popStats[t].changes.Reproduction : undefined;
+		const showSave = !!(o && o.popStats);
+		h += `<div class="tablewrap"><table>${THEAD(['Pop type', 'People', 'Born a month', ...(showSave ? ['The save'] : []), 'Jobs', 'Working', 'Without a job'])}<tbody>${types.map(t => `<tr><td>${esc(nm(t))}</td><td>${people(J.pops[t] || 0)}</td><td>${people(g.births[t] || 0, 1)}</td>${showSave ? `<td>${rep(t) === undefined ? '–' : people(rep(t), 1)}</td>` : ''}<td>${people(J.jobs[t] || 0)}</td><td>${people(J.employed[t] || 0)}</td><td>${people(J.unemployed[t] || 0)}</td></tr>`).join('')}</tbody></table></div>`;
+		const notes = [];
+		if (J.rgoMax) notes.push(`Laborers' jobs include the RGO's ${people(J.rgoMax)}.`);
+		if ((J.unemployed.peasants || 0) > 0) notes.push(`${people(J.unemployed.peasants)} peasants without a job farm for food.`);
+		if (L.pops.some(p => !['Primary', 'Accepted', 'Tolerated'].includes(p.status) && p.size > 0)) notes.push('Pops of another culture get no births.');
+		if (notes.length) h += `<p class="hint">${notes.join(' ')}</p>`;
+		return h;
+	};
+
+	const sourceList = (M, key, unitFn) => M.why(key).map(([s, x]) => `${esc(srcLabel(s))} ${typeof x === 'number' ? unitFn(x) : esc(x)}`).join(' · ');
+	P.manpowerHTML = r => {
+		const mp = r.manpower, sl = r.sailors, L = r.L, M = r.M;
+		const years = def('NCountry', 'MAX_MANPOWER_YEARS', 5);
+		let h = `<p class="lead"><b>${people(mp.monthly)}</b> Monthly Manpower to the country; it adds <b>${people(mp.max)}</b> to max manpower.</p>`;
+		h += `<ul class="factors">${li('From buildings, by their staffing', people(mp.flat))}${li(`× (1 + local Monthly Manpower ${spct(mp.localMod)})`, times(1 + mp.localMod))}`
+			+ li(`× control ${pctN(L.control)}${L.control < 0.1 ? ', counted as 10%' : ''}`, times(mp.control))
+			+ li(`× (1 + the country's Manpower ${spct(mp.globalMod)})`, times(1 + mp.globalMod))
+			+ li('Monthly Manpower', `${people(mp.monthly)} a month`, 'total') + '</ul>';
+		h += mp.flat ? `<p class="hint">Buildings: ${sourceList(M, 'local_manpower', x => speople(x))}. Max manpower holds ${years} years of it: ${people(mp.monthly)} × ${years * 12} = ${people(mp.max)}.</p>`
+			: '<p class="hint">No building here gives manpower. Armories and barracks (towns and cities) or training fields (rural settlements) do, staffed by soldiers.</p>';
+		const onePlus = x => `(1 ${x < 0 ? '−' : '+'} ${pct(Math.abs(x), pdig(100 * x))})`;
+		h += sl.flat ? `<p><b>Sailors:</b> <span class="num">${people(sl.monthly)}</span> a month (adds ${people(sl.max)} to max sailors) = buildings ${people(sl.flat)} × ${onePlus(sl.localMod)} × control ${pctN(sl.control)} × ${onePlus(sl.globalMod)}.</p><p class="hint">${sourceList(M, 'local_sailors', x => speople(x))}</p>`
+			: '<p class="hint">No sailors: docks and other naval buildings give them.</p>';
+		return h;
+	};
+
+	P.leviesHTML = r => {
+		const lv = r.levies, L = r.L, C = r.C, M = r.M;
+		const wrongF = 1 + Math.min(0, C.mods.raw('wrong_culture_levy_size'));
+		const groups = new Map();
+		for (const x of lv.rows) {
+			const k = `${x.kind}|${x.popType}|${x.levy}`;
+			const g = groups.get(k) || { ...x, men: 0, popSize: 0, wrong: 0, unsat: 0 };
+			g.men += x.men; g.popSize += x.popSize;
+			if (x.culture < 1) g.wrong += x.popSize;
+			if (!x.satisfied) g.unsat += x.popSize;
+			groups.set(k, g);
+		}
+		let h = `<p class="lead"><b>${people(lv.army)}</b> men in army levies${lv.navy ? ` and <b>${people(lv.navy)}</b> in navy levies` : ''}, at control ${pctN(L.control)}${L.control < 0.1 ? ' (counted as 10%)' : ''}${L.levyRecovery < 1 ? ` with ${pctN(L.levyRecovery)} of the levies recovered` : ''}.</p>`;
+		h += `<p class="hint">${C.advances ? `Each pop raises the strongest levy unit unlocked by the scenario's ${C.advances.length} advances.` : `Each pop raises the strongest levy unit of Age ${P.AGE_NAMES[L.age] || L.age} it can; regional and cultural units need conditions the simulator does not check.`} Men = pops × share raised × culture × Levy Size × control.</p>`;
+		if (!groups.size) return h + '<p>No pop here can raise a levy.</p>';
+		const rows = [...groups.values()].map(g => {
+			const est = DB.pops[g.popType] ? DB.pops[g.popType].estate : '';
+			const sat = C.estates[est] && C.estates[est].satisfaction;
+			const regs = g.regimentSize ? g.men / g.regimentSize : 0;
+			const note = g.unsat > 0 ? `<span class="pill bad">${esc(nm(est))} at ${pct(sat, 0)}: below 25%, raises nothing</span>` : '';
+			return `<tr><td>${esc(nm(g.popType))}${g.kind === 'navy' ? ' (navy)' : ''}</td><td>${people(g.popSize)}</td><td class="l">${esc(unitName(g.unit))} <span class="hint">${CAT[g.cat] || ''}</span></td><td>${people(g.men)}</td>`
+				+ `<td>${g.regimentSize ? `${fmt(regs, 2)} <span class="hint">of ${people(g.regimentSize)}</span>` : '–'}</td><td>${pct(g.size, g.size < 0.01 ? 1 : 0)}</td><td>${times(g.mult, 2)}</td>`
+				+ `<td>${g.wrong ? `${people(g.wrong)} at ${times(wrongF, 2)}` : '–'}</td><td class="l">${note}</td></tr>`;
+		}).join('');
+		h += `<div class="tablewrap"><table>${THEAD(['Pop type', 'Pops', 'Levy unit', 'Men', 'Regiments', 'Share raised', 'Levy Size', 'Other culture', 'Note'])}<tbody>${rows}</tbody></table></div>`;
+		const estBits = Object.keys(DB.estates).map(e => [e, C.mods.raw(e + '_levy_size')]).filter(([, x]) => x).map(([e, x]) => `${nm(e)} ${spct(x)}`);
+		h += `<p class="hint">The Levy Size column is 1 + Levy Size ${spct(M.get('local_levy_size_modifier'))} + Army Levy Size ${spct(M.get('local_army_levy_size_modifier'))}${estBits.length ? ` + the estate's own levy size (${estBits.join(', ')})` : ''}.</p>`;
+		return h;
+	};
+
+	P.economyHTML = r => {
+		const w = r.wealth, rg = r.rgo, L = r.L;
+		let h = `<p class="lead"><b>${gold(w.total)}</b> gold a month of wealth = RGO ${gold(w.rgo)} + producing buildings ${gold(w.buildings)}${w.burgherTrade ? ` + burgher trade ${gold(w.burgherTrade)}` : ''}.</p>`;
+		if (rg.good && DB.goods[rg.good]) {
+			const max = Number.isFinite(L.rgoMaxPossible) ? `the location's max is ${fmt(L.rgoMaxPossible, 1)}` : '';
+			const from = L.rgoWorkers !== undefined ? `RGO size as set${max ? `; ${max}` : ''}` : max ? `RGO size at the location's max, ${fmt(L.rgoMaxPossible, 1)}` : 'RGO size estimated from the location';
+			h += `<p><b>RGO, ${esc(nm(rg.good))}:</b> ${people(rg.workers)} workers of ${people(rg.size || 0)} (${from}). Output <span class="num">${fmt(rg.output, 2)}</span> (Raw Materials Output ${spct(rg.outMod)}) × price <span class="num">${fmt(rg.price, 3)}</span> × market access ${pctN(L.marketAccess)} = <span class="num">${gold(rg.profit)}</span> gold${rg.food ? `, and ${fmt(rg.food, 1)} food` : ''}.</p>`;
+		} else h += '<p>No raw material here, so no RGO.</p>';
+		const prod = r.buildings.rows.filter(b => b.profit !== undefined && !b.foreign).sort((a, b) => b.profit - a.profit);
+		if (prod.length) {
+			const saved = prod.some(b => typeof b.savedProfit === 'number');
+			// the save's input fill per method (slot): a method short of an input runs at that share
+			const fillOf = b => { const lb = L.buildings[b.idx]; const f = lb && Array.isArray(lb.inputFill) ? lb.inputFill.filter(x => typeof x === 'number') : []; return f.length ? Math.min(...f) : 1; };
+			const short = prod.some(b => fillOf(b) < 1);
+			h += `<div class="tablewrap"><table>${THEAD(['Building', 'Level', 'Makes', 'Made a month', 'Production Efficiency', ...(short ? ['Inputs'] : []), 'Profit', 'Staffed', ...(saved ? ['Profit in the save'] : [])])}<tbody>${prod.map(b => `<tr><td>${esc(P.buildingLabel(b.type))}</td><td>${b.level}</td><td class="l">${esc(nm(b.produces))}</td><td>${fmt(b.output, 2)}</td>`
+				+ `<td>${spct(b.pe, 1)}${b.goodMod ? ` <span class="hint">+ ${esc(nm(b.produces))} output ${spct(b.goodMod, 1)}</span>` : ''}</td>${short ? `<td>${fillOf(b) < 1 ? pct(fillOf(b), 0) : '–'}</td>` : ''}<td class="${b.profit < 0 ? 'down' : ''}">${sgold(b.profit)}</td><td>${pctN(b.employment)}</td>${saved ? `<td>${typeof b.savedProfit === 'number' ? sgold(b.savedProfit) : '–'}</td>` : ''}</tr>`).join('')}`
+				+ `<tr class="total"><td>Producing buildings</td><td></td><td></td><td></td><td></td>${short ? '<td></td>' : ''}<td>${sgold(w.buildings)}</td><td></td>${saved ? '<td></td>' : ''}</tr></tbody></table></div>`;
+			h += `<p class="hint">Profit = level × market access × staffing × (output × price × (1 + Production Efficiency) − inputs × prices), over every production method the building runs (one per slot). Each level above the first adds 1% efficiency × the age's factor.${short ? ' Inputs: the share of its inputs a method got in the save; it runs at that share. Buildings you add get all their inputs.' : ''}</p>`;
+		} else h += '<p class="hint">No producing buildings.</p>';
+		const up = r.buildings.rows.filter(b => b.upkeep !== undefined && !b.foreign);
+		if (up.length) {
+			const saved = up.some(b => typeof b.savedUpkeep === 'number');
+			h += `<p>Upkeep of the other buildings: <span class="num">${gold(r.upkeep)}</span> gold a month, paid by the owner (their goods × ${fmt(r.buildings.upkeepMult, 3)} in ${L.year}). It is an expense, not wealth.</p>`;
+			h += `<details data-k="upkeep"><summary>Upkeep of each building</summary><div class="tablewrap"><table>${THEAD(['Building', 'Level', 'Upkeep a month', ...(saved ? ['In the save'] : [])])}<tbody>${up.sort((a, b) => b.upkeep - a.upkeep).map(b => `<tr><td>${esc(P.buildingLabel(b.type))}</td><td>${b.level}</td><td>${gold(b.upkeep)}</td>${saved ? `<td>${typeof b.savedUpkeep === 'number' ? gold(b.savedUpkeep) : '–'}</td>` : ''}</tr>`).join('')}</tbody></table></div></details>`;
+		}
+		const foreign = L.buildings.filter(b => b.foreign).length;
+		if (foreign) h += `<p class="hint">${foreign} building${foreign > 1 ? 's' : ''} owned by other countries add their modifiers here but no wealth.</p>`;
+		return h;
+	};
+
+	// food of the location (r.food): production and what its pops eat; the province store and the market are country-wide
+	P.foodHTML = r => {
+		const f = r.food, L = r.L, M = r.M;
+		if (!f) return '<p class="hint">This version of the engine has no food model.</p>';
+		const sub = def('NLocation', 'SUBSISTENCE_AGRICULTURE', 0.8);
+		const mult = 1 + M.get('local_food_production_mult') + M.get('hostile_food_multiplier');
+		const g = DB.goods[L.rawMaterial], rgoFoodGood = !!(g && g.food);
+		let h = `<p class="lead">Makes <b>${fmt(f.production, 1)}</b> food a month and its pops eat <b>${fmt(f.consumption, 1)}</b>: ${f.balance >= 0 ? `<b>${fmt(f.balance, 1)}</b> left over` : `<b>${fmt(-f.balance, 1)}</b> short`} for the province's store.</p>`;
+		h += '<ul class="factors">'
+			+ li(rgoFoodGood ? `RGO: ${people(r.J.rgoWorkers)} workers × (1 + Raw Materials Output) × ${esc(nm(L.rawMaterial))} food value ${fmt(g.food, 0)}` : 'RGO: its raw material is not food', fmt(f.rgoFood, 1))
+			+ li(`Subsistence farming: ${people(f.subsist)} peasants and laborers without a job × ${fmt(sub, 1)}`, fmt(sub * f.subsist, 1))
+			+ (f.bldFood ? li('Buildings that make food', fmt(f.bldFood, 1)) : '')
+			+ (f.flat ? li('Monthly Food of the location', fmt(f.flat, 1)) : '')
+			+ li(`× (1 + Monthly Food modifiers${rgoFoodGood ? ` + ${esc(nm(L.rawMaterial))} output` : ''})`, times(f.productivity))
+			+ li(`× (1 + ${esc(modName('local_food_production_mult'))} ${spct(mult - 1)}, from the rank and the land)`, times(mult))
+			+ li('Food made', fmt(f.production, 1), 'total')
+			+ li(`Eaten by ${people(L.population)} people`, fmt(-f.consumption, 1))
+			+ li('Balance a month', signed(f.balance, 1), 'total') + '</ul>';
+		h += `<p class="hint">This location adds ${fmt(f.capacity, 0)} to its province's food capacity${f.preservation ? `, with ${spct(f.preservation)} preservation` : ''}. The province's store and its food trade with the market need the whole country, so growth here takes its food terms from the food inputs on the Location tab.</p>`;
+		return h;
+	};
+
+	P.taxHTML = (r, work) => {
+		const t = r.tax, L = r.L, o = work && work.observed;
+		const saved = !!(o && o.estatePossibleTax);
+		let h = `<p class="lead">Tax Base <b>${gold(t.base)}</b> = wealth ${gold(t.wealth)} × control ${pctN(L.control)}. The crown takes <b>${gold(t.crown)}</b> gold a month.</p>`;
+		h += `<p class="hint">Peasant Enfranchisement ${pct(t.enfranchisement, 1)}: the commoners keep that part of their share and the nobility takes the rest. Tax Efficiency ${times(t.efficiency)}.${L.control < 1 ? ` Uncontrolled wealth, ${gold(t.wealth * (1 - L.control))}, goes to the estates untaxed.` : ''}</p>`;
+		const order = [...P.MAIN_ESTATES.filter(e => t.estates[e]), ...Object.keys(t.estates).filter(e => !P.MAIN_ESTATES.includes(e))];
+		h += `<div class="tablewrap"><table>${THEAD(['Estate', 'Share', 'Wealth', 'Tax Base', 'Rate', 'Crown', ...(saved ? ['The save'] : [])])}<tbody>${order.map(e => { const x = t.estates[e]; return `<tr><td>${esc(nm(e))}</td><td>${pct(x.share, 1)}</td><td>${gold(x.possible)}</td><td>${gold(x.base)}</td><td>${pct(x.rate, 1)}</td><td>${gold(x.crown)}</td>${saved ? `<td>${typeof o.estatePossibleTax[e] === 'number' ? gold(o.estatePossibleTax[e]) : '–'}</td>` : ''}</tr>`; }).join('')}`
+			+ `<tr class="total"><td>Total</td><td></td><td>${gold(t.wealth)}</td><td>${gold(t.base)}</td><td></td><td>${gold(t.crown)}</td>${saved ? `<td>${gold(o.possibleTax)}</td>` : ''}</tr></tbody></table></div>`;
+		if (saved) h += '<p class="hint">The save column is each estate\'s wealth in the save.</p>';
+		return h;
+	};
+
+	P.controlHTML = r => {
+		const c = r.control, L = r.L, M = r.M;
+		const maxKey = c.urban ? 'local_max_urban_control' : 'local_max_rural_control';
+		const raw = M.get('local_max_control') + M.get(maxKey);
+		const move = c.delta > 0 ? `It rises ${fmt(100 * c.delta, 2)} points a month.` : c.delta < 0 ? `It falls ${fmt(-100 * c.delta, 2)} points a month.` : 'It stays where it is.';
+		let h = `<p class="lead">Control <b>${pctN(L.control)}</b>, max <b>${pctN(c.max)}</b> (${c.urban ? 'urban' : 'rural'} location). ${move}</p>`;
+		const items = [...M.why('local_max_control'), ...M.why(maxKey)].map(([s, x]) => typeof x === 'number' ? li(esc(srcLabel(s)), spct(x), x > 0 ? 'up' : x < 0 ? 'down' : '') : '').join('');
+		h += `<ul class="factors">${items}${li(`Max control${raw > 1 ? ` (${spct(raw)} before the 100% cap)` : raw < 0 ? ` (${spct(raw)} before the 0% floor)` : ''}`, pctN(c.max), 'total')}</ul>`;
+		const up = M.get('local_monthly_control') + M.get(c.urban ? 'local_monthly_urban_control' : 'local_monthly_rural_control');
+		h += `<p class="hint">Below the max, control rises by Monthly Control (${spct(up)} a month here: base +0.05%, core +0.1%, road to the capital +0.05%). Above it, it falls by up to ${fmt(100 * def('NLocation', 'MONTHLY_CONTROL_DECAY', 0.01), 1)} points a month.</p>`;
+		return h;
+	};
+
+	// modifier inspector: the location's keys, and the owner's (a global_X shows as the local_X it adds to)
+	const fmtMod = (k, x) => {
+		if (x === 'yes') return 'yes';
+		if (typeof x !== 'number') return esc(x);
+		if (THOUSANDS.has(k)) return speople(x) + ' people';
+		const t = DB.modifierTypes[k];
+		if (t && t[0] === 1) return spct(x);
+		if (t && t[0] === 2) return signed(x, 2) + '%';
+		const a = Math.abs(x);
+		return signed(x, a >= 100 ? 0 : a >= 1 ? 2 : a >= 0.01 ? 3 : 4);
+	};
+	P.fmtMod = fmtMod;
+	P.modKeys = r => {
+		const M = r.M, keys = new Set(Object.keys(M.local.v));
+		for (const k of Object.keys(M.country.v)) { if (M.country.v[k] === 'yes') continue; keys.add(k.startsWith('global_') && DB.modifierTypes['local_' + k.slice(7)] ? 'local_' + k.slice(7) : k); }
+		return [...keys].filter(k => { const v = M.get(k); return (typeof v === 'number' && Math.abs(v) > 1e-12) || M.local.v[k] === 'yes'; })
+			.sort((a, b) => modName(a).localeCompare(modName(b)) || a.localeCompare(b));
+	};
+	P.modOptionsHTML = (keys, sel) => keys.map(k => opt(k, `${modName(k)} · ${k}`, sel)).join('');
+	P.inspectHTML = (r, k) => {
+		if (!k) return '<p class="hint">No modifier to show.</p>';
+		const M = r.M, total = M.get(k), rows = M.why(k);
+		const shown = typeof total === 'number' && total !== 0 ? fmtMod(k, total) : M.on(k) ? 'yes' : fmtMod(k, total);
+		return `<p class="lead"><strong class="name">${esc(modName(k))}</strong> <code>${esc(k)}</code> = <b>${shown}</b></p>`
+			+ (rows.length ? `<div class="tablewrap"><table>${THEAD(['Source', 'Value'])}<tbody>${rows.map(([s, x]) => `<tr><td>${esc(srcLabel(s))}</td><td>${fmtMod(k, x)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="hint">No source of its own here.</p>');
+	};
+
+	// ---------- the years ahead
+	P.METRICS = {
+		population: { label: 'Population', unit: 'people', v: p => p.population * 1000, f: x => fmt(x, 0), compact: true },
+		manpower: { label: 'Monthly Manpower', unit: 'people a month', v: p => p.manpower * 1000, f: x => fmt(x, Math.abs(x) < 100 ? 1 : 0), compact: true },
+		levies: { label: 'Army levies', unit: 'men', v: p => p.levies * 1000, f: x => fmt(x, 0), compact: true },
+		crownTax: { label: 'Crown tax', unit: 'gold a month', v: p => p.crownTax, f: x => fmt(x, 2) },
+		wealth: { label: 'Wealth', unit: 'gold a month', v: p => p.wealth, f: x => fmt(x, 2) },
+		control: { label: 'Control', unit: '% of the location', v: p => p.control * 100, f: x => fmt(x, 1) + '%', fixed: [0, 100, 25], ref: { label: 'Max control', v: p => p.maxControl * 100 } },
+		// an engine that moves development and prosperity in its projection adds these to each month
+		development: { label: 'Development', unit: 'development', v: p => p.development, f: x => fmt(x, 1), need: 'development' },
+		prosperity: { label: 'Prosperity', unit: '% prosperity', v: p => p.prosperity * 100, f: x => fmt(x, 1) + '%', need: 'prosperity' },
+	};
+	P.metricOK = (key, rows) => { const m = P.METRICS[key]; return !!m && (!m.need || !!(rows && rows.length && typeof rows[0][m.need] === 'number')); };
+	P.projectionNote = rows => (rows && rows.length && typeof rows[0].development === 'number'
+		? 'Month by month: pops grow by their births, control moves toward its max, development and prosperity change by their monthly rates, and buildings lay off or rehire 10% of their workers a month as they lose or make money. Prices and food stay as they are now.'
+		: 'Month by month: pops grow by their births, control moves toward its max, and buildings lay off or rehire 10% of their workers a month as they lose or make money. Development, prosperity, prices and food stay as they are now.');
+	const decimals = s => { for (let d = 0; d < 7; d++) if (Math.abs(Math.round(s * 10 ** d) - s * 10 ** d) < 1e-6) return d; return 7; };
+	const niceStep = (span, target) => { const raw = span / target; if (!(raw > 0)) return 1; const p = 10 ** Math.floor(Math.log10(raw)); const m = raw / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; };
+	const domainOf = (vals, fixed) => {
+		if (fixed) return { lo: fixed[0], hi: fixed[1], step: fixed[2] };
+		let mn = Infinity, mx = -Infinity;
+		for (const v of vals) if (Number.isFinite(v)) { if (v < mn) mn = v; if (v > mx) mx = v; }
+		if (!Number.isFinite(mn)) { mn = 0; mx = 0; }
+		let lo, hi;
+		// a narrow band far from zero gets its own range (a line shows change, not size); anything else starts at zero
+		if (mn > 0 && (mx - mn) / mx < 0.35) { const pad = Math.max((mx - mn) * 0.2, mx * 0.004); lo = mn - pad; hi = mx + pad; }
+		else { lo = Math.min(0, mn); hi = Math.max(0, mx); }
+		if (hi - lo < 1e-9) hi = lo + 1;
+		const step = niceStep(hi - lo, 4);
+		lo = Math.floor(lo / step + 1e-9) * step; hi = Math.ceil(hi / step - 1e-9) * step;
+		if (mn >= 0 && lo < 0) lo = 0;
+		if (hi <= lo) hi = lo + step;
+		return { lo, hi, step };
+	};
+	const tickLabel = (v, step, compact) => {
+		if (Math.abs(v) < step * 1e-6) return '0';
+		if (compact && (Math.abs(v) >= 1000 || step >= 1000)) { const big = Math.abs(v) >= 1e6 || step >= 1e6 ? 1e6 : 1e3; return fmt(v / big, decimals(step / big)) + (big === 1e6 ? 'M' : 'K'); }
+		return fmt(v, decimals(step));
+	};
+	P.durLabel = m => (m < 12 ? `${m} month${m === 1 ? '' : 's'}` : `${Math.floor(m / 12)} year${m >= 24 ? 's' : ''}${m % 12 ? ` ${m % 12} month${m % 12 === 1 ? '' : 's'}` : ''}`);
+	// An SVG line chart sized to the box it goes in (width in px). geo carries the scales for the hover layer.
+	P.chartHTML = (rows, metricKey, width, startYear) => {
+		const m = P.METRICS[metricKey] || P.METRICS.population;
+		const W = Math.max(280, Math.round(width)), H = W < 560 ? 250 : 300, Lm = 54, Rm = 76, T = 26, B = 40;
+		const n = rows.length - 1, vals = rows.map(m.v), refs = m.ref ? rows.map(m.ref.v) : null;
+		const d = domainOf(refs ? [...vals, ...refs] : vals, m.fixed);
+		const pw = W - Lm - Rm, ph = H - T - B;
+		const x = i => Lm + pw * (n ? i / n : 0), y = v => T + ph * (1 - (v - d.lo) / (d.hi - d.lo));
+		let grid = '';
+		for (let i = 0; ; i++) {
+			const v = d.lo + i * d.step;
+			if (v > d.hi + d.step * 1e-6) break;
+			const yy = y(v).toFixed(1);
+			grid += `<line class="gridline" x1="${Lm}" x2="${W - Rm}" y1="${yy}" y2="${yy}"/><text x="${Lm - 7}" y="${(+yy + 4).toFixed(1)}" text-anchor="end">${tickLabel(v, d.step, m.compact)}</text>`;
+		}
+		const years = n / 12, maxT = Math.max(2, Math.floor(pw / 64));
+		const ys = [1, 2, 5, 10, 20, 25, 50, 100].find(s => years / s <= maxT) || 100;
+		for (let Y = Math.ceil(startYear / ys) * ys; Y <= startYear + years + 1e-9; Y += ys) {
+			const xx = x((Y - startYear) * 12).toFixed(1);
+			grid += `<line class="gridline" x1="${xx}" x2="${xx}" y1="${T + ph}" y2="${T + ph + 5}"/><text x="${xx}" y="${T + ph + 18}" text-anchor="middle">${Y}</text>`;
+		}
+		grid += `<text class="axis-title" x="0" y="13">${esc(m.unit)}</text><text class="axis-title" x="${W - Rm}" y="${H - 3}" text-anchor="end">Year</text>`;
+		const pathOf = vs => vs.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join('');
+		const main = pathOf(vals);
+		const area = !refs && d.lo === 0 && n ? `<path d="${main}L${x(n).toFixed(1)} ${y(0).toFixed(1)}L${x(0).toFixed(1)} ${y(0).toFixed(1)}Z" fill="var(--side-a)" fill-opacity="0.1" stroke="none"/>` : '';
+		const ref = refs ? `<path d="${pathOf(refs)}" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>` : '';
+		const ye = y(vals[n]);
+		let ends = `<circle cx="${x(n).toFixed(1)}" cy="${ye.toFixed(1)}" r="4" fill="var(--side-a)" stroke="var(--surface)" stroke-width="2"/><text class="endlabel" x="${(x(n) + 8).toFixed(1)}" y="${(ye + 4).toFixed(1)}">${esc(m.f(vals[n]))}</text>`;
+		if (refs && Math.abs(y(refs[n]) - ye) >= 14) ends += `<text class="endlabel" x="${(x(n) + 8).toFixed(1)}" y="${(y(refs[n]) + 4).toFixed(1)}">${esc(m.f(refs[n]))}</text>`;
+		const when = i => `${i === 0 ? 'Now' : `After ${P.durLabel(i)}`} (${startYear + Math.floor(i / 12)})`;
+		const title = `${m.label} over ${P.durLabel(n)}`;
+		const aria = `${title}: from ${m.f(vals[0])} to ${m.f(vals[n])}. Focus the chart and use the arrow keys to read each month.`;
+		const html = `<div class="title">${esc(title)}</div>${refs ? `<div class="legend"><span style="--c:var(--side-a)">${esc(m.label)}</span><span class="dash" style="--c:var(--muted)">${esc(m.ref.label)}</span></div>` : ''}`
+			+ `<svg viewBox="0 0 ${W} ${H}" role="img" tabindex="0" aria-label="${esc(aria)}"><g class="axis">${grid}</g>${area}${ref}<path d="${main}" fill="none" stroke="var(--side-a)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>${ends}`
+			+ `<line class="cross" x1="0" x2="0" y1="${T}" y2="${T + ph}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/><rect class="hit" x="${Lm}" y="${T}" width="${pw}" height="${ph}" fill="transparent"/></svg><div class="tip" hidden></div>`;
+		const tip = i => `<b>${esc(m.f(vals[i]))}</b> ${esc(m.label)}${refs ? `<br><b>${esc(m.f(refs[i]))}</b> ${esc(m.ref.label)}` : ''}<br>${esc(when(i))}`;
+		return { html, geo: { W, H, Lm, Rm, T, B, n, x, y, vals, tip } };
+	};
+	P.projectionTableHTML = (rows, startYear) => {
+		const last = rows.length - 1, dp = P.metricOK('development', rows);
+		const yl = m => (m % 12 ? `${startYear + Math.floor(m / 12)} +${m % 12} mo` : String(startYear + m / 12));
+		return `<table>${THEAD(['Year', 'Population', 'Capacity', 'Growth a year', ...(dp ? ['Development', 'Prosperity'] : []), 'Control', 'Max control', 'Monthly Manpower', 'Army levies', 'Wealth', 'Crown tax'])}<tbody>${rows.filter(p => p.month % 12 === 0 || p.month === last).map(p => `<tr><td>${yl(p.month)}</td><td>${people(p.population, 0)}</td><td>${people(p.capacity, 0)}</td><td>${spct(p.growth)}</td>`
+			+ `${dp ? `<td>${fmt(p.development, 1)}</td><td>${pct(p.prosperity, 1)}</td>` : ''}<td>${pct(p.control, 1)}</td><td>${pct(p.maxControl, 1)}</td><td>${people(p.manpower)}</td><td>${people(p.levies, 0)}</td><td>${gold(p.wealth)}</td><td>${gold(p.crownTax)}</td></tr>`).join('')}</tbody></table>`;
+	};
+
+	// ---------- one more level of each building
+	P.worthRows = (work, extras, base) => {
+		const out = [];
+		work.location.buildings.forEach((b, i) => {
+			if (!P.validBuilding(b) || b.foreign) return;
+			const w2 = { ...work, location: { ...work.location, buildings: work.location.buildings.map((x, j) => (j === i ? { ...x, level: x.level + 1 } : x)) } };
+			const r2 = E.evaluate(P.toScenario(w2, extras));
+			const cap = E.maxLevel(b.type, base.L, base.M), cv = cap && typeof cap === 'object' ? cap.value : cap;
+			out.push({ i, type: b.type, level: b.level, cap: cv, approx: !!(cap && typeof cap === 'object' && cap.unknown.length),
+				d: { manpower: r2.manpower.monthly - base.manpower.monthly, levies: r2.levies.army - base.levies.army, tax: r2.tax.crown - base.tax.crown,
+					wealth: r2.wealth.total - base.wealth.total, upkeep: r2.upkeep - base.upkeep } });
+		});
+		return out;
+	};
+	P.worthHTML = rows => {
+		if (!rows.length) return '<p class="hint">This location owns no buildings to add a level to.</p>';
+		// a change too small to show at its precision reads as a plain 0
+		const cell = (x, f) => { const s = f(x), zero = !/[1-9]/.test(s); return `<td class="${zero ? 'zero' : x > 0 ? 'up' : 'down'}">${zero ? '0' : s}</td>`; };
+		return `<table>${THEAD(['Building', 'Level', 'Cap', 'Monthly Manpower', 'Army levies', 'Crown tax', 'Wealth', 'Upkeep (cost)'])}<tbody>${rows.map(w => `<tr><td>${esc(P.buildingLabel(w.type))}</td><td>${w.level} → ${w.level + 1}</td>`
+			+ `<td>${Number.isFinite(w.cap) ? (w.approx ? '≈' : '') + w.cap : '?'}${Number.isFinite(w.cap) && w.level >= w.cap ? ' <span class="pill">at cap</span>' : ''}</td>`
+			+ `${cell(w.d.manpower, x => speople(x))}${cell(w.d.levies, x => speople(x, 0))}${cell(w.d.tax, sgold)}${cell(w.d.wealth, sgold)}<td>${/[1-9]/.test(sgold(w.d.upkeep)) ? sgold(w.d.upkeep) : '0'}</td></tr>`).join('')}</tbody></table>`;
+	};
+
+	root.LocSimPage = P;
+})(typeof self !== 'undefined' ? self : this);
+</script>
+<script id="page-ui">
+// The page itself: the form, live recalculation, the location search, the chart's hover layer.
+(async function () {
+	'use strict';
+	const $ = id => document.getElementById(id);
+	const status = $('status');
+	const fail = msg => { status.hidden = false; status.classList.add('err'); status.textContent = msg; };
+	const E = window.LocationSim, P = window.LocSimPage;
+	if (!E || !P) { fail('The simulator engine (engine.js) did not load, so the page cannot run. It has to be published next to this page.'); return; }
+	try {
+		const res = await fetch('data.json');
+		if (!res.ok) throw new Error(`the server answered ${res.status}`);
+		E.setData(await res.json());
+		P.init(E);
+	} catch (e) { fail(`Could not load the game data (data.json): ${e.message}. It has to be published next to this page; reload to try again.`); return; }
+	const DB = E.DB;
+	const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+	const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* storage is a convenience only */ } };
+	const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	// ---------- static parts of the form
+	const opt = (v, l, sel) => `<option value="${P.esc(v)}"${String(v) === String(sel) ? ' selected' : ''}>${P.esc(l)}</option>`;
+	$('preset').innerHTML = P.PRESETS.map(p => opt(p.id, p.label)).join('') + '<option value="json" hidden>Scenario from a file or JSON</option>';
+	$('loc-rank').innerHTML = Object.keys(DB.ranks).sort((a, b) => DB.ranks[a].tier - DB.ranks[b].tier).map(k => opt(k, P.nm(k))).join('');
+	$('loc-integ').innerHTML = P.INTEGRATION.map(([v, l]) => opt(v, l)).join('');
+	$('c-age').innerHTML = Object.keys(DB.ages).sort((a, b) => a - b).map(a => opt(a, P.AGE_NAMES[a] || a)).join('');
+	$('proj-metric').innerHTML = Object.entries(P.METRICS).map(([k, m]) => opt(k, m.label)).join('');
+	const pctField = (id, label, step) => `<div class="field"><label for="${id}">${P.esc(label)}</label><input id="${id}" type="number" step="${step}"></div>`;
+	$('cm-grid').innerHTML = P.COUNTRY_FIELDS.map(k => pctField('cm-' + k, P.modName(k) + ' %', /population_growth|monthly_control/.test(k) ? '0.01' : '1')).join('');
+	$('tax-grid').innerHTML = P.MAIN_ESTATES.map(e => pctField('tax-' + e, P.nm(e), '1')).join('');
+	$('sat-grid').innerHTML = P.MAIN_ESTATES.map(e => pctField('sat-' + e, P.nm(e), '1')).join('');
+	const lists = document.createElement('div');
+	lists.innerHTML = `<datalist id="bld-list"></datalist><datalist id="mod-keys">${P.modKeyOptions()}</datalist>`;
+	$('app').appendChild(lists);
+
+	// ---------- state
+	let work = null, orig = {}, extras = [], presetId = 'sevilla', lastR = null, lastScn = null, projRows = null;
+	const rawCache = {};
+	const ui = { tab: lsGet('locsim.tab') || 'place', metric: lsGet('locsim.metric') || 'population', months: +lsGet('locsim.months') || 120, inspect: 'local_manpower_modifier' };
+	if (!P.METRICS[ui.metric]) ui.metric = 'population';
+	ui.months = P.clamp(Math.round(ui.months / 12) * 12 || 120, 12, 600);
+	$('proj-metric').value = ui.metric; $('proj-months').value = ui.months; $('proj-range').value = ui.months;
+
+	// fields bound to a path of the scenario: [id, path, kind, min, max]
+	const BIND = [
+		['loc-rank', 'location.rank', 'select'], ['loc-dev', 'location.development', 'num', 0, 100], ['loc-pros', 'location.prosperity', 'pct', -100, 100],
+		['loc-ctrl', 'location.control', 'pct', 0, 100], ['loc-prox', 'location.proximity', 'num', 0, 100], ['loc-integ', 'location.integration', 'select'],
+		['loc-access', 'location.marketAccess', 'pct', 0, 100], ['loc-rgo', 'location.rgoWorkers', 'opt', 0, 100000],
+		['loc-capital', 'location.capital', 'bool'], ['loc-pcap', 'location.provinceCapital', 'bool'], ['loc-mc', 'location.marketCenter', 'bool'],
+		['loc-port', 'location.port', 'bool'], ['loc-road', 'location.roadToCapital', 'bool'],
+		['c-year', 'country.year', 'int', 1337, 1837], ['c-age', 'country.age', 'int', 1, 6],
+		['loc-surplus', 'location.food.surplusFactor', 'pct', 0, 100], ['loc-storage', 'location.food.storageFactor', 'pct', 0, 100], ['loc-starving', 'location.food.starving', 'bool'],
+		['loc-trade', 'location.burgherTrade', 'num', 0, 1e6], ['loc-levyrec', 'location.levyRecovery', 'pct', 0, 100],
+		...P.MAIN_ESTATES.map(e => [`tax-${e}`, `country.taxRates.${e}`, 'pct', 0, 100]),
+		...P.MAIN_ESTATES.map(e => [`sat-${e}`, `country.estates.${e}.satisfaction`, 'pct', 0, 100]),
+	];
+	const BMAP = new Map(BIND.map(b => [b[0], b]));
+	const getPath = (o, p) => p.split('.').reduce((x, k) => (x == null ? undefined : x[k]), o);
+	const setPath = (o, p, v) => { const ks = p.split('.'); let x = o; for (const k of ks.slice(0, -1)) x = (x[k] = x[k] && typeof x[k] === 'object' ? x[k] : {}); x[ks[ks.length - 1]] = v; };
+	const delPath = (o, p) => { const ks = p.split('.'); const x = getPath(o, ks.slice(0, -1).join('.')); if (x) delete x[ks[ks.length - 1]]; };
+	const show2 = v => (typeof v === 'number' && Number.isFinite(v) ? String(+v.toFixed(2)) : '');
+	function showBound(el) {
+		const [, path, kind] = BMAP.get(el.id), v = getPath(work, path);
+		if (kind === 'bool') el.checked = !!v;
+		else if (kind === 'select') el.value = v;
+		else if (kind === 'pct') el.value = show2(typeof v === 'number' ? v * 100 : undefined);
+		else el.value = show2(v);
+	}
+	function bound(el) {
+		const [id, path, kind, lo, hi] = BMAP.get(el.id);
+		let v;
+		if (kind === 'bool') v = el.checked;
+		else if (kind === 'select') v = el.value;
+		else {
+			const s = el.value.trim();
+			if (s === '') { if (kind === 'opt') { delPath(work, path); schedule(); } return; }
+			let x = parseFloat(s);
+			if (!Number.isFinite(x)) return;
+			x = P.clamp(x, lo, hi);
+			if (kind === 'int') x = Math.round(x);
+			v = kind === 'pct' ? x / 100 : x;
+		}
+		setPath(work, path, v);
+		if (id === 'c-year') { work.country.age = P.ageForYear(v); $('c-age').value = work.country.age; }
+		if (id === 'loc-rank') $('bld-list').innerHTML = P.buildingOptions(v);
+		schedule();
+	}
+	function fillForm() {
+		for (const b of BIND) showBound($(b[0]));
+		for (const k of P.COUNTRY_FIELDS) $('cm-' + k).value = show2(P.countryTotal(work.country, k) * 100);
+		$('loc-search').value = P.locName(work.location.key);
+		closeSearch();
+		$('bld-list').innerHTML = P.buildingOptions(work.location.rank);
+	}
+	function renderPops() { $('pops-table').innerHTML = P.popsHTML(work.location.pops); $('count-pops').textContent = work.location.pops.length; }
+	function renderBuildings() {
+		const b = work.location.buildings;
+		$('bld-table').innerHTML = P.buildingsHTML(b);
+		$('count-bld').textContent = b.length;
+		const foreign = b.filter(x => x.foreign).length, levels = b.reduce((a, x) => a + (x.foreign ? 0 : x.level), 0);
+		$('bld-sum').textContent = `${b.length} buildings${foreign ? `, ${foreign} owned by other countries` : ''}; ${levels} levels of its own`;
+	}
+	function renderExtras() { $('ex-table').innerHTML = P.extrasHTML(extras); }
+
+	// ---------- loading a start
+	function setScenario(raw, note) {
+		const { scn, orig: o } = P.prep(raw);
+		work = scn; orig = o; extras = [];
+		fillForm(); renderPops(); renderBuildings(); renderExtras();
+		$('preset-note').textContent = note || '';
+		recompute();
+	}
+	async function loadPreset(id) {
+		const p = P.PRESETS.find(x => x.id === id);
+		if (id === 'json') { if (rawCache.json) setScenario(rawCache.json, 'Your scenario.'); return; }
+		if (!p) return;
+		let raw = p.scenario;
+		if (p.file) {
+			try {
+				if (!rawCache[id]) { const res = await fetch(p.file); if (!res.ok) throw new Error(`the server answered ${res.status}`); rawCache[id] = await res.json(); }
+				raw = rawCache[id];
+			} catch (e) {
+				$('preset-note').textContent = `Could not load ${p.file} (${e.message}); showing an example instead.`;
+				presetId = 'village'; $('preset').value = 'village';
+				setScenario(P.PRESETS.find(x => x.id === 'village').scenario, `Could not load ${p.file} (${e.message}); showing an example instead.`);
+				return;
+			}
+		}
+		presetId = id; $('preset').value = id;
+		setScenario(raw, p.note);
+	}
+	$('preset').addEventListener('change', () => loadPreset($('preset').value));
+	$('reset').addEventListener('click', () => loadPreset(presetId));
+
+	// ---------- tabs
+	const TABS = ['place', 'pops', 'bld', 'country'];
+	function setTab(t, focus) {
+		if (!TABS.includes(t)) t = 'place';
+		ui.tab = t;
+		for (const k of TABS) { const on = k === t, b = $('tab-' + k); b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; $('panel-' + k).hidden = !on; }
+		if (focus) $('tab-' + t).focus();
+		lsSet('locsim.tab', t);
+	}
+	for (const k of TABS) $('tab-' + k).addEventListener('click', () => setTab(k));
+	document.querySelector('[role="tablist"]').addEventListener('keydown', ev => {
+		const i = TABS.indexOf(ui.tab);
+		const to = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: TABS.length - 1 }[ev.key];
+		if (to === undefined) return;
+		ev.preventDefault();
+		setTab(TABS[(to + TABS.length) % TABS.length], true);
+	});
+	setTab(ui.tab);
+
+	// ---------- edits in the sheet
+	const sheet = $('sheet');
+	function popField(el) {
+		const tr = el.closest('tr[data-i]');
+		const p = tr && work.location.pops[+tr.dataset.i];
+		if (!p) return;
+		const f = el.dataset.f;
+		if (f === 'type') { p.type = el.value; delete p.estate; delete p.building; }
+		else if (f === 'status') { if (el.value !== 'Other' || ['Primary', 'Accepted', 'Tolerated'].includes(p.status)) p.status = el.value; }
+		else {
+			const x = parseFloat(el.value);
+			if (!Number.isFinite(x)) return;
+			if (f === 'size') p.size = Math.max(0, x) / 1000;
+			else if (f === 'satisfaction') p.satisfaction = P.clamp(x, 0, 100) / 100;
+			else if (f === 'literacy') p.literacy = P.clamp(x, 0, 100);
+		}
+		schedule();
+	}
+	function bldField(el, commit) {
+		const tb = el.closest('tbody[data-i]');
+		const i = tb ? +tb.dataset.i : -1, b = work.location.buildings[i];
+		if (!b) return;
+		const f = el.dataset.f;
+		if (f === 'type') {
+			const key = P.resolveBuilding(el.value);
+			if (!key) {
+				if (commit && DB.buildings[b.type]) { el.value = P.buildingLabel(b.type); el.removeAttribute('aria-invalid'); }
+				else el.setAttribute('aria-invalid', 'true');
+				return;
+			}
+			el.removeAttribute('aria-invalid');
+			if (key === b.type) return;
+			b.type = key;
+			for (const k of ['method', 'methods', 'inputFill', 'profit', 'upkeep', 'owner']) delete b[k];
+			const t = DB.buildings[key];
+			$(`bld-${i}-static`).innerHTML = P.buildingStaticHTML(b, i);
+			$(`bld-${i}-staff`).disabled = !t.pop;
+		} else if (f === 'level') { const x = parseInt(el.value, 10); if (!Number.isFinite(x)) return; b.level = P.clamp(x, 1, 999); }
+		else if (f === 'staffing') {
+			const s = el.value.trim();
+			if (s === '') b.staffing = null;
+			else { const x = parseFloat(s); if (!Number.isFinite(x)) return; b.staffing = P.clamp(x, 0, 100) / 100; }
+		} else if (f === 'foreign') { if (el.checked) b.foreign = true; else delete b.foreign; }
+		else if (f === 'method') {
+			if (el.value === (b.methods || [])[+el.dataset.slot]) return; // input and change both fire for a select
+			P.setMethod(b, +el.dataset.slot, el.value);
+			const id = el.id;
+			$(`bld-${i}-static`).innerHTML = P.buildingStaticHTML(b, i);
+			if ($(id)) $(id).focus();
+		}
+		schedule();
+	}
+	function exField(el) {
+		const tr = el.closest('tr[data-i]');
+		const i = tr ? +tr.dataset.i : -1, x = extras[i];
+		if (!x) return;
+		x[el.dataset.f] = el.value;
+		$(`ex-${i}-info`).innerHTML = P.extraInfoHTML(x);
+		schedule();
+	}
+	function onEdit(el, commit) {
+		if (!work || !el.id) return;
+		if (BMAP.has(el.id)) { if (commit && el.type === 'number') showBound(el); else bound(el); return; }
+		if (el.id.startsWith('cm-')) {
+			const k = el.id.slice(3);
+			if (commit) { el.value = show2(P.countryTotal(work.country, k) * 100); return; }
+			const x = parseFloat(el.value);
+			if (!Number.isFinite(x)) return;
+			P.setCountryTotal(work.country, orig, k, x / 100);
+			schedule();
+			return;
+		}
+		const row = el.closest('[data-i]'), i = row ? +row.dataset.i : -1, f = el.dataset.f;
+		if (el.closest('#pops-table')) {
+			// leaving a number field shows what the model holds (an emptied field goes back to its value)
+			if (commit) { const p = work.location.pops[i]; if (p) el.value = f === 'size' ? Math.round(p.size * 1000) : f === 'satisfaction' ? +(p.satisfaction * 100).toFixed(1) : +(+p.literacy).toFixed(1); }
+			else popField(el);
+			return;
+		}
+		if (el.closest('#bld-table')) {
+			if (commit && el.type === 'number') { const b = work.location.buildings[i]; if (b) el.value = f === 'level' ? b.level : b.staffing == null ? '' : +(b.staffing * 100).toFixed(1); }
+			else bldField(el, commit);
+			return;
+		}
+		if (el.closest('#ex-table')) exField(el);
+	}
+	sheet.addEventListener('input', ev => onEdit(ev.target, false));
+	sheet.addEventListener('change', ev => onEdit(ev.target, ev.target.type === 'number' || (ev.target.dataset && ev.target.dataset.f === 'type' && ev.target.tagName === 'INPUT')));
+	sheet.addEventListener('click', ev => {
+		const del = ev.target.closest('[data-del]');
+		if (!del) return;
+		const i = +del.closest('[data-i]').dataset.i;
+		if (del.dataset.del === 'pop') { work.location.pops.splice(i, 1); renderPops(); $('pop-add').focus(); }
+		else if (del.dataset.del === 'bld') { work.location.buildings.splice(i, 1); renderBuildings(); $('bld-add').focus(); }
+		else if (del.dataset.del === 'ex') { extras.splice(i, 1); renderExtras(); $('ex-add').focus(); }
+		schedule();
+	});
+	$('pop-add').addEventListener('click', () => {
+		work.location.pops.push({ type: 'peasants', size: 1, status: 'Primary', satisfaction: 0.5, literacy: 0 });
+		renderPops(); schedule();
+		$(`pop-${work.location.pops.length - 1}-type`).focus();
+	});
+	$('bld-add').addEventListener('click', () => {
+		work.location.buildings.push({ type: '', level: 1, staffing: null });
+		renderBuildings(); schedule();
+		$(`bld-${work.location.buildings.length - 1}-type`).focus();
+	});
+	$('ex-add').addEventListener('click', () => {
+		extras.push({ key: '', value: '' });
+		renderExtras();
+		$(`ex-${extras.length - 1}-key`).focus();
+	});
+
+	// ---------- location search (combobox: the list follows the text; arrows move, Enter picks, Escape closes)
+	const sIn = $('loc-search'), sOut = $('loc-results');
+	let sItems = [], sActive = -1;
+	function closeSearch() { sOut.hidden = true; sOut.innerHTML = ''; sItems = []; sActive = -1; sIn.setAttribute('aria-expanded', 'false'); sIn.removeAttribute('aria-activedescendant'); }
+	function drawSearch() {
+		sOut.innerHTML = sItems.length
+			? sItems.map((it, i) => `<li role="option" id="loc-opt-${i}" data-key="${P.esc(it.key)}" aria-selected="${i === sActive}"><span>${P.esc(it.name)}</span><span class="hint">${P.esc(it.detail)}</span></li>`).join('')
+			: '<li class="none" role="option" aria-disabled="true" aria-selected="false">No land location by that name.</li>';
+		sOut.hidden = false;
+		sIn.setAttribute('aria-expanded', 'true');
+		if (sActive >= 0) { sIn.setAttribute('aria-activedescendant', 'loc-opt-' + sActive); $('loc-opt-' + sActive).scrollIntoView({ block: 'nearest' }); }
+		else sIn.removeAttribute('aria-activedescendant');
+	}
+	function pickLocation(key) {
+		const L = work.location, was = L.key;
+		L.key = key;
+		for (const f of ['id', 'topography', 'vegetation', 'climate', 'rawMaterial', 'harbor', 'river', 'coastal', 'provinceRaw', 'province', 'market']) delete L[f];
+		let note = `Moved to ${P.locName(key)}: terrain, raw material, river and coast now come from the map.`;
+		if (key !== was && (work.observed || work.market)) { delete work.observed; delete work.market; note += ' The save\'s numbers and market prices no longer apply (base prices now).'; }
+		$('preset-note').textContent = note;
+		sIn.value = P.locName(key);
+		closeSearch();
+		schedule();
+	}
+	sIn.addEventListener('input', () => {
+		const q = sIn.value.trim();
+		if (q.length < 2) { closeSearch(); return; }
+		sItems = P.searchLocations(q, 15); sActive = -1;
+		drawSearch();
+	});
+	sIn.addEventListener('keydown', ev => {
+		if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+			if (!sItems.length) return;
+			ev.preventDefault();
+			sActive = ev.key === 'ArrowDown' ? (sActive + 1) % sItems.length : (sActive <= 0 ? sItems.length - 1 : sActive - 1);
+			drawSearch();
+		} else if (ev.key === 'Enter') {
+			if (sItems.length && (sActive >= 0 || sItems.length === 1)) { ev.preventDefault(); pickLocation(sItems[Math.max(0, sActive)].key); }
+		} else if (ev.key === 'Escape') { closeSearch(); sIn.value = P.locName(work.location.key); }
+	});
+	sIn.addEventListener('focus', () => sIn.select());
+	sIn.addEventListener('blur', () => setTimeout(() => { if (document.activeElement !== sIn) { closeSearch(); sIn.value = P.locName(work.location.key); } }, 150));
+	sOut.addEventListener('pointerdown', ev => ev.preventDefault());
+	sOut.addEventListener('click', ev => { const li = ev.target.closest('li[data-key]'); if (li) pickLocation(li.dataset.key); });
+
+	// ---------- recalculation
+	let timer = 0, projTimer = 0, worthTimer = 0;
+	function schedule() { clearTimeout(timer); timer = setTimeout(recompute, 150); }
+	function setHTML(el, html) {
+		const open = new Set([...el.querySelectorAll('details[data-k][open]')].map(d => d.dataset.k));
+		el.innerHTML = html;
+		for (const d of el.querySelectorAll('details[data-k]')) if (open.has(d.dataset.k)) d.open = true;
+	}
+	function recompute() {
+		clearTimeout(timer);
+		if (!work) return;
+		let scn, r;
+		try { scn = P.toScenario(work, extras); r = E.evaluate(scn); }
+		catch (e) { $('calc-err').hidden = false; $('calc-err').textContent = `The simulator stopped on this setup: ${e.message}`; return; }
+		$('calc-err').hidden = true;
+		lastScn = scn; lastR = r;
+		$('sum-where').textContent = P.whereText(r);
+		$('tiles').innerHTML = P.tilesHTML(r, work);
+		const save = P.saveNote(work, r);
+		$('sum-save').hidden = !save; $('sum-save').textContent = save;
+		setHTML($('out-pop'), P.populationHTML(r, work));
+		setHTML($('out-mp'), P.manpowerHTML(r));
+		setHTML($('out-lev'), P.leviesHTML(r));
+		setHTML($('out-eco'), P.economyHTML(r));
+		setHTML($('out-tax'), P.taxHTML(r, work));
+		setHTML($('out-ctl'), P.controlHTML(r));
+		setHTML($('out-food'), P.foodHTML(r));
+		renderInspector();
+		updateSheet(r);
+		renderProjection();
+		clearTimeout(worthTimer); worthTimer = setTimeout(renderWorth, 30);
+		syncJson();
+	}
+	function updateSheet(r) {
+		const L = r.L, Lw = work.location;
+		$('loc-info').textContent = P.locInfo(r);
+		const port = $('loc-port');
+		port.disabled = !L.coastal && !Lw.port;
+		$('loc-port-label').title = port.disabled ? 'Only a coastal location can have a port.' : '';
+		$('loc-rgo').placeholder = Lw.rgoWorkers === undefined ? `max ${r.rgo.size ?? 0}` : '';
+		$('loc-change').textContent = r.change ? `Each month: development ${P.signed(r.change.development, 3)}, prosperity ${P.signed(100 * r.change.prosperity, 2)} points (the projection below follows them).` : '';
+		$('pop-sum').textContent = `${P.people(L.population)} people in ${Lw.pops.length} pops`;
+		let j = 0;
+		Lw.buildings.forEach((b, i) => {
+			const capEl = $(`bld-${i}-cap`), live = $(`bld-${i}-live`);
+			if (!capEl || !live) return;
+			if (!P.validBuilding(b)) { capEl.textContent = '–'; capEl.title = ''; capEl.classList.remove('over'); live.innerHTML = ''; return; }
+			const s = P.buildingLive(b, r, L.buildings[j++]);
+			capEl.textContent = s.capText; capEl.title = s.capTitle; capEl.classList.toggle('over', s.over);
+			live.innerHTML = s.html ? '· ' + s.html : '';
+		});
+	}
+
+	// ---------- modifier inspector
+	function renderInspector() {
+		if (!lastR) return;
+		const keys = P.modKeys(lastR);
+		if (!keys.includes(ui.inspect)) ui.inspect = keys.includes('local_manpower_modifier') ? 'local_manpower_modifier' : keys[0];
+		$('mod-pick').innerHTML = P.modOptionsHTML(keys, ui.inspect);
+		$('out-mod').innerHTML = P.inspectHTML(lastR, ui.inspect);
+	}
+	$('mod-pick').addEventListener('change', () => { ui.inspect = $('mod-pick').value; $('out-mod').innerHTML = P.inspectHTML(lastR, ui.inspect); });
+	document.addEventListener('click', ev => {
+		const b = ev.target.closest('[data-inspect]');
+		if (!b || !lastR) return;
+		const k = b.dataset.inspect;
+		ui.inspect = k;
+		const keys = P.modKeys(lastR);
+		$('mod-pick').innerHTML = P.modOptionsHTML(keys.includes(k) ? keys : [k, ...keys], k);
+		$('out-mod').innerHTML = P.inspectHTML(lastR, k);
+		$('card-mod').scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+		$('mod-pick').focus({ preventScroll: true });
+	});
+
+	// ---------- the years ahead
+	function renderProjection() {
+		if (!lastScn) return;
+		try { projRows = E.project(lastScn, ui.months); }
+		catch (e) { $('proj-chart').textContent = `The projection stopped: ${e.message}`; projRows = null; return; }
+		$('proj-sub').textContent = P.projectionNote(projRows);
+		for (const o of $('proj-metric').options) o.hidden = o.disabled = !P.metricOK(o.value, projRows);
+		if (!P.metricOK(ui.metric, projRows)) { ui.metric = 'population'; $('proj-metric').value = ui.metric; }
+		drawChart();
+		$('proj-table').innerHTML = P.projectionTableHTML(projRows, work.country.year);
+	}
+	let chartW = 0;
+	function drawChart() {
+		if (!projRows) return;
+		const el = $('proj-chart');
+		chartW = el.clientWidth || 640;
+		const { html, geo } = P.chartHTML(projRows, ui.metric, chartW, work.country.year);
+		el.innerHTML = html;
+		hover(el, geo);
+	}
+	function hover(el, geo) {
+		const svg = el.querySelector('svg'), cross = svg.querySelector('.cross'), hit = svg.querySelector('.hit'), tip = el.querySelector('.tip');
+		let cur = geo.n;
+		const showAt = i => {
+			cur = i;
+			const xx = geo.x(i);
+			cross.setAttribute('x1', xx); cross.setAttribute('x2', xx); cross.setAttribute('visibility', 'visible');
+			tip.innerHTML = geo.tip(i); tip.hidden = false;
+			const sr = svg.getBoundingClientRect(), er = el.getBoundingClientRect(), k = sr.width / geo.W;
+			const px = sr.left - er.left + xx * k, py = sr.top - er.top + geo.y(geo.vals[i]) * k;
+			const tw = tip.offsetWidth, th = tip.offsetHeight;
+			tip.style.left = P.clamp(px - tw / 2, 0, Math.max(0, er.width - tw)) + 'px';
+			tip.style.top = (py - th - 12 >= 0 ? py - th - 12 : py + 14) + 'px';
+		};
+		const hide = () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); };
+		hit.addEventListener('pointermove', ev => {
+			const sr = svg.getBoundingClientRect(), px = (ev.clientX - sr.left) * geo.W / sr.width;
+			showAt(P.clamp(Math.round((px - geo.Lm) / (geo.W - geo.Lm - geo.Rm) * geo.n), 0, geo.n));
+		});
+		hit.addEventListener('pointerleave', hide);
+		svg.addEventListener('focus', () => showAt(cur));
+		svg.addEventListener('blur', hide);
+		svg.addEventListener('keydown', ev => {
+			const step = { ArrowLeft: -1, ArrowRight: 1, PageUp: -12, PageDown: 12 }[ev.key];
+			if (step === undefined && ev.key !== 'Home' && ev.key !== 'End') return;
+			ev.preventDefault();
+			showAt(ev.key === 'Home' ? 0 : ev.key === 'End' ? geo.n : P.clamp(cur + step, 0, geo.n));
+		});
+	}
+	if (window.ResizeObserver) new ResizeObserver(() => { const w = $('proj-chart').clientWidth; if (projRows && w && Math.abs(w - chartW) > 4) drawChart(); }).observe($('proj-chart'));
+	const setMonths = (v, from) => {
+		const m = P.clamp(Math.round(v / 12) * 12, 12, 600);
+		if (!Number.isFinite(m)) return;
+		ui.months = m;
+		if (from !== 'num') $('proj-months').value = m;
+		if (from !== 'range') $('proj-range').value = m;
+		lsSet('locsim.months', String(m));
+		clearTimeout(projTimer); projTimer = setTimeout(renderProjection, 150);
+	};
+	$('proj-months').addEventListener('input', () => { const v = parseInt($('proj-months').value, 10); if (Number.isFinite(v) && v >= 12) setMonths(v, 'num'); });
+	$('proj-months').addEventListener('change', () => { $('proj-months').value = ui.months; });
+	$('proj-range').addEventListener('input', () => setMonths(+$('proj-range').value, 'range'));
+	$('proj-metric').addEventListener('change', () => { ui.metric = $('proj-metric').value; lsSet('locsim.metric', ui.metric); drawChart(); });
+
+	// ---------- one more level
+	function renderWorth() {
+		if (!lastR || !work) return;
+		try { $('worth-table').innerHTML = P.worthHTML(P.worthRows(work, extras, lastR)); }
+		catch (e) { $('worth-table').textContent = `Could not work it out: ${e.message}`; }
+	}
+
+	// ---------- scenario as JSON
+	function syncJson() { if ($('json-panel').open && work) $('scn-json').value = JSON.stringify(P.exportScenario(work, extras), null, 1); }
+	$('json-panel').addEventListener('toggle', syncJson);
+	const jsonMsg = (t, bad) => { const m = $('json-msg'); m.textContent = t; m.classList.toggle('err', !!bad); };
+	function loadJson(obj, what) {
+		try { setScenario(obj, `${what} loaded.`); rawCache.json = obj; presetId = 'json'; $('preset').value = 'json'; jsonMsg(`${what} loaded.`); }
+		catch (e) { jsonMsg(`Could not use it: ${e.message}`, true); }
+	}
+	$('json-load').addEventListener('click', () => {
+		let obj;
+		try { obj = JSON.parse($('scn-json').value); } catch (e) { jsonMsg(`That is not valid JSON: ${e.message}`, true); return; }
+		loadJson(obj, 'The JSON');
+	});
+	$('json-copy').addEventListener('click', async () => {
+		syncJson();
+		try { await navigator.clipboard.writeText($('scn-json').value); jsonMsg('Copied.'); }
+		catch (e) { $('scn-json').focus(); $('scn-json').select(); jsonMsg('Press Ctrl+C to copy the selected text.'); }
+	});
+	$('json-file').addEventListener('change', async ev => {
+		const f = ev.target.files && ev.target.files[0];
+		if (!f) return;
+		try { loadJson(JSON.parse(await f.text()), f.name); } catch (e) { jsonMsg(`Could not read ${f.name}: ${e.message}`, true); }
+	});
+
+	// ---------- start
+	status.hidden = true;
+	$('app').hidden = false;
+	await loadPreset('sevilla');
+})();
+</script>
