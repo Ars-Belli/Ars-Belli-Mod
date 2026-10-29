@@ -233,6 +233,17 @@ Files in `.tools/scripts/location_sim/`:
 
 **The projection** (`--months`): pops grow by their births, control moves toward its max, buildings lay off or rehire 10% a month by profit, manpower accumulates. Development, prosperity, prices and food are held constant until their research is done.
 
+### Country mode
+
+`node sim.js scenarios/local/spain_1547.json --months 120 --markets fixed|closed|off` (`country.js`; a scenario with a `locations` list, as `from_save.js --country TAG` writes). Every location runs month by month against one shared country:
+- **Totals**: manpower income, max manpower and the pool, army upkeep in manpower held at the save's value (`options.manpowerExpense`, thousands a month), levies, wealth, tax base, crown tax, building upkeep, control weighted by wealth.
+- **Markets**: each good's price moves 5% a month toward the target from effective supply and demand (Section 8).
+  - The country's own RGO and building output is supply; its building inputs and maintenance goods are demand.
+  - Everything else in the market at month 0 (foreign members, construction, armies, roads) is calibrated as the difference from the save and held.
+  - Pop demand is kept apart and follows the decoded price elasticity: `clamp(1 − 0.4 × (price/default − 1), 0.35, 1)`.
+  - Trade with other markets: `fixed` holds the save's imports and exports; `closed` removes them; `off` freezes prices.
+- **Limits**: pop demand does not grow with population yet, food is not simulated, and proximity is taken from the scenario (Local Governors need the proximity research). Thin goods can swing hard: with everything else fixed, a good drifts to the target its saved supply and demand imply, and buildings the model gets wrong lay off workers.
+
 ---
 
 ## 12. Open questions
