@@ -55,3 +55,30 @@ if (worst) {
 	for (const r of [...rows].sort((a, b) => Math.abs(b.sim - b.possible) - Math.abs(a.sim - a.possible)).slice(0, worst))
 		console.log(`  ${r.key.padEnd(24)} save ${r.possible.toFixed(2).padStart(8)}  sim ${r.sim.toFixed(2).padStart(8)}  with saved buildings ${r.simSaved.toFixed(2).padStart(8)}`);
 }
+
+// Proximity: the country search (country.js) against the save's stored values. The game rebuilds them only when something
+// marks them dirty, so a save can hold values from an older speed term (Spain June 1547: the Supreme Court's goods access fell
+// after the last rebuild); the speed term that reproduces the stored tree is fitted and shown next to the current one.
+if (S.roads && S.proximityCache) {
+	const CS = require('./country.js');
+	const saved = new Map(S.locations.map(l => [l.id, l.proximity]));
+	const { state, results } = CS.evaluate(S);
+	const G0 = state.C.mods.raw('global_distance_from_capital_speed_propagation');
+	const run = G => {
+		state.C.mods.v.global_distance_from_capital_speed_propagation = G;
+		const P = CS.proximity(state, results);
+		const errs = S.locations.map(l => ({ key: l.key, save: saved.get(l.id), sim: P.best.get(l.id) || 0 })).map(r => ({ ...r, err: r.sim - r.save }));
+		const abs = errs.map(r => Math.abs(r.err)).sort((a, b) => a - b);
+		return { G, errs, median: abs[abs.length >> 1], p90: abs[Math.floor(abs.length * 0.9)], max: abs[abs.length - 1], within1: abs.filter(x => x <= 1).length };
+	};
+	const show = r => `median error ${r.median.toFixed(3)}, 90th percentile ${r.p90.toFixed(3)}, worst ${r.max.toFixed(2)}, ${r.within1} of ${r.errs.length} within 1 point`;
+	const now = run(G0);
+	let best = now;
+	for (let G = Math.max(0, G0 - 0.06); G <= G0 + 0.06; G += 0.0025) { const r = run(G); if (r.median < best.median) best = r; }
+	for (let G = Math.max(0, best.G - 0.0025); G <= best.G + 0.0025; G += 0.0001) { const r = run(G); if (r.median < best.median) best = r; }
+	run(G0);
+	console.log(`Proximity, speed term ${G0.toFixed(4)} (the country's modifiers): ${show(now)}`);
+	if (Math.abs(best.G - G0) > 0.002) console.log(`  the save's stored values fit a speed term of ${best.G.toFixed(4)} (computed before a modifier changed): ${show(best)}`);
+	if (worst) for (const r of [...best.errs].sort((a, b) => Math.abs(b.err) - Math.abs(a.err)).slice(0, Math.min(worst, 8)))
+		console.log(`  ${r.key.padEnd(24)} save ${r.save.toFixed(2).padStart(6)}  sim ${r.sim.toFixed(2).padStart(6)}`);
+}

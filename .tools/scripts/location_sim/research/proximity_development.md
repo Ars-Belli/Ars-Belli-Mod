@@ -180,6 +180,14 @@ law `administrative_system = merindad_policy` 0.1; privilege `manorial_courts` 0
 (no cabinet `administrator` trait, no other law/privilege/reform/trait with this modifier; a ruler ADM of 35 would
 explain it). For the simulator take G as an input (country modifier sum) — open question 1.
 
+**Resolved (in-game tooltip, June 1547 save loaded):** "Proximity Efficiency" of La Tour d'Auvergne -> Ussel lists Development
++13.63%, Bridge +10%, Centralization +20%, Supreme Court +8.57%, Manorial Courts +5%, Merindad Division +10%, Ruler's
+Administrative Ability **+3.50%**. The ruler (ADM 20) is in the Order of the Ermine, whose `character_modifier` gives
+ADM +15: `ruler_adm` scales with the skill including character modifiers (chivalric orders, timed character modifiers).
+G = 0.4707 today. The save's stored tree fits 0.4850 = the same with the Supreme Court at full goods access (+0.0143):
+its input fill (0.857 in the save) dropped after the last rebuild, which only dirty-flag triggers start (1.7), and the
+game recomputed on load (Ussel 51.16 stored, 50.91 shown; the simulator gives 50.91). `save-checked`
+
 ### 1.6 Validation on the 1547 save (`save-checked`)
 
 Solver: `prox_tmp\solve.js` (Spain only; inputs: scenario json, map.json adjacency, save roads, `binputs.json`
@@ -250,7 +258,14 @@ countries with/without hills impact), plateau/sparse -> mountains 0.9162 (= coun
 ### 1.8 Open questions (proximity)
 
 1. G residual 0.0150 for Spain (1.5).
-2. River adjacency type source (map loader); which pairs are "river" is only approximated (1.6).
+2. River adjacency type source (map loader); which pairs are "river" is only approximated (1.6). **Calibrated** instead:
+   `river_calibrate.js` labels pairs from every country's tree in a save (fits each country's G by pricing its steps,
+   building speed x staffing x goods access; a step priced 12 is a river, a step priced as road/plain when 12 was
+   cheaper is not, and an image river that would beat the stored child value is not). June 1547: 145 countries fitted
+   (Spain 0.485), 7,681 pairs labelled; the 4 px image rule gets 93.2% of them right (421 false, 104 missed) and every
+   stricter variant does worse (touch: 90.7%), so the game's links are not an image rule (river map mode: links follow
+   the flow between location centres and alternate banks where the river is a border). With the labels Spain is
+   522/522 within 1 point, median 0.001 at the stored G.
 3. The full list of dirty-flag triggers (FUN_1426f0d10, FUN_142d6e490/eaa0, FUN_143166bb0/7550, FUN_143ab7e50 not
    read) and the exact tick of FUN_1425bfcd0 / FUN_14279f400 (daily or monthly).
 4. Frozen-water branch (location+0x13d0 == 1, cost F) and `Gl` were read in code only (Spain has neither).

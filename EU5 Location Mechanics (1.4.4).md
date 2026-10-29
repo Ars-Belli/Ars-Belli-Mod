@@ -156,13 +156,15 @@ crown income         = Σ estate tax base × tax rate × tax efficiency
 
 **Monthly change** *(code `0x1430edf80`; save: 291 of 518 locations at exactly −0.005)*: below max, `+ local + global monthly_control` (base 0.0005, core 0.001, road to the capital 0.0005); above max, `−min(control − max, 0.01, local + global monthly_control_decline)` (base 0.005).
 
-**Proximity** *(code `0x143158bf0`, `0x1427175b0`; save: Spain June 1547, median error 0.34, 472 of 522 within 1)*:
+**Proximity** *(code `0x143158bf0`, `0x1427175b0`; save: Spain June 1547, all 522 within 1 point, median error 0.001 with the save's speed term; Ussel 50.91 = the in-game tooltip)*:
 - **Sources**: `min(100, local_proximity_source) × (1 + local_proximity_source_modifier)`: the capital 100, a historical capital 80, a **Local Governor** 80 (city only, needs a road to the capital, capped by `num_local_governors`, 1 at base). Building sources scale with staffing and input coverage, so an understaffed governor gives less.
 - **Spread**: every location takes the best "source strength minus the sum of jump costs" through the country's own land and every sea zone and lake, never foreign land.
 - **Jump cost** = base × factor ÷ (1 + speed), at least 0.01:
-  - base: plain land 40, divided by the start location's terrain speed (mountains 0.5, hills and wetlands 0.75, plateau 0.875; vegetation 0.5–0.95 on plain land only; floor 0.25); road 20 minus its bonus (paved 15); a river 12 when cheaper; sea 30, falling toward 5 with full maritime presence; landing or embarking at the location's own port 35, elsewhere 35 with no port factor;
+  - base: plain land 40, divided by the start location's terrain speed (mountains 0.5, hills and wetlands 0.75, plateau 0.875; vegetation 0.5–0.95 on plain land only; floor 0.25); road 20 minus its bonus (paved 15); a river 12 (downstream or upstream) when cheaper; sea 30, falling toward 5 with full maritime presence; landing or embarking at the location's own port 35, elsewhere 35 with no port factor;
   - factor: own-port jumps × (1 + port modifiers − 0.5 × harbor suitability), at least 0.05;
-  - speed: the country's `global_distance_from_capital_speed_propagation` (centralization, laws, the Supreme Court, ruler administration) + the start location's own (0.005 × development, bridges, canals).
+  - speed: the country's `global_distance_from_capital_speed_propagation` (centralization, laws, the Supreme Court × goods access, 0.001 × the ruler's administration **with its character modifiers**: Spain's ruler is ADM 20 + 15 from the Order of the Ermine = +3.5%) + the start location's own (0.005 × development, bridges and canals × staffing × goods access).
+- **River links** are not a rule of the river image: a river along a border links the two banks unevenly (Ussel–La Tour d'Auvergne and La Tour d'Auvergne–Mauriac are linked, Ussel–Mauriac is not, though the river touches all three). `river_calibrate.js` reads every country's proximity tree in a save and labels the neighbour pairs the game priced as a river or could not have (7,681 pairs from the June 1547 save; the image rule gets 93% of them right). `build_map.js` takes those labels and the image rule for the rest.
+- The save stores proximity from the last rebuild, which only some changes trigger: Spain's stored values fit a speed of 0.485 (the Supreme Court at full goods access), the game recomputes 0.4707 once loaded.
 - A governor only helps where its 80 beats what the capital already reaches: a governor in Lisbon, reached at 86 by sea, changes nothing. Spain 1547 with a governor in Zaragoza (proximity 32): control +2.1 points within two years, crown tax +3%, manpower +150 a month, levies +7,000.
 
 **Development and prosperity** *(code `0x1430cc5b0`, `0x1430cb200`; consecutive saves within rounding)*, once a month:
@@ -213,7 +215,7 @@ Who pays for traded food and the 1.33 pop-income scale are open.
 | Manpower a month | 6,747 | 6,751 | +0.1% |
 | Sailors a month | 1,496 | 1,525 | +2.0% |
 | Births a month | 4,405 | 4,402 | −0.1% |
-| Proximity | | | median error 0.34, 472 of 522 within 1 point |
+| Proximity | | | all 522 within 1 point; median error 0.313 at today's speed term, 0.001 at the stored values' 0.485 |
 
 Sevilla against the in-game tooltips (June 1547): wealth 79.84 vs 80.99 (buildings 74.25 vs the save's 74.92 after the Burghers' −0.33% production efficiency; the rest is burgher trade); estate shares 16.37 / 7.88 / 50.08 / 5.52 vs 16.48 / 7.93 / 51.01 / 5.55; location taxes 35.25 vs 35.77; building maintenance 31.68 vs 31.87; monthly manpower 113.9 vs 113 (85 from buildings × (1 + 10% Crown of Castile + 4% soldier literacy + 20% Fortress Town)); food productivity 1.864 vs 1.864, subsistence 42.01 vs 42.01, consumption 306.53 vs 306.52; development 0.0092 vs 0.0092 a month; prosperity −0.06% vs −0.06%.
 
@@ -235,7 +237,8 @@ Files in `.tools/scripts/location_sim/`:
 |---|---|
 | `engine.js` | The rules of this document as code; runs in Node and the browser. |
 | `data.json` | Game + mod data: pops, estates, ranks, ages, static modifiers, buildings, production methods, goods, levies, terrain, 28,573 locations with province, river size and coast. Rebuild with `node build_data.js` after a game or mod change (after `build_map.js`). |
-| `map.json` | Each location's size, centre, neighbours (shared border) and river pixels, from the map images. `node build_map.js` (3 s). |
+| `map.json` | Each location's size, centre, neighbours (shared border) and river links, from the map images and `river_fixes.json`. `node build_map.js` (5 s). |
+| `river_calibrate.js` | `node river_calibrate.js <save>`: river links the game uses, from every country's proximity tree, into `river_fixes.json`; rerun `build_map.js` after. |
 | `sim.js` | `node sim.js <scenario.json> [--months 120] [--buildings] [--modifier <key>] [--modifiers] [--json]` |
 | `from_save.js` | `node from_save.js <save|latest> --list TAG`, `--location <id|key>`, `--country TAG` (whole country to `scenarios/local/`, git-ignored) `[--out file]` |
 | `check.js` | A country scenario against the save's own numbers. |
@@ -285,7 +288,7 @@ Files in `.tools/scripts/location_sim/`:
 ## 12. Open questions
 
 1. Tax efficiency: 0.0975 of Spain's ×1.2475 is unexplained.
-2. Proximity: 0.015 of Spain's speed term, and river links (approximated from the river map, about 2% wrong).
+2. Proximity: river links of neighbour pairs no save has shown come from the image rule (about 7% wrong); port landings move with harbour buildings' goods access.
 3. Burgher trade (about 2% of wealth, all to the burghers).
 4. Building input rationing, pop demand and burgher trade (market research).
 5. Food: production, consumption, storage and the province–market exchange.

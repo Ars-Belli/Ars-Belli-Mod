@@ -72,6 +72,7 @@ const reforms = loadDb('in_game/common/government_reforms');
 const societal = loadDb('in_game/common/societal_values');
 const religionsDb = loadDb('in_game/common/religions');
 const traitsDb = loadDb('in_game/common/traits');
+const ordersDb = loadDb('in_game/common/chivalric_orders');
 const policies = {};
 for (const law of Object.values(laws)) for (const [k, v] of law) if (Array.isArray(v) && (get(v, 'country_modifier') || get(v, 'location_modifier'))) policies[k] = v;
 // adds a modifier block to acc, with each key's sources in acc.__src (key -> [[source, value]])
@@ -121,12 +122,28 @@ function countryContext(cid) {
 		if (!Number.isFinite(x) || x <= -999 || !x || !societal[sv]) continue;
 		addBlock(acc, notes, `societal value ${sv} ${x > 0 ? '+' : ''}${x.toFixed(0)}`, get(societal[sv], x < 0 ? 'left_modifier' : 'right_modifier'), Math.abs(x) / 100);
 	}
-	// the ruler's skills (static ruler_adm / ruler_dip / ruler_mil x the skill) and ruler traits
+	// the ruler's skills (static ruler_adm / ruler_dip / ruler_mil x the skill) and ruler traits. The skill counts its character
+	// modifiers: a chivalric order's character_modifier (Order of the Ermine ADM +15) and timed character modifiers.
 	const character = id => save.entry('character_db', id, isText ? '' : undefined) || (isText ? null : (save.section('character_db').database || {})[id]);
+	const skillOf = (ch, sk) => {
+		let x = +ch[sk] || 0;
+		const parts = [];
+		const alive = ch.alive_data || {}, order = alive.joined_chivalric_order;
+		const v = order && ordersDb[order] ? parseFloat(get(get(ordersDb[order], 'character_modifier') || [], sk)) : NaN;
+		if (Number.isFinite(v) && v) { x += v; parts.push(`${order} ${v > 0 ? '+' : ''}${v}`); }
+		for (const t of list((alive.timed_modifiers || {}).timed_modifiers)) {
+			const m = t && DATA.static[t.modifier] && DATA.static[t.modifier].m[sk];
+			if (m) { x += m * (+t.size || 1); parts.push(`${t.modifier} ${m > 0 ? '+' : ''}${m * (+t.size || 1)}`); }
+		}
+		return [x, parts];
+	};
 	if (gov.ruler && gov.ruler !== '0') {
 		const ch = character(gov.ruler);
-		if (ch) for (const sk of ['adm', 'dip', 'mil']) if (ch[sk] !== undefined && DATA.static['ruler_' + sk])
-			addBlock(acc, notes, `ruler ${sk} ${ch[sk]}`, Object.entries(DATA.static['ruler_' + sk].m).map(([k, v]) => [k, String(v)]), +ch[sk]);
+		if (ch) for (const sk of ['adm', 'dip', 'mil']) {
+			if (ch[sk] === undefined || !DATA.static['ruler_' + sk]) continue;
+			const [x, parts] = skillOf(ch, sk);
+			addBlock(acc, notes, `ruler ${sk} ${x}${parts.length ? ` (${ch[sk]} ${parts.join(', ')})` : ''}`, Object.entries(DATA.static['ruler_' + sk].m).map(([k, v]) => [k, String(v)]), x);
+		}
 		if (ch) for (const t of list(ch.traits)) if (get(traitsDb[t] || [], 'category') === 'ruler') addBlock(acc, notes, `ruler trait ${t}`, get(traitsDb[t], 'modifier'));
 	}
 	// cabinet members' cabinet traits (Tax Optimizer +1% tax efficiency...)

@@ -102,7 +102,17 @@ for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
 		if (old === undefined || d2 < old) near.set(k, d2);
 	}
 }
-const riverLink = (a, b) => near.has(a * 65536 + b) && near.has(b * 65536 + a);
+// The game's links are not a function of the image (rivers along a border link the two banks unevenly; on 7,681 pairs the
+// rule above is 93% right and stricter ones do worse), so the pairs a save shows are taken from river_fixes.json
+// (river_calibrate.js: the game's own proximity trees) and the image guess is left for the rest.
+const riverFix = new Map();
+const FIX = path.join(__dirname, 'river_fixes.json');
+if (fs.existsSync(FIX)) for (const [k, v] of Object.entries(JSON.parse(fs.readFileSync(FIX, 'utf8')).river || {})) {
+	const [a, b] = k.split(',').map(x => idOf.get(x));
+	if (a && b) { riverFix.set(a * 65536 + b, v); riverFix.set(b * 65536 + a, v); }
+}
+const riverLink = (a, b) => riverFix.has(a * 65536 + b) ? !!riverFix.get(a * 65536 + b) : near.has(a * 65536 + b) && near.has(b * 65536 + a);
+console.log(`river links: ${riverFix.size / 2} pairs from saves (river_fixes.json), the rest from the image`);
 console.log('river links searched', ((Date.now() - t0) / 1000).toFixed(1) + 's');
 const riverSize = h => { let best = 0; for (const v of Object.keys(h || {}).map(Number)) if (v >= 3 && v <= 253) best = Math.max(best, Math.min(4, Math.floor((v - 3) / 3)) + 1); return best; };
 const neighbours = Array.from({ length: n }, () => []);
