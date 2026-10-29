@@ -241,7 +241,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		<h2 id="worth-title">What is a stat worth?</h2>
 		<p class="sub" id="worth-sub">Quick-battle side A fights an exact copy of itself; only side A gets the bonus. On the left, how often side A wins (50% means the bonus did nothing); on the right, how many enemy men fall for each man side A loses (1.0 is an even trade). A bonus can win battles and still cost more men than it saves.</p>
 		<div class="bar">
-			<div class="field"><label for="w-runs">Battles per bonus</label><input id="w-runs" type="number" min="50" max="10000" step="50" value="500"></div>
+			<div class="field"><label for="worth-runs">Battles per bonus</label><input id="worth-runs" type="number" min="50" max="10000" step="50" value="500"></div>
 			<button id="measure" type="button">Measure the bonuses</button> <span class="progress" id="measure-progress" aria-live="polite"></span>
 		</div>
 		<div class="charts"><div class="chart" id="chart-worth"></div><div class="chart" id="chart-worth-loss"></div></div>
@@ -658,7 +658,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		};
 		next();
 	}
-	$('measure').onclick = () => { const n = Math.max(50, Math.min(10000, +$('w-runs').value || 500)); if (mode === 'full') measureFull(n); else measure(n); };
+	$('measure').onclick = () => { const n = Math.max(50, Math.min(10000, +$('worth-runs').value || 500)); if (mode === 'full') measureFull(n); else measure(n); };
 
 	// ---------- FULL mode: scenario state and editor
 	const EXAMPLE = {
