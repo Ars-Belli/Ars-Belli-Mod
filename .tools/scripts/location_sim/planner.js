@@ -326,4 +326,75 @@ function addFlow(into, f, sign = 1) {
 	return into;
 }
 
-module.exports = { goodImpact, priceSensitivity, flowDelta, addFlow, urbanOption, context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };
+// ---- options valued with their market effects (economy.js, investments.js), gold a month. markets(ctx) holds the settled
+// prices (country.js marketView), our locations' price sensitivity per market and good, what is planned per market
+// (extra own supply, demand and sensitivity: projects under construction, options already bought) and future building
+// (gold a month per point of a construction good's cost impact, per market; setFuture).
+function markets(ctx) {
+	const sens = {};
+	for (const site of ctx.state.sites) { const x = (sens[site.loc.market] ??= {}); for (const [g, v] of Object.entries(priceSensitivity(ctx.base.get(site).r))) x[g] = (x[g] || 0) + v; }
+	const planned = {};
+	return { view: CS.marketView(ctx.state, ctx.results), sens, planned, future: {}, plannedOf: mk => (planned[mk] ??= { dS: {}, dD: {}, sens: {} }) };
+}
+// an option's market and its flows: what it adds to its market and to our price sensitivity once built (flowOwn), and for
+// valuing it (flow; an urbanisation adds the best buildings it unlocks)
+function withFlows(ctx, o) {
+	o.mk = (o.kind === 'road' ? ctx.siteOf.get(o.a).loc : o.site.loc).market;
+	o.demandKey = demandKeyOf(o);
+	if (o.kind === 'building' || o.kind === 'rank') {
+		const r0 = ctx.base.get(o.site).r;
+		o.flowOwn = o.flow = flowDelta(o.r, r0);
+		if (o.best) { o.flow = addFlow({ dS: {}, dD: {}, sens: {} }, o.flowOwn); for (const b of o.best) addFlow(o.flow, flowDelta(b.r, o.r)); }
+	}
+	return o;
+}
+function demandKeyOf(o) {
+	if (o.kind === 'building') return (DB().buildings[o.type] || {}).demand;
+	if (o.kind === 'rank') return (DB().ranks[o.rank] || {}).demand;
+	if (o.kind === 'road') return 'build_' + o.road + '_demand';
+	return null;
+}
+// the construction goods an option buys: its build price = base x (1 + the amount-weighted mean of the goods' cost
+// impacts), so a gold spent on it saves a/sum(a) / (1 + impact) gold per point a good's impact falls
+function constructionWeights(ctx, o) {
+	const d = o.demandKey && DB().demands[o.demandKey], w = {};
+	if (!d || !d.goods) return w;
+	const L = (o.kind === 'road' ? ctx.siteOf.get(o.a) : o.site).L;
+	const sumA = Object.entries(d.goods).filter(([g]) => (DB().goods[g] || {}).price).reduce((a, [, x]) => a + x, 0);
+	if (!sumA) return w;
+	const k = 1 / (1 + marketImpact(o.demandKey, L));
+	for (const [g, a] of Object.entries(d.goods)) if ((DB().goods[g] || {}).price) w[g] = k * a / sumA;
+	return w;
+}
+// future building: perMonth gold a month, shared among markets and their construction goods as in basket ([{ mk, cost, w }])
+function setFuture(M, basket, perMonth) {
+	const all = basket.reduce((a, b) => a + b.cost, 0) || 1;
+	M.future = {};
+	for (const b of basket) { const x = (M.future[b.mk] ??= {}); for (const [g, w] of Object.entries(b.w)) x[g] = (x[g] || 0) + w * b.cost * Math.max(0, perMonth) / all; }
+}
+// the value: its worth (gain at today's prices; an urbanisation's with its unlocked buildings) + per good it supplies or
+// buys, at the price the good settles at in its market after it (with what is planned there): its own output and inputs
+// at that price, our other locations' change from the price move, and what cheaper construction goods save on future
+// building. parts (optional) gets the terms.
+function marketValue(M, o, parts) {
+	const worth = o.worth ?? o.gain;
+	if (!o.flow) return worth;
+	const P = M.plannedOf(o.mk), S = M.sens[o.mk] || {}, F = M.future[o.mk] || {};
+	let v = worth;
+	if (parts) Object.assign(parts, { own: 0, others: 0, building: 0, goods: [] });
+	for (const g of new Set([...Object.keys(o.flow.dS), ...Object.keys(o.flow.dD), ...Object.keys(o.flow.sens)])) {
+		const p0 = M.view.price(o.mk, g);
+		if (p0 === null) continue;
+		const pS = P.dS[g] || 0, pD = P.dD[g] || 0;
+		const before = M.view.settled(o.mk, g, pS, pD), after = M.view.settled(o.mk, g, pS + (o.flow.dS[g] || 0), pD + (o.flow.dD[g] || 0));
+		const own = (o.flow.sens[g] || 0) * (after - p0), others = ((S[g] || 0) + (P.sens[g] || 0)) * (after - before);
+		const building = (F[g] || 0) * (goodImpact(g, before) - goodImpact(g, after));
+		v += own + others + building;
+		if (parts) { parts.own += own; parts.others += others; parts.building += building; parts.goods.push([g, p0, after]); }
+	}
+	return v;
+}
+// an option bought: its market effects join the plan
+const commit = (M, o) => { if (o.flowOwn) addFlow(M.plannedOf(o.mk), o.flowOwn); };
+
+module.exports = { markets, withFlows, demandKeyOf, constructionWeights, setFuture, marketValue, commit, goodImpact, priceSensitivity, flowDelta, addFlow, urbanOption, context, settle, trig, marketImpact, buildingPrice, rankPrice, nextRank, buildingOptions, rankOption, roadOptions, provinceFood, provinceOf, maxedRgo, clone, net, SOURCES, FOOD_SURPLUS_POP_GROWTH, SURPLUS_FULL };

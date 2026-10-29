@@ -10,7 +10,11 @@
 // The country's own locations are simulated: RGO output and building output are supply, building inputs and maintenance
 // are demand. Everything else in the market at month 0 (foreign members, pop demand, armies, construction, roads) is
 // calibrated from the save as the difference and held fixed. Trade with other markets:
-//   'fixed'  - imports and exports stay at the save's values
+//   'fixed'  - imports and exports stay at the save's values, plus a response to the price: net imports grow by
+//              options.tradeResponse (default 1) x the good's market volume per 100% its price is above the save's
+//              (exports when below). Merchants re-route toward dear markets in the game; the trade AI is not decoded, so
+//              this is an assumption that keeps a thin market from spiking (Alcañiz's town would otherwise lift alum in
+//              Lisbon's market from 2.11 to 7.84)
 //   'closed' - no trade with other markets
 //   'off'    - no market at all: prices stay where they are
 // Constructions (scn.constructions from the save, and economy.js's own) buy their demand's goods every month until they
@@ -86,8 +90,8 @@
 		// options.proximity: 'computed' recomputes every location's proximity each month (needs map.json and the roads),
 		// 'given' keeps the scenario's values
 		const proxMode = (scn.options || {}).proximity || (scn.roads ? 'computed' : 'given');
-		const calibration = (scn.options || {}).marketCalibration || 'rest';
-		const state = { scn, C, mode, calibration, food: (scn.options || {}).food !== 'off', proxMode, sites, markets, month: 0, manpowerPool: obs.manpower ?? 0, manpowerExpense: expense, history: [] };
+		const calibration = (scn.options || {}).marketCalibration || 'rest', tradeResponse = (scn.options || {}).tradeResponse ?? 1;
+		const state = { scn, C, mode, calibration, tradeResponse, food: (scn.options || {}).food !== 'off', proxMode, sites, markets, month: 0, manpowerPool: obs.manpower ?? 0, manpowerExpense: expense, history: [] };
 		const first = evaluateAll(state, true);
 		// provinces (food stores): the save's province id, else the map's province of the location
 		const provinces = {};
@@ -207,19 +211,24 @@
 	function target(state, mk, g, S, Dn, popD, price) {
 		const x = mk.goods[g], age = state.sites[0] ? state.sites[0].L.age : 1;
 		const { sEff, dEff } = effective(Math.max(0, S), Math.max(0, Dn + popD * elasticity(g, price)), state.mode === 'closed' ? NO_TRADE : x.trade, state.C.mods.raw('export_impact_on_demand'));
-		return E.targetPrice(g, Math.max(0, sEff + (x.calS || 0)), Math.max(0, dEff + (x.calD || 0)), age, mk.foodPrice ?? 0.05);
+		// trade response (fixed mode): imports when dearer than the save, exports when cheaper
+		const t = state.mode === 'fixed' && x.volume ? state.tradeResponse * x.volume * (price / x.price0 - 1) : 0;
+		return E.targetPrice(g, Math.max(0, sEff + (x.calS || 0) + Math.max(0, t)), Math.max(0, dEff + (x.calD || 0) + Math.max(0, -t)), age, mk.foodPrice ?? 0.05);
 	}
 	// 'rest' calibration: effective supply and demand moved to the ratio whose target is today's price, their sum kept
 	// (R = (k Sp + Dp) / (k Dp + Sp) = p / default gives Dp / Sp = (R - k) / (1 - R k); Sp, Dp include the +1 offset and
 	// the food x1.25). A price at the age's clamp stays as the month has it.
 	function calibrate(state, mk, g, x, ownS, ownD) {
 		x.calS = 0; x.calD = 0;
-		if (state.calibration === 'snapshot' || state.mode === 'off' || !(x.price > 0)) return;
+		if (state.mode === 'off' || !(x.price > 0)) return;
+		const D = Math.max(0, x.otherD + ownD + x.popBase * elasticity(g, x.price));
+		const { sEff, dEff } = effective(Math.max(0, x.otherS + ownS), D, state.mode === 'closed' ? NO_TRADE : x.trade, state.C.mods.raw('export_impact_on_demand'));
+		// the trade response's reference: the save's price and the good's market volume (mean of effective supply and demand)
+		x.price0 = x.price; x.volume = (sEff + dEff) / 2;
+		if (state.calibration === 'snapshot') return;
 		const good = DB().goods[g], age = state.sites[0] ? state.sites[0].L.age : 1, a = DB().ages[age] || DB().ages[1];
 		const k = Math.min(a.priceStability, 1), R = x.price / good.price;
 		if (!(R > a.minPrice && R < a.maxPrice && R > k && R * k < 1)) return;
-		const D = Math.max(0, x.otherD + ownD + x.popBase * elasticity(g, x.price));
-		const { sEff, dEff } = effective(Math.max(0, x.otherS + ownS), D, state.mode === 'closed' ? NO_TRADE : x.trade, state.C.mods.raw('export_impact_on_demand'));
 		const off = (DB().defines.NEconomy || {}).SUPPLY_AND_DEMAND_STABILITY_OFFSET_CONSTANT ?? 1;
 		const f = good.food > 0 && (mk.foodPrice ?? 0.05) > ((DB().defines.NMarket || {}).FOOD_PRICE ?? 0.05) ? 1 + ((DB().defines.NMarket || {}).FOOD_PRICE_IMPACT_ON_PRICES ?? 0.25) : 1;
 		const Sp = sEff + off, Dp = dEff * f + off, rho = (R - k) / (1 - R * k), Sp2 = (Sp + Dp) / (1 + rho);
@@ -260,13 +269,12 @@
 			if (memo.has(key)) return memo.get(key);
 			const o = own[mkId] || { s: {}, d: {} };
 			const S = x.otherS + (o.s[g] || 0) + dS, Dn = x.otherD + (o.d[g] || 0) + ((built[mkId] || {})[g] || 0) + dD, popD = x.popBase * scales[mkId](g);
-			// the target falls as the price rises (pop demand shrinks above the base price): damped fixed point
-			let p = x.price;
-			for (let i = 0; i < 60; i++) {
-				const q = target(state, mk, g, S, Dn, popD, p);
-				if (Math.abs(q - p) <= 1e-7 * Math.max(1e-9, q)) { p = q; break; }
-				p = 0.5 * (p + q);
-			}
+			// the target falls as the price rises (pop demand shrinks above the base price, trade responds), so
+			// target(p) - p falls and has one root: bisection between the age's price clamps
+			const base = DB().goods[g].price, a = DB().ages[state.sites[0] ? state.sites[0].L.age : 1] || DB().ages[1];
+			let lo = base * a.minPrice * 0.999, hi = base * a.maxPrice * 1.001 + Math.abs(x.price);
+			for (let i = 0; i < 60 && hi - lo > 1e-9 * hi; i++) { const mid = (lo + hi) / 2; if (target(state, mk, g, S, Dn, popD, mid) > mid) lo = mid; else hi = mid; }
+			const p = (lo + hi) / 2;
 			memo.set(key, p);
 			return p;
 		}
