@@ -21,14 +21,17 @@
 	const ESTATE_OF = type => (DB.pops[type] && DB.pops[type].estate) || 'peasants_estate';
 
 	// ---------------------------------------------------------------- modifiers
-	// Sums modifier values by key and remembers every source, like the game's tooltips.
+	// Sums modifier values by key and remembers every source, like the game's tooltips. setTracking(false) stops recording
+	// sources (the values are the same): a long simulation needs no tooltips, and the lists cost about a third of its time.
+	let tracking = true;
+	const setTracking = on => { tracking = !!on; };
 	class Mods {
 		constructor() { this.v = {}; this.src = {}; }
 		add(key, x, source) {
-			if (x === 'yes') { this.v[key] = 'yes'; (this.src[key] ??= []).push([source, 'yes']); return; }
+			if (x === 'yes') { this.v[key] = 'yes'; if (tracking) (this.src[key] ??= []).push([source, 'yes']); return; }
 			if (typeof x !== 'number' || !x || !Number.isFinite(x)) return;
 			this.v[key] = (this.v[key] || 0) + x;
-			(this.src[key] ??= []).push([source, x]);
+			if (tracking) (this.src[key] ??= []).push([source, x]);
 		}
 		block(block, scale, source) {
 			if (!block || !scale) return;
@@ -108,6 +111,8 @@
 			} else if (k === 'custom_tooltip' && Array.isArray(v)) r = trigger(v.filter(([x]) => x !== 'text'), ctx);
 			else if (k === 'always') r = v === 'yes';
 			else if (k === 'location_rank') r = ('location_rank:' + ctx.rank) === v;
+			// a built level (the Itinerant Court policy: the capital is a source of 80, not 100, unless it has the court's seat)
+			else if (k === 'has_building') r = !!(ctx.hasBuilding && ctx.hasBuilding(String(v).replace(/^building_type:/, '')));
 			else if (Array.isArray(v)) { (ctx.unknown ??= new Set()).add(k); r = false; }
 			else if (v === 'yes' || v === 'no') { const x = ctx.flag(k); if (x === undefined) { (ctx.unknown ??= new Set()).add(k); r = false; } else r = x === (v === 'yes'); }
 			else r = compare(operand(k, ctx), op, operand(v, ctx));
@@ -198,6 +203,7 @@
 					default: return k.startsWith('modifier:') && extra.mods ? extra.mods.get(k.slice(9)) : extra[k];
 				}
 			},
+			hasBuilding: type => (L.buildings || []).some(b => b.type === type && (b.level || 0) > 0 && !b.foreign),
 			flag(k) {
 				switch (k) {
 					case 'has_river': return L.river > 0;
@@ -238,6 +244,9 @@
 		return keys.map(k => [k, DB.methods[k]]).filter(([, m]) => m);
 	}
 	const methodOf = b => { const m = methodsOf(b)[0]; return m ? m[1] : null; };
+	// input fill of a building's slot i (the save's input=): one recorded while nobody worked there (idleFill) no longer
+	// holds once the building has workers
+	const fillOf = (b, i, e) => (b.idleFill && e > 0 ? 1 : (b.inputFill || [])[i] ?? 1);
 	const isProducing = b => methodsOf(b).some(([, m]) => m.out);
 
 	// ---------------------------------------------------------------- modifiers of a location (eu5.exe 0x143194700 + 0x143edcc30)
@@ -378,7 +387,7 @@
 		// RGO size first (it decides laborer jobs); building RGO-size modifiers count at full staffing here
 		const pre = new Mods();
 		// own copies of the source lists: the pre-pass must not add its full-staffing building lines to the location's tooltips
-		pre.v = { ...base.v }; pre.src = Object.fromEntries(Object.entries(base.src).map(([k, a]) => [k, [...a]]));
+		pre.v = { ...base.v }; if (tracking) pre.src = Object.fromEntries(Object.entries(base.src).map(([k, a]) => [k, [...a]]));
 		for (const b of L.buildings) { const t = DB.buildings[b.type]; if (t) pre.block(t.mod, b.level, b.type); }
 		const rs = rgoSize(L, new LocationMods(pre, C.mods));
 		L.rgoMax = rs.value; L.rgoMaxPossible = rs.max;
@@ -388,7 +397,7 @@
 		for (const b of L.buildings) {
 			const t = DB.buildings[b.type];
 			if (!t || !b.level) continue;
-			const access = b.goodsAccess ?? (b.inputFill ? b.inputFill.reduce((a, x) => a + x, 0) / b.inputFill.length : 1), e = J.E.get(b) ?? 1;
+			const e = J.E.get(b) ?? 1, access = b.goodsAccess ?? (b.inputFill ? b.inputFill.reduce((a, x, i) => a + fillOf(b, i, e), 0) / b.inputFill.length : 1);
 			const name = `${DB.names[b.type] || b.type} ${b.level}`;
 			const S = b.level * access * e, Lv = b.level * access;
 			m.block(t.mod, S, name);
@@ -510,9 +519,12 @@
 	function buildingEconomy(L, M, C, J) {
 		const age = DB.ages[L.age] || DB.ages[1];
 		const provinceRaw = new Set(L.provinceRaw || [L.rawMaterial]);
-		// upkeep multiplier: base 0.2 + 0.001 a year (static years_since_game_start), divided by (1 + building_upkeep_efficiency);
-		// the save shows ~0.39 in 1547 where this gives 0.385 for Spain (economy_control.md 2.3, close but not exact)
-		const upkeepMult = (C.mods.raw('building_upkeep_multiplier') + 0.001 * Math.max(0, L.year - 1337)) / (1 + C.mods.raw('building_upkeep_efficiency'));
+		// upkeep multiplier: base 0.2 + 0.001 a year (static years_since_game_start) = the share of the cost "taken by the
+		// country" (41% in 1547), divided by (1 + building_upkeep_efficiency), x (1 + inflation). A building pays for the inputs
+		// it receives (fill) at its staffing, unless it always demands: Spain June 1547, 2,558 of 2,739 buildings within 1% of
+		// the save's upkeep, 2,781 against 2,765 in all
+		const upkeepMult = (C.mods.raw('building_upkeep_multiplier') + 0.001 * Math.max(0, L.year - 1337)) / (1 + C.mods.raw('building_upkeep_efficiency'))
+			* (1 + ((C.raw || {}).inflation || 0));
 		const rows = [];
 		const priceOf = g => L.prices[g] ?? (DB.goods[g] || {}).price ?? 0;
 		for (const [idx, b] of L.buildings.entries()) {
@@ -529,7 +541,7 @@
 				const throughput = L.marketAccess * e;
 				let value = 0, cost = 0, made = 0, goodMod = 0, produces = null;
 				for (const [i, [, pm]] of pms.entries()) {
-					const fill = (b.inputFill || [])[i] ?? 1;
+					const fill = fillOf(b, i, e);
 					cost += fill * Object.entries(pm.in || {}).reduce((a, [g, n]) => a + n * priceOf(g), 0);
 					if (pm.out) {
 						// output x (1 + production efficiency + the good's output modifier): Spain's lumber mills need its +50% lumber output
@@ -542,8 +554,9 @@
 				const profit = b.level * throughput * (value - cost);
 				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, produces, output: b.level * e * made, pe, goodMod, profit, savedProfit: b.profit });
 			} else {
-				const inCost = pms.reduce((a, [, pm]) => a + Object.entries(pm.in || {}).reduce((x, [g, n]) => x + n * priceOf(g), 0), 0);
-				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, upkeep: b.level * inCost * upkeepMult, savedUpkeep: b.upkeep });
+				const inCost = pms.reduce((a, [, pm], i) => a + fillOf(b, i, e) * Object.entries(pm.in || {}).reduce((x, [g, n]) => x + n * priceOf(g), 0), 0);
+				const staffing = t.alwaysDemand ? 1 : e;
+				rows.push({ idx, type: b.type, level: b.level, foreign: !!b.foreign, employment: e, staffing, upkeep: b.level * inCost * upkeepMult * staffing, savedUpkeep: b.upkeep });
 			}
 		}
 		return { rows, upkeepMult };
@@ -582,7 +595,7 @@
 			const b = L.buildings[row.idx];
 			if (!b || row.profit === undefined) continue;
 			for (const [i, [, pm]] of methodsOf(b).entries())
-				if (pm.out && goods[pm.out] && goods[pm.out].food) bldFood += b.level * row.employment * ((b.inputFill || [])[i] ?? 1) * pm.n * goods[pm.out].food;
+				if (pm.out && goods[pm.out] && goods[pm.out].food) bldFood += b.level * row.employment * fillOf(b, i, row.employment) * pm.n * goods[pm.out].food;
 		}
 		const base = bldFood + M.get('local_monthly_food') + def('NLocation', 'SUBSISTENCE_AGRICULTURE', 0.8) * subsist + rgoFood;
 		const productivity = 1 + M.get('local_monthly_food_modifier') + (rgoGood && rgoGood.food ? M.get('local_' + L.rawMaterial + '_output_modifier') : 0);
@@ -705,8 +718,8 @@
 	}
 	const priceStep = (p, target) => p + def('NMarket', 'MONTHLY_PRICE_CHANGE', 0.05) * (target - p);
 
-	const api = { setData, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
-		maxLevel, employmentSize, methodOf, methodsOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, devProsperity, maxRgo, tax, control, evaluate, advance, project, targetPrice, priceStep,
+	const api = { setData, setTracking, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
+		maxLevel, employmentSize, methodOf, methodsOf, fillOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, devProsperity, maxRgo, tax, control, evaluate, advance, project, targetPrice, priceStep,
 		MILITARY_CONTROL_FLOOR, get DB() { return DB; } };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.LocationSim = api;
 })(typeof self !== 'undefined' ? self : this);

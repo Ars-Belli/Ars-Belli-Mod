@@ -208,6 +208,16 @@ function countryContext(cid) {
 			manpowerIncome: N(c.last_month_manpower_income), manpowerNet: N(c.monthly_manpower), maxManpower: N(c.max_manpower),
 			sailorsIncome: N(c.last_month_sailors_income), maxSailors: N(c.max_sailors), taxIncome: N(c.last_months_tax_income),
 			goldIncome: N(c.last_month_gold_income), population: N(c.last_months_population), manpower: N((c.currency_data || {}).manpower),
+			// the treasury and last month's maintenance by kind (CourtMaintenance, ArmyMaintenance... UpkeepMaintenance), for the
+			// economy simulator's books
+			treasury: N((c.currency_data || {}).gold),
+			maintenance: Object.fromEntries(Object.entries(c.last_month_maintenance || {}).map(([k, v]) => [k, +v])),
+			// last month's total income and expense (the expense also holds the stability investment, which the maintenance list
+			// leaves out), the economic base (its yearly history, last entry), embraced institutions and the budget sliders
+			income: N((c.economy || {}).income), expense: N((c.economy || {}).expense),
+			economicBase: N(list(c.historical_economical_base).slice(-1)[0]),
+			institutions: Object.values(c.institutions || {}).filter(v => v === 'yes').length,
+			sliders: { ...Object.fromEntries(Object.entries((c.economy || {}).maintenances || {}).map(([k, v]) => [k, +v])), StabilityInvestment: N((c.economy || {}).stability_investment) },
 		},
 	};
 }
@@ -298,13 +308,16 @@ function locationScenario(lid, country) {
 			satisfaction: N(p.satisfaction) ?? 0, literacy: N(p.literacy) ?? 0, ...(p.building ? { building: N(p.building) } : {}) });
 	}
 	const buildings = buildingsOf(lid).map(b => {
-		// every active production method (one per slot) and its input fill fraction (input=, 1 when nothing is missing)
+		// every active production method (one per slot) and its input fill fraction (input=, 1 when nothing is missing). A
+		// building nobody works in bought nothing: its fill (0) still scales its modifiers (goods access), but says nothing
+		// about supply once it is staffed (idleFill: 614 of Spain's 846 buildings with every output slot at 0)
 		const pms = Object.keys(b).filter(k => b[k] && typeof b[k] === 'object' && DATA.methods[k]);
 		const fills = pms.map(k => N(b[k].input) ?? 1);
 		// a building under construction has no level yet: level 0 (the engine would otherwise count it as a finished level 1)
-		return { type: b.type, level: N(b.level) ?? 0, employed: N(b.employed), owner: N(b.owner), ...(+b.owner !== +l.owner ? { foreign: 1 } : {}),
+		// the save leaves employed= out when nobody works there (the engine would otherwise staff it from the idle pops)
+		return { type: b.type, level: N(b.level) ?? 0, employed: N(b.employed) ?? 0, owner: N(b.owner), ...(+b.owner !== +l.owner ? { foreign: 1 } : {}),
 			...(b.open === 'no' ? { closed: 1 } : {}),
-			...(pms.length ? { methods: pms } : {}), ...(fills.some(x => x < 1) ? { inputFill: fills } : {}), ...(b.last_months_profit !== undefined ? { profit: N(b.last_months_profit) } : {}), ...(b.upkeep !== undefined ? { upkeep: N(b.upkeep) } : {}) };
+			...(pms.length ? { methods: pms } : {}), ...(fills.some(x => x < 1) ? { inputFill: fills, ...(!(N(b.employed) > 0) ? { idleFill: 1 } : {}) } : {}), ...(b.last_months_profit !== undefined ? { profit: N(b.last_months_profit) } : {}), ...(b.upkeep !== undefined ? { upkeep: N(b.upkeep) } : {}) };
 	});
 	const market = l.market ? marketOf(l.market) : null;
 	const province = l.province ? entry('provinces', l.province) : null;
@@ -387,6 +400,20 @@ function maritimeOf(cid) {
 	return out;
 }
 
+// ---- the country's civil constructions under way in its own locations: each buys its demand's goods every month until it
+// is done (a market's Construction demand is exactly the sum over its active constructions; Spain June 1547, every
+// market). Ships and regiments (type NAVY/ARMY) are left in the market's held demand: a standing military programme
+// (Spain's 15 heavy ships buy 94 cannons and 375 lumber a month).
+function constructionsOf(cid, own) {
+	const out = [];
+	for (const e of Object.values((save.section('construction_manager') || {}).database || {})) {
+		if (!e || typeof e !== 'object' || String(e.country) !== String(cid) || e.type !== 'CIVIL' || !e.has_active_demand || !own.has(+e.location)) continue;
+		const days = (N(e.total) || 0) - (N(e.progress) || 0);
+		if (days > 0) out.push({ location: +e.location, demand: e.demand, days: +days.toFixed(2) });
+	}
+	return out;
+}
+
 // ---- --country TAG: every owned location (the country mode), markets by id
 if (flag('--country')) {
 	const cid = idOfTag(flag('--country'));
@@ -402,7 +429,7 @@ if (flag('--country')) {
 		if (s.location.market && !markets[s.location.market]) markets[s.location.market] = { prices: pricesOf(s.location.market), ...marketDetail(s.location.market) };
 	}
 	write({ name: `${tags[cid]} ${save.date()}`, source: path.basename(file), capital: country.capital, country, locations, markets, observed,
-		roads: roadsAmong(locations.map(l => l.id)), maritime: maritimeOf(cid),
+		roads: roadsAmong(locations.map(l => l.id)), maritime: maritimeOf(cid), constructions: constructionsOf(cid, new Set(locations.map(l => +l.id))),
 		// the save's proximity tree (parent of each node; sea zones keep their value), to check the proximity search
 		proximityCache: Object.fromEntries(Object.entries(c.proximity_persistent_cache || {}).filter(([, v]) => v && typeof v === 'object')
 			.map(([k, v]) => [k, { parent: N(v.proximity_parent), sea: N(v.sea_zone_proximity) }])) });
