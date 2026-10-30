@@ -26,7 +26,9 @@ if (!isMainThread) {
 		} else parentPort.postMessage({ id, result: S.monteCarloScenario(scn, n, { seed: opts.seed }) });
 	});
 } else {
-	module.exports = (threads = Math.max(1, os.cpus().length - 2)) => {
+	// EU5_THREADS=n caps the workers and drops to below-normal priority, for runs while the game is being played
+	if (process.env.EU5_THREADS) { try { os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL); } catch (e) {} }
+	module.exports = (threads = +process.env.EU5_THREADS || Math.max(1, os.cpus().length - 2)) => {
 		const S = require('./engine.js');
 		const workers = Array.from({ length: threads }, () => new Worker(__filename));
 		const idle = [...workers], queue = [], pending = new Map();

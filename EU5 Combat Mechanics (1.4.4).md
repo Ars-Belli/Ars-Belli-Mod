@@ -558,15 +558,17 @@ Read from the installed 1.3 files on 2026-10-30. A meta for 1.3 needs its own ru
 
 ## 11c. Game 1.3.11: rules, meta, Spain and Lotharingia (simulated)
 
-Everything in 11b is for 1.4. This section is for 1.3.11, run on 2026-10-30 with the game on 1.3, `units_1.3.11.json` (vanilla 1.3.11 + mod tag `game.1.3.11.mod.25`) and `S.RULES_13` in `engine.js`. Scripts: `analysis/army_meta.js --rules 1.3` with `EU5_UNITS` set to that file, and `analysis/reformation_13.js`.
+Everything in 11b is for 1.4. This section is for 1.3.11, run on 2026-10-30 with the game on 1.3, `units_1.3.11.json` (vanilla 1.3.11 + mod tag `game.1.3.11.mod.25`) and `S.RULES_13` in `engine.js`. Scripts: `analysis/army_meta.js --rules 1.3` with `EU5_UNITS` set to that file, and `analysis/reformation_13.js`. `EU5_THREADS=1` runs them on one low-priority core.
 
-**The rules** were read from eu5.exe 1.3.11 (Ghidra project `eu5_13`; battle tick `0x1443e8d20`, damage `0x1442e5580`). The flow is the same as 1.4, including the overrun checks (10 at the start, 2 and 10 with collapsed morale, written as literals), so the 1.4 engine runs 1.3 with these changes:
+**The rules** were read from eu5.exe 1.3.11 (Ghidra project `eu5_13`; battle tick `0x1443e8d20`, damage `0x1442e5580`, engage candidates `0x1443e55a0`, target pick `0x1443e5170`). The flow is the same as 1.4, including the overrun checks (10 at the start, 2 and 10 with collapsed morale, written as literals). The differences:
 
-| | 1.3.11 | 1.4 |
+| | 1.3.11 | 1.4 as modelled |
 |---|---|---|
 | Tick | every 2 hours; a battle is ticks, not days | daily |
 | `REGIMENT_SIZE` morale factor | none | ×0.25 to ×4 |
-| Melee starts | tick 5 | day 4 |
+| Who may engage | per section, up to W frontage, in section order; each then rolls | every regiment in the section (1.25 × W) rolls |
+| Melee target | keep the target; else an engaged enemy facing; else any enemy facing; fallback sections offer engaged regiments only | keep the target; else any enemy facing |
+| Melee starts | tick 5; targets reset when bombard ends | day 4 |
 | Dice re-roll | phase compared first, every 5 ticks | every 4 days |
 | Initiative time term | 0.01 × phase counter (`combat+0x30`, resets) | 0.03 × battle age (`+0x34`) |
 | A side with an empty line at an overrun check | counts as 0 men | counts its total men |
@@ -577,42 +579,40 @@ Everything in 11b is for 1.4. This section is for 1.3.11, run on 2026-10-30 with
 | Levy discipline | −10% | −20% |
 | Cavalry power, damage taken, flanking | 4.0 at every age, 0.75, 2.0 / 2.1 | 2.6–3.25, 0.30, 1.6 |
 
-Combined arms, infantry and artillery stats, regiment sizes and levy sizes are the same.
+Combined arms, infantry and artillery stats, regiment sizes and levy sizes are the same. **Not checked:** whether 1.4 shares the first two rows that differ here (who may engage, melee target). The 1.4 model never compared them with the code, and a text search of the old decompiles did not settle it. Check `0x14247eee0` and `0x142481230` before trusting 1.4 stacks over W.
 
 **Why cavalry rules for so long.** Battles end on morale, morale damage follows combat power and not men, and with no regiment-size factor a cavalry hit does about 3.6× the morale damage of a Reformation infantry hit. Infantry's 2,000-man regiments only help casualties.
 
-**Checked against 33 real battles** of the 3rd Friday campaign (1.3.11 save, both sides at least 3k men; finished wars are dropped, so all are from the 1540s). Winner predicted 28 of 33, Brier 0.110, and 29 of 33, 0.100, with armies at 80% morale. Casualties correlate 0.85 with reality. Average length 29 ticks. The sim overstates the loser's losses (79–83% against 71%); the winner's match at 60–80% morale (21–25% against 20%). The stats per country were not known for these battles, so all used one baseline.
+**Initiative is worth more here than on 1.4, up to a cap.** Engage chance a tick is 0.1 + min(0.02 × initiative × (1 + army initiative), 0.1) + 0.01 × phase, so the cap is reached at an effective initiative of 5. Lancers with initiative 5 beat identical Lancers with initiative 2 59% of the time; initiative 8, or +100% army initiative, is no better. Light Lancers forced to initiative 2 fall from 45% to 32% against Lancers. A general adds 1% army initiative per diplomacy point, which lifts heavy cavalry towards the cap, so light cavalry's edge depends on the general. Light Lancers against Lancers, 30 regiments, 1,000 battles: general diplomacy 30 47%, 59 42%, 82 39%, 100 38%. Equal gold (45 against 30) wins 99%. Equal manpower is the same as equal regiments.
 
-**Best army by age** (30 regiments' budget, flat, double oracle at 10% steps, win rate against the best pure army):
+**Checked against 33 real battles** of the 3rd Friday campaign (1.3.11 save, both sides at least 3k men; finished wars are dropped, so all are from the 1540s; one baseline for all countries, stats per country unknown). Winner predicted 30 of 33, Brier 0.079. At 70% morale: loser's losses 71% against a real 71%, winner's 23% against 20%. Before the two engage and target rules were added it was 28 of 33 and 0.110. Winners also fielded less heavy cavalry than losers (24% vs 34% of their cavalry); in 4 close fights with a clear difference the lighter side won 3. Too few to conclude.
 
-| Age | Equal regiments | Equal manpower upkeep | Equal gold |
-|---|---|---|---|
-| II | heavy cavalry (80hc 20lc ties it) | 45hc 15lc 40art, 61% | light cavalry |
-| III | heavy cavalry | heavy cavalry | light cavalry |
-| IV | 10hi 10li 40hc 25lc 15art, 62% | 45hc 40lc 15art, 60% | light cavalry |
-| V | 30hi 40li 10hc 10lc 10art, 69% | 10hi 10li 20hc 40lc 20art, 72% | light infantry |
-| VI | 40hi 40li 10lc 10art, 62% | 10hi 10li 20hc 15lc 45art, 75% | 95li 5lc, 56% |
+**Best army by age** (30 regiments' budget, flat, double oracle at 20% steps, n = 30 / 200, one core; win rate against the best pure army, ±1.8):
 
-- Without combined arms: 100 hc through age IV, then **100 light infantry at equal regiments** in ages V–VI (100 hc through age V at equal manpower).
-- At 60 regiments the shape holds, with no artillery; age IV at equal manpower goes back to 100 hc.
-- **Wars agree with battles here**, unlike 1.4. Share of wars the mix wins against pure cavalry, same regiments / same upkeep, fighting when reinforced: age IV 46% / 63%, age V 83% / 80%, age VI 100% / 100%. Against pure infantry: 100% / 100%, 86% / 100%, 79% / 99%. With a battle every 2 months: against cavalry 58% / 54%, 99% / 79%, 100% / 100%.
+| Age | Equal regiments | Equal manpower upkeep |
+|---|---|---|
+| II | heavy cavalry | heavy cavalry (90hc 10art ties it) |
+| III | heavy cavalry | heavy cavalry |
+| IV | 10li 40hc 40lc 10art, 61% | 40hc 40lc 20art, 59% |
+| V | 40hi 40li 10lc 10art, 70% | 20li 40hc 20lc 20art `cav_inf_cav`, 73% |
+| VI | 40hi 40li 20art, 64% | 20hi 40li 40art, 78% |
 
-Reformation infantry against heavy cavalry at the same stats (30 vs 30, then equal manpower 30 vs 38, then 60 vs 60): Pikemen 23%, 0%, 10%; Arquebusiers 16%, 0%, 8%; Spain's Tercios 81%, 8%, 59%. Lanzas de Castilla beat Arquebusiers 75% on neutral stats and 85% with Spain's +10% power, and Pikemen 68% and 80%, but lose to Heavy Lancers (14%).
+**Run before the engage and target fix, not rerun:** at equal gold the best army is light cavalry to age IV and light infantry after; without combined arms, 100 hc through age IV, then 100 light infantry at equal regiments; wars of attrition (mix against pure cavalry, same regiments / same upkeep, fighting when reinforced: age IV 46% / 63%, V 83% / 80%, VI 100% / 100%), which agreed with the battles, unlike 1.4; research-step values below.
+
+Reformation infantry against Heavy Lancers, same stats, 30 vs 30, after the fix: Pikemen 16%, Arquebusiers 13%. With Spain's stats and general: Tercios 67%, Pikemen 14%. Lanzas de Castilla beat Lancers 81% and lose to Heavy Lancers (14%).
 
 **Spain and Lotharingia, January 1547** (save `SP_SPA_1547_01_04`, the last true 1.3.11 save of the campaign; later ones are 1.4.4 conversions). The military tab confirmed the inputs: discipline +21.60% / +32.18%, tactics 2.60 / 2.65, morale 4.53 / 4.62, levy CE +10% / +30%, tradition 20.9 / 59.7. `from_save.js` undercounts Lotharingia's discipline by 5 points and both countries' morale, so `reformation_13.js` holds the tab's values. Generals 99/82/84 and 61/67/55. Neither country has any age IV unit, Spanish Square, Maurician Infantry or Combined Arms. Spain has no infantry newer than age I.
 
-- **Research decides it.** One side with Heavy Lancers + Spanish Square against an unresearched enemy: Spain 93%, Lotharingia 99.8%. Alone: Heavy Lancers 66% / 97%, Spanish Square 81% / 89%, Maurician Infantry 43% / 63%.
-- **Today, 30 regiments:** both pure heavy cavalry, Spain wins 40%. Spain's 7% Falconets cost it about 10 points; Lotharingia's Light Lancers cost it about 21.
-- **Whole armies** (196 vs 103 regiments): Spain wins 100%, and 100% of wars with real manpower.
+- **Today, 30 regiments:** both pure heavy cavalry, Spain wins 42%. All Lanzas beats Lotharingia as fielded 59%, all Light Lancers 63%, half and half 53%, all Lancers 44%; Spain as fielded (7% Falconets) beats Lotharingia as fielded 49%.
+- **Research (before the fix):** one side with Heavy Lancers + Spanish Square against an unresearched enemy: Spain 93%, Lotharingia 99.8%. Alone: Heavy Lancers 66% / 97%, Spanish Square 81% / 89%, Maurician Infantry 43% / 63%.
+- **Whole armies (before the fix):** 196 vs 103 regiments, Spain wins 100%, and 100% of wars with real manpower.
 
-Equilibrium armies per side, Spain's win rate in brackets:
+Equilibrium armies, 30 regiments, one-core run with few battles (share of the equilibrium in brackets):
 
-| Units | Spain | Lotharingia |
-|---|---|---|
-| Reformation, 30 regiments (25%) | 3 Tercios, 12 Heavy Lancers, 12 Pistoleers, 3 Cannons (42%); 6, 12, 12, 0 `cav_inf_cav` (34%); 9, 12, 9, 0 (22%) | 3 Pikemen, 3 Arquebusiers, 12 Heavy Lancers, 9 Pistoleers, 3 Cannons `cav_inf_cav` (48%); all Heavy Lancers (43%) |
-| Reformation, 60 regiments (26%) | 24 Tercios, 6 Arquebusiers, 12 Heavy Lancers, 18 Pistoleers (71%) | 6, 6, 24, 24 `cav_inf_cav` (97%) |
-| Absolutism, 30 regiments (21%) | 12 Musketeers, 9 Hunters, 3 Gallop Cavalry, 3 Hussars, 3 Mortars (92%) | 12 Musketeers, 12 Hunters, 3 Gallop Cavalry, 3 Mortars (94%) |
-| Absolutism, 60 regiments (17%) | 18, 24, 6, 12 (53%); 24, 18, 12, 6 (41%) | 24, 18, 12, 6 (50%); 18, 24, 12, 6 (49%) |
+| Units | Spain wins | Spain | Lotharingia |
+|---|---|---|---|
+| Reformation | 22% | 12 Tercios, 6 Heavy Lancers, 9 Pistoleers, 3 Cannons (83%) | 3 Pikemen, 3 Arquebusiers, 12 Heavy Lancers, 9 Pistoleers, 3 Cannons (81%) |
+| Absolutism | 19% | 6 Musketeers, 12 Hunters, 3 Gallop Cavalry, 3 Hussars, 6 Mortars (98%) | 9 Musketeers, 9 Hunters, 6 Gallop Cavalry, 3 Hussars, 3 Mortars (95%) |
 
 Tercios upgrade into Musketeers and neither country has an age V special unit, so Spain's infantry edge ends at age V.
 

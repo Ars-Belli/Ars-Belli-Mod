@@ -301,6 +301,22 @@
 					}
 					if (!A.engaged) continue;
 					// melee target (0x142481230): facing section, keep target; else centre, left, right, reserve
+					if (D.RULES_13) {
+						// 0x1443e3ba0 + 0x1443e5170: keep the target; else an ENGAGED enemy facing; else any enemy facing; a section with nobody
+						// facing falls back to centre, left, right, reserve, and there only an engaged regiment can be picked
+						const all = t => foe.filter(x => x.section === t && canFight(x));
+						let t13 = MIRROR[sec], list = all(t13);
+						if (!list.length) { t13 = FALLBACK.find(q => all(q).length); if (!t13) continue; list = all(t13); }
+						let B = A.target && list.includes(A.target) ? A.target : null;
+						if (!B) { const eng = list.filter(x => x.engaged), facing = t13 === MIRROR[sec]; const from = eng.length ? eng : facing ? list : []; if (!from.length) continue; B = from[Math.floor(rng() * from.length)]; }
+						A.target = B;
+						const hasF = q => foe.some(x => x.section === q && canFight(x)), hasO = q => own.some(x => x.section === q && canFight(x));
+						let sec13 = 0, fl13 = false;
+						if (t13 !== 'reserve') { sec13 = t13 === 'C' ? (hasF('L') ? 1 : 0) + (hasF('R') ? 1 : 0) : (hasF('C') ? 1 : 0); fl13 = MIRROR[sec] !== t13 && hasO(MIRROR[t13]) && !hasF(MIRROR[sec]); }
+						const h13 = hit(A, B, { dice: d, flanking: fl13, secured: sec13, combinedA, terr });
+						B.pendStr += h13.s; B.pendMor += h13.m;
+						continue;
+					}
 					let tSec = MIRROR[sec];
 					let pool = foe.filter(x => x.section === tSec && canFight(x));
 					if (!pool.length) { tSec = FALLBACK.find(s => foe.some(x => x.section === s && canFight(x))); if (!tSec) continue; pool = foe.filter(x => x.section === tSec && canFight(x)); }
@@ -324,7 +340,7 @@
 			curDay = day;
 			arrive(0, day); arrive(1, day);
 			let justEnded = false;
-			if ((D.RULES_13 ? day >= D.BOMBARD_DAYS : day > D.BOMBARD_DAYS) && !bombardOver) { bombardOver = true; justEnded = true; }
+			if ((D.RULES_13 ? day >= D.BOMBARD_DAYS : day > D.BOMBARD_DAYS) && !bombardOver) { bombardOver = true; justEnded = true; if (D.RULES_13) for (const i of [0, 1]) for (const r of all[i]) r.target = null; }
 			if (D.RULES_13) { if (phase >= D.DAYS_PER_PHASE) { phase = 0; roll(); } else if (justEnded) roll(); } // 0x1443e8d20: phase compared first, +1 at the end of the tick
 			else { phaseCounter++; if (phaseCounter >= D.DAYS_PER_PHASE) { phaseCounter = 0; roll(); } else if (justEnded) roll(); }
 			if (!bombardOver) { attackSide(0, true); attackSide(1, true); }
@@ -347,7 +363,15 @@
 						budget -= (r.u.f || 1);
 						if (best && rng() <= r.u.cs * (1 + r.c.speedMod) * D.SPEED_SCALE) r.section = best;
 					}
-					for (const s of SECTIONS) for (const r of own) { // AttemptInitiative per section
+					if (D.RULES_13) for (const s of SECTIONS) { // 0x1443e55a0: candidates in section order while W minus the engaged frontage lasts, then each rolls
+						let free = W - own.filter(x => x.section === s && x.engaged && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0);
+						for (const r of own) {
+							if (r.section !== s || r.engaged || !canFight(r) || (r.u.f || 1) > free) continue;
+							free -= (r.u.f || 1);
+							if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * phase) r.engaged = true;
+						}
+					}
+					else for (const s of SECTIONS) for (const r of own) { // AttemptInitiative per section
 						if (r.section !== s || r.engaged || !canFight(r)) continue;
 						if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * (D.RULES_13 ? phase : day)) r.engaged = true;
 					}
