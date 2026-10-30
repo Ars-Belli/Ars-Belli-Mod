@@ -599,7 +599,7 @@ Combined arms, infantry and artillery stats, regiment sizes and levy sizes are t
 
 **Wars of attrition agree with the battles, unlike 1.4** (100 wars, 120 months, fighting when reinforced; share won by the mix, same regiments / same upkeep): against pure cavalry age IV 56% / 63%, V 62% / 82%, VI 100% / 99%; against pure infantry 100% / 100%, 81% / 98%, 81% / 97%.
 
-**Run before the engage and target fix, not rerun:** at equal gold the best army is light cavalry to age IV and light infantry after; without combined arms, 100 hc through age IV, then 100 light infantry at equal regiments; research-step values below.
+**Run before the engage and target fix, not rerun:** at equal gold the best army is light cavalry to age IV and light infantry after; without combined arms, 100 hc through age IV, then 100 light infantry at equal regiments.
 
 **Why cannons, at equal manpower** (age IV, against 30 Heavy Lancers, 1,000 battles a row). 15 Heavy Lancers and 15 Pistoleers win 43%; 14, 13 and 3 Cannons 63%; 12, 12, 6 win 60%; 10, 10, 10 win 56%; 6, 6, 18 win 28%; 30 Cannons 16%. From the 12, 12, 6 army: no combined arms 41%, no bombard 51%, cannon power cut to 1.5 25%; 5 Pikemen in their place 50%. So the guns are the cheapest third category (32 manpower a month, as cavalry, against 40 for Pikemen, and two categories at 50% get no bonus), hit harder than cavalry in the line (power 5 against 4, and morale damage follows power), and add a free bombard. Past about 20% they lose, since they take 125% damage. Their power keeps growing while cavalry stays at 4: guns are worth 25 points at age V and 26 at age VI against the same army without them.
 
@@ -607,9 +607,9 @@ Reformation infantry against Heavy Lancers, same stats, 30 vs 30, after the fix:
 
 **Spain and Lotharingia, January 1547** (save `SP_SPA_1547_01_04`, the last true 1.3.11 save of the campaign; later ones are 1.4.4 conversions). The military tab confirmed the inputs: discipline +21.60% / +32.18%, tactics 2.60 / 2.65, morale 4.53 / 4.62, levy CE +10% / +30%, tradition 20.9 / 59.7. `from_save.js` undercounts Lotharingia's discipline by 5 points and both countries' morale, so `reformation_13.js` holds the tab's values. Generals 99/82/84 and 61/67/55. Neither country has any age IV unit, Spanish Square, Maurician Infantry or Combined Arms. Spain has no infantry newer than age I.
 
-- **Today, 30 regiments:** both pure heavy cavalry, Spain wins 42%. All Lanzas beats Lotharingia as fielded 59%, all Light Lancers 63%, half and half 53%, all Lancers 44%; Spain as fielded (7% Falconets) beats Lotharingia as fielded 49%.
-- **Research (before the fix):** one side with Heavy Lancers + Spanish Square against an unresearched enemy: Spain 93%, Lotharingia 99.8%. Alone: Heavy Lancers 66% / 97%, Spanish Square 81% / 89%, Maurician Infantry 43% / 63%.
-- **Whole armies (before the fix):** 196 vs 103 regiments, Spain wins 100%, and 100% of wars with real manpower.
+- **Today, 30 regiments:** both pure heavy cavalry, Spain wins 42%. All Lanzas beats Lotharingia as fielded 62% and all Lancers 41%; Spain as fielded (7% Falconets, no combined arms) wins 54% and 34%.
+- **Research:** one side with Heavy Lancers + Spanish Square against an unresearched enemy: Spain 94%, Lotharingia 99.9%. Alone: Heavy Lancers 71% / 97%, Spanish Square 82% / 91%, Maurician Infantry 43% / 62%.
+- **Whole armies:** 196 vs 103 regiments, Spain wins 100%, and 100% of wars with real manpower (men lost 288k against 368k).
 
 Equilibrium armies, one-core runs with few battles (share of the equilibrium in brackets). Manpower is the campaign's limit, so **equal manpower** is the row to use: each side's budget is the upkeep of 30 heavy cavalry, and infantry regiments cost 25% more. Remaining counters: Reformation about 2 points, Absolutism 0.1.
 
