@@ -1,6 +1,16 @@
 ﻿# Ars Belli map modes (in_game/gfx/map/map_modes/abm_map_modes.txt): Bailiffs and Urbanisation.
 # All triggers are location scope.
 
+# The locations a map mode colours: the viewing country's, which is the selected country, else the player. An observer with
+# nothing selected has neither, so every owned location shows; a bare owner = scope:actor logs an error per location there.
+abm_map_mode_shows_location = {
+	has_owner = yes
+	trigger_if = {
+		limit = { exists = scope:actor }
+		owner = scope:actor
+	}
+}
+
 # Raw goods worth keeping rural and worth a bailiff before the tax base is there:
 # vanilla default_market_price 2.5 or more (goods/00_raw_materials, 01_plantation_goods, 03_food).
 abm_has_high_value_raw_material = {
