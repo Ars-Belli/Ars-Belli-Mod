@@ -3,7 +3,7 @@ const fs = require('fs');
 const zlib = require('zlib');
 const path = require('path');
 const GAME = process.env.EU5_GAME || 'E:/Steam/steamapps/common/Europa Universalis V/game';
-const MOD = path.resolve(__dirname, '../../..');
+const MOD = process.env.EU5_MOD || path.resolve(__dirname, '../../..');
 
 function tokenize(s) {
 	const out = [];
@@ -100,18 +100,24 @@ class TextSave {
 	constructor(file) {
 		this.file = file;
 		const head = Buffer.alloc(8); const fd = fs.openSync(file, 'r'); fs.readSync(fd, head, 0, 8, 0); fs.closeSync(fd);
-		if (!head.toString('latin1').startsWith('SAV0300')) throw new Error(`${path.basename(file)} is not a text save; use openSave()`);
-		this.text = fs.readFileSync(file, 'latin1');
+		if (!/^SAV0[0-9]00/.test(head.toString('latin1'))) throw new Error(`${path.basename(file)} is not a text save; use openSave()`);
+		// kept as a Buffer: a 1.3 text save can pass Node's 512 MB string limit, so only single sections become strings
+		this.buf = fs.readFileSync(file);
+		this.text = true;
 		this.sections = {};
-		const re = /\n([a-z_]+)=\{/g; let m;
-		while ((m = re.exec(this.text))) if (!(m[1] in this.sections)) this.sections[m[1]] = m.index + 1;
+		const b = this.buf, n = b.length;
+		for (let i = b.indexOf(10); i >= 0 && i < n; i = b.indexOf(10, i + 1)) {
+			let j = i + 1;
+			while (j < n && ((b[j] >= 97 && b[j] <= 122) || b[j] === 95)) j++;
+			if (j > i + 1 && b[j] === 61 && b[j + 1] === 123) { const k = b.toString('latin1', i + 1, j); if (!(k in this.sections)) this.sections[k] = i + 1; }
+		}
 		this.cache = {};
 	}
 	sectionText(name) {
 		const start = this.sections[name];
 		if (start == null) throw new Error('no section ' + name);
 		const next = Object.values(this.sections).filter(p => p > start).sort((a, b) => a - b)[0];
-		return this.text.slice(start, next || this.text.length);
+		return this.buf.toString('latin1', start, next || this.buf.length);
 	}
 	section(name) { return this.cache[name] ??= parseSaveTokens(tokenize(this.sectionText(name)))[name]; }
 	// one "id={...}" entry inside a section, found by its indentation, without parsing the whole section
@@ -133,7 +139,7 @@ function binaryDate(v) {
 	while (doy >= MONTH_DAYS[m]) doy -= MONTH_DAYS[m++];
 	return `${Math.floor(days / 365) - 5000}.${m + 1}.${doy + 1}`;
 }
-TextSave.prototype.date = function () { return (/\n\s*date=([\d.]+)/.exec(this.text.slice(0, 4000)) || [])[1]; };
+TextSave.prototype.date = function () { return (/\n\s*date=([\d.]+)/.exec(this.buf.toString('latin1', 0, 4000)) || [])[1]; };
 
 // EU5 BINARY save (normal saves; header SAV0303): a zip with `gamestate` (u16 tokens) and `string_lookup` (names).
 // Most keys are string_lookup names; engine-fixed tokens show as '#hex'. Sections parse into the same objects as TextSave.
@@ -232,7 +238,7 @@ class BinarySave {
 	}
 }
 const headerOf = f => { const b = Buffer.alloc(8); const fd = fs.openSync(f, 'r'); fs.readSync(fd, b, 0, 8, 0); fs.closeSync(fd); return b.toString('latin1'); };
-const openSave = file => headerOf(file).startsWith('SAV0300') ? new TextSave(file) : new BinarySave(file);
+const openSave = file => /^SAV0[0-9]00/.test(headerOf(file)) ? new TextSave(file) : new BinarySave(file);
 const latestSave = () => {
 	const dir = path.join(process.env.USERPROFILE || '', 'Documents/Paradox Interactive/Europa Universalis V/save games');
 	return fs.readdirSync(dir).filter(f => f.endsWith('.eu5')).map(f => path.join(dir, f)).sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)[0];

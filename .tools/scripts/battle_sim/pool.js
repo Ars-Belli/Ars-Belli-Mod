@@ -11,7 +11,7 @@ const { Worker, isMainThread, parentPort } = require('worker_threads');
 
 if (!isMainThread) {
 	const S = require('./engine.js');
-	S.setUnitDB(require('./units.json'));
+	S.setUnitDB(require(process.env.EU5_UNITS || './units.json'));
 	const pristine = JSON.parse(JSON.stringify({ CAT: S.CAT, D: S.D }));
 	parentPort.on('message', ({ id, scn, n, opts, kind }) => {
 		for (const k of Object.keys(S.CAT)) { for (const f of Object.keys(S.CAT[k])) delete S.CAT[k][f]; Object.assign(S.CAT[k], JSON.parse(JSON.stringify(pristine.CAT[k]))); }

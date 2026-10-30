@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 if (process.argv[2]) process.env.EU5_GAME = process.argv[2];
 const { GAME, MOD, loadDb, parse } = require('./paradox.js');
-const OUT = path.join(__dirname, 'units.json');
+const OUT = process.env.EU5_UNITS_OUT || path.join(__dirname, 'units.json');
 
 const ADDITIVE = new Set(['max_strength', 'combat_power', 'frontage', 'combat_speed', 'initiative', 'flanking_ability',
 	'secure_flanks_defense', 'morale_damage_taken', 'strength_damage_taken', 'morale_damage_done', 'strength_damage_done',

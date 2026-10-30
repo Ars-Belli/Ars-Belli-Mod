@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 const { GAME, loadDb, get, openSave, latestSave } = require('./paradox.js');
-const UNITS = JSON.parse(fs.readFileSync(path.join(__dirname, 'units.json'), 'utf8')).units;
+const UNITS = JSON.parse(fs.readFileSync(process.env.EU5_UNITS || path.join(__dirname, 'units.json'), 'utf8')).units;
 
 const args = process.argv.slice(2);
 const flag = k => { const i = args.indexOf(k); return i < 0 ? undefined : args[i + 1]; };
@@ -108,7 +108,7 @@ function countryStats(id) {
 	const out = { tactics: 0, movementCost: 0 };
 	for (const [f, x] of Object.entries(acc)) setField(out, f, x);
 	return {
-		tag: c.country_name, stats: out, notes,
+		tag: (c.country_name && c.country_name.name) || c.country_name, stats: out, notes,
 		// monthly_manpower = net change a month (income minus the upkeep of all the country's armies)
 		manpower: { max: +(c.max_manpower || 0) * 1000, income: +(c.last_month_manpower_income || 0) * 1000, surplus: +(c.monthly_manpower || 0) * 1000, current: +(cur.manpower || 0) * 1000 },
 		religion: c.primary_religion,

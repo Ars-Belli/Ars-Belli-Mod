@@ -556,6 +556,68 @@ Read from the installed 1.3 files on 2026-10-30. A meta for 1.3 needs its own ru
 
 ---
 
+## 11c. Game 1.3.11: rules, meta, Spain and Lotharingia (simulated)
+
+Everything in 11b is for 1.4. This section is for 1.3.11, run on 2026-10-30 with the game on 1.3, `units_1.3.11.json` (vanilla 1.3.11 + mod tag `game.1.3.11.mod.25`) and `S.RULES_13` in `engine.js`. Scripts: `analysis/army_meta.js --rules 1.3` with `EU5_UNITS` set to that file, and `analysis/reformation_13.js`.
+
+**The rules** were read from eu5.exe 1.3.11 (Ghidra project `eu5_13`; battle tick `0x1443e8d20`, damage `0x1442e5580`). The flow is the same as 1.4, including the overrun checks (10 at the start, 2 and 10 with collapsed morale, written as literals), so the 1.4 engine runs 1.3 with these changes:
+
+| | 1.3.11 | 1.4 |
+|---|---|---|
+| Tick | every 2 hours; a battle is ticks, not days | daily |
+| `REGIMENT_SIZE` morale factor | none | ×0.25 to ×4 |
+| Melee starts | tick 5 | day 4 |
+| Dice re-roll | phase compared first, every 5 ticks | every 4 days |
+| Initiative time term | 0.01 × phase counter (`combat+0x30`, resets) | 0.03 × battle age (`+0x34`) |
+| A side with an empty line at an overrun check | counts as 0 men | counts its total men |
+| `COMBAT_DAMAGE_MULT`, strength, morale | 0.01, 0.2, 1.0 | 0.12, 0.04, 0.25 |
+| Morale drain | 0.01 a tick | 0.03 a day |
+| Initiative base, each, max | 0.1, 0.02, 0.1 | 0.6, 0.025, 0.3 |
+| `COMBAT_SPEED_SCALE`, minimum battle | 0.05, 24 ticks | 0.1, 5 days |
+| Levy discipline | −10% | −20% |
+| Cavalry power, damage taken, flanking | 4.0 at every age, 0.75, 2.0 / 2.1 | 2.6–3.25, 0.30, 1.6 |
+
+Combined arms, infantry and artillery stats, regiment sizes and levy sizes are the same.
+
+**Why cavalry rules for so long.** Battles end on morale, morale damage follows combat power and not men, and with no regiment-size factor a cavalry hit does about 3.6× the morale damage of a Reformation infantry hit. Infantry's 2,000-man regiments only help casualties.
+
+**Checked against 33 real battles** of the 3rd Friday campaign (1.3.11 save, both sides at least 3k men; finished wars are dropped, so all are from the 1540s). Winner predicted 28 of 33, Brier 0.110, and 29 of 33, 0.100, with armies at 80% morale. Casualties correlate 0.85 with reality. Average length 29 ticks. The sim overstates the loser's losses (79–83% against 71%); the winner's match at 60–80% morale (21–25% against 20%). The stats per country were not known for these battles, so all used one baseline.
+
+**Best army by age** (30 regiments' budget, flat, double oracle at 10% steps, win rate against the best pure army):
+
+| Age | Equal regiments | Equal manpower upkeep | Equal gold |
+|---|---|---|---|
+| II | heavy cavalry (80hc 20lc ties it) | 45hc 15lc 40art, 61% | light cavalry |
+| III | heavy cavalry | heavy cavalry | light cavalry |
+| IV | 10hi 10li 40hc 25lc 15art, 62% | 45hc 40lc 15art, 60% | light cavalry |
+| V | 30hi 40li 10hc 10lc 10art, 69% | 10hi 10li 20hc 40lc 20art, 72% | light infantry |
+| VI | 40hi 40li 10lc 10art, 62% | 10hi 10li 20hc 15lc 45art, 75% | 95li 5lc, 56% |
+
+- Without combined arms: 100 hc through age IV, then **100 light infantry at equal regiments** in ages V–VI (100 hc through age V at equal manpower).
+- At 60 regiments the shape holds, with no artillery; age IV at equal manpower goes back to 100 hc.
+- **Wars agree with battles here**, unlike 1.4. Share of wars the mix wins against pure cavalry, same regiments / same upkeep, fighting when reinforced: age IV 46% / 63%, age V 83% / 80%, age VI 100% / 100%. Against pure infantry: 100% / 100%, 86% / 100%, 79% / 99%. With a battle every 2 months: against cavalry 58% / 54%, 99% / 79%, 100% / 100%.
+
+Reformation infantry against heavy cavalry at the same stats (30 vs 30, then equal manpower 30 vs 38, then 60 vs 60): Pikemen 23%, 0%, 10%; Arquebusiers 16%, 0%, 8%; Spain's Tercios 81%, 8%, 59%. Lanzas de Castilla beat Arquebusiers 75% on neutral stats and 85% with Spain's +10% power, and Pikemen 68% and 80%, but lose to Heavy Lancers (14%).
+
+**Spain and Lotharingia, January 1547** (save `SP_SPA_1547_01_04`, the last true 1.3.11 save of the campaign; later ones are 1.4.4 conversions). The military tab confirmed the inputs: discipline +21.60% / +32.18%, tactics 2.60 / 2.65, morale 4.53 / 4.62, levy CE +10% / +30%, tradition 20.9 / 59.7. `from_save.js` undercounts Lotharingia's discipline by 5 points and both countries' morale, so `reformation_13.js` holds the tab's values. Generals 99/82/84 and 61/67/55. Neither country has any age IV unit, Spanish Square, Maurician Infantry or Combined Arms. Spain has no infantry newer than age I.
+
+- **Research decides it.** One side with Heavy Lancers + Spanish Square against an unresearched enemy: Spain 93%, Lotharingia 99.8%. Alone: Heavy Lancers 66% / 97%, Spanish Square 81% / 89%, Maurician Infantry 43% / 63%.
+- **Today, 30 regiments:** both pure heavy cavalry, Spain wins 40%. Spain's 7% Falconets cost it about 10 points; Lotharingia's Light Lancers cost it about 21.
+- **Whole armies** (196 vs 103 regiments): Spain wins 100%, and 100% of wars with real manpower.
+
+Equilibrium armies per side, Spain's win rate in brackets:
+
+| Units | Spain | Lotharingia |
+|---|---|---|
+| Reformation, 30 regiments (25%) | 3 Tercios, 12 Heavy Lancers, 12 Pistoleers, 3 Cannons (42%); 6, 12, 12, 0 `cav_inf_cav` (34%); 9, 12, 9, 0 (22%) | 3 Pikemen, 3 Arquebusiers, 12 Heavy Lancers, 9 Pistoleers, 3 Cannons `cav_inf_cav` (48%); all Heavy Lancers (43%) |
+| Reformation, 60 regiments (26%) | 24 Tercios, 6 Arquebusiers, 12 Heavy Lancers, 18 Pistoleers (71%) | 6, 6, 24, 24 `cav_inf_cav` (97%) |
+| Absolutism, 30 regiments (21%) | 12 Musketeers, 9 Hunters, 3 Gallop Cavalry, 3 Hussars, 3 Mortars (92%) | 12 Musketeers, 12 Hunters, 3 Gallop Cavalry, 3 Mortars (94%) |
+| Absolutism, 60 regiments (17%) | 18, 24, 6, 12 (53%); 24, 18, 12, 6 (41%) | 24, 18, 12, 6 (50%); 18, 24, 12, 6 (49%) |
+
+Tercios upgrade into Musketeers and neither country has an age V special unit, so Spain's infantry edge ends at age V.
+
+---
+
 ## 12. Sieges *(partly code; marked per line)*
 
 **Phase length** *(code, `0x143462cb0`; the arithmetic of the modifiers not finished)*: a siege rolls once per phase. The base is `DAYS_PER_SIEGE_PHASE` **30** days with a fort, `DAYS_PER_SIEGE_PHASE_WITHOUT_FORT` **15** without, and never under `MIN_DAYS_PER_SIEGE_PHASE` **7**. It is changed by the besieger's `siege_ability`, the fort's defence (`global_defensive` + `local_defensive`), the spy network and culture war; the tooltip reads "Siege phases are X (±Y%) days long".

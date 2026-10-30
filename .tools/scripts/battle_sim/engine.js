@@ -175,7 +175,7 @@
 		const mor = (k, x) => { if (x === 1) return; m *= x; if (breakdown) f.push([k, x, 'morale']); };
 		const str = (k, x) => { if (x === 1) return; s *= x; if (breakdown) f.push([k, x, 'strength']); };
 		mor('Relative strength (attacker men / max)', A.str / A.maxStr);
-		mor('Regiment size (attacker ÷ target)', Math.min(D.SIZE_RATIO_MAX, Math.max(1 / D.SIZE_RATIO_MAX, A.maxStr / B.maxStr)));
+		if (D.SIZE_RATIO_MAX) mor('Regiment size (attacker ÷ target)', Math.min(D.SIZE_RATIO_MAX, Math.max(1 / D.SIZE_RATIO_MAX, A.maxStr / B.maxStr)));
 		both('Unit power modifier', 1 + ((ca.power && ca.power[A.cat]) || 0));
 		if (flanking) both('Flanking ability', ua.fl);
 		both('Discipline', 1 + A.disc);
@@ -276,7 +276,7 @@
 		if (!m0[0] || !m0[1]) return finish(m0[0] ? 0 : m0[1] ? 1 : -1, 0, null);
 		if (m0[0] >= D.INITIAL_OVERRUN * m0[1]) return finish(0, 0, 1);   // stack wipe at the start, no morale check
 		if (m0[1] >= D.INITIAL_OVERRUN * m0[0]) return finish(1, 0, 0);
-		let phaseCounter = 0, bombardOver = false;
+		let phaseCounter = 0, bombardOver = false, phase = 0;
 
 		const attackSide = (i, bombard) => {
 			const own = all[i], foe = all[1 - i];
@@ -324,9 +324,9 @@
 			curDay = day;
 			arrive(0, day); arrive(1, day);
 			let justEnded = false;
-			if (day > D.BOMBARD_DAYS && !bombardOver) { bombardOver = true; justEnded = true; }
-			phaseCounter++;
-			if (phaseCounter >= D.DAYS_PER_PHASE) { phaseCounter = 0; roll(); } else if (justEnded) roll();
+			if ((D.RULES_13 ? day >= D.BOMBARD_DAYS : day > D.BOMBARD_DAYS) && !bombardOver) { bombardOver = true; justEnded = true; }
+			if (D.RULES_13) { if (phase >= D.DAYS_PER_PHASE) { phase = 0; roll(); } else if (justEnded) roll(); } // 0x1443e8d20: phase compared first, +1 at the end of the tick
+			else { phaseCounter++; if (phaseCounter >= D.DAYS_PER_PHASE) { phaseCounter = 0; roll(); } else if (justEnded) roll(); }
 			if (!bombardOver) { attackSide(0, true); attackSide(1, true); }
 			else {
 				for (const i of [0, 1]) {
@@ -349,7 +349,7 @@
 					}
 					for (const s of SECTIONS) for (const r of own) { // AttemptInitiative per section
 						if (r.section !== s || r.engaged || !canFight(r)) continue;
-						if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * day) r.engaged = true;
+						if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * (D.RULES_13 ? phase : day)) r.engaged = true;
 					}
 				}
 				attackSide(0, false); attackSide(1, false);
@@ -362,10 +362,13 @@
 				r.pendStr = 0; r.pendMor = 0;
 				if (!canFight(r)) { r.section = 'routed'; r.engaged = false; }
 			}
+			phase++;
 			snap(day);
 			// end of day (0x1424a77f0): before the minimum length only overruns; after it a side with an empty line loses
 			const men = [0, 1].map(i => sideMen(all[i]));
 			const overrun = f => {
+				// 1.3 (0x1443e8920): a side whose line holds no men counts as 0, and the check is a strict <
+				if (D.RULES_13) { for (const i of [1, 0]) if (lineMorale(i) <= D.COLLAPSE && (lineEmpty(i) ? 0 : men[i]) < men[1 - i] / f) return i; return -1; }
 				for (const i of [0, 1]) if (lineMorale(i) <= D.COLLAPSE && !lineEmpty(1 - i) && men[1 - i] >= f * men[i]) return i;
 				return -1;
 			};
@@ -779,6 +782,10 @@
 		return { ...r, target: B };
 	}
 
-	const api = { D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, drilledExperience, simulateWar, summarizeWars, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
+	// 1.3.11 rules, read from eu5.exe 1.3.11 (tick 0x1443e8d20, damage 0x1442e5580) and its defines. A tick is 2 hours, so 'days' are ticks here.
+	// Same flow as 1.4; no REGIMENT_SIZE morale factor; melee from tick 5; initiative's time term uses the phase counter (combat+0x30), not the age.
+	const RULES_13 = { RULES_13: true, DAMAGE_MULT: 0.01, STR_MOD: 0.2, MOR_MOD: 1, DAILY_MORALE: 0.01, DAYS_PER_PHASE: 5, BOMBARD_DAYS: 5, MIN_DAYS: 24, SIZE_RATIO_MAX: 0,
+		INIT_BASE: 0.1, INIT_EACH: 0.02, INIT_MAX: 0.1, INIT_DAY: 0.01, SPEED_SCALE: 0.05, LEVY_DISCIPLINE: -0.1, MAX_DAYS: 2400 };
+	const api = { RULES_13, D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, drilledExperience, simulateWar, summarizeWars, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BattleSim = api;
 })(typeof window !== 'undefined' ? window : globalThis);

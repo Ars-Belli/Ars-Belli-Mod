@@ -24,7 +24,7 @@ const fs = require('fs');
 const path = require('path');
 const S = require('../engine.js');
 const pool = require('../pool.js')();
-S.setUnitDB(require('../units.json'));
+S.setUnitDB(require(process.env.EU5_UNITS || '../units.json'));
 const argv = process.argv.slice(2), opt = (k, d) => { const i = argv.indexOf(k); return i < 0 ? d : argv[i + 1]; }, has = k => argv.includes(k);
 const CATS = ['hi', 'li', 'hc', 'lc', 'art'];
 const ROSTER = {
@@ -105,7 +105,8 @@ function equilibrium(M, T = 60000) {
 	return [...avg].map(x => x / T);
 }
 const location = () => opt('--loc') ? JSON.parse(opt('--loc')) : { frontage: +opt('--frontage', 10) };
-const PATCH = opt('--days-per-phase') ? { D: { DAYS_PER_PHASE: +opt('--days-per-phase') } } : undefined;
+// --rules 1.3 needs EU5_UNITS=<units_1.3.11.json> in the environment (pool.js reads it too)
+const PATCH = opt('--rules') === '1.3' ? { D: S.RULES_13 } : opt('--days-per-phase') ? { D: { DAYS_PER_PHASE: +opt('--days-per-phase') } } : undefined;
 // win rate of a against b: both seat orders, draws count half
 async function duel(a, b, age, view, regs, n, seed = 11) {
 	const x = army(a, age, view, regs), y = army(b, age, view, regs);
