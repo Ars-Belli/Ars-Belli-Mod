@@ -333,6 +333,43 @@ A town or city pays back slowly in crown tax: it loses the rural rank's +100% ma
 
 `urbanise.js` (Spain): 170 of 254 candidates are food-safe, 24 cost food growth, 60 would cause a shortage now or once RGOs are full. Mines and wool stay rural (Odemira's iron would fall from 17 levels to 8, −30 crown tax a month); the best are food locations in big-surplus provinces (Castrocalbón, wheat: the province stays at 37% now and 123% with full RGOs) and cheap-goods towns, each worth about +0.2 to +1.5 crown tax a month once its unlocked buildings are staffed. The long-run effects (promoted burghers' demand, population capacity, development) are for the economy simulator.
 
+**Advanced Create Town map mode** (`abm_advanced_create_town`; Create Town stays beside it for comparison). Built from 759 town candidates in three saves (Spain 1448 and 1547, Great Britain 1547) and run on them from the shipped script files: same tier as this design on all 759, and the same food class as the simulator on 95.8%, with none of the 35 real shortages shown as safe. `urbanise.js` prints it as `adv tier`.
+
+How much of the RGO a town cuts decides whether it pays back, more than the good does: a high-value RGO that is not cut pays back like any other.
+
+| RGO cut by the town | Towns | Long-run crown value per 1,000 gold | Pays back |
+|---|---|---|---|
+| None | 23 | 0.72 | 100% |
+| Under 25% | 48 | 0.54 | 83% |
+| 25-50% | 688 | −0.16 | 39% |
+
+Food is the whole province's. For a food RGO (food value 3+), the other food locations in its province decide most of it:
+
+| Other food locations in the province | Food-safe | Causes a shortage |
+|---|---|---|
+| None | 12% | 59% |
+| 1 | 55% | 18% |
+| 2 | 75% | 6% |
+| 3 | 82% | 1% |
+| 4 or more | 97% | 1% |
+
+Of the 221 shortage verdicts, 186 provinces were short before any town. A location without a food RGO costs its province almost nothing (median −0.7 points of surplus), so the map mode only warns about food on food RGOs.
+
+Script has no province consumption, so `abm_province_food_consumption` adds it up: `num_pop_type_in_province` × the pop's food rate × (1 + the owner's `global_<pop>_food_consumption`). The owner's modifier matters: estate privileges give −10% to peasants and laborers, and without it the surplus is 7.9 points off; with it, 0.4. Local consumption modifiers are left out. A town's food loss is the RGO's food × 1.25 × (1 − 0.84 × the share of workers kept).
+
+| Tier | Rule, first match | Towns | Food-safe | Pays back |
+|---|---|---|---|---|
+| Keep rural (dark red) | high-value RGO cut by 25%+ | 266 | 45% | 12% |
+| Food shortage (red) | the only food RGO, or the surplus after the town is under 0 | 69 | 3% | 70% |
+| Last (orange) | food RGO, surplus after under +25% | 35 | 9% | 74% |
+| Lower (yellow) | a high-value RGO that fits, or a cut medium good, or a cut food-8 staple with under +50% left | 157 | 55% | 58% |
+| Good (green) | RGO cut, food to spare | 192 | 94% | 53% |
+| First (light green) | RGO cut by under 25% | 40 | 73% | 88% |
+
+The middle tiers are ordered by food, not value: those towns are all close to break-even in crown tax, and the food verdict is not priced into "pays back". A small high-value RGO pays back today (84%), but a town limits it to half for good, so it is yellow.
+
+Not modelled: RGOs filling up later, food bought from the market, and consumption modifiers local to a location.
+
 ### Economy simulator
 
 `economy.js` runs the country month by month (country mode: pops, control, development, prosperity, staffing, proximity, province food, markets) and keeps the budget:

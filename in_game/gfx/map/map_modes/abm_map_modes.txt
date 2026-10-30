@@ -343,6 +343,206 @@ abm_create_town = {
 	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
 }
 
+# Advanced Create Town: Create Town with the location simulator's answer. What decides is how much of the RGO a town cuts and
+# what that does to the province's food: a food RGO among many is fine, the only one is not.
+abm_advanced_create_town = {
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				owner = scope:actor
+			}
+			if = {
+				limit = {
+					OR = {
+						NOT = { location_rank = location_rank:rural_settlement }
+						modifier:cannot_upgrade_location = yes
+					}
+				}
+				value = define:NMapColors|MAP_COLOR_NULL
+			}
+			else_if = {
+				limit = { abm_adv_town_keep_rural = yes }
+				value = define:NMapColors|MAP_COLOR_NEGATIVE_MIN
+			}
+			else_if = {
+				limit = { abm_adv_town_causes_shortage = yes }
+				value = define:NMapColors|MAP_COLOR_LOW
+			}
+			else_if = {
+				limit = { abm_adv_town_costs_growth = yes }
+				value = define:NMapColors|WORK_OF_ART_QUALITY_2
+			}
+			else_if = {
+				limit = { abm_adv_town_lower_priority = yes }
+				value = define:NMapColors|MAP_COLOR_MID
+			}
+			else_if = {
+				limit = { abm_adv_town_cuts_rgo = yes }
+				value = define:NMapColors|MAP_COLOR_HIGH
+			}
+			else = {
+				value = define:NMapColors|MAP_COLOR_MAX
+			}
+		}
+	}
+
+	secondary_map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				owner = scope:actor
+				location_rank = location_rank:rural_settlement
+				NOT = { modifier:cannot_upgrade_location = yes }
+				abm_adv_town_keep_rural = no
+				abm_adv_town_causes_shortage = no
+				population < 5
+			}
+			value = define:NMapColors|MAP_COLOR_MIN
+		}
+	}
+
+	tooltip_key = {
+		if = {
+			limit = {
+				has_owner = yes
+				owner = scope:actor
+			}
+			if = {
+				limit = { NOT = { location_rank = location_rank:rural_settlement } }
+				value = ABM_TOWN_MM_URBAN_TT
+			}
+			else_if = {
+				limit = { modifier:cannot_upgrade_location = yes }
+				value = ABM_TOWN_MM_CANNOT_TT
+			}
+			else_if = {
+				limit = { abm_adv_town_keep_rural = yes }
+				value = ABM_ADV_TOWN_MM_KEEP_RURAL_TT
+			}
+			else_if = {
+				limit = { abm_is_only_food_rgo = yes }
+				value = ABM_ADV_TOWN_MM_ONLY_FOOD_TT
+			}
+			else_if = {
+				limit = {
+					abm_adv_town_causes_shortage = yes
+					abm_adv_town_food_surplus_now < 0
+				}
+				value = ABM_ADV_TOWN_MM_ALREADY_SHORT_TT
+			}
+			else_if = {
+				limit = { abm_adv_town_causes_shortage = yes }
+				value = ABM_ADV_TOWN_MM_SHORTAGE_TT
+			}
+			else_if = {
+				limit = { abm_adv_town_costs_growth = yes }
+				value = ABM_ADV_TOWN_MM_GROWTH_TT
+			}
+			else_if = {
+				limit = { abm_has_high_value_raw_material = yes }
+				value = ABM_ADV_TOWN_MM_SMALL_RGO_TT
+			}
+			else_if = {
+				limit = {
+					abm_adv_town_lower_priority = yes
+					abm_has_medium_value_raw_material = yes
+				}
+				value = ABM_ADV_TOWN_MM_MEDIUM_TT
+			}
+			else_if = {
+				limit = { abm_adv_town_lower_priority = yes }
+				value = ABM_ADV_TOWN_MM_TIGHT_STAPLE_TT
+			}
+			else_if = {
+				limit = { abm_adv_town_cuts_rgo = yes }
+				value = ABM_ADV_TOWN_MM_GOOD_TT
+			}
+			else = {
+				value = ABM_ADV_TOWN_MM_FIRST_TT
+			}
+		}
+	}
+
+	legend_key = {
+		desc = "ABM_ADV_TOWN_MM_LEGEND_FIRST"
+		color = define:NMapColors|MAP_COLOR_MAX
+	}
+	legend_key = {
+		desc = "ABM_ADV_TOWN_MM_LEGEND_GOOD"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+	legend_key = {
+		desc = "ABM_ADV_TOWN_MM_LEGEND_LOWER"
+		color = define:NMapColors|MAP_COLOR_MID
+	}
+	legend_key = {
+		desc = "ABM_ADV_TOWN_MM_LEGEND_GROWTH"
+		color = define:NMapColors|WORK_OF_ART_QUALITY_2
+	}
+	legend_key = {
+		desc = "ABM_ADV_TOWN_MM_LEGEND_SHORTAGE"
+		color = define:NMapColors|MAP_COLOR_LOW
+	}
+	legend_key = {
+		desc = "ABM_ADV_TOWN_MM_LEGEND_KEEP_RURAL"
+		color = define:NMapColors|MAP_COLOR_NEGATIVE_MIN
+	}
+	legend_key = {
+		desc = "ABM_ADV_TOWN_MM_LEGEND_POPULATION"
+		color = define:NMapColors|MAP_COLOR_MIN
+	}
+	legend_key = {
+		desc = "ABM_ADV_TOWN_MM_LEGEND_URBAN"
+		color = define:NMapColors|MAP_COLOR_NULL
+	}
+
+	icon = "gfx/interface/icons/map_modes/town_rights.dds"
+
+	small_map_names = location
+	medium_map_names = country
+	large_map_names = country
+
+	small_tooltip_context = location
+	medium_tooltip_context = location
+	large_tooltip_context = location
+	enable_rivers = yes
+
+	flatmap_behaviour = Always
+	force_brown_in_flatmap = only_in_rg_colorblind_mode
+	use_fow = no
+
+	category = economy
+	index = 1
+
+	map_markers = {
+		market_marker = no
+		fort_marker = no
+		toll_marker = no
+		unit_marker = no
+	}
+
+	gradient_parameters = {
+		zoom_step = 2
+
+		gradient_alpha_inside = 	1
+		gradient_alpha_outside = 	1
+		gradient_width = 			0.875
+		gradient_color_mult =		0.9
+		edge_width = 				0
+		edge_sharpness = 			0
+		edge_alpha = 				0
+		edge_color_mult = 			0
+		before_lighting_blend =		0.5
+		after_lighting_blend =		0.5
+	}
+
+	refresh_colors_on_selection_change = yes
+	color_refresh_counters = { Month LocationPopulationChanged LocationTaxBaseChanged }
+	color_and_names_refresh_counters = { LocationOwnerChanged CountryStatus }
+}
+
+
 # Create City: which towns to raise to a city. A city makes 20% less food instead of 10% and
 # keeps the town's RGO, so only the food tier matters. Stripes: under the 30 population a
 # city needs.
