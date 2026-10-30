@@ -31,9 +31,10 @@ NEconomy = {
 }
 
 NSpreadable = {
-	# 1.3.11 crash fix: when a regiment catches a disease from another regiment in its army, the
-	# engine can grow the outbreak's table while still holding a pointer into the old one, which
-	# crashes late-game MP sessions during a big plague. 0 skips that step; armies still catch
-	# diseases from infected locations. The 1.4.6 engine no longer has the bug, so drop this there.
+	# 1.3.11 crash fix: when a regiment picks up a movement (e.g. Lutheranism) from another regiment
+	# in its army, the engine can grow the movement's table while still holding a pointer into the
+	# old one, which crashes late-game MP sessions. 0 skips that step; regiments still pick movements
+	# up from their location (ESTIMATED_MIXING_WITH_UNITS). Disease spread seems to read this define
+	# too. The 1.4.6 engine no longer has the bug, so drop this there.
 	ESTIMATED_MIXING_WITHIN_UNITS = 0 # vanilla 0.35
 }
