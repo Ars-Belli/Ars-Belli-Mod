@@ -50,7 +50,8 @@ types RightPanelTypes
 					direction = vertical
 					spacing = 5
 					parentanchor = vcenter
-					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
+					# OLD - visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
+					visible = "[And(GetGlobalVariable('mp_mechanics_enabled').IsSet, IsPlayerValid)]"
 
 					# text_single = {
 					#	text = "[GetPlayer.Custom('mp_calc_counter_display')]"
@@ -251,7 +252,7 @@ types RightPanelTypes
 					direction = vertical
 					spacing = 2
 					parentanchor = right
-					visible = "[GetGlobalVariable('mp_mechanics_enabled').IsSet]"
+					visible = "[And(GetGlobalVariable('mp_mechanics_enabled').IsSet, IsPlayerValid)]"
 
 					datacontext = "[GetPlayer]"
 					tooltip = "MP_RANK_TOOLTIP"
