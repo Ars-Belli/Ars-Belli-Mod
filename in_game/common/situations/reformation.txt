@@ -1,0 +1,667 @@
+﻿# QUICK CAMPAIGN: vanilla file with its dates moved by .tools/scripts/quick_campaign/compress_years.js, do not edit by hand
+reformation = {
+	monthly_spawn_chance = monthly_spawn_chance_high
+	hint_tag = hint_reformation
+	can_start = {
+		current_year >= 1394
+	}
+	
+	outcome = {
+		name = "reformation_confessional_settlement"
+		trigger = {
+			AND = {
+				situation:council_of_trent = {
+					situation_is_active = no
+					situation_has_ended = yes
+				}
+				situation:war_of_religions = {
+					situation_is_active = no
+					situation_has_ended = yes
+				}
+			}
+		}
+	}
+	outcome = {
+		name = "reformation_confessional_age_passes"
+		trigger = {
+			current_year >= 1451
+		}
+	}
+	
+	visible = {
+		exists = religion
+		OR = {
+			AND = {
+				religion.group = religion_group:christian
+				NOR = {
+					religion = religion:miaphysite
+					religion = religion:nestorianism
+
+				}
+			}
+			capital ?= { continent = continent:europe }
+		}
+	}
+	
+
+	on_start = {
+		religion:lutheran = {
+			enable_religion = yes
+		}
+		continent:europe = {
+			random_location_in_continent = {
+				limit = {
+					exists = owner
+					population > 1
+					has_building_with_at_least_one_level = university
+					dominant_religion = religion:catholic
+					NOT = { location_key = rome }
+					NOT = { owner = c:PAP }
+				}
+				weight = {
+					base = 1
+					modifier = {
+						add = 12
+						region = region:north_german_region
+					}
+					modifier = {
+						add = 4
+						region = region:south_german_region
+					}
+					modifier = {
+						add = 6
+						region = region:scandinavian_region
+					}
+					modifier = {
+						add = -0.5
+						region = region:iberia_region
+					}
+					modifier = {
+						add = -0.5
+						region = region:italy_region
+					}
+					modifier = {
+						add = 4
+						is_owned_by_international_organization = international_organization:hre
+					}
+				}
+
+				every_pop = {
+					limit = {
+						religion = religion:catholic
+					}
+					split_pop = {
+						fraction = 0.50
+						religion = religion:lutheran
+					}
+				}
+				root = {
+					set_variable = { name = lutheran_origin value = prev }
+				}
+
+				# Spawn the Lutheran movement with the newly-converted pops as seed supporters
+				spawn_movement = {
+					movement_definition = movement_definition:lutheranism_movement
+					supporters = {
+						value = population
+						multiply = 0.4
+					}
+				}
+
+				owner ?= {
+					create_character = {
+						first_name = name_martin
+						last_name = Luther
+						religion = religion:lutheran
+						culture = culture:saxon
+						birth_date = 1483.11.10
+						birth_location = location:eisleben
+						estate = estate_type:clergy_estate
+						adm = { 40 60 }
+						dip = { 40 60 }
+						mil = { 80 100 }
+						script = martin_luther
+						root = {
+							set_variable = { name = lutheran_character value = prev }
+						}
+					}
+				}
+			}
+		}
+
+		# Martin Luther becomes the first spreader of the Lutheran movement
+		var:lutheran_character = {
+			save_scope_as = reformation_first_spreader
+		}
+		var:lutheran_origin = {
+			save_scope_as = reformation_first_spreader_location
+		}
+		religion:lutheran = {
+			ordered_movement_in_religion = {
+				max = 1
+				order_by = { value = 1 }
+				add_spreader = {
+					character = scope:reformation_first_spreader
+					location = scope:reformation_first_spreader_location
+				}
+			}
+		}
+
+
+		every_country = {
+			limit = {
+				religion = religion:catholic
+			}
+		
+			trigger_event_non_silently = reformation.1
+		}
+	}
+
+	on_monthly = {
+		# bible translations
+		
+		random_country = {
+			limit = {
+				religion = religion:catholic
+				has_embraced_institution = institution:printing_press
+				NOT = { has_variable = bibles_translated_in_country }				
+				NOT = { dominant_language ?= language:latin_language }
+			}
+			
+			set_variable = { 
+				name = bibles_translated_in_country 
+				value = 1
+			} 
+			trigger_event_non_silently = reformation.2
+		}
+
+		#Historical Reformers of the Faith
+		#Lutherans
+
+		#Philip Melanchton
+
+		location:wittenberg = {
+			owner ?= {
+				if = {
+					limit = {
+						current_year >= 1396
+						current_year <= 1409
+						religion.group = religion_group:christian
+						NOT = { has_variable = received_reformer }
+					}
+					random_list = {
+						10 = {
+							trigger_event_non_silently = reformation.3
+						}
+						90 = {  }
+					}
+				}
+			}
+		}
+
+		#Justus Jonas
+
+		location:halle_an_der_saale = {
+			owner ?= {
+				if = {
+					limit = {
+						current_year >= 1395
+						current_year <= 1408
+						religion.group = religion_group:christian
+						NOT = { has_variable = received_reformer }
+					}
+					random_list = {
+						10 = {
+							trigger_event_non_silently = reformation.4
+						}
+						90 = {  }
+					}
+				}
+			}
+		}
+
+		#Mikael Agricola
+
+		location:abo = {
+			owner ?= {
+				if = {
+					limit = {
+						current_year >= 1400
+						current_year <= 1408
+						religion.group = religion_group:christian
+						NOT = { has_variable = received_reformer }
+					}
+					random_list = {
+						10 = {
+							trigger_event_non_silently = reformation.5
+						}
+						90 = {  }
+					}
+				}
+			}
+		}
+
+		#Hans Tausen
+
+		location:kobenhavn = {
+			owner ?= {
+				if = {
+					limit = {
+						current_year >= 1397
+						current_year <= 1410
+						religion.group = religion_group:christian
+						NOT = { has_variable = received_reformer }
+					}
+					random_list = {
+						10 = {
+							trigger_event_non_silently = reformation.6
+						}
+						90 = {  }
+					}
+				}
+			}
+		}
+
+		#John Calvin
+
+		location:basel = {
+			owner ?= {
+				if = {
+					limit = {
+						current_year >= 1400
+						current_year <= 1410
+						religion.group = religion_group:christian
+						NOT = { has_variable = received_reformer }
+					}
+					random_list = {
+						40 = {
+							trigger_event_non_silently = reformation.7
+						}
+						60 = {  }
+					}
+				}
+			}
+		}
+
+		#Huldrych Zwingli
+
+		location:bern = {
+			owner ?= {
+				if = {
+					limit = {
+						current_year <= 1400
+						religion.group = religion_group:christian
+					}
+					random_list = {
+						40 = {
+							trigger_event_non_silently = reformation.8
+						}
+						60 = {  }
+					}
+				}
+			}
+		}
+
+		#Heinrich Bullinger
+
+		location:zurich = {
+			owner ?= {
+				if = {
+					limit = {
+						current_year >= 1398
+						current_year <= 1414
+						religion.group = religion_group:christian
+					}
+					random_list = {
+						1 = {
+							trigger_event_non_silently = reformation.9
+						}
+						99 = {  }
+					}
+				}
+			}
+		}
+
+		#John Knox
+
+		location:edinburgh = {
+			owner ?= {
+				if = {
+					limit = {
+						religion:calvinist = {
+							is_religion_enabled = yes
+						}
+						current_year >= 1401
+						current_year <= 1413
+						religion.group = religion_group:christian
+						NOT = { has_variable = received_reformer }
+					}
+					random_list = {
+						10 = {
+							trigger_event_non_silently = reformation.10
+						}
+						90 = {  }
+					}
+				}
+			}
+		}
+
+		#Guido de Bres
+
+		location:antwerp = {
+			owner ?= {
+				if = {
+					limit = {
+						religion:calvinist = {
+							is_religion_enabled = yes
+						}
+						current_year >= 1404
+						current_year <= 1411
+						religion.group = religion_group:christian
+						NOT = { has_variable = received_reformer }
+					}
+					random_list = {
+						1 = {
+							trigger_event_non_silently = reformation.11
+						}
+						99 = {  }
+					}
+				}
+
+			}
+		}
+
+		hidden_effect = {
+			#random events for all countries
+			every_country = {
+				if = {
+					limit = {
+						current_year <= 1421
+						OR = {
+							is_protestant = yes
+							religion = religion:catholic
+						}
+						any_character = {
+							is_alive = yes
+							is_adult = yes
+							religion = prev.religion
+							NOT = {
+								is_target_in_global_variable_list = {
+									name = reformer_list
+									target = this
+								}
+							}
+						}
+						any_neighbor_country = {
+							exists = yes
+						}
+						NOT = {
+							has_cooldown = convert_religion
+						}
+					}
+					random_list = {
+						1 = { trigger_event_non_silently = reformation.12 } #A Character Converts
+						99 = { }
+					}
+				}
+				if = {
+					limit = {
+						current_year <= 1421
+						OR = {
+							is_protestant = yes
+							religion = religion:catholic
+						}
+						any_owned_location = {
+							dominant_religion ?= { group = religion_group:christian }
+							NOT = { dominant_religion ?= prev.religion }
+						}
+						any_neighbor_country = {
+							exists = yes
+						}
+					}
+					random_list = {
+						1 = { trigger_event_non_silently = reformation.13 } #Minority Migrates away
+						99 = { }
+					}
+				}
+				if = {
+					limit = {
+						current_year <= 1421
+						situation:reformation = {
+							years_since_situation_start > 20
+						}
+						OR = {
+							is_protestant = yes
+							religion = religion:catholic
+						}
+						any_owned_location = {
+							has_building_with_at_least_one_level = university
+						}
+						any_character = {
+							religion.group = prev.religion.group
+							religion != prev.religion
+							OR = {
+								has_estate = estate_type:burghers_estate
+								has_estate = estate_type:clergy_estate
+							}
+						}
+						any_neighbor_country = {
+							exists = yes
+						}
+					}
+					random_list = {
+						1 = { trigger_event_non_silently = reformation.14 } #A Heretic Professor
+						99 = { }
+					}
+				}
+				if = {
+					limit = {
+						current_year <= 1421
+						religion = religion:catholic
+						any_owned_location = {
+							has_building_with_at_least_one_level = monastery
+						}
+					}
+					random_list = {
+						1 = { trigger_event_non_silently = reformation.15 } #A Monastery joins the reformation
+						99 = { }
+					}
+				}
+				if = {
+					limit = {
+						current_year <= 1421
+						OR = {
+							religion = religion:lutheran
+							religion = religion:calvinist
+						}
+						has_variable = received_reformer
+						religious_unity <= 0.8
+					}
+					random_list = {
+						1 = { trigger_event_non_silently = reformation.16 } #Reformer asks for additional funds
+						99 = { }
+					}
+				}
+			}
+		}
+	}
+
+
+	on_ended = {
+		every_country = {
+			remove_variable = bibles_translated_in_country
+			remove_variable = lutheran_origin
+		}
+		remove_variable = reformation_lutheran_preachers_counter
+		remove_variable = reformation_calvinist_preachers_counter
+		clear_global_variable_list = reformer_list
+
+		# Outbreaks survive the situation end (movement potential only gates spawning, not spread).
+		# Burn them down so post-1700/Council-of-Trent saves don't keep converting pops indefinitely.
+		religion:lutheran = {
+			every_movement_in_religion = {
+				destroy_movement = yes
+			}
+		}
+		religion:calvinist = {
+			every_movement_in_religion = {
+				destroy_movement = yes
+			}
+		}
+	}
+
+	tooltip = {
+		if = {
+			limit = {
+				any_in_global_list = {
+					variable = reformer_list
+					location ?= prev
+				}
+			}
+			custom_tooltip = REFORMATION_LOCAL_ACTIVE_REFORMER
+		}
+		if = {
+			limit = {
+				has_owner = yes
+				"religion_percentage(religion:lutheran)" >= 0.05
+			}
+			custom_tooltip = REFORMATION_HAS_LUTHERAN_MOVEMENT
+		}
+		if = {
+			limit = {
+				has_owner = yes
+				"religion_percentage(religion:calvinist)" >= 0.05
+			}
+			custom_tooltip = REFORMATION_HAS_CALVINIST_MOVEMENT
+		}
+		if = {
+			limit = {
+				has_owner = yes
+				NOT = { "religion_percentage(religion:lutheran)" >= 0.05 }
+				NOT = { "religion_percentage(religion:calvinist)" >= 0.05 }
+				NOT = { dominant_religion ?= religion:lutheran }
+				NOT = { dominant_religion ?= religion:calvinist }
+				NOT = { dominant_religion ?= religion:hussite }
+				NOT = { dominant_religion ?= religion:anglican }
+			}
+			custom_tooltip = REFORMATION_MAP_NO_MOVEMENT_PRESENT
+		}
+		if = {
+			limit = {
+				dominant_religion ?= religion:catholic
+				has_owner = yes
+				owner = {
+					has_policy = jesuits_allowed
+				}
+			}
+			custom_tooltip = REFORMATION_HAS_JESUITS_ACTIVE
+		}
+		if = {
+			limit = {
+				exists = dominant_religion
+			}
+			custom_tooltip = REFORMATION_LOCATION_RELIGION
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = {
+				any_in_global_list = {
+					variable = reformer_list
+					location ?= prev
+				}
+			}
+			value = reformation_reformer
+		}
+		else_if = {
+			limit = { dominant_religion ?= religion:catholic }
+			if = {
+				limit = {
+					has_owner = yes
+					owner = {
+						has_policy = jesuits_allowed
+					}
+				}
+				value = reformation_jesuits_state
+			}
+			else = {
+				value = religion_catholic
+			}
+		}
+		else_if = {
+			limit = { dominant_religion ?= religion:lutheran }
+			value = color_lutheran
+		}
+		else_if = {
+			limit = { dominant_religion ?= religion:calvinist }
+			value = color_calvinist
+		}
+		else_if = {
+			limit = { dominant_religion ?= religion:hussite }
+			value = color_hussite
+		}
+		else_if = {
+			limit = { dominant_religion ?= religion:anglican }
+			value = color_anglican
+		}
+		else = {
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+	
+	secondary_map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				"religion_percentage(religion:lutheran)" >= 0.05
+				NOT = { dominant_religion ?= religion:lutheran }
+			}
+			value = color_lutheran
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				"religion_percentage(religion:calvinist)" >= 0.05
+				NOT = { dominant_religion ?= religion:calvinist }
+			}
+			value = color_calvinist
+		}
+	}
+
+	legend_key = {
+		desc = "REFORMER_STATE"
+		color = reformation_reformer
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "HUSSITE_STATE"
+		color = color_hussite
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "ANGLICAN_STATE"
+		color = color_anglican
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "LUTHERAN_STATE"
+		color = color_lutheran
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "CALVINIST_STATE"
+		color = color_calvinist
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "JESUIT_STATE"
+		color = reformation_jesuits_state
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "CATHOLIC_STATE"
+		color = religion_catholic
+		require_color_on_map = yes
+	}
+}

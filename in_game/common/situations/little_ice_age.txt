@@ -1,0 +1,247 @@
+﻿# QUICK CAMPAIGN: vanilla file with its dates moved by .tools/scripts/quick_campaign/compress_years.js, do not edit by hand
+little_ice_age = {
+	monthly_spawn_chance = monthly_spawn_chance_unique
+	hint_tag = hint_little_ice_age
+	
+	can_start = {
+		current_year >= 1434
+	}
+	
+	outcome = {
+		name = "little_ice_age_climate_recovers"
+		trigger = {
+			current_year > 1455
+		}
+	}
+	
+	visible = {
+		capital ?= {
+			area = {
+				has_extended_winter = yes
+			}
+		}
+	}
+
+	on_start = {
+		add_timeline_note = {
+			key = timeline_note_little_ice_age
+			show_in_pop_graph = yes
+			unique = yes
+		}
+		region:scandinavian_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:north_atlantic_islands_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:north_german_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:south_german_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:great_britain_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:ireland_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:france_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:iberia_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:italy_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:carpathia_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:baltic_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:ruthenia_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:caucasus_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:steppes_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:russian_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:ural_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:balkan_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:khorasan_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:east_siberia_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:west_siberia_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:xinjiang_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:mongolia_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:north_china_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:tibet_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:west_china_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:east_china_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:manchuria_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:korea_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:japan_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:anatolia_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:caucasus_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:alaska_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:west_coast_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:aridoamerica_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:canada_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:east_coast_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:great_plains_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:mesoamerica_region = {	every_area_in_region = { add_extended_winter = this } }
+		region:maghreb_region = {	every_area_in_region = { add_extended_winter = this } }
+
+	
+		every_area = {
+			limit = {
+				has_extended_winter = yes
+			}
+			every_location_in_area = {
+				limit = { is_ownable = yes }
+				add_location_modifier = {
+					modifier = harsh_winters_modifier
+					mode = add_and_extend
+					years = -1
+				}
+			}
+		}
+	
+		every_country = {
+			limit = {
+				capital ?= {
+					area = {
+						has_extended_winter = yes
+					}
+				}
+			}
+		
+			trigger_event_non_silently = little_ice_age.1
+		}
+	}
+
+	on_monthly = {
+		if = {
+			limit = {
+				current_year = 1453
+				current_month = 11
+			}
+			
+			every_country = {
+				limit = {
+					capital ?= {
+						area = {
+							has_extended_winter = yes
+						}
+					}
+				}
+			
+				trigger_event_non_silently = little_ice_age.16
+			}
+		}
+	
+	
+		every_country = {
+			limit = {
+				capital ?= {
+					area = {
+						has_extended_winter = yes
+					}
+				}
+			}
+			random_list =  {
+				1000 = { }
+				2 = { trigger_event_non_silently = little_ice_age.5   }
+				2 = { trigger_event_non_silently = little_ice_age.6   }
+				2 = { trigger_event_non_silently = little_ice_age.7   }
+				2 = { trigger_event_non_silently = little_ice_age.8   }
+				2 = { trigger_event_non_silently = little_ice_age.9   }
+				2 = { trigger_event_non_silently = little_ice_age.10  }
+				2 = { trigger_event_non_silently = little_ice_age.11  }
+				2 = { trigger_event_non_silently = little_ice_age.12  }
+				2 = { trigger_event_non_silently = little_ice_age.13  }
+				2 = { trigger_event_non_silently = little_ice_age.14  }
+				2 = { trigger_event_non_silently = little_ice_age.15  }
+				2 = { trigger_event_non_silently = little_ice_age.17  }
+				2 = { trigger_event_non_silently = little_ice_age.18  }
+				2 = { trigger_event_non_silently = little_ice_age.101 }
+				2 = { trigger_event_non_silently = little_ice_age.102 }
+				2 = { trigger_event_non_silently = little_ice_age.103 }
+				2 = { trigger_event_non_silently = little_ice_age.104 }
+				2 = { trigger_event_non_silently = little_ice_age.105 }
+			}
+
+		}
+	}
+
+	tooltip = {
+		if = {
+			limit = {
+				has_owner = yes
+				province = { is_starving = yes }
+			}
+			custom_tooltip = province_is_starving_tt
+		}
+		if = {
+			limit = {
+				has_owner = yes
+				this.market ?= { market_monthly_food_balance < 0 }
+			}
+			custom_tooltip = market_negative_food_balance_tt
+		}
+		if = {
+			limit = {	
+				area = {
+					has_extended_winter = yes
+				}
+			}
+			custom_tooltip = affected_by_extended_winters_tt
+		}
+
+	}
+
+
+	on_ended = {
+		add_timeline_note = {
+			key = timeline_note_little_ice_age_end
+			show_in_pop_graph = yes
+			unique = yes
+		}
+		every_country = {
+			limit = {
+				capital ?= {
+					area = {
+						has_extended_winter = yes
+					}
+				}
+			}
+		
+			trigger_event_non_silently = little_ice_age.100
+		}
+	
+		every_area = {
+			every_location_in_area = {
+				remove_location_modifier = harsh_winters_modifier
+			}
+			remove_extended_winter = this 
+		} 
+	}
+	 
+	
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				province = { is_starving = yes }
+			}
+			value = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				this.market ?= { market_monthly_food_balance < 0 }
+			}
+			value = define:NMapColors|MAP_COLOR_MID
+		}
+		else_if = {
+			limit = {	
+				area = {
+					has_extended_winter = yes
+				}
+			}
+			value = define:NMapColors|MAP_COLOR_HIGH
+		}
+		else = {
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+	
+	legend_key = { 
+		desc = "LEGEND_KEY_STARVING"
+		color = define:NMapColors|POPULATION_STARVING_COLOR_STRIPE
+	}
+	legend_key = { 
+		desc = "LEGEND_KEY_FOOD_NEG"
+		color = define:NMapColors|MAP_COLOR_MID
+	}
+	legend_key = { 
+		desc = "STATIC_MODIFIER_NAME_harsh_winters_modifier"
+		color = define:NMapColors|MAP_COLOR_HIGH
+	}
+}

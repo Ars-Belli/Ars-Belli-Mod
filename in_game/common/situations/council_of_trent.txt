@@ -1,0 +1,310 @@
+﻿# QUICK CAMPAIGN: vanilla file with its dates moved by .tools/scripts/quick_campaign/compress_years.js, do not edit by hand
+council_of_trent = {
+	monthly_spawn_chance = monthly_spawn_chance_ultimate
+	hint_tag = hint_council_of_trent
+	international_organization_type = catholic_church
+	voters = council_of_trent_voters
+	can_start = {
+		reformation_is_enabled = yes
+		current_year >= 1400
+		exists = religion:catholic
+		OR = {
+			religion:catholic = {
+				reform_desire >= 0.25
+			}
+			# Historical fallback: Council fires 1545-1563 even if Reformation was suppressed early
+			AND = {
+				current_year >= 1404
+				current_year <= 1410
+			}
+		}
+		exists = international_organization:catholic_church
+		international_organization:catholic_church = {
+			exists = leader_country
+		}
+	}
+	outcome = {
+		name = "council_of_trent_church_dissolved"
+		trigger = {
+			NOT = {
+				unique_international_organization_type_exists = international_organization_type:catholic_church
+			}
+		}
+	}
+	outcome = {
+		name = "council_of_trent_reforms_adopted"
+		trigger = {
+			custom_tooltip = {
+				text = council_of_trent_end_trigger_passed_debates_tt
+				has_variable = council_of_trent_passed_debates
+				has_variable = council_of_trent_passed_debates_max
+				var:council_of_trent_passed_debates >= var:council_of_trent_passed_debates_max
+			}
+		}
+	}
+	outcome = {
+		name = "council_of_trent_reforms_rejected"
+		trigger = {
+			custom_tooltip = {
+				text = council_of_trent_end_trigger_failed_debates_tt
+				has_variable = council_of_trent_failed_debates
+				has_variable = council_of_trent_failed_debates_max
+				var:council_of_trent_failed_debates >= var:council_of_trent_failed_debates_max
+			}
+		}
+	}
+	outcome = {
+		name = "council_of_trent_council_adjourned"
+		trigger = {
+			current_age_or_later = { age = age_5_absolutism }
+		}
+	}
+	visible = {
+		OR = {
+			religion ?= religion:catholic
+			is_protestant = yes
+		}
+	}
+	on_start = {
+		set_variable = {	name = council_of_trent_passed_debates		value = 0	}
+		set_variable = {	name = council_of_trent_failed_debates		value = 0	}
+		set_variable = {	name = council_of_trent_passed_debates_max	value = 5	}
+		set_variable = {	name = council_of_trent_failed_debates_max	value = 5	}
+		international_organization:catholic_church = {
+			leader_country ?= {
+				trigger_event_non_silently = council_of_trent.1000
+			}
+			every_international_organization_member = {
+				limit = {
+					NOT = { is_leader_of_international_organization = PREV }
+				}
+				trigger_event_non_silently = council_of_trent.1001
+			}
+			every_international_organization_member = {
+				add_to_global_variable_list = { name = council_of_trent_voters target = this } 
+			}
+			set_variable = {	name = council_of_trent_pro_reformation_policies	value = 0	}
+			set_variable = {	name = council_of_trent_anti_reformation_policies	value = 0	}
+			every_current_policy_in_international_organization = {
+				if = {
+					limit = { has_tag = pro_reformation }
+					prev = { change_variable = { name = council_of_trent_pro_reformation_policies add = 1 } }
+					if = {
+						limit = { has_tag = pro_reformation_severe }
+						prev = { change_variable = { name = council_of_trent_pro_reformation_policies add = 1 } }
+					}
+				}
+				else_if = {
+					limit = { has_tag = anti_reformation }
+					prev = { change_variable = { name = council_of_trent_anti_reformation_policies add = 1 } }
+					if = {
+						limit = { has_tag = anti_reformation_severe }
+						prev = { change_variable = { name = council_of_trent_anti_reformation_policies add = 1 } }
+					}
+				}
+				if = {
+					limit = { has_tag = conciliatory_policy }
+					prev = { change_variable = { name = council_of_trent_pro_reformation_policies add = 3 } }
+				}
+				else_if = {
+					limit = { has_tag = harsh_policy }
+					prev = { change_variable = { name = council_of_trent_anti_reformation_policies add = 3 } }
+				}
+			}
+		}
+		every_country = {
+			limit = { is_protestant = yes }
+			trigger_event_non_silently = council_of_trent.1002
+		}
+	}
+	on_monthly = {
+		clear_global_variable_list = council_of_trent_voters
+		clear_global_variable_list = council_of_trent_voting_for_debate
+		clear_global_variable_list = council_of_trent_voting_against_debate
+		clear_global_variable_list = council_of_trent_unvoters
+		international_organization:catholic_church = {
+			if = {
+				limit = { resolution_is_active = resolution:policy_vote }
+				every_international_organization_member = {
+					if = {
+						limit = {
+							international_organization:catholic_church = {
+								has_voted_for = {
+									voter = prev
+									resolution = resolution:policy_vote
+									vote = situation:council_of_trent.var:council_of_trent_current_debate
+								}
+							}
+						}
+						add_to_global_variable_list = { name = council_of_trent_voting_for_debate target = this } 
+					}
+					else_if = {
+						limit = {
+							international_organization:catholic_church = {
+								has_voted = {
+									voter = prev
+									resolution = resolution:policy_vote
+								}
+							}
+						}
+						add_to_global_variable_list = { name = council_of_trent_voting_against_debate target = this } 
+					}
+					else_if = {
+						limit = {
+							international_organization:catholic_church = {
+								has_abstained_vote = {
+									voter = prev
+									resolution = resolution:policy_vote
+								}
+							}
+						}
+						add_to_global_variable_list = { name = council_of_trent_voters target = this } 
+					}
+					else = {
+						add_to_global_variable_list = { name = council_of_trent_unvoters target = this } 
+					}
+				}
+			}
+			leader_country ?= {
+				random_list = {
+					2 = { trigger_event_non_silently = council_of_trent.3 }
+					98 = { }
+				}
+			}
+		}
+	}
+	on_ended = {
+		international_organization:catholic_church = {
+			# Reset counters before final tally so on_start baseline does not double-count
+			set_variable = {	name = council_of_trent_pro_reformation_policies	value = 0	}
+			set_variable = {	name = council_of_trent_anti_reformation_policies	value = 0	}
+			every_current_policy_in_international_organization = {
+				if = {
+					limit = { has_tag = pro_reformation }
+					prev = { change_variable = { name = council_of_trent_pro_reformation_policies add = 1 } }
+					if = {
+						limit = { has_tag = pro_reformation_severe }
+						prev = { change_variable = { name = council_of_trent_pro_reformation_policies add = 1 } }
+					}
+				}
+				else_if = {
+					limit = { has_tag = anti_reformation }
+					prev = { change_variable = { name = council_of_trent_anti_reformation_policies add = 1 } }
+					if = {
+						limit = { has_tag = anti_reformation_severe }
+						prev = { change_variable = { name = council_of_trent_anti_reformation_policies add = 1 } }
+					}
+				}
+				if = {
+					limit = { has_tag = conciliatory_policy }
+					prev = { change_variable = { name = council_of_trent_pro_reformation_policies add = 3 } }
+				}
+				else_if = {
+					limit = { has_tag = harsh_policy }
+					prev = { change_variable = { name = council_of_trent_anti_reformation_policies add = 3 } }
+				}
+			}
+			set_variable = {
+				name = council_of_trent_value
+				value = var:council_of_trent_pro_reformation_policies
+			}
+			change_variable = {
+				name = council_of_trent_value
+				subtract = var:council_of_trent_anti_reformation_policies
+			}
+		}
+		every_country = {
+			limit = { religion = religion:catholic }
+			trigger_event_non_silently = council_of_trent.2
+		}
+		clear_global_variable_list = council_of_trent_voters
+		clear_global_variable_list = council_of_trent_voting_for_debate
+		clear_global_variable_list = council_of_trent_voting_against_debate
+		clear_global_variable_list = council_of_trent_unvoters
+		remove_variable = council_of_trent_passed_debates
+		remove_variable = council_of_trent_failed_debates
+		remove_variable = council_of_trent_passed_debates_max
+		remove_variable = council_of_trent_failed_debates_max
+		remove_variable = council_of_trent_current_debate
+		# Clear IO-level debate cooldowns so a potential second Council is not blocked
+		international_organization:catholic_church = {
+			clear_variable_list = law_debate_cooldowns
+			clear_variable_list = ai_law_vote_cooldowns
+		}
+	}
+	tooltip = {
+		if = {
+			limit = {
+				has_owner = yes
+				is_target_in_global_variable_list = {
+					name = council_of_trent_voting_for_debate
+					target = root.owner
+				}
+			}
+			custom_tooltip = "COUNCIL_OF_TRENT_FAVORS_LAW_REFORM"
+		}
+		else_if = {
+			limit = {	
+				has_owner = yes
+				is_target_in_global_variable_list = {
+					name = council_of_trent_voting_against_debate
+					target = root.owner
+				}
+			}
+			custom_tooltip = "COUNCIL_OF_TRENT_REJECTS_LAW_REFORMS"
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				is_target_in_global_variable_list = {
+					name = council_of_trent_unvoters
+					target = root.owner
+				}
+			}
+			custom_tooltip = "COUNCIL_OF_TRENT_FAVORS_HAS_YET_TO_VOTE"
+		}
+	}
+	map_color = {
+		if = {
+			limit = {
+				has_owner = yes
+				is_target_in_global_variable_list = {
+					name = council_of_trent_voting_for_debate
+					target = root.owner
+				}
+			}
+			value = cot_conciliatory_color
+		}
+		else_if = {
+			limit = {	
+				has_owner = yes
+				is_target_in_global_variable_list = {
+					name = council_of_trent_voting_against_debate
+					target = root.owner
+				}
+			}
+			value = cot_belligerent_color
+		}
+		else_if = {
+			limit = {
+				has_owner = yes
+				is_target_in_global_variable_list = {
+					name = council_of_trent_unvoters
+					target = root.owner
+				}
+			}
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+	
+	legend_key = { 
+		desc = "belligerent_focus"
+		color = cot_belligerent_color
+		require_color_on_map = yes # Don't show key if this color is not on the map.
+	}
+	legend_key = { 
+		desc = "conciliatory_focus"
+		color = cot_conciliatory_color
+		require_color_on_map = yes
+	}
+}
