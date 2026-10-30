@@ -597,7 +597,11 @@ Combined arms, infantry and artillery stats, regiment sizes and levy sizes are t
 | V | 40hi 40li 10lc 10art, 70% | 20li 40hc 20lc 20art `cav_inf_cav`, 73% |
 | VI | 40hi 40li 20art, 64% | 20hi 40li 40art, 78% |
 
-**Run before the engage and target fix, not rerun:** at equal gold the best army is light cavalry to age IV and light infantry after; without combined arms, 100 hc through age IV, then 100 light infantry at equal regiments; wars of attrition (mix against pure cavalry, same regiments / same upkeep, fighting when reinforced: age IV 46% / 63%, V 83% / 80%, VI 100% / 100%), which agreed with the battles, unlike 1.4; research-step values below.
+**Wars of attrition agree with the battles, unlike 1.4** (100 wars, 120 months, fighting when reinforced; share won by the mix, same regiments / same upkeep): against pure cavalry age IV 56% / 63%, V 62% / 82%, VI 100% / 99%; against pure infantry 100% / 100%, 81% / 98%, 81% / 97%.
+
+**Run before the engage and target fix, not rerun:** at equal gold the best army is light cavalry to age IV and light infantry after; without combined arms, 100 hc through age IV, then 100 light infantry at equal regiments; research-step values below.
+
+**Why cannons, at equal manpower** (age IV, against 30 Heavy Lancers, 1,000 battles a row). 15 Heavy Lancers and 15 Pistoleers win 43%; 14, 13 and 3 Cannons 63%; 12, 12, 6 win 60%; 10, 10, 10 win 56%; 6, 6, 18 win 28%; 30 Cannons 16%. From the 12, 12, 6 army: no combined arms 41%, no bombard 51%, cannon power cut to 1.5 25%; 5 Pikemen in their place 50%. So the guns are the cheapest third category (32 manpower a month, as cavalry, against 40 for Pikemen, and two categories at 50% get no bonus), hit harder than cavalry in the line (power 5 against 4, and morale damage follows power), and add a free bombard. Past about 20% they lose, since they take 125% damage. Their power keeps growing while cavalry stays at 4: guns are worth 25 points at age V and 26 at age VI against the same army without them.
 
 Reformation infantry against Heavy Lancers, same stats, 30 vs 30, after the fix: Pikemen 16%, Arquebusiers 13%. With Spain's stats and general: Tercios 67%, Pikemen 14%. Lanzas de Castilla beat Lancers 81% and lose to Heavy Lancers (14%).
 
@@ -607,12 +611,14 @@ Reformation infantry against Heavy Lancers, same stats, 30 vs 30, after the fix:
 - **Research (before the fix):** one side with Heavy Lancers + Spanish Square against an unresearched enemy: Spain 93%, Lotharingia 99.8%. Alone: Heavy Lancers 66% / 97%, Spanish Square 81% / 89%, Maurician Infantry 43% / 63%.
 - **Whole armies (before the fix):** 196 vs 103 regiments, Spain wins 100%, and 100% of wars with real manpower.
 
-Equilibrium armies, 30 regiments, one-core run with few battles (share of the equilibrium in brackets):
+Equilibrium armies, one-core runs with few battles (share of the equilibrium in brackets). Manpower is the campaign's limit, so **equal manpower** is the row to use: each side's budget is the upkeep of 30 heavy cavalry, and infantry regiments cost 25% more. Remaining counters: Reformation about 2 points, Absolutism 0.1.
 
-| Units | Spain wins | Spain | Lotharingia |
-|---|---|---|---|
-| Reformation | 22% | 12 Tercios, 6 Heavy Lancers, 9 Pistoleers, 3 Cannons (83%) | 3 Pikemen, 3 Arquebusiers, 12 Heavy Lancers, 9 Pistoleers, 3 Cannons (81%) |
-| Absolutism | 19% | 6 Musketeers, 12 Hunters, 3 Gallop Cavalry, 3 Hussars, 6 Mortars (98%) | 9 Musketeers, 9 Hunters, 6 Gallop Cavalry, 3 Hussars, 3 Mortars (95%) |
+| Units | Parity | Spain wins | Spain | Lotharingia |
+|---|---|---|---|---|
+| Reformation | manpower | 19% | 3 Tercios, 12 Heavy Lancers, 11 Pistoleers, 3 Cannons (70%) | 12 Heavy Lancers, 12 Pistoleers, 6 Cannons (73%); 27 Heavy Lancers, 3 Pistoleers (23%) |
+| Absolutism | manpower | 20% | 3 Musketeers, 3 Hunters, 11 Gallop Cavalry, 6 Hussars, 6 Mortars `cav_inf_cav` (98%) | the same army, `balanced_army` (95%) |
+| Reformation | regiments | 22% | 12 Tercios, 6 Heavy Lancers, 9 Pistoleers, 3 Cannons (83%) | 3 Pikemen, 3 Arquebusiers, 12 Heavy Lancers, 9 Pistoleers, 3 Cannons (81%) |
+| Absolutism | regiments | 19% | 6 Musketeers, 12 Hunters, 3 Gallop Cavalry, 3 Hussars, 6 Mortars (98%) | 9 Musketeers, 9 Hunters, 6 Gallop Cavalry, 3 Hussars, 3 Mortars (95%) |
 
 Tercios upgrade into Musketeers and neither country has an age V special unit, so Spain's infantry edge ends at age V.
 

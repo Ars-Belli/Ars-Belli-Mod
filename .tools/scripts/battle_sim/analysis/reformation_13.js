@@ -1,4 +1,4 @@
-// node .tools/scripts/battle_sim/analysis/reformation_13.js [checks] [--n 60] [--nm 400] [--iters 8] [--regs 30,60] [--out file]
+// node .tools/scripts/battle_sim/analysis/reformation_13.js [checks] [--n 60] [--nm 400] [--iters 8] [--regs 30,60] [--parity manpower] [--games full:full,abs:abs] [--out file]
 // Best army for Spain and Lotharingia in the Reformation on game 1.3.11 (rules RULES_13, units_1.3.11.json), from the campaign's
 // 1.3.11 save of January 1547. Asymmetric zero-sum game solved by double oracle: each country has its own roster, stats and general
 // and both best-respond. Tiers: today = units actually unlocked in the save; full = every age IV unit and universal advance.
@@ -43,8 +43,11 @@ function counts(comp, n) {
 	for (const i of raw.map((x, i) => [x - out[i], i]).sort((a, b) => b[0] - a[0]).map(x => x[1])) { if (left-- <= 0) break; out[i]++; }
 	return Object.fromEntries(CATS.map((c, i) => [c, out[i]]));
 }
+// --parity manpower: each side's budget is the monthly manpower of n heavy cavalry regiments, so 2% infantry regiments cost 25% more than 4% cavalry and artillery ones
+const upkeep = t => { const u = S.unitStats(t); return u.pr.m[1] * u.s; };
+const sized = (r, comp, n) => { if (opt('--parity') !== 'manpower') return counts(comp, n); const avg = CATS.reduce((t, c) => t + (comp[c] || 0) * upkeep(r[c]), 0); return counts(comp, Math.round(n * upkeep(r.hc) / avg)); };
 const army = (s, tier, comp, n, roster) => {
-	const k = counts(comp, n), r = roster || SIDES[s][tier];
+	const r = roster || SIDES[s][tier], k = sized(r, comp, n);
 	return { name: s, formation: comp.f || 'balanced', general: SIDES[s].general, country: country(s, tier), units: CATS.filter(c => k[c]).map(c => ({ type: r[c], count: k[c] })) };
 };
 const keyOf = c => CATS.map(k => Math.round((c[k] || 0) * 100)).join('/') + (c.f === 'cav_inf_cav' ? ' cic' : '');
@@ -117,8 +120,8 @@ async function solveGame(ta, tb, regs, o, rosterA, rosterB) {
 		if (gb >= o.tol) B.push(bb.c);
 	}
 	M = await matrix(); eq = solve(M);
-	const pick = (set, w) => set.map((c, i) => ({ c, p: w[i] })).filter(x => x.p >= 0.03).sort((x, y) => y.p - x.p).map(x => ({ comp: nameOf(x.c), c: x.c, p: x.p, regiments: counts(x.c, regs) }));
-	return { ta, tb, regs, spain: pick(A, eq.p), lotharingia: pick(B, eq.q), spainWins: eq.p.reduce((t, p, i) => t + p * eq.q.reduce((u, q, j) => u + q * M[i][j], 0), 0), battles: [...memo.keys()].reduce((t, k) => t + 2 * +k.split('|')[2], 0) };
+	const pick = (set, w, r) => set.map((c, i) => ({ c, p: w[i] })).filter(x => x.p >= 0.03).sort((x, y) => y.p - x.p).map(x => ({ comp: nameOf(x.c), c: x.c, p: x.p, regiments: sized(r, x.c, regs) }));
+	return { ta, tb, regs, spain: pick(A, eq.p, rosterA || SIDES.SPA[ta]), lotharingia: pick(B, eq.q, rosterB || SIDES.LOT[tb]), spainWins: eq.p.reduce((t, p, i) => t + p * eq.q.reduce((u, q, j) => u + q * M[i][j], 0), 0), battles: [...memo.keys()].reduce((t, k) => t + 2 * +k.split('|')[2], 0) };
 }
 // ---- concrete questions: mode "checks"
 const custom = (s, tier, units, extra = {}) => ({ name: s, formation: 'balanced', general: SIDES[s].general, country: { ...country(s, tier), ...extra }, units });
