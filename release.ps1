@@ -36,7 +36,7 @@ if ($version -match '^(.*?)(\d+)$') {
     throw "Version '$version' does not end in a number - aborting before archive."
 }
 
-$zipName = "ArsBelliMod_$version.zip"
+$zipName = "ArsBelliQuickCampaign_$version.zip"
 $zipPath = Join-Path $sourceDir $zipName
 
 # Directories and files to include (matching deploy.ps1)

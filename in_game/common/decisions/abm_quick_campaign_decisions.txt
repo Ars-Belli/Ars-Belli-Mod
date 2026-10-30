@@ -1,0 +1,39 @@
+﻿# QUICK CAMPAIGN: one use per country. The AI leaves it to the players.
+abm_qc_diplomatic_shelter_decision = {
+	decision_category = other_decisions
+	hide_repeatable_tag = yes
+
+	potential = {
+		NOT = { has_variable = abm_qc_diplomatic_shelter_used }
+	}
+
+	allow = {
+		custom_tooltip = {
+			text = abm_qc_small_country_only_tt
+			abm_qc_is_small_country = yes
+		}
+	}
+
+	ai_will_do = { value = -1 }
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	illustration_scope = {
+		event_illustration_government_estate_effect = yes
+	}
+
+	option = {
+		name = abm_qc_diplomatic_shelter_decision.a
+		ai_chance = { value = 100 }
+		effect = {
+			set_variable = abm_qc_diplomatic_shelter_used
+			add_country_modifier = {
+				modifier = abm_qc_diplomatic_shelter
+				years = 20
+			}
+		}
+	}
+}

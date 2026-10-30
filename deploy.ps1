@@ -3,7 +3,7 @@
 
 # Define source and destination paths
 $sourceDir = $PSScriptRoot
-$destDir = Join-Path ([Environment]::GetFolderPath('MyDocuments')) "Paradox Interactive\Europa Universalis V\mod\ArsBelliMod"
+$destDir = Join-Path ([Environment]::GetFolderPath('MyDocuments')) "Paradox Interactive\Europa Universalis V\mod\ArsBelliQuickCampaign"
 
 # Ensure destination directory exists and is empty
 if (-not (Test-Path -Path $destDir)) {
