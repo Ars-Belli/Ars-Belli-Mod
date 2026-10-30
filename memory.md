@@ -157,6 +157,14 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - `alliance_can_exist` (abm_alliance_overrides) + `abm_vision_sharing` also block vs player-coalition target, same as vanilla coalition.
 - Loc: `main_menu\localization\english\abm_player_coalition_l_english.yml`.
 
+### 3m. Plague spread crash (1.3.11 only)
+- Crash: AV on `Network/Session thread`, top frame `ffxFsr2ResourceIsNull (+ 18700188)` = eu5+0x4b0b0cc, daily tick, disease spread. Found 2026-10-30, 1568 MP game (SPA client). Reload no help.
+- Why: spread pass for each infected regiment (X) keep pointer to X slot in outbreak hash map, then loop army mates (Z) and insert Z in same map. Insert can grow map (probe cap or load 0.9); old table freed; next Z read stale pointer. Only 2 hash-map stale site: this one. Location -> unit inserts refetch pointer, safe.
+- Fix: `NSpreadable.ESTIMATED_MIXING_WITHIN_UNITS = 0` in `loading_screen\common\defines\01_abm_defines.txt`. Value 0 = insert never run. Side effect: regiment no catch disease from army mates, only from infected location.
+- Machine dependent: read of freed table only crash if allocator decommit block; other clients read old data and go on, so one client die while others keep going (PAP save same date as crash).
+- Map entries clear each pass but storage stay; load start small, so reload grow table again and hit same crash.
+- 1.4.6 read X value once before loop, bug gone. Drop the define on 1.4.
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.
