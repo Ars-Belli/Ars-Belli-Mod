@@ -6,7 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 if (process.argv[2]) process.env.EU5_GAME = process.argv[2];
-const { GAME, MOD, loadDb } = require('./paradox.js');
+const { GAME, MOD, loadDb, parse } = require('./paradox.js');
 const OUT = path.join(__dirname, 'units.json');
 
 const ADDITIVE = new Set(['max_strength', 'combat_power', 'frontage', 'combat_speed', 'initiative', 'flanking_ability',
@@ -15,6 +15,15 @@ const ADDITIVE = new Set(['max_strength', 'combat_power', 'frontage', 'combat_sp
 
 const cats = loadDb('in_game/common/unit_categories');
 const types = loadDb('in_game/common/unit_types');
+// DLC folders (game/dlc/<name>/in_game/common/unit_types) hold units the base folder lacks, e.g. D009's Maghreb and Iberian levies.
+// The mod does not override them, so they are added as they are, never over an existing key.
+const DLC_DIR = path.join(GAME, 'dlc');
+const dlcs = fs.existsSync(DLC_DIR) ? fs.readdirSync(DLC_DIR).map(d => path.join(DLC_DIR, d)) : [];
+for (const d of dlcs) {
+	const dir = path.join(d, 'in_game/common/unit_types');
+	if (!fs.existsSync(dir)) continue;
+	for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.txt'))) for (const [k, v] of parse(fs.readFileSync(path.join(dir, f), 'utf8'))) if (Array.isArray(v) && !types[k]) types[k] = v;
+}
 
 // Prices (in_game/common/prices): <category>_build / _reinforce / _maintenance plus unit-specific adds (<unit>_build...).
 // Stored per unit as [gold, manpower]; the engine scales gold per 100 men and manpower per man.
@@ -58,7 +67,7 @@ function own(key, seen = new Set()) {
 
 // English names
 const names = {};
-for (const root of [GAME, MOD]) {
+for (const root of [GAME, ...dlcs, MOD]) {
 	for (const sub of ['main_menu/localization/english', 'in_game/localization/english']) {
 		const dir = path.join(root, sub);
 		if (!fs.existsSync(dir)) continue;

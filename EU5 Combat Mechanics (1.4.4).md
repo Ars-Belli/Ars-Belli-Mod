@@ -444,6 +444,118 @@ So **+0.1 tactics ≈ +5% discipline ≈ +1 commander die ≈ +20 experience**, 
 
 ---
 
+## 11b. Army composition: the meta by age (simulated, 1.4 rules)
+
+Scripts: `analysis/army_meta.js` (regular armies, wars, the levy game) and `analysis/levy_meta.js` (levies, Morocco, steppe hordes). Run 2026-10-30 with `units.json` built from 1.4.6. **None of this applies to 1.3**: see the table at the end of this section.
+
+**Method.** Composition is treated as a symmetric zero-sum game and solved by double oracle: keep a small set of armies, solve its equilibrium, search a whole grid for the best counter to that equilibrium, add it, repeat until nothing beats the equilibrium by more than 1 point. So the answer is not limited to a list of guesses. A strategy is regiment shares over heavy and light infantry, heavy and light cavalry and artillery, in steps of 10%, plus the formation (`balanced_army` and `cav_inf_cav` are the only presets). Both sides have generals 60/59/61, Spain 1547's discipline and morale, army tradition 20, experience 0.37 and every universal advance of the age; frontage 10; a budget of 30 regiments of heavy cavalry (ages I–IV) or heavy infantry (ages V–VI). No universal advance gives one category power, so the ages themselves favour nobody except through combined arms (+1% a type at ages IV and VI).
+
+### Regular armies
+
+Best army per parity view (hi/li = heavy/light infantry, hc/lc = heavy/light cavalry). The percentage is its win rate against the best pure army, 3,000 battles, 95% range about ±1.7.
+
+| Age | Equal regiments | Equal manpower upkeep | Equal gold |
+|---|---|---|---|
+| I, III | 100 hc | 100 hc | 100 lc |
+| II | 10hi 10li 40hc 40lc, 54% vs hc | 100 hc | 100 lc |
+| IV | 40hi 30li 20hc 10lc, 64% vs hi | 10hi 10li 40hc 40lc, 57% vs hc | 20hi 40li 40lc, 55% vs li |
+| V | 40hi 40li 10hc 10lc, 59% vs hi | 20hi 10li 40hc 30lc, 63% vs hc (three other mixes share the equilibrium) | 100 li |
+| VI | 40hi 40li 10hc 10lc, 58% vs hi | 30hi 30li 20hc 20lc, 76% vs hi | 95li 5lc, 55% vs li |
+
+- **Mixing has no synergy of its own: the whole advantage is the combined-arms bonus.** With the bonus off, the equilibrium is 100 hc through age III, a tie at age IV (50.7%), and **100 hi at equal regiments from age V** (100 hc through age V at equal manpower). That is the MP meta as players describe it.
+- **The bonus is a cliff.** One category at 50% or more gives 0 (the game's own text: "an army cannot have 50% or more regiments of the same category"). So a 60% infantry army shows nothing, while 40/40/10/10 gets +14% (ages IV–V) or +18% (age VI) on all damage.
+- **It needs the two Combined Arms advances.** At the base 2.5% a type, ages V and VI at equal regiments go back to 100 hi; age IV stays mixed (59%).
+- **Artillery is in no equilibrium** (at most a 6% weight). Field battles only; sieges are not modelled.
+- **The formation hardly matters.** `balanced_army` alone gives the same armies and 57–71% against the best pure army, so the result does not rest on the approximated `cav_inf_cav` placement.
+- **Stable under stress.** 60-regiment budgets (over the line's 40 regiments): same shape, mixed armies 67–75%, except that age IV at equal manpower goes back to 100 hc. Hills with woods: same shape, 60–63%. `DAYS_PER_PHASE = 2`: same shape, 56–73%.
+
+**Wars of attrition change the answer.** Share of wars won by the best mixed army (500 wars, same manpower income, undecided wars count half). The first figure is same regiments, the second same upkeep:
+
+| Age | vs 100 hc, fight when reinforced, 120 months | vs 100 hc, every 2 months, 48 months | vs 100 hi, fight when reinforced | vs 100 hi, every 2 months |
+|---|---|---|---|---|
+| IV | 0% / 4% | 30% / 46% | 98% / 100% | 74% / 100% |
+| V | 0% / 7% | 26% / 40% | 79% / 100% | 57% / 94% |
+| VI | 37% / 67% | 99% / 97% | 78% / 98% | 58% / 83% |
+
+Pure cavalry beats the mix in long wars through age V even while losing most of the battles: at age V, equal regiments, the mix wins 75% of the battles and 0% of the wars, because it loses 168k men to cavalry's 109k. Mixed armies are the answer for the battle that decides a war, cavalry for grinding one out. At age VI the mix takes over at equal upkeep (67%, 97%) and with frequent battles (99%), but still loses at equal regiments when both fight only fully reinforced (37%). The late-age verdict depends on battle spacing, as in section 16.
+
+### Levies
+
+Levy regiments needed to match 30 regulars of the meta (levy combat efficiency +10%):
+
+| Age | All infantry | 25% knights | All knights |
+|---|---|---|---|
+| II | 50 | 44 | 34 |
+| III | 50 | 45 | 35 |
+| IV | 44 | 42 | 38 |
+| V | 43 | 42 | 42 |
+| VI | 42 | 42 | 48 |
+
+- **In a line slot a levy is worth about 0.6–0.7 of a regular.** Swapping 10% of 30 regulars for levy infantry drops the win rate to 35–46%, 25% to 17–26%. Never replace regulars.
+- **On top of regulars they decide battles.** +10 levies on 30 regulars wins 95–99% against the same 30 alone. They cost no manpower and fit in the line's free slots. Bringing them in behind, as the line needs them, gives the same result.
+- **Knights are the best levy per regiment** through age IV. At age VI infantry passes them.
+- **Levy combat efficiency is worth buying.** At break-even size, +30% wins 61–69% and +100% wins 82–93%, against 53–57% at +10%.
+
+**The levy meta, with both sides raising 30 free levies** (`army_meta.js regulars --levies 30`, knights 0, 25 or 50% of the levies):
+
+| Age | Regulars + levies | Against the best pure regular army + levies |
+|---|---|---|
+| II | 6hi 6li 12hc 6lc + 50% knights | 73% |
+| III | 6hi 12hc 12lc + 50% knights | 73% |
+| IV | 18hi 6hc 6lc + 50% knights | 60% |
+| V, VI | 30 hi + 25% knights | (is the best pure army) |
+
+Levies count for combined arms by category, so they fill the categories cheaply and mixing wins from age II, not age IV. Knights are capped by nobles in play (roughly 10% of levy regiments from typical pop shares, 20–25% with Enforced Service), so the 50% rows are a ceiling.
+
+### Tribal levies: Morocco
+
+Morocco's real levy is not `a_tribesmen`. D009's `levy_sanhaja_camel_cavalry` and `levy_zenati_horse` use `levy_generic_noble_cavalry_size`, **10% of tribesmen** against the usual 2%, and raise age I units of 200 men with +25% morale damage done. They never scale. The advances need only `feudalism_advance`.
+
+- **Culture status is the switch.** Sanhaja are Tolerated at the start (×0.25, levy maximum 25.6k in a 1337 save), and once Accepted their 410k tribesmen raise 41k men: 205 regiments, exactly what a 1372 save fielded.
+- **Men come from pops.** A smaller `max_strength` means more regiments for the same men, not fewer men. Frontage counts regiments, so small regiments get relatively weaker every age.
+- **It is close to one-shot.** The 1372 maximum of 65k had fallen to 12.9k by 1378 (`LEVY_RECOVERY_MONTHS` 240).
+
+| Age | Sanhaja to match 30 hc / 30 hi | One 30-regiment stack vs 30 hc / 30 hi | Whole levy worth, in hc / hi regiments | Same 2.2M people, no tribes |
+|---|---|---|---|---|
+| I, Tolerated (100 regiments, 26k) | 39 / 34 | 1% / 12% | 59 / 83 | 41 / 48 |
+| I, Accepted (246, 55k) | | | 151 / over 400 | |
+| II, Tolerated (91, 26k) | 99 / 61 | 0% / 0% | 31 / 40 | 25 / 28 |
+| II, Accepted (237, 55k) | | | 54 / 89 | |
+| III, as fielded (250, 55k) | 192 / 73 | 0% / 0% | 36 / 80 | 17 / 19 |
+
+- **Strong in the mass, weak in a stack.** The whole levy is worth 1–5 regular armies for no manpower, two to four times a plain country's at age III. But most armies the player actually fielded in 1372 held 19–36 regiments, and at that size they lose almost every battle against 30 regulars from age II.
+- **Depth favours cavalry.** Past the line, slow infantry reserves (20% a day) can't refill it, and an empty line loses however many wait behind it. That is why a big levy can be worth "over 400" infantry regiments.
+- **Sparse terrain** (Sanhaja +20%) moves the age I stack vs 30 hi from 12% to 34%, and elsewhere changes little.
+- **Not checked against a real battle.** Saves keep battle records only for wars still running, and the 1372 war had no levy battle. Regiment counts, men and maximum morale were checked on saves: levies reach the same 4.53 as regulars. A 250-regiment stack's supply and attrition are not modelled.
+
+### Steppe hordes: what the Ars Belli size change does
+
+`a_steppe_horde` is 200 men (vanilla 600) and `a_late_steppe_horde` is 400 from its age II advance on (section 14). Same men either way, so the table compares the same horde in both sizes:
+
+| Horde | Age I, worth in hc regiments | Age II | Age III |
+|---|---|---|---|
+| 24k men | 67 (vanilla 108) | 40 (43) | 27 (29) |
+| 48k men | 133 (266) | 67 (86) | 42 (49) |
+| 96k men | 260 (over 400) | 133 (173) | 67 (89) |
+
+Small hordes barely change: the men needed to match 30 regulars are 8.6k against 9.0k at age I. It bites once a horde is well past the line: 38–50% at age I, 14–25% at ages II–III.
+
+### 1.3 is a different game
+
+Read from the installed 1.3 files on 2026-10-30. A meta for 1.3 needs its own ruleset; these numbers don't carry over.
+
+| | 1.3 | 1.4 |
+|---|---|---|
+| Cavalry combat power | 4.0 at every age | 2.6, 2.6, 2.6, 2.85, 3.25, 3.25 |
+| Cavalry damage taken | 0.75 | 0.30 |
+| Flanking, heavy / light cavalry | 2.0 / 2.1 | 1.6 / 1.6 |
+| Levy discipline | −10% | −20% |
+| Morocco's D009 levies | not in the game | 10% of tribesmen |
+| Combat tick | every 2 hours | daily |
+| Combined arms rule and advances, infantry and artillery power and sizes, cavalry sizes, levy sizes | same | same |
+
+---
+
 ## 12. Sieges *(partly code; marked per line)*
 
 **Phase length** *(code, `0x143462cb0`; the arithmetic of the modifiers not finished)*: a siege rolls once per phase. The base is `DAYS_PER_SIEGE_PHASE` **30** days with a fort, `DAYS_PER_SIEGE_PHASE_WITHOUT_FORT` **15** without, and never under `MIN_DAYS_PER_SIEGE_PHASE` **7**. It is changed by the besieger's `siege_ability`, the fort's defence (`global_defensive` + `local_defensive`), the spy network and culture war; the tooltip reads "Siege phases are X (±Y%) days long".
@@ -500,6 +612,8 @@ So **+0.1 tactics ≈ +5% discipline ≈ +1 commander die ≈ +20 experience**, 
 - Levy focus, Enforced Service: Nobles Levy Size +30% (nobles raise the cavalry levies; France's French Heritage gives the same). Levy knights (Mailed Knights, Plated Knights, Cavaliers…) take 25% less strength and morale damage than regular heavy cavalry, which offsets part of the levy penalties.
 - Army Morale Movement Cost −0.14% on Trained March (Quality) and Unrelenting Advance (Maneuver); see section 7 for what it is worth.
 - `high_horde_unity`: discipline +5% (vanilla +10%). `horde_army_expectation`: land morale −10% (vanilla −50%).
+- Steppe unit sizes: `a_steppe_horde` and `a_steppe_horse_archers` lose vanilla's +0.4 `max_strength` (200 men, not 600). `a_late_steppe_horde` (400 men, advance `abm_steppe_renaissance_levy`, age II) takes over from `a_steppe_horde`. Levy men come from pops, so this means more, smaller regiments, not fewer men; section 11b has what that is worth.
+- Morocco's D009 levies (Sanhaja, Zenata) and the tribal levies are vanilla: no Ars Belli file changes their units, levy sizes or pops.
 - Mercenary hiring costs back to vanilla (2026-10-28).
 - No combat defines are overridden (`01_abm_defines.txt` only touches war score, war worth, food depots and loans).
 
@@ -564,7 +678,7 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 | File | What it is |
 |---|---|
 | `engine.js` | The rules of this document as code. Runs in the browser and in Node. |
-| `units.json` | Every army unit type of vanilla 1.4.4 + Ars Belli with its effective stats, plus terrain. Rebuild with `node .tools/scripts/battle_sim/build_units.js` after a game update or a unit change. |
+| `units.json` | Every army unit type of vanilla 1.4.4, the DLC folders and Ars Belli with its effective stats, plus terrain. Rebuild with `node .tools/scripts/battle_sim/build_units.js` after a game update or a unit change. It reads the installed game, so never rebuild it while 1.3 is installed. |
 | `sim.js` | Command line: `node .tools/scripts/battle_sim/sim.js <scenario.json> [--runs 2000] [--seed 1] [--sample] [--json] [--campaign [battles]] [--months 3]`; `--units <text>` lists unit types matching a key or name. It always prints costs; `--campaign` adds the war of attrition. |
 | `scenarios/` | Scenario files; `example_river_hills.json` shows every field. |
 | `battle-sim.html` | The page (publish with `engine.js` and `units.json` as supporting files). |
