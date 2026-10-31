@@ -470,15 +470,57 @@
 	}
 
 	// Levies (0x143354880): the levy each pop raises and its men.
+	// Levy conditions: country_allow on the owner, allow on the pop (levies/readme.txt). A key this doesn't model counts as false and lands in levyUnknown, so a gap shows.
+	const levyUnknown = new Set();
+	const stripKey = v => String(v).replace(/^[a-z_]+:/, '');
+	let regionOf = null; // location key -> region, built once
+	function levyCondition(pairs, x, mode = 'AND') {
+		const { pop, L, C, scope } = x, out = [];
+		for (const [k, op, v] of pairs) {
+			let r;
+			if (k === 'AND' || k === 'OR') r = levyCondition(v, x, k);
+			else if (k === 'NOT' || k === 'NOR') r = !levyCondition(v, x, 'OR');
+			else if (k === 'NAND') r = !levyCondition(v, x, 'AND');
+			else if (k === 'custom_tooltip') r = levyCondition(v.filter(([q]) => q !== 'text'), x);
+			else if (k === 'location') r = !!L && levyCondition(v, { ...x, scope: 'location' });
+			else if (k === 'owner') r = levyCondition(v, { ...x, scope: 'country' });
+			else if (k === 'market') r = levyCondition(v, { ...x, scope: 'market' });
+			else if (k === 'has_dlc') r = (DB.dlcs || []).includes(String(v).toLowerCase());
+			else if (k === 'current_year') r = compare(L ? L.year : C.year, op, +v);
+			else if (k === 'region') { regionOf ??= new Map(DB.locations.map(l => [l[0], DB.regions[l[14]]])); r = !!L && regionOf.get(L.key) === stripKey(v); }
+			else if (k === 'has_estate_privilege') r = (C.privileges || []).includes(stripKey(v));
+			else if (k === 'has_reform') r = (C.reforms || []).includes(stripKey(v));
+			else if (k === 'has_policy') r = (C.policies || []).includes(stripKey(v));
+			else if (k === 'has_advance') r = (C.advances || []).includes(stripKey(v));
+			else if (k === 'has_or_had_tag' || k === 'tag') r = C.tag === stripKey(v);
+			else if (k === 'government_type') r = C.government === stripKey(v);
+			else if (k === 'country_type') r = String(C.countryType || '').toLowerCase() === stripKey(v).toLowerCase();
+			else if (k === 'culture') r = (scope === 'pop' && pop ? pop.cultureKey : C.primaryCultureKey) === stripKey(v);
+			else if (k === 'religion') r = (scope === 'pop' && pop ? pop.religionKey : C.religionKey) === stripKey(v);
+			else if (k === 'pop_type') r = !!pop && pop.type === stripKey(v);
+			else if (k === 'raw_material') r = L.rawMaterial === stripKey(v);
+			else if (k === 'has_building_with_at_least_one_level') r = L.buildings.some(b => b.type === stripKey(v));
+			else if (k === 'is_produced_in_market') r = !!(L.marketGoods && L.marketGoods.includes(stripKey(v)));
+			else if (k === 'has_primary_or_accepted_culture') r = !!pop && (pop.status === 'Primary' || pop.status === 'Accepted');
+			else if (k.startsWith('modifier:')) r = C.mods.raw(k.slice(9)) > 0;
+			else if (DB.levyTriggers && DB.levyTriggers[k]) r = levyCondition(DB.levyTriggers[k], x) === (v !== 'no');
+			else { levyUnknown.add(k); r = false; }
+			out.push(r);
+		}
+		return mode === 'OR' ? out.some(Boolean) : out.every(Boolean);
+	}
 	function availableLevies(C, age) {
 		const out = [];
 		for (const [k, l] of Object.entries(DB.levies)) {
-			if (l.countryAllow || l.allow || (l.cultures && l.cultures.length) || !l.power) continue; // flavour levies need triggers the simulator cannot check
+			if (!l.power) continue;
+			if (l.countryAllow && !levyCondition(l.countryAllow, { C, scope: 'country' })) continue;
 			const ok = !l.unlock ? true : C.advances ? l.unlock.some(([a]) => C.advances.includes(a)) : l.unlock.some(([, ag]) => ag <= age);
 			if (ok) out.push([k, l]);
 		}
 		return out;
 	}
+	const levyFits = (l, p, L, C) => (!l.pops.length || l.pops.includes(p.type)) && (!(l.cultures && l.cultures.length) || l.cultures.includes(p.cultureKey))
+		&& (!l.allow || levyCondition(l.allow, { pop: p, L, C, scope: 'pop' }));
 	function levies(L, M, C) {
 		const ctrl = Math.max(L.control, MILITARY_CONTROL_FLOOR);
 		const avail = availableLevies(C, L.age);
@@ -489,7 +531,7 @@
 			const kind = navy ? 'navy' : 'army';
 			const cands = avail.filter(([, l]) => !!l.navy === navy);
 			for (const p of L.pops) {
-				const pick = cands.filter(([, l]) => !l.pops.length || l.pops.includes(p.type)).sort((a, b) => b[1].power - a[1].power)[0];
+				const pick = cands.filter(([, l]) => levyFits(l, p, L, C)).sort((a, b) => b[1].power - a[1].power)[0];
 				if (!pick) continue;
 				const [key, l] = pick;
 				const size = typeof l.size === 'number' ? l.size : DB.values[l.size] ?? 0;
@@ -498,7 +540,7 @@
 				const culture = p.status === 'Primary' || p.status === 'Accepted' ? 1 : wrong;
 				const mult = 1 + M.get('local_levy_size_modifier') + M.get(`local_${kind}_levy_size_modifier`) + C.mods.raw(`${p.estate}_levy_size`);
 				const men = satisfied ? p.size * size * culture * mult * ctrl * L.levyRecovery : 0;
-				rows.push({ kind, levy: key, unit: l.unit, cat: l.cat, popType: p.type, status: p.status, popSize: p.size, size, culture, mult, satisfied, men, regimentSize: l.men });
+				rows.push({ kind, levy: key, unit: l.unit, cat: l.cat, popType: p.type, status: p.status, cultureKey: p.cultureKey, popSize: p.size, size, culture, mult, control: ctrl, recovery: L.levyRecovery, satisfied, men, regimentSize: l.men });
 			}
 		}
 		const sum = kind => rows.filter(r => r.kind === kind).reduce((a, r) => a + r.men, 0);
@@ -718,7 +760,7 @@
 	}
 	const priceStep = (p, target) => p + def('NMarket', 'MONTHLY_PRICE_CHANGE', 0.05) * (target - p);
 
-	const api = { setData, setTracking, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
+	const api = { levyUnknown, setData, setTracking, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
 		maxLevel, employmentSize, methodOf, methodsOf, fillOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, devProsperity, maxRgo, tax, control, evaluate, advance, project, targetPrice, priceStep,
 		MILITARY_CONTROL_FLOOR, get DB() { return DB; } };
 	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.LocationSim = api;

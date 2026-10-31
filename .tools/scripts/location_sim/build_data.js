@@ -48,9 +48,11 @@ function parseOps(text) {
 	};
 	return block();
 }
-function loadDbOps(rel) {
+const dlcRoot = path.join(GAME, 'dlc');
+const dlcFolders = fs.existsSync(dlcRoot) ? fs.readdirSync(dlcRoot).sort() : [];
+function loadDbOps(rel, opts = {}) {
 	const files = new Map();
-	for (const root of [GAME, MOD]) {
+	for (const root of [GAME, ...(opts.dlc ? dlcFolders.map(d => path.join(dlcRoot, d)) : []), MOD]) {
 		const dir = path.join(root, rel);
 		if (fs.existsSync(dir)) for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.txt'))) files.set(f.toLowerCase(), path.join(dir, f));
 	}
@@ -214,19 +216,27 @@ for (const [k, v] of Object.entries(loadDb('in_game/common/building_types'))) {
 // A pop raises the eligible levy whose unit has the highest total combat power (levies/readme.txt):
 // max_strength x combat_power x (1 + initiative x 0.025) x (1 + (flanking - 1) x 0.3) x (1 + mdd)(1 - mdt)(1 + sdd)(1 - sdt)
 const AGE_N = { age_1_traditions: 1, age_2_renaissance: 2, age_3_discovery: 3, age_4_reformation: 4, age_5_absolutism: 5, age_6_revolutions: 6 };
-const advancesDb = loadDb('in_game/common/advances');
+const advancesDb = loadDb('in_game/common/advances', { dlc: true });
 const unlockedBy = {};
 for (const [ak, av] of Object.entries(advancesDb))
 	for (const lv of all(av, 'unlock_levy')) (unlockedBy[lv] ??= []).push([ak, AGE_N[scalar(av, 'age')] || 0]);
 const UNITS = JSON.parse(fs.readFileSync(path.join(__dirname, '../battle_sim/units.json'), 'utf8')).units;
+// condition blocks keep their operators: [key, op, value]
+const levyOps = loadDbOps('in_game/common/levies', { dlc: true });
+const condition = (k, key) => ((levyOps[k] || []).find(([x]) => x === key) || [])[2];
 const levies = {};
-for (const [k, v] of Object.entries(loadDb('in_game/common/levies'))) {
+for (const [k, v] of Object.entries(loadDb('in_game/common/levies', { dlc: true }))) {
 	const u = UNITS[scalar(v, 'unit')];
 	levies[k] = { unit: scalar(v, 'unit'), size: scalar(v, 'size'), pops: all(v, 'allowed_pop_type'), cultures: all(v, 'allowed_culture'),
-		...(get(v, 'country_allow') ? { countryAllow: 1 } : {}), ...(get(v, 'allow') ? { allow: 1 } : {}), ...(get(v, 'allow_as_crew') ? { navy: 1 } : {}),
+		...(condition(k, 'country_allow') ? { countryAllow: condition(k, 'country_allow') } : {}), ...(condition(k, 'allow') ? { allow: condition(k, 'allow') } : {}), ...(get(v, 'allow_as_crew') ? { navy: 1 } : {}),
 		...(unlockedBy[k] ? { unlock: unlockedBy[k] } : {}),
 		...(u ? { cat: u.c, age: u.a, men: u.s, power: +(u.s * u.p * (1 + u.i * 0.025) * (1 + (u.fl - 1) * 0.3) * (1 + u.mdd) * (1 - u.mdt) * (1 + u.sdd) * (1 - u.sdt)).toFixed(5) } : {}) };
 }
+
+// scripted triggers the levy conditions call, directly or through each other
+const allTriggers = loadDbOps('in_game/common/scripted_triggers', { dlc: true }), levyTriggers = {};
+const collect = t => { for (const [k, , v] of t) { if (allTriggers[k] && !levyTriggers[k]) { levyTriggers[k] = allTriggers[k]; collect(levyTriggers[k]); } if (Array.isArray(v)) collect(v); } };
+for (const l of Object.values(levies)) { if (l.countryAllow) collect(l.countryAllow); if (l.allow) collect(l.allow); }
 
 // ---- terrain
 function terrain(rel) {
@@ -254,17 +264,18 @@ for (const m of readText('in_game/map_data/location_templates.txt')[0].matchAll(
 	locations.push([m[1], o.topography || '', o.vegetation || '', o.climate || '', o.raw_material || '', o.natural_harbor_suitability ? +o.natural_harbor_suitability : 0, o.culture || '', o.religion || '', 0, 0]);
 }
 // province and area of every location (map_data/definitions.txt: continent > subcontinent > region > area > province { locations });
-// appended as [10] province index into `provinces`, [11] area index into `areas`, [13] continent index into `continents`
-const provinces = [], areas = [], continents = [];
+// appended as [10] province index into `provinces`, [11] area index into `areas`, [13] continent index into `continents`, [14] region index into `regions`
+const provinces = [], areas = [], regions = [], continents = [];
 {
 	const idOf = new Map(locations.map((l, i) => [l[0], i]));
 	const stack = [];
 	for (const tok of readText('in_game/map_data/definitions.txt')[0].replace(/^﻿/, '').replace(/#[^\n]*/g, '').match(/\{|\}|[^\s{}=]+/g)) {
 		if (tok === '{') continue;
 		if (tok === '}') { stack.pop(); continue; }
-		if (stack.length === 5) { const i = idOf.get(tok); if (i !== undefined) { locations[i][10] = provinces.length - 1; locations[i][11] = areas.length - 1; locations[i][13] = continents.length - 1; } continue; }
+		if (stack.length === 5) { const i = idOf.get(tok); if (i !== undefined) { locations[i][10] = provinces.length - 1; locations[i][11] = areas.length - 1; locations[i][13] = continents.length - 1; locations[i][14] = regions.length - 1; } continue; }
 		stack.push(tok);
 		if (stack.length === 1) continents.push(tok);
+		if (stack.length === 3) regions.push(tok);
 		if (stack.length === 4) areas.push(tok);
 		if (stack.length === 5) provinces.push(tok);
 	}
@@ -364,9 +375,9 @@ const data = {
 	built: new Date().toISOString().slice(0, 10), game: '1.4.4',
 	defines: Object.fromEntries(KEEP_DEFINES.filter(s => defines[s]).map(s => [s, defines[s]])),
 	values, scripted: keptScripted, pops, estates, ranks, ages, roadTypes, townRights, locationObjects, static: staticMods, countryBase,
-	goods, methods, demands, prices, buildings, levies,
+	goods, methods, demands, prices, buildings, levies, levyTriggers, dlcs: dlcFolders.map(d => d.toLowerCase()),
 	terrain: { topography: terrain('in_game/common/topography'), vegetation: terrain('in_game/common/vegetation'), climate: terrain('in_game/common/climates') },
-	locations, provinces, areas, continents, modifierTypes, names,
+	locations, provinces, areas, regions, continents, modifierTypes, names,
 };
 fs.writeFileSync(OUT, JSON.stringify(data));
 console.log('wrote', OUT, (fs.statSync(OUT).size / 1024).toFixed(0) + ' KB:', Object.keys(buildings).length, 'buildings,', Object.keys(methods).length,

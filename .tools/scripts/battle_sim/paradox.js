@@ -50,9 +50,12 @@ function parse(text) {
 // A database folder from vanilla then the mod; a mod file with the same name replaces the vanilla file.
 // REPLACE:/INJECT: entries apply after every plain definition, whatever the file order: a mod file such as
 // abm_country.txt sorts before vanilla's country.txt and must still override it.
-function loadDb(rel) {
+// opts.dlc also reads the DLC folders (game/dlc/<name>/...), which load between the base game and the mod
+function loadDb(rel, opts = {}) {
 	const files = new Map();
-	for (const root of [GAME, MOD]) {
+	const dlcRoot = path.join(GAME, 'dlc');
+	const dlcs = opts.dlc && fs.existsSync(dlcRoot) ? fs.readdirSync(dlcRoot).sort().map(d => path.join(dlcRoot, d)) : [];
+	for (const root of [GAME, ...dlcs, MOD]) {
 		const dir = path.join(root, rel);
 		if (!fs.existsSync(dir)) continue;
 		for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.txt')).sort()) files.set(f.toLowerCase(), path.join(dir, f));

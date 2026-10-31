@@ -93,6 +93,10 @@ max manpower      = income × 60  (MAX_MANPOWER_YEARS 5) + flat max_manpower
 
 ## 4. Levies
 
+**Which levy a pop raises** *(levies/readme.txt; checked on the game's rows, 2026-10-31)*: the eligible levy with the highest total combat power, army and navy apart. A levy is eligible if the pop type and culture fit, the country has the advance that unlocks it, `country_allow` holds for the owner and `allow` holds for the pop. DLC levies count, so Morocco's tribesmen raise D009's Sanhaja and Zenata cavalry. `location_sim/levy_report.js` prints a country's levy by unit, and any condition it can't read.
+
+**Recovery.** The Army Levies Recovery panel is the save's `army_levies` per province: Recovered is `current`, Recovered + Missing is `max`, and the percentage is the tooltip's "Recovering since last raise". `max` is the levy at the last raise, not the levy now: Morocco's eight listed provinces hold 12,612 in September 1337, its rows at the April start come to 12,670, and its rows in September to 9,312, because control fell. Only the percentage feeds the rows.
+
 *(code, `0x143354880`; tooltip `POP_LEVY_CALC_FINAL_CALCULATION_*`)*
 
 ```

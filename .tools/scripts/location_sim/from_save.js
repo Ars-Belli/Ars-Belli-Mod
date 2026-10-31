@@ -20,14 +20,20 @@ const isText = !!save.text;
 const N = x => (x === undefined || x === null || x === '' ? undefined : +x);
 const list = x => (x === undefined ? [] : Array.isArray(x) ? x : x.__list || (typeof x === 'object' ? Object.values(x) : String(x).trim().split(/\s+/)));
 
+// a section the save does not have is empty: an early game has no cabinet_manager
+const sectionOf = name => { try { return save.section(name); } catch (e) { return null; } };
 // ---- one entry of a save section (text saves: found by its indentation, without parsing the whole section)
 const INDENT = { countries: '', locations: '\t\t', population: '', market_manager: '', provinces: '', building_manager: '' };
 function entry(section, id) {
 	if (isText) return save.entry(section, id, INDENT[section]);
-	const s = save.section(section);
+	const s = sectionOf(section);
+	if (!s) return null;
 	return (s.database && s.database[id]) || (s.locations && s.locations[id]) || s[id] || null;
 }
 const locKeys = DATA.locations.map(l => l[0]);
+const defOf = (section, id, ...fields) => { if (id === undefined) return undefined; const e = isText ? save.entry(section, id, '') : ((sectionOf(section) || {}).database || {})[id]; for (const f of fields) if (e && e[f]) return e[f]; return undefined; };
+const cultureKey = id => defOf('culture_manager', id, 'culture_definition', 'key', 'definition');
+const religionKey = id => defOf('religion_manager', id, 'key', 'definition');
 const locId = q => /^\d+$/.test(q) ? +q : locKeys.indexOf(q) + 1;
 const locKey = id => locKeys[+id - 1];
 
@@ -65,15 +71,15 @@ function buildingsAt(lid) {
 }
 
 // ---- the owner's country modifiers (a partial sum; see notes)
-const advances = loadDb('in_game/common/advances');
-const laws = loadDb('in_game/common/laws');
-const privileges = loadDb('in_game/common/estate_privileges');
-const reforms = loadDb('in_game/common/government_reforms');
-const societal = loadDb('in_game/common/societal_values');
-const religionsDb = loadDb('in_game/common/religions');
-const traitsDb = loadDb('in_game/common/traits');
-const ordersDb = loadDb('in_game/common/chivalric_orders');
-const ranksDb = loadDb('in_game/common/country_ranks');
+const advances = loadDb('in_game/common/advances', { dlc: true });
+const laws = loadDb('in_game/common/laws', { dlc: true });
+const privileges = loadDb('in_game/common/estate_privileges', { dlc: true });
+const reforms = loadDb('in_game/common/government_reforms', { dlc: true });
+const societal = loadDb('in_game/common/societal_values', { dlc: true });
+const religionsDb = loadDb('in_game/common/religions', { dlc: true });
+const traitsDb = loadDb('in_game/common/traits', { dlc: true });
+const ordersDb = loadDb('in_game/common/chivalric_orders', { dlc: true });
+const ranksDb = loadDb('in_game/common/country_ranks', { dlc: true });
 const policies = {};
 for (const law of Object.values(laws)) for (const [k, v] of law) if (Array.isArray(v) && (get(v, 'country_modifier') || get(v, 'location_modifier'))) policies[k] = v;
 // adds a modifier block to acc, with each key's sources in acc.__src (key -> [[source, value]])
@@ -172,7 +178,7 @@ function countryContext(cid) {
 	}
 	// the state religion's definition_modifier (Lutheranism +3% tax efficiency...)
 	if (c.primary_religion !== undefined) {
-		const rel = isText ? save.entry('religion_manager', c.primary_religion, '') : ((save.section('religion_manager') || {}).database || {})[c.primary_religion];
+		const rel = isText ? save.entry('religion_manager', c.primary_religion, '') : ((sectionOf('religion_manager') || {}).database || {})[c.primary_religion];
 		const key = rel && (rel.key || rel.definition);
 		if (key && religionsDb[key]) addBlock(acc, notes, `religion ${key}`, get(religionsDb[key], 'definition_modifier'));
 	}
@@ -190,7 +196,8 @@ function countryContext(cid) {
 	const year = +String(save.date() || '1337').split('.')[0];
 	const age = +Object.keys(DATA.ages).filter(a => DATA.ages[a].year <= year).sort((a, b) => b - a)[0] || 1;
 	return {
-		id: +cid, tag: tags[cid], year, age, advances: Object.keys(c.researched_advances || {}), capital: N(c.capital), primaryCulture: N(c.primary_culture), acceptedCultures: list(c.accepted_cultures).map(Number),
+		id: +cid, tag: tags[cid], year, age, advances: Object.keys(c.researched_advances || {}), capital: N(c.capital), primaryCulture: N(c.primary_culture), primaryCultureKey: cultureKey(c.primary_culture), religionKey: religionKey(c.primary_religion),
+		countryType: c.country_type, privileges: list(gov.implemented_privileges).map(p => p.object), reforms: list(gov.implemented_reforms).map(r => r.object), policies: Object.values(gov.implemented_laws || {}).map(v => v.object), acceptedCultures: list(c.accepted_cultures).map(Number),
 		religion: N(c.primary_religion), government: gov.type,
 		// inflation raises every gold price (buildings, roads, rank upgrades)
 		inflation: N((c.currency_data || {}).inflation) ?? 0,
@@ -304,7 +311,7 @@ function locationScenario(lid, country) {
 	for (const pid of list((l.population || {}).pops)) {
 		const p = popEntry(pid);
 		if (!p) continue;
-		pops.push({ type: p.type, estate: p.estate, size: N(p.size), status: p.status || 'none', culture: N(p.culture), religion: N(p.religion),
+		pops.push({ type: p.type, estate: p.estate, size: N(p.size), status: p.status || 'none', culture: N(p.culture), religion: N(p.religion), cultureKey: cultureKey(p.culture), religionKey: religionKey(p.religion),
 			satisfaction: N(p.satisfaction) ?? 0, literacy: N(p.literacy) ?? 0, ...(p.building ? { building: N(p.building) } : {}) });
 	}
 	const buildings = buildingsOf(lid).map(b => {
@@ -329,6 +336,8 @@ function locationScenario(lid, country) {
 			integration: l.integration || (l.cores && list(l.cores).map(Number).includes(+l.owner) ? 'core' : 'conquered'),
 			capital: +country.capital === lid, marketCenter: !!market && +market.center === lid, roadToCapital: l.road_to_capital === 'yes',
 			rgoWorkers: N(l.max_raw_material_workers), garrison: N(l.garrison),
+			// the "Army Levies Recovery" panel: recovered / (recovered + missing) of this owner's levies in the province, the tooltip's "Recovering since last raise"
+			...(() => { const e = province && province.army_levies && province.army_levies[l.owner]; return e && +e.max > 0 ? { levyRecovery: Math.min(1, +e.current / +e.max) } : {}; })(),
 			...(townRightsOf(lid).length ? { townRights: townRightsOf(lid) } : {}),
 			...(tradeThrough(lid) ? { trade: tradeThrough(lid) } : {}),
 			// timed location modifiers (event modifiers such as quality_merino_wool) with their size
@@ -375,7 +384,7 @@ function townRightsOf(lid) {
 		rightsByLocation = new Map();
 		const add = (loc, type) => { if (loc && type && type !== 'none') (rightsByLocation.get(String(loc)) || rightsByLocation.set(String(loc), []).get(String(loc))).push(type); };
 		if (isText) for (const m of save.sectionText('townrights_manager').matchAll(/\n\d+=\{\n\tlocation=(\d+)\n\ttype=([a-z_0-9]+)/g)) add(m[1], m[2]);
-		else for (const r of Object.values((save.section('townrights_manager') || {}).database || {})) if (r && typeof r === 'object') add(r.location, r.type);
+		else for (const r of Object.values((sectionOf('townrights_manager') || {}).database || {})) if (r && typeof r === 'object') add(r.location, r.type);
 	}
 	return rightsByLocation.get(String(lid)) || [];
 }
@@ -386,7 +395,7 @@ function roadsAmong(ids) {
 	if (isText) {
 		for (const m of save.sectionText('road_network').matchAll(/from=(\d+)\s+to=(\d+)\s+type=([a-z_]+)/g))
 			if (own.has(+m[1]) && own.has(+m[2])) out.push([+m[1], +m[2], m[3]]);
-	} else for (const r of list((save.section('road_network') || {}).roads)) if (own.has(+r.from) && own.has(+r.to)) out.push([+r.from, +r.to, r.type]);
+	} else for (const r of list((sectionOf('road_network') || {}).roads)) if (own.has(+r.from) && own.has(+r.to)) out.push([+r.from, +r.to, r.type]);
 	return out;
 }
 function maritimeOf(cid) {
@@ -395,7 +404,7 @@ function maritimeOf(cid) {
 		const t = save.sectionText('maritime_manager'), re = /\n\t\t(\d+)=\{([\s\S]*?)\n\t\t\}/g;
 		let m;
 		while ((m = re.exec(t))) for (const p of m[2].matchAll(/power=([\d.\-]+)\s+country=(\d+)/g)) if (p[2] === String(cid)) out[m[1]] = +p[1];
-	} else for (const [z, o] of Object.entries((save.section('maritime_manager') || {}).objects || {}))
+	} else for (const [z, o] of Object.entries((sectionOf('maritime_manager') || {}).objects || {}))
 		for (const p of list((o || {}).presences)) if (String(p.country) === String(cid)) out[z] = +p.power;
 	return out;
 }
@@ -406,7 +415,7 @@ function maritimeOf(cid) {
 // (Spain's 15 heavy ships buy 94 cannons and 375 lumber a month).
 function constructionsOf(cid, own) {
 	const out = [];
-	for (const e of Object.values((save.section('construction_manager') || {}).database || {})) {
+	for (const e of Object.values((sectionOf('construction_manager') || {}).database || {})) {
 		if (!e || typeof e !== 'object' || String(e.country) !== String(cid) || e.type !== 'CIVIL' || !e.has_active_demand || !own.has(+e.location)) continue;
 		const days = (N(e.total) || 0) - (N(e.progress) || 0);
 		if (days > 0) out.push({ location: +e.location, demand: e.demand, days: +days.toFixed(2) });
