@@ -96,6 +96,9 @@ types SubheaderTypes {
 	type diplomatic_relations_content = filtered_sorted_list {
 		datacontext = "[ForeignCountryView.GetDiplomaticRelationsSortSearch]"
 
+		#1.4: dropped the scroll_list_is_empty / _text overrides - vanilla 1.4 omits them here
+		#      and FOREIGN_COUNTRY_LIST_EMPTY no longer resolves (the base type supplies the text)
+
 		blockoverride "scroll_list_setup" {
 			using = layoutpolicy_expanding
 			scrollbarpolicy_horizontal = always_off

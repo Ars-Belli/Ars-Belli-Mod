@@ -80,11 +80,14 @@ abm_china_pirates = {
 	years = 2
 }
 
-abm_china_meritocratic_republic = {
+abm_china_meritocratic_government = {
 	major = yes
 
 	potential = {
-		government_type = government_type:republic
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:republic
+		}
 		culture = { has_culture_group = culture_group:chinese_group }
 		capital = { sub_continent = sub_continent:east_asia }
 	}
@@ -94,18 +97,18 @@ abm_china_meritocratic_republic = {
 	# }
 
 	country_modifier = {
-		global_merchant_capacity_modifier = 0.25
+		global_merchant_capacity_modifier = 0.20
 		trade_income = 0.10
-		global_foreign_build_buildings_efficiency = 0.50
+		global_foreign_build_buildings_efficiency = 0.20
 
-		merchant_maintenance_efficiency = 0.25
-		selling_efficiency = medium_trade_efficiency_bonus
+		merchant_maintenance_efficiency = 0.20
+		selling_efficiency = small_trade_efficiency_bonus
 		import_efficiency = small_trade_efficiency_bonus
 	}
 
-	on_activate = {
-		change_heir_selection = heir_selection:oligarchic_elective
-	}
+	#on_activate = {
+	#	change_heir_selection = heir_selection:oligarchic_elective
+	#}
 
 	years = 2
 }

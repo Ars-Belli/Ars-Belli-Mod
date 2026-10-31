@@ -135,3 +135,15 @@ REPLACE:new_colonial_nation_founded = {
 	local_sand_output_modifier = 1
 	local_iron_output_modifier = 1
 }
+
+# ARS BELLI: consequence of expelling another country's trade posts (abm_expel_fondacos).
+# The victim's merchants are thrown out, so the expelling country's own trade suffers for a while.
+# Mild on purpose - the real deterrent is the cb_destroyed_building the victim receives.
+abm_expelled_foreign_merchants = {
+	game_data = {
+		category = country
+	}
+	trade_income = -0.10
+	global_merchant_capacity_modifier = -0.10
+	trade_range_modifier = -0.10
+}

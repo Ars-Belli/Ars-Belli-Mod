@@ -1,0 +1,108 @@
+﻿# ARS BELLI: the enforcing half of the player-to-player Trade Office Rights system.
+#
+# Revoking the rights deliberately leaves already-built Trade Offices standing (see
+# scripted_relations/abm_trade_office_rights.txt), so this is how a host actually clears them out:
+# it destroys every trade_office the target country holds in the ACTOR's own locations and revokes
+# the rights in the same action, so they cannot simply rebuild.
+#
+# Unilateral - no accept/decline, so it is modelled on worsen_opinion (the mod's other unilateral
+# country action) rather than on the offer-style pay_for_* actions. Mechanically it is vanilla's
+# disband_kontor pattern (peace_treaties/disband_kontor.txt): `location_building_level = {
+# building_type = ... owner = scope:recipient }` finds one specific country's building in a
+# location, and `destroy_building_forcefully` is the forced variant that removes a FOREIGN one.
+#
+# PLAYER-ONLY in both directions, so AI holdings stay exactly as vanilla: the AI never expels
+# anyone, and its own Trade Offices cannot be expelled. Cost is one diplomat.
+
+abm_expel_trade_offices = {
+	type = diplomacy
+	category = CATEGORY_ECONOMY_ACTIONS
+
+	potential = {
+		scope:actor = {
+			is_ai = no
+			has_limited_diplomacy = no
+		}
+		scope:recipient = {
+			is_ai = no
+		}
+	}
+
+	allow = {
+		scope:actor != scope:recipient
+		scope:actor = {
+			num_of_diplomats >= 1
+		}
+		# Kept in allow rather than potential so the entry greys out with a reason instead of the
+		# action vanishing for every country that holds nothing here.
+		custom_tooltip = {
+			text = abm_expel_trade_offices_has_offices_tt
+			scope:actor = {
+				any_owned_location = {
+					location_building_level = {
+						building_type = building_type:trade_office
+						value > 0
+						owner = scope:recipient
+					}
+				}
+			}
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "abm_expel_trade_offices_SELECT_TITLE"
+		none_available_msg_key = "abm_expel_trade_offices_no_countries"
+		column = {
+			data = name
+		}
+		visible = {
+			this != scope:actor
+			within_diplomatic_range = scope:actor
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:recipient
+			}
+			scope:actor = {
+				# Charged inside the guard so a cancelled selection is not billed.
+				add_diplomats = -1
+				every_owned_location = {
+					if = {
+						limit = {
+							location_building_level = {
+								building_type = building_type:trade_office
+								value > 0
+								owner = scope:recipient
+							}
+						}
+						destroy_building_forcefully = "building(building_type:trade_office|scope:recipient)"
+					}
+				}
+				# The rights go with the buildings, otherwise the target just rebuilds next month.
+				if = {
+					limit = {
+						giving_scripted_relation = {
+							type = relation_type:abm_trade_office_rights
+							target = scope:recipient
+						}
+					}
+					remove_relation = {
+						first = scope:actor
+						second = scope:recipient
+						type = relation_type:abm_trade_office_rights
+					}
+				}
+			}
+		}
+	}
+
+	ai_tick = never
+	ai_will_do = {
+		add = -1000
+	}
+}
