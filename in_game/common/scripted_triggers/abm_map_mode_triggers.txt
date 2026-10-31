@@ -1,0 +1,109 @@
+﻿# Ars Belli map modes (in_game/gfx/map/map_modes/abm_map_modes.txt): Bailiffs and Urbanisation.
+# All triggers are location scope.
+
+# Raw goods worth keeping rural and worth a bailiff before the tax base is there:
+# vanilla default_market_price 2.5 or more (goods/00_raw_materials, 01_plantation_goods, 03_food).
+abm_has_high_value_raw_material = {
+	OR = {
+		raw_material = goods:goods_gold		# 8
+		raw_material = goods:silver			# 6
+		raw_material = goods:elephants		# 5
+		raw_material = goods:marble			# 5
+		raw_material = goods:saffron		# 5
+		raw_material = goods:pepper			# 5
+		raw_material = goods:cloves			# 5
+		raw_material = goods:chili			# 5
+		raw_material = goods:silk			# 4
+		raw_material = goods:dyes			# 4
+		raw_material = goods:cocoa			# 4
+		raw_material = goods:ivory			# 4
+		raw_material = goods:salt			# 4
+		raw_material = goods:gems			# 4
+		raw_material = goods:pearls			# 4
+		raw_material = goods:amber			# 4
+		raw_material = goods:horses			# 3
+		raw_material = goods:iron			# 3
+		raw_material = goods:copper			# 3
+		raw_material = goods:tea			# 3
+		raw_material = goods:coffee			# 3
+		raw_material = goods:alum			# 3
+		raw_material = goods:camels			# 3
+		raw_material = goods:mercury		# 3
+		raw_material = goods:cotton			# 3
+		raw_material = goods:sugar			# 3
+		raw_material = goods:tobacco		# 3
+		raw_material = goods:wool			# 2.5
+		raw_material = goods:incense		# 2.5
+	}
+}
+
+# Medium-value raw goods (vanilla default price 1.5 - 2, not food staples). Everything not in
+# a list here is low value: clay, sand (0.5), stone, medicaments (1).
+abm_has_medium_value_raw_material = {
+	OR = {
+		raw_material = goods:lumber			# 1.5
+		raw_material = goods:coal			# 2
+		raw_material = goods:tin			# 2
+		raw_material = goods:lead			# 2
+		raw_material = goods:fiber_crops	# 2
+		raw_material = goods:saltpeter		# 2
+		raw_material = goods:wine			# 2
+		raw_material = goods:beeswax		# 2, food 2.5
+		raw_material = goods:fur			# 2, food 2
+	}
+}
+
+# Food tiers by vanilla food value. A town loses the rural food bonus and makes 10% less food,
+# a city 20% less, so the more food a location makes, the later it should urbanise.
+abm_has_food_8_raw_material = {
+	OR = {
+		raw_material = goods:rice			# 10
+		raw_material = goods:wheat			# 8
+		raw_material = goods:maize			# 8
+		raw_material = goods:potato			# 8
+		raw_material = goods:livestock		# 8
+	}
+}
+
+abm_has_food_5_raw_material = {
+	OR = {
+		raw_material = goods:fish			# 5
+		raw_material = goods:millet			# 5
+		raw_material = goods:legumes		# 5
+	}
+}
+
+abm_has_food_3_raw_material = {
+	OR = {
+		raw_material = goods:olives			# 4
+		raw_material = goods:fruit			# 4
+		raw_material = goods:wild_game		# 3.5
+		raw_material = goods:wool			# 3 (high value: stays rural for Create Town)
+	}
+}
+
+# Medium-value goods in a rich location: a town halves its RGO size (loses the rural +100%),
+# which costs more than the cheap goods suggest.
+abm_has_rich_medium_value_rgo = {
+	abm_has_medium_value_raw_material = yes
+	location_tax_base >= abm_town_rich_rgo_tax_base
+}
+
+# Where a bailiff could stand (vanilla bailiff: rural_settlement, not overseas), limited to
+# integrated or cored locations.
+abm_bailiff_location_eligible = {
+	location_rank = location_rank:rural_settlement
+	is_overseas_for_owner = no
+	OR = {
+		integration_level = integrated
+		integration_level = core
+	}
+}
+
+# A bailiff (+20% local max control) pays for its upkeep, or the goods are worth growing into.
+abm_bailiff_worth_it = {
+	OR = {
+		location_tax_base >= abm_bailiff_min_tax_base
+		abm_has_high_value_raw_material = yes
+	}
+}

@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.23 | **Supported game version:** 1.3.\*
-**Compiled:** 24 October 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.4.4.mod.26 | **Supported game version:** 1.4.\*
+**Compiled:** 28 October 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -175,16 +175,21 @@ Alliance, Defensive and Guarantee points.
 
 ### Player Coalition
 
-- A coalition that only players can found or join, aimed at a multiplayer **Great Power**. It sits
+- A coalition that only players can found or join, aimed at a multiplayer **Great Power or Major
+  Power**. It sits
   alongside the vanilla coalition, which works as before.
-- It needs no antagonism, opinion or diplomatic range toward the target. Subjects (tributaries
-  excepted), countries with a truce, union or subject tie to the target, and countries already in a
-  player coalition against it cannot join. AI countries never join.
+- Joining requires **more than 50 antagonism** toward the target, as for the vanilla coalition, but
+  no opinion or diplomatic range. Subjects (tributaries excepted), countries with a truce, union or
+  subject tie to the target, and countries already in a player coalition against it cannot join. AI
+  countries never join.
+- Members leave once their antagonism toward the target drops **below 30** while they are not at war
+  with it.
 - Members defend each other if the target attacks one of them. The coalition declares war with the
   regular Coalition casus belli (see [section 8](#8-war-wargoals-and-peace)), which **only the
   coalition leader** holds and uses to rally the members. If the leader leaves, the coalition
   dissolves.
 - Members cannot ally or share vision with the target.
+- Members have +20 opinion of each other ("In Coalition Together"), as in the vanilla coalition.
 - **Dissolve Player Coalition** peace term: the members cannot form another one against the winner
   for 15 years.
 
@@ -578,6 +583,11 @@ in-game.
   and Caspian network and a galley barracks in Kaffa, Bakhchysarai (Qirq Yer) is the Crimean Horde's
   capital, and the Dnieper and Donets steppe is Cossack rather than Tatar. Zaporozhia is a duchy, and
   the Crimean Horde and Circassia get towns of their own.
+- **Institutions spread faster by trade and through any neighbour:** trade spread is 1.33× vanilla
+  for Traditions and Renaissance institutions, 2× for Discovery and Reformation ones and 2.5× for
+  Absolutism and Revolutions ones. Spread from any neighbour is 3–10× vanilla while spread from
+  friendly neighbours is a quarter to a third lower, so hostile neighbours can no longer lock a
+  country out of an institution. Both follow game 1.4's higher vanilla neighbour spread.
 
 ### Formables
 
@@ -622,10 +632,24 @@ in-game.
   read as proper names instead of raw text keys.
 - The right-panel buttons — Ledger, Find Location, Europedia, Automation, Hints and Menu — have
   tooltips instead of raw text keys.
+- **Bailiffs map mode** (next to Max Control): where a Bailiff pays off — rural, integrated or core
+  locations with a tax base of 8 or more, high-value raw goods (wool, iron, silver, gold, saffron,
+  dyes and similar) even below that, locations worth one once integrated, and existing Bailiffs.
+- **Create Town and Create City map modes** (next to Location Rank): which locations to urbanise
+  first. Cheap goods first, food staples last (food 8+ after food 5 after food 3–4), high-value goods
+  kept rural, and rich locations with medium-value goods (lumber, fibre, ...) below cheap ones;
+  stripes mark locations short of the population the next rank needs (5,000 for a town, 30,000 for
+  a city).
+- The campaign timeline button is removed from the age bar, where it sat under the MP rank and Tier
+  List; the timeline is still reachable from the decisions screen.
+- Observers do not get the player-only MP counters, rank label and partner lists.
+- Country history ships as a single setup file, so generating a new game is about 2 minutes faster.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.23).
+- Supported game version: **1.4.\*** (mod version game.1.4.4.mod.26). Every base-game file the mod
+  replaces is re-based on 1.4.4 (interface, diplomacy, laws, the HRE, buildings, levies, advances and
+  the 1337 start: pops, buildings, roads, diplomacy and country cultures). 1.3 saves load.
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -636,7 +660,90 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.23 (current)
+## game.1.4.4.mod.26 (current)
+
+Since game.1.3.11.mod.25 → game.1.4.4.mod.26:
+
+### Patch Compatibility
+
+- updated for game 1.4.4 (supports 1.4.\*): every base-game file the mod replaces was re-based on
+  1.4.4 — interface, diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start (pops,
+  buildings, roads, diplomacy and country cultures). 1.3 saves load and keep running
+
+### UI and Quality of Life
+
+- **New map modes:** **Bailiffs** (next to Max Control) shows where a Bailiff pays off: rural,
+  integrated or core locations with a tax base of 8 or more, and those with high-value raw goods
+  (wool, iron, silver, gold, saffron, dyes and similar) even before the tax base is there. **Create
+  Town** and **Create City** (next to Location Rank) rank your locations for urbanising: cheap goods
+  first, food staples last (food 8+ after food 5 after food 3–4), high-value goods kept rural, and
+  rich locations with medium-value goods (lumber, fibre, ...) lower than cheap ones; stripes mark
+  locations still short of the population the next rank needs (5,000 / 30,000)
+- the campaign timeline button is gone from the age bar, where it sat under the MP rank and Tier
+  List; the timeline is still in the decisions screen
+- observers no longer get the player-only MP counters, rank label and partner lists, which had no
+  country to read and logged an error every frame
+- generating a new game is about 2 minutes faster
+
+### Pops, Map and Campaign Setup
+
+- institution spread from neighbours follows game 1.4's vanilla increase: friendly neighbours +25%,
+  any neighbour ×2. The mod still favours spread from any neighbour over friendly ones
+
+### Crusades and Jihads
+
+- the 100-year cooldown on calling a Jihad now actually applies — the override that added it was
+  silently ignored by the game
+
+### Economy and Gold-Transfers
+
+- **Send Economic Support:** the "agreed" and cancellation popups show proper text instead of raw
+  keys
+
+### New Diplomatic Actions
+
+- **Player Coalition:** the members' opinion bonus of each other now reads "In Coalition Together"
+  instead of a raw key
+
+### National Flavour
+
+- **Siguntur — Rajo Tigo Selo** now requires Pike and Shot [was a Japanese-only ship advance, which
+  Siguntur cannot research]
+- **Fars — Diplomatic Prudence** now gives its +0.05 monthly diplomats [the bonus never applied]
+
+## game.1.3.11.mod.25
+
+Since game.1.3.11.mod.24 → game.1.3.11.mod.25:
+
+### New Diplomatic Actions
+
+- **Player Coalition:** can now target a multiplayer **Great Power or Major Power** [was Great Power
+  only]
+
+## game.1.3.11.mod.24
+
+Since game.1.3.11.mod.23 → game.1.3.11.mod.24:
+
+### New Diplomatic Actions
+
+- **Player Coalition:** joining now requires **more than 50 antagonism** toward the target, and members
+  leave once it drops **below 30** while not at war with the target — the same thresholds as the
+  vanilla coalition. This applies to the leader too, whose leaving dissolves the coalition. Opinion
+  and diplomatic range are still not required
+
+### National Flavour
+
+- **Genoese Crossbowmen** advance: +10% light infantry power and +10% heavy infantry power [was +20%
+  light infantry power]; the Genoese Crossbowmen unit also deals +10% morale damage
+- **Late Genoese Crossbowmen, Genoese Arquebusiers, Genoese Musketeers and Genoese Riflemen:** −1
+  initiative [Musketeers and Riflemen were +1] and a −10% wetlands combat penalty [was −15%];
+  Genoese Riflemen take 10% less strength and morale damage [was 5%]
+- **Venetian Stradioti** advance no longer gives +15% light cavalry power
+- **Italian Stradioti** deal +10% morale damage and get +1 combat speed instead of +1 initiative,
+  matching the Venetian Stradioti
+- **Late Balestrieri** lose their +1 initiative
+
+## game.1.3.11.mod.23
 
 Since game.1.3.11.mod.22 → game.1.3.11.mod.23:
 

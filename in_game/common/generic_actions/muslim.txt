@@ -1,0 +1,203 @@
+﻿# Ars Belli: same-name full-file replacement of vanilla muslim.txt (it holds only call_jihad).
+# Was REPLACE:call_jihad in abm_jihad.txt, but REPLACE: does not bind in the generic_actions
+# database (see make_unit_available_for_hire.txt), so overriding the file by name is the only
+# mechanism that is guaranteed to apply. Everything is vanilla 1.4.4 except the "Ars Belli" lines:
+# once per 100 years globally (jihad_global_cooldown, scripted_triggers/crusade_target_overrides.txt).
+call_jihad = {
+	type = religious
+
+	sound = UI_action_religion_generic
+	
+	potential = {
+		scope:actor = {
+			religion.group = religion_group:muslim
+			OR = {
+				country_rank = country_rank:rank_kingdom
+				country_rank = country_rank:rank_empire
+			}
+		}
+		
+	}
+
+	allow = {
+		game_is_initialized = yes
+		scope:actor = {
+			is_subject = no
+		}
+		scope:actor ?= {
+			monthly_manpower > 0
+		}
+		jihad_global_cooldown = yes # Ars Belli: once per 100 years globally
+	}
+
+	ai_prerequisite_after_potential = {
+		at_war = no
+		NOT = { is_leader_of_international_organization_of_type = { type = jihad } }
+	}
+
+	cooldown = {
+		type = call_jihad
+		years = 100 # Ars Belli: was 10
+	}
+
+	ai_tick = monthly
+	ai_tick_frequency = 12
+
+	automation_tick = monthly
+	automation_tick_frequency = 6
+	player_automated_category = religiousdoctrines
+
+    price = price:call_jihad
+
+	select_trigger = {
+		looking_for_a = religion
+		source = actor
+		target_flag = recipient
+		name = "choose_religion"
+		column = {
+			data = name
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = target
+		name = "call_jihad_select_country"
+		none_available_msg_key = "call_jihad_no_countries"
+		cache_targets = yes
+		interaction_source_list = {
+			scope:actor = {
+				every_country_in_diplomatic_range = {
+					add_to_list = source
+				}
+			}
+		}
+		ai_interaction_source_list = {
+			scope:actor = {
+				ordered_country_in_diplomatic_range = {
+					limit = {
+						is_valid_target_for_jihad = yes
+						scope:actor = { has_discovered = prev.capital }
+						NOR = {
+							is_allied_with = { target = scope:actor }
+							is_at_war_with = scope:actor
+							has_truce_with = scope:actor
+						}
+						NOT = { top_overlord ?= { religion = scope:actor.religion } }
+					}
+					order_by = military_strength
+					max = 10
+					check_range_bounds = no
+					add_to_list = source
+				}
+			}
+		}
+		column = {
+			data = name
+		}
+		column = {
+			data = population
+		}	
+		visible = {
+            is_valid_target_for_jihad = yes
+            scope:actor = { has_discovered = prev.capital }
+			NOR = {
+				is_allied_with = { target = scope:actor }
+				is_at_war_with = scope:actor
+				has_truce_with = scope:actor
+			}
+			NOT = { top_overlord ?= { religion = scope:actor.religion } }
+        }
+		pre_evaluation_sort_value = {
+			value = "scope:actor.relative_strength(root)"
+		}
+		pre_evaluation_number_to_evaluate_fully = 3
+	}
+
+	effect = {
+		scope:actor = {
+			if = {
+				limit = { exists = scope:target }
+				create_international_organization = {
+					type = international_organization_type:jihad
+					target = scope:target
+					custom_tooltip = {
+						text = leader_of_jihad_tt
+						add_country_to_international_organization = scope:actor
+						set_leader_country = scope:actor
+					}
+				}
+				# Ars Belli: global 100-year cooldown (read by jihad_global_cooldown)
+				set_global_variable = {
+					name = jihad_recently_called_global
+					years = 100
+				}
+			}
+			else = {
+				custom_tooltip = call_jihad.tt
+			}
+		}
+	}
+	
+	ai_will_do = {
+		add = -25
+		add = {
+			desc = "HOLY_WAR_AGE_DAMPENER"
+			value = crusade_jihad_age_dampener
+		}
+		if = {
+			limit = { exists = scope:target }
+			add = {
+				desc = "RELATIVE_STRENGTH"
+				value = 150
+				multiply = "scope:actor.relative_strength(scope:target)"
+				subtract = 100
+			}
+		}
+		if = {
+			limit = {
+				exists = scope:target
+				scope:target = { any_neighbor_country = { this = scope:actor } }
+			}
+			add = 40
+		}
+		if = {
+			limit = {
+				exists = scope:target
+				scope:target = { is_rival_of = scope:actor }
+			}
+			add = 30
+		}
+		if = {
+			limit = {
+				exists = scope:target
+				NOT = { scope:target = { any_neighbor_country = { this = scope:actor } } }
+				NOT = { scope:target = { is_rival_of = scope:actor } }
+			}
+			add = {
+				desc = "TARGET_NOT_RELEVANT_TO_US"
+				value = -40
+			}
+		}
+		if = {
+			limit = { exists = scope:target }
+			add = {
+				desc = "DISTANCE_TO_TARGET"
+				value = "scope:actor.capital.distance_to_squared(scope:target.capital)"
+				multiply = -0.0004
+			}
+		}
+		if = {
+			limit = { scope:actor = { is_during_bankruptcy = yes } }
+			add = {
+				desc = "IS_BANKRUPT_TOOLTIP"
+				value = -1000
+			}
+		}
+		add = {
+			desc = "DIPLOREASON_IN_DEBT"
+			value = "scope:actor.num_loans"
+			multiply = -20
+		}
+	}
+}

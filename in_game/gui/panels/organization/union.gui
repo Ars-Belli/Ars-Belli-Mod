@@ -179,6 +179,47 @@ organization_geodiplomatic_theme = {
 													visible = "[And(Not(UIAction.IsEnabled), Not(StringIsEmpty(UIAction.GetConditions)))]"
 													textcontext = "[UIAction.GetConditions]"
 												}
+												flowcontainer = {
+													direction = vertical
+													spacing = 3
+													ignoreinvisible = yes
+													visible = "[Not(UIAction.IsEnabled)]"
+													datamodel = "[InternationalOrganizationsView.GetInternationalOrganization.GetMembers]"
+													item = {
+														button_regular_diamond = {
+															visible = "[PdxGuiWidget.IsUberButtonVisible]"
+															size = { 300 26 }
+															text = "[Country.GetName]"
+															scripted_action_tooltip = {
+																click_type = left
+																click_mode = single
+																action_name = "[CountryInteraction.GetKey]"
+																action_direction = "offer"
+																actor = "[InternationalOrganizationsView.GetPlayer]"
+																parameter = {
+																	parameter_name = "international_organization"
+																	parameter_value = "[InternationalOrganizationsView.GetInternationalOrganization]"
+																}
+																parameter = {
+																	parameter_name = "recipient"
+																	parameter_value = "[Country.MakeScope]"
+																}
+															}
+															enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+															tooltipwidget = {
+																ContextualTooltipType = {
+																	blockoverride "title_text" { text = "[Country.GetName]" }
+																	blockoverride "tooltip_content" {
+																		TooltipRequirementsList = {
+																			visible = "[Not(StringIsEmpty(UIAction.GetConditions))]"
+																			textcontext = "[UIAction.GetConditions]"
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
 											}
 										}
 									}
@@ -265,7 +306,12 @@ organization_geodiplomatic_theme = {
 										}
 									}
 									expand = {}
-									text_single = {										autoresize = yes
+									text_single = {
+										layoutpolicy_horizontal = expanding
+										layoutstretchfactor_horizontal = 100
+										autoresize = no
+										align = right|nobaseline
+										elide = right
 										visible = "[InternationalOrganizationsView.HasSpecialStatusCountry('senior_partner')]"
 										text = "IO_SENIOR_MEMBER"
 									}

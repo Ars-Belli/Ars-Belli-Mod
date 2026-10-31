@@ -1,4 +1,4 @@
-﻿fleet_basing_rights =  {
+﻿fleet_basing_rights =  { 
 	type = diplomacy
 	relation_type = oneway
     block_when_at_war = yes
@@ -17,6 +17,8 @@
 
     buy_price = buy_fleet_basing_rights
 
+    # Ars Belli: institution_spread_to_first/second (monthly_institution_spread_weak) removed.
+
     relation_type_for_ai = friendly
 
 	offer_enabled = {
@@ -33,13 +35,14 @@
             }
             OR = {
                 is_subject = no
-                AND = {
-                    is_subject = yes
+                trigger_if = {
+                    limit = { is_subject = yes }
                     not = { overlord = scope:actor }
                     subject_type = {
                         gives_fleet_basing_rights = no
                     }
                 }
+                trigger_else = { always = no }
             }
         }
 	}
@@ -54,13 +57,14 @@
             has_limited_diplomacy = no
             OR = {
                 is_subject = no
-                AND = {
-                    is_subject = yes
+                trigger_if = {
+                    limit = { is_subject = yes }
                     not = { overlord = scope:recipient }
                     subject_type = {
                         gives_fleet_basing_rights = no
                     }
                 }
+                trigger_else = { always = no }
             }
             not = { receives_fleet_basing_rights_from = scope:recipient }
         }
@@ -91,4 +95,4 @@
         positive_opinion = 0.1
         royal_ties = 0.25
     }
-}
+}	

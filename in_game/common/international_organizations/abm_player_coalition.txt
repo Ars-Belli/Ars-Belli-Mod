@@ -1,7 +1,8 @@
 ﻿# Ars Belli Player Coalition — runs in parallel with vanilla `coalition`.
-# Only player-controlled countries can create or join. No antagonism / opinion /
-# diplomatic-range requirements to join (see abm_can_join_player_coalition_against).
-# The target must be an MP Great Power when the coalition is started.
+# Only player-controlled countries can create or join. Joining needs antagonism > 50
+# towards the target, but no opinion / diplomatic-range requirements
+# (see abm_can_join_player_coalition_against). Members leave below 30 when not at war.
+# The target must be an MP Great Power or Major Power when the coalition is started.
 # Panel: in_game\gui\panels\organization\abm_player_coalition.gui (engine maps type -> <type>.gui).
 abm_player_coalition = {
 
@@ -68,20 +69,26 @@ abm_player_coalition = {
 	modifier = {
 	}
 
+	# 1.4: complacency no longer exists (vanilla coalition dropped its monthly_complacency target_modifier).
 	target_modifier = {
-		monthly_complacency = -0.05
 	}
 
 	# Readme calls this alert-only, but the engine also checks it in the create
 	# action ("Never" blocked creation when it was always = no). Mirror can_target.
 	potential_target_trigger = {
-		is_mp_gp = yes
+		OR = {
+			is_mp_gp = yes
+			is_mp_major = yes
+		}
 	}
 
 	can_target_trigger = {
 		custom_tooltip = {
 			text = abm_player_coalition_target_rank_tt
-			is_mp_gp = yes
+			OR = {
+				is_mp_gp = yes
+				is_mp_major = yes
+			}
 		}
 	}
 
@@ -105,7 +112,7 @@ abm_player_coalition = {
 		}
 	}
 
-	# Vanilla minus the antagonism < 30 exit: player coalitions are not antagonism-driven.
+	# Same as vanilla, including the antagonism < 30 exit (only while not at war with the target).
 	auto_leave_trigger = {
 		trigger_if = {
 			limit = { exists = scope:target }
@@ -127,6 +134,11 @@ abm_player_coalition = {
 							is_subject_or_below_of = root
 						}
 						in_union_with = scope:target
+
+						antagonism = {
+							target = scope:target
+							value < 30
+						}
 					}
 				}
 			}

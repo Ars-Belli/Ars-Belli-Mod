@@ -12,6 +12,10 @@
 			is_member_of_international_organization = international_organization:catholic_church
 		}
 		crusade_allow_trigger = yes
+		OR = {
+			international_organization:catholic_church = { resolution_is_active = resolution:call_crusade }
+			no_papal_bull_debate_active = yes
+		}
 		religion:catholic = {
 			modifier:curia_actions_blocked = no
 		}
@@ -25,7 +29,7 @@
 		scope:actor = {
 			has_regent = no
 		}
-		crusade_global_cooldown = yes
+		crusade_global_cooldown = yes # Ars Belli: once per 100 years globally
 	}
 
 	can_vote = {
@@ -36,7 +40,7 @@
 			}
 		}
 	}
-
+	
 	votes = {
 		add = {
 			desc = "[cardinal_s|e]"
@@ -50,7 +54,7 @@
 
 	cooldown = {
 		type = recently_called_crusade
-		years = 100
+		years = 100 # Ars Belli: was 10
 	}
 
 	select_trigger = {
@@ -88,6 +92,10 @@
 					not = { has_truce_with = root }
 					not = { is_allied_with = { target = root } }
 				}
+			}
+			OR = {
+				NOT = { exists = scope:actor }
+				NOT = { top_overlord ?= { religion = scope:actor.religion } }
 			}
 		}
 	}
@@ -133,6 +141,7 @@
 				target = this
 			}
 		}
+		align_subject_curia_votes_effect = yes
 	}
 
 	abstain_effect = {
@@ -147,6 +156,7 @@
 			crusade_effect = { target = scope:target }
 		}
 
+		# Ars Belli: global 100-year cooldown (read by crusade_global_cooldown)
 		set_global_variable = {
 			name = crusade_recently_called_global
 			years = 100
@@ -154,7 +164,7 @@
 
 		clear_global_variable_list = pope_crusaders
 	}
-
+	
 	reject_effect = {
 		scope:proposer = {
 			add_prestige = prestige_extreme_penalty
@@ -166,7 +176,7 @@
 	ai_will_do = {
 		scope:proposer ?= {
 			#We want to be at least somewhat strong enough to fight ourselves
-
+			
 			if = {
 				limit = {
 					at_war = yes
@@ -178,6 +188,10 @@
 			}
 		}
 		scope:actor = {
+			add = {
+				desc = "HOLY_WAR_AGE_DAMPENER"
+				value = crusade_jihad_age_dampener
+			}
 			if = {
 				limit = {
 					is_at_war_with = scope:target
@@ -216,7 +230,7 @@
 				value = "relative_strength(scope:target)"
 				add = -0.60
 				multiply = 200
-			}
+			}	
 		}
 		#bias for the "no" vote, but only for votes, not for proposals.
 		if = {

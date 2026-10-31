@@ -23,7 +23,10 @@
             }
         }
         else = {
-            value = 0
+            add = {
+                desc = "PRICE_NOT_YET_SET"
+                value = 0
+            }
         }
     }
     payer = scope:recipient
@@ -35,8 +38,9 @@
 		looking_for_a = country
 		target_flag = recipient
 		name = "choose_country"
+		default_sort = will
 		column = {
-			data = name
+			data = country_diplomacy_info_trade
 		}
 		visible = {
 		}
@@ -80,6 +84,8 @@
 
             this != scope:recipient
 
+            NOT = { is_subject_type = appanage }
+
 			# ARS BELLI: nor can a tributary be the subject being handed over - tribute is owed
 			# to whoever imposed it, and is not a title to be sold on.
 			custom_tooltip = {
@@ -122,6 +128,15 @@
         value = -10
 	}
 
+    potential_diplomatic_capacity_used = {
+        if = {
+			limit = {
+				exists = scope:target
+			}
+            add = "scope:recipient.diplomatic_capacity_of_new_subject(scope:target|scope:target.subject_type)"
+		}
+    }
+
 	diplo_chance = {
         at_war = -100
         recipient_at_war = -100
@@ -137,6 +152,24 @@
 	}
 
 	accept = {
+        if = {
+            limit = {
+                exists = scope:target
+                any_international_organization = {
+                    OR = {
+                        international_organization_type = international_organization_type:crusade
+                        international_organization_type = international_organization_type:jihad
+                    }
+                    international_organization_target ?= scope:target
+                    total_members > 0
+                }
+            }
+            add = {
+                desc = "DIPLOREASON_TARGET_OF_HOLY_WAR"
+                value = -1000
+            }
+        }
+
         #relation of recipient to subject
         if = {
             limit = {

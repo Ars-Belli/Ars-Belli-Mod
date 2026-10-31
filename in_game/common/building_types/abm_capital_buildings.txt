@@ -1,5 +1,6 @@
 ﻿#manpower buffed to 50 (from 20) and clergy employed increased to 100 (from 50)
 REPLACE:order_headquarters = {
+	audio_tier = 2 # 1.4 vanilla
 	is_foreign = no
 	pop_type = clergy
 	max_levels = 1
@@ -11,12 +12,19 @@ REPLACE:order_headquarters = {
 	rural_settlement = yes
 	town = yes
 	city = yes
+	megalopolis = yes # 1.4 vanilla
 	
 	expensive = yes
 	build_time = large_capital_build_time
 	
+	# 1.4 vanilla capital rules
 	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
 		is_capital = yes
+		country_has_no_other_copy_of_building = { type = order_headquarters }
 	}
 
 

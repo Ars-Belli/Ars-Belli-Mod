@@ -4,6 +4,7 @@
 	expel_members_who_are_targets_of_other_members = no
 	custom_name = union_name
 
+	has_leader_country = yes
 	leader_change_trigger_type = rulerchange
 	leader_type = character
 	leader = {
@@ -79,11 +80,15 @@
 			add = {
 				desc = "UPKEEP_TOTAL_ECO_BASE"
 				value = international_organization_economical_base
+				subtract = root.country_economical_base
 				multiply = 0.00025
 			}
 		}
 	}
 
+	assists_in_rebellions = yes
+	assists_in_civil_wars = yes
+	#Baseline of a union, will never change
 	# ARS BELLI: was "always = yes", which dragged every union partner into any defensive war
 	# of any other partner with no say in it - the war simply appeared. Partners now get a
 	# call to arms they can accept or decline, like any other ally.
@@ -196,22 +201,43 @@
 	}
 
 	can_join_trigger = {
-		#these aren't things you can just join
-		always = no
+		custom_tooltip = {
+			text = union_cannot_join_tt
+			always = no
+		}
 	}
 
 	can_leave_trigger = {
-		#these aren't things you can just leave
-		always = no
+		custom_tooltip = {
+			text = union_cannot_leave_tt
+			always = no
+		}
 	}
 
 	auto_leave_trigger = {
-		#happens in code
-		always = no
+		custom_tooltip = {
+			text = union_cannot_leave_tt
+			always = no
+		}
 	}
 	
 	auto_disband_trigger = {
 		total_members < 2
+	}
+
+	on_creation = {
+		if = {
+			limit = { union_flavor_is_spain = yes }
+			set_variable = iberian_union_active
+			if = {
+				limit = { has_dlc = "d009_across_the_pillars" }
+				set_international_organization_icon = throne_room_castile
+			}
+			if = {
+				limit = { exists = scope:actor }
+				scope:actor = { trigger_event_non_silently = flavor_iberian_union.2 }
+			}
+		}
 	}
 
 	on_joined = {
@@ -234,6 +260,22 @@
 			limit = { has_variable = union_no_integration_reset }
 			remove_variable = union_no_integration_reset
 		}
+		if = {
+			limit = {
+				scope:recipient = {
+					union_flavor_is_spain = yes
+					NOT = { has_variable = iberian_union_active }
+				}
+			}
+			scope:recipient = {
+				set_variable = iberian_union_active
+				if = {
+					limit = { has_dlc = "d009_across_the_pillars" }
+					set_international_organization_icon = throne_room_castile
+				}
+			}
+			trigger_event_non_silently = flavor_iberian_union.2
+		}
 	}
 
 	on_left = {
@@ -242,6 +284,20 @@
 
 	monthly_effect = {
 		hidden_effect = {
+			if = {
+				limit = {
+					union_flavor_is_spain = yes
+					NOT = { has_variable = iberian_union_active }
+				}
+				set_variable = iberian_union_active
+			}
+			if = {
+				limit = {
+					has_variable = iberian_union_active
+					has_dlc = "d009_across_the_pillars"
+				}
+				set_international_organization_icon = throne_room_castile
+			}
 			if = {
 				limit = {
 					has_active_senior_partner = yes
@@ -349,10 +405,32 @@
 								owner = root.var:union_senior_partner
 							}
 							is_ruler = no #don't move them if they're busy ruling somewhere
+							not = {
+								has_cooldown = move_child_to_court
+							}
 						}
 					}
-					var:union_heir_character = {
-						move_country = root.var:union_senior_partner
+					#in rare cases he could be the heir of two unions which have senior partners. Let's check for that
+					if = {
+						limit = {
+							var:union_heir_character = {
+								owner = {
+									or = {
+										not = { exists = union } #not in a union, fine
+										union ?= {
+											or = {
+												not = { has_variable = union_senior_partner }
+												not = { has_variable = union_heir_character }
+												not = { var:union_heir_character = root.var:union_heir_character }
+											}
+										}
+									}
+								}
+							}
+						}
+						var:union_heir_character = {
+							move_country = root.var:union_senior_partner
+						}
 					}
 				}
 				var:union_senior_partner = {
@@ -371,9 +449,6 @@
 		}
 	}
 	
-	variables = {
-	}
-
 	ai_desire_to_join = {}
 	
 	ai_desire_to_allow_new_member = {
