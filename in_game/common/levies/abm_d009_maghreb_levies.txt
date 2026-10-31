@@ -1,0 +1,46 @@
+﻿#####ArsBelliMod#####
+
+# D009 raises these at levy_generic_noble_cavalry_size, 10% of tribesmen, where every other land levy on tribesmen raises 2%.
+# Nobles are a small class, tribesmen are not: Morocco with Sanhaja Accepted raised 55k men, worth 5 times a country of its population in age 1.
+# TRY_REPLACE: the keys exist only with D009, and without it the entry is skipped with no error. A plain REPLACE would log one.
+# REPLACE resets the entry, so each body is the full D009 one. Keep in step with d009_traditions_levies.txt.
+
+TRY_REPLACE:levy_zenati_horse = {
+	size = abm_levy_maghreb_cavalry_size
+	allowed_pop_type = tribesmen
+
+	allowed_culture = zenati
+
+	country_allow = {
+		has_dlc = "d009_across_the_pillars"
+	}
+
+	unit = a_zenata_cavalry
+}
+
+TRY_REPLACE:levy_sanhaja_camel_cavalry = {
+	size = abm_levy_maghreb_cavalry_size
+	allowed_pop_type = tribesmen
+
+	allowed_culture = sanhaja
+
+	country_allow = {
+		has_dlc = "d009_across_the_pillars"
+	}
+
+	unit = a_sanhaja_camel_cavalry
+}
+
+TRY_REPLACE:levy_saharan_camelry = {
+	size = abm_levy_maghreb_cavalry_size
+	allowed_pop_type = tribesmen
+
+	allowed_culture = tuareg
+	allowed_culture = eastern_amazigh
+
+	country_allow = {
+		has_dlc = "d009_across_the_pillars"
+	}
+
+	unit = a_tuareg_camelry
+}
