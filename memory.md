@@ -272,7 +272,8 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 
 ### 3u. Levy focus against Standing Forces (2026-10-31)
 - `.tools/scripts/battle_sim/analysis/levy_vs_standing/` (README). A country against itself after 10, 30, 50 years of economy, armies at 75% of monthly manpower plus the whole levy. Levy wins: Castile 89/62/60, Morocco 99/99/99.
-- Applied by the user's call: Nobles Levy Size +200% to +100%, Non-Culture Levy Size +25% to +15%, Levy Size stays +20%. Castile 83/52/59, Morocco 93/92/94, so Levy is still the stronger pick, most of all for Morocco. Not released yet.
+- Applied by the user's call: Nobles Levy Size +200% to +100%, Non-Culture Levy Size +25% to +15%, Levy Size stays +20%. Castile 83/52/59, Morocco 93/92/94, so Levy is still the stronger pick, most of all for Morocco. Released in game.1.4.6.mod.27.
+- On wooded hills Morocco is about even, 45/47/48, because frontage drops from 10 to 5. Terrain modifiers alone cost about 10 points; frontage alone takes it to 41/49/52 (`terrain_split.js`). Frontage counts regiments, and most of its extra levy regiments are 200-man cavalry.
 - Not taken: culture bonus off, size +10%, nobles +100% together give Castile 68/43/47, Morocco 48/41/50.
 - `economy.js` can value manpower (`@mv`, `@from`) and `--unlock` advances. Armories first thing put Castile in debt; best for year 50 is economy to year 30, then armories.
 - Open: Morocco's manpower, save 39 a month, simulator 15.
