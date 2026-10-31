@@ -1,0 +1,574 @@
+﻿# Vanilla tech-line units, except mercenaries_per_location is removed.
+# Stats are written out in full, with no hide flag. The age template's hide = yes drops the previous
+# professional once any later unit of that category exists, including a current-age mercenary.
+# country_potential hides the unit only once that upgrade's advance has been researched.
+REPLACE:a_footmen = {
+	category = army_heavy_infantry
+	max_strength = 0.5
+	combat_power = 1
+	age = "age_1_traditions"
+	default = yes
+	strength_damage_taken = -0.05
+	
+	
+	country_potential = { 
+		NOT = { has_advance = unlock_men_at_arms_advance }
+		government_type != government_type:steppe_horde
+	}
+	
+	upgrades_to = a_men_at_arms
+	
+	maintenance_demand =  early_heavy_infantry_maintenance
+	construction_demand = early_heavy_infantry_construction
+	
+	gfx_tags = { medium_tag }
+	
+}
+REPLACE:a_archers = {
+	category = army_light_infantry
+	max_strength = 0.5
+	combat_power = 1
+	age = "age_1_traditions"
+	default = yes
+	
+	upgrades_to = a_crossbowmen
+	
+	country_potential = { 
+		NOT = { has_advance = unlock_crossbowmen_advance }
+		government_type != government_type:steppe_horde
+	}
+	
+	maintenance_demand = archer_infantry_maintenance
+	construction_demand = archer_infantry_construction
+	gfx_tags = { archer_tag medium_tag }
+}
+REPLACE:a_horsemen = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 0.2
+	combat_power = 2.6
+	age = "age_1_traditions"
+	
+	
+	upgrades_to = a_cavalrymen
+	
+	gfx_tags = { medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_cavalry_advance }
+	}
+}
+REPLACE:a_armored_horsemen = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 0.2
+	combat_power = 2.6
+	age = "age_1_traditions"
+	
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	upgrades_to = a_heavy_cavalrymen
+	gfx_tags = { heavy_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_heavy_cavalry_advance }
+	}
+}
+REPLACE:a_camp_followers = {
+	category = army_auxiliary
+	max_strength = 0.05
+	combat_power = 0.25
+	age = "age_1_traditions"
+	gfx_tags = { medium_tag }
+	
+	country_potential = { 
+		NOT = { has_advance = unlock_supply_carts }
+		and = {
+			exists = government_type
+			government_type != government_type:steppe_horde
+		}
+	}
+	
+	upgrades_to = a_supply_carts
+}
+REPLACE:a_men_at_arms = {
+	category = army_heavy_infantry
+	max_strength = 1.0
+	combat_power = 1
+	age = "age_2_renaissance"
+	strength_damage_taken = -0.1
+	combat_speed = 1
+	
+	upgrades_to = a_halberdiers
+	
+	maintenance_demand =  early_heavy_infantry_maintenance
+	construction_demand = early_heavy_infantry_construction
+	
+	gfx_tags = { medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_halberdiers_advance }
+	}
+}
+REPLACE:a_crossbowmen = {
+	category = army_light_infantry
+	max_strength = 1.0
+	combat_power = 1
+	maintenance_demand =  early_infantry_maintenance
+	construction_demand = early_infantry_construction
+	age = "age_2_renaissance"
+	
+	
+	upgrades_to = a_early_arquebusiers
+	gfx_tags = { crossbow_tag medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_early_arquebusiers_advance }
+	}
+}
+REPLACE:a_handgonners = {
+	category = army_light_infantry
+	max_strength = 1.0
+	combat_power = 1
+	age = "age_2_renaissance"
+	# Light infantry so it can upgrade into a_early_arquebusiers (upgrades are category-scoped).
+	# Overrides below keep the original heavy-infantry combat profile (CAESAR-67717).
+	movement_speed = -0.5
+	initiative = -4
+	flanking_ability = -0.1
+	strength_damage_done = 0.1
+	morale_damage_taken = -0.1
+	combat_speed = -1.5
+	morale_damage_done = 0.10
+	build_time_modifier = 0.25
+	maintenance_demand =  infantry_maintenance
+	construction_demand = infantry_construction
+	upgrades_to = a_early_arquebusiers
+	gfx_tags = { musket_tag medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_handgonners_advance }
+	}
+}
+REPLACE:a_cavalrymen = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 0.4
+	combat_power = 2.6
+	age = "age_2_renaissance"
+	
+	
+	upgrades_to = a_light_lancers
+	
+	gfx_tags = { medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_light_lancers_advance }
+	}
+}
+REPLACE:a_heavy_cavalrymen = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 0.4
+	combat_power = 2.6
+	age = "age_2_renaissance"
+	
+	upgrades_to = a_lancers
+	
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	gfx_tags = { heavy_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_lancers_advance }
+	}
+}
+REPLACE:a_houfnice = {
+	category = army_artillery
+	max_strength = 0.2
+	combat_power = 3
+	bombard_efficiency = 0.125
+	artillery_barrage = 3
+	age = "age_2_renaissance"
+	
+	upgrades_to = a_falconet
+	country_potential = {
+		NOT = { has_advance = unlock_falconet_advance }
+	}
+}
+REPLACE:a_supply_carts = {
+	category = army_auxiliary
+	max_strength = 0.1
+	combat_power = 0.25
+	age = "age_2_renaissance"
+	gfx_tags = { medium_tag }
+	upgrades_to = a_supply_convoy
+	country_potential = {
+		NOT = { has_advance = unlock_supply_convoy }
+	}
+}
+REPLACE:a_early_arquebusiers = {
+	category = army_light_infantry
+	max_strength = 1.5
+	combat_power = 1
+	age = "age_3_discovery"
+	
+	upgrades_to = a_arquebusiers
+	
+	gfx_tags = { musket_tag medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_arquebusiers_advance }
+	}
+}
+REPLACE:a_halberdiers = {
+	category = army_heavy_infantry
+	max_strength = 1.5
+	combat_power = 1
+	age = "age_3_discovery"
+	upgrades_to = a_pikemen
+	maintenance_demand =  early_heavy_infantry_maintenance
+	construction_demand = early_heavy_infantry_construction
+	gfx_tags = { polearm_tag medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_pikemen_advance }
+	}
+}
+REPLACE:a_light_lancers = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 0.6
+	combat_power = 2.6
+	age = "age_3_discovery"
+	
+	upgrades_to = a_pistoleers
+	
+	gfx_tags = { spear_tag medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_pistoleers_advance }
+	}
+}
+REPLACE:a_lancers = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 0.6
+	combat_power = 2.6
+	age = "age_3_discovery"
+	
+	upgrades_to = a_heavy_lancers
+	
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	
+	gfx_tags = { spear_tag heavy_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_heavy_lancers_advance }
+	}
+}
+REPLACE:a_falconet = {
+	category = army_artillery
+	max_strength = 0.6
+	combat_power = 4
+	bombard_efficiency = 0.15
+	artillery_barrage = 4
+	age = "age_3_discovery"
+	upgrades_to = a_chambered_cannon
+	country_potential = {
+		NOT = { has_advance = unlock_chambered_cannon_advance }
+	}
+}
+REPLACE:a_supply_convoy = {
+	category = army_auxiliary
+	max_strength = 0.15
+	combat_power = 0.25
+	age = "age_3_discovery"
+	upgrades_to = a_baggage_train
+	country_potential = {
+		NOT = { has_advance = unlock_baggage_train }
+	}
+}
+REPLACE:a_arquebusiers = {
+	category = army_light_infantry
+	max_strength = 2.0
+	combat_power = 1.5
+	age = "age_4_reformation"
+	upgrades_to = a_hunters
+	
+	gfx_tags = { musket_tag medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_hunters_advance }
+	}
+}
+REPLACE:a_pikemen = {
+	category = army_heavy_infantry
+	max_strength = 2.0
+	combat_power = 1.5
+	age = "age_4_reformation"
+	
+	upgrades_to = a_musketeers
+	
+	maintenance_demand =  pikemen_maintenance
+	construction_demand = pikemen_construction
+	gfx_tags = { pike_tag medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_musketeers_advance }
+	}
+}
+REPLACE:a_pistoleers = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 0.8
+	combat_power = 2.85
+	age = "age_4_reformation"
+	
+	upgrades_to = a_hussars
+	gfx_tags = { pistol_tag medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_hussars_advance }
+	}
+}
+REPLACE:a_heavy_lancers = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 0.8
+	combat_power = 2.85
+	age = "age_4_reformation"
+	gfx_tags = { spear_tag heavy_tag }
+	
+	upgrades_to = a_gallop_cavalry
+	
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	country_potential = {
+		NOT = { has_advance = unlock_gallop_cavalry_advance }
+	}
+}
+REPLACE:a_chambered_cannon = {
+	category = army_artillery
+	max_strength = 0.8
+	combat_power = 5
+	bombard_efficiency = 0.20
+	artillery_barrage = 5
+	age = "age_4_reformation"
+	upgrades_to = a_royal_mortar
+	country_potential = {
+		NOT = { has_advance = unlock_royal_mortar_advance }
+	}
+}
+REPLACE:a_baggage_train = {
+	category = army_auxiliary
+	max_strength = 0.2
+	combat_power = 0.25
+	age = "age_4_reformation"
+	gfx_tags = { medium_tag }
+	
+	upgrades_to = a_wagon_train
+	country_potential = {
+		NOT = { has_advance = unlock_wagon_train }
+	}
+}
+REPLACE:a_hunters = {
+	category = army_light_infantry
+	max_strength = 2.5
+	combat_power = 2.25
+	age = "age_5_absolutism"
+	upgrades_to = a_sharpshooters
+	gfx_tags = { rifle_tag medium_tag }
+	color = unit_rifle_green
+	country_potential = {
+		NOT = { has_advance = unlock_sharpshooters_advance }
+	}
+}
+REPLACE:a_musketeers = {
+	category = army_heavy_infantry
+	max_strength = 2.5
+	combat_power = 2.25
+	age = "age_5_absolutism"
+	
+	upgrades_to = a_fusiliers
+	
+	maintenance_demand =  heavy_infantry_maintenance
+	construction_demand = heavy_infantry_construction
+	
+	gfx_tags = { musket_tag medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_fusiliers_advance }
+	}
+}
+REPLACE:a_hussars = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 1.0
+	combat_power = 3.25
+	age = "age_5_absolutism"
+	
+	
+	upgrades_to = a_light_dragoons
+	gfx_tags = { medium_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_light_dragoons_advance }
+	}
+}
+REPLACE:a_gallop_cavalry = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 1.0
+	combat_power = 3.25
+	age = "age_5_absolutism"
+	
+	upgrades_to = a_cuirassiers
+	
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	gfx_tags = { heavy_tag }
+	country_potential = {
+		NOT = { has_advance = unlock_cuirassiers_advance }
+	}
+}
+REPLACE:a_royal_mortar = {
+	category = army_artillery
+	max_strength = 1.0
+	combat_power = 5.5
+	bombard_efficiency = 0.25
+	artillery_barrage = 7
+	age = "age_5_absolutism"
+	
+	
+	upgrades_to = a_flying_battery
+	country_potential = {
+		NOT = { has_advance = unlock_flying_battery_advance }
+	}
+}
+REPLACE:a_wagon_train = {
+	category = army_auxiliary
+	max_strength = 0.25
+	combat_power = 0.25
+	age = "age_5_absolutism"
+	gfx_tags = { medium_tag }
+	upgrades_to = a_logistics_corps
+	country_potential = {
+		NOT = { has_advance = unlock_logistics_corps }
+	}
+}
+REPLACE:a_sharpshooters = {
+	category = army_light_infantry
+	max_strength = 3.0
+	combat_power = 3
+	age = "age_6_revolutions"
+	
+	
+	gfx_tags = { rifle_tag medium_tag }
+	color = unit_rifle_green 
+}
+REPLACE:a_fusiliers = {
+	category = army_heavy_infantry
+	max_strength = 3.0
+	combat_power = 3
+	age = "age_6_revolutions"
+	
+	maintenance_demand =  heavy_infantry_maintenance
+	construction_demand = heavy_infantry_construction
+	gfx_tags = { musket_tag medium_tag }
+}
+REPLACE:a_flying_battery = {
+	category = army_artillery
+	max_strength = 1.2
+	combat_power = 7.5
+	bombard_efficiency = 0.30
+	artillery_barrage = 9
+	age = "age_6_revolutions"
+}
+REPLACE:a_logistics_corps = {
+	category = army_auxiliary
+	max_strength = 0.3
+	combat_power = 0.25
+	age = "age_6_revolutions"
+	gfx_tags = { medium_tag }
+}
