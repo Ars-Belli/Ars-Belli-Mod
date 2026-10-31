@@ -68,6 +68,14 @@ REPLACE:trade_office = {
 
 
 
+	# A location that has fallen to a rural settlement may not host an office at
+	# all (rural_settlement = no above). Demoting a city or megalopolis already
+	# wipes the location's buildings, so this should never fire - it is a belt-and-
+	# braces guard for a rural location that ends up holding a building anyway.
+	remove_if = {
+		location ?= { location_rank = location_rank:rural_settlement }
+	}
+
 	build_time = trade_post_build_time
 
 	unique_production_methods = {
@@ -170,8 +178,8 @@ REPLACE:fondaco = {
 
 	modifier = {
 		merchant_power_from_building = 2.0				#1.0
-		building_owner_maritime_presence = 0.075		#0.025
-		merchant_capacity_from_building = 0.6			#0.2
+		building_owner_maritime_presence = 0.1			#0.025
+		merchant_capacity_from_building = 1				#0.2
 		# merchants settle in the new location
 		local_migration_attraction = 0.05				#0.025
 	}
@@ -215,7 +223,7 @@ REPLACE:hanseatic_kontor = {
 	expensive = yes
 	
 	increase_per_level_cost = 0.5
-	
+	05
 	country_potential = {
 		modifier:allows_hanseatic_federation_buildings = yes
 	}
@@ -243,8 +251,8 @@ REPLACE:hanseatic_kontor = {
 	
 	modifier = {
 		merchant_power_from_building = 3.0			#1.0
-		building_owner_maritime_presence = 0.3		#0.1
-		merchant_capacity_from_building = 0.75		#0.25
+		building_owner_maritime_presence = 0.2		#0.1
+		merchant_capacity_from_building = 0.5		#0.25
 	}
 	
 	raw_modifier = {
