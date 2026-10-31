@@ -3,6 +3,7 @@
 # professional once any later unit of that category exists, including a current-age mercenary.
 # country_potential hides the unit only once that upgrade's advance has been researched.
 REPLACE:a_footmen = {
+	# Ars Belli: vanilla copy_from = a_age_1_traditions_heavy_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_footmen
 	category = army_heavy_infantry
 	max_strength = 0.5
 	combat_power = 1
@@ -12,7 +13,7 @@ REPLACE:a_footmen = {
 	
 	
 	country_potential = { 
-		NOT = { has_advance = unlock_men_at_arms_advance }
+		NOT = { has_advance = unlock_men_at_arms_advance } # Ars Belli: stands in for the template's hide = yes
 		government_type != government_type:steppe_horde
 	}
 	
@@ -25,6 +26,7 @@ REPLACE:a_footmen = {
 	
 }
 REPLACE:a_archers = {
+	# Ars Belli: vanilla copy_from = a_age_1_traditions_light_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_archers
 	category = army_light_infantry
 	max_strength = 0.5
 	combat_power = 1
@@ -34,7 +36,7 @@ REPLACE:a_archers = {
 	upgrades_to = a_crossbowmen
 	
 	country_potential = { 
-		NOT = { has_advance = unlock_crossbowmen_advance }
+		NOT = { has_advance = unlock_crossbowmen_advance } # Ars Belli: stands in for the template's hide = yes
 		government_type != government_type:steppe_horde
 	}
 	
@@ -43,6 +45,7 @@ REPLACE:a_archers = {
 	gfx_tags = { archer_tag medium_tag }
 }
 REPLACE:a_horsemen = {
+	# Ars Belli: vanilla copy_from = a_age_1_traditions_light_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_horsemen
 	category = army_light_cavalry
 	impact = { 
 		jungle = 0.10
@@ -63,10 +66,11 @@ REPLACE:a_horsemen = {
 	
 	gfx_tags = { medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_cavalry_advance }
+		NOT = { has_advance = unlock_cavalry_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_armored_horsemen = {
+	# Ars Belli: vanilla copy_from = a_age_1_traditions_heavy_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_armored_horsemen
 	category = army_heavy_cavalry
 	impact = {
 		jungle = 0.10
@@ -88,10 +92,11 @@ REPLACE:a_armored_horsemen = {
 	upgrades_to = a_heavy_cavalrymen
 	gfx_tags = { heavy_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_heavy_cavalry_advance }
+		NOT = { has_advance = unlock_heavy_cavalry_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_camp_followers = {
+	# Ars Belli: vanilla copy_from = a_age_1_traditions_auxiliary. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_camp_followers
 	category = army_auxiliary
 	max_strength = 0.05
 	combat_power = 0.25
@@ -99,7 +104,7 @@ REPLACE:a_camp_followers = {
 	gfx_tags = { medium_tag }
 	
 	country_potential = { 
-		NOT = { has_advance = unlock_supply_carts }
+		NOT = { has_advance = unlock_supply_carts } # Ars Belli: stands in for the template's hide = yes
 		and = {
 			exists = government_type
 			government_type != government_type:steppe_horde
@@ -109,6 +114,7 @@ REPLACE:a_camp_followers = {
 	upgrades_to = a_supply_carts
 }
 REPLACE:a_men_at_arms = {
+	# Ars Belli: vanilla copy_from = a_age_2_renaissance_heavy_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_men_at_arms
 	category = army_heavy_infantry
 	max_strength = 1.0
 	combat_power = 1
@@ -123,10 +129,11 @@ REPLACE:a_men_at_arms = {
 	
 	gfx_tags = { medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_halberdiers_advance }
+		NOT = { has_advance = unlock_halberdiers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_crossbowmen = {
+	# Ars Belli: vanilla copy_from = a_age_2_renaissance_light_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_crossbowmen
 	category = army_light_infantry
 	max_strength = 1.0
 	combat_power = 1
@@ -138,10 +145,11 @@ REPLACE:a_crossbowmen = {
 	upgrades_to = a_early_arquebusiers
 	gfx_tags = { crossbow_tag medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_early_arquebusiers_advance }
+		NOT = { has_advance = unlock_early_arquebusiers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_handgonners = {
+	# Ars Belli: vanilla copy_from = a_age_2_renaissance_light_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_handgonners
 	category = army_light_infantry
 	max_strength = 1.0
 	combat_power = 1
@@ -161,10 +169,11 @@ REPLACE:a_handgonners = {
 	upgrades_to = a_early_arquebusiers
 	gfx_tags = { musket_tag medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_handgonners_advance }
+		NOT = { has_advance = unlock_handgonners_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_cavalrymen = {
+	# Ars Belli: vanilla copy_from = a_age_2_renaissance_light_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_cavalrymen
 	category = army_light_cavalry
 	impact = { 
 		jungle = 0.10
@@ -185,10 +194,11 @@ REPLACE:a_cavalrymen = {
 	
 	gfx_tags = { medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_light_lancers_advance }
+		NOT = { has_advance = unlock_light_lancers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_heavy_cavalrymen = {
+	# Ars Belli: vanilla copy_from = a_age_2_renaissance_heavy_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_heavy_cavalrymen
 	category = army_heavy_cavalry
 	impact = {
 		jungle = 0.10
@@ -211,10 +221,11 @@ REPLACE:a_heavy_cavalrymen = {
 	construction_demand = heavy_cavalry_construction
 	gfx_tags = { heavy_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_lancers_advance }
+		NOT = { has_advance = unlock_lancers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_houfnice = {
+	# Ars Belli: vanilla copy_from = a_age_2_renaissance_artillery. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_houfnice
 	category = army_artillery
 	max_strength = 0.2
 	combat_power = 3
@@ -224,10 +235,11 @@ REPLACE:a_houfnice = {
 	
 	upgrades_to = a_falconet
 	country_potential = {
-		NOT = { has_advance = unlock_falconet_advance }
+		NOT = { has_advance = unlock_falconet_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_supply_carts = {
+	# Ars Belli: vanilla copy_from = a_age_2_renaissance_auxiliary. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_supply_carts
 	category = army_auxiliary
 	max_strength = 0.1
 	combat_power = 0.25
@@ -235,10 +247,11 @@ REPLACE:a_supply_carts = {
 	gfx_tags = { medium_tag }
 	upgrades_to = a_supply_convoy
 	country_potential = {
-		NOT = { has_advance = unlock_supply_convoy }
+		NOT = { has_advance = unlock_supply_convoy } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_early_arquebusiers = {
+	# Ars Belli: vanilla copy_from = a_age_3_discovery_light_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_early_arquebusiers
 	category = army_light_infantry
 	max_strength = 1.5
 	combat_power = 1
@@ -248,10 +261,11 @@ REPLACE:a_early_arquebusiers = {
 	
 	gfx_tags = { musket_tag medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_arquebusiers_advance }
+		NOT = { has_advance = unlock_arquebusiers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_halberdiers = {
+	# Ars Belli: vanilla copy_from = a_age_3_discovery_heavy_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_halberdiers
 	category = army_heavy_infantry
 	max_strength = 1.5
 	combat_power = 1
@@ -261,10 +275,11 @@ REPLACE:a_halberdiers = {
 	construction_demand = early_heavy_infantry_construction
 	gfx_tags = { polearm_tag medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_pikemen_advance }
+		NOT = { has_advance = unlock_pikemen_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_light_lancers = {
+	# Ars Belli: vanilla copy_from = a_age_3_discovery_light_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_light_lancers
 	category = army_light_cavalry
 	impact = { 
 		jungle = 0.10
@@ -284,10 +299,11 @@ REPLACE:a_light_lancers = {
 	
 	gfx_tags = { spear_tag medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_pistoleers_advance }
+		NOT = { has_advance = unlock_pistoleers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_lancers = {
+	# Ars Belli: vanilla copy_from = a_age_3_discovery_heavy_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_lancers
 	category = army_heavy_cavalry
 	impact = {
 		jungle = 0.10
@@ -311,10 +327,11 @@ REPLACE:a_lancers = {
 	
 	gfx_tags = { spear_tag heavy_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_heavy_lancers_advance }
+		NOT = { has_advance = unlock_heavy_lancers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_falconet = {
+	# Ars Belli: vanilla copy_from = a_age_3_discovery_artillery. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_falconet
 	category = army_artillery
 	max_strength = 0.6
 	combat_power = 4
@@ -323,20 +340,22 @@ REPLACE:a_falconet = {
 	age = "age_3_discovery"
 	upgrades_to = a_chambered_cannon
 	country_potential = {
-		NOT = { has_advance = unlock_chambered_cannon_advance }
+		NOT = { has_advance = unlock_chambered_cannon_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_supply_convoy = {
+	# Ars Belli: vanilla copy_from = a_age_3_discovery_auxiliary. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_supply_convoy
 	category = army_auxiliary
 	max_strength = 0.15
 	combat_power = 0.25
 	age = "age_3_discovery"
 	upgrades_to = a_baggage_train
 	country_potential = {
-		NOT = { has_advance = unlock_baggage_train }
+		NOT = { has_advance = unlock_baggage_train } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_arquebusiers = {
+	# Ars Belli: vanilla copy_from = a_age_4_reformation_light_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_arquebusiers
 	category = army_light_infantry
 	max_strength = 2.0
 	combat_power = 1.5
@@ -345,10 +364,11 @@ REPLACE:a_arquebusiers = {
 	
 	gfx_tags = { musket_tag medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_hunters_advance }
+		NOT = { has_advance = unlock_hunters_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_pikemen = {
+	# Ars Belli: vanilla copy_from = a_age_4_reformation_heavy_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_pikemen
 	category = army_heavy_infantry
 	max_strength = 2.0
 	combat_power = 1.5
@@ -360,10 +380,11 @@ REPLACE:a_pikemen = {
 	construction_demand = pikemen_construction
 	gfx_tags = { pike_tag medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_musketeers_advance }
+		NOT = { has_advance = unlock_musketeers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_pistoleers = {
+	# Ars Belli: vanilla copy_from = a_age_4_reformation_light_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_pistoleers
 	category = army_light_cavalry
 	impact = { 
 		jungle = 0.10
@@ -382,10 +403,11 @@ REPLACE:a_pistoleers = {
 	upgrades_to = a_hussars
 	gfx_tags = { pistol_tag medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_hussars_advance }
+		NOT = { has_advance = unlock_hussars_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_heavy_lancers = {
+	# Ars Belli: vanilla copy_from = a_age_4_reformation_heavy_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_heavy_lancers
 	category = army_heavy_cavalry
 	impact = {
 		jungle = 0.10
@@ -408,10 +430,11 @@ REPLACE:a_heavy_lancers = {
 	maintenance_demand =  heavy_cavalry_maintenance
 	construction_demand = heavy_cavalry_construction
 	country_potential = {
-		NOT = { has_advance = unlock_gallop_cavalry_advance }
+		NOT = { has_advance = unlock_gallop_cavalry_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_chambered_cannon = {
+	# Ars Belli: vanilla copy_from = a_age_4_reformation_artillery. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_chambered_cannon
 	category = army_artillery
 	max_strength = 0.8
 	combat_power = 5
@@ -420,10 +443,11 @@ REPLACE:a_chambered_cannon = {
 	age = "age_4_reformation"
 	upgrades_to = a_royal_mortar
 	country_potential = {
-		NOT = { has_advance = unlock_royal_mortar_advance }
+		NOT = { has_advance = unlock_royal_mortar_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_baggage_train = {
+	# Ars Belli: vanilla copy_from = a_age_4_reformation_auxiliary. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_baggage_train
 	category = army_auxiliary
 	max_strength = 0.2
 	combat_power = 0.25
@@ -432,10 +456,11 @@ REPLACE:a_baggage_train = {
 	
 	upgrades_to = a_wagon_train
 	country_potential = {
-		NOT = { has_advance = unlock_wagon_train }
+		NOT = { has_advance = unlock_wagon_train } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_hunters = {
+	# Ars Belli: vanilla copy_from = a_age_5_absolutism_light_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_hunters
 	category = army_light_infantry
 	max_strength = 2.5
 	combat_power = 2.25
@@ -444,10 +469,11 @@ REPLACE:a_hunters = {
 	gfx_tags = { rifle_tag medium_tag }
 	color = unit_rifle_green
 	country_potential = {
-		NOT = { has_advance = unlock_sharpshooters_advance }
+		NOT = { has_advance = unlock_sharpshooters_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_musketeers = {
+	# Ars Belli: vanilla copy_from = a_age_5_absolutism_heavy_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_musketeers
 	category = army_heavy_infantry
 	max_strength = 2.5
 	combat_power = 2.25
@@ -460,10 +486,11 @@ REPLACE:a_musketeers = {
 	
 	gfx_tags = { musket_tag medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_fusiliers_advance }
+		NOT = { has_advance = unlock_fusiliers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_hussars = {
+	# Ars Belli: vanilla copy_from = a_age_5_absolutism_light_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_hussars
 	category = army_light_cavalry
 	impact = { 
 		jungle = 0.10
@@ -483,10 +510,11 @@ REPLACE:a_hussars = {
 	upgrades_to = a_light_dragoons
 	gfx_tags = { medium_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_light_dragoons_advance }
+		NOT = { has_advance = unlock_light_dragoons_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_gallop_cavalry = {
+	# Ars Belli: vanilla copy_from = a_age_5_absolutism_heavy_cavalry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_gallop_cavalry
 	category = army_heavy_cavalry
 	impact = {
 		jungle = 0.10
@@ -509,10 +537,11 @@ REPLACE:a_gallop_cavalry = {
 	construction_demand = heavy_cavalry_construction
 	gfx_tags = { heavy_tag }
 	country_potential = {
-		NOT = { has_advance = unlock_cuirassiers_advance }
+		NOT = { has_advance = unlock_cuirassiers_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_royal_mortar = {
+	# Ars Belli: vanilla copy_from = a_age_5_absolutism_artillery. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_royal_mortar
 	category = army_artillery
 	max_strength = 1.0
 	combat_power = 5.5
@@ -523,10 +552,11 @@ REPLACE:a_royal_mortar = {
 	
 	upgrades_to = a_flying_battery
 	country_potential = {
-		NOT = { has_advance = unlock_flying_battery_advance }
+		NOT = { has_advance = unlock_flying_battery_advance } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_wagon_train = {
+	# Ars Belli: vanilla copy_from = a_age_5_absolutism_auxiliary. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_wagon_train
 	category = army_auxiliary
 	max_strength = 0.25
 	combat_power = 0.25
@@ -534,10 +564,11 @@ REPLACE:a_wagon_train = {
 	gfx_tags = { medium_tag }
 	upgrades_to = a_logistics_corps
 	country_potential = {
-		NOT = { has_advance = unlock_logistics_corps }
+		NOT = { has_advance = unlock_logistics_corps } # Ars Belli: stands in for the template's hide = yes
 	}
 }
 REPLACE:a_sharpshooters = {
+	# Ars Belli: vanilla copy_from = a_age_6_revolutions_light_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_sharpshooters
 	category = army_light_infantry
 	max_strength = 3.0
 	combat_power = 3
@@ -548,6 +579,7 @@ REPLACE:a_sharpshooters = {
 	color = unit_rifle_green 
 }
 REPLACE:a_fusiliers = {
+	# Ars Belli: vanilla copy_from = a_age_6_revolutions_heavy_infantry. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_fusiliers
 	category = army_heavy_infantry
 	max_strength = 3.0
 	combat_power = 3
@@ -558,6 +590,7 @@ REPLACE:a_fusiliers = {
 	gfx_tags = { musket_tag medium_tag }
 }
 REPLACE:a_flying_battery = {
+	# Ars Belli: vanilla copy_from = a_age_6_revolutions_artillery. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_flying_battery
 	category = army_artillery
 	max_strength = 1.2
 	combat_power = 7.5
@@ -566,6 +599,7 @@ REPLACE:a_flying_battery = {
 	age = "age_6_revolutions"
 }
 REPLACE:a_logistics_corps = {
+	# Ars Belli: vanilla copy_from = a_age_6_revolutions_auxiliary. Its stats are written out here without its hide and buildable = no. mercenaries_per_location moved to a_abm_merc_logistics_corps
 	category = army_auxiliary
 	max_strength = 0.3
 	combat_power = 0.25
