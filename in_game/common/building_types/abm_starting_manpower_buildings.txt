@@ -1,0 +1,167 @@
+﻿# Ars Belli - capital manpower buildings, 3 levels.
+#
+# The capital / fixed-level manpower buildings get max_levels = 3 instead of 1.
+# Per-level values stay vanilla, so a full building gives 0.045 (sergeantry,
+# city_guard, temple_militia), 0.03 (warrior_temple) or 0.0075 (jurchen_barracks) -
+# paid for with gold, build time, soldier pops and maintenance, so nothing changes
+# at the 1337 start.
+#
+# temple_militia is the theocratic counterpart of sergeantry (capital-only,
+# theocracy, not military_order_reform - military orders use order_headquarters);
+# it is included for parity even though vanilla places none at the 1337 start.
+# order_headquarters (military orders) is also 3-level, but it lives in
+# abm_capital_buildings.txt, where the mod already REPLACE:s it - one id must not be
+# defined twice, so the level change was applied there.
+#
+# Estate power is moved to raw_modifier ("applied to the location, not scaled") so
+# it does NOT triple with level: vanilla's totals stay as they are. INJECT: cannot
+# do that - it can only append blocks, and appended modifier values add up.
+#
+# REPLACE: blocks must stay full copies - re-sync with vanilla manpower_buildings.txt
+# if it edits these entries.
+
+REPLACE:sergeantry = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = 3
+	increase_per_level_cost = 0.5
+	
+	category = military_category
+	forbidden_for_estates = yes
+	
+	employment_size = manpower_employment
+	
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	build_time = medium_soldier_building
+	
+	location_potential = {
+		counts_as_capital = yes
+	}
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = sergeantry }
+	}
+	country_potential = {
+		government_type ?= government_type:monarchy
+	}
+	remove_if = {
+		is_no_longer_capital = yes
+	}
+
+	capital_modifier = {
+		local_manpower = 0.015
+		can_recruit_regiment_in_this_location = yes
+	}
+
+	raw_modifier = {
+		local_crown_estate_power = 0.25
+	}
+
+	possible_production_methods =  {
+		sergeantry_maintenance
+	}
+	construction_demand = early_soldier_building_construction
+}
+
+REPLACE:city_guard = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = 3
+	increase_per_level_cost = 0.5
+	
+	category = military_category
+	forbidden_for_estates = yes
+	
+	employment_size = manpower_employment
+	
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	build_time = medium_soldier_building
+	
+	location_potential = {
+		counts_as_capital = yes
+	}
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = city_guard }
+	}
+	country_potential = {
+		government_type ?= government_type:republic
+	}
+	remove_if = {
+		is_no_longer_capital = yes
+	}
+	
+	capital_modifier = {
+		local_manpower = 0.020
+		can_recruit_regiment_in_this_location = yes
+	}
+
+	raw_modifier = {
+		global_burgher_estate_power = -0.25
+	}
+
+	possible_production_methods =  {
+		city_guard_maintenance
+	}
+	construction_demand = early_soldier_building_construction
+}
+
+REPLACE:temple_militia = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = 3
+	increase_per_level_cost = 0.5
+
+	category = military_category
+	forbidden_for_estates = yes
+
+	employment_size = manpower_employment
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	build_time = medium_soldier_building
+
+	location_potential = {
+		counts_as_capital = yes
+	}
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = temple_militia }
+	}
+	country_potential = {
+		government_type ?= government_type:theocracy
+		# Military orders use order_headquarters as their capital manpower building instead.
+		NOT = { has_reform = government_reform:military_order_reform }
+	}
+	remove_if = {
+		OR = {
+			is_no_longer_capital = yes
+			location.owner ?= { has_reform = government_reform:military_order_reform }
+		}
+	}
+
+	capital_modifier = {
+		local_manpower = 0.015
+		can_recruit_regiment_in_this_location = yes
+	}
+
+	raw_modifier = {
+		global_clergy_estate_power = -0.25
+	}
+
+	possible_production_methods =  {
+		temple_militia_maintenance
+	}
+	construction_demand = early_soldier_building_construction
+}
