@@ -1,4 +1,4 @@
-﻿Following files were replaced and need updating along with vanilla files:
+Following files were replaced and need updating along with vanilla files:
 
 #############################################################
 # RUNTIME / GAMEPLAY FILES (active during play - high priority)
@@ -19,6 +19,17 @@ in_game/gui/sell_location_action_view.gui
 
 # in_game/common
 in_game/common/advances/3_fort_level.txt
+in_game/common/advances/colonial_nations.txt
+in_game/common/advances/country_ILK.txt
+in_game/common/advances/country_chg.txt # lower-case since 1.4.4 (was country_CHG.txt; a case-only mismatch no longer overrides vanilla)
+in_game/common/advances/country_glh.txt # lower-case since 1.4.4
+in_game/common/advances/country_ira.txt # lower-case since 1.4.4; ira_islamized_persia deliberately removed
+in_game/common/advances/country_mge.txt # lower-case since 1.4.4
+in_game/common/advances/country_zmw.txt
+in_game/common/advances/ctype_army.txt
+in_game/common/advances/culture_japan.txt
+in_game/common/advances/government_steppe_horde.txt
+in_game/common/advances/japanese_unique.txt
 in_game/common/casus_belli/hegemon.txt # cb_hegemon targets top 3 MP Great Powers (is_mp_top3_gp) instead of is_hegemon
 in_game/common/casus_belli/red_turban_rebellions.txt
 in_game/common/casus_belli/timurs_conquests.txt
@@ -39,6 +50,7 @@ in_game/common/generic_action_ai_lists/crisis_of_the_chinese_dynasty_list.txt
 in_game/common/generic_action_ai_lists/decline_of_majapahit_list.txt
 in_game/common/generic_action_ai_lists/lordship_of_ireland.txt
 in_game/common/generic_actions/make_unit_available_for_hire.txt
+in_game/common/generic_actions/muslim.txt # holds only call_jihad; ABM 100-year global cooldown
 in_game/common/generic_actions/red_turban_rebellions.txt
 in_game/common/generic_actions/rise_of_timur.txt
 in_game/common/international_organization_land_ownership_rules/lordship_of_ireland_land_ownership.txt
@@ -67,6 +79,7 @@ in_game/common/regencies/12_lordship_of_ireland_regency.txt
 in_game/common/scripted_relations/alliance.txt
 in_game/common/scripted_relations/corrupt_officials.txt
 in_game/common/scripted_relations/fleet_basing_rights.txt
+in_game/common/scripted_relations/fondaco_rights.txt # visible block extended with the Merchant Enclave reforms
 in_game/common/scripted_relations/knowledge_sharing.txt
 in_game/common/scripted_relations/guarantee.txt
 in_game/common/scripted_relations/scutage.txt
@@ -74,7 +87,7 @@ in_game/common/scripted_relations/sow_discontent.txt
 in_game/common/situations/fall_of_delhi.txt
 in_game/common/situations/red_turban_rebellions.txt
 in_game/common/situations/rise_of_timur.txt
-in_game/common/town_setups/00_default.txt
+ #1.4: in_game/common/town_setups/00_default.txt is NO LONGER a full-file replacement - ABM's town_setup changes moved to in_game/common/town_setups/abm_town_setups.txt as REPLACE:<name> entries
 in_game/common/age/00_default.txt
 
 # in_game/events (same-name full-file replacements; reapply Ars Belli flavor/edits on vanilla update)
@@ -98,7 +111,6 @@ in_game/events/situations/rise_of_timur.txt
 
 # main_menu (non-setup)
 main_menu/common/named_colors/02_map.txt
-main_menu/gui/messagetypes.txt
 main_menu/localization/english/country_names_l_english.yml
 
 #############################################################
@@ -106,26 +118,51 @@ main_menu/localization/english/country_names_l_english.yml
 #############################################################
 
 # in_game/setup/countries (start-state overrides; reapply Ars Belli edits on vanilla update)
+# NOTE: 39 full copies of vanilla `setup/countries/<region>.txt`. The mod deletes ~527
+# countries on purpose by commenting their blocks out - keep them removed. A removed tag
+# is only fatal when a loaded file still references it as a country block: vanilla's
+# `main_menu/setup/1337/10_countries.txt` does, and the reader then aborts that whole
+# file (no country start-state -> frontend crash). So the mod MUST ship its own
+# `main_menu/setup/<date>/` start-state (see the `main_menu/setup/1337` section below).
+in_game/setup/countries/_scandinavia.txt
 in_game/setup/countries/anatolia.txt
+in_game/setup/countries/andes.txt
 in_game/setup/countries/arabia.txt
+in_game/setup/countries/aridoamerica.txt
+in_game/setup/countries/baltics.txt
 in_game/setup/countries/bengal.txt
+in_game/setup/countries/brasil.txt
 in_game/setup/countries/british_isles.txt
+in_game/setup/countries/canadian.txt
 in_game/setup/countries/carpathia.txt
 in_game/setup/countries/caucasus.txt
+in_game/setup/countries/central_north_america.txt
+in_game/setup/countries/centralamerica.txt
+in_game/setup/countries/chaco.txt
+in_game/setup/countries/colonial_nations.txt
+in_game/setup/countries/colombia.txt
 in_game/setup/countries/crescent.txt
+in_game/setup/countries/east_africa.txt
 in_game/setup/countries/east_asia.txt
+in_game/setup/countries/eastcoast.txt
 in_game/setup/countries/egypt.txt
 in_game/setup/countries/france.txt
 in_game/setup/countries/horn_of_africa.txt
 in_game/setup/countries/india.txt
 in_game/setup/countries/indonesia.txt
+in_game/setup/countries/kongo.txt
+in_game/setup/countries/lowlands.txt
+in_game/setup/countries/mesoamerica.txt
 in_game/setup/countries/north_germany.txt
 in_game/setup/countries/persia.txt
+in_game/setup/countries/polynesia.txt
 in_game/setup/countries/russia.txt
 in_game/setup/countries/siberia.txt
+in_game/setup/countries/south_africa.txt
 in_game/setup/countries/south_east_asia.txt
 in_game/setup/countries/steppes.txt
 in_game/setup/countries/west_africa.txt
+in_game/setup/countries/westcoast.txt
 
 # main_menu/setup/templates
 main_menu/setup/templates/expl_horn_of_africa.txt
@@ -133,12 +170,19 @@ main_menu/setup/templates/expl_horn_of_africa_ethiopia.txt
 main_menu/setup/templates/expl_horn_of_africa_no_coast.txt
 main_menu/setup/templates/subsaharan_tribe.txt
 
-# main_menu/setup/start
-main_menu/setup/start/03_markets.txt
-main_menu/setup/start/06_pops.txt
-main_menu/setup/start/07_cities_and_buildings.txt
-main_menu/setup/start/09_roads.txt
-main_menu/setup/start/10_countries.txt
-main_menu/setup/start/12_diplomacy.txt
-main_menu/setup/start/15_international_organizations.txt
-main_menu/setup/start/16_wars.txt
+# main_menu/setup/1337 (renamed from setup/start in game 1.4: the bookmark folder is the start date)
+# 11 of these 73 files share a name with vanilla (listed below); the other 62 are
+# mod-only `10_countries_<region>_region.txt` splits of 10_countries.txt. The mod's
+# own start-state MUST load, otherwise vanilla's 10_countries.txt aborts on the
+# countries Ars Belli deleted (see `in_game/setup/countries` note above).
+main_menu/setup/1337/03_markets.txt
+main_menu/setup/1337/06_pops.txt
+main_menu/setup/1337/07_cities_and_buildings.txt
+main_menu/setup/1337/08_institutions.txt
+main_menu/setup/1337/09_roads.txt
+main_menu/setup/1337/10_countries.txt
+main_menu/setup/1337/12_diplomacy.txt
+main_menu/setup/1337/14_development.txt
+main_menu/setup/1337/15_international_organizations.txt
+main_menu/setup/1337/16_wars.txt
+main_menu/setup/1337/19_diseases.txt

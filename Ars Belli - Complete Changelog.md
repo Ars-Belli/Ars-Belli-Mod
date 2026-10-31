@@ -4,8 +4,8 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.25 | **Supported game version:** 1.3.\*
-**Compiled:** 25 October 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.4.4.mod.26 | **Supported game version:** 1.4.\*
+**Compiled:** 28 October 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -189,6 +189,7 @@ Alliance, Defensive and Guarantee points.
   coalition leader** holds and uses to rally the members. If the leader leaves, the coalition
   dissolves.
 - Members cannot ally or share vision with the target.
+- Members have +20 opinion of each other ("In Coalition Together"), as in the vanilla coalition.
 - **Dissolve Player Coalition** peace term: the members cannot form another one against the winner
   for 15 years.
 
@@ -582,6 +583,11 @@ in-game.
   and Caspian network and a galley barracks in Kaffa, Bakhchysarai (Qirq Yer) is the Crimean Horde's
   capital, and the Dnieper and Donets steppe is Cossack rather than Tatar. Zaporozhia is a duchy, and
   the Crimean Horde and Circassia get towns of their own.
+- **Institutions spread faster by trade and through any neighbour:** trade spread is 1.33× vanilla
+  for Traditions and Renaissance institutions, 2× for Discovery and Reformation ones and 2.5× for
+  Absolutism and Revolutions ones. Spread from any neighbour is 3–10× vanilla while spread from
+  friendly neighbours is a quarter to a third lower, so hostile neighbours can no longer lock a
+  country out of an institution. Both follow game 1.4's higher vanilla neighbour spread.
 
 ### Formables
 
@@ -626,10 +632,24 @@ in-game.
   read as proper names instead of raw text keys.
 - The right-panel buttons — Ledger, Find Location, Europedia, Automation, Hints and Menu — have
   tooltips instead of raw text keys.
+- **Bailiffs map mode** (next to Max Control): where a Bailiff pays off — rural, integrated or core
+  locations with a tax base of 8 or more, high-value raw goods (wool, iron, silver, gold, saffron,
+  dyes and similar) even below that, locations worth one once integrated, and existing Bailiffs.
+- **Create Town and Create City map modes** (next to Location Rank): which locations to urbanise
+  first. Cheap goods first, food staples last (food 8+ after food 5 after food 3–4), high-value goods
+  kept rural, and rich locations with medium-value goods (lumber, fibre, ...) below cheap ones;
+  stripes mark locations short of the population the next rank needs (5,000 for a town, 30,000 for
+  a city).
+- The campaign timeline button is removed from the age bar, where it sat under the MP rank and Tier
+  List; the timeline is still reachable from the decisions screen.
+- Observers do not get the player-only MP counters, rank label and partner lists.
+- Country history ships as a single setup file, so generating a new game is about 2 minutes faster.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.25).
+- Supported game version: **1.4.\*** (mod version game.1.4.4.mod.26). Every base-game file the mod
+  replaces is re-based on 1.4.4 (interface, diplomacy, laws, the HRE, buildings, levies, advances and
+  the 1337 start: pops, buildings, roads, diplomacy and country cultures). 1.3 saves load.
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -640,7 +660,58 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.25 (current)
+## game.1.4.4.mod.26 (current)
+
+Since game.1.3.11.mod.25 → game.1.4.4.mod.26:
+
+### Patch Compatibility
+
+- updated for game 1.4.4 (supports 1.4.\*): every base-game file the mod replaces was re-based on
+  1.4.4 — interface, diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start (pops,
+  buildings, roads, diplomacy and country cultures). 1.3 saves load and keep running
+
+### UI and Quality of Life
+
+- **New map modes:** **Bailiffs** (next to Max Control) shows where a Bailiff pays off: rural,
+  integrated or core locations with a tax base of 8 or more, and those with high-value raw goods
+  (wool, iron, silver, gold, saffron, dyes and similar) even before the tax base is there. **Create
+  Town** and **Create City** (next to Location Rank) rank your locations for urbanising: cheap goods
+  first, food staples last (food 8+ after food 5 after food 3–4), high-value goods kept rural, and
+  rich locations with medium-value goods (lumber, fibre, ...) lower than cheap ones; stripes mark
+  locations still short of the population the next rank needs (5,000 / 30,000)
+- the campaign timeline button is gone from the age bar, where it sat under the MP rank and Tier
+  List; the timeline is still in the decisions screen
+- observers no longer get the player-only MP counters, rank label and partner lists, which had no
+  country to read and logged an error every frame
+- generating a new game is about 2 minutes faster
+
+### Pops, Map and Campaign Setup
+
+- institution spread from neighbours follows game 1.4's vanilla increase: friendly neighbours +25%,
+  any neighbour ×2. The mod still favours spread from any neighbour over friendly ones
+
+### Crusades and Jihads
+
+- the 100-year cooldown on calling a Jihad now actually applies — the override that added it was
+  silently ignored by the game
+
+### Economy and Gold-Transfers
+
+- **Send Economic Support:** the "agreed" and cancellation popups show proper text instead of raw
+  keys
+
+### New Diplomatic Actions
+
+- **Player Coalition:** the members' opinion bonus of each other now reads "In Coalition Together"
+  instead of a raw key
+
+### National Flavour
+
+- **Siguntur — Rajo Tigo Selo** now requires Pike and Shot [was a Japanese-only ship advance, which
+  Siguntur cannot research]
+- **Fars — Diplomatic Prudence** now gives its +0.05 monthly diplomats [the bonus never applied]
+
+## game.1.3.11.mod.25
 
 Since game.1.3.11.mod.24 → game.1.3.11.mod.25:
 

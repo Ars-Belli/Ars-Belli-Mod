@@ -1,0 +1,305 @@
+﻿aragonese_montaneses = {
+	age = age_1_traditions
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			culture = culture:aragonese
+			culture = { merged_culture_group_contains_culture = culture:aragonese }
+		}
+		NOT = { has_reform = government_reform:partitio_reform }
+	}
+
+	army_heavy_infantry_power = 0.1
+	army_movement_speed = 0.1
+
+	requires = cultural_traditions_law_advance
+}
+
+ara_conquest_of_the_ebro = {
+	age = age_1_traditions
+	icon = glorious_arms
+
+	potential = {
+		has_or_had_tag = ARA
+		original_tag = ARA
+	}
+
+	army_light_infantry_power = 0.1
+	siege_ability = 0.1
+
+	requires = feudalism_advance
+}
+
+ara_desperta_ferro = {
+	content_priority = 600
+	age = age_1_traditions
+	icon = ara_desperta_ferro
+
+	potential = {
+		OR = {
+			has_or_had_tag = ARA
+			is_aragonese_catalan_spain = yes
+		}
+	}
+
+	discipline = 0.05
+	land_morale_modifier = 0.1
+
+	requires = feudalism_advance
+
+	ai_weight = { add = 10 }
+}
+
+aragonese_pyrenean_passes = {
+	age = age_2_renaissance
+	icon = merchants_and_trade
+
+	potential = {
+		OR = {
+			culture = culture:aragonese
+			culture = { merged_culture_group_contains_culture = culture:aragonese }
+		}
+		NOT = { has_reform = government_reform:partitio_reform }
+	}
+
+	global_merchant_power = 0.1
+	global_trade_center_power = 0.05
+
+	requires = trade_range_advance_age_2
+}
+
+ara_a_mediterranean_trade_power = {
+	content_priority = 300
+	age = age_2_renaissance
+	icon = a_central_power
+
+	potential = {
+		OR = {
+			has_or_had_tag = ARA
+			is_aragonese_catalan_spain = yes
+		}
+	}
+
+	export_efficiency = small_trade_efficiency_bonus
+	merchant_maintenance_efficiency = 0.2
+
+	requires = merchants_and_trade
+}
+
+ara_dinero_jaques = {
+	age = age_2_renaissance
+	icon = standardized_coins
+
+	potential = {
+		has_or_had_tag = ARA
+		original_tag = ARA
+	}
+
+	bank_interest = -0.01
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
+
+	requires = merchants_and_trade
+}
+
+aragonese_castillos_frontera = {
+	age = age_3_discovery
+	icon = defensive_mentality
+
+	potential = {
+		OR = {
+			culture = culture:aragonese
+			culture = { merged_culture_group_contains_culture = culture:aragonese }
+		}
+		NOT = { has_reform = government_reform:partitio_reform }
+	}
+
+	fort_maintenance_efficiency = 0.20
+	global_defensive = 0.1
+
+	requires = pike_square
+}
+
+ara_diputacion_del_general = {
+	age = age_3_discovery
+	icon = imperial_ambitions
+
+	potential = {
+		has_or_had_tag = ARA
+		original_tag = ARA
+	}
+
+	global_construction_speed = 0.10
+	nobles_estate_target_satisfaction = small_permanent_target_satisfaction
+
+	requires = formalized_relations
+}
+
+ara_overseas_realms = {
+	age = age_3_discovery
+	icon = colonies
+
+	potential = {
+		OR = {
+			has_or_had_tag = ARA
+			is_aragonese_catalan_spain = yes
+		}
+	}
+
+	subject_income_modifier = 0.05
+	subject_loyalty = 5
+
+	requires = formalized_relations
+}
+
+aragonese_salinas_reales = {
+	age = age_4_reformation
+	icon = efficient_mining
+
+	potential = {
+		OR = {
+			culture = culture:aragonese
+			culture = { merged_culture_group_contains_culture = culture:aragonese }
+		}
+		NOT = { has_reform = government_reform:partitio_reform }
+	}
+
+	expand_rgo_gathering_cost_modifier = -0.10
+	global_salt_output_modifier = 0.1
+
+	requires = imperial_ambitions
+}
+
+ara_carinena_vineyards = {
+	age = age_4_reformation
+	icon = grand_banquets
+
+	potential = {
+		has_or_had_tag = ARA
+		original_tag = ARA
+	}
+
+	global_max_rgo_size_modifier = 0.1
+	global_wine_output_modifier = 0.1
+
+	requires = chartered_companies
+}
+
+ara_stronger_united = {
+	age = age_4_reformation
+	icon = ara_stronger_united
+
+	potential = {
+		OR = {
+			has_or_had_tag = ARA
+			is_aragonese_catalan_spain = yes
+		}
+	}
+
+	country_cabinet_efficiency = 0.10
+	global_distance_from_capital_speed_propagation = 0.1
+
+	requires = confessional_court
+}
+
+aragonese_sociedad_economica = {
+	age = age_5_absolutism
+	icon = enlightenment_advance
+
+	potential = {
+		OR = {
+			culture = culture:aragonese
+			culture = { merged_culture_group_contains_culture = culture:aragonese }
+		}
+		NOT = { has_reform = government_reform:partitio_reform }
+	}
+
+	global_burghers_city_desired_pop = 0.5
+	improve_relation_impact = 0.1
+
+	requires = the_constitution
+}
+
+ara_basilica_del_pilar = {
+	age = age_5_absolutism
+	icon = crown_power_advance_renaissance
+
+	potential = {
+		has_or_had_tag = ARA
+		original_tag = ARA
+	}
+
+	clergy_estate_target_satisfaction = small_permanent_target_satisfaction
+	monthly_devotion = 0.1
+	monthly_legitimacy = 0.1
+	monthly_republican_tradition = 0.1
+
+	requires = absolute_rulership
+}
+
+ara_protection_of_the_little_folk = {
+	age = age_5_absolutism
+	icon = ara_protection_of_the_little_folk
+
+	potential = {
+		OR = {
+			has_or_had_tag = ARA
+			is_aragonese_catalan_spain = yes
+		}
+	}
+
+	global_disease_resistance = 0.1
+	monthly_war_exhaustion = -0.02
+
+	requires = army_movement_speed_absolutism
+}
+
+aragonese_foralism = {
+	age = age_6_revolutions
+	icon = the_constitution
+
+	potential = {
+		OR = {
+			culture = culture:aragonese
+			culture = { merged_culture_group_contains_culture = culture:aragonese }
+		}
+		NOT = { has_reform = government_reform:partitio_reform }
+	}
+
+	global_separatism = -0.05
+	monthly_diplomats = 0.05
+
+	requires = government_size_revolutions
+}
+
+ara_gunpowder_souls = {
+	age = age_6_revolutions
+	icon = ara_gunpowder_souls
+
+	potential = {
+		OR = {
+			has_or_had_tag = ARA
+			is_aragonese_catalan_spain = yes
+		}
+	}
+
+	army_artillery_power = 0.1
+	land_morale_recovery = 0.02
+
+	requires = napoleonic_warfare
+}
+
+ara_zaragoza_industry = {
+	age = age_6_revolutions
+	icon = industrialization_advance
+
+	potential = {
+		has_or_had_tag = ARA
+		original_tag = ARA
+	}
+
+	global_non_rural_monthly_prosperity = 0.001
+	global_production_efficiency = medium_production_efficiency_bonus
+
+	requires = rgo_size_advance_revolutions
+}

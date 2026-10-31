@@ -2,6 +2,7 @@
 # (which players keep asking for) is too long for certain areas to be viable in a multiplayer setting. As a compromise between said
 # mechanic and the old (very high) values, increased trade spread will be tested. As an addition it was made harder to lock out 
 # institution spread for enemies by tweaking 'neighbor' spread values and shifting from 'friendly negihbor' to simply 'neighbor'.
+# 1.4: vanilla raised friendly-neighbor spread x1.25 and neighbor spread x2; the ABM values were scaled by the same factors.
 
 #########################################
 # Early factors
@@ -18,12 +19,12 @@ institution_trade_spread_value_early = {
 
 institution_base_spread_from_friendly_neighbor_with_early = {
 	value = average_location_literacy
-	multiply = 0.030 #was 0.040
+	multiply = 0.0375 #was 0.050 - ABM 0.030 x1.25, as 1.4 raised vanilla 0.040 -> 0.050
 }
 
 institution_base_spread_from_neighbor_with_early = {
 	value = average_location_literacy
-	multiply = 0.015 #was 0.005
+	multiply = 0.030 #was 0.010 - ABM 0.015 x2, as 1.4 raised vanilla 0.005 -> 0.010
 
 }
 
@@ -74,12 +75,12 @@ institution_trade_spread_value_mid = {
 
 institution_base_spread_from_friendly_neighbor_with_mid = {
 	value = average_location_literacy
-	multiply = 0.020 #was 0.030
+	multiply = 0.025 #was 0.0375 - ABM 0.020 x1.25, as 1.4 raised vanilla 0.030 -> 0.0375
 }
 
 institution_base_spread_from_neighbor_with_mid = {
 	value = average_location_literacy
-	multiply = 0.015 #was 0.0025
+	multiply = 0.030 #was 0.005 - ABM 0.015 x2, as 1.4 raised vanilla 0.0025 -> 0.005
 
 }
 
@@ -129,12 +130,12 @@ institution_trade_spread_value_late = {
 
 institution_base_spread_from_friendly_neighbor_with_late = {
 	value = average_location_literacy
-	multiply = 0.015 #was 0.020
+	multiply = 0.019 #was 0.025 - ABM 0.015 x1.25 (rounded), as 1.4 raised vanilla 0.020 -> 0.025
 }
 
 institution_base_spread_from_neighbor_with_late = {
 	value = average_location_literacy
-	multiply = 0.010 #was 0.001
+	multiply = 0.020 #was 0.002 - ABM 0.010 x2, as 1.4 raised vanilla 0.001 -> 0.002
 
 }
 

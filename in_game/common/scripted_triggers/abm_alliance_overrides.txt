@@ -54,4 +54,21 @@
 		actor = $first$
 		recipient = $second$
 	}
+	# 1.4 vanilla check (kept as vanilla): no alliances across the Hussite Wars sides.
+	trigger_if = {
+		limit = {
+			situation:hussite_wars ?= { situation_is_active = yes }
+		}
+		custom_tooltip = {
+			text = not_on_opposing_hussite_wars_sides_tt
+			NOT = {
+				hussite_wars_on_opposing_sides = {
+					first = $first$
+					second = $second$
+				}
+			}
+		}
+	}
+	# Ars Belli: vanilla's "no two hegemons" check (NOT = { $first$ and $second$ both is_hegemon })
+	# is left out on purpose - hegemons may ally each other (bdfd863).
 }

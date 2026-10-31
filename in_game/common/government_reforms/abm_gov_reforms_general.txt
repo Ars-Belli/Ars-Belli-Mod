@@ -1,31 +1,4 @@
-﻿REPLACE:merchant_republic = {
-	major = yes
-	government = republic
-
-	potential = {
-		OR = {
-			original_capital ?= { sub_continent = sub_continent:western_europe }
-			original_capital ?= { sub_continent = sub_continent:eastern_europe }
-			original_capital ?= { sub_continent = sub_continent:north_africa }
-			original_capital ?= { sub_continent = sub_continent:middle_east }
-		}
-	}
-
-	country_modifier = {
-		global_merchant_capacity_modifier = 0.50
-		trade_income = 0.20
-		global_foreign_build_buildings_efficiency = 1.0
-
-		merchant_maintenance_efficiency = 0.50
-		global_integration_speed_modifier = -0.25
-		court_language_is_market_language_importance_modifier = 15
-
-	}
-
-	years = 2
-}
-
-abm_eastern_christian_militant_church = {
+﻿abm_eastern_christian_militant_church = {
 	major = yes
 	unique = yes
 	age = age_1_traditions
@@ -80,7 +53,7 @@ abm_colonial_republic = {
 abm_trade_emporium = {
 	icon = state_backed_merchant_fleet
 	major = yes
-	
+
 	societal_values = {
 		capital_economy_focus
 		innovative_focus
@@ -91,6 +64,7 @@ abm_trade_emporium = {
 		OR = {
 			original_capital ?= { sub_continent = sub_continent:west_africa }
 			original_capital ?= { sub_continent = sub_continent:east_africa }
+			original_capital ?= { sub_continent = sub_continent:north_africa }
 			original_capital ?= { sub_continent = sub_continent:south_east_asia }
 			original_capital ?= { sub_continent = sub_continent:middle_east }
 		}
@@ -104,14 +78,14 @@ abm_trade_emporium = {
 	}
 
 	country_modifier = {
-		global_merchant_capacity_modifier = 0.20
-		global_merchant_power = 0.20
-		global_trades_per_burgher = 0.20
-		global_foreign_build_buildings_efficiency = 0.50
-		trade_sea_efficiency = 0.50
+		global_merchant_capacity_modifier = 0.25
+		global_merchant_power = 0.25
+		global_trades_per_burgher = 0.25
+		global_foreign_build_buildings_efficiency = 0.25
+		trade_sea_efficiency = 0.25
 
 		global_crown_estate_power = -0.05
-		nobles_estate_target_satisfaction = -0.025
+		nobles_estate_target_satisfaction = -0.05
 
 		court_language_is_market_language_importance_modifier = 15
 	}

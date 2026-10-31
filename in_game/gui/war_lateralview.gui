@@ -55,14 +55,46 @@ types war_types {
 							WarLateralView.TogglePeaceViewEnabled,
 							WarLateralView.IsEnemyOrOverlordValidForPeace(WarLateralViewParticipant.GetCountry))]"
 
-							using = sue_for_peace_action_tooltip
+							tooltipwidget = {
+								ContextualTooltipType = {
+									blockoverride "title_icon_texture" {
+										texture = "gfx/interface/icons/flat_icons/war_view/offer_peace_button.dds"
+									}
+
+									blockoverride "title_text" {
+										text = "PEACETITLE"
+									}
+
+									blockoverride "concept_link" {
+										text = [peace|E]
+									}
+
+									blockoverride "tooltip_content" {
+										TooltipTextBlock = {
+											visible = "[Not(StringIsEmpty(WarLateralView.IsEnemyOrOverlordValidForPeaceTooltip(WarLateralViewParticipant.GetCountry)))]"
+											blockoverride "text" {
+												text = "[WarLateralView.IsEnemyOrOverlordValidForPeaceTooltip(WarLateralViewParticipant.GetCountry)]"
+											}
+										}
+										TooltipTextBlock = {
+											visible = "[And(WarLateralView.TogglePeaceViewEnabled, Not(StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)))]"
+											blockoverride "text" {
+												text = "[WarLateralView.TogglePeaceViewTooltip]"
+											}
+										}
+										TooltipRequirementsList = {
+											visible = "[Not(StringIsEmpty(StringToConditionListOnlyPassedAndNeutralIfNot(And(WarLateralView.TogglePeaceViewEnabled, StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)), WarLateralView.TogglePeaceViewTooltip).GetOutput))]"
+											textcontext = "[StringToConditionListOnlyPassedAndNeutralIfNot(And(WarLateralView.TogglePeaceViewEnabled, StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)), WarLateralView.TogglePeaceViewTooltip).GetOutput]"
+										}
+									}
+								}
+							}
 
 							action_tooltip = {
 								click_type = left
 								click_mode = single
 								title = "PEACETITLE"
 								on_action = "[WarLateralView.ShowPeaceOfferLateralViewForCountry(WarLateralViewParticipant.GetCountry)]"
-								description = "[WarLateralView.IsEnemyOrOverlordValidForPeaceTooltip(WarLateralViewParticipant.GetCountry)]"
 								conditions = "[WarLateralView.TogglePeaceViewTooltip]"
 								enabled = "[And3(Or(Not(WarLateralViewParticipant.IsSubjectWithOverlordInWar), WarLateralViewParticipant.IsDisloyalSubject), WarLateralView.TogglePeaceViewEnabled, WarLateralView.IsEnemyOrOverlordValidForPeace(WarLateralViewParticipant.GetCountry))]"
 							}
@@ -179,6 +211,19 @@ types war_types {
 							size = { 105% 105% }
 							name = "name"
 						}
+
+						tooltip_enabled = "[IsBuildDebug]"
+						tooltipwidget = {
+							BasicFunctionalTooltip = {
+								blockoverride "tooltip_content" {
+									TooltipDebugTextBlock = {
+										blockoverride "text" {
+											debug_text = "[WarLateralView.GetCountryJoinReason(Country.Self)]"
+										}
+									}
+								}
+							}
+						}
 					}
 					expand = {}
 				}
@@ -244,7 +289,7 @@ types war_types {
 						}
 	
 						# Positive Stability
-						progressbar = {
+						progressbar_framed = {
 							visible = "[Not(WarLateralViewParticipant.GetCountry.IsCurrencyValueEqualOrLessThanZero('stability'))]"
 							layoutpolicy_horizontal = expanding
 							size = {-1 5}
@@ -255,7 +300,7 @@ types war_types {
 						}
 
 						# Negative Stability
-						progressbar = {
+						progressbar_framed = {
 							visible = "[WarLateralViewParticipant.GetCountry.IsCurrencyValueEqualOrLessThanZero('stability')]"
 							layoutpolicy_horizontal = expanding
 							size = {-1 5}
@@ -295,7 +340,7 @@ types war_types {
 							text = "[WarLateralViewParticipant.GetWarEnthusiasm|0%]"
 						}
 	
-						progressbar = {
+						progressbar_framed = {
 							layoutpolicy_horizontal = expanding
 							size = {-1 5}
 							using = progress_bar_green_alt
@@ -337,7 +382,7 @@ types war_types {
 							text = "[WarLateralViewParticipant.GetCountry.GetFixedPointCurrencyValue('war_exhaustion')|0]"
 						}
 	
-						progressbar = {
+						progressbar_framed = {
 							layoutpolicy_horizontal = expanding
 							size = {-1 5}
 							using = progress_bar_green_alt
@@ -384,7 +429,7 @@ types war_types {
 							text = "[WarLateralViewParticipant.GetCountry.GetBlockadedPercent|0%]"
 						}
 	
-						progressbar = {
+						progressbar_framed = {
 							layoutpolicy_horizontal = expanding
 							size = {-1 5}
 							using = progress_bar_green_alt
@@ -425,7 +470,7 @@ types war_types {
 							text = "[WarLateralViewParticipant.GetWarParticipation|0%]"
 						}
 	
-						progressbar = {
+						progressbar_framed = {
 							layoutpolicy_horizontal = expanding
 							size = {-1 5}
 							using = progress_bar_green_alt
@@ -592,7 +637,7 @@ lateralview_full = {
 									using = WarScore_tooltip
 								}
 
-								progressbar = {
+								progressbar_framed = {
 									visible = "[Not(And(WarLateralView.IsPlayerInWar, Not(WarLateralView.IsPlayerAttacker)))]"
 									layoutpolicy_horizontal = expanding
 									size = {-1 15}
@@ -612,7 +657,7 @@ lateralview_full = {
 									}
 								}
 
-								progressbar = {
+								progressbar_framed = {
 									visible = "[And(WarLateralView.IsPlayerInWar, Not(WarLateralView.IsPlayerAttacker))]"
 									layoutpolicy_horizontal = expanding
 									size = {-1 15}
@@ -1879,25 +1924,25 @@ lateralview_full = {
 											sort_by_key_button = {
 												name = "name"
 												layoutpolicy_vertical = expanding
-												size = { 250 -1 }
+												size = { 204 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "manpower"
 												layoutpolicy_vertical = expanding
-												size = { 110 -1 }
+												size = { 174 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "ships"
 												layoutpolicy_vertical = expanding
-												size = { 105 -1 }
+												size = { 104 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "stability"
 												layoutpolicy_vertical = expanding
-												size = { 80 -1 }
+												size = { 74 -1 }
 											}
 
 											sort_by_key_button = {
@@ -1909,22 +1954,20 @@ lateralview_full = {
 											sort_by_key_button = {
 												name = "exhaustion"
 												layoutpolicy_vertical = expanding
-												size = { 75 -1 }
+												size = { 74 -1 }
 											}
 
 											sort_by_key_button = {
 												visible = "[Not(WarLateralView.AreAttackersLandlocked)]"
 												name = "blockaded"
 												layoutpolicy_vertical = expanding
-												size = { 76 -1 }
+												size = { 74 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "participation"
-												layoutpolicy_vertical = expanding
-												size = { 72 -1 }
+												using = layoutpolicy_expanding
 											}
-											expand = {}
 
 											# sort_by_key_button = {
 											# 	name = "warscore"
@@ -2006,52 +2049,50 @@ lateralview_full = {
 											sort_by_key_button = {
 												name = "name"
 												layoutpolicy_vertical = expanding
-												size = { 250 -1 }
+												size = { 249 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "manpower"
 												layoutpolicy_vertical = expanding
-												size = { 110 -1 }
+												size = { 169 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "ships"
 												layoutpolicy_vertical = expanding
-												size = { 105 -1 }
+												size = { 104 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "stability"
 												layoutpolicy_vertical = expanding
-												size = { 80 -1 }
+												size = { 82 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "enthusiasm"
 												layoutpolicy_vertical = expanding
-												size = { 74 -1 }
+												size = { 82 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "exhaustion"
 												layoutpolicy_vertical = expanding
-												size = { 75 -1 }
+												size = { 82 -1 }
 											}
 
 											sort_by_key_button = {
 												visible = "[Not(WarLateralView.AreDefendersLandlocked)]"
 												name = "blockaded"
 												layoutpolicy_vertical = expanding
-												size = { 76 -1 }
+												size = { 74 -1 }
 											}
 
 											sort_by_key_button = {
 												name = "participation"
-												layoutpolicy_vertical = expanding
-												size = { 72 -1 }
+												using = layoutpolicy_expanding
 											}
-											expand = {}
 
 											# sort_by_key_button = {
 											# 	name = "warscore"
@@ -2113,28 +2154,82 @@ lateralview_full = {
 						}
 					}
 
-					# SURRENDER
+					# DEMAND WAR LEADERSHIP
 					hbox = {
 						layoutpolicy_horizontal = expanding
 						margin = {10 0}
-						
-						action_button = {
+						visible = "[And3(WarLateralView.IsPlayerInWar, Not(ObjectsEqual(Player.Self, WarLateralView.GetFriendlyLeader.Self)), Not(WarLateralView.GetWar.IsCivilWar))]"
+
+						button = {
+							visible = "[PdxGuiWidget.IsUberButtonVisible]"
 							using = button_wax_texture
 							using = button_common_template
 							layoutpolicy_horizontal = expanding
 
-							title = "surrender_civil_war"
-							actor = "[Player]"
-							parameter = {
-								parameter_name = "recipient"
-								parameter_value = "[WarLateralView.GetEnemyLeader]"
+							scripted_action_tooltip = {
+								click_type = left
+								click_mode = confirm
+								action_name = "demand_war_leadership"
+								actor = "[Player]"
+								parameter = {
+									parameter_name = "recipient"
+									parameter_value = "[WarLateralView.GetFriendlyLeader]"
+								}
+								parameter = {
+									parameter_name = "war"
+									parameter_value = "[WarLateralView.GetWar]"
+								}
 							}
-		
-							left_click_and_hold_action = {
-								action_name = "surrender_civil_war"
-							}
+							enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
 
-							tooltipwidget = { using = action_tooltip_pop_out }
+							button_tooltip_override = { title = "demand_war_leadership" }
+							tooltipwidget = { using = war_scripted_diplomatic_action_tooltip }
+
+							hbox = {
+								spacing = 5
+								expand = {}
+
+								icon = {
+									size = { 23 23 }
+									texture = "gfx/interface/icons/flat_icons/declare_war/war_leader.dds"
+								}
+
+								text_single = {
+									text = "demand_war_leadership"
+									align = nobaseline
+									using = Font_Type_Headers
+								}
+
+								expand = {}
+							}
+						}
+					}
+
+					# SURRENDER
+					hbox = {
+						layoutpolicy_horizontal = expanding
+						margin = {10 0}
+
+						button = {
+							visible = "[PdxGuiWidget.IsUberButtonVisible]"
+							using = button_wax_texture
+							using = button_common_template
+							layoutpolicy_horizontal = expanding
+
+							scripted_action_tooltip = {
+								click_type = left
+								click_mode = confirm
+								action_name = "surrender_civil_war"
+								actor = "[Player]"
+								parameter = {
+									parameter_name = "recipient"
+									parameter_value = "[WarLateralView.GetEnemyLeader]"
+								}
+							}
+							enabled = "[PdxGuiWidget.IsUberButtonEnabled]"
+
+							button_tooltip_override = { title = "surrender_civil_war" }
+							tooltipwidget = { using = war_scripted_diplomatic_action_tooltip }
 		
 							hbox = {
 								spacing = 5
@@ -2183,6 +2278,7 @@ lateralview_full = {
 								size = { -1 50 }
 								visible = "[WarLateralView.IsDefenderUnconditionalSurrenderVisible]"
 								enabled = "[WarLateralView.GetDefenderUnconditionalSurrender.IsEnabled]"
+								datacontext = "[WarLateralView.GetDefenderUnconditionalSurrender]"
 								action_tooltip = {
 									click_type = left
 									click_mode = confirm
@@ -2190,10 +2286,10 @@ lateralview_full = {
 									on_action = "[WarLateralView.GetDefenderUnconditionalSurrender.OnClick]"
 									visible = "[WarLateralView.IsDefenderUnconditionalSurrenderVisible]"
 									enabled = "[WarLateralView.GetDefenderUnconditionalSurrender.IsEnabled]"
-									description = "[WarLateralView.GetDefenderUnconditionalSurrender.GetTooltip]"
-								}		
-								
-								tooltipwidget = { BasicFunctionalTooltip = {} }
+									conditions = "[WarLateralView.GetDefenderUnconditionalSurrender.GetTooltip]"
+								}
+
+								tooltipwidget = { using = diplomatic_action_tooltip }
 									
 								hbox = {
 									spacing = 5
@@ -2225,7 +2321,6 @@ lateralview_full = {
 									title = "[WarLateralView.GetAnnexRevolterTitle]"
 									on_action = "[WarLateralView.SendAnnexRevolter]"
 									enabled = "[WarLateralView.CanAnnexRevolter]"
-									description = "[WarLateralView.CanAnnexRevolterInfo]"
 								}
 
 								tooltipwidget = {
@@ -2234,7 +2329,7 @@ lateralview_full = {
 											icon = {
 												using = tooltip_title_icon_size
 												texture = "gfx/interface/icons/peace_treaty/offer_peace.dds"
-												
+
 												glow = {
 													name = "drop_shadow"
 													glow_radius = 3
@@ -2243,15 +2338,20 @@ lateralview_full = {
 												}
 											}
 										}
-								
+
 										blockoverride "title_text" {
 											text = "OFFER_PEACE"
 										}
-								
+
 										blockoverride "concept_link" {
 											text = "[peace|e]"
 										}
 										blockoverride "tooltip_content"{
+											TooltipTextBlock = {
+												visible = "[Not(StringIsEmpty(WarLateralView.CanAnnexRevolterInfo))]"
+												blockoverride "text" { text = "[WarLateralView.CanAnnexRevolterInfo]" }
+											}
+
 											TooltipScrolledRowList = {
 												blockoverride "block_scrollarea" { maximumsize = { -1 350 } }
 												textcontext = "[WarLateralView.CanAnnexRevolterDesc]"
@@ -2302,7 +2402,6 @@ lateralview_full = {
 									title = "WAR_LATERALVIEW_GRANT_INDEPENDENCE"
 									on_action = "[WarLateralView.SendGrantIndependenceRevolter]"
 									enabled = "[WarLateralView.CanGrantIndependence]"
-									description = "[WarLateralView.CanGrantIndependenceInfo]"
 								}
 
 								tooltipwidget = {
@@ -2311,7 +2410,7 @@ lateralview_full = {
 											icon = {
 												using = tooltip_title_icon_size
 												texture = "gfx/interface/icons/peace_treaty/offer_peace.dds"
-												
+
 												glow = {
 													name = "drop_shadow"
 													glow_radius = 3
@@ -2320,20 +2419,25 @@ lateralview_full = {
 												}
 											}
 										}
-								
+
 										blockoverride "title_text" {
 											text = "OFFER_PEACE"
 										}
-								
+
 										blockoverride "concept_link" {
 											text = "[peace|e]"
 										}
 										blockoverride "tooltip_content"{
+											TooltipTextBlock = {
+												visible = "[Not(StringIsEmpty(WarLateralView.CanGrantIndependenceInfo))]"
+												blockoverride "text" { text = "[WarLateralView.CanGrantIndependenceInfo]" }
+											}
+
 											TooltipScrolledRowList = {
 												blockoverride "block_scrollarea" { maximumsize = { -1 350 } }
 												textcontext = "[WarLateralView.CanGrantIndependenceDesc]"
 												ontextcontextchanged = "[SetRowListWithTitleFromTextContext(PdxGuiWidget.AccessSelf)]"
-											}				
+											}
 										}
 									}
 								}
@@ -2371,7 +2475,15 @@ lateralview_full = {
 							button_wax = {
 								layoutpolicy_horizontal = expanding
 								visible = "[WarLateralView.IsReinInSubjectVisible]"
-								onclick = "[WarLateralView.ShowPeaceDemandLateralView]"
+								enabled = "[WarLateralView.IsReinInSubjectEnabled]"
+
+								action_tooltip = {
+									click_type = left
+									click_mode = confirm
+									title = "WAR_LATERALVIEW_REIN_IN_SUBJECT"
+									on_action = "[WarLateralView.SendReinInSubjects]"
+									enabled = "[WarLateralView.IsReinInSubjectEnabled]"
+								}
 
 								tooltipwidget = {
 									ContextualTooltipType = {
@@ -2398,6 +2510,11 @@ lateralview_full = {
 										}
 
 										blockoverride "tooltip_content" {
+											TooltipTextBlock = {
+												visible = "[Not(StringIsEmpty(WarLateralView.CanReinInSubjectInfo))]"
+												blockoverride "text" { text = "[WarLateralView.CanReinInSubjectInfo]" }
+											}
+
 											TooltipScrolledRowList = {
 												blockoverride "block_scrollarea" { maximumsize = { -1 350 } }
 												textcontext = "[WarLateralView.GetReinInSubjectTooltip]"
@@ -2439,6 +2556,7 @@ lateralview_full = {
 								size = { -1 50 }
 								visible = "[WarLateralView.IsAttackerUnconditionalSurrenderVisible]"
 								enabled = "[WarLateralView.GetAttackerUnconditionalSurrender.IsEnabled]"
+								datacontext = "[WarLateralView.GetAttackerUnconditionalSurrender]"
 								action_tooltip = {
 									click_type = left
 									click_mode = confirm
@@ -2446,10 +2564,10 @@ lateralview_full = {
 									on_action = "[WarLateralView.GetAttackerUnconditionalSurrender.OnClick]"
 									visible = "[WarLateralView.IsAttackerUnconditionalSurrenderVisible]"
 									enabled = "[WarLateralView.GetAttackerUnconditionalSurrender.IsEnabled]"
-									description = "[WarLateralView.GetAttackerUnconditionalSurrender.GetTooltip]"
-								}		
-								
-								tooltipwidget = { BasicFunctionalTooltip = {} }
+									conditions = "[WarLateralView.GetAttackerUnconditionalSurrender.GetTooltip]"
+								}
+
+								tooltipwidget = { using = diplomatic_action_tooltip }
 									
 								hbox = {
 									spacing = 5
@@ -2563,6 +2681,33 @@ template sue_for_peace_action_tooltip {
 					visible = "[Not(StringIsEmpty(StringToConditionListOnlyPassedAndNeutralIfNot(And(WarLateralView.TogglePeaceViewEnabled, StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)), WarLateralView.TogglePeaceViewTooltip).GetOutput))]"
 					textcontext = "[StringToConditionListOnlyPassedAndNeutralIfNot(And(WarLateralView.TogglePeaceViewEnabled, StringIsEmpty(WarLateralView.TogglePeaceViewTooltip)), WarLateralView.TogglePeaceViewTooltip).GetOutput]"
 				}
+			}
+		}
+	}
+}
+
+template war_scripted_diplomatic_action_tooltip {
+	ContextualTooltipType = {
+		blockoverride "title_text" {
+			text = "[Select_CString(PdxGuiWidget.HasTooltipMetaTitle, PdxGuiWidget.GetTooltipMetaTitle, UIAction.GetTitle)]"
+		}
+
+		blockoverride "tooltip_content" {
+			TooltipTextBlock = {
+				visible = "[Not(StringIsEmpty(UIAction.GetDescription))]"
+				blockoverride "text" { text = "[UIAction.GetDescription]" }
+			}
+
+			TooltipConditionList = {
+				blockoverride "block_title" { text = "BREAKDOWN_REASONS_GENERIC_TITLE" }
+				visible = "[ConditionList.HasItems]"
+				datacontext = "[StringToConditionListOnlyPassedAndNeutral(UIAction.GetEffects)]"
+			}
+
+			TooltipConditionList = {
+				blockoverride "block_title" { text = "game_concept_effects" }
+				visible = "[And(UIAction.IsEnabled, ConditionList.HasItems)]"
+				datacontext = "[StringToConditionListOnlyPassedAndNeutral(UIAction.GetConditions)]"
 			}
 		}
 	}

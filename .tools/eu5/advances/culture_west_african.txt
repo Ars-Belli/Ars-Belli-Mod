@@ -4,15 +4,24 @@
 	}
 
 	age = age_1_traditions
+	icon = griot_advance
 	num_possible_artists = 1
 	set_cabinet_member_cost_modifier = -0.1
 }
 
 west_african_caravan_stop_advance = {
 	potential = {
-		culture = { has_culture_group = culture_group:west_african_group }
+		OR = {
+			culture = { has_culture_group = culture_group:west_african_group }
+			culture = { has_culture_group = culture_group:arabian_group }
+			culture = { has_culture_group = culture_group:arabic_group }
+			culture = { has_culture_group = culture_group:iranian_group }
+			culture = { has_culture_group = culture_group:amazigh_group }
+			culture = { has_culture_group = culture_group:maghrebi_group }
+		}
 	}
 	age = age_1_traditions
+	icon = west_african_caravan_stop_advance
 
 	unlock_building = caravan_stop
 }
@@ -23,5 +32,6 @@ sudano_sahelian_architecture_advance = {
 	}
 
 	age = age_2_renaissance
+	icon = sudano_sahelian_architecture_advance
 	global_build_buildings_efficiency = 0.2
 }

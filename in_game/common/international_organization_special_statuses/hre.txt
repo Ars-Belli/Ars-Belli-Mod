@@ -116,8 +116,13 @@ elector = {
 archbishop_elector = {
 	max_countries = {
 		if = {
-			limit = {  modifier:hre_max_archbishop_elector <= 0 } 
-			value = 5
+			limit = {
+			modifier:hre_max_archbishop_elector <= 0
+			international_organization:hre = {
+				international_organization_has_policy = policy:princely_bishopric_electorate_policy
+			}
+		}
+			value = 5 # Ars Belli: was 3
 		}
 		else = {
 			value = modifier:hre_max_archbishop_elector

@@ -1,4 +1,51 @@
-﻿REPLACE:kingdom_of_god_reform = {
+﻿REPLACE:merchant_republic = {
+	major = yes
+	government = republic
+
+	potential = {
+		OR = {
+			# Christian nations of western or eastern Europe: no societal value requirement.
+			AND = {
+				religion.group = religion_group:christian
+				original_capital ?= {
+					OR = {
+						sub_continent = sub_continent:western_europe
+						sub_continent = sub_continent:eastern_europe
+					}
+				}
+			}
+			# North Africa and the Middle East: any religion, but a thoroughly mercantile society.
+			# (Societal values run -100..100, so "50+" is the strong half of each axis.)
+			AND = {
+				original_capital ?= {
+					OR = {
+						sub_continent = sub_continent:north_africa
+						sub_continent = sub_continent:middle_east
+					}
+				}
+				societal_value:serfdom_vs_free_subjects >= 50
+				societal_value:aristocracy_vs_plutocracy >= 50
+				societal_value:individualism_vs_communalism >= 50
+				societal_value:capital_economy_vs_traditional_economy >= 50
+			}
+		}
+	}
+
+	country_modifier = {
+		global_merchant_capacity_modifier = 0.50
+		trade_income = 0.20
+		global_foreign_build_buildings_efficiency = 1.0
+
+		merchant_maintenance_efficiency = 0.50
+		#global_integration_speed_modifier = -0.25
+		court_language_is_market_language_importance_modifier = 15
+
+	}
+
+	years = 2
+}
+
+REPLACE:kingdom_of_god_reform = {
 	unique = yes
 	potential = {
 		has_unlocked_government_reform_trigger = { type = kingdom_of_god_reform }
@@ -16,17 +63,8 @@
 		}
 	}
 
-	on_deactivate = {
-		#If it somehow get unlocked
-		#If a modifier was provided to add the Gov reform through its event
-		#we need to remove it if the reform is removed
-		if = {
-			limit = {
-				has_country_modifier = kingdom_of_god_slot_modifier
-			}
-			remove_country_modifier = kingdom_of_god_slot_modifier
-		}
-	}
+	#1.4: on_deactivate dropped - it only cleaned up kingdom_of_god_slot_modifier, which 1.4 no longer
+	#defines (this reform grants government_reform_slots = 1 itself, so nothing temporary is added)
 
 	years = 2
 }

@@ -4,6 +4,57 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.4.4.mod.26
+
+Since game.1.3.11.mod.25 → game.1.4.4.mod.26:
+
+### Patch Compatibility
+
+- updated for game 1.4.4 (supports 1.4.\*): every base-game file the mod replaces was re-based on
+  1.4.4 — interface, diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start (pops,
+  buildings, roads, diplomacy and country cultures). 1.3 saves load and keep running
+
+### UI and Quality of Life
+
+- **New map modes:** **Bailiffs** (next to Max Control) shows where a Bailiff pays off: rural,
+  integrated or core locations with a tax base of 8 or more, and those with high-value raw goods
+  (wool, iron, silver, gold, saffron, dyes and similar) even before the tax base is there. **Create
+  Town** and **Create City** (next to Location Rank) rank your locations for urbanising: cheap goods
+  first, food staples last (food 8+ after food 5 after food 3–4), high-value goods kept rural, and
+  rich locations with medium-value goods (lumber, fibre, ...) lower than cheap ones; stripes mark
+  locations still short of the population the next rank needs (5,000 / 30,000)
+- the campaign timeline button is gone from the age bar, where it sat under the MP rank and Tier
+  List; the timeline is still in the decisions screen
+- observers no longer get the player-only MP counters, rank label and partner lists, which had no
+  country to read and logged an error every frame
+- generating a new game is about 2 minutes faster
+
+### Pops, Map and Campaign Setup
+
+- institution spread from neighbours follows game 1.4's vanilla increase: friendly neighbours +25%,
+  any neighbour ×2. The mod still favours spread from any neighbour over friendly ones
+
+### Crusades and Jihads
+
+- the 100-year cooldown on calling a Jihad now actually applies — the override that added it was
+  silently ignored by the game
+
+### Economy and Gold-Transfers
+
+- **Send Economic Support:** the "agreed" and cancellation popups show proper text instead of raw
+  keys
+
+### New Diplomatic Actions
+
+- **Player Coalition:** the members' opinion bonus of each other now reads "In Coalition Together"
+  instead of a raw key
+
+### National Flavour
+
+- **Siguntur — Rajo Tigo Selo** now requires Pike and Shot [was a Japanese-only ship advance, which
+  Siguntur cannot research]
+- **Fars — Diplomatic Prudence** now gives its +0.05 monthly diplomats [the bonus never applied]
+
 ## game.1.3.11.mod.25
 
 Since game.1.3.11.mod.24 → game.1.3.11.mod.25:

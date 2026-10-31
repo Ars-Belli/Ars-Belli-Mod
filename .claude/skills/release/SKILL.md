@@ -36,7 +36,7 @@ The matching git commit is titled exactly the version string (e.g. commit subjec
 
 ## Release-only (version already bumped, committed, tagged, pushed)
 
-If `release.ps1` already ran and the tagged commit is pushed (you only owe the GitHub release), skip steps 2–5 and do 6–7. Build the body from the version's `versionsChangelog.md` entries / the blurb, or re-derive it by diffing `git log <prev_tag>..<version> --oneline` and classifying with the `changelog` skill's rules. Confirm `ArsBelliMod_<version>.zip` still sits in the repo root (it is left there by step 2 and gitignored); if it was deleted, build a ZIP at the current version matching `release.ps1`'s include list — do **not** just re-run `release.ps1`, which would bump the version again.
+If `release.ps1` already ran and the tagged commit is pushed (you only owe the GitHub release), skip steps 2–5 and do 6–7. Build the body from the version's `versionsChangelog.md` entries / the blurb, or re-derive it by diffing `git log <prev_tag>..<version> --oneline` and classifying with the `changelog` skill's rules. Confirm `ArsBelliMod_<version>.zip` still sits in the repo root (it is left there by step 2 and gitignored); if it was deleted, build a ZIP at the current version matching `release.ps1`'s include list, running `merge_country_setup.ps1 -ModRoot <staging dir>` on the staged copy before zipping — do **not** just re-run `release.ps1`, which would bump the version again.
 
 ## Cautions
 

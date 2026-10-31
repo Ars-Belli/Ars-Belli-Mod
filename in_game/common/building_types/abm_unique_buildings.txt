@@ -1,5 +1,6 @@
 ﻿#manpower nerfed to 5 (from 50), employed soldiers to 500 (from 5000) and no longer buildable in town/city (starting ones in cities should still function regardless)
 REPLACE:kurultai = {
+	audio_tier = 3 # 1.4 vanilla
 	is_special = yes
 	is_foreign = no
 	pop_type = soldiers
@@ -55,6 +56,7 @@ REPLACE:kurultai = {
 
 #manpower nerfed to 2 (from 5), employed clergy to 200 (from 400) and no longer buildable in rural (starting ones in rural should still function regardless)
 REPLACE:order_commandery = {
+	audio_tier = 3 # 1.4 vanilla
 	is_special = yes
 	is_foreign = yes
 	stronger_power_projection = no
@@ -65,10 +67,12 @@ REPLACE:order_commandery = {
 	
 	max_levels = 1
 	employment_size = 0.2 #was 0.4
+	want_foreign_pop_created = no #1.4: field is required (is_foreign = yes); absent from 1.3-era copy
 	
 	rural_settlement = no
 	town = yes
 	city = yes
+	megalopolis = yes # 1.4 vanilla
 	
 	allow_wrong_startup = yes
 	
@@ -95,7 +99,7 @@ REPLACE:order_commandery = {
 	
 	allow = {
 		owner = { within_diplomatic_range = scope:actor }
-		dominant_religion = religion:catholic
+		dominant_religion ?= religion:catholic
 	}
 
 	remove_if = {

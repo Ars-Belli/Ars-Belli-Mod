@@ -30,14 +30,31 @@
  STATIC_MODIFIER_NAME_receiving_abm_economic_support: "Receiving $abm_economic_support_relation$"
  STATIC_MODIFIER_DESC_receiving_abm_economic_support: "This country sends us a monthly sum of [gold_i], capped at our [tax_base|e]."
 
- cancellation_abm_economic_support: "Cancel $abm_economic_support_relation$"
- cancellation_abm_economic_support_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
- cancellation_abm_economic_support_cta: "Stop sending $abm_economic_support_relation$ to [TARGET_COUNTRY.GetName]."
- cancellation_abm_economic_support_desc: "We will stop sending them gold, freeing the #H Defensive Point#! and the monthly [diplomats|e] it costs us."
+ # Relation action and popup keys. The engine builds these from the offer_/cancel_/
+ # break_ prefixes (the same set vanilla gives every scripted relation in
+ # scripted_relations_l_english.yml). The offer popup appears when the interaction's
+ # create_relation fires, so its text names no country - the effect list under it
+ # already does.
+ offer_abm_economic_support_happened_title: "$abm_economic_support_relation$ Agreed"
+ offer_abm_economic_support_happened_desc: "A new $abm_economic_support_relation$ arrangement has been agreed. Both sides spend a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as it lasts."
+ cancel_abm_economic_support: "Cancel $abm_economic_support_relation$"
+ cancel_abm_economic_support_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ cancel_abm_economic_support_cta: "Stop sending $abm_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ cancel_abm_economic_support_desc: "We will stop sending them gold, freeing the #H Defensive Point#! and the monthly [diplomats|e] it costs us."
+ cancel_abm_economic_support_cta_to_unknown: "Stop sending $abm_economic_support_relation$ to a [country|e]"
+ cancel_abm_economic_support_desc_to_unknown: "$cancel_abm_economic_support_desc$"
+ cancel_abm_economic_support_happened_title: "$abm_economic_support_relation$ Cancelled"
+ cancel_abm_economic_support_happened_desc: "[SCOPE.sCountry('actor').GetName] stopped sending $abm_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]."
+ cancel_abm_economic_support_proposal_question: "Stop sending $abm_economic_support_relation$ to [TARGET_COUNTRY.GetName]?\n$INFO$"
  break_abm_economic_support: "Refuse $abm_economic_support_relation$"
  break_abm_economic_support_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
- break_abm_economic_support_cta: "Stop accepting $abm_economic_support_relation$ from [TARGET_COUNTRY.GetName]."
+ break_abm_economic_support_cta: "Stop accepting $abm_economic_support_relation$ from [SCOPE.sCountry('recipient').GetName]"
  break_abm_economic_support_desc: "We will refuse further gold, freeing the #H Defensive Point#! and the monthly [diplomats|e] it costs us."
+ break_abm_economic_support_cta_to_unknown: "Stop accepting $abm_economic_support_relation$ from a [country|e]"
+ break_abm_economic_support_desc_to_unknown: "$break_abm_economic_support_desc$"
+ break_abm_economic_support_happened_title: "$abm_economic_support_relation$ Refused"
+ break_abm_economic_support_happened_desc: "[SCOPE.sCountry('actor').GetName] refused further $abm_economic_support_relation$ from [SCOPE.sCountry('recipient').GetName]."
+ break_abm_economic_support_proposal_question: "Stop accepting $abm_economic_support_relation$ from [TARGET_COUNTRY.GetName]?\n$INFO$"
 
  abm_economic_support_select_amount: "Gold sent each month - limited by their [tax_base|e]"
  abm_economic_support_one_patron_tt: "They must not already be receiving $abm_economic_support_relation$ from another [country|e]"

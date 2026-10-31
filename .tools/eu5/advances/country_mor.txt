@@ -1,171 +1,444 @@
-﻿amazigh_slave_raids = {
+﻿moroccan_sharifian_descent = {
 	age = age_1_traditions
+	icon = crown_power_advance_renaissance
+
 	potential = {
-		has_or_had_tag = MOR
+		culture = culture:moroccan
 	}
 
-	requires = feudalism_advance
-	
-	auto_slave_raid_different_religion = yes
-}
+	clergy_estate_target_satisfaction = small_permanent_target_satisfaction
+	monthly_prestige = 0.1
 
-zenata_roots = {
-	age = age_1_traditions
-	potential = {
-		has_or_had_tag = MOR
-	}
-	requires = alchemy_advance
-
-	global_wool_output_modifier = 0.25
+	requires = cultural_traditions_law_advance
 }
 
 mor_atlas_strongholds = {
 	age = age_1_traditions
+	icon = mor_atlas_strongholds
+
 	potential = {
 		has_or_had_tag = MOR
 	}
-	mountains_proximity_impact = -0.33
+
 	hills_proximity_impact = -0.2
+	mountains_proximity_impact = -0.33
 
-	requires = zenata_roots
-}
-
-mor_marabouts = {
-	age = age_2_renaissance
-	potential = {
-		has_or_had_tag = MOR
-		religion.group = religion_group:muslim
-	}
-
-	requires = renaissance_thought
-
-	invite_religious_figure_same_school_cost_modifier = -0.5
-	invite_religious_figure_different_school_cost_modifier = -0.5
-	dismiss_religious_figure_cost_modifier = -0.5
-}
-trans_saharan_trade = {
-	age = age_2_renaissance
-	icon = markets_for_salt
-	potential = {
-		has_or_had_tag = MOR
-	}
-
-	requires = trade_range_advance_age_2
-	trade_land_efficiency = large_trade_land_efficiency_bonus
+	requires = alchemy_advance
 }
 
 first_fleet_of_the_med = {
-	age = age_2_renaissance
+	age = age_1_traditions
+	icon = first_fleet_of_the_med
+
 	potential = {
 		has_or_had_tag = MOR
+		original_tag = MOR
 	}
-	
-	requires = blockade_tactics
 
-	monthly_navy_tradition = 0.1
+	global_sailors_modifier = 0.1
+	naval_morale_modifier = 0.1
+
+	requires = ship_building_advance
 }
 
-slave_soldiers = {
+mor_marinid_takeover = {
+	age = age_1_traditions
+	icon = crown_power_advance_renaissance
+
+	potential = {
+		has_or_had_tag = MOR
+		original_tag = MOR
+	}
+
+	country_cabinet_efficiency = 0.1
+	court_spending_efficiency = 0.1
+
+	requires = medieval_administration
+}
+
+sle_idrisi_atlantic_port = {
+	age = age_1_traditions
+	icon = merchants_and_trade
+
+	potential = {
+		has_or_had_tag = SLE
+	}
+
+	country_cabinet_efficiency = 0.1
+	global_merchant_capacity_modifier = 0.1
+
+	requires = cultural_traditions_law_advance
+}
+
+tet_strait_lookout = {
+	age = age_1_traditions
+	icon = defensive_mentality
+
+	potential = {
+		has_or_had_tag = TET
+	}
+
+	improve_relation_impact = 0.1
+	spy_network_construction = 0.1
+
+	requires = cultural_traditions_law_advance
+}
+
+moroccan_bay_a = {
 	age = age_2_renaissance
+	icon = legalism_advance
+
+	potential = {
+		culture = culture:moroccan
+	}
+
+	global_separatism = -0.05
+	nobles_estate_target_satisfaction = small_permanent_target_satisfaction
+
+	requires = renaissance_court
+}
+
+mor_marrakesh_fez_axis = {
+	age = age_2_renaissance
+	icon = merchants_and_trade
+
 	potential = {
 		has_or_had_tag = MOR
 	}
-	
+
+	global_distance_from_capital_speed_propagation = 0.1
+	non_rural_migration_attraction = 0.1
+
+	requires = renaissance_court
+}
+
+mor_marinid_madrasas = {
+	age = age_2_renaissance
+	icon = scholasticism
+
+	potential = {
+		has_or_had_tag = MOR
+		original_tag = MOR
+	}
+
+	global_max_literacy = 5
+	improve_relation_impact = 0.1
+
+	requires = renaissance_thought
+}
+
+sle_early_privateer_charters = {
+	age = age_2_renaissance
+	icon = skilled_captains
+
+	potential = {
+		has_or_had_tag = SLE
+	}
+
+	privateer_durability = 0.02
+	ship_capture_chance = 0.05
+
+	requires = renaissance_court
+}
+
+tet_riffian_levies = {
+	age = age_2_renaissance
+	icon = offensive_army
+
+	potential = {
+		has_or_had_tag = TET
+	}
+
+	army_light_infantry_power = 0.05
+	mercenary_maintenance_efficiency = 0.1
+
 	requires = armory_advance
-
-	global_manpower_modifier = 0.1
 }
 
-desert_power = {
+moroccan_andalusi_refuge = {
 	age = age_3_discovery
+	icon = patron_of_art
+
+	potential = {
+		culture = culture:moroccan
+	}
+
+	burghers_estate_target_satisfaction = small_permanent_target_satisfaction
+	cultural_influence_modifier = 0.1
+
+	requires = formalized_relations
+}
+
+mor_sadi_sharifian_emergence = {
+	age = age_3_discovery
+	icon = cultural_traditions_law_advance
+
 	potential = {
 		has_or_had_tag = MOR
 	}
-	
-	requires = regulate_court_procedures
-	
-	tribes_estate_target_satisfaction = medium_permanent_target_satisfaction
-	peasants_estate_target_satisfaction = medium_permanent_target_satisfaction
+
+	diplomatic_range_modifier = 0.25
+	monthly_diplomats = 0.05
+
+	requires = crown_power_advance_discovery
+}
+
+mor_chichaoua_sugar = {
+	age = age_3_discovery
+	icon = merchants_and_trade
+
+	potential = {
+		has_or_had_tag = MOR
+		original_tag = MOR
+	}
+
+	expand_rgo_farming_cost_modifier = -0.1
+	global_sugar_output_modifier = 0.2
+
+	requires = rgo_size_advance_discovery
+}
+
+sle_atlantic_corsair_charters = {
+	age = age_3_discovery
+	icon = sle_atlantic_corsair_charters
+
+	potential = {
+		has_or_had_tag = SLE
+	}
+
+	navy_tradition_from_battle = 0.25
+	privateer_durability = 0.02
+
+	requires = formalized_relations
+}
+
+tet_andalusi_quarter = {
+	age = age_3_discovery
+	icon = patron_of_art
+
+	potential = {
+		has_or_had_tag = TET
+	}
+
+	global_max_literacy = 5
+	tolerance_own = 1
+
+	requires = formalized_relations
 }
 
 atlantic_trade_routes = {
 	age = age_4_reformation
+	icon = atlantic_trade_routes
+
 	potential = {
-		has_or_had_tag = MOR
+		culture = culture:moroccan
 	}
-	
+
+	monthly_navy_tradition = 0.1
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+
 	requires = maritime_advance_age_4
-	
-	trade_sea_efficiency = large_trade_sea_efficiency_bonus
 }
 
 foreign_politics = {
 	age = age_4_reformation
+	icon = foreign_politics
+
 	potential = {
 		has_or_had_tag = MOR
 	}
-	
-	requires = leader_recruit_cost_advance
 
 	diplomatic_capacity = 1
+	diplomatic_reputation = diplomatic_reputation_weak_bonus
 
+	requires = leader_recruit_cost_advance
 }
 
-saharan_gold_trade = {
+mor_dhahabi_golden_age = {
 	age = age_4_reformation
+	icon = zmw_merchant_taxes
+
 	potential = {
 		has_or_had_tag = MOR
+		original_tag = MOR
 	}
-	
-	requires = bole_smelting
-	
+
 	global_goods_gold_output_modifier = 0.1
-	minting_inflation_threshold = 0.01
+	global_monthly_prosperity = 0.001
+
+	requires = global_trade_routes_advance
+}
+
+sle_bou_regreg_republic = {
+	age = age_4_reformation
+	icon = crown_power_advance_renaissance
+
+	potential = {
+		has_or_had_tag = SLE
+	}
+
+	antagonism_received_modifier = -0.1
+	stability_decay = -0.00025
+
+	requires = leader_recruit_cost_advance
+}
+
+tet_andalusi_banking_houses = {
+	age = age_4_reformation
+	icon = zmw_merchant_taxes
+
+	potential = {
+		has_or_had_tag = TET
+	}
+
+	bank_interest = -0.01
+	merchant_maintenance_efficiency = 0.1
+
+	requires = global_trade_routes_advance
+}
+
+moroccan_malhun_poetry = {
+	age = age_5_absolutism
+	icon = patron_of_art
+
+	potential = {
+		culture = culture:moroccan
+	}
+
+	peasants_estate_target_satisfaction = small_permanent_target_satisfaction
+	prestige_decay = -0.001
+
+	requires = absolute_rulership
 }
 
 jaysh_armies_advance = {
 	age = age_5_absolutism
+	icon = jaysh_armies_advance
+
 	potential = {
 		has_or_had_tag = MOR
 	}
-	
+
+	army_heavy_cavalry_power = 0.05
+	monthly_army_tradition = 0.05
+
+	unlock_estate_privilege = jaysh_armies
+
 	requires = army_movement_speed_absolutism
-	unlock_estate_privilege = jaysh_armies 
 }
 
-black_guard = {
+mor_sherifian_inviolability = {
 	age = age_5_absolutism
+	icon = crown_power_advance_renaissance
+
 	potential = {
 		has_or_had_tag = MOR
+		original_tag = MOR
 	}
-	
-	requires = unlock_musketeers_advance
 
-	unlock_unit = a_black_guard
+	antagonism_received_modifier = -0.1
+	stability_decay = -0.00025
+
+	requires = absolute_rulership
 }
 
-shurfa_status = {
+sle_christian_captive_market = {
+	age = age_5_absolutism
+	icon = slavery_before_death
+
+	potential = {
+		has_or_had_tag = SLE
+	}
+
+	hire_privateer_cost_modifier = -0.25
+	privateer_maintenance_cost_modifier = -0.25
+
+	requires = absolute_rulership
+}
+
+tet_naqib_al_ashraf = {
+	age = age_5_absolutism
+	icon = cultural_traditions_law_advance
+
+	potential = {
+		has_or_had_tag = TET
+	}
+
+	clergy_estate_satisfaction_recovery = 0.001
+	monthly_devotion = 0.05
+	monthly_legitimacy = 0.05
+	monthly_republican_tradition = 0.05
+
+	requires = absolute_rulership
+}
+
+moroccan_nahda_maghribiyya = {
 	age = age_6_revolutions
+	icon = enlightenment_advance
+
+	potential = {
+		culture = culture:moroccan
+	}
+
+	cultural_influence_modifier = 0.1
+	global_pop_assimilation_speed_modifier = 0.2
+
+	requires = enlightened_court
+}
+
+mor_imperial_modernization = {
+	age = age_6_revolutions
+	icon = enlightenment_advance
+
 	potential = {
 		has_or_had_tag = MOR
-		religion.group = religion_group:muslim
 	}
-	
+
+	global_pop_promotion_speed_modifier = 0.1
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
+
 	requires = government_size_revolutions
-
-	monthly_legitimacy = 0.1
-	monthly_prestige = 0.1
 }
 
-maghrebi_administration = {
+mor_makhzen_taxation_reform = {
 	age = age_6_revolutions
+	icon = zmw_merchant_taxes
+
 	potential = {
 		has_or_had_tag = MOR
-		religion.group = religion_group:muslim
+		original_tag = MOR
 	}
-	
-	requires = urbanization
 
-	global_distance_from_capital_speed_propagation = 0.1
+	bank_interest = -0.01
+	merchant_maintenance_efficiency = 0.1
+
+	requires = enlightened_court
 }
 
+sle_atlantic_legal_commerce = {
+	age = age_6_revolutions
+	icon = atlantic_trade_routes
+
+	potential = {
+		has_or_had_tag = SLE
+	}
+
+	bank_interest = -0.01
+	global_trade_center_power = 0.1
+
+	requires = enlightened_court
+}
+
+tet_andalusi_press_revival = {
+	age = age_6_revolutions
+	icon = enlightenment_advance
+
+	potential = {
+		has_or_had_tag = TET
+	}
+
+	global_pop_promotion_speed_modifier = 0.1
+	non_rural_migration_attraction = 0.2
+
+	requires = enlightened_court
+}

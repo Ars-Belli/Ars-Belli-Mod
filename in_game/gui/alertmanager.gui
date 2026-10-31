@@ -17,9 +17,6 @@ template green_diplo_icon {
 	spriteborder_bottom = 16
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" {
-		on_start = "[PlayAudioEffect('UI_alert_appear_green_diplo')]"
-	}
 }
 
 template blue_alert {
@@ -30,9 +27,6 @@ template blue_alert {
 	spriteborder_bottom = 13
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" {
-		on_start = "[PlayAudioEffect('UI_alert_appear_blue')]"
-	}
 }
 
 template red_alert {
@@ -43,9 +37,6 @@ template red_alert {
 	spriteborder_bottom = 25
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" {
-		on_start = "[PlayAudioEffect('UI_alert_appear_red')]"
-	}
 }
 
 template red_war_alert {
@@ -56,9 +47,6 @@ template red_war_alert {
 	spriteborder_bottom = 25
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" {
-		on_start = "[PlayAudioEffect('UI_alert_appear_red')]"
-	}
 }
 
 template black_alert {
@@ -69,9 +57,6 @@ template black_alert {
 	spriteborder_bottom = 21
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" {
-		on_start = "[PlayAudioEffect('UI_alert_appear_black')]"
-	}
 }
 
 template yellow_alert {
@@ -82,9 +67,6 @@ template yellow_alert {
 	spriteborder_bottom = 24
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" {
-		on_start = "[PlayAudioEffect('UI_alert_appear_yellow')]"
-	}
 }
 
 template green_alert {
@@ -95,9 +77,6 @@ template green_alert {
 	spriteborder_bottom = 21
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" {
-		on_start = "[PlayAudioEffect('UI_alert_appear_green')]"
-	}
 }
 
 template purple_alert {
@@ -108,9 +87,6 @@ template purple_alert {
 	spriteborder_bottom = 21
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" {
-		on_start = "[PlayAudioEffect('UI_alert_appear_purple')]"
-	}
 }
 
 template orange_alert {
@@ -121,9 +97,6 @@ template orange_alert {
 	spriteborder_bottom = 18
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" {
-		on_start = "[PlayAudioEffect('UI_alert_appear_orange')]"
-	}
 }
 
 
@@ -135,9 +108,6 @@ template alert_discard {
 	spriteborder_bottom = 13
 	texture_density = 4
 	using = snd_UI_hover_alert
-	blockoverride "alert_appear_default_soundeffect" { 
-		on_start = "[PlayAudioEffect('UI_alert_appear_blue')]"
-	}
 }
 
 template automatic_priority_alert {
@@ -271,7 +241,6 @@ template alert_banner_anim {
 		duration = 0.4
 		position_y = 0
 		bezier = { 1.0 0.0 1.0 0.0 }
-		using = snd_UI_alert_appear_default
 		next = alert_drop_2
 	}
 	state = {
@@ -306,12 +275,13 @@ template alert_banner_setup {
 				block "alert_more_icons_before" {}
 
 				block "icon_texture_obj" {
-					icon = {
+					button = {
+						alwaystransparent = yes
+						tooltip_enabled = no
 						size = { 30 30 }
 						block "icon_texture" { 
 							texture = "[AlertEntry.GetDescription.GetIcon]"
 						}
-						alwaystransparent = yes
 						texture_density = 2
 						alpha = 1
 
@@ -395,12 +365,13 @@ template progress_banner_setup {
 						}
 					}
 
-					icon = {
+					button = {
 						size = { 75% 75% }
 						texture = "[PdxGuiWidget.GetTooltipMetaTexture]"
 						parentanchor = center
 						allow_outside = yes
 						alwaystransparent = yes
+						tooltip_enabled = no
 						texture_density = 2
 						alpha = 1
 
@@ -464,10 +435,6 @@ types AlertManager {
 
 		blockoverride "alert_banner_priority" {
 			using = automatic_priority_alert
-		}
-
-		blockoverride "alert_appear_default_soundeffect" {
-			on_start = "[PlayAudioEffect(AlertEntry.GetDescription.GetAlertAppearSound)]"
 		}
 
 		onmousehierarchyenter = "[AlertEntry.SetAsOld]"
@@ -539,7 +506,9 @@ types AlertManager {
 		}
 
 		block "icon_texture_obj" {
-			icon = {
+			button = {
+				alwaystransparent = yes
+				tooltip_enabled = no
 				parentanchor = center
 				size = { 35 35 }
 				block "icon_texture" {}
@@ -655,6 +624,19 @@ types AlertTooltipTypes {
 			}
 		}
 	}
+
+	type AlertTooltipStringPairListType = AlertTooltipType {
+		blockoverride "tooltip_content" {
+			TooltipDebugTextBlock = {
+				blockoverride "text" {
+					debug_text = "[AlertDescription.GetDebugText]"
+				}
+			}
+			TooltipScrolledStringPairList = {
+				textcontext = "[AlertEntry.GetTooltip]"
+			}
+		}
+	}
 }
 
 container = {
@@ -707,7 +689,7 @@ alert_tooltip_container = {
 
 alert_banner = {
 	name = "has_disease"
-	onmousehierarchyenter = "[SetHighlightedTab('geography_group')]"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
 	onmousehierarchyleave = "[ResetHighlightedTab]"
 }
 
@@ -717,7 +699,7 @@ alert_action = {
 		click_type = left
 		title = "ALERT_CTA_LEFT_CLICK"
 		using = snd_UI_alert_openAndCycle
-		on_action = "[OpenLateralView('diseases')]"
+		on_action = "[OpenLateralViewWithParams('country_turmoils', 'subtab = outbreaks')]"
 	}
 }
 
@@ -737,7 +719,7 @@ alert_action = {
 		click_type = left
 		title = "ALERT_CTA_LEFT_CLICK"
 		using = snd_UI_alert_openAndCycle
-		on_action = "[OpenLateralViewWithParams('country_people', 'subtab = movements')]"
+		on_action = "[OpenLateralViewWithParams('country_turmoils', 'subtab = movements')]"
 	}
 }
 
@@ -791,6 +773,50 @@ alert_tooltip_container = {
 						blockoverride "block_title" {
 							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
 						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_gov_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_GOV_NEED"
+										description = "TRADE_ORDER_ANY_GOVERNMENT_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
+						}
 						visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
 						textcontext = "[MarketCountryNeeds.GetGovernmentMissingGoodsInfo]"
 					}
@@ -806,6 +832,50 @@ alert_tooltip_container = {
 						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
 						blockoverride "block_title" {
 							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_gov_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_GOV_NEED"
+										description = "TRADE_ORDER_ANY_GOVERNMENT_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
 						}
 						visible = "[MarketCountryNeeds.HasGovernmentMissingGoods]"
 						textcontext = "[MarketCountryNeeds.GetGovernmentMissingGoodsInfo]"
@@ -881,6 +951,45 @@ alert_tooltip_container = {
 									}
 								}
 							}
+
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" { size = { 110 30 } }
+								blockoverride "any_good_card_margins" { margin = { 2 0 } }
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/constructions_missing_input.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_gov_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_GOV_NEED"
+										description = "TRADE_ORDER_ANY_GOVERNMENT_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)1')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
 						}
 					}
 
@@ -936,6 +1045,50 @@ alert_tooltip_container = {
 						blockoverride "block_title" {
 							raw_text = "@market! [StarvingProvincesMarketEntry.GetMarket.GetName]:"
 						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_food_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_FOOD_NEED"
+										description = "TRADE_ORDER_ANY_FOOD_TT"
+										enabled = "[CanOpenTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(StarvingProvincesMarketEntry.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
+						}
 						textcontext = "[StarvingProvincesMarketEntry.GetProvincesInfo]"
 					}
 				}
@@ -949,6 +1102,50 @@ alert_tooltip_container = {
 						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
 						blockoverride "block_title" {
 							raw_text = "@market! [StarvingProvincesMarketEntry.GetMarket.GetName]:"
+						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_food_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_FOOD_NEED"
+										description = "TRADE_ORDER_ANY_FOOD_TT"
+										enabled = "[CanOpenTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(StarvingProvincesMarketEntry.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(StarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
 						}
 						textcontext = "[StarvingProvincesMarketEntry.GetProvincesInfo]"
 					}
@@ -981,7 +1178,8 @@ alert_tooltip_container = {
 						blockoverride "field_right" {
 							spacing = 7
 							expand = {}
-							tooltipwidget = { using = starving_provinces_market_entry_tooltip }
+							datacontext = "[StarvingProvincesMarketEntry.GetMarket]"
+							tooltipwidget = { using = market_food_balance_tooltip }
 							text_single = {
 								text = "[StarvingProvincesMarketEntry.GetProvincesAmount]"
 							}
@@ -1096,6 +1294,7 @@ alert_action = {
 		click_type = left
 		title = "ALERT_CTA_LEFT_CLICK"
 		using = snd_UI_alert_openAndCycle
+		# Ars Belli: Intervene in War is removed; this alert now opens Enforce Peace instead.
 		on_action = "[OpenDiploAction('abm_enforce_peace')]"
 	}
 }
@@ -1200,7 +1399,7 @@ alert_tooltip_container = {
 						text = "LIST_OF_POTENTIAL_COALITION_COUNTRIES_TT"
 					}
 
-					TooltipScrolledContentSection = {
+					TooltipListScrollArea = {
 						autoresize_axis = vertical
 						blockoverride "block_scrollarea" {
 							maximumsize = { -1 665 }
@@ -1265,7 +1464,7 @@ alert_tooltip_container = {
 												minimumsize = "[AutoTableWidth.GetMinimumSize('(int32)4', PdxGuiWidget.Self)]"
 												autoresize = yes
 												align = right|nobaseline
-												raw_text = "[Country.GetNavyStrength|0V]@navy_strength!"
+												raw_text = "[Country.GetTotalNavyStrengthAndPotentialLevies|0V]@navy_strength!"
 
 												tagtooltip_enabled = yes
 												tooltip = "[navy|e]"
@@ -1501,6 +1700,43 @@ alert_action = {
 }
 
 ###########################
+# Disaster Action Available
+###########################
+
+alert_banner = {
+	name = "has_disaster_action_available"
+}
+
+alert_action = {
+	name = "has_disaster_action_available_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertDisasterActionAvailable.Next]"
+	}
+}
+
+alert_banner = {
+	name = "has_estate_reward_action_available"
+	onmousehierarchyenter = "[SetHighlightedTab('content_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+	tooltipmeta = {
+		texture = "gfx/interface/icons/alerts_icons/actions_available.dds"
+	}
+}
+
+alert_action = {
+	name = "has_estate_reward_action_available_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertEstateRewardActionAvailable.Next]"
+	}
+}
+
+###########################
 # Above Diplomatic Relations Limit
 ###########################
 
@@ -1573,7 +1809,7 @@ alert_action = {
 		click_type = left
 		title = "ALERT_CTA_LEFT_CLICK"
 		using = snd_UI_alert_openAndCycle
-		on_action = "[OpenLateralViewWithParams('country_people', 'subtab = rebels')]"
+		on_action = "[OpenLateralViewWithParams('country_turmoils', 'subtab = rebels')]"
 	}
 }
 
@@ -1967,7 +2203,7 @@ alert_tooltip_container = {
 						text = "ALERT_HAS_REBELLIOUS_SUBJECTS"
 					}
 
-					TooltipScrolledContentSection = {
+					TooltipListScrollArea = {
 						autoresize_axis = vertical
 						blockoverride "block_scrollarea" {
 							maximumsize = { -1 400 }
@@ -2079,7 +2315,7 @@ alert_tooltip_container = {
 						text = "ALERT_HAS_IMMINENT_INDEPENDENCE_WAR"
 					}
 
-					TooltipScrolledContentSection = {
+					TooltipListScrollArea = {
 						autoresize_axis = vertical
 						blockoverride "block_scrollarea" {
 							maximumsize = { -1 400 }
@@ -2149,9 +2385,9 @@ alert_action = {
 	name = "has_raised_army_levies_in_peace_action"
 	action_tooltip = {
 		click_type = left
-		title = "ALERT_CTA_LEFT_CLICK"
+		title = "DISBAND_ALL_LEVIES"
 		using = snd_UI_alert_openAndCycle
-		on_action = "[AlertHasRaisedArmyLeviesInPeace.Next]"
+		on_action = "[AlertHasRaisedArmyLeviesInPeace.ConfirmDisbandAllLevies]"
 	}
 }
 
@@ -2169,9 +2405,9 @@ alert_action = {
 	name = "has_raised_navy_levies_in_peace_action"
 	action_tooltip = {
 		click_type = left
-		title = "ALERT_CTA_LEFT_CLICK"
+		title = "DISBAND_ALL_LEVIES"
 		using = snd_UI_alert_openAndCycle
-		on_action = "[AlertHasRaisedNavyLeviesInPeace.Next]"
+		on_action = "[AlertHasRaisedNavyLeviesInPeace.ConfirmDisbandAllLevies]"
 	}
 }
 
@@ -2772,11 +3008,11 @@ alert_tooltip_container = {
 					text = "ALERT_PRIVATEERS"
 				}
 					
-				TooltipListScrollArea = {
+				TooltipScrolledContentSection = {
 					blockoverride "block_scrollarea" {
 						maximumsize = { -1 400 }
 					}
-					blockoverride "scrollarea_content" {
+					blockoverride "section_content" {
 						TooltipListColumnContent = {
 							set_parent_dimension_to_minimum = height
 							layoutpolicy_horizontal = expanding
@@ -2887,51 +3123,6 @@ alert_tooltip_container = {
 	AlertTooltipTextType = {}
 }
 
-###########################
-# Negative Trade
-###########################
-
-alert_banner = {
-	name = "has_unprofitable_trade"
-	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
-	onmousehierarchyleave = "[ResetHighlightedTab]"
-}
-
-alert_action = {
-	name = "has_unprofitable_trade_action"
-	action_tooltip = {
-		click_type = left
-		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
-		using = snd_UI_alert_openAndCycle
-		on_action = "[AlertUnprofitableTrade.Next]"
-	}
-}
-
-alert_tooltip_container = {
-	name = "has_unprofitable_trade_tooltip"
-	AlertTooltipListType = {}
-}
-
-###########################
-# No More Goods Trade
-###########################
-
-alert_banner = {
-	name = "has_no_supplies_trade"
-	onmousehierarchyenter = "[SetHighlightedTab('economy_group')]"
-	onmousehierarchyleave = "[ResetHighlightedTab]"
-}
-
-alert_action = {
-	name = "has_no_supplies_trade_action"
-	action_tooltip = {
-		click_type = left
-		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
-		using = snd_UI_alert_openAndCycle
-		on_action = "[AlertHasNoSuppliesTrade.Next]"
-	}
-}
-
 ###################################
 # Lacking Rivals
 ####################################
@@ -2959,6 +3150,39 @@ alert_tooltip_container = {
 				action_tooltip = {
 					title = "OPEN_HINT"
 					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_lacks_of_rivals')]"
+				}
+			}
+		}
+	}
+}
+
+###################################
+# Inadequate Rivals
+####################################
+
+alert_banner = {
+	name = "has_inadequate_rivals"
+}
+
+alert_action = {
+	name = "has_inadequate_rivals_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[ShowSelectRivals]"
+	}
+}
+
+alert_tooltip_container = {
+	name = "has_inadequate_rivals_tooltip"
+
+	AlertTooltipListType = {
+		blockoverride "title_button" {
+			hint_button = {
+				action_tooltip = {
+					title = "OPEN_HINT"
+					on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_has_inadequate_rivals')]"
 				}
 			}
 		}
@@ -3024,6 +3248,44 @@ alert_action = {
 }
 
 ###################################
+# Target of a crusade in preparation
+####################################
+
+alert_banner = {
+	name = "target_of_crusade_in_preparation"
+	blockoverride "icon_texture" {
+		texture = "[AlertTargetOfCrusadeInPreparation.GetIcon]"
+	}
+}
+
+alert_action = {
+	name = "target_of_crusade_in_preparation_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenInternationalOrganizationView(AlertTargetOfCrusadeInPreparation.GetCrusade)]"
+	}
+}
+
+alert_banner = {
+	name = "subject_target_of_crusade_in_preparation"
+	blockoverride "icon_texture" {
+		texture = "[AlertSubjectTargetOfCrusadeInPreparation.GetIcon]"
+	}
+}
+
+alert_action = {
+	name = "subject_target_of_crusade_in_preparation_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenInternationalOrganizationView(AlertSubjectTargetOfCrusadeInPreparation.GetCrusade)]"
+	}
+}
+
+###################################
 # Parliament in session
 ####################################
 
@@ -3047,15 +3309,7 @@ alert_banner = {
 				size = { 33 33 }
 				using = piechart_angles
 
-				background = {
-					texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-					texture_density = 2
-					alpha = 0.5
-					modify_texture = {
-						using = color_dark_brown_texture
-						blend_mode = multiply
-					}
-				}
+				using = bg_piechart_dark
 				
 				icon = {
 					texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
@@ -3169,15 +3423,7 @@ alert_banner = {
 				size = { 33 33 }
 				using = piechart_angles
 
-				background = {
-					texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
-					texture_density = 2
-					alpha = 0.5
-					modify_texture = {
-						using = color_dark_brown_texture
-						blend_mode = multiply
-					}
-				}
+				using = bg_piechart_dark
 				
 				icon = {
 					texture = "gfx/interface/pie_charts/pie_chart_alpha_80.dds"
@@ -3681,6 +3927,50 @@ alert_tooltip_container = {
 						blockoverride "block_title" {
 							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
 						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/buildings_missing_input.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_building_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_BUILDING_NEED"
+										description = "TRADE_ORDER_ANY_BUILDING_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
+						}
 						visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
 						textcontext = "[MarketCountryNeeds.GetBuildingsMissingGoodsInfo]"
 					}
@@ -3696,6 +3986,50 @@ alert_tooltip_container = {
 						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
 						blockoverride "block_title" {
 							text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/buildings_missing_input.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_building_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_BUILDING_NEED"
+										description = "TRADE_ORDER_ANY_BUILDING_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
 						}
 						visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
 						textcontext = "[MarketCountryNeeds.GetBuildingsMissingGoodsInfo]"
@@ -3748,9 +4082,9 @@ alert_tooltip_container = {
 							spacing = 7
 							expand = {}
 							visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
-							datacontext = "[GetMarketCountryNeeds(Player.Self, Market.Self)]"
 							datacontext = "[MarketCountryNeeds.GetMarket]"
-							tooltipwidget = { using = market_hub_gov_needs_tooltip }
+							datacontext = "[GetMarketCountryNeeds(Player.Self, Market.Self)]"
+							tooltipwidget = { using = market_hub_building_needs_tooltip }
 
 							text_single = {
 								visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
@@ -3770,6 +4104,45 @@ alert_tooltip_container = {
 									modify_texture = {
 										using = color_yellow_texture
 										alpha = 0.6
+									}
+								}
+							}
+
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" { size = { 110 30 } }
+								blockoverride "any_good_card_margins" { margin = { 2 0 } }
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/buildings_missing_input.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_building_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_BUILDING_NEED"
+										description = "TRADE_ORDER_ANY_BUILDING_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
 									}
 								}
 							}
@@ -3840,6 +4213,50 @@ alert_tooltip_container = {
 						blockoverride "block_title" {
 							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
 						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/buildings_missing_input.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_building_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_BUILDING_NEED"
+										description = "TRADE_ORDER_ANY_BUILDING_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
+						}
 						visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
 						textcontext = "[MarketCountryNeeds.GetBuildingsMissingGoodsInfo]"
 					}
@@ -3855,6 +4272,50 @@ alert_tooltip_container = {
 						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
 						blockoverride "block_title" {
 							text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/buildings_missing_input.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_building_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_BUILDING_NEED"
+										description = "TRADE_ORDER_ANY_BUILDING_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)2')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
 						}
 						visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
 						textcontext = "[MarketCountryNeeds.GetBuildingsMissingGoodsInfo]"
@@ -3906,9 +4367,9 @@ alert_tooltip_container = {
 							spacing = 7
 							expand = {}
 							visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
-							datacontext = "[GetImportantBuildingsMarketCountryNeeds(Player.Self, Market.Self)]"
 							datacontext = "[MarketCountryNeeds.GetMarket]"
-							tooltipwidget = { using = market_hub_gov_needs_tooltip }
+							datacontext = "[GetImportantBuildingsMarketCountryNeeds(Player.Self, Market.Self)]"
+							tooltipwidget = { using = market_hub_building_needs_tooltip }
 
 							text_single = {
 								visible = "[MarketCountryNeeds.HasBuildingsMissingGoods]"
@@ -3993,7 +4454,7 @@ alert_tooltip_container = {
 					datacontext = "[GetAutoTableWidthFor('lack_pop_promotion_table')]"
 					minimumsize = "[AutoTableWidth.GetTableMinimumSize('(float)420', '(float)10', PdxGuiWidget.Self)]"
 
-					TooltipScrolledContentSection = {
+					TooltipListScrollArea = {
 						autoresize_axis = vertical
 						blockoverride "block_scrollarea" {
 							maximumsize = { -1 400 }
@@ -4092,7 +4553,7 @@ alert_tooltip_container = {
 					datacontext = "[GetAutoTableWidthFor('lack_pop_for_rgo_table')]"
 					minimumsize = "[AutoTableWidth.GetTableMinimumSize('(float)420', '(float)10', PdxGuiWidget.Self)]"
 
-					TooltipScrolledContentSection = {
+					TooltipListScrollArea = {
 						autoresize_axis = vertical
 						blockoverride "block_scrollarea" {
 							maximumsize = { -1 400 }
@@ -4194,6 +4655,50 @@ alert_tooltip_container = {
 						blockoverride "block_title" {
 							raw_text = "@market! [RiskStarvingProvincesMarketEntry.GetMarket.GetName]:"
 						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_food_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_FOOD_NEED"
+										description = "TRADE_ORDER_ANY_FOOD_TT"
+										enabled = "[CanOpenTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(RiskStarvingProvincesMarketEntry.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
+						}
 						textcontext = "[RiskStarvingProvincesMarketEntry.GetProvincesInfo]"
 					}
 				}
@@ -4207,6 +4712,50 @@ alert_tooltip_container = {
 						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
 						blockoverride "block_title" {
 							raw_text = "@market! [RiskStarvingProvincesMarketEntry.GetMarket.GetName]:"
+						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/starving_provinces.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_food_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_FOOD_NEED"
+										description = "TRADE_ORDER_ANY_FOOD_TT"
+										enabled = "[CanOpenTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(RiskStarvingProvincesMarketEntry.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(RiskStarvingProvincesMarketEntry.GetMarket, '(int32)4')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
 						}
 						textcontext = "[RiskStarvingProvincesMarketEntry.GetProvincesInfo]"
 					}
@@ -4239,7 +4788,8 @@ alert_tooltip_container = {
 						blockoverride "field_right" {
 							spacing = 7
 							expand = {}
-							tooltipwidget = { using = risk_starving_provinces_market_entry_tooltip }
+							datacontext = "[RiskStarvingProvincesMarketEntry.GetMarket]"
+							tooltipwidget = { using = market_food_balance_tooltip }
 							text_single = {
 								text = "[RiskStarvingProvincesMarketEntry.GetProvincesAmount]"
 							}
@@ -4347,6 +4897,50 @@ alert_tooltip_container = {
 						blockoverride "block_title" {
 							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
 						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/pops_wanting_stuff.dds"
+									texture_density = 2
+								}
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_pop_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_POP_NEED"
+										description = "TRADE_ORDER_ANY_POP_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
+						}
 						visible = "[MarketCountryNeeds.HasPopsMissingGoods]"
 						textcontext = "[MarketCountryNeeds.GetPopsMissingGoodsInfo]"
 					}
@@ -4362,6 +4956,55 @@ alert_tooltip_container = {
 						blockoverride "block_scrollarea" { maximumsize = { -1 120 } }
 						blockoverride "block_title" {
 							raw_text = "@market! [MarketCountryNeeds.GetMarket.GetName]:"
+						}
+						blockoverride "table_header_extra" {
+							any_good_card_button = {
+								blockoverride "any_good_card_button_size" {
+									size = { 110 30 }
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_icon" {
+									texture = "gfx/interface/icons/alerts_icons/pops_wanting_stuff.dds"
+									size = { 20 20 }
+									texture_density = 2
+								}
+								blockoverride "any_good_card_margins" {
+									margin = { 2 0 }
+								}
+								blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+								blockoverride "any_good_card_tooltip" {
+									tooltipwidget = { using = trade_order_pop_need_tooltip }
+								}
+								blockoverride "any_good_card_enabled" {
+									enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+								}
+								blockoverride "any_good_card_action" {
+									action_tooltip = {
+										click_type = left
+										click_mode = single
+										title = "TRADE_ORDER_CREATE_FROM_POP_NEED"
+										description = "TRADE_ORDER_ANY_POP_NEED_TT"
+										enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+										conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+										conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+									}
+
+									action_tooltip = {
+										click_modifier = shift
+										click_type = left
+										title = "ALERT_HINT"
+										click_modifier_description = "OPEN_HINT_TEXT"
+										using = snd_UI_alert_openAndCycle
+										on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+										on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+										on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
+									}
+								}
+							}
 						}
 						visible = "[MarketCountryNeeds.HasPopsMissingGoods]"
 						textcontext = "[MarketCountryNeeds.GetPopsMissingGoodsInfo]"
@@ -4450,6 +5093,46 @@ alert_tooltip_container = {
 											modify_texture = {
 												visible = "[MarketCountryNeeds.HasRebelPopsMissingGoods]"
 												using = color_dark_red_texture
+											}
+										}
+									}
+
+									any_good_card_button = {
+										visible = "[Not(And(Not(MarketCountryNeeds.HasPopsMissingGoods), Not(MarketCountryNeeds.HasRebelPopsMissingGoods)))]"
+										blockoverride "any_good_card_button_size" { size = { 110 30 } }
+										blockoverride "any_good_card_margins" { margin = { 2 0 } }
+										blockoverride "any_good_card_label" { text = "game_concept_trade_order" }
+										blockoverride "any_good_card_icon" {
+											texture = "gfx/interface/icons/alerts_icons/pops_wanting_stuff.dds"
+											texture_density = 2
+										}
+										blockoverride "any_good_card_tooltip" {
+											tooltipwidget = { using = trade_order_pop_need_tooltip }
+										}
+										blockoverride "any_good_card_enabled" {
+											enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+										}
+										blockoverride "any_good_card_action" {
+											action_tooltip = {
+												click_type = left
+												click_mode = single
+												title = "TRADE_ORDER_CREATE_FROM_POP_NEED"
+												description = "TRADE_ORDER_ANY_POP_NEED_TT"
+												enabled = "[CanOpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+												conditions = "[AddLocalizationIf(Not(HasTradeCapacityInMarket(MarketCountryNeeds.GetMarket)), 'TRADE_ORDER_NO_TC_IN_MARKET_TT')]"
+												conditions = "[MakeItFailIfLoc(HasExistingTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3'), 'TRADE_ORDER_CREATE_ALREADY_EXISTS_TT')]"
+												on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+											}
+
+											action_tooltip = {
+												click_modifier = shift
+												click_type = left
+												title = "ALERT_HINT"
+												click_modifier_description = "OPEN_HINT_TEXT"
+												using = snd_UI_alert_openAndCycle
+												on_action = "[OpenTradeOrderForNeed(MarketCountryNeeds.GetMarket, '(int32)3')]"
+												on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_trade_orders')]"
+												on_action = "[PdxGuiTriggerAllAnimations('reset_carousel')]"
 											}
 										}
 									}
@@ -4822,7 +5505,7 @@ alert_action = {
 		click_type = left
 		title = "ALERT_CTA_LEFT_CLICK"
 		using = snd_UI_alert_openAndCycle
-		on_action = "[OpenLateralViewWithParams('country_people', 'subtab = rebels')]"
+		on_action = "[OpenLateralViewWithParams('country_turmoils', 'subtab = rebels')]"
 	}
 }
 
@@ -4936,6 +5619,11 @@ alert_banner = {
 	onmousehierarchyleave = "[ResetHighlightedTab]"
 }
 
+alert_tooltip_container = {
+	name = "non_crown_estate_in_cabinet_tooltip"
+	AlertTooltipStringPairListType = {}
+}
+
 alert_action = {
 	name = "non_crown_estate_in_cabinet_action"
 	action_tooltip = {
@@ -4977,7 +5665,7 @@ alert_tooltip_container = {
 						text = "ALERT_HAS_DISLOYAL_SUBJECTS"
 					}
 
-					TooltipScrolledContentSection = {
+					TooltipListScrollArea = {
 						autoresize_axis = vertical
 						blockoverride "block_scrollarea" {
 							maximumsize = { -1 400 }
@@ -5062,6 +5750,22 @@ alert_tooltip_container = {
 ###########################
 # Above Accepted Culture Limit
 ###########################
+
+alert_banner = {
+	name = "has_available_cultural_capacity"
+	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_available_cultural_capacity_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('country_culture')]"
+	}
+}
 
 alert_banner = {
 	name = "has_over_accepted_culture_limit"
@@ -5176,7 +5880,7 @@ alert_tooltip_container = {
 						text = "ALERT_DEPOPULATING_LOCATIONS"
 					}
 
-					TooltipScrolledContentSection = {
+					TooltipListScrollArea = {
 						autoresize_axis = vertical
 						blockoverride "block_scrollarea" {
 							maximumsize = { -1 400 }
@@ -5440,12 +6144,12 @@ alert_tooltip_container = {
 				blockoverride "block_title" {
 					text = "ALERT_HAS_DEVASTATED_LOCATIONS_TEXT"
 				}
-				TooltipListScrollArea = {
+				TooltipScrolledContentSection = {
 					blockoverride "block_scrollarea" {
 						maximumsize = { -1 390 }
 					}
 
-					blockoverride "scrollarea_content" {
+					blockoverride "section_content" {
 						TooltipListColumnContent = {
 							set_parent_dimension_to_minimum = height
 							layoutpolicy_horizontal = expanding
@@ -5539,30 +6243,6 @@ alert_tooltip_container = {
 			}
 		}
 	}
-}
-
-###################################
-# High complacency
-###################################
-
-alert_banner = {
-	name = "has_high_complacency"
-}
-
-alert_action = {
-	name = "has_high_complacency_action"
-	action_tooltip = {
-		click_type = left
-		title = "ALERT_CTA_LEFT_CLICK"
-		using = snd_UI_alert_openAndCycle
-		on_action = "[OpenLateralViewWithParams('government', 'tabcontent = estates')]"
-	}
-}
-
-alert_tooltip_container = {
-	name = "has_high_complacency_tooltip"
-
-	AlertTooltipTextType = {}
 }
 
 ###########################################################################
@@ -5761,7 +6441,7 @@ alert_tooltip_container = {
 
 alert_banner = {
 	name = "has_possible_country_rank_upgrade"
-	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyenter = "[SetHighlightedTab('content_group')]"
 	onmousehierarchyleave = "[ResetHighlightedTab]"
 }
 
@@ -5771,13 +6451,49 @@ alert_action = {
 		click_type = left
 		title = "ALERT_CTA_LEFT_CLICK"
 		using = snd_UI_alert_openAndCycle
-		on_action = "[OpenLateralViewWithParams('government', 'togglebutton = select_form_new_country')]"
+		on_action = "[OpenLateralView('form_new_country')]"
 	}
 }
 
 alert_tooltip_container = {
 	name = "has_possible_country_rank_upgrade_tooltip"
 	AlertTooltipListType = {}
+}
+
+###################################
+# We have an expedition available
+###################################
+
+alert_banner = {
+	name = "has_possible_expedition"
+	onmousehierarchyenter = "[SetHighlightedTab('geography_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "has_possible_expedition_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('expeditions')]"
+	}
+}
+
+alert_banner = {
+	name = "can_promote_industry"
+	onmousehierarchyenter = "[SetHighlightedTab('production_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_promote_industry_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralView('town_rights')]"
+	}
 }
 
 ###################################
@@ -5821,7 +6537,7 @@ alert_tooltip_container = {
 alert_banner = {
 	name = "has_possible_formable_country"
 
-	onmousehierarchyenter = "[SetHighlightedTab('government_group')]"
+	onmousehierarchyenter = "[SetHighlightedTab('content_group')]"
 	onmousehierarchyleave = "[ResetHighlightedTab]"
 
 	blockoverride "alert_more_icons_after" { expand = {} }
@@ -5864,8 +6580,8 @@ alert_action = {
 	action_tooltip = {
 		click_type = left
 		title = "ALERT_CTA_LEFT_CLICK"
-		using = snd_UI_alert_openAndCycle
-		on_action = "[OpenLateralViewWithParams('government', 'togglebutton = select_form_new_country')]"
+		using = snd_UI_alert_openAndCycle		
+		on_action = "[OpenLateralView('form_new_country')]"
 	}
 }
 
@@ -5873,11 +6589,11 @@ alert_tooltip_container = {
 	name = "has_possible_formable_country_tooltip"
 
 	AlertTooltipListType = {
-		datacontext = "[AlertFormableCountry.GetFormableCountry]"
 		blockoverride "field_format_right" { visible = no }
 		blockoverride "field_text_content_left" { text = "[StringViewPair.GetRight.GetStringView]" }
 		blockoverride "field_left" {
 			country_flag = {
+				datacontext = "[GetFormableCountry(StringViewPair.GetLeft.GetString)]"
 				size = { 36 24 }
 
 				blockoverride "tooltip" {
@@ -5969,6 +6685,12 @@ alert_banner = {
 
 alert_action = {
 	name = "has_positive_white_peace_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[AlertHasPositiveWhitePeace.Next]"
+	}
 }
 
 ###################################
@@ -6045,7 +6767,7 @@ alert_action = {
 }
 
 ###################################
-# We can spend Religious Influence
+# We can use Religious Actions
 ###################################
 
 alert_banner = {
@@ -6066,31 +6788,6 @@ alert_action = {
 
 alert_tooltip_container = {
 	name = "can_spend_religious_influence_tooltip"
-	AlertTooltipListType = {}
-}
-
-###################################
-# We can use Religious Actions
-###################################
-
-alert_banner = {
-	name = "can_use_religious_action"
-	onmousehierarchyenter = "[SetHighlightedTab('society_group')]"
-	onmousehierarchyleave = "[ResetHighlightedTab]"
-}
-
-alert_action = {
-	name = "can_use_religious_action_action"
-	action_tooltip = {
-		click_type = left
-		title = "ALERT_CTA_LEFT_CLICK"
-		using = snd_UI_alert_openAndCycle
-		on_action = "[OpenLateralView('country_religion')]"
-	}
-}
-
-alert_tooltip_container = {
-	name = "can_use_religious_action_tooltip"
 	AlertTooltipListType = {}
 }
 
@@ -6212,7 +6909,7 @@ alert_tooltip_container = {
 # We Can Activate Avatar
 ###################################
 
-# [SD] Made redundant by can_use_religious_action
+# [SD] Made redundant by can_spend_religious_influence
 # alert_banner = {
 # 	name = "can_activate_avatar"
 
@@ -6250,105 +6947,6 @@ alert_action = {
 		title = "ALERT_CTA_LEFT_CLICK"
 		using = snd_UI_alert_openAndCycle
 		on_action = "[OpenLateralView('country_religion')]"
-	}
-}
-
-###########################
-# Children can have better education
-###########################
-
-alert_banner = {
-	name = "has_uneducated_child"
-}
-
-alert_action = {
-	name = "has_uneducated_child_action"
-	action_tooltip = {
-		click_type = left
-		title = "ALERT_CTA_CYCLE_LEFT_CLICK"
-		using = snd_UI_alert_openAndCycle
-		on_action = "[AlertHasUneducatedChild.Next]"
-	}
-}
-
-alert_tooltip_container = {
-	name = "has_uneducated_child_tooltip"
-	AlertTooltipType = {
-		blockoverride "tooltip_content" {
-			TooltipTextBlock = {
-				blockoverride "text" {
-					text = "ALERT_CHILD_UNEDUCATED_TEXT"
-				}
-			}
-			TooltipScrolledRowList = {
-				blockoverride "block_title" {
-					text = "ALERT_CHILD_UNEDUCATED_PLURAL"
-					default_format = "#color_white"
-				}
-				blockoverride "rowlist_datamodel_is_empty" { visible = "[IsDataModelEmpty(AlertHasUneducatedChild.GetUneducatedChildren)]"}
-				blockoverride "rowlist_datamodel_has_items" { visible = "[DataModelHasItems(AlertHasUneducatedChild.GetUneducatedChildren)]"}
-				blockoverride "rowlist_datamodel" {
-					datamodel = "[AlertHasUneducatedChild.GetUneducatedChildren]"
-					ignoreinvisible = yes
-				}
-				blockoverride "visibility" {
-					visible = "[And3(Not(Character.GetEducation.IsDefault), Not(Character.IsAdult), GreaterThanOrEqualTo_int32(Character.GetAgeInYears, GetDefine('NCharacter','EDUCATION_AGE')))]"
-				}
-				blockoverride "rowlist_content" {
-					hbox = {
-						using = layoutpolicy_expanding
-						margin = { 10 10 }
-						spacing = 10
-
-						widget = {
-							size = {65 65}
-							character_frame_small = {
-								blockoverride "portrait_datacontext" {
-									datacontext = "[Character]"
-								}
-								parentanchor = hcenter|bottom
-								blockoverride "character_frame_texture" {
-									texture = "gfx/interface/component_decoration/character_frames/character_non_stretchable_frame_2.dds"
-								}
-							}
-						}
-
-						text_multi = {
-							layoutpolicy_horizontal = expanding
-							autoresize = yes
-							multiline = yes
-							size = { -1 60 }
-							align = left|nobaseline
-							text = "[Character.GetName], [Character.GetAge|Y]"
-						}
-
-						hbox = {
-							spacing = 5
-							datamodel = "[Character.GetTraits]"
-							item = {
-								widget = {
-									size = { 40 40 }
-									icon = {
-										size = { 100% 100% }
-										using = trait_item
-										parentanchor = center
-									}
-								}
-							}
-						}
-					}
-				}
-
-				blockoverride "block_scrollarea" {
-					maximumsize = { -1 500 }
-				}
-
-				blockoverride "row_size" {
-					maximumsize = { -1 50 }
-					minimumsize = { -1 50 }
-				}
-			}
-		}
 	}
 }
 
@@ -6410,12 +7008,12 @@ alert_tooltip_container = {
 				blockoverride "block_title" {
 					text = "ALERT_CAN_CODIFY_NEW_POLICIES_TEXT"
 				}
-				TooltipListScrollArea = {
+				TooltipScrolledContentSection = {
 					blockoverride "block_scrollarea" {
 						maximumsize = { -1 390 }
 					}
 
-					blockoverride "scrollarea_content" {
+					blockoverride "section_content" {
 						TooltipListColumnContent = {
 							set_parent_dimension_to_minimum = height
 							layoutpolicy_horizontal = expanding
@@ -6614,49 +7212,49 @@ alert_action = {
 		click_type = left
 		title = "OPEN_HINTS"
 		using = snd_UI_alert_openAndCycle
-		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'HUN'))]"
+		visible = "[IsPlayerTag('HUN')]"
 		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_hungary')]"
 	}
 	action_tooltip = {
 		click_type = left
 		title = "OPEN_HINTS"
 		using = snd_UI_alert_openAndCycle
-		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'HOL'))]"
+		visible = "[IsPlayerTag('HOL')]"
 		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_holland')]"
 	}
 	action_tooltip = {
 		click_type = left
 		title = "OPEN_HINTS"
 		using = snd_UI_alert_openAndCycle
-		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'NOR'))]"
+		visible = "[IsPlayerTag('NOR')]"
 		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_norway')]"
 	}
 	action_tooltip = {
 		click_type = left
 		title = "OPEN_HINTS"
 		using = snd_UI_alert_openAndCycle
-		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'NAP'))]"
+		visible = "[IsPlayerTag('NAP')]"
 		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_naples')]"
 	}
 	action_tooltip = {
 		click_type = left
 		title = "OPEN_HINTS"
 		using = snd_UI_alert_openAndCycle
-		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'CAS'))]"
+		visible = "[IsPlayerTag('CAS')]"
 		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_castile')]"
 	}
 	action_tooltip = {
 		click_type = left
 		title = "OPEN_HINTS"
 		using = snd_UI_alert_openAndCycle
-		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'TUR'))]"
+		visible = "[IsPlayerTag('TUR')]"
 		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_ottomans')]"
 	}
 	action_tooltip = {
 		click_type = left
 		title = "OPEN_HINTS"
 		using = snd_UI_alert_openAndCycle
-		visible = "[And(IsPlayerValid, EqualTo_string(Player.GetTag, 'BYZ'))]"
+		visible = "[IsPlayerTag('BYZ')]"
 		on_action = "[OpenLateralViewWithParams('hints', 'selected_hint = hint_eastern_roman_empire')]"
 	}
 }
@@ -6963,7 +7561,9 @@ situation_banner = {
 					blockoverride "show_as_icon" { visible = yes }
 				}
 
-				icon = {
+				button = {
+					alwaystransparent = yes
+					tooltip_enabled = no
 					size = { 22 22 }
 					texture = "gfx/interface/icons/map_modes/war.dds"
 
@@ -7002,6 +7602,30 @@ situation_banner = {
 	datacontext = "[ActiveSituation.GetSituation]"
 	tooltipwidget = {
 		using = Situation_tooltip
+	}
+
+	#if we have warnings
+	button = {
+		size = { @alert_wide 90 }
+		parentanchor = center
+		alwaystransparent = yes
+		tooltip_enabled = no
+		visible = "[Situation.HasWarning]"
+		texture = "gfx/interface/alerts/alert_warning_effect.dds"
+		spriteType = Corneredstretched
+		spriteborder_top = 40
+		spriteborder_bottom = 30
+		texture_density = 4
+	}
+	
+	button = {
+		size = { 16 16 }
+		parentanchor = bottom|hcenter
+		position = {0 -15}
+		alwaystransparent = yes
+		tooltip_enabled = no
+		visible = "[Situation.HasWarning]"
+		using = warning_icon_texture
 	}
 
 	action_tooltip = {
@@ -7407,6 +8031,44 @@ button = {
 	}
 
 	input_action = "toggle_alert_stash"
-	use_global_input_instance = yes
 	tooltipwidget = { BasicFunctionalTooltip = {} }
+}
+###########################
+# Unique decision available
+###########################
+
+alert_banner = {
+	name = "can_take_unique_decision"
+	onmousehierarchyenter = "[SetHighlightedTab('content_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_take_unique_decision_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('decisions', 'subtab = decisions')]"
+	}
+}
+
+###########################
+# Generic decision available
+###########################
+
+alert_banner = {
+	name = "can_take_generic_decision"
+	onmousehierarchyenter = "[SetHighlightedTab('content_group')]"
+	onmousehierarchyleave = "[ResetHighlightedTab]"
+}
+
+alert_action = {
+	name = "can_take_generic_decision_action"
+	action_tooltip = {
+		click_type = left
+		title = "ALERT_CTA_LEFT_CLICK"
+		using = snd_UI_alert_openAndCycle
+		on_action = "[OpenLateralViewWithParams('decisions', 'subtab = decisions')]"
+	}
 }

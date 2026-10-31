@@ -1,0 +1,59 @@
+﻿l_english:
+ # Ars Belli map modes (in_game/gfx/map/map_modes/abm_map_modes.txt)
+
+ mapmode_abm_bailiffs_name: "Bailiffs"
+ MAPMODE_ABM_BAILIFFS: "#T $mapmode_abm_bailiffs_name$#!\n$mapmode_common_start$ whether a Bailiff (+20% local [max_control|e]) pays off there. Bailiffs can only be built in rural [locations|e] of your own that are not overseas; this map mode also asks for them to be [integrated|e] or a [core|e].\n\n#G Green#!: [tax_base|e] of 8 or more, the extra [control|e] earns more than the upkeep.\n#Y Yellow#!: high-value [raw_material|e] (wool, iron, silver, gold, saffron, dyes and similar), worth a Bailiff while you build it up.\nDark green: worth it, but not [integrated|e] yet.\n#R Red#!: too little [tax_base|e] and low-value [goods|e].\nLight blue: already has a Bailiff."
+
+ ABM_BAILIFF_MM_LEGEND_HAS: "Has a Bailiff"
+ ABM_BAILIFF_MM_LEGEND_BUILD: "Build: tax base 8+"
+ ABM_BAILIFF_MM_LEGEND_VALUABLE: "Build: high-value goods"
+ ABM_BAILIFF_MM_LEGEND_NOT_INTEGRATED: "Worth it once integrated"
+ ABM_BAILIFF_MM_LEGEND_LOW: "Not worth it"
+ ABM_BAILIFF_MM_LEGEND_CANNOT: "Town, city or overseas"
+
+ ABM_BAILIFF_MM_HAS_TT: "[ROOT.GetLocation.GetName] already has a Bailiff."
+ ABM_BAILIFF_MM_BUILD_TT: "#G Build a Bailiff#! in [ROOT.GetLocation.GetName]: with a [tax_base|e] of 8 or more, the extra [control|e] earns more than the Bailiff's upkeep."
+ ABM_BAILIFF_MM_VALUABLE_TT: "#Y Build a Bailiff#! in [ROOT.GetLocation.GetName]: its [ROOT.GetLocation.GetRawMaterial.GetName] is a high-value [raw_material|e], worth the upkeep while you build up its [tax_base|e]."
+ ABM_BAILIFF_MM_NOT_INTEGRATED_TT: "[ROOT.GetLocation.GetName] would be worth a Bailiff once it is [integrated|e]."
+ ABM_BAILIFF_MM_LOW_TT: "#R Not worth a Bailiff:#! [ROOT.GetLocation.GetName] has a [tax_base|e] below 8 and no high-value [raw_material|e]."
+ ABM_BAILIFF_MM_CANNOT_TT: "[ROOT.GetLocation.GetName] cannot have a Bailiff: Bailiffs are only built in rural [locations|e] that are not overseas."
+
+ mapmode_abm_create_town_name: "Create Town"
+ MAPMODE_ABM_CREATE_TOWN: "#T $mapmode_abm_create_town_name$#!\n$mapmode_common_start$ which rural settlements to raise to a town first. A town loses the rural +100% [rgo|e] size and food bonus and makes 10% less [food|e], so cheap [goods|e] go first, food staples last, and high-value [goods|e] stay rural.\n\nLight green: cheap [goods|e] (clay, sand, stone, medicaments): create a town first.\n#G Green#!: medium-value [goods|e] (lumber, fibre, wine, metals...) or a light food (olives, fruit, game).\n#Y Yellow#!: lower priority: a food-5 staple (fish, millet, legumes), or medium-value [goods|e] in a rich location ([tax_base|e] 15+) whose big [rgo|e] a town would halve.\n#R Red#!: urbanise last: a food-8 staple (wheat, rice, maize, potato, livestock).\nDark red: high-value [goods|e], keep it rural.\nBlack stripes: under the 5,000 [population|e] a town needs."
+
+ ABM_TOWN_MM_LEGEND_FIRST: "Create a town first: cheap goods"
+ ABM_TOWN_MM_LEGEND_GOOD: "Good: medium goods or light food"
+ ABM_TOWN_MM_LEGEND_LOWER: "Lower priority: food 5 or rich RGO"
+ ABM_TOWN_MM_LEGEND_LAST: "Last: food 8 staple"
+ ABM_TOWN_MM_LEGEND_KEEP_RURAL: "Keep rural: high-value goods"
+ ABM_TOWN_MM_LEGEND_POPULATION: "Stripes: under 5,000 population"
+ ABM_TOWN_MM_LEGEND_URBAN: "Already a town or city"
+
+ ABM_TOWN_MM_URBAN_TT: "[ROOT.GetLocation.GetName] is already a town or city; see the Create City map mode."
+ ABM_TOWN_MM_CANNOT_TT: "[ROOT.GetLocation.GetName] cannot be upgraded."
+ ABM_TOWN_MM_KEEP_RURAL_TT: "#R Keep [ROOT.GetLocation.GetName] rural:#! [ROOT.GetLocation.GetRawMaterial.GetName] is a high-value [raw_material|e], and a town loses the rural +100% [rgo|e] size."
+ ABM_TOWN_MM_FOOD_8_TT: "#R Make [ROOT.GetLocation.GetName] a town last:#! [ROOT.GetLocation.GetRawMaterial.GetName] is a major food staple, and a town makes less [food|e].\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a town needs 5,000)"
+ ABM_TOWN_MM_FOOD_5_TT: "#Y Lower priority:#! [ROOT.GetLocation.GetRawMaterial.GetName] in [ROOT.GetLocation.GetName] is a food staple, and a town makes less [food|e].\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a town needs 5,000)"
+ ABM_TOWN_MM_RICH_RGO_TT: "#Y Lower priority:#! [ROOT.GetLocation.GetName] is rich ([tax_base|e] 15+), and a town would halve its [ROOT.GetLocation.GetRawMaterial.GetName] [rgo|e].\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a town needs 5,000)"
+ ABM_TOWN_MM_MEDIUM_TT: "#G Good town:#! [ROOT.GetLocation.GetRawMaterial.GetName] in [ROOT.GetLocation.GetName] is a medium-value [raw_material|e].\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a town needs 5,000)"
+ ABM_TOWN_MM_FOOD_3_TT: "#G Good town:#! [ROOT.GetLocation.GetRawMaterial.GetName] in [ROOT.GetLocation.GetName] is cheap and only a light [food|e] source.\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a town needs 5,000)"
+ ABM_TOWN_MM_FIRST_TT: "#G Create a town in [ROOT.GetLocation.GetName] first:#! its [raw_material|e] is cheap.\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a town needs 5,000)"
+
+ mapmode_abm_create_city_name: "Create City"
+ MAPMODE_ABM_CREATE_CITY: "#T $mapmode_abm_create_city_name$#!\n$mapmode_common_start$ which towns to raise to a city first. A city keeps the town's [rgo|e] but makes 20% less [food|e] instead of 10%, so the more [food|e] a town makes, the later it should become a city.\n\nLight green: not a food source: create a city first.\n#G Green#!: light food (olives, fruit, game, wool).\n#Y Yellow#!: food-5 staple (fish, millet, legumes).\n#R Red#!: food-8 staple (wheat, rice, maize, potato, livestock): last.\nBlack stripes: under the 30,000 [population|e] a city needs.\nLight blue: already a city."
+
+ ABM_CITY_MM_LEGEND_FIRST: "Create a city first: no food"
+ ABM_CITY_MM_LEGEND_FOOD_3: "Good: light food"
+ ABM_CITY_MM_LEGEND_FOOD_5: "Lower priority: food 5 staple"
+ ABM_CITY_MM_LEGEND_FOOD_8: "Last: food 8 staple"
+ ABM_CITY_MM_LEGEND_POPULATION: "Stripes: under 30,000 population"
+ ABM_CITY_MM_LEGEND_CITY: "Already a city"
+ ABM_CITY_MM_LEGEND_RURAL: "Not a town yet, or cannot be upgraded"
+
+ ABM_CITY_MM_CITY_TT: "[ROOT.GetLocation.GetName] is already a city."
+ ABM_CITY_MM_RURAL_TT: "[ROOT.GetLocation.GetName] is not a town yet; see the Create Town map mode."
+ ABM_CITY_MM_CANNOT_TT: "[ROOT.GetLocation.GetName] cannot be upgraded."
+ ABM_CITY_MM_FOOD_8_TT: "#R Make [ROOT.GetLocation.GetName] a city last:#! [ROOT.GetLocation.GetRawMaterial.GetName] is a major food staple, and a city makes 20% less [food|e].\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a city needs 30,000)"
+ ABM_CITY_MM_FOOD_5_TT: "#Y Lower priority:#! [ROOT.GetLocation.GetRawMaterial.GetName] in [ROOT.GetLocation.GetName] is a food staple, and a city makes 20% less [food|e].\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a city needs 30,000)"
+ ABM_CITY_MM_FOOD_3_TT: "#G Good city:#! [ROOT.GetLocation.GetRawMaterial.GetName] in [ROOT.GetLocation.GetName] is only a light [food|e] source.\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a city needs 30,000)"
+ ABM_CITY_MM_FIRST_TT: "#G Create a city in [ROOT.GetLocation.GetName] first:#! it is not a [food|e] source.\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a city needs 30,000)"

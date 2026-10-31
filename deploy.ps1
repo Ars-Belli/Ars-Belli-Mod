@@ -41,4 +41,8 @@ if (Test-Path -Path $metadataDir) {
     Copy-Item -Path (Join-Path $metadataDir "*") -Destination $destDir -Force
 }
 
+# Ship country history as one 10_countries.txt, like vanilla: the game spends ~2 seconds
+# per setup file when generating a new game, so the regional files cost ~2 minutes.
+& (Join-Path $sourceDir "merge_country_setup.ps1") -ModRoot $destDir
+
 Write-Host "Deployment complete."

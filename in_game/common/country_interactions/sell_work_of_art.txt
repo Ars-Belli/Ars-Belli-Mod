@@ -65,15 +65,18 @@ sell_work_of_art = {
 		looking_for_a = country
 		target_flag = recipient
 		name = "choose_country"
+		default_sort = will
+		check_cheapest_price = yes
 		column = {
-			data = name
+			data = country_diplomacy_info_trade
 		}
 		visible = {
+			is_real_country = yes
 			NOT = { this = scope:actor }
+			NOT = { country_type = building }
 		}
 		enabled = {
 			NOT = { is_enemy_of = scope:actor }
-			prestige >= scope:actor.prestige
 		}
 	}
 
@@ -87,19 +90,37 @@ sell_work_of_art = {
 		column = {
 			data = name
 		}
+		column = {
+			data = select_target_acceptance_frame
+		}
 		visible = {
 			art_is_priceless = no
+			is_art_destroyed = no
+			work_of_art_is_imperial_regalia = no
 		}
 	}
 
 	effect = {
-		custom_tooltip = {
-			text = sell_work_of_art_move_art_tt
-			hidden_effect = {
-				scope:target = {
-					move_art_and_owner = { location = scope:recipient.capital country = scope:recipient }
+		if = {
+			limit = { exists = scope:target }
+			scope:actor = {
+				add_prestige = {
+					value = scope:target.art_price
+					multiply = -0.02
 				}
 			}
+			custom_tooltip = {
+				text = sell_work_of_art_move_art_tt
+				hidden_effect = {
+					scope:target = {
+						move_art_and_owner = { location = scope:recipient.capital country = scope:recipient }
+					}
+				}
+			}
+		}
+		else = {
+			custom_tooltip = sell_work_of_art_move_art_generic_tt
+			custom_tooltip = woa_trade_price_scales_with_value_tt
 		}
 	}
 
@@ -125,11 +146,14 @@ sell_work_of_art = {
 		base = -50
 	}
 
-	accept = {
-		add = {
-			desc = "OUR_OPINION_TOOLTIP"
-			value = "scope:recipient.opinion(scope:actor)"
-			divide = 3
+accept = {
+		if = {
+			limit = { exists = scope:recipient }
+			add = {
+				desc = "THEIR_OPINION_TOOLTIP"
+				value = "scope:recipient.opinion(scope:actor)"
+				divide = 3
+			}
 		}
 		# Ars Belli: the buyer now weighs what it is being asked to pay. Eight points per month
 		# of its own income, the same rate the pay-for-access actions price offered gold at, so
@@ -138,7 +162,10 @@ sell_work_of_art = {
 		# work from burying every other term, since `art_price` is engine-side and its range is
 		# not knowable from script.
 		if = {
-			limit = { exists = scope:target }
+			limit = {
+				exists = scope:target
+				exists = scope:recipient
+			}
 			subtract = {
 				desc = "ABM_ART_PRICE_VS_INCOME"
 				value = scope:target.art_price
@@ -151,7 +178,7 @@ sell_work_of_art = {
 			}
 		}
 		if = {
-			limit = { scope:recipient = { gold < { value = monthly_income_total multiply = 6 } } }
+			limit = { scope:recipient ?= { gold < { value = monthly_income_total multiply = 6 } } }
 			add = {
 				desc = "LOW_TREASURY"
 				value = -60
@@ -160,12 +187,13 @@ sell_work_of_art = {
 		# Ars Belli: +30 above 24 months of income -> +15 above 36. A fat treasury was the single
 		# biggest reason AI bought art it had no interest in.
 		if = {
-			limit = { scope:recipient = { gold > { value = monthly_income_total multiply = 36 } } }
+			limit = { scope:recipient ?= { gold > { value = monthly_income_total multiply = 36 } } }
 			add = {
 				desc = "WEALTHY_BUYER"
 				value = 15
 			}
 		}
+		# Ars Belli: flat quality bands instead of vanilla's (art_quality - 50) slope.
 		if = {
 			limit = { scope:target ?= { art_quality >= 70 } }
 			add = {
@@ -196,7 +224,7 @@ sell_work_of_art = {
 			}
 		}
 		if = {
-			limit = { scope:recipient = { is_rival_of = scope:actor } }
+			limit = { scope:recipient ?= { is_rival_of = scope:actor } }
 			add = {
 				desc = "game_concept_rival"
 				value = -100

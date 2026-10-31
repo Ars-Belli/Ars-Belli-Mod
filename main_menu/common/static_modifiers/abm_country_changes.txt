@@ -45,6 +45,12 @@ REPLACE:is_great_power = {
 	# court_spending_cost_modifier = 0.1
 	court_spending_efficiency = -0.10
 	monthly_prestige = 0.1
+	# Ars Belli: no mercenary_range_modifier (vanilla 0.5) - mercenary nerf, b64f2ed
+	# 1.4 vanilla lines (kept as vanilla):
+	creditworthiness_bonus = 0.1
+	max_bonds = 2
+	alliance_weight = 1.0
+	union_weight = 0.75
 
 
 	# Intervene in War is removed mod-wide: players consistently misread it as unfair
@@ -128,4 +134,16 @@ REPLACE:new_colonial_nation_founded = {
 	local_lumber_output_modifier = 1
 	local_sand_output_modifier = 1
 	local_iron_output_modifier = 1
+}
+
+# ARS BELLI: consequence of expelling another country's trade posts (abm_expel_fondacos).
+# The victim's merchants are thrown out, so the expelling country's own trade suffers for a while.
+# Mild on purpose - the real deterrent is the cb_destroyed_building the victim receives.
+abm_expelled_foreign_merchants = {
+	game_data = {
+		category = country
+	}
+	trade_income = -0.10
+	global_merchant_capacity_modifier = -0.10
+	trade_range_modifier = -0.10
 }
