@@ -195,6 +195,13 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - No engine modifier for: unit starting experience (Thorough Training -> monthly_experience_gain), artillery move speed (Limbers -> army_movement_speed 0.05), flat monthly manpower (Guerillas -> max_manpower 1). Stand-ins, verify in game.
 - Modifier/icon validation: modifier keys = `MODIFIER_TYPE_NAME_*` in vanilla `modifier_types_l_english.yml` (engine modifiers have no def file). Icon must be an existing advance icon name.
 
+### 3o. Battle simulator and army meta (2026-10-30)
+- Simulator `.tools/scripts/battle_sim/` (`sim.js`, `engine.js`). Rules + tables: `EU5 Combat Mechanics (1.4.4).md`, 11b = 1.4, 11c = 1.3.11. Raw results, real battles, one-off checks, commands: `analysis/meta_1.3/`, `analysis/meta_1.4/` (README in each). Quote game version with ANY meta claim, the two differ.
+- Data: `units.json` = 1.4.6, `units_1.3.11.json` = 1.3.11 + mod tag `game.1.3.11.mod.25`. NEVER rebuild `units.json` while the game is on 1.3 (writes 1.3 data under a 1.4 label). 1.3 run = `EU5_UNITS=<units_1.3.11.json>` + `--rules 1.3` (`S.RULES_13`). `EU5_THREADS=1` = one low-priority core; while user is in a game no all-core runs.
+- 1.3 (read from exe, 30 of 33 real battles): no REGIMENT_SIZE morale factor, only W frontage per section may engage, melee picks engaged enemies first, 2-hour ticks. Initiative caps at effective 5. User campaign is limited by manpower, not gold: quote equal manpower. Meta: heavy cavalry to age III; age IV half heavy half light + ~10% cannons; age V 20li 40hc 20lc 20art; age VI 20hi 40li 40art. Equal regiments moves to infantry at age V. Cannons are cheapest third category for combined arms, past 20% they lose. Wars agree with battles.
+- 1.4: pure cavalry to age III. Mixed wins battles from age IV only via combined arms (cliff at 50%). Pure cavalry wins WARS to age V. Morocco D009 levies raise 10% of tribesmen; Ars Belli levy size nerf is steppe-only.
+- OPEN: 1.4 may share the 1.3 engage limit + engaged-first targeting. Check `0x14247eee0`, `0x142481230` before trusting 1.4 stacks over W. Morocco levy nerf approved but waits for game back on 1.4.
+
 ### 4. Economy & Town Setups
 - Custom building setups for different cultures/regions in `in_game\common\town_setups\00_default.txt`.
 - Tweaks to prices and societal values.

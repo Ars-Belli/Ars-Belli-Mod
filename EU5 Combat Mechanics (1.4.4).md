@@ -446,7 +446,7 @@ So **+0.1 tactics ≈ +5% discipline ≈ +1 commander die ≈ +20 experience**, 
 
 ## 11b. Army composition: the meta by age (simulated, 1.4 rules)
 
-Scripts: `analysis/army_meta.js` (regular armies, wars, the levy game) and `analysis/levy_meta.js` (levies, Morocco, steppe hordes). Run 2026-10-30 with `units.json` built from 1.4.6. **None of this applies to 1.3**: see the table at the end of this section.
+Scripts: `analysis/army_meta.js` (regular armies, wars, the levy game) and `analysis/levy_meta.js` (levies, Morocco, steppe hordes). Run 2026-10-30 with `units.json` built from 1.4.6. **None of this applies to 1.3**: see the table at the end of this section. Raw results, the Morocco checks and the exact commands are in `analysis/meta_1.4/`.
 
 **Method.** Composition is treated as a symmetric zero-sum game and solved by double oracle: keep a small set of armies, solve its equilibrium, search a whole grid for the best counter to that equilibrium, add it, repeat until nothing beats the equilibrium by more than 1 point. So the answer is not limited to a list of guesses. A strategy is regiment shares over heavy and light infantry, heavy and light cavalry and artillery, in steps of 10%, plus the formation (`balanced_army` and `cav_inf_cav` are the only presets). Both sides have generals 60/59/61, Spain 1547's discipline and morale, army tradition 20, experience 0.37 and every universal advance of the age; frontage 10; a budget of 30 regiments of heavy cavalry (ages I–IV) or heavy infantry (ages V–VI). No universal advance gives one category power, so the ages themselves favour nobody except through combined arms (+1% a type at ages IV and VI).
 
@@ -558,7 +558,7 @@ Read from the installed 1.3 files on 2026-10-30. A meta for 1.3 needs its own ru
 
 ## 11c. Game 1.3.11: rules, meta, Spain and Lotharingia (simulated)
 
-Everything in 11b is for 1.4. This section is for 1.3.11, run on 2026-10-30 with the game on 1.3, `units_1.3.11.json` (vanilla 1.3.11 + mod tag `game.1.3.11.mod.25`) and `S.RULES_13` in `engine.js`. Scripts: `analysis/army_meta.js --rules 1.3` with `EU5_UNITS` set to that file, and `analysis/reformation_13.js`. `EU5_THREADS=1` runs them on one low-priority core.
+Everything in 11b is for 1.4. This section is for 1.3.11, run on 2026-10-30 with the game on 1.3, `units_1.3.11.json` (vanilla 1.3.11 + mod tag `game.1.3.11.mod.25`) and `S.RULES_13` in `engine.js`. Scripts: `analysis/army_meta.js --rules 1.3` with `EU5_UNITS` set to that file, and `analysis/reformation_13.js`. `EU5_THREADS=1` runs them on one low-priority core. The real battles, raw results, one-off checks and exact commands are in `analysis/meta_1.3/`.
 
 **The rules** were read from eu5.exe 1.3.11 (Ghidra project `eu5_13`; battle tick `0x1443e8d20`, damage `0x1442e5580`, engage candidates `0x1443e55a0`, target pick `0x1443e5170`). The flow is the same as 1.4, including the overrun checks (10 at the start, 2 and 10 with collapsed morale, written as literals). The differences:
 
