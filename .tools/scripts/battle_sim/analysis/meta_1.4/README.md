@@ -2,7 +2,7 @@
 
 Everything behind section 11b of `EU5 Combat Mechanics (1.4.4).md`. The numbers are 1.4 only (`units.json` built from 1.4.6). Run 2026-10-31.
 
-The main scripts are one folder up (`army_meta.js`, `levy_meta.js`). `results/` uses the engage limit and engaged-first targeting that 1.4 shares with 1.3. `results/pre_fix/` is the 2026-10-30 set from before them, superseded: to compare, set `ENGAGE_W: false` in the engine's `D` (`levy_meta.js --old-engage` does this).
+The main scripts are one folder up (`army_meta.js`, `levy_meta.js`). `results/` uses the engage limit and engaged-first targeting that 1.4 shares with 1.3. `results/pre_fix/` is the 2026-10-30 set from before them, superseded: to compare, set `ENGAGE_W: false` in the engine's `D` (`levy_meta.js --old-engage` does this). `results/pre_dice_fix/` is the set from before the dice timing fix of 2026-10-31.
 
 ## Results
 
@@ -68,4 +68,4 @@ node $A regulars --ages 2,3,4,5,6 --views regiments,manpower --regs 60 --n 60 --
 node $A regulars --ages 2,3,4,5,6 --views regiments --levies 30 --n 60 --nm 400 --iters 8 --out $R/levy_game.json > $R/levy_game.log 2>&1
 ```
 
-These run on every core by default. Set `EU5_THREADS=1` if the game is running.
+These run at the lowest priority, on every core but two by default. If the game is running, set `EU5_THREADS=20` so it keeps 8 of the 28 logical cores.

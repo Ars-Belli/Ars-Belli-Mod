@@ -1,7 +1,7 @@
 // 42 real 1.4.6 battles (battles14.json, AI wars of an observer game, 1370s, both sides at least 3k men) against the simulator.
 // Compares the engage limit and engaged-first targeting (ENGAGE_W) with the model before them, on identical inputs and seeds.
 // Stats per country are not known, so every side gets one age 1 baseline; only the comparison between rulesets is meaningful.
-const os = require('os'); try { os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL); } catch {}
+const os = require('os'); try { os.setPriority(os.constants.priority.PRIORITY_LOW); } catch {}
 const S = require('../../engine.js'); S.setUnitDB(require('../../units.json'));
 const B = require('./battles14.json').filter(b => [b.A, b.D].every(s => s.tot.reduce((x, y) => x + y, 0) >= 3));
 const N = +process.argv[2] || 60;

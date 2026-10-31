@@ -119,11 +119,11 @@
 	}
 
 	const levyFactor = c => Math.min(1, Math.max(0.05, D.LEVY_IMPACT + (1 - D.LEVY_IMPACT) * c.levyCE));
-	const present = r => r.section !== 'absent' && r.section !== 'routed';
+	const present = r => r.section !== 'absent' && r.section !== 'routed' && r.section !== 'away';
 	const inLine = r => SECTIONS.includes(r.section);
 	const canFight = r => present(r) && r.str >= D.MIN_STRENGTH && r.mor >= D.COLLAPSE;
 	// overrun "men": every regiment of the side's armies in the battle, levies at their factor (0x143519150)
-	const sideMen = regs => regs.reduce((t, r) => t + (r.section === 'absent' ? 0 : r.str * (r.levy ? levyFactor(r.c) : 1)), 0);
+	const sideMen = regs => regs.reduce((t, r) => t + (r.section === 'absent' || r.section === 'away' ? 0 : r.str * (r.levy ? levyFactor(r.c) : 1)), 0);
 
 	// Formation boxes (the army's autobalance, as stored in saves): "balanced" deals regiments out in a snake,
 	// C L R R L C C L R ...; "cav_inf_cav" snakes cavalry over L R R L ... and puts the rest in the centre.
@@ -221,6 +221,7 @@
 		const Ws = [0, 1].map(i => terr.frontage * (1 + ((sides[i][0] || {}).c?.frontageMod || 0)));
 		const all = [0, 1].map(i => sides[i].flatMap(a => a.regs));
 		const timeline = [];
+		let rot = [null, null]; // opts.rotate state per side
 		const dice = [0, 0];
 		let curDay = 0;
 		// arrivalDay 'needed': the army waits next door and comes in (one a day, in list order) once its side has no fighting
@@ -257,6 +258,11 @@
 			const sum = (i, f) => all[i].filter(r => r.section !== 'absent').reduce((t, r) => t + f(r), 0);
 			return {
 				winner, days: day, overrun: overrunSide != null, shattered, frontage: Ws[0], frontages: Ws, start: startMen,
+				...(opts.rotate ? {
+					trips: rot.map(R => R ? R.trips : 0),
+					state: sides.map(s => s.map(x => x.regs.filter(r => r.str >= D.MIN_STRENGTH).map(r => ({ s: r.str / r.maxStr, m: r.mor / r.maxMor, sec: r.section })))),
+					awayInfo: rot.map(R => R ? [...R.away].map(([j, st]) => ({ j, back: st.phase === 'ready' ? day + R.cfg.march : st.phase === 'resting' ? st.readyDay + R.cfg.march : st.back, rest: st.rest, fill: st.fill, fresh: !!st.fresh })) : []),
+				} : {}),
 				losses: [0, 1].map(i => sum(i, lostOf)),
 				lossesRegular: [0, 1].map(i => sum(i, r => r.levy ? 0 : lostOf(r))),
 				lossesLevy: [0, 1].map(i => sum(i, r => r.levy ? lostOf(r) : 0)),
@@ -276,7 +282,82 @@
 		if (!m0[0] || !m0[1]) return finish(m0[0] ? 0 : m0[1] ? 1 : -1, 0, null);
 		if (m0[0] >= D.INITIAL_OVERRUN * m0[1]) return finish(0, 0, 1);   // stack wipe at the start, no morale check
 		if (m0[1] >= D.INITIAL_OVERRUN * m0[0]) return finish(1, 0, 0);
-		let phaseCounter = 0, bombardOver = false, phase = 0;
+		let bombardOver = false, phase = 0;
+
+		// opts.rotate = [cfg, cfg], null for a side that stays in: a side takes tired armies out of the battle by hand (combat doc 11d). The tiredest army goes once its
+		// average morale is under cfg.threshold, rests towards cfg.target (at most cfg.maxRest days, cfg.recovery a day) a location away (cfg.march days) and comes back as
+		// reserves. cfg.friendly: 25% men if a month tick passes. cfg.relay: armies from index cfg.start wait away, and the tired army leaves only when a rested one arrives;
+		// otherwise it just leaves, if cfg.minLine regiments stay in the line. The opponent never reacts.
+		rot = [0, 1].map(i => (opts.rotate && opts.rotate[i]) ? { cfg: opts.rotate[i], away: new Map(), out: new Set(), trips: 0, init: false } : null);
+		const monthTick = rot.some(Boolean) ? 1 + Math.floor(rng() * 30) : 0;
+		const crossesMonth = (from, to) => { for (let t = monthTick; t <= to; t += 30) if (t > from) return true; return false; };
+		const restDays = (cfg, m) => Math.min(cfg.maxRest, Math.max(1, Math.ceil((cfg.target - m + 2 * cfg.march * D.MOVEMENT_COST) / cfg.recovery)));
+		const averageMorale = regs => regs.reduce((t, r) => t + r.mor / r.maxMor, 0) / regs.length;
+		const inBattle = (i, j) => sides[i][j].regs.filter(r => r.section !== 'absent' && r.str >= D.MIN_STRENGTH);
+		const tiredest = (i, R, day) => {
+			let best = -1, bestM = Infinity;
+			sides[i].forEach((a, j) => {
+				if (R.away.has(j) || R.out.has(j) || arrivedAt[i][j] > day) return;
+				const regs = inBattle(i, j);
+				if (!regs.length) return;
+				const m = averageMorale(regs);
+				if (m < bestM) { bestM = m; best = j; }
+			});
+			return [best, bestM];
+		};
+		const leave = (i, j) => { for (const r of sides[i][j].regs) { if (r.section === 'absent') continue; r.section = r.str >= D.MIN_STRENGTH ? 'away' : 'routed'; r.engaged = false; r.target = null; r.pendStr = 0; r.pendMor = 0; } };
+		const comeBack = (i, j, st, gain) => {
+			const a = sides[i][j], alive = a.regs.filter(r => r.str >= D.MIN_STRENGTH);
+			for (const r of alive) {
+				r.mor = Math.max(0, Math.min(r.maxMor, r.mor + gain * r.maxMor));
+				if (st.fill) r.str = Math.min(r.maxStr, r.str + D.MONTHLY_REINFORCE * r.maxStr);
+				r.engaged = false; r.target = null;
+			}
+			deploy(alive, a.army.formation || 'balanced', Ws[i], all[i], true, rng);
+		};
+		const pullOutStep = (i, R, day) => {
+			const cfg = R.cfg;
+			for (const [j, st] of [...R.away]) {
+				if (day < st.back) continue;
+				R.away.delete(j);
+				comeBack(i, j, st, st.rest * cfg.recovery - 2 * cfg.march * D.MOVEMENT_COST);
+			}
+			if (day < D.MIN_DAYS) return;
+			const [j, m] = tiredest(i, R, day);
+			if (j < 0 || m >= cfg.threshold) return;
+			const mine = new Set(sides[i][j].regs);
+			if (all[i].filter(r => !mine.has(r) && inLine(r) && canFight(r)).length < cfg.minLine) return;
+			const rest = restDays(cfg, m), back = day + 2 * cfg.march + rest;
+			leave(i, j);
+			R.away.set(j, { back, rest, fill: !!cfg.friendly && crossesMonth(day, back) });
+			R.trips++;
+		};
+		const relayStep = (i, R, day) => {
+			const cfg = R.cfg;
+			if (!R.init) { R.init = true; sides[i].forEach((a, j) => { if (j >= cfg.start) R.away.set(j, { phase: 'ready', rest: 0, fill: false, fresh: true, back: Infinity, readyDay: 0 }); }); }
+			for (const [j, st] of [...R.away]) {
+				if (st.phase === 'resting' && day >= st.readyDay) st.phase = 'ready';
+				if (st.phase !== 'inbound' || day < st.back) continue;
+				R.away.delete(j);
+				comeBack(i, j, st, st.fresh ? -cfg.march * D.MOVEMENT_COST : st.rest * cfg.recovery - 2 * cfg.march * D.MOVEMENT_COST);
+				arrivedAt[i][j] = -1; // already deployed; `day` would make arrive() deploy it again
+				const out = st.swapOut;
+				R.out.delete(out);
+				const regs = inBattle(i, out);
+				if (!regs.length) continue;
+				const rest = restDays(cfg, averageMorale(regs)), readyDay = day + cfg.march + rest;
+				leave(i, out);
+				R.away.set(out, { phase: 'resting', readyDay, rest, fill: !!cfg.friendly && crossesMonth(day, readyDay), back: Infinity, fresh: false });
+				R.trips++;
+			}
+			if (day + cfg.march < D.MIN_DAYS) return; // the tired army could not leave before the gate
+			const [j, m] = tiredest(i, R, day);
+			if (j < 0 || m >= cfg.threshold) return;
+			const ready = [...R.away].find(([, st]) => st.phase === 'ready');
+			if (!ready) return;
+			Object.assign(ready[1], { phase: 'inbound', back: day + cfg.march, swapOut: j });
+			R.out.add(j);
+		};
 
 		const attackSide = (i, bombard) => {
 			const own = all[i], foe = all[1 - i];
@@ -338,11 +419,12 @@
 
 		for (let day = 1; day <= D.MAX_DAYS; day++) {
 			curDay = day;
+			for (const i of [0, 1]) if (rot[i]) (rot[i].cfg.relay ? relayStep : pullOutStep)(i, rot[i], day);
 			arrive(0, day); arrive(1, day);
 			let justEnded = false;
 			if ((D.RULES_13 ? day >= D.BOMBARD_DAYS : day > D.BOMBARD_DAYS) && !bombardOver) { bombardOver = true; justEnded = true; if (D.RULES_13) for (const i of [0, 1]) for (const r of all[i]) r.target = null; }
-			if (D.RULES_13) { if (phase >= D.DAYS_PER_PHASE) { phase = 0; roll(); } else if (justEnded) roll(); } // 0x1443e8d20: phase compared first, +1 at the end of the tick
-			else { phaseCounter++; if (phaseCounter >= D.DAYS_PER_PHASE) { phaseCounter = 0; roll(); } else if (justEnded) roll(); }
+			// 1.4.6 0x1424a7620, 1.3.11 0x1443e8d20: the counter is compared first and goes up at the end of the tick, so 1.4 re-rolls on day 4 (bombard ends), then 5, 9, 13
+			if (phase >= D.DAYS_PER_PHASE) { phase = 0; roll(); } else if (justEnded) roll();
 			if (!bombardOver) { attackSide(0, true); attackSide(1, true); }
 			else {
 				for (const i of [0, 1]) {
@@ -811,5 +893,9 @@
 	const RULES_13 = { RULES_13: true, DAMAGE_MULT: 0.01, STR_MOD: 0.2, MOR_MOD: 1, DAILY_MORALE: 0.01, DAYS_PER_PHASE: 5, BOMBARD_DAYS: 5, MIN_DAYS: 24, SIZE_RATIO_MAX: 0,
 		INIT_BASE: 0.1, INIT_EACH: 0.02, INIT_MAX: 0.1, INIT_DAY: 0.01, SPEED_SCALE: 0.05, LEVY_DISCIPLINE: -0.1, MAX_DAYS: 2400 };
 	const api = { RULES_13, D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, drilledExperience, simulateWar, summarizeWars, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
-	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.BattleSim = api;
+	if (typeof module !== 'undefined' && module.exports) {
+		// Node: always the lowest priority, so a simulation never takes time from any other program
+		try { const os = require('os'); os.setPriority(os.constants.priority.PRIORITY_LOW); } catch (e) {}
+		module.exports = api;
+	} else root.BattleSim = api;
 })(typeof window !== 'undefined' ? window : globalThis);

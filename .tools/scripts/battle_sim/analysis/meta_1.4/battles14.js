@@ -1,7 +1,7 @@
 // Real 1.4.6 battles from an observer game, written to battles14.json for val14.js.
 // Read-only on the save. Run at below-normal priority: the game may be running.
 const path = require('path'), fs = require('fs'), os = require('os');
-try { os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL); } catch {}
+try { os.setPriority(os.constants.priority.PRIORITY_LOW); } catch {}
 const R = path.resolve(__dirname, '..', '..') + '/';
 const P = require(R + 'paradox.js');
 const dir = path.join(process.env.USERPROFILE, 'Documents/Paradox Interactive/Europa Universalis V/save games');

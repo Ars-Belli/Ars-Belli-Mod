@@ -1,5 +1,5 @@
 const R=require('path').resolve(__dirname,'..','..')+'/';
-const os=require('os');try{os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL);}catch{}
+const os=require('os');try{os.setPriority(os.constants.priority.PRIORITY_LOW);}catch{}
 const S=require(R+'engine.js'),db=JSON.parse(JSON.stringify(require(R+'units_1.3.11.json')));
 db.units.x_lancers_i5={...db.units.a_lancers,i:5};db.units.x_lancers_i8={...db.units.a_lancers,i:8};db.units.x_ll_i2={...db.units.a_light_lancers,i:2};
 S.setUnitDB(db);Object.assign(S.D,S.RULES_13);

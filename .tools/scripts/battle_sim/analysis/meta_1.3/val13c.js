@@ -1,5 +1,5 @@
 const R=require('path').resolve(__dirname,'..','..')+'/';
-const os=require('os');try{os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL);}catch{}
+const os=require('os');try{os.setPriority(os.constants.priority.PRIORITY_LOW);}catch{}
 const S=require(R+'engine.js');S.setUnitDB(require(R+'units_1.3.11.json'));Object.assign(S.D,S.RULES_13);
 const B=require(__dirname+'/battles13.json').filter(b=>{const a=b.A.tot.reduce((x,y)=>x+y,0),d=b.D.tot.reduce((x,y)=>x+y,0);return a>=3&&d>=3;});
 const types=['a_early_arquebusiers','a_halberdiers','a_light_lancers','a_lancers','a_falconet','a_supply_convoy'];

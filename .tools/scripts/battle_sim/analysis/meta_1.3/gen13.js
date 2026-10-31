@@ -1,5 +1,5 @@
 const R=require('path').resolve(__dirname,'..','..')+'/';
-const os=require('os');try{os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL);}catch{}
+const os=require('os');try{os.setPriority(os.constants.priority.PRIORITY_LOW);}catch{}
 const S=require(R+'engine.js');S.setUnitDB(require(R+'units_1.3.11.json'));Object.assign(S.D,S.RULES_13);
 const LOC={topography:'flatland',vegetation:'farmland'},C={tactics:2.6,discipline:.27,moraleMod:.31,moraleFlat:.5,experience:.4,initiativeMod:.2,correctBoxChance:.2,combinedPerType:.025};
 const A=(t,n,g)=>({name:t,general:g,country:C,units:[{type:t,count:n}]}),N=500;

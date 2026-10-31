@@ -1,5 +1,5 @@
 const R=require('path').resolve(__dirname,'..','..')+'/';
-const os=require('os');try{os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL);}catch{}
+const os=require('os');try{os.setPriority(os.constants.priority.PRIORITY_LOW);}catch{}
 const S=require(R+'engine.js'),db=JSON.parse(JSON.stringify(require(R+'units_1.3.11.json')));
 for(const k of ['a_chambered_cannon','a_royal_mortar','a_flying_battery']) { db.units['x_weak_'+k]={...db.units[k],p:1.5}; }
 S.setUnitDB(db);Object.assign(S.D,S.RULES_13);

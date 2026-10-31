@@ -26,8 +26,7 @@ if (!isMainThread) {
 		} else parentPort.postMessage({ id, result: S.monteCarloScenario(scn, n, { seed: opts.seed }) });
 	});
 } else {
-	// EU5_THREADS=n caps the workers and drops to below-normal priority, for runs while the game is being played
-	if (process.env.EU5_THREADS) { try { os.setPriority(os.constants.priority.PRIORITY_BELOW_NORMAL); } catch (e) {} }
+	// EU5_THREADS=n caps the workers; while the game is being played leave it 8 cores. Priority: engine.js sets the lowest.
 	module.exports = (threads = +process.env.EU5_THREADS || Math.max(1, os.cpus().length - 2)) => {
 		const S = require('./engine.js');
 		const workers = Array.from({ length: threads }, () => new Worker(__filename));
