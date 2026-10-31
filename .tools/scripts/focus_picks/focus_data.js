@@ -1,0 +1,278 @@
+// Focus pick data, transcribed from "Ars Belli MP Mod - Design Doc - Focus Picks.md".
+// Each branch: 5-7 advances (tree shape: PARENT in generate_focus_picks.js). Entry: [key, modifiers(string lines), extra]
+// extra: { name, desc } for new keys (abm_*), { icon } override, { raw } extra raw lines.
+// Branch art: a vanilla illustration under gfx/interface/illustrations/ (no .dds), shown in the panel card header.
+// Value rule: reused vanilla advance keeps vanilla value unless the doc marks "(was X)" or adds a new stat.
+module.exports = {
+ ages: [
+ { age: 'age_2_renaissance', n: 2,
+   eco: [
+    { id: 'court', art: 'government/throne_rooms/throne_room_north_german', name: 'Court', desc: 'Administrative and court efficiency.', adv: [
+      ['innovativeness', 'global_max_literacy = 5'],
+      ['state_efficiency', 'global_distance_from_capital_speed_propagation = 0.1'],
+      ['court_accounting', 'court_spending_efficiency = 0.1'],
+      ['dynamic_court', 'country_cabinet_efficiency = 0.10\nmonthly_political_influence_gain_modifier = 0.10'],
+      ['church_attendance_duty', 'stability_investment = small_stability_investment'],
+      ['empiricism', 'legislative_efficiency = 0.20\nset_policy_cost_modifier = -0.66\nchange_policy_cost_modifier = -0.20'],
+    ]},
+    { id: 'trade', art: 'trade_market/trade', name: 'Trade', desc: 'Markets, merchants and trade range.', adv: [
+      ['shrewd_commerce_practice', 'global_merchant_power = 0.15'],
+      ['merchant_traditions', 'trade_range_modifier = 0.20'],
+      ['additional_merchants', 'global_merchant_capacity_modifier = 0.25'],
+      ['merchant_adventures', 'trade_sea_efficiency = medium_trade_sea_efficiency_bonus'],
+      ['debt_and_loans', 'bank_interest = -0.01\nmax_bonds = 1'],
+      ['abm_protected_trade_caravans', 'trade_land_efficiency = medium_trade_land_efficiency_bonus', { icon: 'expanded_supply_trains', name: 'Protected Trade Caravans', desc: 'Armed escorts and fortified caravanserais along our overland routes let our merchants reach far-off markets without the expense of a fleet.' }],
+    ]},
+    { id: 'influence', art: 'government/diplomacy_illustration', name: 'Influence', desc: 'Subjects, vassals and diplomats.', adv: [
+      ['integrated_elites', 'monthly_diplomats = 0.2\nmax_diplomats = 1\nglobal_estate_power = -0.20\nmonthly_political_influence_gain_modifier = 0.15'],
+      ['tribute_system', 'subject_income_modifier = 0.25\nsubject_loyalty = 10\nsubject_opinions = 25'],
+      ['marcher_lords', '', { raw: 'unlock_subject_type = march' }],
+      ['buffer_states', 'diplomatic_capacity = 2\ndiplomatic_reputation = 4'],
+      ['benign_diplomats', 'improve_relation_impact = 0.25\nsubject_opinions = 10'],
+      ['abm_absorbing_vassals', 'annexation_speed_modifier = 0.20', { icon: 'crown_power_advance_renaissance', name: 'Absorbing Vassals', desc: 'Generations of loyal service have bound our subjects so closely to the crown that folding their lands into our own is little more than a formality.' }],
+    ]},
+   ],
+   mil: [
+    { id: 'levy', art: 'institutions/feudalism', name: 'Levy', desc: 'Larger and better levies, raised for the army and the fleet alike.', adv: [
+      ['enforced_service', 'global_levy_size_modifier = 0.20\nlevy_recovery_modifier = 0.20\nnobles_estate_levy_size = 2.00'], // nobles raise the knights (cavalry levies); +30% like France's French Heritage
+      ['open_levy_standards', 'wrong_culture_levy_size = 0.25'],
+      ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.30'],
+      ['battlefield_commisions', 'army_tradition_from_battle = 1.0\nnavy_tradition_from_battle = 1.0'],
+      ['abm_local_militias', 'global_levy_recruitment_speed_modifier = 0.33\nlevy_maintenance_modifier = -0.5', { icon: 'regimental_system', name: 'Local Militias', desc: 'Townsmen and villagers drilled on the green each Sunday can be called to arms quickly and cost little to keep.' }],
+      ['abm_common_foot', 'army_heavy_infantry_power = 0.10\narmy_light_infantry_power = 0.10', { icon: 'drill_army_advance', name: 'Common Foot', desc: 'Most of our levies march on foot. Taught to keep their ranks with pike and bow, they stand their ground far better than a rabble.' }],
+    ]},
+    { id: 'mercenary', art: 'situation/italian_wars', name: 'Mercenary', desc: 'Hired forces: cheaper, more available mercenaries, and privateers at sea.', adv: [
+      ['benefits_for_mercenaries', 'mercenary_maintenance_efficiency = 0.25\ntolerance_heretic = 0.5\ntolerance_heathen = 0.5'],
+      ['organised_mercenary_recruitment', 'mercenary_range_modifier = 0.5'],
+      ['organised_mercenary_payment', 'hire_mercenary_premium_cost_modifier = -0.2\nhire_privateer_cost_modifier = -0.2'],
+      ['glorious_arms', 'prestige_from_land_battle = 1.0\nprestige_from_naval_battle = 1.0\nmilitary_tactics = 0.10'],
+      ['abm_ensure_mercenary_payments', 'hire_mercenary_leader_cost_modifier = -0.75', { icon: 'regimental_system', name: 'Ensure Mercenary Payments', desc: 'A reputation for paying on time means the best condottieri will sign with us for far less.' }],
+      // Keep the privateers key: vanilla naval laws (state piracy, letters of marque) and an OMA event check has_advance = privateers.
+      // 1.4 vanilla also lists the Letters of Marque policy here (its allow already checks has_advance = privateers).
+      ['privateers', 'can_hire_privateers = yes', { raw: 'unlock_policy = issue_letter_of_marque_policy' }],
+    ]},
+    { id: 'standing_forces', art: 'institutions/professional_armies', name: 'Standing Forces', desc: 'A permanent army and fleet, kept paid and under arms in peacetime.', adv: [
+      ['finest_of_horses', 'army_heavy_cavalry_power = 0.05\narmy_light_cavalry_power = 0.05\narmy_heavy_cavalry_maintenance_cost_modifier = -0.05\narmy_light_cavalry_maintenance_cost_modifier = -0.05'],
+      ['abm_royal_arsenals', 'regiment_recruit_speed = 0.25\nship_build_speed = 0.25', { icon: 'ship_building_advance', name: 'Royal Arsenals', desc: 'State arsenals turn out arms, armour and hulls to a common pattern, year in, year out.' }],
+      ['abm_drilled_regulars', 'monthly_experience_gain = 0.25', { icon: 'drill_army_advance', name: 'Drilled Regulars', desc: 'Soldiers and sailors who serve all year round have time to learn their trade between campaigns.' }],
+      ['abm_household_troops', 'land_morale = 0.25\nnaval_morale = 0.25', { icon: 'army_professionalism', name: 'Household Troops', desc: 'The crown\'s own guards and flagships set the standard of courage for everyone else.' }],
+      ['abm_regular_pay', 'army_maintenance_efficiency = 0.05\nnavy_maintenance_efficiency = 0.05', { icon: 'court_accounting', name: 'Regular Pay', desc: 'Wages paid on time and in full keep our regulars and crews from melting away, and cost less than raising them anew.' }],
+      ['improved_rams', 'navy_galley_power = 0.15\nnavy_galley_maintenance_cost_modifier = -0.10'],
+    ]},
+   ]},
+ { age: 'age_3_discovery', n: 3,
+   eco: [
+    { id: 'infrastructure', art: 'situation/_default', name: 'Infrastructure', desc: 'Construction, roads and mining.', adv: [
+      ['organised_construction', 'global_build_buildings_efficiency = 0.1'],
+      ['efficient_construction_plans', 'global_urban_build_buildings_efficiency = 0.1'],
+      ['expanded_infrastructure_network', 'global_road_building_time = -0.1\nbuild_gravel_road_cost_modifier = -0.1\nbuild_paved_road_cost_modifier = -0.1\nbuild_modern_road_cost_modifier = -0.1'],
+      ['efficient_mining', 'expand_rgo_mining_cost_modifier = -0.1\nglobal_iron_output_modifier = 0.1\nglobal_copper_output_modifier = 0.1'],
+      ['rgo_logistics_mil_choice', 'raw_material_in_province_impact = 0.025'],
+      ['advanced_bureaucracy', 'tax_income_efficiency = small_tax_income_efficiency_bonus\nglobal_bureaucracy_maintenance_efficiency = 0.04'],
+    ]},
+    { id: 'exploration', art: 'institutions/new_world', name: 'Exploration', desc: 'Exploration, colonisation and overseas trade.', adv: [
+      ['quest_for_the_new_world', 'exploration_preparation_time_modifier = -0.25\nexploration_mission_speed = 0.1\nexploration_maintenance_efficiency = 0.20', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
+      ['exploration', 'colonial_range = 500\nrecruit_explorer_cost_modifier = -0.25', { raw: 'unlock_casus_belli = cb_exploration\n\nai_preference_tags = {\n\texploration\n}' }],
+      ['overseas_exploration', 'colonial_range_modifier = 0.5\ncreate_colonial_charter_cost_modifier = -0.20', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
+      ['faster_colonists', 'colonial_migration_size_modifier = 0.25', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
+      ['colonial_ventures', 'colonial_migration_size_modifier = 0.25\ncolonial_maintenance_efficiency = 0.20', { raw: 'ai_preference_tags = {\n\texploration\n}' }],
+      ['overseas_trade', 'trade_range_modifier = 0.5'],
+    ]},
+    { id: 'espionage', art: 'disaster/byzantine_succession_crisis', name: 'Espionage', desc: 'Spies, infiltration, sabotage and stolen research.', adv: [
+      ['vetting', 'counter_espionage = 0.33\nspy_network_construction = 0.5'],
+      ['abm_sabotage_fort_advance', '', { icon: 'fortified_towns', name: 'Sabotage Fort', desc: 'In time of war our agents can buy off the men who hold an enemy\'s walls, leaving the fort without a garrison.', raw: 'unlock_country_interaction = abm_sabotage_fort' }],
+      ['infiltrate_administration_advance', '', { raw: 'unlock_diplomacy = { infiltrate_administration }' }],
+      ['foreign_embassies', 'monthly_diplomats = 0.1\nmax_diplomats = 1'],
+      ['abm_global_networks', 'diplomatic_range_modifier = 0.5\ndiplomatic_range = 500', { icon: 'diplomatic_influence', name: 'Global Networks', desc: 'Our envoys, agents and correspondents reach every court of note, however distant.' }],
+      ['abm_industrial_espionage', '', { icon: 'efficient_spies', name: 'Industrial Espionage', desc: 'Why pay for discoveries when our agents can simply copy them?', raw: 'unlock_country_interaction = steal_technology' }],
+    ]},
+   ],
+   mil: [
+    { id: 'quality', art: 'disaster/succession_crisis', name: 'Quality', desc: 'Steadier, harder troops and crews that take less damage. Elite cavalry and great ships cost more to keep.', adv: [
+      ['military_drill', 'land_morale_modifier = 0.10', { raw: 'ai_weight = { add = 10 }' }],
+      ['naval_drill', 'naval_morale_modifier = 0.10', { icon: 'naval_morale_advance_1' }],
+      ['abm_strict_discipline', 'discipline = 0.05', { icon: 'glorious_arms', name: 'Strict Discipline', desc: 'Strict articles of war and harsher punishment keep our ranks steady and in order when the shot starts flying.' }],
+      ['abm_hardened_ranks', 'military_tactics = 0.10\nnaval_damage_taken = -0.10', { icon: 'defensive_army', name: 'Hardened Ranks', desc: 'Soldiers who know how to take cover and crews who know how to fight their ship lose fewer men to every volley and broadside.' }],
+      // land_morale_movement_cost: 1.4 vanilla scaled it x7 (base 0.001 -> 0.0069, advances -0.0001 -> -0.0007); was -0.0002 on 1.3.
+      ['abm_trained_march', 'land_morale_movement_cost = -0.0014', { icon: 'expanded_supply_trains', name: 'Trained March', desc: 'Regulated marching pace and rest halts keep our columns in good order and good spirits on the road.' }],
+      ['abm_elite_companies', 'army_heavy_cavalry_power = 0.10\narmy_light_cavalry_power = 0.10\narmy_heavy_infantry_power = 0.10\narmy_light_infantry_power = 0.10\nnavy_heavy_ship_power = 0.15\narmy_heavy_cavalry_maintenance_cost_modifier = 0.05\narmy_light_cavalry_maintenance_cost_modifier = 0.05\narmy_heavy_infantry_maintenance_cost_modifier = 0.05\narmy_light_infantry_maintenance_cost_modifier = 0.05\nnavy_heavy_ship_maintenance_cost_modifier = 0.05', { icon: 'royal_navy', name: 'Elite Companies', desc: 'Picked horsemen, picked foot and our finest great ships are given the best of everything. They fight like no others, and they cost like no others.' }],
+    ]},
+    { id: 'quantity', art: 'situation/guelphs_and_ghibellines', name: 'Quantity', desc: 'More men and sailors, wider battle lines, cheap upkeep and cheap ships.', adv: [
+      ['abm_rapid_reinforcement', 'combat_speed_modifier = 0.10\npossible_frontage_modifier = 0.10', { icon: 'regimental_system', name: 'Rapid Reinforcement', desc: 'Reserve companies are moved up to the line as soon as the front ranks falter, and every spare man is put into the fight.' }],
+      ['camp_followers', 'global_supply_limit_modifier = 0.1\nfood_consumption_modifier = -0.10'],
+      ['the_old_and_infirm', 'army_maintenance_efficiency = 0.1\nnavy_maintenance_efficiency = 0.1'],
+      ['abm_deep_reserves', 'army_reinforce_efficiency = 0.2\nnavy_repair_efficiency = 0.2', { icon: 'defensive_army', name: 'Deep Reserves', desc: 'Depots of trained replacements and dockyard stores stand ready behind every army and squadron, so losses are made good cheaply.' }],
+      ['grand_navy', 'navy_galley_build_cost_modifier = -0.15\nnavy_heavy_ship_build_cost_modifier = -0.15\nnavy_light_ship_build_cost_modifier = -0.15'],
+      ['grand_army', 'global_manpower_modifier = 0.15\nglobal_sailors_modifier = 0.15'],
+    ]},
+    { id: 'leadership', art: 'army/army_full_flip', name: 'Leadership', desc: 'Generals, admirals, and the officers and drill sergeants who serve under them: our men are drilled into veterans faster, and keep what they learn.', adv: [
+      ['formalized_officer_corps', 'army_initiative = 0.25\nnavy_initiative = 0.50'],
+      ['quality_education', 'monthly_army_tradition = 0.2\nmonthly_navy_tradition = 0.2\narmy_tradition_decay = -0.001\nnavy_tradition_decay = -0.001'],
+      ['administrative_leadership', 'hire_advisor_cost_modifier = -0.25\ntrain_general_cost_modifier = -0.40\ntrain_admiral_cost_modifier = -0.40'],
+      ['abm_military_academies', 'train_general_ability = 45\ntrain_admiral_ability = 45', { icon: 'army_professionalism', name: 'Military Academies', desc: 'Officers are schooled in war on land and at sea before they ever hold a command.' }],
+      ['abm_drill_sergeants', 'monthly_experience_gain = 0.75\nexperience_decay = -0.02', { icon: 'offensive_army', name: 'Drill Sergeants', desc: 'Veteran sergeants and boatswains put every company and crew through its paces daily, turning raw recruits into seasoned men in half the time and keeping veterans sharp.' }],
+      ['abm_aides_de_camp', 'correct_box_chance = 0.30', { icon: 'military_revolution_advance', name: 'Aides-de-Camp', desc: 'Gallopers carry the commander\'s orders across the field, so units arriving late still reach the place they are needed.' }],
+    ]},
+   ]},
+ { age: 'age_4_reformation', n: 4,
+   eco: [
+    { id: 'religion', art: 'society/religion', name: 'Religion', desc: 'Conversion and assimilation to the true faith.', adv: [
+      ['devoutness', 'tolerance_own = 1'],
+      ['religious_tradition', 'monthly_prestige = 0.1\ncultural_tradition_modifier = 0.2'],
+      ['abm_cultural_unity', 'global_pop_assimilation_speed_modifier = 0.2', { icon: 'cultural_ties', name: 'Cultural Unity', desc: 'One realm, one people: schools, sermons and law courts all speak the language of the crown.' }],
+      ['preaching_missions', 'global_pop_assimilation_speed_modifier = 0.1\nglobal_pop_conversion_speed_modifier = 0.1'],
+      ['divine_supremacy', 'global_pop_conversion_speed_modifier = 0.20'],
+      ['missionary_schools', 'global_pop_conversion_speed = 0.01'],
+    ]},
+    { id: 'expansion', art: 'situation/columbian_exchange', name: 'Expansion', desc: 'Late colonisation and overseas trade.', adv: [
+      ['free_colonies', 'colonial_maintenance_efficiency = 0.40'],
+      ['land_of_opportunity', 'colonial_migration_size_modifier = 0.50'],
+      ['abm_trade_winds', 'navy_movement_speed = 0.10', { icon: 'maritime_advance_age_2', name: 'Trade Winds', desc: 'Our pilots have charted the great ocean winds and currents, and our ships now cross to the colonies in weeks rather than months.' }],
+      ['vice_roys', 'subject_pays_colonial_cost_modifier = 0.50\ndiplomatic_range_modifier = 0.25'],
+      ['merchant_power_from_maritime_rev_dip_choice', 'merchant_power_from_maritime_modifier = 0.1'],
+      ['overseas_merchants', 'trade_range_modifier = 0.5'],
+    ]},
+    { id: 'humanism', art: 'society/culture_illustration', name: 'Humanism', desc: 'Religious and cultural tolerance.', adv: [
+      ['ecumenism', 'tolerance_heretic = 1.5'],
+      ['humanist_tolerance', 'tolerance_heathen = 1.5'],
+      ['abm_integration_of_cultures', 'add_accepted_culture_cost_modifier = -0.5\nchange_primary_culture_cost_modifier = -0.5', { icon: 'cultural_ties', name: 'Integration of Cultures', desc: 'Welcoming new peoples into the heart of the realm is no longer a matter of controversy.' }],
+      ['cultural_ties', 'cultures_capacity = 2'],
+      ['abm_compromise', 'monthly_rebel_growth = -0.001\nmonthly_religious_rebel_growth = -0.001\npop_leave_rebels_threshold = -0.05', { icon: 'cultural_acceptance_advance', name: 'Compromise', desc: 'Listening to grievances before they turn into rebellions keeps the peace at home.' }],
+      ['cultures_capacity_mil_choice', 'cultures_capacity_modifier = 0.25'],
+    ]},
+   ],
+   mil: [
+    { id: 'offense', art: 'government/siege_battle_illustration', name: 'Offense', desc: 'Sieges, assaults and artillery, with fleets to blockade the coast.', adv: [
+      ['expanded_supply_trains', 'land_unit_attrition = -0.15'],
+      ['abm_night_assaults', 'assault_ability = 0.20', { icon: 'offensive_army', name: 'Night Assaults', desc: 'Storming parties go over the walls under cover of darkness, when the defenders least expect it.' }],
+      ['engineer_corps', 'siege_ability = 0.20\nblockade_efficiency = 0.25'],
+      ['abm_standardized_barrels', 'army_artillery_build_cost_modifier = -0.10\nglobal_cannons_output_modifier = 0.05', { icon: 'efficient_mining', name: 'Standardized Barrels', desc: 'Fixed calibres and bore sizes let our foundries cast guns quickly and interchangeably.' }],
+      ['superior_firepower', 'army_artillery_power = 0.1'],
+      ['abm_siege_artillery', 'artillery_bonus_vs_fort = 1', { icon: 'offensive_army', name: 'Siege Artillery', desc: 'Heavy guns built for one purpose: bringing down walls.' }],
+    ]},
+    { id: 'defense', art: 'situation/hussite_wars', name: 'Defense', desc: 'Forts and garrisons, and fleets that fight best off their own coasts.', adv: [
+      ['defensive_army', 'global_hostile_attrition = 1'],
+      ['garrison_conscription', 'global_garrison_size_modifier = 0.20\nglobal_garrison_growth = 0.025'],
+      ['defensive_mentality', 'global_defensive = 0.2\nown_coast_naval_combat_bonus = 0.10'],
+      ['abm_earthworks', 'global_fort_build_buildings_efficiency = 0.4', { icon: 'defensive_mentality', name: 'Earthworks', desc: 'Packed earth and timber ramparts can be thrown up quickly and cheaply, and they shrug off cannon fire better than stone.' }],
+      ['fort_logistics', 'fort_maintenance_efficiency = 0.2\nanti_piracy_warfare_modifier = 0.25'],
+      ['abm_fortified_cities_focus', 'fort_limit_modifier = 0.10\nfort_limit = 3', { icon: 'defensive_mentality', name: 'Fortified Cities', desc: 'Every town of note is ringed by modern bastions.' }],
+    ]},
+    { id: 'balanced', art: 'institutions/military_revolution', name: 'Balanced', desc: 'A little of everything: sieges and forts, army and fleet, and the staying power to see a war through.', adv: [
+      ['abm_military_engineers', 'siege_ability = 0.10\nglobal_defensive = 0.10', { icon: 'siege_ability_revolutions', name: 'Military Engineers', desc: 'The same engineers who dig our trenches before an enemy fortress also lay out the bastions of our own.' }],
+      ['abm_garrison_artillery', 'army_artillery_power = 0.05\nglobal_garrison_size_modifier = 0.10', { icon: 'artillery_institution_advance', name: 'Garrison Artillery', desc: 'Gunners trained on the walls of our forts take the field with the army when it marches.' }],
+      ['abm_coastal_squadrons', 'blockade_efficiency = 0.25\nown_coast_naval_combat_bonus = 0.05', { icon: 'rudimentary_coastal_ship_repair', name: 'Coastal Squadrons', desc: 'Squadrons that guard our own shores in peace can close an enemy\'s ports in war.' }],
+      ['abm_seasoned_campaigners', 'land_unit_attrition = -0.10\nnaval_unit_attrition = -0.10', { icon: 'expanded_supply_trains', name: 'Seasoned Campaigners', desc: 'Soldiers and sailors who have seen many campaigns know how to keep themselves fed, dry and healthy.' }],
+      ['abm_ready_reserves', 'army_reinforce_efficiency = 0.10\nnavy_repair_efficiency = 0.10', { icon: 'regiment_reinforcement_speed_renaissance', name: 'Ready Reserves', desc: 'Replacements for the regiments and stores for the fleet are kept in hand, so losses are made good without delay.' }],
+      ['abm_steady_resolve', 'max_war_exhaustion = 2', { icon: 'defensive_mentality', name: 'Steady Resolve', desc: 'Our people will bear a long war before they demand peace at any price.' }],
+    ]},
+   ]},
+ { age: 'age_5_absolutism', n: 5,
+   eco: [
+    { id: 'administration', art: 'institutions/legalism', name: 'Administration', desc: 'Control, cabinet and legislation.', adv: [
+      ['cabinet', 'country_cabinet_efficiency = 0.20\nmonthly_political_influence = 0.25'],
+      ['national_bank', 'minting_income_factor = 0.10\nmax_bonds = 1'],
+      ['civil_servants', 'global_monthly_control = 0.001\nglobal_monthly_control_decline = -0.002'],
+      ['legislative_efficiency_idea', 'legislative_efficiency = 0.25\nchange_policy_cost_modifier = -0.25'],
+      ['centralized_government', 'global_distance_from_capital_speed_propagation = 0.1'],
+      ['economic_ideas', 'global_monthly_development = 0.001'],
+    ]},
+    { id: 'commerce', art: 'institutions/banking', name: 'Commerce', desc: 'Trade advantage, capacity and banking.', adv: [
+      ['competetive_merchants', 'global_merchant_power = 0.2'],
+      ['national_trade_policy', 'selling_efficiency = small_selling_efficiency_bonus'], // 1.4 vanilla moved selling_efficiency to the *_selling_efficiency_bonus values
+      ['fast_negotiations', 'merchant_maintenance_efficiency = 0.20'],
+      ['free_trade', 'global_merchant_capacity_modifier = 0.20'],
+      ['trade_manipulation', 'global_trade_center_power = 0.10'],
+      ['bookkeeping', 'bank_interest = -0.01\nmax_bonds = 1'],
+    ]},
+    { id: 'diplomatic', art: 'situation/treaty_of_tordesillas', name: 'Diplomatic', desc: 'The diplomacy of conquest.', adv: [
+      ['flexible_negotiation', 'global_war_score_efficiency = 0.2\npeace_offer_negotiation_power = 0.15'],
+      ['formal_diplomacy', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\nimprove_relation_impact = 0.30\nantagonism_monthly_change_modifier = 0.1'],
+      ['diplomatic_influence', 'diplomatic_reputation = diplomatic_reputation_mild_bonus\ndiplomatic_capacity = 2'],
+      ['adaptability', 'antagonism_received_modifier = -0.3'],
+      ['diplomatic_corps', 'monthly_diplomats = 0.1\ncasus_belli_creation_speed_modifier = 0.25\nwar_no_cb_cost_modifier = -0.25'],
+      ['indirect_rule', 'global_separatism = -0.1\nglobal_integration_speed_modifier = 0.25'],
+    ]},
+   ],
+   mil: [
+    { id: 'maneuver', art: 'units/army_cavalry_5', name: 'Maneuver', desc: 'Faster armies and fleets, on and off the battlefield.', adv: [
+      ['improved_manuever', 'combat_speed_modifier = 0.10'],
+      ['abm_forced_march', 'army_movement_speed = 0.10\nnavy_movement_speed = 0.10', { icon: 'expanded_supply_trains', name: 'Forced March', desc: 'Our armies are trained to cover great distances at speed when the campaign demands it, and our squadrons crowd on sail to match them.' }],
+      ['land_morale_movement_cost_rev_choice_mil', 'land_morale_movement_cost = -0.0014'], // 2x vanilla 1.4 (-0.0007), as on 1.3 (-0.0002 vs -0.0001)
+      ['abm_bold_maneuvers', 'movement_speed_if_no_road = 0.20\narmy_disembark_speed = 0.25', { icon: 'offensive_army', name: 'Bold Maneuvers', desc: 'Our generals do not wait for roads or harbours; they march across country, land on open beaches and appear where the enemy least expects them.' }],
+      ['abm_limbers', 'army_movement_speed = 0.05', { icon: 'offensive_army', name: 'Limbers', desc: 'Two-wheeled carriages let our guns be hitched to horses and keep pace with the rest of the army.' }],
+      ['offensive_army', 'land_morale_recovery = 0.02\nnaval_morale_recovery = 0.02'],
+    ]},
+    { id: 'logistics', art: 'missions/generic_trade', name: 'Logistics', desc: 'Attrition, supply, range and support units, for armies and fleets.', adv: [
+      ['abm_enduring_hardships', 'land_morale_attrition_cost = -0.0025', { icon: 'improved_foraging', name: 'Enduring Hardships', desc: 'Hunger and disease no longer break the spirit of our soldiers as easily as they once did.' }],
+      ['improved_foraging', 'land_unit_attrition = -0.20\nnaval_unit_attrition = -0.20'],
+      ['abm_prepared_camps', 'global_supply_limit_modifier = 0.10\nfood_consumption_modifier = -0.15', { icon: 'expanded_supply_trains', name: 'Prepared Camps', desc: 'Camp sites along our lines of march are surveyed and stocked in advance.' }],
+      ['improved_logistics', 'army_logistics_distance_modifier = 0.20\nnaval_range_modifier = 0.20'],
+      ['abm_logistics_corps', 'army_auxiliary_power = 0.50\narmy_auxiliary_build_cost_modifier = -0.20\narmy_auxiliary_maintenance_cost_modifier = -0.10\nnavy_transport_power = 0.25', { icon: 'expanded_supply_trains', name: 'Logistics Corps', desc: 'Wagoners, sappers, sutlers and transport crews are organised into proper units that can defend themselves when caught out.' }],
+      ['abm_trained_reserves', 'regiment_reinforcement_speed = 0.10\nship_repair_at_sea = 0.025', { icon: 'defensive_army', name: 'Trained Reserves', desc: 'Replacements arrive at the front already trained and equipped, and our ships carry the stores to repair themselves at sea.' }],
+    ]},
+    { id: 'firepower', art: 'institutions/artillery_institution', name: 'Firepower', desc: 'Damage done: infantry volleys, naval broadsides and guns.', adv: [
+      ['abm_volley_fire', 'army_light_infantry_power = 0.05\nnaval_damage_done = 0.10', { icon: 'military_modernization', name: 'Volley Fire', desc: 'Ranks that fire together on command, on the battlefield and on the gun deck, hit far harder than men who fire at will.' }],
+      ['abm_line_of_battle', 'army_heavy_infantry_power = 0.05\nnavy_heavy_ship_power = 0.10', { icon: 'royal_navy', name: 'Line of Battle', desc: 'Infantry drawn up in line and ships of the line in column bring every musket and every gun to bear at once.' }],
+      ['abm_horse_artillery', 'army_artillery_power = 0.10', { icon: 'artillery_institution_advance', name: 'Horse Artillery', desc: 'Light guns drawn by teams of horses can unlimber wherever the fighting is hottest.' }],
+      ['abm_paper_cartridges', 'combat_speed_modifier = 0.10', { icon: 'offensive_army', name: 'Paper Cartridges', desc: 'Measured charges wrapped in paper let our men and gun crews load faster than the enemy.' }],
+      ['abm_frigates', 'navy_light_ship_power = 0.15\nnavy_light_ship_build_cost_modifier = -0.20', { icon: 'naval_morale_advance_1', name: 'Frigates', desc: 'Fast, well-armed cruisers that can fight their own battles as well as scout for the fleet.' }],
+      ['abm_prize_crews', 'ship_capture_chance = 0.05', { icon: 'nav_fearless_seamen', name: 'Prize Crews', desc: 'Every ship carries men ready to board and sail home a beaten enemy.' }],
+    ]},
+   ]},
+ { age: 'age_6_revolutions', n: 6,
+   eco: [
+    { id: 'industry', art: 'institutions/industrialization', name: 'Industry', desc: 'Production, extraction and taxes. The tall pick.', adv: [
+      ['audit_checks', 'tax_income_efficiency = large_tax_income_efficiency_bonus'],
+      ['formal_administration', 'government_size = 1'],
+      ['smithian_economics', 'global_production_efficiency = medium_production_efficiency_bonus\nglobal_monthly_development = 0.002'],
+      ['regulation_bureau', 'minting_inflation_threshold = 0.02'],
+      ['abm_industrial_scale_extraction', 'global_max_rgo_size_modifier = 0.20', { icon: 'efficient_mining', name: 'Industrial Scale Extraction', desc: 'Steam pumps and organised labour open mines and plantations on a scale never seen before.' }],
+      ['abm_modern_extraction_methods', 'global_raw_material_output = 0.20', { icon: 'efficient_mining', name: 'Modern Extraction Methods', desc: 'Scientific agriculture and new machinery wring more from every field and seam.' }],
+    ]},
+    { id: 'empire', art: 'government/geopolitics_expansion_illustration', name: 'Empire', desc: 'Proximity, governors and subjects. The wide pick.', adv: [
+      ['global_empire', 'subject_income_modifier = 0.05\ntax_income_efficiency = medium_tax_income_efficiency_bonus'],
+      ['local_traditions', 'global_estate_target_satisfaction = small_permanent_target_satisfaction'],
+      ['postal_service', 'road_cost_on_distance_from_capital = -2\nsea_cost_on_distance_from_capital_when_maritime = -1'],
+      ['port_cost_distance_from_capital_choice_mil', 'port_cost_distance_from_capital = -5'],
+      ['abm_imperial_administration', 'num_local_governors = 1', { icon: 'court_accounting', name: 'Imperial Administration', desc: 'A professional corps of governors administers the provinces in the name of the crown.' }],
+      ['abm_overseas_holdings', 'num_naval_governors = 1', { icon: 'expansionism', name: 'Overseas Holdings', desc: 'Our possessions across the sea are placed under governors answerable directly to the capital.' }],
+    ]},
+    { id: 'innovation', art: 'institutions/scientific_revolution', name: 'Innovation', desc: 'Research, literacy and the arts. The science pick.', adv: [
+      ['abm_national_academy_of_sciences', 'research_speed = 0.05', { icon: 'scholasticism', name: 'National Academy of Sciences', desc: 'A royal academy gathers the finest minds of the nation under one roof.' }],
+      ['abm_the_scientific_method', 'research_speed_modifier = 0.25', { icon: 'scholasticism', name: 'The Scientific Method', desc: 'Observation, hypothesis and experiment replace received wisdom.' }],
+      ['abm_belle_epoque', 'cultural_influence_modifier = 0.5\nwork_of_art_quality_modifier = 0.5\nartist_impact = 0.5\nglobal_monthly_art_start_chance = 0.5\nskill_of_new_artists = 0.5', { icon: 'scholasticism', name: 'Belle Époque', desc: 'Salons, galleries and opera houses make our capital the envy of the civilised world.' }],
+      ['humanism', 'global_max_literacy = 10'],
+      ['abm_universal_literacy', 'global_monthly_literacy = 0.1', { icon: 'scholasticism', name: 'Universal Literacy', desc: 'A school in every parish, and every child taught to read.' }],
+      ['optimism', 'monthly_war_exhaustion = -0.05'],
+    ]},
+   ],
+   mil: [
+    { id: 'voluntary_service', art: 'units/army_infantry_6', name: 'Voluntary Service', desc: 'Fewer but better troops and crews.', adv: [
+      ['discipline_drills', 'discipline = 0.05\nnaval_morale_modifier = 0.10'],
+      ['abm_thorough_training', 'regiment_recruit_speed = -0.50\nmonthly_experience_gain = 0.25', { icon: 'offensive_army', name: 'Thorough Training', desc: 'No recruit takes the field before he has mastered his drill; it takes longer, but it shows.' }],
+      ['regimental_system', 'army_maintenance_efficiency = 0.1\narmy_initiative = 0.25'],
+      ['abm_skirmish_line', 'military_tactics = 0.10', { icon: 'offensive_army', name: 'Skirmish Line', desc: 'Light troops screen the main body, picking off officers and disrupting the enemy advance.' }],
+      ['bayonet_leaders', 'army_heavy_infantry_power = 0.1\narmy_light_infantry_power = 0.1'],
+      ['abm_mission_command', 'army_initiative = 0.10\nnavy_initiative = 0.25', { icon: 'offensive_army', name: 'Mission Command', desc: 'Our officers are told what to achieve, not how; trusted to act on their own judgement, they seize the moment without waiting for orders.' }],
+    ]},
+    { id: 'conscription', art: 'institutions/levee_en_masse', name: 'Conscription', desc: 'Mass armies and fleets from a large population.', adv: [
+      ['mass_army', 'global_manpower_modifier = 0.20\nglobal_sailors_modifier = 0.20\nglobal_levy_size_modifier = 0.10'],
+      ['national_conscripts', 'regiment_recruit_speed = 0.5\nship_build_speed = 0.25\nlevy_maintenance_modifier = -0.5'],
+      ['nationalistic_enthusiasm', 'army_maintenance_efficiency = 0.1\nnavy_maintenance_efficiency = 0.1\nlevy_combat_efficiency_modifier = 0.10'],
+      ['the_young_can_serve', 'army_reinforce_efficiency = 0.10\nnavy_repair_efficiency = 0.10\nlevy_recovery_modifier = 0.10'],
+      ['massed_battery', 'army_artillery_power = 0.1\narmy_artillery_build_cost_modifier = -0.10'],
+      ['private_to_marshal', 'army_heavy_infantry_build_cost_modifier = -0.20\narmy_light_infantry_build_cost_modifier = -0.20\narmy_heavy_infantry_reinforce_cost_modifier = -0.15\narmy_light_infantry_reinforce_cost_modifier = -0.15\narmy_heavy_infantry_maintenance_cost_modifier = -0.10\narmy_light_infantry_maintenance_cost_modifier = -0.10'],
+    ]},
+    { id: 'insurrection', art: 'situation/the_revolution', name: 'Insurrection', desc: 'Defensive war for small countries fighting for survival.', adv: [
+      ['abm_guerillas', 'max_manpower = 1\noccupation_time = 1.0', { icon: 'defensive_army', name: 'Guerillas', desc: 'Every hill and forest hides a band of partisans, and no occupier sleeps soundly in our land.' }],
+      ['morale_recovery_rev_dip_choice', 'morale_recovery_in_friendly = 0.05'],
+      // global_devastation_recovery: 1.4 vanilla halved every prosperity recovery source (0.005 -> 0.0025); was 0.01 on 1.3.
+      ['abm_peoples_war', 'global_hostile_attrition = 1\nglobal_devastation_recovery = 0.005', { icon: 'defensive_army', name: "People's War", desc: 'The whole nation takes up arms; invaders find the land stripped bare and every village hostile.' }],
+      ['abm_last_stand', 'global_garrison_size_modifier = 0.15\nglobal_defensive = 0.15\nown_coast_naval_combat_bonus = 0.10', { icon: 'defensive_mentality', name: 'Last Stand', desc: 'Our garrisons will hold to the last man, and our ships will fight for every mile of our own coast.' }],
+      ['abm_national_resistance', 'monthly_war_exhaustion = -0.05\ncultural_tradition_modifier = 10', { icon: 'cultural_ties', name: 'National Resistance', desc: 'Defeat only hardens the resolve of our people and deepens their sense of who they are.' }],
+      ['abm_foreign_fighters', 'mercenary_maintenance_efficiency = 0.5\nmercenary_range_modifier = 1.0', { icon: 'regimental_system', name: 'Foreign Fighters', desc: 'Volunteers from across the world flock to our cause.' }],
+    ]},
+   ]},
+ ]
+};
