@@ -4,7 +4,7 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.3.11.mod.25 | **Supported game version:** 1.3.\*
+**Mod version:** game.1.3.11.mod.25-crash-fix | **Supported game version:** 1.3.\*
 **Compiled:** 25 October 2026 (cumulative section verified against the mod files on that date)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
@@ -629,10 +629,12 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.25).
+- Supported game version: **1.3.\*** (mod version game.1.3.11.mod.25-crash-fix).
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
+- Regiments pick up religious movements such as Lutheranism only from their location, not from other
+  regiments in their army. This avoids a late-game multiplayer crash on game 1.3.11.
 
 ---
 
@@ -640,7 +642,18 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.3.11.mod.25 (current)
+## game.1.3.11.mod.25-crash-fix (current)
+
+Since game.1.3.11.mod.25 → game.1.3.11.mod.25-crash-fix:
+
+### Compatibility
+
+- **Late-game multiplayer crash:** fix for a crash on game 1.3.11 once a religious movement such as
+  Lutheranism is carried by a very large number of regiments; not yet tested in a live game
+- **Movements in armies:** regiments no longer pick up movements from other regiments in their army,
+  only from their location; disease spread may change the same way
+
+## game.1.3.11.mod.25
 
 Since game.1.3.11.mod.24 → game.1.3.11.mod.25:
 

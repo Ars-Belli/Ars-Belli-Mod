@@ -4,6 +4,17 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.3.11.mod.25-crash-fix
+
+Since game.1.3.11.mod.25 → game.1.3.11.mod.25-crash-fix:
+
+### Compatibility
+
+- **Late-game multiplayer crash:** fix for a crash on game 1.3.11 once a religious movement such as
+  Lutheranism is carried by a very large number of regiments; not yet tested in a live game
+- **Movements in armies:** regiments no longer pick up movements from other regiments in their army,
+  only from their location; disease spread may change the same way
+
 ## game.1.3.11.mod.25
 
 Since game.1.3.11.mod.24 → game.1.3.11.mod.25:
