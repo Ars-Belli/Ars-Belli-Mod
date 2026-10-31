@@ -48,6 +48,17 @@ The Levy side's win rate at the equilibrium of the regiment mix search, years 10
 
 The applied row went into the Levy focus on 2026-10-31, with Levy Size left at +20%. Those armies on wooded hills: Castile 57 / 43 / 55, Morocco 44 / 47 / 51. Year-50 levies: Castile 39.9k against 33.3k, Morocco 11.7k against 8.1k.
 
+On narrow ground Morocco's Levy side loses its lead. `terrain_split.js` plays the applied armies with frontage and terrain modifiers switched separately, Levy side's win rate at years 10 / 30 / 50:
+
+| | Morocco | Castile |
+|---|---|---|
+| Open ground, frontage 10 | 90 / 90 / 94 | 81 / 51 / 57 |
+| Open ground, frontage 5 | 41 / 49 / 52 | 69 / 37 / 55 |
+| Hills and woods modifiers, frontage 10 | 78 / 77 / 84 | 68 / 51 / 53 |
+| Wooded hills, frontage 5 | 45 / 47 / 48 | 58 / 42 / 54 |
+
+Frontage counts regiments, not men, and most of Morocco's extra levy regiments are 200-man cavalry (year 30: 37 regiments against 25). That last link is a reading, not a separate test. These armies were picked for open ground, so a side tuned for hills could do better.
+
 `variants.json` holds changes to the focus as studied, and `focus_data.js` now has the applied values. To rerun the table, use commit `cbfe291`.
 
 ## Open
