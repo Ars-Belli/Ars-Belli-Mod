@@ -1,4 +1,4 @@
-// node .tools/scripts/battle_sim/analysis/levy_meta.js levies|tribal|nerf [--ages 2,3,4,5,6] [--n 1500] [--plain] [--out file]
+// node .tools/scripts/battle_sim/analysis/levy_meta.js levies|tribal|nerf|rate [--ages 2,3,4,5,6] [--n 1500] [--plain] [--rates 2,3,4,5,6,10] [--old-engage] [--out file]
 // --plain (with tribal): a country with Morocco's population but no tribes, as a comparison
 // What levies are worth, against the regular meta found by army_meta.js. No mercenaries.
 //   levies : generic levies (peasant infantry, noble knights) of ages 2-6
@@ -8,6 +8,7 @@
 //            (the levy meta itself, with both sides raising levies: army_meta.js regulars --levies 30)
 //   tribal : Morocco's real levies (D009 Sanhaja and Zenata cavalry, age-1 units that never scale) in ages 1-3
 //            stacks from saves: the 30-regiment armies Morocco fielded, and its whole levy
+//   rate   : Morocco's whole levy with the D009 tribal cavalry at other shares of tribesmen (10% in vanilla), as regular regiments
 //   nerf   : Ars Belli's steppe horde size (200 men in age 1, 400 from age 2) against vanilla's 600, same men
 // Levies: discipline -20%, levy vs regular factor 0.75 + 0.25 x levy CE, no manpower, 1% of the gold upkeep (section 8 of the
 // combat doc). Men come from pops, so a smaller regiment means more regiments for the same men, not fewer men: frontage counts
@@ -47,7 +48,7 @@ const levyArmy = (list, age, extra, more = {}) => ({ name: 'levies', formation: 
 const scn = (a, b, location) => ({ location: location || { frontage: 10 }, attacker: { armies: [].concat(a) }, defender: { armies: [].concat(b) } });
 // win rate, men lost and pops lost of side a against side b, both seat orders
 async function fight(a, b, location, n = N) {
-	const [m1, m2] = await Promise.all([pool.mc(scn(a, b, location), n, { seed: 21 }), pool.mc(scn(b, a, location), n, { seed: 500021 })]);
+	const [m1, m2] = await Promise.all([pool.mc(scn(a, b, location), n, { seed: 21, patch: OLD }), pool.mc(scn(b, a, location), n, { seed: 500021, patch: OLD })]);
 	return {
 		win: (m1.wins[0] + m1.draws / 2 + m2.wins[1] + m2.draws / 2) / (2 * n), days: (m1.days + m2.days) / 2,
 		lost: (m1.losses[0] + m2.losses[1]) / 2, killed: (m1.losses[1] + m2.losses[0]) / 2, wiped: (m1.overrun[0] + m2.overrun[1]) / (2 * n), n: 2 * n,
@@ -130,6 +131,28 @@ const STACKS = {
 const PLAIN = {
 	1: { a_feudal_levy: 74, a_mailed_knights: 4 }, 2: { a_peasant_levy: 37, a_plated_knights: 2 }, 3: { a_matchlock_levy: 25, a_cavaliers: 1 },
 };
+// the Sanhaja and Zenata regiments follow the rate; everything else in the levy stays
+const atRate = (st, r) => Object.fromEntries(Object.entries(st).map(([k, n]) => [k, /sanhaja|zenata/.test(k) ? Math.round(n * r / 10) : n]));
+const OLD = argv.includes('--old-engage') ? { D: { ENGAGE_W: false } } : undefined;
+async function rate() {
+	const rates = opt('--rates', '2,3,4,5,6,10').split(',').map(Number), res = {}, flat = { topography: 'flatland', vegetation: 'farmland' };
+	for (const age of [1, 2, 3]) {
+		const worth = async st => { const [hc, hi] = await Promise.all(['hc', 'hi'].map(c => breakEven(n => regulars({ [c]: n }, age, { discipline: MOR.discipline }), stackArmy(st, age), flat, 5, 400))); return { hc, hi }; };
+		const plain = await worth(PLAIN[age]);
+		res[age] = { plain };
+		console.log(`\n=== Age ${age}: the whole levy as regular regiments, one stack, open farmland. Same population without tribes: ${plain.hc} heavy cavalry, ${plain.hi} heavy infantry`);
+		for (const [name, st] of Object.entries(STACKS[age]).slice(1)) {
+			res[age][name] = {};
+			console.log(`  ${name}`);
+			for (const r of rates) {
+				const s = atRate(st, r), w = await worth(s);
+				res[age][name][r] = { ...w, regs: Object.values(s).reduce((a, b) => a + b, 0), men: stackMen(s) };
+				console.log(`    ${String(r).padStart(3)}%: ${String(res[age][name][r].regs).padStart(4)} regs, ${stackMen(s).toFixed(1).padStart(5)}k men, worth ${String(w.hc ?? '400+').padStart(4)} heavy cavalry (${w.hc ? (w.hc / plain.hc).toFixed(1) : '-'}x plain), ${String(w.hi ?? '400+').padStart(4)} heavy infantry`);
+			}
+		}
+	}
+	return res;
+}
 const stackMen = st => Object.entries(st).reduce((t, [k, n]) => t + n * S.unitStats(k).s, 0);
 const stackArmy = (st, age, extra) => levyArmy(Object.entries(st).map(([type, count]) => ({ type, count })), age, { ...MOR, ...extra });
 async function tribal() {
@@ -198,7 +221,7 @@ async function nerf() {
 }
 (async () => {
 	const t0 = Date.now(), mode = argv[0], ages = opt('--ages', '2,3,4,5,6').split(',').map(Number);
-	const out = mode === 'levies' ? await levies(ages) : mode === 'tribal' ? await tribal() : mode === 'nerf' ? await nerf() : null;
+	const out = mode === 'levies' ? await levies(ages) : mode === 'tribal' ? await tribal() : mode === 'nerf' ? await nerf() : mode === 'rate' ? await rate() : null;
 	if (opt('--out')) fs.writeFileSync(opt('--out'), JSON.stringify(out, null, 1));
 	console.log(`\n${pool.threads} threads, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
 	await pool.close();

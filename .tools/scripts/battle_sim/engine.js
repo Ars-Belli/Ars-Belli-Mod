@@ -12,7 +12,7 @@
 		MIN_STRENGTH: 0.001,       // regiments with less strength (thousands of men) leave the line
 		LINE_EMPTY: 0.01,          // a section counts as empty below this total strength
 		INIT_BASE: 0.6, INIT_EACH: 0.025, INIT_MAX: 0.3, INIT_DAY: 0.03,
-		SPEED_SCALE: 0.1, OVERSTACK: 1.25, SIZE_RATIO_MAX: 4, LEVY_IMPACT: 0.75, EXP_RED: 0.5,
+		ENGAGE_W: true, SPEED_SCALE: 0.1, OVERSTACK: 1.25, SIZE_RATIO_MAX: 4, LEVY_IMPACT: 0.75, EXP_RED: 0.5,
 		NOT_ENG_STR: 1.1, NOT_ENG_MOR: 1.2, INITIAL_OVERRUN: 10, MORALE_OVERRUN: 2,
 		BOMBARD_CHANCE: 0.2, LAND_MORALE: 3, LEVY_DISCIPLINE: -0.2, RETREAT_STRENGTH_DAMAGE: 0.1,
 		COMBINED_PER_TYPE: 0.025, COMBINED_MIN: 0.1, COMBINED_MAX: 0.5,
@@ -301,8 +301,8 @@
 					}
 					if (!A.engaged) continue;
 					// melee target (0x142481230): facing section, keep target; else centre, left, right, reserve
-					if (D.RULES_13) {
-						// 0x1443e3ba0 + 0x1443e5170: keep the target; else an ENGAGED enemy facing; else any enemy facing; a section with nobody
+					if (D.ENGAGE_W) {
+						// 1.4.6 0x142481060, 1.3.11 0x1443e3ba0 + 0x1443e5170: keep the target; else an ENGAGED enemy facing; else any enemy facing; a section with nobody
 						// facing falls back to centre, left, right, reserve, and there only an engaged regiment can be picked
 						const all = t => foe.filter(x => x.section === t && canFight(x));
 						let t13 = MIRROR[sec], list = all(t13);
@@ -363,15 +363,15 @@
 						budget -= (r.u.f || 1);
 						if (best && rng() <= r.u.cs * (1 + r.c.speedMod) * D.SPEED_SCALE) r.section = best;
 					}
-					if (D.RULES_13) for (const s of SECTIONS) { // 0x1443e55a0: candidates in section order while W minus the engaged frontage lasts, then each rolls
+					if (D.ENGAGE_W) for (const s of SECTIONS) { // 1.4.6 0x142485e40, 1.3.11 0x1443e55a0: candidates in section order while W minus the engaged frontage lasts, then each rolls
 						let free = W - own.filter(x => x.section === s && x.engaged && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0);
 						for (const r of own) {
 							if (r.section !== s || r.engaged || !canFight(r) || (r.u.f || 1) > free) continue;
 							free -= (r.u.f || 1);
-							if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * phase) r.engaged = true;
+							if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * (D.RULES_13 ? phase : day)) r.engaged = true;
 						}
 					}
-					else for (const s of SECTIONS) for (const r of own) { // AttemptInitiative per section
+					else for (const s of SECTIONS) for (const r of own) { // ENGAGE_W false: the model before 2026-10-31, every regiment in the section rolls
 						if (r.section !== s || r.engaged || !canFight(r)) continue;
 						if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * (D.RULES_13 ? phase : day)) r.engaged = true;
 					}
