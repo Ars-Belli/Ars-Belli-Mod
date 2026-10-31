@@ -270,6 +270,12 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Levy regiments of one unit type merge across provinces, so a stack is full regiments plus one partial.
 - Study: `.tools/scripts/battle_sim/analysis/castile_morocco/`. `battle_sim/progress.js` prints % and time left for long runs.
 
+### 3u. Levy focus against Standing Forces (2026-10-31, nothing changed in the focus)
+-  (README). A country against itself after 10, 30, 50 years of economy, armies at 75% of monthly manpower plus the whole levy. Levy wins: Castile 89/62/60, Morocco 99/99/99.
+- All three Levy cuts tested together (culture bonus off, size +10%, nobles +100%) give Castile 68/43/47, Morocco 48/41/50. Not applied.
+-  can value manpower (, ) and s advances. Armories first thing bankrupt Castile; best for year 50 is economy to year 30, then armories.
+- Open: Morocco's manpower, save 39 a month, simulator 15.
+
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.
 - The real block is levies. The army list refuses any army with a levy, mercenary or prisoner regiment; vanilla's comment says the lend silently no-ops on levies. Three 1.4 saves: 5 of 76, 8 of 76, 9 of 96 subject armies can be lent, 2-4% of regiments (`analysis/meta_1.4/subject_armies.js`). Liberty desire is not it: 342 of 354 subjects are under 25.

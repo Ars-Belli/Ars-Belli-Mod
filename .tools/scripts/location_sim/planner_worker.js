@@ -58,6 +58,7 @@ const handlers = {
 	},
 	options(msg) {
 		const ctx = plan.context(scn, { state, results });
+		ctx.manpowerValue = msg.manpowerValue || 0;
 		const cache = new Map(), options = [], worth = [], towns = [], townAt = new Set(msg.towns || []);
 		for (const [id, types] of msg.jobs) {
 			const site = siteOf.get(id);
@@ -74,6 +75,12 @@ const handlers = {
 			if (ok) options.push(lean(plan.withFlows(ctx, { ...u, worth: u.value, cost2: u.valueCost }), id));
 		}
 		return { options, worth, towns, sens: mine.map(site => [site.loc.id, plan.priceSensitivity(ctx.base.get(site).r)]) };
+	},
+	// the army levy now, one row per pop: unit, regiment size, full men, men as shown (recovery applied), each rounded down as the game shows it
+	levies() {
+		const rows = [];
+		for (const site of mine) for (const x of results.get(site).levies.rows) if (x.kind === 'army') rows.push([x.unit, x.regimentSize, x.men / (x.recovery || 1), x.men]);
+		return { rows };
 	},
 	roadInfo() {
 		return { info: plan.roadInfo(plan.context(scn, { state, results }), mine) };

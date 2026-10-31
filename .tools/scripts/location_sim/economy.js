@@ -8,6 +8,11 @@
 //        [--mod key=+x]...                         change a country modifier for the run (repeatable)
 //        [--compare "key=+x" "key2=+y,key3=-z"...] a baseline run and one run per variant, side by side
 //        [--idle]                                  also a run that never invests (what investing gains)
+//        [--unlock adv1,adv2]                      advances every run has from the start (armory_advance...)
+//        [--levy-years 10,30,50]                   record the army levy by unit in those years (always the last year)
+//        [--json out.json]                         the runs' yearly numbers, what they built and their levies
+// In --mod and --compare, @mv=x makes a man of monthly manpower worth x gold a month when choosing what to build, and @from=y
+// starts that in year y (use a multiple of --full-every).
 //        [--serial]                                runs one after another (by default each runs in its own thread)
 //        [--explain 20]                            the first N purchases of every decision, their value in parts
 // Books: income = crown tax (simulated) + other income held at the save's (minting, trade, food sales...); expenses =
@@ -52,6 +57,9 @@ const nm = k => DB.names[k] || k;
 
 // "key=+0.2,key2=-0.1" -> [[key, 0.2], [key2, -0.1]]
 const parseMods = s => String(s || '').split(',').filter(Boolean).map(x => { const [k, v] = x.split('='); return [k.trim(), parseFloat(v)]; });
+const unlocks = String(flag('--unlock', '')).split(',').filter(Boolean);
+const levyYears = String(flag('--levy-years', '')).split(',').filter(Boolean).map(Number);
+const progress = require('../battle_sim/progress.js');
 
 // a max-heap of [score, item]
 class Heap {
@@ -88,7 +96,12 @@ async function run(variant, label, invest = true) {
 	const time = clock();
 	const scn = JSON.parse(JSON.stringify(scn0));
 	scn.options = { ...(scn.options || {}), markets: 'fixed', food: 'on' };
+	scn.country.advances = [...new Set([...(scn.country.advances || []), ...unlocks])];
+	const special = k => (variant.find(([x]) => x === k) || [])[1];
+	const mv = special('@mv') || 0, mvFrom = (special('@from') || 0) * 12;
+	const mods0 = { ...scn.country.modifiers };
 	for (const [k, v] of variant) {
+		if (k.startsWith('@')) continue;
 		scn.country.modifiers[k] = (scn.country.modifiers[k] || 0) + v;
 		if (scn.country.sources && scn.country.sources[k]) scn.country.sources[k].push(['economy.js variant', v]);
 	}
@@ -98,7 +111,9 @@ async function run(variant, label, invest = true) {
 	// held: army, navy, forts, food (and colonies, exploration...); with the economic base: the court, and the stability
 	// investment (last month's expense minus the maintenance list, which leaves it out)
 	const SCALED = new Set(['UpkeepMaintenance', 'CourtMaintenance']);
-	const fixed = Object.entries(maint).filter(([k]) => !SCALED.has(k)).reduce((a, [, v]) => a + v, 0);
+	// the held army and navy follow a change of maintenance efficiency: upkeep is / (1 + efficiency)
+	const eff = (key, k) => (maint[key] || 0) * ((1 + (mods0[k] || 0)) / (1 + (scn.country.modifiers[k] || 0)) - 1);
+	const fixed = Object.entries(maint).filter(([k]) => !SCALED.has(k)).reduce((a, [, v]) => a + v, 0) + eff('ArmyMaintenance', 'army_maintenance_efficiency') + eff('NavyMaintenance', 'navy_maintenance_efficiency');
 	const court0 = maint.CourtMaintenance || 0;
 	// the stability investment: none by default (most players pay it only for a while, e.g. to clear a disaster); --stability save
 	// keeps the save's (Spain 908 a month, paid to reach 30 stability)
@@ -114,6 +129,7 @@ async function run(variant, label, invest = true) {
 	const years = [];
 	const months = opt.years * 12;
 	let yearStats = null;
+	const levyAt = {};
 	const siteOf = new Map(state.sites.map(s => [s.loc.id, s]));
 	const worth = new Map(), rankChanged = new Set(); // building types that paid off per location; locations that rose a rank
 	const townWorth = new Map(); // whether a location's rise was a candidate at the last full pass
@@ -176,8 +192,15 @@ async function run(variant, label, invest = true) {
 				dev += x.development; if (x.rank !== 'rural_settlement') towns++;
 			}
 			yearStats = { year: m / 12, treasury: book.treasury, crown: t.crownTax, taxBase: t.taxBase, upkeep: t.upkeep, net: income - expenses, eco, courtStability: scaled, population: t.population, burghers: pops.burghers || 0,
-				manpower: t.manpower, control: t.control, development: dev / state.sites.length, invested: book.invested, built: { ...book.built }, towns };
+				manpower: t.manpower, maxManpower: t.maxManpower, pool: state.manpowerPool, control: t.control, development: dev / state.sites.length, invested: book.invested, built: { ...book.built }, towns, types: { ...book.types } };
 			years.push(yearStats);
+			if (!isMainThread) parentPort.postMessage({ tick: 1 }); else if (tickYear) tickYear();
+			if (levyYears.includes(m / 12) || m === months) {
+				const rows = shards ? (await each(() => ({ type: 'levies' }))).flatMap(r => r.rows) : [...results.values()].flatMap(r => r.levies.rows.filter(x => x.kind === 'army').map(x => [x.unit, x.regimentSize, x.men / (x.recovery || 1), x.men]));
+				const by = {};
+				for (const [unit, size, full, now] of rows) { const u = (by[unit] ??= { unit, size, men: 0, now: 0 }); u.men += Math.floor(full * 1000) / 1000; u.now += Math.floor(now * 1000) / 1000; }
+				levyAt[m / 12] = Object.values(by).sort((a, b) => b.men - a.men);
+			}
 			if (!opt.quiet) console.log(`  [${label}] year ${String(m / 12).padStart(2)}: crown tax ${num(t.crownTax, 0)}/mo, tax base ${num(t.taxBase, 0)}, upkeep ${num(t.upkeep, 0)}, court+stability ${num(scaled, 0)}, net ${num(income - expenses, 0)}/mo, economic base ${num(eco)}, treasury ${num(book.treasury)}, invested ${num(book.invested)}, built ${book.built.building} levels / ${book.built.road} roads / ${book.built.rank} ranks`);
 		}
 		if (m === months) break;
@@ -201,7 +224,7 @@ async function run(variant, label, invest = true) {
 	} finally { if (shards) for (const s of shards) s.w.terminate(); }
 	time.lap('months');
 	if (opt.profile) console.log(`  [${label}] time: ${Object.entries(time.T).map(([k, v]) => `${k} ${(v / 1000).toFixed(1)} s`).join(', ')}`);
-	return { label, variant, years, book };
+	return { label, variant, years, book, levies: levyAt };
 
 	// ---- spend the treasury above the reserve, best value per gold first. An option's value is its gain once control has
 	// settled, at the prices its output and inputs settle at in its market (with what is already planned there), minus what
@@ -212,6 +235,8 @@ async function run(variant, label, invest = true) {
 		let budget = book.treasury - reserve;
 		if (budget < 100) return;
 		const ctx = plan.context(scn, { state, results });
+		const manpowerValue = m >= mvFrom ? mv : 0;
+		ctx.manpowerValue = manpowerValue;
 		const options = [];
 		time.lap('months');
 		const cache = new Map();
@@ -228,7 +253,7 @@ async function run(variant, label, invest = true) {
 		if (shards) {
 			// each shard prices its own locations (as they stand this month) and sends their price sensitivity
 			const jobOf = new Map(jobs);
-			const replies = await each(s => ({ type: 'options', jobs: s.sites.filter(x => jobOf.has(x)).map(x => [x.loc.id, jobOf.get(x)]),
+			const replies = await each(s => ({ type: 'options', manpowerValue, jobs: s.sites.filter(x => jobOf.has(x)).map(x => [x.loc.id, jobOf.get(x)]),
 				towns: s.sites.filter(x => townWorth.get(x)).map(x => x.loc.id) }));
 			const sensOf = new Map();
 			for (const r of replies) {
@@ -342,7 +367,8 @@ const variants = [['baseline', parseMods(all('--mod').join(','))]];
 if (args.includes('--idle')) variants.push(['no investment', parseMods(all('--mod').join(',')), false]);
 for (const v of after('--compare')) variants.push([v, [...parseMods(all('--mod').join(',')), ...parseMods(v)]]);
 const mostBuilt = r => Object.entries(r.book.types).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([k, n]) => `${nm(k)} ${n}`).join(', ');
-const summary = r => ({ label: r.label, years: r.years, book: { crownTotal: r.book.crownTotal, netTotal: r.book.netTotal, invested: r.book.invested, types: r.book.types, built: r.book.built } });
+const summary = r => ({ label: r.label, years: r.years, levies: r.levies, book: { crownTotal: r.book.crownTotal, netTotal: r.book.netTotal, invested: r.book.invested, types: r.book.types, built: r.book.built } });
+let tickYear = null;
 // runs side by side share the planner threads
 opt.runs = variants.length > 1 && !args.includes('--serial') ? variants.length : 1;
 const runOne = async ([label, v, invest]) => summary(await run(v, label, invest !== false));
@@ -352,9 +378,10 @@ else report();
 async function report() {
 	const t0 = Date.now();
 	const parallel = variants.length > 1 && !args.includes('--serial');
+	tickYear = progress((opt.years + 1) * variants.length, 'run-years', 5000);
 	const go = (x, i) => (parallel ? new Promise((res, rej) => {
 		const w = new Worker(__filename, { argv: process.argv.slice(2), workerData: { i } });
-		w.on('message', res); w.on('error', rej);
+		w.on('message', m => { if (m && m.tick) tickYear(); else res(m); }); w.on('error', rej);
 	}) : runOne(x));
 	const runs = [];
 	for (const p of variants.map((x, i) => (parallel ? go(x, i) : null))) runs.push(p);
@@ -378,5 +405,6 @@ ${scn0.name}: ${opt.years} years; decisions every ${opt.decide} months, reserve 
 			(num(end.taxBase) + d(end.taxBase, at(base, opt.years).taxBase)).padStart(17), num(end.net).padStart(12), num(end.eco).padStart(13), num(r.book.invested).padStart(10), num(end.treasury).padStart(10), num(end.population * 1000).padStart(12), num(end.burghers * 1000).padStart(10), String(end.towns).padStart(6), num(end.manpower * 1000).padStart(12)].join(' '));
 	}
 	for (const r of runs) if (Object.keys(r.book.types).length) console.log(`  ${r.label}: most built ${mostBuilt(r)}`);
+	if (flag('--json')) fs.writeFileSync(flag('--json'), JSON.stringify({ name: scn0.name, source: scn0.source, years: opt.years, unlocks, runs }, null, '\t'));
 	console.log(`(${((Date.now() - t0) / 1000).toFixed(0)} s)`);
 }

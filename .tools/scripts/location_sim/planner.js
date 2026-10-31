@@ -166,7 +166,8 @@ function buildingOptions(ctx, site, opts = {}) {
 			else L.buildings.push({ type, level: 1, employed: hire, ...(methods ? { methods } : {}) });
 			L.control = r0.control.max;
 			const r = settle(ctx, site, L, site.obs);
-			const gain = net(r) - net(r0);
+			// ctx.manpowerValue: gold a month for each man a month, so manpower buildings can compete (economy.js, @mv)
+			const gain = net(r) - net(r0) + (ctx.manpowerValue || 0) * 1000 * (r.manpower.monthly - r0.manpower.monthly);
 			if (!best || gain > best.gain) best = { gain, crown: r.tax.crown - r0.tax.crown, upkeep: r.upkeep - r0.upkeep, manpower: r.manpower.monthly - r0.manpower.monthly, methods, L, r };
 		}
 		out.push({ kind: 'building', type, level, where: site.loc.key, site, cost, ...best, hire, size,
