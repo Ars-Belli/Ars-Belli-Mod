@@ -37,13 +37,18 @@ The Levy side's win rate at the equilibrium of the regiment mix search, years 10
 
 | Change to the focus | Castile | Morocco |
 |---|---|---|
-| Today | 89 / 62 / 60 | 99 / 99 / 99 |
+| Focus as studied (nobles +200%, culture +25%) | 89 / 62 / 60 | 99 / 99 / 99 |
 | Culture bonus halved | 89 / 62 / 59 | 92 / 90 / 92 |
 | Culture bonus removed | 88 / 61 / 58 | 70 / 65 / 69 |
 | Levy size +20% to +10% | 82 / 52 / 52 | 99 / 98 / 100 |
 | Noble levies +200% to +100% | 85 / 52 / 57 | 99 / 99 / 99 |
 | All three cuts | 68 / 43 / 47 | 48 / 41 / 50 |
 | Standing Forces +50% manpower | 16 / 16 / 13 | 86 / 83 / 76 |
+| **Applied: nobles +100%, culture +15%** | **83 / 52 / 59** | **93 / 92 / 94** |
+
+The applied row went into the Levy focus on 2026-10-31, with Levy Size left at +20%. Those armies on wooded hills: Castile 57 / 43 / 55, Morocco 44 / 47 / 51. Year-50 levies: Castile 39.9k against 33.3k, Morocco 11.7k against 8.1k.
+
+`variants.json` holds changes to the focus as studied, and `focus_data.js` now has the applied values. To rerun the table, use commit `cbfe291`.
 
 ## Open
 

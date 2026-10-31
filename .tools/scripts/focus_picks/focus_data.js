@@ -34,8 +34,8 @@ module.exports = {
    ],
    mil: [
     { id: 'levy', art: 'institutions/feudalism', name: 'Levy', desc: 'Larger and better levies, raised for the army and the fleet alike.', adv: [
-      ['enforced_service', 'global_levy_size_modifier = 0.20\nlevy_recovery_modifier = 0.20\nnobles_estate_levy_size = 2.00'], // nobles raise the knights (cavalry levies); +30% like France's French Heritage
-      ['open_levy_standards', 'wrong_culture_levy_size = 0.25'],
+      ['enforced_service', 'global_levy_size_modifier = 0.20\nlevy_recovery_modifier = 0.20\nnobles_estate_levy_size = 1.00'], // nobles raise the knights (cavalry levies)
+      ['open_levy_standards', 'wrong_culture_levy_size = 0.15'],
       ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.30'],
       ['battlefield_commisions', 'army_tradition_from_battle = 1.0\nnavy_tradition_from_battle = 1.0'],
       ['abm_local_militias', 'global_levy_recruitment_speed_modifier = 0.33\nlevy_maintenance_modifier = -0.5', { icon: 'regimental_system', name: 'Local Militias', desc: 'Townsmen and villagers drilled on the green each Sunday can be called to arms quickly and cost little to keep.' }],
