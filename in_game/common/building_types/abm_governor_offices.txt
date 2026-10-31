@@ -173,3 +173,81 @@ abm_court_secretariat = {
 	ai_forbid_shutdown = yes
 	important_for_AI = yes
 }
+
+# Naval counterpart of the Court Secretariat: converts an unused naval governor post
+# into a cabinet seat. Placed where a naval governor may stand (port city, not the
+# capital, not overseas) - connected ports included, per the naval_governor override
+# in abm_naval_governors.txt.
+
+abm_admiralty_board = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = nobles
+	max_levels = 3
+	increase_per_level_cost = 0.5
+	forbidden_for_estates = yes
+
+	category = government_category
+	employment_size = large_noble_employment
+
+	rural_settlement = no
+	town = no
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		is_port = yes
+		is_overseas_for_owner = no
+		is_capital = no
+		is_historical_capital = no
+		has_proximity_source_building = no
+	}
+
+	allow = {
+		is_port = yes
+		is_overseas_for_owner = no
+		is_capital = no
+		is_historical_capital = no
+		has_proximity_source_building = no
+		country_has_no_other_copy_of_building = { type = abm_admiralty_board }
+		scope:actor = {
+			abm_has_unused_naval_governor = yes
+		}
+	}
+
+	remove_if = {
+		location = {
+			OR = {
+				NOT = { is_port = yes }
+				is_capital = yes
+			}
+		}
+	}
+
+	on_destroyed = {
+		location = {
+			owner ?= {
+				add_gold = {
+					value = monthly_income_total
+					multiply = -3
+				}
+				add_stability = -10
+				add_political_influence = political_influence_severe_penalty
+			}
+		}
+	}
+
+	modifier = {
+		pure_tooltip_entry = abm_governor_office_abolished_tt
+	}
+
+	possible_production_methods = {
+		abm_governor_offices_maintenance
+	}
+
+	ai_forbid_shutdown = yes
+	important_for_AI = yes
+}

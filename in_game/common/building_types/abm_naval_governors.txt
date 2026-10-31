@@ -1,0 +1,88 @@
+﻿# Ars Belli - naval governor without the "must be disconnected from the capital"
+# rule.
+#
+# Vanilla forbids ports connected to the capital by road/strait and destroys the
+# building as soon as one becomes connected, which left naval governors as exclave-
+# only affairs. Both conditions are removed here; the cap check in allow, the cost,
+# max_levels and the proximity source are unchanged.
+
+REPLACE:naval_governor = {
+	audio_tier = 2
+	is_foreign = no
+	pop_type = nobles
+	max_levels = 1
+	important_for_UI = yes
+
+	employment_size = large_noble_employment
+
+	category = government_category
+
+	rural_settlement = no
+	town = no
+	city = yes
+	megalopolis = yes
+
+	allow = {
+		trigger_if = {
+			limit = {
+				scope:actor = {
+					modifier:num_naval_governors <= 0
+				}
+			}
+			custom_tooltip = {
+				text = no_naval_governor_tt
+				always = no
+			}
+		}
+		trigger_else = {
+			custom_tooltip = {
+				text = naval_governor_tt
+				scope:actor = {
+					total_building_levels_including_construction:naval_governor < modifier:num_naval_governors
+				}
+			}
+		}
+		owner = scope:actor #not in subjects
+	}
+
+	location_potential = {
+		is_port = yes
+		is_overseas_for_owner = no
+		is_capital = no
+		is_historical_capital = no
+		has_proximity_source_building = no
+	}
+
+	expensive = yes
+
+	automation_build_allowed = no
+	ai_forbid_shutdown = yes
+	forbidden_for_estates = yes
+	important_for_AI = yes
+
+	build_time = government_build_time
+
+	unique_production_methods = {
+		naval_governor_maintenance = {
+			icon_type = building_type
+			icon = naval_governor
+			tools = 1
+			masonry = 1
+			weaponry = 0.5
+			paper = 3
+			books = 1
+			goods_gold = 1
+			furniture = 2
+			naval_supplies = 0.5
+			fine_cloth = 0.5
+
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = local_governor_construction
+
+	modifier = {
+		local_proximity_source = 80
+	}
+}

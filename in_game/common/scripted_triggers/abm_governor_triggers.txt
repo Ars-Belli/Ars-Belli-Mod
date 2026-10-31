@@ -26,3 +26,10 @@ abm_has_unused_local_governor = {
 	# minimum_num_local_governors floors the cap, so the -1 has to actually bite
 	modifier:num_local_governors > modifier:minimum_num_local_governors
 }
+
+# Naval posts have no lieutenancy-style deductions and no minimum floor, so the
+# check is simply "built < cap" (vanilla naval_governor.allow).
+abm_has_unused_naval_governor = {
+	modifier:num_naval_governors > 0
+	total_building_levels_including_construction:naval_governor < modifier:num_naval_governors
+}
