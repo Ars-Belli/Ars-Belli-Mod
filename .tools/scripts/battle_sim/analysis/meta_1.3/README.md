@@ -48,10 +48,10 @@ The save is `SP_SPA_1547_01_04_7f25c496-f283-4e84-b8b6-b35a16c851c9_0.eu5`, the 
 
 ## Commands
 
-From the repo root, in bash. `EU5_THREADS=1` keeps a run on one low-priority core; leave it set if the game is running.
+From the repo root, in bash. Runs use every core at the lowest priority.
 
 ```sh
-export EU5_THREADS=1 EU5_UNITS="$PWD/.tools/scripts/battle_sim/units_1.3.11.json"
+export EU5_UNITS="$PWD/.tools/scripts/battle_sim/units_1.3.11.json"
 A=.tools/scripts/battle_sim/analysis; R=$A/meta_1.3/results
 node $A/army_meta.js regulars --rules 1.3 --ages 2,3,4,5,6 --views regiments,manpower --n 30 --nm 200 --iters 5 --out $R/r14.json > $R/r14.log 2>&1
 node $A/army_meta.js wars --rules 1.3 --in $R/r14.json --ages 4,5,6 --wars 100 --months 120 --interval ready --out $R/w14.json > $R/w14.log 2>&1

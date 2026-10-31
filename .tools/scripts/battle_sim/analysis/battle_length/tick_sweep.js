@@ -44,7 +44,7 @@ if (!isMainThread) {
 	});
 } else {
 	const jobs = SCN.flatMap((_, si) => CONFIGS.map((__, ci) => ({ si, ci })));
-	const threads = Math.min(jobs.length, +process.env.EU5_THREADS || Math.max(1, os.cpus().length - 2));
+	const threads = Math.min(jobs.length, +process.env.EU5_THREADS || os.cpus().length);
 	const workers = Array.from({ length: threads }, () => new Worker(__filename, { workerData: { N } }));
 	const out = new Array(jobs.length);
 	let next = 0, left = jobs.length;

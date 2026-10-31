@@ -2,7 +2,7 @@
 //   const { runCells, D } = require('./relay.js');
 //   const rows = await runCells([{ kind: 'relay', o, cfg, seed, n, over }, ...]);   // over = changes to engine D for that job
 // kind 'relay': a side (cfg null = control) against plain armies, both seats. kind 'allin': both sides commit everything.
-// EU5_THREADS=n caps the workers; while the game is being played leave it 8 cores. Priority: engine.js sets the lowest.
+// Every core by default, at the lowest priority (engine.js). EU5_THREADS=n caps the workers.
 const os = require('os');
 const { Worker, isMainThread, parentPort } = require('worker_threads');
 const S = require('../../engine.js');
@@ -64,7 +64,7 @@ const runJob = job => {
 if (!isMainThread) parentPort.on('message', ({ id, job }) => parentPort.postMessage({ id, result: runJob(job) }));
 
 function runCells(jobs) {
-	const threads = Math.min(jobs.length, +process.env.EU5_THREADS || Math.max(1, os.cpus().length - 2));
+	const threads = Math.min(jobs.length, +process.env.EU5_THREADS || os.cpus().length);
 	return new Promise((done, fail) => {
 		const out = new Array(jobs.length), workers = Array.from({ length: threads }, () => new Worker(__filename));
 		let next = 0, left = jobs.length;

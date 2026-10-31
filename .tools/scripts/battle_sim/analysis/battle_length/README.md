@@ -28,16 +28,17 @@ Standard case: 4 armies of 30 regiments a side, frontage 10, 3 in and 1 away, sw
 | `pullout.js` | Battle length by stack size, then pull-out with no replacement | `pullout.txt` |
 | `tick_sweep.js` | What finer ticks and more dice are worth | `tick_sweep.txt` |
 
+`levers.js` has a row for the commented block that `levers.txt` doesn't yet: the sims were stopped before that rerun.
+
 `results/pre_fix/` is the 2026-10-30 set, run without the engage limit and superseded. It said infantry relay wins 45% and that doubling damage is enough. Both are wrong on the corrected engine.
 
 `../meta_1.4/subject_armies.js` is a separate question: which subject armies can be lent to an overlord (memory.md, Lend Army to War Leader).
 
 ## Commands
 
-From this folder. Leave the game 8 cores if it is running: 28 logical cores, so `EU5_THREADS=20`. The simulator always runs at the lowest priority, set in `engine.js`.
+From this folder. The simulator uses every core at the lowest priority (`engine.js`), so it does not disturb other programs.
 
 ```sh
-export EU5_THREADS=20
 node final_levers.js > results/final.txt
 node side_effects.js > results/side_effects.txt
 node cycle_test.js > results/cycle.txt

@@ -450,6 +450,8 @@ So **+0.1 tactics ≈ +5% discipline ≈ +1 commander die ≈ +20 experience**, 
 
 Scripts: `analysis/army_meta.js` (regular armies, wars, the levy game) and `analysis/levy_meta.js` (levies, Morocco, steppe hordes). Run 2026-10-31 with `units.json` built from 1.4.6. **None of this applies to 1.3**: see the table at the end of this section. Raw results, the Morocco checks and the exact commands are in `analysis/meta_1.4/`.
 
+**These numbers predate the dice timing fix of 2026-10-31.** Six runs were repeated before the rerun was stopped (`results/dice_fix_partial`) and the top army moved in about a quarter of their blocks, so treat close calls here as open.
+
 **Rerun with the engage limit and engaged-first targeting** (sections 4 and 6), which the 1.4 model lacked until 2026-10-31; `ENGAGE_W: false` in `engine.js` restores it, and the old runs are in `results/pre_fix`. On 42 real 1.4.6 battles (`meta_1.4/val14.js`: AI wars of the 1370s, 85% levies, one baseline for all countries) both models call 37 winners at full morale, Brier 0.101; at 70% morale the new one gets 38 and 0.096 against 37 and 0.102. So it is no worse, but those battles don't prove it: the reason for the change is the code. Sections 1 to 11a and 16 quote runs from before the fix and were not rerun.
 
 **Method.** Composition is treated as a symmetric zero-sum game and solved by double oracle: keep a small set of armies, solve its equilibrium, search a whole grid for the best counter to that equilibrium, add it, repeat until nothing beats the equilibrium by more than 1 point. So the answer is not limited to a list of guesses. A strategy is regiment shares over heavy and light infantry, heavy and light cavalry and artillery, in steps of 10%, plus the formation (`balanced_army` and `cav_inf_cav` are the only presets). Both sides have generals 60/59/61, Spain 1547's discipline and morale, army tradition 20, experience 0.37 and every universal advance of the age; frontage 10; a budget of 30 regiments of heavy cavalry (ages I–IV) or heavy infantry (ages V–VI). No universal advance gives one category power, so the ages themselves favour nobody except through combined arms (+1% a type at ages IV and VI).
@@ -574,7 +576,7 @@ Read from the installed 1.3 files on 2026-10-30. A meta for 1.3 needs its own ru
 
 ## 11c. Game 1.3.11: rules, meta, Spain and Lotharingia (simulated)
 
-Everything in 11b is for 1.4. This section is for 1.3.11, run on 2026-10-30 with the game on 1.3, `units_1.3.11.json` (vanilla 1.3.11 + mod tag `game.1.3.11.mod.25`) and `S.RULES_13` in `engine.js`. Scripts: `analysis/army_meta.js --rules 1.3` with `EU5_UNITS` set to that file, and `analysis/reformation_13.js`. `EU5_THREADS=1` runs them on one low-priority core. The real battles, raw results, one-off checks and exact commands are in `analysis/meta_1.3/`.
+Everything in 11b is for 1.4. This section is for 1.3.11, run on 2026-10-30 with the game on 1.3, `units_1.3.11.json` (vanilla 1.3.11 + mod tag `game.1.3.11.mod.25`) and `S.RULES_13` in `engine.js`. Scripts: `analysis/army_meta.js --rules 1.3` with `EU5_UNITS` set to that file, and `analysis/reformation_13.js`. They run on every core at the lowest priority. The real battles, raw results, one-off checks and exact commands are in `analysis/meta_1.3/`.
 
 **The rules** were read from eu5.exe 1.3.11 (Ghidra project `eu5_13`; battle tick `0x1443e8d20`, damage `0x1442e5580`, engage candidates `0x1443e55a0`, target pick `0x1443e5170`). The flow is the same as 1.4, including the overrun checks (10 at the start, 2 and 10 with collapsed morale, written as literals). The differences:
 
@@ -689,7 +691,7 @@ Taking an army out needs no replacement either: on the same terms, 5 armies of 3
 No stack wipes in any cell, even at 3:1. What it costs:
 - **Very big stacks break before their reserves are used.** Infantry 120 v 120 on frontage 10: shattered retreats fall from 100% to 8% and men lost from 59% to 40%, because the line breaks first. Big stacks are worth less.
 - **Quality decides a little less.** +5% discipline wins 66% → 62% (infantry 30 v 30), 73% → 63% (120 v 120), 70% → 62% (cavalry 30 v 30).
-- **Cavalry keeps some edge.** 84% in the table; a player who adapts how they swap gets more (`levers.txt`). The infantry case, which is what players reported, goes.
+- **Cavalry keeps some edge.** 84% in the table, and a player who adapts how they swap gets more: 94% at both damage ×4 (`levers.txt`). The infantry case, which is what players reported, goes.
 
 **Limits.** The opponent never reacts, forces are even, there is no artillery, days per location are assumed, and none of this is tested in game. Rerun the focus and army balance before releasing the change.
 
@@ -869,7 +871,7 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 - Country `costMod` (`{ build: { hc: -0.2 }, reinforce: {…}, maintenance: {…} }`) and `frontageMod` (possible frontage) are filled by `from_save.js`.
 
 ### Speed: all cores
-- **Command line and analysis scripts:** `pool.js` runs battles on worker threads (all cores but two by default).
+- **Command line and analysis scripts:** `pool.js` runs battles on worker threads (every core by default, at the lowest priority, set in `engine.js`).
   - `sim.js --threads N` sets the count; `--threads 1` turns the workers off.
   - A seeded run splits its battles by seed offset, so it gives exactly the single-thread result.
   - 20,000 battles: 13.6 s on one thread, 2.9 s on 26 threads.

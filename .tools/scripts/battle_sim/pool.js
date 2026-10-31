@@ -1,5 +1,5 @@
 // Runs Monte Carlo battles on several cores (Node worker_threads).
-//   const pool = require('./pool.js')(threads);          // threads default: cores - 2
+//   const pool = require('./pool.js')(threads);          // threads default: every core
 //   const m = await pool.mc(scenario, n, { seed, patch });  // merged result, same as monteCarloScenario
 //   await pool.close();
 // A run is split into chunks; chunk k starts at seed + its first battle index, so a seeded run gives exactly the
@@ -26,8 +26,8 @@ if (!isMainThread) {
 		} else parentPort.postMessage({ id, result: S.monteCarloScenario(scn, n, { seed: opts.seed }) });
 	});
 } else {
-	// EU5_THREADS=n caps the workers; while the game is being played leave it 8 cores. Priority: engine.js sets the lowest.
-	module.exports = (threads = +process.env.EU5_THREADS || Math.max(1, os.cpus().length - 2)) => {
+	// Every core by default, at the lowest priority (engine.js), so other programs are not disturbed. EU5_THREADS=n caps the workers.
+	module.exports = (threads = +process.env.EU5_THREADS || os.cpus().length) => {
 		const S = require('./engine.js');
 		const workers = Array.from({ length: threads }, () => new Worker(__filename));
 		const idle = [...workers], queue = [], pending = new Map();

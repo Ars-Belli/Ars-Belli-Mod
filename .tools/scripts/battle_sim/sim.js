@@ -1,7 +1,7 @@
 // Command-line battle simulator.
 //   node .tools/scripts/battle_sim/sim.js <scenario.json> [--runs 2000] [--seed 1] [--sample] [--json]
 //        [--campaign [battles]] [--months 3]    repeat the battle and track manpower (scenario "war" block)
-//        [--threads N]                            worker threads (default: cores - 2; 1 = no workers)
+//        [--threads N]                            worker threads (default: every core; 1 = no workers)
 //   node .tools/scripts/battle_sim/sim.js --units <search>        list unit types matching a name or key
 // Scenario format: "EU5 Combat Mechanics (1.4.4).md", section 16, in the repo root.
 const fs = require('fs');
@@ -27,7 +27,7 @@ const scn = JSON.parse(fs.readFileSync(file, 'utf8'));
 const runs = +flag('--runs', scn.runs || 2000);
 const seed = flag('--seed') === undefined ? undefined : +flag('--seed');
 (async () => {
-// all cores but two by default (--threads 1 for a single thread); seeded runs give the same result either way
+// every core by default, at the lowest priority (--threads 1 for a single thread); seeded runs give the same result either way
 const threads = +flag('--threads', 0) || undefined;
 let m;
 if (threads === 1) m = S.monteCarloScenario(scn, runs, { seed });
