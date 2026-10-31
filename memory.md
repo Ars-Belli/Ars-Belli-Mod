@@ -211,6 +211,21 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - **Create City** (towns only; a city keeps the RGO, -20% food instead of -10%, so only food matters): light green = no food; green = food 3-4 (incl. wool); yellow = food 5; red = food 8+; black stripes = population < 30; light blue = city/megalopolis; blue-black = rural / cannot upgrade.
 - **Goods lists** are explicit (from vanilla default prices / food values; no script accessor for `default_market_price` was verified): high value = default price >= 2.5 (29 goods incl. wool, incense, iron, silver, gold, saffron, dyes). Retune the lists if goods change in a game update.
 
+### 6. Governor offices: unused governor posts -> reform slots / cabinet seats (2026-10-31)
+- **Concept:** an unused local governor post is converted into government capacity by building a nobles building. Two building types, one reward each; each building level = one converted post.
+- **Files:**
+  - `in_game\common\building_types\abm_governor_offices.txt` - `abm_provincial_chancellery` (reform slot) and `abm_court_secretariat` (cabinet seat), `max_levels = 3`, nobles, `category = government_category`, `forbidden_for_estates = yes`.
+  - `in_game\common\production_methods\abm_governor_offices.txt` - `abm_governor_offices_maintenance` (`no_upkeep = yes`, like vanilla `cardinal_maintenance`).
+  - `in_game\common\auto_modifiers\abm_country.txt` - six blocks `abm_provincial_chancellery_l1..3` / `abm_court_secretariat_l1..3`, each `num_local_governors = -1` plus `government_reform_slots = 1` / `government_size = 1`. **This is where the reward lives** (see below).
+  - `in_game\common\scripted_triggers\abm_governor_triggers.txt` - only `abm_has_unused_local_governor` now.
+  - Loc: `abm_buildings_l_english.yml` (names, descs, `<id>_abolished_tt`) and `abm_modifiers_l_english.yml` (`AUTO_MODIFIER_NAME_/DESC_` per block).
+- **Placement:** capital, or a cored town/city in the capital's **area**: `OR = { is_capital = yes AND = { is_city = yes is_core_of = owner area = owner.capital.area } }` in both `location_potential` and `allow`. Verified triggers: `is_city` (town_or_city), `is_core_of = owner` (culture_buildings.txt:24), `area = owner.capital.area` (flavor_NOR.txt:630). One copy per country via `country_has_no_other_copy_of_building = { type = X }` (royal_court); upgrades still allowed.
+- **Why an auto-modifier and not `capital_country_modifier`:** the latter only applies "if built in the capital" (building_types/readme.txt), but the building may stand anywhere in the capital area - and it is scaled by goods access, which would make integer modifiers fractional. The auto modifier is country-wide and reads the building's level.
+- **Level counting uses `any_owned_location = { location_building_level = { building_type = ... value >= N } }`, NOT `total_building_levels_including_construction`.** The including-construction version would hand out the slot as soon as construction STARTS; cancelling construction would then leave the enacted reform while the governor post returned.
+- **Demolition:** allowed, but `on_destroyed` charges `add_gold = { value = monthly_income_total multiply = -3 }`, `add_stability = -10`, `add_political_influence = political_influence_severe_penalty` (-10, default_values.txt:73). Rationale: the reward is derived from the building level, so deleting it returns the governor post; enacted reforms are permanent, so the penalty is the deterrent. `remove_if` only fires when the location stops being a city/town or loses its core (never on capital moves), and warns that it may also trigger the penalty.
+- **No `commoners_estate`:** the estates are nobles/clergy/burghers/peasants/tribes/cossacks/dhimmi + crown.
+- **Unverified in game:** `location_building_level` availability inside a country auto-modifier's `any_owned_location`, whether `on_destroyed` also fires on `remove_if`, and tooltip rendering.
+
 ## Project Structure
 The repository mirrors the EU5 file structure:
 - `in_game/`: Contains gameplay logic (advances, effects, triggers, setup).

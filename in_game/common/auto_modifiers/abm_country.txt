@@ -220,3 +220,103 @@ REPLACE:high_horde_unity = { #Hordes are already too volatile
 
 # 	fort_maintenance_efficiency = 0.50
 # }
+
+# Ars Belli - governor offices (building_types/abm_governor_offices.txt).
+# Each completed level of a governor office turns one unused local governor post
+# (tied up by the building's allow gate) into government capacity. Blocks stack.
+
+# Provincial Chancellery level 1. Counts COMPLETED levels only (location_building_level, not
+# total_building_levels_including_construction), so starting construction does not
+# hand out the slot early.
+abm_provincial_chancellery_l1 = {
+	potential_trigger = {
+		any_owned_location = {
+			location_building_level = {
+				building_type = building_type:abm_provincial_chancellery
+				value >= 1
+			}
+		}
+	}
+	num_local_governors = -1
+	government_reform_slots = 1
+}
+
+# Provincial Chancellery level 2. Counts COMPLETED levels only (location_building_level, not
+# total_building_levels_including_construction), so starting construction does not
+# hand out the slot early.
+abm_provincial_chancellery_l2 = {
+	potential_trigger = {
+		any_owned_location = {
+			location_building_level = {
+				building_type = building_type:abm_provincial_chancellery
+				value >= 2
+			}
+		}
+	}
+	num_local_governors = -1
+	government_reform_slots = 1
+}
+
+# Provincial Chancellery level 3. Counts COMPLETED levels only (location_building_level, not
+# total_building_levels_including_construction), so starting construction does not
+# hand out the slot early.
+abm_provincial_chancellery_l3 = {
+	potential_trigger = {
+		any_owned_location = {
+			location_building_level = {
+				building_type = building_type:abm_provincial_chancellery
+				value >= 3
+			}
+		}
+	}
+	num_local_governors = -1
+	government_reform_slots = 1
+}
+
+# Court Secretariat level 1. Counts COMPLETED levels only (location_building_level, not
+# total_building_levels_including_construction), so starting construction does not
+# hand out the slot early.
+abm_court_secretariat_l1 = {
+	potential_trigger = {
+		any_owned_location = {
+			location_building_level = {
+				building_type = building_type:abm_court_secretariat
+				value >= 1
+			}
+		}
+	}
+	num_local_governors = -1
+	government_size = 1
+}
+
+# Court Secretariat level 2. Counts COMPLETED levels only (location_building_level, not
+# total_building_levels_including_construction), so starting construction does not
+# hand out the slot early.
+abm_court_secretariat_l2 = {
+	potential_trigger = {
+		any_owned_location = {
+			location_building_level = {
+				building_type = building_type:abm_court_secretariat
+				value >= 2
+			}
+		}
+	}
+	num_local_governors = -1
+	government_size = 1
+}
+
+# Court Secretariat level 3. Counts COMPLETED levels only (location_building_level, not
+# total_building_levels_including_construction), so starting construction does not
+# hand out the slot early.
+abm_court_secretariat_l3 = {
+	potential_trigger = {
+		any_owned_location = {
+			location_building_level = {
+				building_type = building_type:abm_court_secretariat
+				value >= 3
+			}
+		}
+	}
+	num_local_governors = -1
+	government_size = 1
+}

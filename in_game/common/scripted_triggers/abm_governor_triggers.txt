@@ -1,0 +1,28 @@
+﻿# Ars Belli - governor post trigger.
+#
+# "Unused governor" = a post the country has a cap for but has not filled. The
+# arithmetic mirrors vanilla building_types/capital_buildings.txt ->
+# local_governor.allow (local governors compete with lieutenancy / itinerant court
+# seat / king's manor for the same cap), so converting a post never lands on an
+# already-built governor.
+
+abm_has_unused_local_governor = {
+	trigger_if = {
+		limit = { has_dlc = "d009_across_the_pillars" }
+		total_building_levels_including_construction:local_governor < {
+			value = effective_num_local_governors
+			subtract = total_building_levels_including_construction:itinerant_court_seat
+			subtract = total_building_levels_including_construction:kings_manor
+		}
+	}
+	trigger_else = {
+		total_building_levels_including_construction:local_governor < {
+			value = effective_num_local_governors
+			subtract = total_building_levels_including_construction:lieutenancy
+			subtract = total_building_levels_including_construction:itinerant_court_seat
+			subtract = total_building_levels_including_construction:kings_manor
+		}
+	}
+	# minimum_num_local_governors floors the cap, so the -1 has to actually bite
+	modifier:num_local_governors > modifier:minimum_num_local_governors
+}

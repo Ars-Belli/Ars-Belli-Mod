@@ -1,0 +1,175 @@
+﻿# Ars Belli - governor offices.
+#
+# A nobles building that converts an unused local governor post into government
+# capacity. One copy per country, buildable in the capital or in any cored
+# town/city inside the capital's AREA; each level absorbs one more free governor
+# post (see abm_has_unused_local_governor). The reward itself lives in
+# auto_modifiers/abm_country.txt, keyed off the building's completed levels - a
+# building modifier cannot be shown outside the capital (capital_country_modifier
+# only applies "if built in the capital"), and this building may stand elsewhere
+# in the area.
+#
+# Abolishing the office is allowed but expensive (on_destroyed): the governor post
+# comes back, so the only reason to demolish is to dodge the trade - it costs gold,
+# stability and political influence. Reforms already enacted with the extra slots
+# stay enacted, hence the penalty.
+#
+# Shapes copied from vanilla: royal_court / chancery (capital_buildings.txt) for the
+# location_potential + country_has_no_other_copy_of_building shell,
+# local_governor for forbidden_for_estates, itinerant_court_seat for can_close = no.
+
+abm_provincial_chancellery = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = nobles
+	max_levels = 3
+	forbidden_for_estates = yes
+
+	category = government_category
+	employment_size = large_noble_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		OR = {
+			is_capital = yes
+			AND = {
+				is_city = yes
+				is_core_of = owner
+				area = owner.capital.area
+			}
+		}
+	}
+
+	allow = {
+		OR = {
+			is_capital = yes
+			AND = {
+				is_city = yes
+				is_core_of = owner
+				area = owner.capital.area
+			}
+		}
+		country_has_no_other_copy_of_building = { type = abm_provincial_chancellery }
+		scope:actor = {
+			abm_has_unused_local_governor = yes
+		}
+	}
+
+	remove_if = {
+		location = {
+			OR = {
+				NOT = { is_city = yes }
+				NOT = { is_core_of = owner }
+			}
+		}
+	}
+
+	on_destroyed = {
+		location = {
+			owner ?= {
+				add_gold = {
+					value = monthly_income_total
+					multiply = -3
+				}
+				add_stability = -10
+				add_political_influence = political_influence_severe_penalty
+			}
+		}
+	}
+
+	modifier = {
+		pure_tooltip_entry = abm_governor_office_abolished_tt
+	}
+
+	possible_production_methods = {
+		abm_governor_offices_maintenance
+	}
+
+	ai_forbid_shutdown = yes
+	important_for_AI = yes
+}
+
+abm_court_secretariat = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = nobles
+	max_levels = 3
+	forbidden_for_estates = yes
+
+	category = government_category
+	employment_size = large_noble_employment
+
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		OR = {
+			is_capital = yes
+			AND = {
+				is_city = yes
+				is_core_of = owner
+				area = owner.capital.area
+			}
+		}
+	}
+
+	allow = {
+		OR = {
+			is_capital = yes
+			AND = {
+				is_city = yes
+				is_core_of = owner
+				area = owner.capital.area
+			}
+		}
+		country_has_no_other_copy_of_building = { type = abm_court_secretariat }
+		scope:actor = {
+			abm_has_unused_local_governor = yes
+		}
+	}
+
+	remove_if = {
+		location = {
+			OR = {
+				NOT = { is_city = yes }
+				NOT = { is_core_of = owner }
+			}
+		}
+	}
+
+	on_destroyed = {
+		location = {
+			owner ?= {
+				add_gold = {
+					value = monthly_income_total
+					multiply = -3
+				}
+				add_stability = -10
+				add_political_influence = political_influence_severe_penalty
+			}
+		}
+	}
+
+	modifier = {
+		pure_tooltip_entry = abm_governor_office_abolished_tt
+	}
+
+	possible_production_methods = {
+		abm_governor_offices_maintenance
+	}
+
+	ai_forbid_shutdown = yes
+	important_for_AI = yes
+}
