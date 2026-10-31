@@ -11,7 +11,7 @@ const args = process.argv.slice(2), flag = k => { const i = args.indexOf(k); ret
 const scn = JSON.parse(fs.readFileSync(args.find(a => a.endsWith('.json')), 'utf8'));
 const state = CS.create({ ...scn, options: { ...(scn.options || {}), markets: 'off' } });
 const units = {}, status = {}, provinces = {};
-let total = 0, totalNow = 0;
+let total = 0, totalNow = 0, rounded = 0;
 const rowsAt = {};
 for (const site of state.sites) {
 	const mk = (scn.markets || {})[site.loc.market];
@@ -19,9 +19,9 @@ for (const site of state.sites) {
 	const r = E.evaluate(site.scn, { L: site.L, C: state.C });
 	for (const x of r.levies.rows) {
 		if (x.kind !== 'army') continue;
-		const u = (units[x.unit] ??= { unit: x.unit, cat: x.cat, men: 0, now: 0, size: x.regimentSize, levy: x.levy });
+		const u = (units[x.unit] ??= { unit: x.unit, cat: x.cat, men: 0, now: 0, shownFull: 0, shownNow: 0, size: x.regimentSize, levy: x.levy });
 		const full = x.men / (x.recovery || 1);
-		u.men += full; u.now += x.men; total += full; totalNow += x.men;
+		u.men += full; u.now += x.men; u.shownFull += Math.floor(full * 1000) / 1000; u.shownNow += Math.floor(x.men * 1000) / 1000; total += full; totalNow += x.men; rounded += Math.floor(x.men * 1000); // the game rounds each row down
 		const pv = (provinces[site.loc.province] ??= {}), pu = (pv[x.unit] ??= { size: x.regimentSize, men: 0, now: 0 });
 		pu.men += full; pu.now += x.men;
 		const st = (status[`${x.cultureKey} ${x.popType} (${x.status})`] ??= { men: 0, unit: x.unit });
@@ -30,7 +30,7 @@ for (const site of state.sites) {
 	}
 }
 const rows = Object.values(units).sort((a, b) => b.men - a.men).map(u => ({ ...u, regiments: Math.round(u.men / u.size) }));
-console.log(`${scn.name}: ${state.sites.length} locations, army levy ${(total * 1000).toFixed(0)} men full, ${(totalNow * 1000).toFixed(0)} now`);
+console.log(`${scn.name}: ${state.sites.length} locations, army levy ${(total * 1000).toFixed(0)} men full, ${(totalNow * 1000).toFixed(0)} now, ${rounded} with each row rounded down as the game shows it`);
 console.log('  unit'.padEnd(36) + 'full'.padStart(9) + 'now'.padStart(9) + 'share'.padStart(8));
 for (const u of rows) console.log(`  ${u.unit}`.padEnd(36) + (u.men * 1000).toFixed(0).padStart(9) + (u.now * 1000).toFixed(0).padStart(9) + `${(100 * u.men / total).toFixed(1)}%`.padStart(8));
 console.log('  by pop:');
@@ -41,4 +41,4 @@ if (flag('--find')) for (const q of flag('--find').split(',')) {
 }
 const unknown = E.levyUnknown ? [...E.levyUnknown] : [];
 if (unknown.length) console.log('  conditions not modelled (counted false):', unknown.join(' '));
-if (flag('--json')) fs.writeFileSync(flag('--json'), JSON.stringify({ name: scn.name, source: scn.source, men: total, now: totalNow, rows, provinces }, null, '\t'));
+if (flag('--json')) fs.writeFileSync(flag('--json'), JSON.stringify({ name: scn.name, source: scn.source, men: total, now: totalNow, rounded, rows: rows.map(u => ({ ...u, men: u.shownFull, now: u.shownNow })), provinces }, null, '\t'));

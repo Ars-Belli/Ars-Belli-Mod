@@ -1,5 +1,5 @@
 // Castile against Morocco, levy against levy, on every terrain the two own, with each side attacking. Same neutral general on both sides.
-//   node levy_battles.js [--n 2000] [--out results/levy_battles.json]
+//   node levy_battles.js [--n 2000] [--date 1337_09] [--out results/levy_battles.json]
 // Regiments of one unit type from different provinces merge, so each type is full regiments plus one partial. Progress goes to stderr.
 const fs = require('fs'), path = require('path');
 const R = path.join(__dirname, '../..');
@@ -9,7 +9,7 @@ const Pool = require(path.join(R, 'pool.js'));
 const progress = require(path.join(R, 'progress.js'));
 const args = process.argv.slice(2), flag = (k, d) => { const i = args.indexOf(k); return i < 0 ? d : args[i + 1]; };
 const N = +flag('--n', 2000), OUT = flag('--out');
-const I = JSON.parse(fs.readFileSync(path.join(__dirname, 'inputs.json'), 'utf8'));
+const I = JSON.parse(fs.readFileSync(path.join(__dirname, `inputs_${flag('--date', '1337_09')}.json`), 'utf8'));
 const GENERAL = { adm: 60, dip: 59, mil: 61 }; // the neutral general of every analysis here (levy_meta.js)
 
 const stack = (rows, field, scale = 1) => {
@@ -23,12 +23,12 @@ const stack = (rows, field, scale = 1) => {
 };
 const sum = (rows, f) => rows.reduce((t, r) => t + r[f], 0);
 const army = (tag, units) => ({ name: tag, country: tag, formation: 'balanced', general: GENERAL, units });
-const sep = I.levies.september, start = I.levies.start;
+const sep = I.levies.save, start = I.levies.start;
 const FORCES = [
-	['Full levies at September 1337 control', stack(sep.MOR, 'men'), stack(sep.CAS, 'men')],
-	['Morocco as it stands in the save (still recovering), Castile full', stack(sep.MOR, 'now'), stack(sep.CAS, 'men')],
+	[`Full levies at ${I.date} control`, stack(sep.MOR, 'men'), stack(sep.CAS, 'men')],
+	[`Both as they stand on ${I.date}, recovery included`, stack(sep.MOR, 'now'), stack(sep.CAS, 'now')],
 	['Full levies at the April 1337 start', stack(start.MOR, 'men'), stack(start.CAS, 'men')],
-	['Equal men: Castile cut to the size of Morocco, same mix', stack(sep.MOR, 'men'), stack(sep.CAS, 'men', sum(sep.MOR, 'men') / sum(sep.CAS, 'men'))],
+	[`Equal men at ${I.date}: Castile cut to the size of Morocco, same mix`, stack(sep.MOR, 'men'), stack(sep.CAS, 'men', sum(sep.MOR, 'men') / sum(sep.CAS, 'men'))],
 ];
 const place = (t, crossing = 'none') => ({ topography: t.topography, vegetation: t.vegetation, climate: t.climate, river: crossing === 'river', crossing, rankFrontage: 0 });
 // the most common terrain of each country, also fought across a river and from the sea

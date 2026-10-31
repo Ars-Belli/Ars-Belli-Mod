@@ -264,7 +264,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Hourly ticks cannot return in a mod: combat doc section 13.
 
 ### 3t. Country simulator levies, Castile against Morocco (2026-10-31)
-- `location_sim` now picks levies as the game does: DLC levies, cultures, `country_allow`, `allow`. A condition it can't read is listed by `levy_report.js`, none are left. All 21 rows of Tadla match the game, plus rows in Fez, Meknes and Sevilla.
+- `location_sim` now picks levies as the game does: DLC levies, cultures, `country_allow`, `allow`. A condition it can't read is listed by `levy_report.js`, none are left. Rows rounded down give Morocco's top-bar total: 8,517 exactly on 1338.4.8, 7,703 vs 7,701 on 1337.9.26. All 21 rows of Tadla match too.
 - Both `from_save.js` load DLC data. The battle one also gained reforms, religion and `--no-general`; without religion, damage against other faiths never applied in save-based battles.
 - Army Levies Recovery panel = save `army_levies`. Its percentage feeds the rows, its men do not: `max` is the levy at the last raise (Location doc section 4).
 - Levy regiments of one unit type merge across provinces, so a stack is full regiments plus one partial.
