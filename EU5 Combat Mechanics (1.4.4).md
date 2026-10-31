@@ -19,7 +19,7 @@ Combat ticks once per day (1.3 ticked per "hour"; see section 13). The daily tic
 
 **Every day**
 1. Once the battle is older than `BOMBARD_DAYS` = **3** days, the bombard phase ends and both sides re-roll their dice.
-2. Every `DAYS_PER_PHASE` = **4** days a new phase starts and **both sides re-roll their dice**. The dice modifiers (commander, terrain, crossings) are recomputed every day.
+2. A new phase starts and **both sides re-roll their dice** when the phase counter reaches `DAYS_PER_PHASE` = **4**. The counter is compared at the start of the day and goes up at the end of it, so with step 1 the rolls fall on days 4, 5, 9, 13, 17 and so on. The dice modifiers (commander, terrain, crossings) are recomputed every day.
 3. **Bombard phase (days 1–3): only artillery fires.** Per section, the guns in the battle line fire, up to W frontage of them; guns in reserve don't. Each rolls `0.2 × (1 + bombard efficiency)` once a day. A hit lands on the enemy section facing it: the gun keeps its last target if it is still there, otherwise it picks one at random. A miss makes it forget its target. Bombard hits get no flanking or secured-flank factors. Nothing happens if the facing section is empty. No reserves move, no regiment engages, no melee, no daily morale drain.
 4. **From day 4:** side 1 moves reserves up (`HandleReserves`) and rolls initiative in each section (`AttemptInitiative`), then side 2 does the same. Then both sides' engaged regiments hit (side 1, then side 2), and every regiment in the battle loses `COMBAT_DAILY_MORALE_TICK` = **0.03** morale.
 5. The day's collected strength and morale losses are applied together. Strength loss can't exceed the men a regiment has left.
@@ -116,7 +116,7 @@ Naval combat swaps in `NAVAL_DAMAGE_DONE`, `OWN_COAST`, `GUNS_VS_HULL` and `NAVA
 
 ## 3. Dice *(code)*
 
-- Roll = random 0–9 (`COMBAT_DICE_SIDE` = 10), re-rolled per side every phase (4 days). The tooltip shows it +1 (1–10), but the damage code adds the raw 0–9, so rolls run **5–14** before bonuses.
+- Roll = random 0–9 (`COMBAT_DICE_SIDE` = 10), re-rolled per side every phase (section 1: days 4, 5, 9, 13 and every 4 days after). The tooltip shows it +1 (1–10), but the damage code adds the raw 0–9, so rolls run **5–14** before bonuses.
 - Dice modifiers for a side:
   - **Commander:** the `commander_combat_bonus` of the side's commander, rounded to whole dice. The commander is the best-rated leader among the side's armies. **Only traits give it** (Offensive Planner +1, others ±1 or +2); skill adds no dice. Confirmed on 9 live battles in three 1342 saves: each side's untyped dice entry is just the die shown (last raw die + 1), and a separate `COMMANDER` entry appears only for generals with such a trait.
   - **Attacker only:** river crossing −1 (`RIVER_CROSSING_DICE`), strait −2 (`STRAIT_CROSSING_DICE`), landing from the sea −1 (`SEA_LANDING_DICE`).
@@ -583,7 +583,7 @@ Everything in 11b is for 1.4. This section is for 1.3.11, run on 2026-10-30 with
 | Tick | every 2 hours; a battle is ticks, not days | daily |
 | `REGIMENT_SIZE` morale factor | none | ×0.25 to ×4 |
 | Melee starts | tick 5; targets reset when bombard ends | day 4 |
-| Dice re-roll | phase compared first, every 5 ticks | every 4 days |
+| Dice re-roll | phase compared first, every 5 ticks | phase compared first, every 4 days |
 | Initiative time term | 0.01 × phase counter (`combat+0x30`, resets) | 0.03 × battle age (`+0x34`) |
 | A side with an empty line at an overrun check | counts as 0 men | counts its total men |
 | `COMBAT_DAMAGE_MULT`, strength, morale | 0.01, 0.2, 1.0 | 0.12, 0.04, 0.25 |
@@ -638,6 +638,63 @@ Tercios upgrade into Musketeers and neither country has an age V special unit, s
 
 ---
 
+## 11d. Long battles and taking armies out (simulated, 1.4 rules)
+
+The question: armies leave a battle, rest a location away and walk back in, and battles last long enough to pull reinforcements from everywhere. Would slower armies stop that? No. Shorter battles do. Scripts and raw results: `analysis/battle_length/` (README there). The model is `simulateScenario(scn, { rotate })`.
+
+**Leaving a battle is free** *(code, 1.4.6)*:
+- A plain move order is the exit (`0x1423fbd40`, execute `0x143539f70`). It is refused only while the battle's age (`combat+0x34`) is under `MINIMUM_COMBAT_DAYS` + `retreat_delay` (`0x142492f30`). That is the battle's age, not the army's, so a late joiner can walk out at once.
+- `RETREAT_STRENGTH_DAMAGE` 10% travels only in `CShatteredRetreatCommand`. Nothing traced charges a normal move.
+- Coming back has no limit: the army rejoins as fresh reserves.
+- Rest gives 5 to 6.25% morale a day. Men only return outside combat, on land you own and control or are allowed on, 25% of a regiment a month (`0x14357e070`, `0x143491490`). The `REINFORCE_HOME/HOSTILE/ADJACENT` keys are dead in 1.4.6.
+- Speed is the slowest regiment's `movement_speed` × `ARMY_MOVEMENT_SPEED` 0.9 (`0x14351cef0`). The size penalty is per army (`0x1434e8120`, `0x1434ed1a0`), so splitting avoids it.
+
+**No penalty for leaving can be scripted.** `lock_unit = N` halves morale and caps it at 50% (`0x14351f300`; the engine never sets it itself), but nothing fires when one army leaves a running battle: the on_actions are on_battle_won/lost and their character and great battle forms, `on_retreat` is an AI diplomacy reason key, and script cannot start a unit ability (`CUseUnitAbility` is a player command).
+
+**The relay.** 4 armies of 30 regiments a side, frontage 10. One side keeps 1 army a location away and swaps a tired army out when the rested one arrives; the other commits everything. 3 days a location, rest to 90%, 480 battles a cell, about ±4 points. 50% means no edge. Veteran infantry is +100% morale and 90 experience, the others +30% and 50.
+
+| Change | Infantry V | Veteran infantry V | Cavalry III | Men lost |
+|---|---|---|---|---|
+| Vanilla | 51 days, 97% | 98 days, 94% | 90 days, 100% | 42–76% |
+| Armies 25% slower | 51 days, 90% | 98 days, 95% | 90 days, 100% | same |
+| Armies 50% slower | 51 days, 83% | 98 days, 93% | 90 days, 100% | same |
+| Both land damage ×2 | 32 days, 61% | 60 days, 72% | 62 days, 99% | 54–87% |
+| Both land damage ×3 | 22 days, 49% | 46 days, 59% | 47 days, 90% | 57–90% |
+| Morale damage ×2 | 30 days, 56% | 53 days, 100% | 58 days, 100% | 28–47% |
+| Morale damage ×4 | 15 days, 52% | 31 days, 57% | 36 days, 83% | 14–25% |
+| **Morale ×4 + strength ×3** | **16 days, 47%** | **35 days, 61%** | **39 days, 84%** | **40–75%** |
+| Morale ×5 + strength ×4 | 14 days, 51% | 29 days, 55% | 33 days, 71% | 41–73% |
+
+Taking an army out needs no replacement either: on the same terms, 5 armies of 30 infantry win 89–100% with the sensible thresholds (leave under 35% morale), and 3 armies of 30 cavalry win 100%.
+
+**Why slower armies do little.** Marching is about 6 days of a 16-day swap (3 out, about 10 resting, 3 back), and speed changes nothing about battle length. How far help can come from is speed × battle length, so a battle half as long cuts that as much as armies half as fast, without slowing every other march. Each trip also costs more morale at lower speed.
+
+**What sets the edge:**
+- **How many swaps fit.** For one kind of army the edge rises with battle length. Infantry: 17 days 49%, 22 days 49%, 32 days 61%, 40 days 77%, 51 days 97%.
+- **Whether armies break before they die.** Rest brings morale back, not men. At about the same length, veteran infantry with morale damage ×2 keeps 100% (47% of men lost) where both damage ×2 falls to 72% (87% lost). Cavalry takes little strength damage, so it breaks by morale and keeps its edge longest. Cavalry at 40 days is 83%; veteran infantry at 38 days is 50%.
+- **The engage limit.** It makes these battles about 40% longer. Without it infantry lasts 37 days and the relay is 49%, which is what the first version of this analysis wrongly reported.
+
+**What doesn't work:** raising `MINIMUM_COMBAT_DAYS` (15 changes nothing, 30 costs infantry about 10 points), halving morale recovery (cavalry stays at 100%), and `COMBAT_DAILY_MORALE_TICK` ×2 (battles 15–30% shorter, relay unchanged).
+
+**The change, commented out in `01_abm_defines.txt`:** `LAND_MORALE_DAMAGE_MODIFIER` 0.25 → 1.0 and `LAND_STRENGTH_DAMAGE_MODIFIER` 0.04 → 0.12. Only the land hit function reads them (`0x142481f60`), so sieges and navies are untouched; `COMBAT_DAMAGE_MULT` also reaches sieges (`0x143475bf0`). Losses stay close to vanilla at normal sizes (1,200 battles a cell, +30% morale, 50 experience):
+
+| Battle | Days | Men lost, first side | Men lost, second side |
+|---|---|---|---|
+| Infantry 10 v 10 | 19 → 9 | 60% → 60% | 60% → 60% |
+| Infantry 30 v 30 | 19 → 9 | 59% → 60% | 60% → 61% |
+| Infantry 30 v 15 | 10 → 6 | 14% → 17% | 83% → 83% |
+| Cavalry 30 v 30 | 39 → 14 | 52% → 49% | 52% → 49% |
+| Cavalry 40 v 15 | 18 → 8 | 8% → 9% | 71% → 70% |
+
+No stack wipes in any cell, even at 3:1. What it costs:
+- **Very big stacks break before their reserves are used.** Infantry 120 v 120 on frontage 10: shattered retreats fall from 100% to 8% and men lost from 59% to 40%, because the line breaks first. Big stacks are worth less.
+- **Quality decides a little less.** +5% discipline wins 66% → 62% (infantry 30 v 30), 73% → 63% (120 v 120), 70% → 62% (cavalry 30 v 30).
+- **Cavalry keeps some edge.** 84% in the table; a player who adapts how they swap gets more (`levers.txt`). The infantry case, which is what players reported, goes.
+
+**Limits.** The opponent never reacts, forces are even, there is no artillery, days per location are assumed, and none of this is tested in game. Rerun the focus and army balance before releasing the change.
+
+---
+
 ## 12. Sieges *(partly code; marked per line)*
 
 **Phase length** *(code, `0x143462cb0`; the arithmetic of the modifiers not finished)*: a siege rolls once per phase. The base is `DAYS_PER_SIEGE_PHASE` **30** days with a fort, `DAYS_PER_SIEGE_PHASE_WITHOUT_FORT` **15** without, and never under `MIN_DAYS_PER_SIEGE_PHASE` **7**. It is changed by the besieger's `siege_ability`, the fort's defence (`global_defensive` + `local_defensive`), the spy network and culture war; the tooltip reads "Siege phases are X (±Y%) days long".
@@ -686,6 +743,8 @@ Tercios upgrade into Musketeers and neither country has an age V special unit, s
 | `SIEGE_REGIMENTS_FOR_ARTILLERY` | 3 | 2 |
 | Levy discipline (`is_army_levy`) | −10% | −20% |
 
+**Hourly ticks cannot come back in a mod** *(code, 1.4.6)*. 1.3's `HOUR_TICK` 2 gave 12 ticks a day. All the hour defines are gone from eu5.exe, the date step adds a literal 24 hours (`0x142fd82e0`; 1.3 added a stored value at `0x144104ea0`), and the tick tasks are compiled daily (`CombatDailyUpdate`, `MovementDailyUpdate`). In 1.4 ticks in a battle equal days in a battle. Tick size alone was worth nothing; the gain was more dice rolls per battle. `DAYS_PER_PHASE` 2 is the closest stand-in for 1.3's dice (`analysis/battle_length/results/tick_sweep.txt`: +5% discipline, infantry 30 v 30: 1.3 rules 64%, `DAYS_PER_PHASE` 4 63%, 2 66%, 1 70%).
+
 ---
 
 ## 14. Ars Belli changes that touch combat
@@ -697,7 +756,7 @@ Tercios upgrade into Musketeers and neither country has an age V special unit, s
 - Steppe unit sizes: `a_steppe_horde` and `a_steppe_horse_archers` lose vanilla's +0.4 `max_strength` (200 men, not 600). `a_late_steppe_horde` (400 men, advance `abm_steppe_renaissance_levy`, age II) takes over from `a_steppe_horde`. Levy men come from pops, so this means more, smaller regiments, not fewer men; section 11b has what that is worth.
 - D009's Sanhaja, Zenata and Tuareg cavalry levies raise 3% of tribesmen, vanilla 10% (section 11b). Their units and pops are vanilla, and so are the other tribal levies.
 - Mercenary hiring costs back to vanilla (2026-10-28).
-- No combat defines are overridden (`01_abm_defines.txt` only touches war score, war worth, food depots and loans).
+- No combat defines are overridden (`01_abm_defines.txt` only touches war score, war worth, food depots and loans). A faster-battles block sits there commented out, see section 11d.
 
 ---
 
@@ -760,6 +819,7 @@ Interactive page: https://claude.ai/artifact/PjQC55Y4sfvuuSdJKJEwFi (Quick battl
 | File | What it is |
 |---|---|
 | `engine.js` | The rules of this document as code. Runs in the browser and in Node. |
+| `analysis/` | Studies behind sections 11 to 11d, each with a README where it has raw results. |
 | `units.json` | Every army unit type of vanilla 1.4.4, the DLC folders and Ars Belli with its effective stats, plus terrain. Rebuild with `node .tools/scripts/battle_sim/build_units.js` after a game update or a unit change. It reads the installed game, so never rebuild it while 1.3 is installed. |
 | `sim.js` | Command line: `node .tools/scripts/battle_sim/sim.js <scenario.json> [--runs 2000] [--seed 1] [--sample] [--json] [--campaign [battles]] [--months 3]`; `--units <text>` lists unit types matching a key or name. It always prints costs; `--campaign` adds the war of attrition. |
 | `scenarios/` | Scenario files; `example_river_hills.json` shows every field. |
@@ -940,6 +1000,9 @@ Equal manpower is about **upkeep and reinforcement**, not the one-time recruitme
   - A smaller army that waits for full strength almost never wins outright: 70% infantry wins about 2% of the wars decisively, 70% cavalry about 0.5%. Cheap cavalry turns its defeats into stalemates (89% undecided). While it waits, the bigger army holds the field, sieges and takes war score, which the model doesn't count.
   - Picking the moment is worth most between equal armies: 62% against 38%.
 
+### Armies leaving a battle
+`simulateScenario(scn, { rotate: [cfg, null] })`: a side takes tired armies out, rests them a location away and brings them back, as a relay or a plain pull-out. The comment above `rotate` in `engine.js` lists the fields, section 11d has the results.
+
 ### Ordered retreats in scenarios
 `attacker.retreatDay` / `defender.retreatDay`: that side orders a retreat at the end of that day (never before day 5). It loses 10% of its men and the battle. `analysis/artillery_raid.js` uses it.
 
@@ -992,7 +1055,7 @@ Read, per army, the regiments by type (the unit names map to keys; names are in 
 ### Approximated in the simulator
 - formation boxes in hand-made scenarios (the snake rule read from saves; scenarios built from a save carry the exact boxes);
 - which regiments overflow into reserve when a section is full (the game sorts them first; the order was not decoded);
-- the 120-day cap;
+- `MAX_DAYS` 400, a safety stop, because no game cap is known;
 - the reinforcement goods basket, and the war of attrition's expected-value steps (section above).
 
 Exact since v3 (2026-10-28): the end rules (section 1, step 7), bombard (W guns per section, one roll per gun, target forgotten on a miss), the melee fallback order and flank rule, combined arms by regiment count with the 50% cut-off, and the dice re-roll when the bombard phase ends.
@@ -1055,6 +1118,8 @@ Kit: `E:\Tools\ghidra-scripts` (README there). Addresses change every patch; re-
 | Max manpower tooltip | `0x142638ab0` | `MAX_MANPOWER_YEARS` (`0x14fb243b8`), labels `MAX_MANPOWER_TT`, `THIRD_MAX_MANPOWER_TT` |
 | Land army strength for overruns | `0x143519150` | men, levies × levy factor |
 | Daily morale change outside battle | `0x1434f47a0` | recovery `0x143493940` (labels `CAN_NOT_RECOVER_WHILE_MOVING`, `UNIT_MORALE_RECOVERY_IN_FRIENDLY`), movement cost `land_morale_movement_cost` (`0x14f0a367e`), attrition cost; `LOCKED_MORALE_CAP` |
+| Battle tick | `0x1424a7620` | `CCombatManager` vtable slot 8; age at `combat+0x34`, phase at `+0x30`, both +1 a call, phase compared at the start of the tick |
+| Leaving a battle | `0x1423fbd40`, execute `0x143539f70`, gate `0x142492f30` | `MINIMUM_COMBAT_DAYS` + `retreat_delay` against the battle's age |
 | Retreat after a lost battle | `0x142477570` | shattered if average morale < `LOW_MORALE_THRESHOLD` 0.5 (navy 1.5) |
 | Siege / assault tick | `0x143475730` | all `SIEGE_*` / `ASSAULT_*` defines (not decompiled) |
 | Modifier registration | `0x144c840f0` | each modifier name string is followed by a store of its index, e.g. discipline `0x14f0a37c2`, military_tactics `0x14f0a37ce`, levy_combat_efficiency `0x14f0a389e`, commander_combat_bonus `0x14f0a37d0`, army_initiative `0x14f0a37ee`, combat_speed_modifier `0x14f0a37f2` |
