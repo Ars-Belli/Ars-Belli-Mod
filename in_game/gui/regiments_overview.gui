@@ -1,0 +1,621 @@
+lateralview_full = {	
+	name = "regiment_overview"
+	
+	blockoverride "panel_header" {
+		window_header_alt = {
+			blockoverride "header_text" {
+				text = "LEDGER_TAB"
+			}
+			blockoverride "window_header_alt_color_texture"{
+				using = color_default_brown_texture
+			}
+		}
+	}
+
+	blockoverride "panel_content" {
+		vbox = {
+			header_main_tabs = {
+				blockoverride "content" {
+					using = ledger_tabs_template
+				}
+			}
+
+			vbox = {
+				using = layoutpolicy_expanding
+				using = bg_main_inner_alt
+				using = window_main_tabs_margin_alt
+
+				filtered_sorted_list = {
+					margin_top = 10
+					datacontext = "[RegimentsView.GetRegimentItemsSortSearch]"
+					
+					blockoverride "sort_buttons_filtered_list" {
+						sort_by_key_button = {
+							name = "age"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 3
+						}
+
+						sort_by_key_button = {
+							name = "category"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 1
+						}
+
+						sort_by_key_button = {
+							name = "name"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 4
+						}
+
+						
+						sort_by_key_button = {
+							name = "max_strength"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						
+						sort_by_key_button = {
+							name = "combat_power"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						
+							sort_by_key_button = {
+							name = "initiative"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						
+						sort_by_key_button = {
+							name = "frontage"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+
+						sort_by_key_button = {
+							name = "combat_speed"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+					
+						sort_by_key_button = {
+							name = "artillery_barrage"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						sort_by_key_button = {
+							name = "bombard_efficiency"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						sort_by_key_button = {
+							name = "flanking_ability"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						sort_by_key_button = {
+							name = "secure_flanks_defense"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						sort_by_key_button = {
+							name = "morale_damage_taken"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						sort_by_key_button = {
+							name = "strength_damage_taken"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						sort_by_key_button = {
+							name = "morale_damage_done"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+
+						sort_by_key_button = {
+							name = "strength_damage_done"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+						sort_by_key_button = {
+							name = "food_storage_per_strength"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+	
+						sort_by_key_button = {
+							name = "food_consumption_per_strength"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 2
+						}
+
+						sort_by_key_button = {
+							name = "movement_speed"
+							layoutpolicy_horizontal = expanding
+							layoutstretchfactor_horizontal = 3
+						}
+	
+	#supply_weight,
+	#attrition_loss,
+
+						
+
+					}
+
+					blockoverride "scroll_list_content" {
+						addcolumn = 100%
+						addrow = 45
+						setitemsizefromcell = yes
+
+						datamodel = "[RegimentsView.GetRegiments]"
+						item = {
+							using = ledger_item_template
+							blockoverride "ledger_item_content" {
+								widget = {
+									using = layoutpolicy_expanding
+
+									datacontext = "[RegimentItem.GetRegiment]"
+									
+									hbox = {
+										margin = { 15 0 }
+										spacing = 10
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											widget = {
+												ignoreinvisible = yes
+												icon = {
+													visible = "[Not(Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('anti_piracy_warfare')), And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('maritime_presence')), And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('blockade_capacity')), And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('hull_size')), And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('transport_capacity')), And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('crew_size'))))]"
+													texture = "[GetAgeIcon(SubUnitType.GetAge)]"
+													size = { 30 30 }
+													datacontext = "[RegimentItem.GetRegiment.GetAge]"
+													tooltipwidget = {
+														using = Age_tooltip
+													}
+												}
+												icon = {
+													visible = "[And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('anti_piracy_warfare'))]"
+													size = { 30 30 }
+													texture = "gfx/interface/icons/age/age_1_traditions.dds"
+													tooltip = "abm_age_badge_1"
+												}
+												icon = {
+													visible = "[And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('maritime_presence'))]"
+													size = { 30 30 }
+													texture = "gfx/interface/icons/age/age_2_renaissance.dds"
+													tooltip = "abm_age_badge_2"
+												}
+												icon = {
+													visible = "[And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('blockade_capacity'))]"
+													size = { 30 30 }
+													texture = "gfx/interface/icons/age/age_3_discovery.dds"
+													tooltip = "abm_age_badge_3"
+												}
+												icon = {
+													visible = "[And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('hull_size'))]"
+													size = { 30 30 }
+													texture = "gfx/interface/icons/age/age_4_reformation.dds"
+													tooltip = "abm_age_badge_4"
+												}
+												icon = {
+													visible = "[And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('transport_capacity'))]"
+													size = { 30 30 }
+													texture = "gfx/interface/icons/age/age_5_absolutism.dds"
+													tooltip = "abm_age_badge_5"
+												}
+												icon = {
+													visible = "[And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('crew_size'))]"
+													size = { 30 30 }
+													texture = "gfx/interface/icons/age/age_6_revolutions.dds"
+													tooltip = "abm_age_badge_6"
+												}
+											}
+											sort_by_highlight = {
+												name = "age"
+											}
+										}
+										
+										
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											icon =  {
+												texture = "[GetSubUnitCategoryIcon(SubUnitType.GetCategory)]"
+												size = { 30 30 }
+												datacontext = "[RegimentItem.GetRegiment.GetCategory]"
+												tooltipwidget = {
+													using = SubUnitCategory_tooltip
+												}
+											}
+											sort_by_highlight = {
+												name = "category"
+											}
+										}
+
+
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 2
+											autoresize = no
+											align = left|nobaseline
+
+											text = "[SubUnitType.GetName]"
+											tooltipwidget = {
+												using = SubUnitType_tooltip
+											}
+											sort_by_highlight = {
+												name = "name"
+											}
+										}
+										text_single = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											autoresize = no
+											align = right|nobaseline
+
+											raw_text = "[SubUnitType.GetStat('max_strength')]"
+											tooltipwidget = {
+												using = TT_MaxStrength
+											}
+											sort_by_highlight = {
+												name = "max_strength"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('combat_power')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('combat_power')]"
+											}
+											tooltipwidget = {
+												using = TT_CombatPower
+											}
+											sort_by_highlight = {
+												name = "combat_power"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('initiative')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('initiative')]"
+											}
+											tooltipwidget = {
+												using = TT_Initiative
+											}
+											sort_by_highlight = {
+												name = "initiative"
+											}
+										}
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('frontage')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('frontage')]"
+											}
+											tooltipwidget = {
+												using = TT_Frontage
+											}
+											sort_by_highlight = {
+												name = "frontage"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('combat_speed')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('combat_speed')]"
+											}
+											tooltipwidget = {
+												using = TT_CombatSpeed
+											}
+											sort_by_highlight = {
+												name = "combat_speed"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('artillery_barrage')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('artillery_barrage')]"
+											}
+											tooltipwidget = {
+												using = TT_ArtilleryBarrage
+											}
+											sort_by_highlight = {
+												name = "artillery_barrage"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('bombard_efficiency')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('bombard_efficiency')]"
+											}
+											tooltipwidget = {
+												using = TT_BombardEfficiency
+											}
+											sort_by_highlight = {
+												name = "bombard_efficiency"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('flanking_ability')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('flanking_ability')]"
+											}
+											tooltipwidget = {
+												using = TT_FlankingAbility
+											}
+											sort_by_highlight = {
+												name = "flanking_ability"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('secure_flanks_defense')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('secure_flanks_defense')]"
+											}
+											tooltipwidget = {
+												using = TT_SecureFlanks
+											}
+											sort_by_highlight = {
+												name = "secure_flanks_defense"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('morale_damage_taken')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('morale_damage_taken')]"
+											}
+											tooltipwidget = {
+												using = TT_MoraleDamageTaken
+											}
+											sort_by_highlight = {
+												name = "morale_damage_taken"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('strength_damage_taken')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('strength_damage_taken')]"
+											}
+											tooltipwidget = {
+												using = TT_StrengthDamageTaken
+											}
+											sort_by_highlight = {
+												name = "strength_damage_taken"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('morale_damage_done')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('morale_damage_done')]"
+											}
+											tooltipwidget = {
+												using = TT_MoraleDamageDone
+											}
+											sort_by_highlight = {
+												name = "morale_damage_done"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('strength_damage_done')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('strength_damage_done')]"
+											}
+											tooltipwidget = {
+												using = TT_StrengthDamageDone
+											}
+											sort_by_highlight = {
+												name = "strength_damage_done"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('food_storage_per_strength')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('food_storage_per_strength')]"
+											}
+											tooltipwidget = {
+												using = TT_FoodStorage
+											}
+											sort_by_highlight = {
+												name = "food_storage_per_strength"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('food_consumption_per_strength')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('food_consumption_per_strength')]"
+											}
+											tooltipwidget = {
+												using = TT_FoodConsumption
+											}
+											sort_by_highlight = {
+												name = "food_consumption_per_strength"
+											}
+										}
+
+										hbox = {
+											layoutpolicy_horizontal = expanding
+											layoutstretchfactor_horizontal = 1
+											spacing = 2
+											text_single = {
+												layoutpolicy_horizontal = expanding
+												autoresize = no
+												align = right|nobaseline
+	
+												text = "[SubUnitType.GetStat('movement_speed')]"
+											}
+											icon = {
+												size = { 16 16 }
+												texture = "[GetConceptTexture('movement_speed')]"
+											}
+											tooltipwidget = {
+												using = TT_MovementSpeed
+											}
+											sort_by_highlight = {
+												name = "movement_speed"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

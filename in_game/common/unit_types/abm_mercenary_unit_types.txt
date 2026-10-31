@@ -1,0 +1,865 @@
+﻿# Mercenary-only unit types. Stats are written out in full so they do not copy the shared age template.
+# Copying that template also overwrites it, which was capping and age-locking the regular unit.
+# These are special regiments with limit 0. The army builder leaves that combination out of recruitment.
+# No age key. A current-age mercenary of the same category retires the previous professional. location_potential still limits hiring to that age.
+# The zero naval stat under hide is only a badge marker for the army interface. It is not an age.
+a_merc_footmen = {
+	category = army_heavy_infantry
+	max_strength = 0.5
+	combat_power = 1
+	is_special = yes
+	hide = yes
+	anti_piracy_warfare = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	strength_damage_taken = -0.05
+	country_potential = { 
+		government_type != government_type:steppe_horde
+	}
+	upgrades_to = a_men_at_arms
+	maintenance_demand =  early_heavy_infantry_maintenance
+	construction_demand = early_heavy_infantry_construction
+	gfx_tags = { medium_tag }
+	location_potential = {
+		current_age = age_1_traditions
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.1
+	}
+}
+a_merc_archers = {
+	category = army_light_infantry
+	max_strength = 0.5
+	combat_power = 1
+	is_special = yes
+	hide = yes
+	anti_piracy_warfare = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_crossbowmen
+	country_potential = { 
+		government_type != government_type:steppe_horde
+	}
+	maintenance_demand = archer_infantry_maintenance
+	construction_demand = archer_infantry_construction
+	gfx_tags = { archer_tag medium_tag }
+	location_potential = {
+		current_age = age_1_traditions
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.05
+	}
+}
+a_merc_horsemen = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 0.2
+	combat_power = 2.6
+	is_special = yes
+	hide = yes
+	anti_piracy_warfare = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_cavalrymen
+	gfx_tags = { medium_tag }
+	location_potential = {
+		current_age = age_1_traditions
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+	mercenaries_per_location = {
+		pop_type = tribesmen
+		multiply = 0.01
+	}
+}
+a_merc_armored_horsemen = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 0.2
+	combat_power = 2.6
+	is_special = yes
+	hide = yes
+	anti_piracy_warfare = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	upgrades_to = a_heavy_cavalrymen
+	gfx_tags = { heavy_tag }
+	location_potential = {
+		current_age = age_1_traditions
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.1
+	}
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+}
+a_merc_camp_followers = {
+	category = army_auxiliary
+	max_strength = 0.05
+	combat_power = 0.25
+	is_special = yes
+	hide = yes
+	anti_piracy_warfare = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	gfx_tags = { medium_tag }
+	country_potential = { 
+		and = {
+			exists = government_type
+			government_type != government_type:steppe_horde
+		}
+	}
+	upgrades_to = a_supply_carts
+	location_potential = {
+		current_age = age_1_traditions
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.01
+	}
+}
+a_merc_men_at_arms = {
+	category = army_heavy_infantry
+	max_strength = 1.0
+	combat_power = 1
+	is_special = yes
+	hide = yes
+	maritime_presence = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	strength_damage_taken = -0.1
+	combat_speed = 1
+	upgrades_to = a_halberdiers
+	maintenance_demand =  early_heavy_infantry_maintenance
+	construction_demand = early_heavy_infantry_construction
+	gfx_tags = { medium_tag }
+	location_potential = {
+		current_age = age_2_renaissance
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.1
+	}
+}
+a_merc_crossbowmen = {
+	category = army_light_infantry
+	max_strength = 1.0
+	combat_power = 1
+	maintenance_demand =  early_infantry_maintenance
+	construction_demand = early_infantry_construction
+	is_special = yes
+	hide = yes
+	maritime_presence = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_early_arquebusiers
+	gfx_tags = { crossbow_tag medium_tag }
+	location_potential = {
+		current_age = age_2_renaissance
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.05
+	}
+}
+a_merc_handgonners = {
+	category = army_light_infantry
+	max_strength = 1.0
+	combat_power = 1
+	is_special = yes
+	hide = yes
+	maritime_presence = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	# Light infantry so it can upgrade into a_early_arquebusiers (upgrades are category-scoped).
+	# Overrides below keep the original heavy-infantry combat profile (CAESAR-67717).
+	movement_speed = -0.5
+	initiative = -4
+	flanking_ability = -0.1
+	strength_damage_done = 0.1
+	morale_damage_taken = -0.1
+	combat_speed = -1.5
+	morale_damage_done = 0.10
+	build_time_modifier = 0.25
+	maintenance_demand =  infantry_maintenance
+	construction_demand = infantry_construction
+	upgrades_to = a_early_arquebusiers
+	gfx_tags = { musket_tag medium_tag }
+	location_potential = {
+		current_age = age_2_renaissance
+	}
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.025
+	}
+}
+a_merc_cavalrymen = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 0.4
+	combat_power = 2.6
+	is_special = yes
+	hide = yes
+	maritime_presence = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_light_lancers
+	gfx_tags = { medium_tag }
+	location_potential = {
+		current_age = age_2_renaissance
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+	mercenaries_per_location = {
+		pop_type = tribesmen
+		multiply = 0.01
+	}
+}
+a_merc_heavy_cavalrymen = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 0.4
+	combat_power = 2.6
+	is_special = yes
+	hide = yes
+	maritime_presence = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_lancers
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	gfx_tags = { heavy_tag }
+	location_potential = {
+		current_age = age_2_renaissance
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+}
+a_merc_houfnice = {
+	category = army_artillery
+	max_strength = 0.2
+	combat_power = 3
+	bombard_efficiency = 0.125
+	artillery_barrage = 3
+	is_special = yes
+	hide = yes
+	maritime_presence = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_falconet
+	location_potential = {
+		current_age = age_2_renaissance
+	}
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+}
+a_merc_supply_carts = {
+	category = army_auxiliary
+	max_strength = 0.1
+	combat_power = 0.25
+	is_special = yes
+	hide = yes
+	maritime_presence = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	gfx_tags = { medium_tag }
+	upgrades_to = a_supply_convoy
+	location_potential = {
+		current_age = age_2_renaissance
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.01
+	}
+}
+a_merc_early_arquebusiers = {
+	category = army_light_infantry
+	max_strength = 1.5
+	combat_power = 1
+	is_special = yes
+	hide = yes
+	blockade_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_arquebusiers
+	gfx_tags = { musket_tag medium_tag }
+	location_potential = {
+		current_age = age_3_discovery
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.05
+	}
+}
+a_merc_halberdiers = {
+	category = army_heavy_infantry
+	max_strength = 1.5
+	combat_power = 1
+	is_special = yes
+	hide = yes
+	blockade_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_pikemen
+	maintenance_demand =  early_heavy_infantry_maintenance
+	construction_demand = early_heavy_infantry_construction
+	gfx_tags = { polearm_tag medium_tag }
+	location_potential = {
+		current_age = age_3_discovery
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.1
+	}
+}
+a_merc_light_lancers = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 0.6
+	combat_power = 2.6
+	is_special = yes
+	hide = yes
+	blockade_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_pistoleers
+	gfx_tags = { spear_tag medium_tag }
+	location_potential = {
+		current_age = age_3_discovery
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+	mercenaries_per_location = {
+		pop_type = tribesmen
+		multiply = 0.01
+	}
+}
+a_merc_lancers = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 0.6
+	combat_power = 2.6
+	is_special = yes
+	hide = yes
+	blockade_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_heavy_lancers
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	gfx_tags = { spear_tag heavy_tag }
+	location_potential = {
+		current_age = age_3_discovery
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+}
+a_merc_falconet = {
+	category = army_artillery
+	max_strength = 0.6
+	combat_power = 4
+	bombard_efficiency = 0.15
+	artillery_barrage = 4
+	is_special = yes
+	hide = yes
+	blockade_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_chambered_cannon
+	location_potential = {
+		current_age = age_3_discovery
+	}
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+}
+a_merc_supply_convoy = {
+	category = army_auxiliary
+	max_strength = 0.15
+	combat_power = 0.25
+	is_special = yes
+	hide = yes
+	blockade_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_baggage_train
+	location_potential = {
+		current_age = age_3_discovery
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.01
+	}
+}
+a_merc_arquebusiers = {
+	category = army_light_infantry
+	max_strength = 2.0
+	combat_power = 1.5
+	is_special = yes
+	hide = yes
+	hull_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_hunters
+	gfx_tags = { musket_tag medium_tag }
+	location_potential = {
+		current_age = age_4_reformation
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.05
+	}
+}
+a_merc_pikemen = {
+	category = army_heavy_infantry
+	max_strength = 2.0
+	combat_power = 1.5
+	is_special = yes
+	hide = yes
+	hull_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_musketeers
+	maintenance_demand =  pikemen_maintenance
+	construction_demand = pikemen_construction
+	gfx_tags = { pike_tag medium_tag }
+	location_potential = {
+		current_age = age_4_reformation
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.1
+	}
+}
+a_merc_pistoleers = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 0.8
+	combat_power = 2.85
+	is_special = yes
+	hide = yes
+	hull_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_hussars
+	gfx_tags = { pistol_tag medium_tag }
+	location_potential = {
+		current_age = age_4_reformation
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+}
+a_merc_heavy_lancers = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 0.8
+	combat_power = 2.85
+	is_special = yes
+	hide = yes
+	hull_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	gfx_tags = { spear_tag heavy_tag }
+	upgrades_to = a_gallop_cavalry
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	location_potential = {
+		current_age = age_4_reformation
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+}
+a_merc_chambered_cannon = {
+	category = army_artillery
+	max_strength = 0.8
+	combat_power = 5
+	bombard_efficiency = 0.20
+	artillery_barrage = 5
+	is_special = yes
+	hide = yes
+	hull_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_royal_mortar
+	location_potential = {
+		current_age = age_4_reformation
+	}
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+}
+a_merc_baggage_train = {
+	category = army_auxiliary
+	max_strength = 0.2
+	combat_power = 0.25
+	is_special = yes
+	hide = yes
+	hull_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	gfx_tags = { medium_tag }
+	upgrades_to = a_wagon_train
+	location_potential = {
+		current_age = age_4_reformation
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.01
+	}
+}
+a_merc_hunters = {
+	category = army_light_infantry
+	max_strength = 2.5
+	combat_power = 2.25
+	is_special = yes
+	hide = yes
+	transport_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_sharpshooters
+	gfx_tags = { rifle_tag medium_tag }
+	color = unit_rifle_green
+	location_potential = {
+		current_age = age_5_absolutism
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.05
+	}
+}
+a_merc_musketeers = {
+	category = army_heavy_infantry
+	max_strength = 2.5
+	combat_power = 2.25
+	is_special = yes
+	hide = yes
+	transport_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_fusiliers
+	maintenance_demand =  heavy_infantry_maintenance
+	construction_demand = heavy_infantry_construction
+	gfx_tags = { musket_tag medium_tag }
+	location_potential = {
+		current_age = age_5_absolutism
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.1
+	}
+}
+a_merc_hussars = {
+	category = army_light_cavalry
+	impact = { 
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = { 
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+	}
+	max_strength = 1.0
+	combat_power = 3.25
+	is_special = yes
+	hide = yes
+	transport_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_light_dragoons
+	gfx_tags = { medium_tag }
+	location_potential = {
+		current_age = age_5_absolutism
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+}
+a_merc_gallop_cavalry = {
+	category = army_heavy_cavalry
+	impact = {
+		jungle = 0.10
+		wetlands = 0.10
+		mountains = 0.10
+	}
+	combat = {
+		jungle = -0.10
+		wetlands = -0.10
+		mountains = -0.10
+		river = -0.10
+	}
+	max_strength = 1.0
+	combat_power = 3.25
+	is_special = yes
+	hide = yes
+	transport_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_cuirassiers
+	maintenance_demand =  heavy_cavalry_maintenance
+	construction_demand = heavy_cavalry_construction
+	gfx_tags = { heavy_tag }
+	location_potential = {
+		current_age = age_5_absolutism
+	}
+	mercenaries_per_location = {
+		pop_type = nobles
+		multiply = 0.3
+	}
+}
+a_merc_royal_mortar = {
+	category = army_artillery
+	max_strength = 1.0
+	combat_power = 5.5
+	bombard_efficiency = 0.25
+	artillery_barrage = 7
+	is_special = yes
+	hide = yes
+	transport_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	upgrades_to = a_flying_battery
+	location_potential = {
+		current_age = age_5_absolutism
+	}
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+}
+a_merc_wagon_train = {
+	category = army_auxiliary
+	max_strength = 0.25
+	combat_power = 0.25
+	is_special = yes
+	hide = yes
+	transport_capacity = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	gfx_tags = { medium_tag }
+	upgrades_to = a_logistics_corps
+	location_potential = {
+		current_age = age_5_absolutism
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.01
+	}
+}
+a_merc_sharpshooters = {
+	category = army_light_infantry
+	max_strength = 3.0
+	combat_power = 3
+	is_special = yes
+	hide = yes
+	crew_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	gfx_tags = { rifle_tag medium_tag }
+	color = unit_rifle_green 
+	location_potential = {
+		current_age = age_6_revolutions
+	}
+	mercenaries_per_location = {
+		pop_type = peasants
+		multiply = 0.05
+	}
+}
+a_merc_fusiliers = {
+	category = army_heavy_infantry
+	max_strength = 3.0
+	combat_power = 3
+	is_special = yes
+	hide = yes
+	crew_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	maintenance_demand =  heavy_infantry_maintenance
+	construction_demand = heavy_infantry_construction
+	gfx_tags = { musket_tag medium_tag }
+	location_potential = {
+		current_age = age_6_revolutions
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.1
+	}
+}
+a_merc_flying_battery = {
+	category = army_artillery
+	max_strength = 1.2
+	combat_power = 7.5
+	bombard_efficiency = 0.30
+	artillery_barrage = 9
+	is_special = yes
+	hide = yes
+	crew_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	location_potential = {
+		current_age = age_6_revolutions
+	}
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+}
+a_merc_logistics_corps = {
+	category = army_auxiliary
+	max_strength = 0.3
+	combat_power = 0.25
+	is_special = yes
+	hide = yes
+	crew_size = 0.001
+	buildable = yes
+	limit = 0
+	levy = no
+	gfx_tags = { medium_tag }
+	location_potential = {
+		current_age = age_6_revolutions
+	}
+	mercenaries_per_location = {
+		pop_type = laborers
+		multiply = 0.01
+	}
+}
