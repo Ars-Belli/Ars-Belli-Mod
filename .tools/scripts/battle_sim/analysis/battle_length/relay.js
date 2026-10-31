@@ -5,6 +5,7 @@
 // Every core by default, at the lowest priority (engine.js). EU5_THREADS=n caps the workers.
 const os = require('os');
 const { Worker, isMainThread, parentPort } = require('worker_threads');
+const progress = require('../../progress.js');
 const S = require('../../engine.js');
 S.setUnitDB(require('../../units.json'));
 const D = S.D, BASE = { ...D };
@@ -68,11 +69,12 @@ function runCells(jobs) {
 	return new Promise((done, fail) => {
 		const out = new Array(jobs.length), workers = Array.from({ length: threads }, () => new Worker(__filename));
 		let next = 0, left = jobs.length;
+		const tick = progress(jobs.length, 'cells');
 		const feed = w => { if (next < jobs.length) { w.postMessage({ id: next, job: jobs[next] }); next++; } };
 		for (const w of workers) {
 			w.on('error', fail);
 			w.on('message', ({ id, result }) => {
-				out[id] = result;
+				out[id] = result; tick();
 				if (--left === 0) { workers.forEach(x => x.terminate()); done(out); } else feed(w);
 			});
 			feed(w);

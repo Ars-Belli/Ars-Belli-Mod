@@ -263,6 +263,13 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - The first version of this (2026-10-30) ran without the engage limit and said infantry relay wins 45% and damage x2 is enough. Wrong: 97%, and x2 leaves 61%. Those runs are in `results/pre_fix`.
 - Hourly ticks cannot return in a mod: combat doc section 13.
 
+### 3t. Country simulator levies, Castile against Morocco (2026-10-31)
+- `location_sim` now picks levies as the game does: DLC levies, cultures, `country_allow`, `allow`. A condition it can't read is listed by `levy_report.js`, none are left. All 21 rows of Tadla match the game, plus rows in Fez, Meknes and Sevilla.
+- Both `from_save.js` load DLC data. The battle one also gained reforms, religion and `--no-general`; without religion, damage against other faiths never applied in save-based battles.
+- Army Levies Recovery panel = save `army_levies`. Its percentage feeds the rows, its men do not: `max` is the levy at the last raise (Location doc section 4).
+- Levy regiments of one unit type merge across provinces, so a stack is full regiments plus one partial.
+- Study: `.tools/scripts/battle_sim/analysis/castile_morocco/`. `battle_sim/progress.js` prints % and time left for long runs.
+
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.
 - The real block is levies. The army list refuses any army with a levy, mercenary or prisoner regiment; vanilla's comment says the lend silently no-ops on levies. Three 1.4 saves: 5 of 76, 8 of 76, 9 of 96 subject armies can be lent, 2-4% of regiments (`analysis/meta_1.4/subject_armies.js`). Liberty desire is not it: 342 of 354 subjects are under 25.

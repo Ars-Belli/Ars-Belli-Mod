@@ -1,10 +1,10 @@
 // Builds a battle scenario from an EU5 save: a normal (binary) save or a debug-mode text save.
 //   node .tools/scripts/battle_sim/from_save.js <save.eu5|latest> --list                     armies with their location
 //   node .tools/scripts/battle_sim/from_save.js <save> --attacker <army id|TAG> --defender <army id|TAG>
-//        [--at <location key>] [--out scenario.json]
+//        [--at <location key>] [--no-general] [--out scenario.json]
 // Regiments keep their men, morale, experience and section (the army formation's "box"). Generals add their trait
 // modifiers and skill modifiers (static_modifiers/character.txt). Country combat values are summed from base values,
-// advances, laws, privileges, timed modifiers, societal values, army tradition and war exhaustion; the scenario's
+// advances, laws, privileges, reforms, timed modifiers, societal values, army tradition and war exhaustion; the scenario's
 // "notes" list every source so they can be checked against the game's military tab.
 const fs = require('fs');
 const path = require('path');
@@ -42,14 +42,16 @@ const FIELD = {
 // army_<category>_<build|reinforce|maintenance>_cost_modifier -> costMod.<kind>.<category>
 const CAT_KEY = { light_infantry: 'li', heavy_infantry: 'hi', light_cavalry: 'lc', heavy_cavalry: 'hc', artillery: 'art', auxiliary: 'aux' };
 for (const [k, c] of Object.entries(CAT_KEY)) for (const kind of ['build', 'reinforce', 'maintenance']) FIELD[`army_${k}_${kind}_cost_modifier`] = `costMod.${kind}.${c}`;
-const autoMods = loadDb('in_game/common/auto_modifiers');
-const advances = loadDb('in_game/common/advances');
-const laws = loadDb('in_game/common/laws');
-const privileges = loadDb('in_game/common/estate_privileges');
-const societal = loadDb('in_game/common/societal_values');
-const traits = loadDb('in_game/common/traits');
+const autoMods = loadDb('in_game/common/auto_modifiers', { dlc: true });
+const advances = loadDb('in_game/common/advances', { dlc: true });
+const laws = loadDb('in_game/common/laws', { dlc: true });
+const privileges = loadDb('in_game/common/estate_privileges', { dlc: true });
+const societal = loadDb('in_game/common/societal_values', { dlc: true });
+const reforms = loadDb('in_game/common/government_reforms', { dlc: true });
+const religions = loadDb('in_game/common/religions', { dlc: true });
+const traits = loadDb('in_game/common/traits', { dlc: true });
 const staticMods = { ...loadDb('main_menu/common/static_modifiers') };
-const ranks = loadDb('in_game/common/location_ranks');
+const ranks = loadDb('in_game/common/location_ranks', { dlc: true });
 const policies = {};
 for (const law of Object.values(laws)) for (const [k, v] of law) if (Array.isArray(v) && get(v, 'country_modifier')) policies[k] = v;
 
@@ -100,6 +102,7 @@ function countryStats(id) {
 	for (const adv of Object.keys(c.researched_advances || {})) addBlock(acc, notes, `advance ${adv}`, advances[adv]);
 	for (const [law, v] of Object.entries((c.government || {}).implemented_laws || {})) addBlock(acc, notes, `law ${law} = ${v.object}`, get(policies[v.object] || [], 'country_modifier'));
 	for (const p of [].concat((c.government || {}).implemented_privileges || [])) addBlock(acc, notes, `privilege ${p.object}`, get(privileges[p.object] || [], 'country_modifier'));
+	for (const r of [].concat((c.government || {}).implemented_reforms || [])) addBlock(acc, notes, `reform ${r.object}`, get(reforms[r.object] || [], 'country_modifier'));
 	for (const t of [].concat((c.timed_modifiers || {}).timed_modifiers || [])) addBlock(acc, notes, `timed modifier ${t.modifier}`, staticMods[t.modifier], +(t.size || 1));
 	for (const [sv, val] of Object.entries((c.government || {}).societal_values || {})) {
 		const x = +val; if (!Number.isFinite(x) || x <= -999 || !x || !societal[sv]) continue;
@@ -107,6 +110,9 @@ function countryStats(id) {
 	}
 	const out = { tactics: 0, movementCost: 0 };
 	for (const [f, x] of Object.entries(acc)) setField(out, f, x);
+	// the engine compares these for damage against heretics and heathens
+	const rel = c.primary_religion !== undefined ? save.entry('religion_manager', c.primary_religion) : null, relKey = rel && (rel.key || rel.definition);
+	if (relKey) { out.religion = relKey; const g = get(religions[relKey] || [], 'group'); if (g) out.religionGroup = g; }
 	return {
 		tag: (c.country_name && c.country_name.name) || c.country_name, stats: out, notes,
 		// monthly_manpower = net change a month (income minus the upkeep of all the country's armies)
@@ -237,7 +243,8 @@ const sideArmies = list => list.map(a => {
 	const cid = a.u.country;
 	const cs = countryCache[cid] ??= countryStats(cid);
 	let code = cs.tag;
-	const gen = a.u.leader ? generalMods(a.u.leader) : null;
+	// --no-general: country values alone, for runs that give both sides the same general
+	const gen = a.u.leader && !args.includes('--no-general') ? generalMods(a.u.leader) : null;
 	if (gen) {
 		code = `${cs.tag} (${gen.name})`;
 		const st = JSON.parse(JSON.stringify(cs.stats));
