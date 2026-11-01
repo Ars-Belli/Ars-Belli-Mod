@@ -278,6 +278,10 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - `economy.js` can value manpower (`@mv`, `@from`) and `--unlock` advances. Armories first thing put Castile in debt; best for year 50 is economy to year 30, then armories.
 - Open: Morocco's manpower, save 39 a month, simulator 15.
 
+### 3v. Iberia MP playtest changes (2026-11-01, on update/1.4, not played yet)
+- Test ran Workshop game.1.4.6.mod.27, game files same as update/1.4 then. Saves `MP_GRA_*_2daa983e-*`. User = GRA.
+- Levy focus: Designated Instruction +30% -> +15% (`regular_levy_training` in focus_data.js).
+
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.
 - The real block is levies. The army list refuses any army with a levy, mercenary or prisoner regiment; vanilla's comment says the lend silently no-ops on levies. Three 1.4 saves: 5 of 76, 8 of 76, 9 of 96 subject armies can be lent, 2-4% of regiments (`analysis/meta_1.4/subject_armies.js`). Liberty desire is not it: 342 of 354 subjects are under 25.

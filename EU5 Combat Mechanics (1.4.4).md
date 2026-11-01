@@ -751,7 +751,7 @@ No stack wipes in any cell, even at 3:1. What it costs:
 
 ## 14. Ars Belli changes that touch combat
 
-- Levy combat efficiency on the focus picks: Designated Instruction +30% (worth +7.5% levy damage vs regulars), Nationalistic Enthusiasm +10%.
+- Levy combat efficiency on the focus picks: Designated Instruction +15% (worth +3.75% levy damage vs regulars; +30% until 2026-11-01), Nationalistic Enthusiasm +10%.
 - Levy focus, Enforced Service: Nobles Levy Size +100% (nobles raise the cavalry levies). Levy knights (Mailed Knights, Plated Knights, Cavaliers…) take 25% less strength and morale damage than regular heavy cavalry, which offsets part of the levy penalties.
 - Army Morale Movement Cost −0.14% on Trained March (Quality) and Unrelenting Advance (Maneuver); see section 7 for what it is worth.
 - `high_horde_unity`: discipline +5% (vanilla +10%). `horde_army_expectation`: land morale −10% (vanilla −50%).

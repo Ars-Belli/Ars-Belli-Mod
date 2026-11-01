@@ -36,7 +36,7 @@ module.exports = {
     { id: 'levy', art: 'institutions/feudalism', name: 'Levy', desc: 'Larger and better levies, raised for the army and the fleet alike.', adv: [
       ['enforced_service', 'global_levy_size_modifier = 0.20\nlevy_recovery_modifier = 0.20\nnobles_estate_levy_size = 1.00'], // nobles raise the knights (cavalry levies)
       ['open_levy_standards', 'wrong_culture_levy_size = 0.15'],
-      ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.30'],
+      ['regular_levy_training', 'levy_combat_efficiency_modifier = 0.15'],
       ['battlefield_commisions', 'army_tradition_from_battle = 1.0\nnavy_tradition_from_battle = 1.0'],
       ['abm_local_militias', 'global_levy_recruitment_speed_modifier = 0.33\nlevy_maintenance_modifier = -0.5', { icon: 'regimental_system', name: 'Local Militias', desc: 'Townsmen and villagers drilled on the green each Sunday can be called to arms quickly and cost little to keep.' }],
       ['abm_common_foot', 'army_heavy_infantry_power = 0.10\narmy_light_infantry_power = 0.10', { icon: 'drill_army_advance', name: 'Common Foot', desc: 'Most of our levies march on foot. Taught to keep their ranks with pike and bow, they stand their ground far better than a rabble.' }],
