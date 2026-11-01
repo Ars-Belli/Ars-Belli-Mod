@@ -259,7 +259,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 ### 3q. Battle length and armies leaving a battle (2026-10-31)
 - Rules, table, side effects: `EU5 Combat Mechanics (1.4.4).md` 11d. Scripts, raw results, commands: `.tools/scripts/battle_sim/analysis/battle_length/`. Model: `simulateScenario(scn, { rotate })`.
 - Leaving a battle is a plain move order, free, gated only by the BATTLE's age (`MINIMUM_COMBAT_DAYS` + `retreat_delay`). No script hook fires when an army leaves. Don't re-investigate.
-- Slower armies barely help. ACTIVE since 2026-11-01 in `01_abm_defines.txt`: both land damage x2, `LAND_MORALE_DAMAGE_MODIFIER` 0.5, `LAND_STRENGTH_DAMAGE_MODIFIER` 0.08. Battles about 40% shorter, infantry relay 62%, cavalry relay 96% with the slower armies. Before release rerun focus and army balance.
+- Slower armies barely help. ACTIVE since 2026-11-01 in `01_abm_defines.txt`: both land damage x2, `LAND_MORALE_DAMAGE_MODIFIER` 0.5, `LAND_STRENGTH_DAMAGE_MODIFIER` 0.08. Battles about 40% shorter, infantry relay 58%, cavalry relay 96% with the slower armies and heavy infantry 2.25. Before release rerun focus and army balance.
 - The first version of this (2026-10-30) ran without the engage limit and said infantry relay wins 45% and damage x2 is enough. Wrong: 97%, and x2 leaves 61%. Those runs are in `results/pre_fix`.
 - Hourly ticks cannot return in a mod: combat doc section 13.
 
@@ -290,8 +290,8 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Speed: ARMY 0.9 -> 0.675, NAVY 3.525 -> 2.64375. Numbers mine, user gave none.
 - Battles: SHORTER, both land damage x2, the user's pick. `to change.txt` says longer; x2/3 and then morale x4 + strength x3 were tried first and reversed the same day. 30 v 30: infantry II 34 to 21 days, cavalry II 39 to 23, infantry V 19 to 13. `engine.js` holds the mod's modifiers, battle_length scripts reset to vanilla.
 - Simulator: `units.json` + location_sim `data.json` rebuilt. `build_units.js` loads DLC via loadDb so TRY_INJECT binds.
-- Big stacks: morale x4 + strength x3 was dropped because infantry V 7 armies v 5 won only 49% (vanilla 100%), with 56% of the loser's reserve unused. At both x2: 6 v 6 39 days v 69, 7 v 5 64%, mixed age V 78%, infantry II 100%, cavalry 99%. Combat doc 11d, `big_battles.js`, `big_settings.js`. Not tested in game.
-- Why age V stacks stall: heavy infantry reserves join at combat speed 2 x 0.1 a day. Heavy infantry 3 in unit_categories takes infantry V 7 v 5 from 64% to 100%, 6 v 6 45 days, 67% lost. Holding armies next door is worse. `reserve_speed.js`. Tested only, game value unchanged, decision with the user.
+- Big stacks: morale x4 + strength x3 was dropped because infantry V 7 armies v 5 won only 49% (vanilla 100%), with 56% of the loser's reserve unused. Now, both x2 and heavy infantry 2.25: 6 v 6 44 days v 69, 7 v 5 81%, 7 v 6 69%, mixed age V 91%, infantry II 100%, cavalry 99%. Combat doc 11d, `big_battles.js`, `big_settings.js`. Not tested in game.
+- Heavy infantry combat speed 2 -> 2.25: `in_game/common/unit_categories/abm_army_heavy_infantry.txt`, REPLACE with the full block, the user's number. Age V stacks stall because reserves join at combat speed x 0.1 a day. Infantry V 7 v 5 at 2 / 2.25 / 2.5 / 3: 64 / 81 / 91 / 100%. Light infantry needs nothing, 98-100%. Holding armies next door is worse. `reserve_speed.js`. REPLACE binds in unit_categories: 58 of 67 armies with auxiliaries in the 1371 save match the mod's 7000 storage. Check in game: a Musketeer tooltip shows 2.25.
 - Public battle sim page NOT republished: players on mod.27 until next release. Republish at release.
 - Food: combat doc section 8. No mod cause. Full-size rule, regiment supply weight, retreat food loss.
 - Castile against Morocco after 2%, 400 men and both x2: start 40/11 to 34/8, as they stand 95/68 to 98/78, full levies 61/23 to 77/42. castile_morocco README.

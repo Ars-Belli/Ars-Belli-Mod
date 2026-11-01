@@ -1,4 +1,4 @@
-// 6 and 7 armies of 30 regiments a side, before (mod.27: vanilla damage and speed) against now (both land damage x2, armies x0.75):
+// 6 and 7 armies of 30 regiments a side, before (mod.27: vanilla damage and speed) against now (both land damage x2, heavy infantry combat speed 2.25, armies x0.75):
 // how long the battle runs, who wins, what it costs, how much of the stack gets to fight. Then the relay at the same sizes.
 //   node big_battles.js [battles a seat, default 150]
 const os = require('os');
@@ -10,7 +10,7 @@ const N = (isMainThread ? +process.argv[2] : workerData.N) || 150;
 const GEN = { adm: 60, dip: 59, mil: 61 };
 const q = { moraleMod: .3 }, better = { ...q, discipline: 0.05 };
 // t: how many times longer a march takes
-const SET = [['before', { STR_MOD: 0.04, MOR_MOD: 0.25 }, 1], ['now', { STR_MOD: 0.08, MOR_MOD: 0.5 }, 4 / 3]];
+const SET = [['before', { STR_MOD: 0.04, MOR_MOD: 0.25, HI_CS: 2 }, 1], ['now', { STR_MOD: 0.08, MOR_MOD: 0.5, HI_CS: 2.25 }, 4 / 3]];
 const UNITS = [
 	['Infantry II', [['generic:hi:2', 30]]],
 	['Cavalry III', [['generic:hc:3', 30]]],
@@ -52,7 +52,7 @@ function run(units, m, t) {
 }
 
 if (!isMainThread) {
-	parentPort.on('message', ({ id, si, ui, mi, zi }) => { Object.assign(D, BASE, SET[si][1]); parentPort.postMessage({ id, r: zi == null ? run(UNITS[ui][1], MATCH[mi][1], SET[si][2]) : run(SIZE_UNITS[ui][1], { ra: SIZE[zi][0], rb: SIZE[zi][1] }, SET[si][2]) }); });
+	parentPort.on('message', ({ id, si, ui, mi, zi }) => { Object.assign(D, BASE, SET[si][1]); S.CAT.hi.cs = SET[si][1].HI_CS; parentPort.postMessage({ id, r: zi == null ? run(UNITS[ui][1], MATCH[mi][1], SET[si][2]) : run(SIZE_UNITS[ui][1], { ra: SIZE[zi][0], rb: SIZE[zi][1] }, SET[si][2]) }); });
 } else (async () => {
 	const jobs = UNITS.flatMap((_, ui) => MATCH.flatMap((__, mi) => SET.map((___, si) => ({ ui, mi, si }))));
 	const sizeFrom = jobs.length;
@@ -71,7 +71,7 @@ if (!isMainThread) {
 	});
 	const p = x => `${(x * 100).toFixed(0)}%`;
 	console.log(`${N * 2} battles a cell, both seats. Armies of 30 regiments, +30% morale, 50 experience, generals 60/59/61, frontage 10 unless named.`);
-	console.log('before = mod.27, vanilla damage and speed. now = both land damage x2, armies x0.75. First side named is the one the win rate is for; lost = share of its men, then of the other side\'s.');
+	console.log('before = mod.27, vanilla damage and speed. now = both land damage x2, heavy infantry combat speed 2.25, armies x0.75. First side named is the one the win rate is for; lost = share of its men, then of the other side\'s.');
 	console.log('reserve = the loser\'s regiments still waiting to fight when the battle ended. Army by army: one every 5 days before, 7 days now, because armies are slower.');
 	UNITS.forEach(([un], ui) => {
 		console.log(`\n=== ${un}`);

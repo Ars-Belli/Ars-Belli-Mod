@@ -60,6 +60,7 @@ function allIn(o, seed, n) {
 const runJob = job => {
 	for (const k of Object.keys(D)) if (!(k in BASE)) delete D[k];
 	Object.assign(D, BASE, job.over || {});
+	S.CAT.hi.cs = (job.over && job.over.HI_CS) || 2;
 	return job.kind === 'allin' ? allIn(job.o, job.seed, job.n) : cell(job.o, job.cfg, job.seed, job.n);
 };
 

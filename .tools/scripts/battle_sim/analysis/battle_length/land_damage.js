@@ -10,7 +10,8 @@ const N = (isMainThread ? +process.argv[2] : workerData.N) || 300;
 const GEN = { adm: 60, dip: 59, mil: 61 };
 const SET = [
 	['vanilla', {}],
-	['both x2 (mod)', { MOR_MOD: 0.5, STR_MOD: 0.08 }],
+	['both x2, heavy infantry 2.25 (mod)', { MOR_MOD: 0.5, STR_MOD: 0.08, HI_CS: 2.25 }],
+	['both x2', { MOR_MOD: 0.5, STR_MOD: 0.08 }],
 	['morale x4 + strength x3', { MOR_MOD: 1, STR_MOD: 0.12 }],
 	['both x0.8', { DAMAGE_MULT: 0.096 }],
 	['both x0.75', { DAMAGE_MULT: 0.09 }],
@@ -45,7 +46,7 @@ function run([, u, a, b, better]) {
 	return { w: w / t, d: d / t, wipe: wipe / t, sh: sh / t, la: lostA / startA, lb: lostB / startB };
 }
 if (!isMainThread) {
-	parentPort.on('message', ({ id, si, ci }) => { Object.assign(D, BASE, SET[si][1]); parentPort.postMessage({ id, r: run(SCN[ci]) }); });
+	parentPort.on('message', ({ id, si, ci }) => { Object.assign(D, BASE, SET[si][1]); S.CAT.hi.cs = SET[si][1].HI_CS || 2; parentPort.postMessage({ id, r: run(SCN[ci]) }); });
 } else {
 	const jobs = SET.flatMap((_, si) => SCN.map((__, ci) => ({ si, ci })));
 	const threads = Math.min(jobs.length, +process.env.EU5_THREADS || os.cpus().length);

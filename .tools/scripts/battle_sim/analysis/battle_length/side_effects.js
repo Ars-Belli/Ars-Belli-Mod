@@ -41,7 +41,7 @@ function run([, u, a, b, better]) {
 	return { w: w / t, d: d / t, wipe: wipe / t, sh: sh / t, la: lostA / startA, lb: lostB / startB };
 }
 if (!isMainThread) {
-	parentPort.on('message', ({ id, si, ci }) => { Object.assign(D, BASE, SET[si][1]); parentPort.postMessage({ id, r: run(SCN[ci]) }); });
+	parentPort.on('message', ({ id, si, ci }) => { Object.assign(D, BASE, SET[si][1]); S.CAT.hi.cs = 2; parentPort.postMessage({ id, r: run(SCN[ci]) }); });
 } else {
 	const jobs = SET.flatMap((_, si) => SCN.map((__, ci) => ({ si, ci })));
 	const threads = Math.min(jobs.length, +process.env.EU5_THREADS || os.cpus().length);

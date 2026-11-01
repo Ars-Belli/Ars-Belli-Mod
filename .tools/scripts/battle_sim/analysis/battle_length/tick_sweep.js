@@ -40,6 +40,7 @@ if (!isMainThread) {
 	parentPort.on('message', ({ id, si, ci }) => {
 		for (const k of Object.keys(D)) if (!(k in BASE)) delete D[k];
 		Object.assign(D, BASE, CONFIGS[ci][1].over);
+		S.CAT.hi.cs = 2;
 		const [, unit, n] = SCN[si];
 		parentPort.postMessage({ id, a: run(unit, n, 0.05), b: run(unit, n, 0.10), phase: D.DAYS_PER_PHASE });
 	});

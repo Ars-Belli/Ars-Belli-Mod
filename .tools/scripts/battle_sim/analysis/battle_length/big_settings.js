@@ -10,7 +10,7 @@ const GEN = { adm: 60, dip: 59, mil: 61 }, q = { moraleMod: .3 };
 const SET = [
 	['vanilla', 0.04, 0.25],
 	['both x1.5', 0.06, 0.375],
-	['both x2 (now)', 0.08, 0.5],
+	['both x2', 0.08, 0.5],
 	['both x2.5', 0.1, 0.625],
 	['both x3', 0.12, 0.75],
 	['morale x3, strength x2', 0.08, 0.75],
@@ -35,6 +35,7 @@ function cell(u, a, b, ca) {
 if (!isMainThread) {
 	parentPort.on('message', ({ id, si, ui }) => {
 		Object.assign(D, BASE, { STR_MOD: SET[si][1], MOR_MOD: SET[si][2] });
+		S.CAT.hi.cs = 2; // the comparison that led to both x2, before heavy infantry went to 2.25
 		const u = UNITS[ui][1];
 		parentPort.postMessage({ id, r: { even: cell(u, 6, 6, q), big: cell(u, 7, 5, q), quality: cell(u, 6, 7, { ...q, discipline: 0.05 }) } });
 	});
@@ -50,7 +51,7 @@ if (!isMainThread) {
 			res[m.id] = m.r;
 			if (--left) return feed(w);
 			workers.forEach(x => x.terminate());
-			console.log(`${N * 2} battles a cell, both seats. Armies of 30 regiments, +30% morale, 50 experience, frontage 10. Reserve = the loser's regiments still waiting when 6 v 6 ended.`);
+			console.log(`${N * 2} battles a cell, both seats. Armies of 30 regiments, +30% morale, 50 experience, frontage 10. Heavy infantry combat speed 2. Reserve = the loser's regiments still waiting when 6 v 6 ended.`);
 			UNITS.forEach(([un], ui) => {
 				console.log(`\n=== ${un}`);
 				console.log('setting'.padEnd(32) + '6v6 days'.padStart(9) + 'lost'.padStart(6) + 'reserve'.padStart(9) + '7v5 wins'.padStart(10) + '6v7 +5% wins'.padStart(14));
