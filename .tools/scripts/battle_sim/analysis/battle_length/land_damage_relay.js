@@ -11,7 +11,9 @@ const SCN = [
 const LEVERS = [
 	['vanilla', {}, 1],
 	['morale x4 + strength x3', { MOR_MOD: 1, STR_MOD: 0.12 }, 1],
-	['mod: that, speed x0.75', { MOR_MOD: 1, STR_MOD: 0.12 }, 4 / 3],
+	['that, speed x0.75', { MOR_MOD: 1, STR_MOD: 0.12 }, 4 / 3],
+	['both land damage x2', { MOR_MOD: 0.5, STR_MOD: 0.08 }, 1],
+	['mod: x2, speed x0.75', { MOR_MOD: 0.5, STR_MOD: 0.08 }, 4 / 3],
 	['speed x0.75', {}, 4 / 3],
 	['both land damage x2/3', { DAMAGE_MULT: 0.08 }, 1],
 	['both land damage x0.5', { DAMAGE_MULT: 0.06 }, 1],

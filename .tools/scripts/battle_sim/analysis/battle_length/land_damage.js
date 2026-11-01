@@ -10,7 +10,8 @@ const N = (isMainThread ? +process.argv[2] : workerData.N) || 300;
 const GEN = { adm: 60, dip: 59, mil: 61 };
 const SET = [
 	['vanilla', {}],
-	['morale x4 + strength x3 (mod)', { MOR_MOD: 1, STR_MOD: 0.12 }],
+	['both x2 (mod)', { MOR_MOD: 0.5, STR_MOD: 0.08 }],
+	['morale x4 + strength x3', { MOR_MOD: 1, STR_MOD: 0.12 }],
 	['both x0.8', { DAMAGE_MULT: 0.096 }],
 	['both x0.75', { DAMAGE_MULT: 0.09 }],
 	['both x2/3', { DAMAGE_MULT: 0.08 }],

@@ -676,11 +676,11 @@ The question: armies leave a battle, rest a location away and walk back in, and 
 | Vanilla | 51 days, 97% | 98 days, 94% | 90 days, 100% | 42–76% |
 | Armies 25% slower | 51 days, 90% | 98 days, 95% | 90 days, 100% | same |
 | Armies 50% slower | 51 days, 83% | 98 days, 93% | 90 days, 100% | same |
-| Both land damage ×2 | 32 days, 61% | 60 days, 72% | 62 days, 99% | 54–87% |
+| **Both land damage ×2** | **32 days, 61%** | **60 days, 72%** | **62 days, 99%** | **54–87%** |
 | Both land damage ×3 | 22 days, 49% | 46 days, 59% | 47 days, 90% | 57–90% |
 | Morale damage ×2 | 30 days, 56% | 53 days, 100% | 58 days, 100% | 28–47% |
 | Morale damage ×4 | 15 days, 52% | 31 days, 57% | 36 days, 83% | 14–25% |
-| **Morale ×4 + strength ×3** | **16 days, 47%** | **35 days, 61%** | **39 days, 84%** | **40–75%** |
+| Morale ×4 + strength ×3 | 16 days, 47% | 35 days, 61% | 39 days, 84% | 40–75% |
 | Morale ×5 + strength ×4 | 14 days, 51% | 29 days, 55% | 33 days, 71% | 41–73% |
 
 Taking an army out needs no replacement either: on the same terms, 5 armies of 30 infantry win 89–100% with the sensible thresholds (leave under 35% morale), and 3 armies of 30 cavalry win 100%.
@@ -694,7 +694,7 @@ Taking an army out needs no replacement either: on the same terms, 5 armies of 3
 
 **What doesn't work:** raising `MINIMUM_COMBAT_DAYS` (15 changes nothing, 30 costs infantry about 10 points), halving morale recovery (cavalry stays at 100%), and `COMBAT_DAILY_MORALE_TICK` ×2 (battles 15–30% shorter, relay unchanged).
 
-**The shorter-battles setting, active in `01_abm_defines.txt` since 2026-11-01 (section 14):** `LAND_MORALE_DAMAGE_MODIFIER` 0.25 → 1.0 and `LAND_STRENGTH_DAMAGE_MODIFIER` 0.04 → 0.12. Only the land hit function reads them (`0x142481f60`), so sieges and navies are untouched; `COMBAT_DAMAGE_MULT` also reaches sieges (`0x143475bf0`). Losses stay close to vanilla at normal sizes (1,200 battles a cell, +30% morale, 50 experience):
+**The stronger option, not used. The mod runs both ×2, see section 14:** `LAND_MORALE_DAMAGE_MODIFIER` 0.25 → 1.0 and `LAND_STRENGTH_DAMAGE_MODIFIER` 0.04 → 0.12. Only the land hit function reads them (`0x142481f60`), so sieges and navies are untouched; `COMBAT_DAMAGE_MULT` also reaches sieges (`0x143475bf0`). Losses stay close to vanilla at normal sizes (1,200 battles a cell, +30% morale, 50 experience):
 
 | Battle | Days | Men lost, first side | Men lost, second side |
 |---|---|---|---|
@@ -706,11 +706,11 @@ Taking an army out needs no replacement either: on the same terms, 5 armies of 3
 
 No stack wipes in any cell, even at 3:1. What it costs:
 - **Very big stacks break before their reserves are used.** Infantry 120 v 120 on frontage 10: shattered retreats fall from 100% to 8% and men lost from 59% to 40%, because the line breaks first. Big stacks are worth less.
-- **At 6 and 7 armies numbers stop counting for late infantry** (`results/big_battles.txt`, 600 battles a cell, armies of 30, frontage 10). Infantry V at the mod's setting: 7 armies beat 5 in 49% of battles, 100% in vanilla, and 6 at +5% discipline beat 7 in 59%, 8% in vanilla. The battle ends in 16 days with 56% of the loser's regiments still waiting. At 7:5 odds the bigger side wins 93% at 42 v 30, 84% at 84 v 60, 56% at 126 v 90, 50% at 168 v 120. Infantry II 7 v 5 is 72%, cavalry stays at 100%. An army coming in army by army now loses: the side that arrives whole wins 96%, 21% in vanilla, where a waiting reserve drains morale. Both damage ×1.5 is the strongest setting that keeps numbers: 7 v 5 91%, 6 v 6 at 54 days against vanilla's 69 (`results/big_settings.txt`). Not tested in game.
+- **At 6 and 7 armies numbers stop counting for late infantry** (`results/big_battles.txt`, 600 battles a cell, armies of 30, frontage 10). At this option infantry V 7 armies beat 5 in 49% of battles, 100% in vanilla, and 6 at +5% discipline beat 7 in 59%, 8% in vanilla. The battle ends in 16 days with 56% of the loser's regiments still waiting, so the mod took both ×2 instead (`results/big_settings.txt`). Both ×2, armies 25% slower: 6 v 6 39 days against vanilla's 69, 7 v 5 64%, 6 at +5% discipline beat 7 in 65%, 23% of the loser's regiments still waiting. Mixed age V is 78%, infantry II 100%, cavalry III 99%. At 7:5 odds infantry V's bigger side wins 95% at 42 v 30, 98% at 84 v 60, 91% at 126 v 90, 79% at 168 v 120, 64% at 210 v 150. An army coming in army by army now loses against one that arrives whole: the whole side wins 79%, 21% in vanilla, where a waiting reserve drains morale. Not tested in game.
 - **Quality decides a little less.** +5% discipline wins 66% → 62% (infantry 30 v 30), 73% → 63% (120 v 120), 70% → 62% (cavalry 30 v 30).
 - **Cavalry keeps some edge.** 84% in the table, and a player who adapts how they swap gets more: 94% at both damage ×4 (`levers.txt`). The infantry case, which is what players reported, goes.
 
-**Limits.** The opponent never reacts, forces are even, there is no artillery, days per location are assumed, and none of this is tested in game. With the mod's armies and navies 25% slower on top, the relay is 50% / 58% / 75% (`results/land_damage_relay.txt`). Rerun the focus and army balance before releasing the change: sections 11 to 11b and the focus numbers predate it.
+**Limits.** The opponent never reacts, forces are even, there is no artillery, days per location are assumed, and none of this is tested in game. At the mod's both ×2 with armies and navies 25% slower, the relay is 62% / 72% / 96% (`results/land_damage_relay.txt`), and at 6 and 7 armies 55–59% on infantry V, 98–100% on cavalry III. Rerun the focus and army balance before releasing the change: sections 11 to 11b and the focus numbers predate it.
 
 ---
 
@@ -776,7 +776,7 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - D009's Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen, vanilla 10% (section 11b).
 - All six 200-man land levies on tribesmen raise 400-man regiments (`abm_tribal_levy_sizes.txt`, 2026-11-01): Tribal Cavalry, Tribal Camelry, Zenata, Sanhaja, Tuareg, Hilali. Same men from the same pops, half as many regiments. At 400 men Tribal Cavalry would out-power Atlas Infantry in the levy pick, so `REPLACE:levy_tribal_cavalry` keeps Masmuda tribesmen off it.
 - Mercenary hiring costs back to vanilla (2026-10-28).
-- Land damage modifiers: `LAND_STRENGTH_DAMAGE_MODIFIER` 0.12, `LAND_MORALE_DAMAGE_MODIFIER` 1.0 (2026-11-01), strength ×3 and morale ×4 of vanilla, the setting from section 11d. The formulas in section 2 show vanilla's 0.04 and 0.25; `engine.js` uses the mod's. Infantry II 34 → 13 days, cavalry II 39 → 14, infantry V 19 → 9. A side loses 50% of its men, not 53%. +5% discipline wins 66% on infantry and 60% on cavalry, not 70%. Raw numbers in `analysis/battle_length/results/land_damage.txt`.
+- Land damage modifiers doubled: `LAND_STRENGTH_DAMAGE_MODIFIER` 0.08, `LAND_MORALE_DAMAGE_MODIFIER` 0.5 (2026-11-01). The formulas in section 2 show vanilla's 0.04 and 0.25; `engine.js` uses the mod's. 30 v 30: infantry II 34 → 21 days, cavalry II 39 → 23, infantry V 19 → 13. 6 v 6: infantry II 106 → 73, cavalry III 110 → 80, infantry V 69 → 39. A side loses 58% of its men, not 53%. +5% discipline wins 67% on infantry and 63% on cavalry, not 70%. Section 11d has why not more. Raw numbers in `analysis/battle_length/results/land_damage.txt` and `big_battles.txt`.
 - Armies and navies 25% slower: `ARMY_MOVEMENT_SPEED` 0.675, `NAVY_MOVEMENT_SPEED` 2.64375 (`0x14351cef0` multiplies each regiment's speed by these). Morale lost to marching is per day, so a march costs a third more morale.
 
 ---

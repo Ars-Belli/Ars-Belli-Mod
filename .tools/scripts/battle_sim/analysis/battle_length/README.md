@@ -2,9 +2,9 @@
 
 Everything behind section 11d of `EU5 Combat Mechanics (1.4.4).md`. Asked on 2026-10-30: would slower armies stop endless battles, and armies stepping out of a battle to rest and coming back? Numbers are 1.4 only, run 2026-10-31 with the engage limit, the fixed dice timing and `units.json` from 1.4.6.
 
-**Answer:** slower armies barely help. Raising the land damage modifiers does: `LAND_MORALE_DAMAGE_MODIFIER = 1.0` and `LAND_STRENGTH_DAMAGE_MODIFIER = 0.12`, active since 2026-11-01.
+**Answer:** slower armies barely help. Raising the land damage modifiers does. The mod runs both at ×2 since 2026-11-01: `LAND_MORALE_DAMAGE_MODIFIER = 0.5`, `LAND_STRENGTH_DAMAGE_MODIFIER = 0.08`.
 
-**2026-11-01:** after the Iberia playtest the mod runs those modifiers with armies and navies at 0.75. 2/3 damage was tried first and reversed the same day: it took the relay to 100%. Infantry II 34 to 13 days, cavalry II 39 to 14, infantry V 19 to 9. Relay with the slower armies: 50% / 58% / 75%. `engine.js` holds the mod's modifiers, and the scripts here reset their baseline to vanilla, so `vanilla` rows are vanilla and the tables in `results/` can be rerun.
+**2026-11-01:** after the Iberia playtest the mod runs those modifiers with armies and navies at 0.75. Two settings came before it the same day: 2/3 damage took the relay to 100%, and morale ×4 + strength ×3 left 6 and 7 armies of age V infantry unable to use their reserves, 7 v 5 49%. Both ×2: infantry II 34 to 21 days, cavalry II 39 to 23, infantry V 19 to 13. Relay with the slower armies: 62% / 72% / 96%. `engine.js` holds the mod's modifiers, and the scripts here reset their baseline to vanilla, so `vanilla` rows are vanilla and the tables in `results/` can be rerun.
 
 ## The model
 

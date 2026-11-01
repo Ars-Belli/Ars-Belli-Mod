@@ -259,7 +259,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 ### 3q. Battle length and armies leaving a battle (2026-10-31)
 - Rules, table, side effects: `EU5 Combat Mechanics (1.4.4).md` 11d. Scripts, raw results, commands: `.tools/scripts/battle_sim/analysis/battle_length/`. Model: `simulateScenario(scn, { rotate })`.
 - Leaving a battle is a plain move order, free, gated only by the BATTLE's age (`MINIMUM_COMBAT_DAYS` + `retreat_delay`). No script hook fires when an army leaves. Don't re-investigate.
-- Slower armies barely help. ACTIVE since 2026-11-01 in `01_abm_defines.txt`: `LAND_MORALE_DAMAGE_MODIFIER` 1.0, `LAND_STRENGTH_DAMAGE_MODIFIER` 0.12. Battles about half as long or shorter, losses close to vanilla at normal sizes, infantry relay gone, cavalry relay 75% with the slower armies. Before release rerun focus and army balance.
+- Slower armies barely help. ACTIVE since 2026-11-01 in `01_abm_defines.txt`: both land damage x2, `LAND_MORALE_DAMAGE_MODIFIER` 0.5, `LAND_STRENGTH_DAMAGE_MODIFIER` 0.08. Battles about 40% shorter, infantry relay 62%, cavalry relay 96% with the slower armies. Before release rerun focus and army balance.
 - The first version of this (2026-10-30) ran without the engage limit and said infantry relay wins 45% and damage x2 is enough. Wrong: 97%, and x2 leaves 61%. Those runs are in `results/pre_fix`.
 - Hourly ticks cannot return in a mod: combat doc section 13.
 
@@ -288,12 +288,12 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Strait: `in_game/events/DHE/flavor_cas_rio_salado.txt` same-name copy, calls to .3 (Granada) and .4 (Portugal) removed, events stay defined. Refuse cost -20 prestige -20 legitimacy, not -50 stability. Situation's own Force Tribute and Demand War Entry kept, Morocco's `mor_vassalize_granada` kept.
 - Castile's Vassalize Granada blocked only while Granada is a player: `in_game/common/generic_actions/battle_for_the_strait.txt` is a same-name copy of the D009 file, the FIRST mod file to shadow a DLC file. One check added to `vassalize_granada`'s allow, `c:GRA ?= { is_ai = yes }`, tooltip `abm_bfts_granada_is_ai`. The button stays and greys out. An outright removal with a copied panel was tried first and dropped the same day. Event .31 and Morocco's action unchanged. Against a played Granada Castile's situation win needs Granada conquered. Check in game: with a played Granada the button greys out and names that reason. If not, the copy did not bind.
 - Speed: ARMY 0.9 -> 0.675, NAVY 3.525 -> 2.64375. Numbers mine, user gave none.
-- Battles: SHORTER, the 11d setting, morale x4, strength x3. `to change.txt` says longer; x2/3 was tried first and the user reversed it the same day. Infantry II 34 to 13 days, cavalry II 39 to 14, infantry V 19 to 9. `engine.js` holds the mod's modifiers, battle_length scripts reset to vanilla.
+- Battles: SHORTER, both land damage x2, the user's pick. `to change.txt` says longer; x2/3 and then morale x4 + strength x3 were tried first and reversed the same day. 30 v 30: infantry II 34 to 21 days, cavalry II 39 to 23, infantry V 19 to 13. `engine.js` holds the mod's modifiers, battle_length scripts reset to vanilla.
 - Simulator: `units.json` + location_sim `data.json` rebuilt. `build_units.js` loads DLC via loadDb so TRY_INJECT binds.
-- Big stacks at the 11d setting: infantry V 7 armies v 5 wins 49% (vanilla 100%), line breaks with 56% of the loser's reserve unused, numbers fade from about 4 armies. Infantry II 72%, cavalry 100%. Both x1.5 keeps numbers (91%, 6 v 6 54 days v 69). Combat doc 11d, `big_battles.js`, `big_settings.js`. Open decision for the user. Not tested in game.
+- Big stacks: morale x4 + strength x3 was dropped because infantry V 7 armies v 5 won only 49% (vanilla 100%), with 56% of the loser's reserve unused. At both x2: 6 v 6 39 days v 69, 7 v 5 64%, mixed age V 78%, infantry II 100%, cavalry 99%. Combat doc 11d, `big_battles.js`, `big_settings.js`. Not tested in game.
 - Public battle sim page NOT republished: players on mod.27 until next release. Republish at release.
 - Food: combat doc section 8. No mod cause. Full-size rule, regiment supply weight, retreat food loss.
-- Castile against Morocco after 2%, 400 men and shorter battles: start 40/11 to 41/15, as they stand 95/68 to 97/80, full levies 61/23 to 79/51. castile_morocco README.
+- Castile against Morocco after 2%, 400 men and both x2: start 40/11 to 34/8, as they stand 95/68 to 98/78, full levies 61/23 to 77/42. castile_morocco README.
 
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.

@@ -10,11 +10,11 @@ const GEN = { adm: 60, dip: 59, mil: 61 }, q = { moraleMod: .3 };
 const SET = [
 	['vanilla', 0.04, 0.25],
 	['both x1.5', 0.06, 0.375],
-	['both x2', 0.08, 0.5],
+	['both x2 (now)', 0.08, 0.5],
 	['both x2.5', 0.1, 0.625],
 	['both x3', 0.12, 0.75],
 	['morale x3, strength x2', 0.08, 0.75],
-	['morale x4, strength x3 (now)', 0.12, 1],
+	['morale x4, strength x3', 0.12, 1],
 	['morale x2, strength x3', 0.12, 0.5],
 	['morale x1.5, strength x3', 0.12, 0.375],
 	['strength x3 only', 0.12, 0.25],
