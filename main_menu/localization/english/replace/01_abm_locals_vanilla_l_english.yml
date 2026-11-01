@@ -55,3 +55,9 @@
  military_drill_desc: "Pride in the regiment and its colours keeps our soldiers standing where lesser troops would break."
  naval_drill: "Pride of the Fleet"
  naval_drill_desc: "Crews who take pride in their ship hold their nerve under fire and shake off the shock of battle quickly."
+
+ # --- Battle for the Strait: Castile cannot vassalize a played Granada ---
+ # in_game/common/generic_actions/battle_for_the_strait.txt blocks it. The other two name the action.
+ abm_bfts_granada_is_ai: "[GetCountry('GRA').GetNameWithNoTooltip] must be controlled by the AI"
+ BFTS_THRESHOLD_CAS_100_DESC: "[GetCountry('CAS').GetName] dominates the strait outright. They may [ShowGenericActionName('vassalize_granada')] if [GetCountry('GRA').GetNameWithNoTooltip] is controlled by the AI, or [ShowDecisionName('demand_conversion_of_granada')], and once Iberia answers to Christian or Castilian rule, win the [situation|e] in their favor."
+ hint_battle_for_the_strait_hint_text_3: "#T Recommended Actions as [GetCountry('CAS').GetNameWithNoTooltip]:#!\n@arrow_bonus_tier_3! Instruct our [cabinet_with_icon|e] to [ShowCabinetActionName('cas_pressure_andalusi_court')], which pulls influence toward us every month.\n@arrow_bonus_tier_2! Once influence leans #Y 25#! our way, [ShowGenericActionName('cas_force_tribute')] can bind a weakened [GetCountry('GRA').GetNameWithNoTooltip] to us. At #Y 100#!, [ShowGenericActionName('vassalize_granada')] completes the work if [GetCountry('GRA').GetNameWithNoTooltip] is controlled by the AI.\n@arrow_bonus_tier_1! [ShowGenericActionName('cas_reduce_granadan_sovereignty')] and [ShowGenericActionName('cas_dismantle_fortifications')] keep a subject [GetCountry('GRA').GetNameWithNoTooltip] from ever standing on its own again."
