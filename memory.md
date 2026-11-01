@@ -289,8 +289,10 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Castile's Vassalize Granada blocked only while Granada is a player: `in_game/common/generic_actions/battle_for_the_strait.txt` is a same-name copy of the D009 file, the FIRST mod file to shadow a DLC file. One check added to `vassalize_granada`'s allow, `c:GRA ?= { is_ai = yes }`, tooltip `abm_bfts_granada_is_ai`. The button stays and greys out. An outright removal with a copied panel was tried first and dropped the same day. Event .31 and Morocco's action unchanged. Against a played Granada Castile's situation win needs Granada conquered. Check in game: with a played Granada the button greys out and names that reason. If not, the copy did not bind.
 - Speed: ARMY 0.9 -> 0.675, NAVY 3.525 -> 2.64375. Numbers mine, user gave none.
 - Battles: SHORTER, the 11d setting, morale x4, strength x3. `to change.txt` says longer; x2/3 was tried first and the user reversed it the same day. Infantry II 34 to 13 days, cavalry II 39 to 14, infantry V 19 to 9. `engine.js` holds the mod's modifiers, battle_length scripts reset to vanilla.
+- Simulator: `units.json` + location_sim `data.json` rebuilt. `build_units.js` loads DLC via loadDb so TRY_INJECT binds.
 - Public battle sim page NOT republished: players on mod.27 until next release. Republish at release.
 - Food: combat doc section 8. No mod cause. Full-size rule, regiment supply weight, retreat food loss.
+- Castile against Morocco after 2%, 400 men and shorter battles: start 40/11 to 41/15, as they stand 95/68 to 97/80, full levies 61/23 to 79/51. castile_morocco README.
 
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.

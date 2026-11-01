@@ -1,5 +1,7 @@
 # Castile against Morocco, levy against levy (game 1.4.6)
 
+**Rerun 2026-11-01** with the playtest changes: 2% Maghreb rate, 400-man tribal cavalry, shorter land battles (morale damage ×4, strength ×3). `results/levy_battles_1338_04.txt` and `inputs_1338_04.json` are that run; the run described below is kept as `results/levy_battles_1338_04_before_playtest.txt`. Castile win rate weighted by both countries' locations in each terrain, Morocco attacks / Castile attacks, before → after: as they stand 95/68 → 97/80, full levies 61/23 → 79/51, April 1337 start 40/11 → 41/15, equal men 2/0 → 1/0. Battles run 8 to 15 days. At 2/3 damage the start was 19/2, because long battles favour Morocco's better men.
+
 Levy counts come from the country simulator, the battles from the battle simulator, with the Ars Belli 3% Maghreb cavalry rate. Run 2026-10-31. The main run is the save `SP_MOR_1338_04_08_640fb766-...eu5` (`--date 1338_04`). The first run, from `SP_MOR_1337_09_26_85a5e25a-...eu5`, is kept as `results/levy_battles.*`, before men were rounded as the game rounds them.
 
 ## Levy counts

@@ -14,7 +14,7 @@ const ADDITIVE = new Set(['max_strength', 'combat_power', 'frontage', 'combat_sp
 	'bombard_efficiency', 'artillery_barrage', 'damage_taken', 'movement_speed', 'attrition_loss', 'supply_weight']);
 
 const cats = loadDb('in_game/common/unit_categories');
-const types = loadDb('in_game/common/unit_types');
+const types = loadDb('in_game/common/unit_types', { dlc: true }); // with the DLC folders, or a mod TRY_INJECT: on a DLC unit finds no key and is skipped
 // DLC folders (game/dlc/<name>/in_game/common/unit_types) hold units the base folder lacks, e.g. D009's Maghreb and Iberian levies.
 // The mod does not override them, so they are added as they are, never over an existing key.
 const DLC_DIR = path.join(GAME, 'dlc');
