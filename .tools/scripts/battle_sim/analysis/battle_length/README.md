@@ -33,6 +33,7 @@ Standard case: 4 armies of 30 regiments a side, frontage 10, 3 in and 1 away, sw
 | `land_damage_relay.js` | Those settings with slower armies, relay win rate | `land_damage_relay.txt` |
 | `big_battles.js` | 6 and 7 armies, before against now: days, who wins, losses, reserve left, the relay, and 7:5 odds at growing size. 57 s | `big_battles.txt` |
 | `big_settings.js` | Which setting keeps numbers counting at 6 and 7 armies. 1 min | `big_settings.txt` |
+| `reserve_speed.js` | Why they do not: faster reserves, and holding armies next door, at both ×2. 1.5 min | `reserve_speed.txt` |
 
 `levers.js` has a row for the mod's setting that `levers.txt` doesn't yet: the sims were stopped before that rerun.
 

@@ -291,6 +291,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Battles: SHORTER, both land damage x2, the user's pick. `to change.txt` says longer; x2/3 and then morale x4 + strength x3 were tried first and reversed the same day. 30 v 30: infantry II 34 to 21 days, cavalry II 39 to 23, infantry V 19 to 13. `engine.js` holds the mod's modifiers, battle_length scripts reset to vanilla.
 - Simulator: `units.json` + location_sim `data.json` rebuilt. `build_units.js` loads DLC via loadDb so TRY_INJECT binds.
 - Big stacks: morale x4 + strength x3 was dropped because infantry V 7 armies v 5 won only 49% (vanilla 100%), with 56% of the loser's reserve unused. At both x2: 6 v 6 39 days v 69, 7 v 5 64%, mixed age V 78%, infantry II 100%, cavalry 99%. Combat doc 11d, `big_battles.js`, `big_settings.js`. Not tested in game.
+- Why age V stacks stall: heavy infantry reserves join at combat speed 2 x 0.1 a day. Heavy infantry 3 in unit_categories takes infantry V 7 v 5 from 64% to 100%, 6 v 6 45 days, 67% lost. Holding armies next door is worse. `reserve_speed.js`. Tested only, game value unchanged, decision with the user.
 - Public battle sim page NOT republished: players on mod.27 until next release. Republish at release.
 - Food: combat doc section 8. No mod cause. Full-size rule, regiment supply weight, retreat food loss.
 - Castile against Morocco after 2%, 400 men and both x2: start 40/11 to 34/8, as they stand 95/68 to 98/78, full levies 61/23 to 77/42. castile_morocco README.
