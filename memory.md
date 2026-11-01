@@ -281,6 +281,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 ### 3v. Iberia MP playtest changes (2026-11-01, on update/1.4, not played yet)
 - Test ran Workshop game.1.4.6.mod.27, game files same as update/1.4 then. Saves `MP_GRA_*_2daa983e-*`. User = GRA.
 - Levy focus: Designated Instruction +30% -> +15% (`regular_levy_training` in focus_data.js).
+- Event timeout: `NGame.EVENT_MP_TIMEOUT_MONTHS` 3 -> 5. One define for all events. Read only in CEventWindow constructor (`0x147c1bcd0`): date window created + months. Expiry check `0x147c1dd60`. Code does not explain 1.5 month reports. `NDiplomacy.AUTO_TIME_OUT_MONTHS` 2 is diplomacy offers, left alone.
 
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.
