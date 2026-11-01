@@ -706,6 +706,7 @@ Taking an army out needs no replacement either: on the same terms, 5 armies of 3
 
 No stack wipes in any cell, even at 3:1. What it costs:
 - **Very big stacks break before their reserves are used.** Infantry 120 v 120 on frontage 10: shattered retreats fall from 100% to 8% and men lost from 59% to 40%, because the line breaks first. Big stacks are worth less.
+- **At 6 and 7 armies numbers stop counting for late infantry** (`results/big_battles.txt`, 600 battles a cell, armies of 30, frontage 10). Infantry V at the mod's setting: 7 armies beat 5 in 49% of battles, 100% in vanilla, and 6 at +5% discipline beat 7 in 59%, 8% in vanilla. The battle ends in 16 days with 56% of the loser's regiments still waiting. At 7:5 odds the bigger side wins 93% at 42 v 30, 84% at 84 v 60, 56% at 126 v 90, 50% at 168 v 120. Infantry II 7 v 5 is 72%, cavalry stays at 100%. An army coming in army by army now loses: the side that arrives whole wins 96%, 21% in vanilla, where a waiting reserve drains morale. Both damage ×1.5 is the strongest setting that keeps numbers: 7 v 5 91%, 6 v 6 at 54 days against vanilla's 69 (`results/big_settings.txt`). Not tested in game.
 - **Quality decides a little less.** +5% discipline wins 66% → 62% (infantry 30 v 30), 73% → 63% (120 v 120), 70% → 62% (cavalry 30 v 30).
 - **Cavalry keeps some edge.** 84% in the table, and a player who adapts how they swap gets more: 94% at both damage ×4 (`levers.txt`). The infantry case, which is what players reported, goes.
 

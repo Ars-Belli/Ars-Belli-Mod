@@ -31,6 +31,8 @@ Standard case: 4 armies of 30 regiments a side, frontage 10, 3 in and 1 away, sw
 | `tick_sweep.js` | What finer ticks and more dice are worth | `tick_sweep.txt` |
 | `land_damage.js` | The mod's setting, lower land damage, morale drain: days, men lost, what quality is worth | `land_damage.txt` |
 | `land_damage_relay.js` | Those settings with slower armies, relay win rate | `land_damage_relay.txt` |
+| `big_battles.js` | 6 and 7 armies, before against now: days, who wins, losses, reserve left, the relay, and 7:5 odds at growing size. 57 s | `big_battles.txt` |
+| `big_settings.js` | Which setting keeps numbers counting at 6 and 7 armies. 1 min | `big_settings.txt` |
 
 `levers.js` has a row for the mod's setting that `levers.txt` doesn't yet: the sims were stopped before that rerun.
 

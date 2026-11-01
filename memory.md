@@ -290,6 +290,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Speed: ARMY 0.9 -> 0.675, NAVY 3.525 -> 2.64375. Numbers mine, user gave none.
 - Battles: SHORTER, the 11d setting, morale x4, strength x3. `to change.txt` says longer; x2/3 was tried first and the user reversed it the same day. Infantry II 34 to 13 days, cavalry II 39 to 14, infantry V 19 to 9. `engine.js` holds the mod's modifiers, battle_length scripts reset to vanilla.
 - Simulator: `units.json` + location_sim `data.json` rebuilt. `build_units.js` loads DLC via loadDb so TRY_INJECT binds.
+- Big stacks at the 11d setting: infantry V 7 armies v 5 wins 49% (vanilla 100%), line breaks with 56% of the loser's reserve unused, numbers fade from about 4 armies. Infantry II 72%, cavalry 100%. Both x1.5 keeps numbers (91%, 6 v 6 54 days v 69). Combat doc 11d, `big_battles.js`, `big_settings.js`. Open decision for the user. Not tested in game.
 - Public battle sim page NOT republished: players on mod.27 until next release. Republish at release.
 - Food: combat doc section 8. No mod cause. Full-size rule, regiment supply weight, retreat food loss.
 - Castile against Morocco after 2%, 400 men and shorter battles: start 40/11 to 41/15, as they stand 95/68 to 97/80, full levies 61/23 to 79/51. castile_morocco README.
