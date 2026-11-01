@@ -8,7 +8,8 @@ const { Worker, isMainThread, parentPort } = require('worker_threads');
 const progress = require('../../progress.js');
 const S = require('../../engine.js');
 S.setUnitDB(require('../../units.json'));
-const D = S.D, BASE = { ...D };
+// The study's baseline is vanilla, engine.js holds the mod's land damage.
+const D = S.D, BASE = { ...D, STR_MOD: 0.04, MOR_MOD: 0.25 };
 const GEN = { adm: 60, dip: 59, mil: 61 };
 const mk = (u, n, c, e, x = {}) => ({ general: GEN, country: c, units: [{ type: u, count: n, experience: e }], ...x });
 const mku = (u, n, c, e, g) => ({ general: GEN, country: c, units: [{ type: u, count: n, experience: e, ...g }] });

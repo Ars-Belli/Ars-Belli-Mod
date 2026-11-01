@@ -2,7 +2,9 @@
 
 Everything behind section 11d of `EU5 Combat Mechanics (1.4.4).md`. Asked on 2026-10-30: would slower armies stop endless battles, and armies stepping out of a battle to rest and coming back? Numbers are 1.4 only, run 2026-10-31 with the engage limit, the fixed dice timing and `units.json` from 1.4.6.
 
-**Answer:** slower armies barely help. Raising the land damage modifiers does. The ready-to-use block is commented out in `loading_screen/common/defines/01_abm_defines.txt`: `LAND_MORALE_DAMAGE_MODIFIER = 1.0` and `LAND_STRENGTH_DAMAGE_MODIFIER = 0.12`. It is not active.
+**Answer:** slower armies barely help. Raising the land damage modifiers does: `LAND_MORALE_DAMAGE_MODIFIER = 1.0` and `LAND_STRENGTH_DAMAGE_MODIFIER = 0.12`, active since 2026-11-01.
+
+**2026-11-01:** after the Iberia playtest the mod runs those modifiers with armies and navies at 0.75. 2/3 damage was tried first and reversed the same day: it took the relay to 100%. Infantry II 34 to 13 days, cavalry II 39 to 14, infantry V 19 to 9. Relay with the slower armies: 50% / 58% / 75%. `engine.js` holds the mod's modifiers, and the scripts here reset their baseline to vanilla, so `vanilla` rows are vanilla and the tables in `results/` can be rerun.
 
 ## The model
 
@@ -27,8 +29,10 @@ Standard case: 4 armies of 30 regiments a side, frontage 10, 3 in and 1 away, sw
 | `levers.js` | A player who adapts: best of 4 policies at 3 and 5 days a location | `levers.txt` |
 | `pullout.js` | Battle length by stack size, then pull-out with no replacement | `pullout.txt` |
 | `tick_sweep.js` | What finer ticks and more dice are worth | `tick_sweep.txt` |
+| `land_damage.js` | The mod's setting, lower land damage, morale drain: days, men lost, what quality is worth | `land_damage.txt` |
+| `land_damage_relay.js` | Those settings with slower armies, relay win rate | `land_damage_relay.txt` |
 
-`levers.js` has a row for the commented block that `levers.txt` doesn't yet: the sims were stopped before that rerun.
+`levers.js` has a row for the mod's setting that `levers.txt` doesn't yet: the sims were stopped before that rerun.
 
 `results/pre_fix/` is the 2026-10-30 set, run without the engage limit and superseded. It said infantry relay wins 45% and that doubling damage is enough. Both are wrong on the corrected engine.
 

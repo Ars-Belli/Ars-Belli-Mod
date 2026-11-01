@@ -5,7 +5,8 @@ const os = require('os');
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 const S = require('../../engine.js');
 S.setUnitDB(require('../../units.json'));
-const D = S.D, BASE = { ...D };
+// The study's baseline is vanilla, engine.js holds the mod's land damage.
+const D = S.D, BASE = { ...D, STR_MOD: 0.04, MOR_MOD: 0.25 };
 const N = (isMainThread ? +process.argv[2] : workerData.N) || 1200;
 const GEN = { adm: 60, dip: 59, mil: 61 };
 const pp = (p, n) => 1 - Math.pow(1 - Math.min(p, 0.999), 1 / n);

@@ -259,7 +259,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 ### 3q. Battle length and armies leaving a battle (2026-10-31)
 - Rules, table, side effects: `EU5 Combat Mechanics (1.4.4).md` 11d. Scripts, raw results, commands: `.tools/scripts/battle_sim/analysis/battle_length/`. Model: `simulateScenario(scn, { rotate })`.
 - Leaving a battle is a plain move order, free, gated only by the BATTLE's age (`MINIMUM_COMBAT_DAYS` + `retreat_delay`). No script hook fires when an army leaves. Don't re-investigate.
-- Slower armies barely help. Commented out in `01_abm_defines.txt`, NOT active: `LAND_MORALE_DAMAGE_MODIFIER` 1.0, `LAND_STRENGTH_DAMAGE_MODIFIER` 0.12. Battles about half as long, losses close to vanilla at normal sizes, infantry relay gone, cavalry relay reduced to 84%. Before release rerun focus and army balance.
+- Slower armies barely help. ACTIVE since 2026-11-01 in `01_abm_defines.txt`: `LAND_MORALE_DAMAGE_MODIFIER` 1.0, `LAND_STRENGTH_DAMAGE_MODIFIER` 0.12. Battles about half as long or shorter, losses close to vanilla at normal sizes, infantry relay gone, cavalry relay 75% with the slower armies. Before release rerun focus and army balance.
 - The first version of this (2026-10-30) ran without the engage limit and said infantry relay wins 45% and damage x2 is enough. Wrong: 97%, and x2 leaves 61%. Those runs are in `results/pre_fix`.
 - Hourly ticks cannot return in a mod: combat doc section 13.
 
@@ -288,6 +288,8 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Strait: `in_game/events/DHE/flavor_cas_rio_salado.txt` same-name copy, calls to .3 (Granada) and .4 (Portugal) removed, events stay defined. Refuse cost -20 prestige -20 legitimacy, not -50 stability. Situation's own Force Tribute and Demand War Entry kept, Morocco's `mor_vassalize_granada` kept.
 - Castile's Vassalize Granada blocked only while Granada is a player: `in_game/common/generic_actions/battle_for_the_strait.txt` is a same-name copy of the D009 file, the FIRST mod file to shadow a DLC file. One check added to `vassalize_granada`'s allow, `c:GRA ?= { is_ai = yes }`, tooltip `abm_bfts_granada_is_ai`. The button stays and greys out. An outright removal with a copied panel was tried first and dropped the same day. Event .31 and Morocco's action unchanged. Against a played Granada Castile's situation win needs Granada conquered. Check in game: with a played Granada the button greys out and names that reason. If not, the copy did not bind.
 - Speed: ARMY 0.9 -> 0.675, NAVY 3.525 -> 2.64375. Numbers mine, user gave none.
+- Battles: SHORTER, the 11d setting, morale x4, strength x3. `to change.txt` says longer; x2/3 was tried first and the user reversed it the same day. Infantry II 34 to 13 days, cavalry II 39 to 14, infantry V 19 to 9. `engine.js` holds the mod's modifiers, battle_length scripts reset to vanilla.
+- Public battle sim page NOT republished: players on mod.27 until next release. Republish at release.
 
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.
