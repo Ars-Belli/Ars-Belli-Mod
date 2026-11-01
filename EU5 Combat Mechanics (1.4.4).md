@@ -756,7 +756,7 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - Army Morale Movement Cost −0.14% on Trained March (Quality) and Unrelenting Advance (Maneuver); see section 7 for what it is worth.
 - `high_horde_unity`: discipline +5% (vanilla +10%). `horde_army_expectation`: land morale −10% (vanilla −50%).
 - Steppe unit sizes: `a_steppe_horde` and `a_steppe_horse_archers` lose vanilla's +0.4 `max_strength` (200 men, not 600). `a_late_steppe_horde` (400 men, advance `abm_steppe_renaissance_levy`, age II) takes over from `a_steppe_horde`. Levy men come from pops, so this means more, smaller regiments, not fewer men; section 11b has what that is worth.
-- D009's Sanhaja, Zenata and Tuareg cavalry levies raise 3% of tribesmen, vanilla 10% (section 11b). Their units and pops are vanilla, and so are the other tribal levies.
+- D009's Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen, vanilla 10% (section 11b). Their units and pops are vanilla, and so are the other tribal levies.
 - Mercenary hiring costs back to vanilla (2026-10-28).
 - No combat defines are overridden (`01_abm_defines.txt` only touches war score, war worth, food depots and loans). A faster-battles block sits there commented out, see section 11d.
 
