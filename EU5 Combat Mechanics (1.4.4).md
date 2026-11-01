@@ -760,6 +760,7 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - All six 200-man land levies on tribesmen raise 400-man regiments (`abm_tribal_levy_sizes.txt`, 2026-11-01): Tribal Cavalry, Tribal Camelry, Zenata, Sanhaja, Tuareg, Hilali. Same men from the same pops, half as many regiments. At 400 men Tribal Cavalry would out-power Atlas Infantry in the levy pick, so `REPLACE:levy_tribal_cavalry` keeps Masmuda tribesmen off it.
 - Mercenary hiring costs back to vanilla (2026-10-28).
 - No combat defines are overridden (`01_abm_defines.txt` only touches war score, war worth, food depots and loans). A faster-battles block sits there commented out, see section 11d.
+- Armies and navies 25% slower: `ARMY_MOVEMENT_SPEED` 0.675, `NAVY_MOVEMENT_SPEED` 2.64375 (`0x14351cef0` multiplies each regiment's speed by these). Morale lost to marching is per day, so a march costs a third more morale.
 
 ---
 
