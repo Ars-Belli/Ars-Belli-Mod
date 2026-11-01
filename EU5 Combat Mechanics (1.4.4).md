@@ -260,6 +260,22 @@ Matching regulars needs a smaller levy discipline penalty, which the mod can set
 1. **Their own levy units** (data only, recommended). A levy can be gated with `country_allow = { … }` or unlocked by an advance (`unlock_levy`), and each pop raises the eligible levy with the highest total combat power (`levies/readme.txt`). A per-age set of "drilled" levy unit types with `strength_damage_done +0.25`, `morale_damage_done +0.25`, `strength_damage_taken −0.20`, `morale_damage_taken −0.20` cancels the −20% discipline exactly against regulars at base discipline: 0.8 × 1.25 = 1 dealt, 1.25 × 0.8 = 1 taken. Those stats also raise the unit's total combat power, so the drilled version wins the pick automatically. Side effect: they also out-power flavour levies, which then stop raising for that country.
 2. **`add_unit_modifier` on levy armies** (script). Armies have an `is_levy` trigger, and a unit modifier with `discipline = 0.2` can be put on them from an on_action or a monthly pulse. But unit modifiers cover the whole army, so a levy merged into a regular army would hand the bonus to regulars too, and it needs refreshing whenever levies are raised.
 
+### Food *(saves + code, 2026-11-01, game 1.4.6)*
+
+Checked on 364 armies in a multiplayer save from 1371: 349 match this exactly.
+
+```
+monthly food = sum over regiments of max_strength x food_consumption_per_strength x (0.25 if levy) x (1 + over-limit penalty)
+over-limit penalty = max(0, share over the supply limit) x ATTRITION_ON_FOOD_CONSUMPTION_IMPACT 2.0, capped at MAX_FOOD_CONSUMPTION_PENALTY 3.0 (so at most x4)
+```
+
+- **Men do not count.** A regiment eats for its full size however empty it is. Castile's 26 levy regiments holding 1,677 men ate 2.01 a month in 1366: 1.2 food per 1,000 men, against 0.08 for a full infantry levy.
+- **Supply weight counts regiments too**, 1 each, so a 200-man regiment weighs as much as a 1,000-man one (`0x1434f55e0`, tooltip `UNIT_FOOD_CONSUMPTION_ENTRY`).
+- **Rates per 1,000 men:** infantry 0.33, cavalry 1.32, artillery 0.66, auxiliary 0.2. Cavalry was 0.66 in 1.3, so 1.4 doubled it. Levies pay a quarter. Storage per 1,000 men: infantry and artillery 5, cavalry 10.
+- **The store runs out fast in a losing war.** Morocco's 47-regiment levy fell from 94 of 94 to about 7 between October 1366 and April 1367, eating 3.1 a month, so about 19 of the 87 lost was eaten. `FOOD_PERCENTAGE_LOST_AT_RETREAT` 50% fits the rest, but the saves hold no record of those battles, so that part is inferred. Morocco's stack and Granada's army were at 0 by October 1367.
+- **The mod does not change any of this.** `is_army_levy` keeps vanilla's -75%, no unit rate or supply limit is touched, and the only army food values the mod sets are the deposit fraction, a few focus and advance food discounts, and camp followers' storage, 7,000 per 1,000 men against vanilla's 3,000. That last one helps regular armies only, because levies have no auxiliaries.
+- A lower levy food bill is one number, `food_consumption_modifier` on `is_army_levy`. Nothing in script can change the full-size rule.
+
 ---
 
 ## 9. Experience

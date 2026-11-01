@@ -290,6 +290,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Speed: ARMY 0.9 -> 0.675, NAVY 3.525 -> 2.64375. Numbers mine, user gave none.
 - Battles: SHORTER, the 11d setting, morale x4, strength x3. `to change.txt` says longer; x2/3 was tried first and the user reversed it the same day. Infantry II 34 to 13 days, cavalry II 39 to 14, infantry V 19 to 9. `engine.js` holds the mod's modifiers, battle_length scripts reset to vanilla.
 - Public battle sim page NOT republished: players on mod.27 until next release. Republish at release.
+- Food: combat doc section 8. No mod cause. Full-size rule, regiment supply weight, retreat food loss.
 
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.
