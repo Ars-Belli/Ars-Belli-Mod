@@ -108,8 +108,6 @@ abm_base_purity = {
 		religion = { has_purity = yes }
 	}
 
-
-
 	monthly_purity = 0.20
 }
 
@@ -223,13 +221,17 @@ REPLACE:high_horde_unity = { #Hordes are already too volatile
 
 # Ars Belli - governor offices (building_types/abm_governor_offices.txt).
 #
-# No levels any more: one office per LOCATION (max_levels = 1, and the engine allows only
-# one instance of a building type per location), unlimited copies per country, each one
-# eating one governor post through the building's own allow gate. The reward therefore
-# scales with the NUMBER of completed offices, not with levels: one auto modifier per
-# step, keyed on has_building + count. has_building sees completed buildings only, so
-# starting construction does not hand the slot out early
-# (total_building_levels_including_construction would).
+# No levels: one office per LOCATION (max_levels = 1, and the engine allows only one
+# instance of a building type per location) and unlimited copies per country. The REWARD
+# scales with the NUMBER of completed offices, hence one auto modifier per step, keyed on
+# has_building + count. has_building sees completed buildings only, so starting
+# construction does not hand out a cabinet seat or reform slot early.
+#
+# These blocks do NOT take the governor post. The post is taken by the building's own
+# allow gate, which calls abm_has_unused_local_governor / abm_has_unused_naval_governor -
+# those subtract every office from the cap, vanilla-style, in one place
+# (scripted_triggers/abm_governor_triggers.txt). Reducing num_local_governors here as
+# well would count the same post twice.
 #
 # The ladder stops at 4 because that is as many offices as the posts allow: the local cap
 # tops out at 4 (base 1 + kingdom/empire + local_governor_advance +
@@ -244,7 +246,6 @@ abm_provincial_chancellery_1 = {
 			has_building = building_type:abm_provincial_chancellery
 		}
 	}
-	num_local_governors = -1
 	government_reform_slots = 1
 }
 
@@ -256,7 +257,6 @@ abm_provincial_chancellery_2 = {
 			count >= 2
 		}
 	}
-	num_local_governors = -1
 	government_reform_slots = 1
 }
 
@@ -268,7 +268,6 @@ abm_provincial_chancellery_3 = {
 			count >= 3
 		}
 	}
-	num_local_governors = -1
 	government_reform_slots = 1
 }
 
@@ -280,7 +279,6 @@ abm_provincial_chancellery_4 = {
 			count >= 4
 		}
 	}
-	num_local_governors = -1
 	government_reform_slots = 1
 }
 
@@ -291,7 +289,6 @@ abm_court_secretariat_1 = {
 			has_building = building_type:abm_court_secretariat
 		}
 	}
-	num_local_governors = -1
 	government_size = 1
 }
 
@@ -303,7 +300,6 @@ abm_court_secretariat_2 = {
 			count >= 2
 		}
 	}
-	num_local_governors = -1
 	government_size = 1
 }
 
@@ -315,7 +311,6 @@ abm_court_secretariat_3 = {
 			count >= 3
 		}
 	}
-	num_local_governors = -1
 	government_size = 1
 }
 
@@ -327,7 +322,6 @@ abm_court_secretariat_4 = {
 			count >= 4
 		}
 	}
-	num_local_governors = -1
 	government_size = 1
 }
 
@@ -338,7 +332,6 @@ abm_admiralty_board_1 = {
 			has_building = building_type:abm_admiralty_board
 		}
 	}
-	num_naval_governors = -1
 	government_size = 1
 }
 
@@ -350,7 +343,6 @@ abm_admiralty_board_2 = {
 			count >= 2
 		}
 	}
-	num_naval_governors = -1
 	government_size = 1
 }
 
@@ -362,7 +354,6 @@ abm_admiralty_board_3 = {
 			count >= 3
 		}
 	}
-	num_naval_governors = -1
 	government_size = 1
 }
 
@@ -374,6 +365,5 @@ abm_admiralty_board_4 = {
 			count >= 4
 		}
 	}
-	num_naval_governors = -1
 	government_size = 1
 }

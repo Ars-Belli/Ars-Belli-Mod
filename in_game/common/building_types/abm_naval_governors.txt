@@ -37,16 +37,11 @@ REPLACE:naval_governor = {
 		trigger_else = {
 			custom_tooltip = {
 				text = naval_governor_tt
-				scope:actor = {
-					# Provincial Administrations and Proconsulates hold naval posts
-					# without changing num_naval_governors, so they count against the
-					# same cap (keep in sync with abm_has_unused_naval_governor)
-					total_building_levels_including_construction:naval_governor < {
-						value = modifier:num_naval_governors
-						subtract = total_building_levels_including_construction:abm_provincial_administration
-						subtract = total_building_levels_including_construction:abm_proconsulate
-					}
-				}
+				# the shared trigger subtracts the Admiralty Board, the Provincial
+				# Administration and the Proconsulate (scripted_triggers/
+				# abm_governor_triggers.txt) - vanilla's own idiom for a building that
+				# parks on a governor post
+				scope:actor = { abm_has_unused_naval_governor = yes }
 			}
 		}
 		owner = scope:actor #not in subjects
