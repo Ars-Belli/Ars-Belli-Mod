@@ -11,10 +11,13 @@ Workshop mod (the release zip takes only `in_game`, `main_menu`, `loading_screen
   no flag, matches no list and runs nothing (the engine logs that once), so daily, monthly and yearly work
   keeps its pace. Patched: three constants (`lea r10,[rax+0x18]` and the two folded `24 - 43800000` offsets).
 - **Battles**: on steps that run no daily tasks the DLL runs one battle round itself: `CCombatManager`
-  (global `0x14fac1028` -> `+0x108` -> `+0x26e40`, vtable checked) slot 8, the tick for every battle in
-  progress. Day steps run it from the daily task as usual, so every tick is one round:
+  slot 8, the tick for every battle in progress. The manager is `*(field) + 0x26e40`; the DLL learns which
+  game-state field from the first daily battle tick (it scans the game state for the pointer), and until then
+  uses the manager that tick passed, dropped on a date jump (save load). The first guess, global
+  `0x14fac1028 -> +0x108`, gave NULL in game, so in-between rounds were skipped. Day steps run it from the daily task as usual, so every tick is one round:
   24 / `hours_per_tick` rounds a day. Movement, sieges and the rest stay daily.
-- **Game speed**: `NGame.GAME_SPEED_TICKS` (seconds per tick, a float array at `*0x14fb229d0`, count at
+- **Game speed**: the mod defines 7 speeds in seconds per day (`01_abm_defines.txt`, `hud_topbar.gui`).
+  `NGame.GAME_SPEED_TICKS` (seconds per tick, a float array at `*0x14fb229d0`, count at
   `+0xc`) is scaled by `hours_per_tick / 24`, so a day takes as long as before.
 - **Date text**: the `GetDateString` getter (`0x1428fded0`) is replaced; it formats the date with the
   engine's own formatter (`0x140e58380`) and adds `, HH:00`.

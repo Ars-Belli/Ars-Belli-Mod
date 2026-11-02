@@ -47,7 +47,7 @@ typedef struct {
   /* battles */
   uint32_t combat_vftable, combat_slot, combat_tick;
   code_check_t combat_tick_start;
-  uint32_t game_data_global, game_data_inner, combat_manager_offset;
+  uint32_t combat_manager_offset;  /* manager = *(game state field) + this; the field is learned at run time */
   /* date */
   uint32_t game_state_global; /* date (8 bytes) at +8 */
   uint32_t date_step;
@@ -72,7 +72,7 @@ static const build_t KNOWN_BUILDS[] = {
     .time_date_stamp = 0x6ae34c4c, .size_of_image = 0x10559000,
     .combat_vftable = 0x0c7ef738, .combat_slot = 8, .combat_tick = 0x024a7620,
     .combat_tick_start = { 0x024a7620, 16, { 0x55, 0x41, 0x57, 0x41, 0x56, 0x41, 0x55, 0x41, 0x54, 0x56, 0x57, 0x53, 0x48, 0x81, 0xec, 0x68 } },
-    .game_data_global = 0x0fac1028, .game_data_inner = 0x108, .combat_manager_offset = 0x26e40,
+    .combat_manager_offset = 0x26e40,
     .game_state_global = 0x0fac4028,
     .date_step = 0x02fd82e0,
     .date_step_calls = { 0x02fd8113, 0x02fd813e },
@@ -152,26 +152,62 @@ static void describe_date(uint64_t date, char *out, size_t n) {
            (int)((date >> 32) & 0xff) + 1, hour);
 }
 
-/* ---- battles ---- */
+/* ---- battles ----
+   The daily task reaches the manager as *(context->x + 0x108) + 0x26e40, where x is
+   not the global tried first (that gave NULL in game, 2026-11-02). So the DLL learns
+   the chain from the daily call itself: it looks for the field of the game state
+   (date at +8) that points at manager - 0x26e40. Until then, or if none is found, it
+   uses the manager the daily task passed, dropped on any date jump (save load). */
+static void *g_daily_mgr;            /* last manager the daily task passed */
+static int g_chain_offset = -1;      /* game-state field pointing at manager - combat_manager_offset */
+
+static int is_combat_manager(void *mgr) {
+  return mgr && *(void **)mgr == (void *)(g_base + g_build->combat_vftable);
+}
+
+static size_t readable_bytes(const void *p, size_t want) {
+  MEMORY_BASIC_INFORMATION mbi;
+  if (!VirtualQuery(p, &mbi, sizeof mbi) || mbi.State != MEM_COMMIT) return 0;
+  if (mbi.Protect & (PAGE_NOACCESS | PAGE_GUARD)) return 0;
+  size_t left = (size_t)((uint8_t *)mbi.BaseAddress + mbi.RegionSize - (uint8_t *)p);
+  return left < want ? left : want;
+}
+
+static void learn_chain(void *mgr) {
+  uint8_t *gs = game_state();
+  if (!gs) return;
+  uint8_t *want = (uint8_t *)mgr - g_build->combat_manager_offset;
+  size_t n = readable_bytes(gs, 0x2000) & ~(size_t)7;
+  for (size_t off = 0; off < n; off += 8)
+    if (*(uint8_t **)(gs + off) == want) {
+      g_chain_offset = (int)off;
+      log_line("combat manager %p = *(game state %p + 0x%x) + 0x%x", mgr, gs, g_chain_offset,
+               g_build->combat_manager_offset);
+      return;
+    }
+  log_line("combat manager %p: no game-state field points at it; using the daily task's pointer", mgr);
+}
+
 static void *combat_manager(void) {
-  uint8_t *data = *(uint8_t **)(g_base + g_build->game_data_global);
-  if (!data) return NULL;
-  uint8_t *inner = *(uint8_t **)(data + g_build->game_data_inner);
-  if (!inner) return NULL;
-  void *mgr = inner + g_build->combat_manager_offset;
-  return *(void **)mgr == (void *)(g_base + g_build->combat_vftable) ? mgr : NULL;
+  if (g_chain_offset >= 0) {
+    uint8_t *gs = game_state();
+    uint8_t *inner = gs ? *(uint8_t **)(gs + g_chain_offset) : NULL;
+    void *mgr = inner ? inner + g_build->combat_manager_offset : NULL;
+    if (is_combat_manager(mgr)) return mgr;
+  }
+  return is_combat_manager(g_daily_mgr) ? g_daily_mgr : NULL;
 }
 
 static int active_battles(void *mgr) { return mgr ? *(int *)((uint8_t *)mgr + 0x8c) : -1; }
 
 /* vtable slot 8: the daily task's battle tick. Runs once, as in vanilla. */
 static uint64_t hook_tick(void *mgr, void *a2, void *a3, void *a4) {
-  static int checked;
-  if (!checked) {
-    checked = 1;
-    log_line("daily battle tick: manager %p, pointer chain gives %p%s", mgr, combat_manager(),
-             mgr == combat_manager() ? " (match)" : "  MISMATCH: extra rounds will be skipped");
+  static int attempts;
+  if (g_chain_offset < 0 && attempts < 3) {
+    attempts++;
+    learn_chain(mgr);
   }
+  g_daily_mgr = mgr;
   InterlockedExchange(&g_combat_ran, 1);
   return g_tick(mgr, a2, a3, a4);
 }
@@ -199,9 +235,16 @@ static void scale_speed_table(void) {
 
 /* ---- date step: one tick ---- */
 static uint64_t g_ticks, g_extra_rounds;
+static void *g_last_gs;
+static int32_t g_last_hours;
 
 static void hook_step(void *gs) {
   scale_speed_table();
+  int32_t hours_before = *(int32_t *)((uint8_t *)gs + 8);
+  if (gs != g_last_gs || hours_before != g_last_hours) {
+    if (g_ticks) log_line("date jumped (load?): manager pointer from the daily task dropped until the next day");
+    g_daily_mgr = NULL; /* a loaded game may hold a new manager */
+  }
   void *mgr = combat_manager();
   int battles_before = active_battles(mgr);
 
@@ -221,6 +264,8 @@ static void hook_step(void *gs) {
     }
   }
 
+  g_last_gs = gs;
+  g_last_hours = *(int32_t *)((uint8_t *)gs + 8);
   int battles_after = active_battles(combat_manager());
   if (g_ticks <= 30 || battles_before > 0 || battles_after > 0) {
     char when[48];
