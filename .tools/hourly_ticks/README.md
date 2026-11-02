@@ -10,12 +10,33 @@ Workshop mod (the release zip takes only `in_game`, `main_menu`, `loading_screen
   and each step sets new-day/week/month/year flags that pick the task list to run. A step inside a day sets
   no flag, matches no list and runs nothing (no log row in game), so daily, monthly and yearly work
   keeps its pace. Patched: three constants (`lea r10,[rax+0x18]` and the two folded `24 - 43800000` offsets).
-- **Battles**: on steps that run no daily tasks the DLL runs one battle round itself: `CCombatManager`
-  slot 8, the tick for every battle in progress. The manager is `*(field) + 0x26e40`; the DLL learns which
-  game-state field from the first daily battle tick (it scans the game state for the pointer), and until then
-  uses the manager that tick passed, dropped on a date jump (save load). In game (1.4.6) the field is
-  `game state + 0x108`; the first guess read it from global `0x14fac1028`, which gave NULL. Day steps run it from the daily task as usual, so every tick is one round:
-  24 / `hours_per_tick` rounds a day. Movement, sieges and the rest stay daily.
+- **Movement and battles** (`hourly_movement=1`, default): on steps that run no daily tasks the DLL runs a
+  task graph itself, the one the date step would pick for a plain new day. It reads that graph from the game
+  state's map every time (table `+0xe0`, mask `+0xec`, max probe `+0xf0`, 0x28-byte entries, graph at `+0x10`),
+  so a player joining mid-day runs the same as the host. Every task's Prepare (vtable slot 9) is called from
+  one site in the stage executor (`0x1435bbd9c`, `call [rax+0x48]`). That call now goes through a gate, which
+  on these steps skips every task except:
+  - 912 `UnitCancelRetreatIfNeeded`;
+  - 913 `UnitHandleAttachment`, `UnitProgressMovementOneDay`, `UnitRemoveOverload`,
+    `CalcCachedValuesForStartingBattle`, `UnitStartBattles`;
+  - 914 `CombatDailyUpdate`;
+  - 916/917 `ClearArrivingUnits`, `UpdateArrivingUnits`.
+
+  A skipped Prepare leaves the task's job empty, and the executor counts it as done. So armies and navies
+  move every tick, battles start at the hour armies meet, and every tick is one battle round
+  (24 / `hours_per_tick` a day).
+  - Speed: the movement job reads the unit speed through one call (`0x14395c4b1` -> `0x143511fa0`, fixed
+    point, 100000 = 1). The DLL scales that result by `hours_per_tick / 24`, so a day's distance is
+    unchanged. The other callers (the tooltip's arrival date, the AI) keep the daily speed, so the arrival
+    date stays right.
+  - Daily on purpose:
+    - `913_SubUnitsProcessMoveCost`, the march morale cost. Each call charges a day's cost; the movement job
+      only stores the rate on the unit (`+0x118`/`+0x120`/`+0x128`).
+    - Sieges, supply and attrition.
+    - AI orders.
+- **Battles only** (`hourly_movement=0`): on those steps the DLL runs one battle round itself
+  (`CCombatManager` slot 8). The manager is `*(game state + 0x108) + 0x26e40`, taken from the build table;
+  a build without that field learns it from the first daily battle tick.
 - **Game speed**: the mod defines 7 speeds in seconds per day (`01_abm_defines.txt`, `hud_topbar.gui`).
   `NGame.GAME_SPEED_TICKS` (seconds per tick, a float array at `*0x14fb229d0`, count at
   `+0xc`) is scaled by `hours_per_tick / 24`, so a day takes as long as before.
@@ -24,8 +45,9 @@ Workshop mod (the release zip takes only `in_game`, `main_menu`, `loading_screen
   `first_hour` (default 7): 07:00 to 18:00 at 12 ticks a day, then 07:00 the next day. Only the text: the
   stored hour stays real (0, 2 ... 22) and the day turns at midnight. The log shows the same clock.
 - **Checksum**: the three entries into the checksum function (`0x140af8510`) go through a wrapper that feeds
-  `1.4.6+abm-hourly-<h>h` instead of the game version string (`+0x1b8`). A player without the DLL, or with
-  another `hours_per_tick`, has a different checksum and can't join.
+  `1.4.6+abm-hourly-<h>h` (plus `-move` with hourly movement) instead of the game version string (`+0x1b8`).
+  A player without the DLL, or with another `hours_per_tick` or movement setting, has a different checksum
+  and can't join.
 
 ## Safety
 Only patches a known build (PE TimeDateStamp + SizeOfImage) after checking the bytes at every site;
@@ -42,8 +64,8 @@ and runs the tests. Copy `out\version.dll` and `ars_belli_hourly.ini` to
 ## Tests
 - `test/test_host.c`: a stand-in program that imports version.dll; every call must reach the real one.
 - `test/test_verify.c`: maps an eu5.exe image without running it, runs the DLL's checks, applies every
-  patch to that copy and reads them back, and checks the checksum salt on a stand-in object. The 1.3.11
-  exe must be refused.
+  patch to that copy and reads them back. On stand-ins it checks the checksum salt, the task gate, the
+  speed scaling and the graph lookup. The 1.3.11 exe must be refused.
 
 ## Adding a game build
 Re-find each site from stable anchors, then add a `KNOWN_BUILDS` entry and run `build.ps1`:
@@ -53,4 +75,12 @@ Re-find each site from stable anchors, then add a `KNOWN_BUILDS` entry and run `
 - `GetDateString`: string xref in the GUI registration, the getter passed beside it.
 - checksum: the function logging "Feeding game version into checksum"; find its E8/E9 entries.
 - `GAME_SPEED_TICKS`: the define name string, registration passes the array address in R9.
+- task graphs: the date step's only call to the graph runner. Before that call the step hashes the four
+  flags with FNV-1a and looks them up in the game-state map.
+- stage executor: the runner's per-stage callee. It builds a `CGameTickTaskExecutionContext` (find it by its
+  vftable xref) and calls the task's slot 9 right after.
+- hourly tasks: `node vtables.js <exe> CTickTask_<Name>@unity_<hash>`. The names come from RTTI; most of
+  these classes sit in anonymous namespaces.
+- unit speed: the call in the `UnitProgressMovementOneDay` job lambda (`_Func_impl_no_alloc<...Prepare...>`,
+  slot 2) whose result is added to the unit's progress (`+0x8e0`).
 Tools and method: `E:\Tools\ghidra-scripts` (README there).

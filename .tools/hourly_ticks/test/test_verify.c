@@ -14,6 +14,12 @@ static void *abs_jump_dest(uint8_t *at) {
   return (at[0] == 0xFF && at[1] == 0x25 && *(int32_t *)(at + 2) == 0) ? p : NULL;
 }
 
+/* stand-ins for task Prepare functions and the unit speed function */
+static int prepare_calls[2];
+static void fake_prepare_a(void *t, void *c) { (void)t; (void)c; prepare_calls[0]++; }
+static void fake_prepare_b(void *t, void *c) { (void)t; (void)c; prepare_calls[1]++; }
+static int64_t *fake_speed(void *unit, int64_t *out, uint64_t flag) { (void)unit; (void)flag; *out = 120000; return out; }
+
 /* stand-in for the engine checksum: records the version string it is fed */
 static char seen[128];
 static uint64_t fake_checksum(void *obj, uint64_t flag) {
@@ -38,7 +44,7 @@ int wmain(int argc, wchar_t **argv) {
   const build_t *b = check_build(base);
   if (!b) { puts("build refused"); return 2; }
   printf("build %s accepted, applying patches for %d hours a tick\n", b->name, hours);
-  if (!apply_patches(base, b, hours)) { puts("apply failed"); return 3; }
+  if (!apply_patches(base, b, hours, 1)) { puts("apply failed"); return 3; }
 
   void **slot = (void **)(base + b->combat_vftable + 8 * b->combat_slot);
   EXPECT(*slot == (void *)hook_tick, "vtable slot 8 -> hook_tick");
@@ -56,6 +62,19 @@ int wmain(int argc, wchar_t **argv) {
   EXPECT(*(int32_t *)(base + b->step_offset_a.rva + 2) == hours - DATE_EPOCH_HOURS, "offset a = %d", hours - DATE_EPOCH_HOURS);
   EXPECT(*(int32_t *)(base + b->step_offset_b.rva + 2) == hours - DATE_EPOCH_HOURS, "offset b = %d", hours - DATE_EPOCH_HOURS);
   EXPECT(g_tick == (tick_fn)(void *)(base + b->combat_tick), "original battle tick kept for calls");
+  EXPECT(g_chain_offset == 0x108, "combat manager field known from the start (0x%x)", g_chain_offset);
+
+  /* hourly movement sites */
+  EXPECT(g_movement == 1 && g_allowed_n == 9, "hourly movement on, %d tasks allowed on in-between ticks", g_allowed_n);
+  {
+    uint8_t *site = base + b->prepare_call.rva;
+    const uint8_t *orig = b->prepare_call.bytes;
+    int same_regs = memcmp(site, orig + 3, 7) == 0 && memcmp(site + 7, orig + 10, 3) == 0 && site[10] == 0x90;
+    EXPECT(same_regs && site[11] == 0xE8 && abs_jump_dest(rel32_dest(site + 11)) == (void *)hook_prepare && site[16] == 0x90,
+           "task Prepare call -> hook_prepare, return address unchanged");
+    EXPECT(abs_jump_dest(rel32_dest(base + b->unit_speed_call)) == (void *)hook_unit_speed, "movement job speed -> hook_unit_speed");
+    EXPECT(g_graph_run == (graph_run_fn)(void *)(base + b->graph_run), "task-graph runner kept for calls");
+  }
 
   /* the patched image must now be refused by a second check (bytes changed) */
   printf("re-check of the patched image (must be refused):\n");
@@ -71,6 +90,58 @@ int wmain(int argc, wchar_t **argv) {
   EXPECT(fit_first_hour(7, 2) == 7 && fit_first_hour(20, 2) == 12 && fit_first_hour(7, 1) == 0 && fit_first_hour(-3, 4) == 0,
          "first_hour kept so the last tick ends by 23:00 (7 2h -> 7, 20 2h -> 12, 7 1h -> 0)");
 
+  /* gate: on an in-between tick only allowed tasks reach their Prepare */
+  {
+    void *vt_a[10] = { 0 }, *vt_b[10] = { 0 };
+    vt_a[9] = (void *)fake_prepare_a;
+    vt_b[9] = (void *)fake_prepare_b;
+    void **task_a = vt_a, **task_b = vt_b;
+    int saved_n = g_allowed_n;
+    g_allowed_vt[g_allowed_n] = vt_a;
+    g_allowed_name[g_allowed_n++] = "test";
+    hook_prepare(&task_a, NULL);
+    hook_prepare(&task_b, NULL);
+    EXPECT(prepare_calls[0] == 1 && prepare_calls[1] == 1, "day tick: every task prepared");
+    g_ran_mask = 0;
+    g_skipped = 0;
+    g_inbetween = 1;
+    hook_prepare(&task_a, NULL);
+    hook_prepare(&task_b, NULL);
+    g_inbetween = 0;
+    EXPECT(prepare_calls[0] == 2 && prepare_calls[1] == 1 && g_skipped == 1 && (g_ran_mask & (1L << saved_n)),
+           "in-between tick: allowed task prepared, other task skipped");
+    g_allowed_n = saved_n;
+  }
+
+  /* speed: a day's move split over the day's ticks */
+  {
+    unit_speed_fn real_speed = g_unit_speed;
+    g_unit_speed = fake_speed;
+    int64_t out = 0;
+    hook_unit_speed(NULL, &out, 1);
+    g_unit_speed = real_speed;
+    EXPECT(out == 120000LL * hours / 24, "speed 1.2 a day -> %lld per tick (fixed point)", (long long)out);
+  }
+
+  /* graph lookup on a stand-in game state: occupied entries, the fewest flags wins */
+  {
+    static uint8_t gs[0x200], table[8 * 0x28], stages[64];
+    memset(gs, 0, sizeof gs);
+    memset(table, 0, sizeof table);
+    *(uint8_t **)(gs + 0xe0) = table;
+    *(int *)(gs + 0xec) = 3; /* mask: 4 slots */
+    gs[0xf0] = 2;            /* plus 2 probe slots */
+    uint8_t *month = table + 1 * 0x28, *day = table + 4 * 0x28, *broken = table + 2 * 0x28;
+    month[4] = 1; month[8] = 1; month[10] = 1;
+    *(void **)(month + 0x10) = stages; *(int *)(month + 0x1c) = 9;
+    day[4] = 2; day[8] = 1;
+    *(void **)(day + 0x10) = stages; *(int *)(day + 0x1c) = 7;
+    broken[4] = 1; /* occupied, no stages: skipped */
+    EXPECT(find_graph(gs) == day + 0x10, "task graph found in the map (plain day, 7 stages)");
+    *(int *)(gs + 0xec) = -1;
+    EXPECT(find_graph(gs) == NULL, "bad map refused");
+  }
+
   /* checksum salt: run hook_checksum's string swap with a stand-in object and checksum function */
   static uint8_t fake_obj[0x400];
   uint8_t *ver = fake_obj + b->checksum_version_offset;
@@ -81,7 +152,7 @@ int wmain(int argc, wchar_t **argv) {
   uint64_t r = hook_checksum(fake_obj, 0);
   g_checksum = real_checksum;
   char want[64];
-  snprintf(want, sizeof want, "1.4.6+abm-hourly-%dh", hours);
+  snprintf(want, sizeof want, "1.4.6+abm-hourly-%dh-move", hours);
   EXPECT(r == 7 && strcmp(seen, want) == 0, "checksum sees \"%s\"", seen);
   EXPECT(memcmp(ver, "1.4.6", 5) == 0 && ver[15] == 5, "version string restored after the checksum");
 

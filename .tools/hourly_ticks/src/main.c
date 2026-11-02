@@ -9,9 +9,13 @@
      - ticks that don't start a new day set no flag, match no task list and run
        nothing (the engine logs that once): daily, monthly and yearly work keeps
        running once per day/month/year;
-     - on those ticks this DLL runs one battle round itself (CCombatManager vtable
-       slot 8, the battle tick for every battle), so battles get 24/hours_per_tick
-       rounds a day;
+     - on those ticks this DLL runs the day's task graph again with every task
+       skipped except army/navy movement, battle starts and the battle round
+       (hourly movement: each task's Prepare goes through one call site, which
+       the DLL gates), so units move and fight every tick; unit speed in the
+       movement job is scaled by hours_per_tick/24 so a day's distance stays the
+       same. The march morale cost, sieges, supply and the AI stay daily. With
+       hourly_movement=0 it only runs the battle round (CCombatManager slot 8);
      - the game-speed table (seconds per tick) is scaled by hours_per_tick/24 so
        a day still takes as long as before;
      - the top-bar date (GetDateString) shows a 1.3-style clock: the ticks of a
@@ -49,7 +53,8 @@ typedef struct {
   /* battles */
   uint32_t combat_vftable, combat_slot, combat_tick;
   code_check_t combat_tick_start;
-  uint32_t combat_manager_offset;  /* manager = *(game state field) + this; the field is learned at run time */
+  uint32_t combat_manager_offset;  /* manager = *(game state + combat_manager_field) + this */
+  uint32_t combat_manager_field;   /* 0 = unknown: learned from the first daily battle tick */
   /* date */
   uint32_t game_state_global; /* date (8 bytes) at +8 */
   uint32_t date_step;
@@ -66,6 +71,14 @@ typedef struct {
   uint32_t checksum_version_offset; /* game version string fed into the checksum */
   /* speed */
   uint32_t speed_ticks_array;       /* NGame.GAME_SPEED_TICKS: float* at +0, count at +0xc */
+  /* hourly movement */
+  code_check_t graph_map_lookup;    /* task-graph map in the game state: mask +0xec, table +0xe0, entries 0x28 */
+  code_check_t graph_map_end;       /* max probe byte +0xf0 */
+  code_check_t graph_run_args;      /* graph = entry + 0x10 */
+  uint32_t graph_run_call, graph_run; /* E8 in the date step -> graph runner (game state, date*, graph) */
+  code_check_t prepare_call;        /* stage executor: mov rax,[rbx]; lea rdx,[rbp+X]; mov rcx,rbx; call [rax+0x48] */
+  uint32_t unit_speed_call, unit_speed; /* E8 in the movement job -> unit speed (unit, int64 *out, flag) */
+  struct { uint32_t vftable; const char *name; } hourly_tasks[12]; /* tasks that run on in-between ticks */
 } build_t;
 
 static const build_t KNOWN_BUILDS[] = {
@@ -74,7 +87,7 @@ static const build_t KNOWN_BUILDS[] = {
     .time_date_stamp = 0x6ae34c4c, .size_of_image = 0x10559000,
     .combat_vftable = 0x0c7ef738, .combat_slot = 8, .combat_tick = 0x024a7620,
     .combat_tick_start = { 0x024a7620, 16, { 0x55, 0x41, 0x57, 0x41, 0x56, 0x41, 0x55, 0x41, 0x54, 0x56, 0x57, 0x53, 0x48, 0x81, 0xec, 0x68 } },
-    .combat_manager_offset = 0x26e40,
+    .combat_manager_offset = 0x26e40, .combat_manager_field = 0x108, /* seen in game 2026-11-02 */
     .game_state_global = 0x0fac4028,
     .date_step = 0x02fd82e0,
     .date_step_calls = { 0x02fd8113, 0x02fd813e },
@@ -87,6 +100,23 @@ static const build_t KNOWN_BUILDS[] = {
     .checksum_entries = { 0x00959658, 0x00af8503, 0x00b88cd4 },
     .checksum_version_offset = 0x1b8,
     .speed_ticks_array = 0x0fb229d0,
+    .graph_map_lookup = { 0x02fd8b8a, 20, { 0x8b, 0x86, 0xec, 0x00, 0x00, 0x00, 0x48, 0x98, 0x21, 0xc1, 0x48, 0x63, 0xd1, 0x48, 0x8b, 0x8e, 0xe0, 0x00, 0x00, 0x00 } },
+    .graph_map_end = { 0x02fd8bf0, 22, { 0x0f, 0xb6, 0x96, 0xf0, 0x00, 0x00, 0x00, 0x48, 0x01, 0xd0, 0x48, 0x8d, 0x14, 0x80, 0x4c, 0x8d, 0x04, 0xd1, 0x49, 0x83, 0xc0, 0x28 } },
+    .graph_run_args = { 0x02fd8c1b, 14, { 0x49, 0x83, 0xc0, 0x10, 0x48, 0x8d, 0x95, 0x38, 0x04, 0x00, 0x00, 0x48, 0x89, 0xf1 } },
+    .graph_run_call = 0x02fd8c29, .graph_run = 0x02fecca0,
+    .prepare_call = { 0x035bbd8f, 17, { 0x48, 0x8b, 0x03, 0x48, 0x8d, 0x95, 0x20, 0x16, 0x00, 0x00, 0x48, 0x89, 0xd9, 0xff, 0x50, 0x48, 0x90 } },
+    .unit_speed_call = 0x0395c4b1, .unit_speed = 0x03511fa0,
+    .hourly_tasks = {
+      { 0x0c900398, "UnitCancelRetreatIfNeeded" },         /* 912 */
+      { 0x0c900828, "UnitHandleAttachment" },              /* 913 */
+      { 0x0c900cb8, "UnitProgressMovementOneDay" },        /* 913 */
+      { 0x0c901b38, "UnitRemoveOverload" },                /* 913 */
+      { 0x0c9013f8, "CalcCachedValuesForStartingBattle" }, /* 913 */
+      { 0x0c9016a8, "UnitStartBattles" },                  /* 913 */
+      { 0x0c907e88, "CombatDailyUpdate" },                 /* 914 */
+      { 0x0c9b2ad8, "ClearArrivingUnits" },                /* 916 */
+      { 0x0c9b2d88, "UpdateArrivingUnits" },               /* 917 */
+    },
   },
 };
 
@@ -99,6 +129,7 @@ typedef void (*engine_free_fn)(void *p);
 typedef uint64_t (*checksum_fn)(void *obj, uint64_t flag);
 
 static int g_hours_per_tick = 2;
+static int g_movement;           /* hourly movement on (ini hourly_movement and the build checks) */
 static int g_first_hour = 7;     /* hour the first tick of a day shows */
 static uint8_t *g_base;
 static const build_t *g_build;
@@ -250,6 +281,102 @@ static void scale_speed_table(void) {
   log_line("GAME_SPEED_TICKS (seconds per tick) %s -> %s", before, after);
 }
 
+/* ---- hourly movement ----
+   On an in-between tick the DLL runs one of the game's own task graphs (the
+   lists the date step picks for a new day), but every task's Prepare goes
+   through hook_prepare, which skips all tasks except hourly_tasks while
+   g_inbetween is set. A skipped Prepare leaves the task's job empty, and the
+   stage executor then counts it done. Movement then runs 24/h times a day, so
+   the unit speed it reads is scaled by h/24. 913_SubUnitsProcessMoveCost (the
+   march morale cost) is not in the list: it charges once per call. */
+typedef void (*prepare_fn)(void *task, void *ctx);
+typedef void (*graph_run_fn)(void *gs, void *date, void *graph);
+typedef int64_t *(*unit_speed_fn)(void *unit, int64_t *out, uint64_t flag);
+
+static graph_run_fn g_graph_run;
+static unit_speed_fn g_unit_speed;
+static volatile LONG g_inbetween;
+static void *g_allowed_vt[12];
+static const char *g_allowed_name[12];
+static int g_allowed_n;
+static volatile LONG g_ran_mask, g_skipped;
+
+static void hook_prepare(void *task, void *ctx) {
+  void **vt = *(void ***)task;
+  if (g_inbetween) {
+    int i = 0;
+    while (i < g_allowed_n && g_allowed_vt[i] != (void *)vt) i++;
+    if (i == g_allowed_n) {
+      InterlockedIncrement(&g_skipped);
+      return;
+    }
+    InterlockedOr(&g_ran_mask, 1L << i);
+  }
+  ((prepare_fn)vt[9])(task, ctx);
+}
+
+/* the movement job's speed read: a day's move split over the day's ticks */
+static int64_t *hook_unit_speed(void *unit, int64_t *out, uint64_t flag) {
+  int64_t *r = g_unit_speed(unit, out, flag);
+  *out = *out * g_hours_per_tick / 24;
+  return r;
+}
+
+/* A task graph from the game state's map (key = new day/week/month/year flags).
+   Every graph holds the daily tasks, and all others are skipped, so any will do;
+   the one with the fewest flags (plain day) is the smallest. Read from the map each
+   time rather than remembered from the last day, so a player joining mid-day runs
+   the same as everyone else. */
+static void *find_graph(uint8_t *gs) {
+  uint8_t *table = *(uint8_t **)(gs + 0xe0);
+  int mask = *(int *)(gs + 0xec);
+  int n = mask + 1 + gs[0xf0];
+  if (!table || mask < 0 || mask > 0xffff) return NULL;
+  if (readable_bytes(table, (size_t)n * 0x28) < (size_t)n * 0x28) return NULL;
+  void *best = NULL;
+  int best_flags = 99;
+  for (int i = 0; i < n; i++) {
+    uint8_t *e = table + (size_t)i * 0x28;
+    if (!e[4]) continue; /* empty slot */
+    int flags = !!e[8] + !!e[9] + !!e[10] + !!e[11];
+    int stages = *(int *)(e + 0x10 + 0xc);
+    if (stages <= 0 || stages > 100000 || !*(void **)(e + 0x10)) continue;
+    if (flags < best_flags) {
+      best = e + 0x10;
+      best_flags = flags;
+    }
+  }
+  return best;
+}
+
+static uint64_t g_hourly_runs;
+
+static int run_hourly_tasks(uint8_t *gs) {
+  void *graph = find_graph(gs);
+  if (!graph) {
+    static int warned;
+    if (!warned++) log_line("hourly movement: no task graph in the game state; only the battle round runs");
+    return 0;
+  }
+  uint64_t date = *(uint64_t *)(gs + 8);
+  g_ran_mask = 0;
+  g_skipped = 0;
+  InterlockedExchange(&g_inbetween, 1);
+  g_graph_run(gs, &date, graph);
+  InterlockedExchange(&g_inbetween, 0);
+  if (++g_hourly_runs <= 2) {
+    char ran[512] = "", missing[512] = "";
+    for (int i = 0; i < g_allowed_n; i++) {
+      char *dst = (g_ran_mask & (1L << i)) ? ran : missing;
+      snprintf(dst + strlen(dst), 512 - strlen(dst), "%s%s", *dst ? " " : "", g_allowed_name[i]);
+    }
+    log_line("hourly run %llu: graph %p (%d stages), %ld tasks skipped; ran: %s; not in the graph: %s",
+             (unsigned long long)g_hourly_runs, graph, *(int *)((uint8_t *)graph + 0xc), (long)g_skipped, ran,
+             *missing ? missing : "none");
+  }
+  return 1;
+}
+
 /* ---- date step: one tick ---- */
 static uint64_t g_ticks, g_extra_rounds;
 static void *g_last_gs;
@@ -270,14 +397,18 @@ static void hook_step(void *gs) {
   g_ticks++;
 
   const char *round = "daily task";
-  if (!g_combat_ran) {
-    mgr = combat_manager();
-    if (mgr) {
-      g_tick(mgr, NULL, NULL, NULL);
-      g_extra_rounds++;
-      round = "extra";
-    } else {
-      round = "SKIPPED (no manager)";
+  int32_t hours_now = *(int32_t *)((uint8_t *)gs + 8);
+  if (hours_now % 24 != 0) { /* in-between tick: the step ran no task list */
+    if (g_movement && run_hourly_tasks(gs)) round = g_combat_ran ? "hourly tasks" : "hourly tasks, NO BATTLE ROUND";
+    if (!g_combat_ran) {
+      mgr = combat_manager();
+      if (mgr) {
+        g_tick(mgr, NULL, NULL, NULL);
+        g_extra_rounds++;
+        round = "extra";
+      } else {
+        round = "SKIPPED (no manager)";
+      }
     }
   }
 
@@ -317,8 +448,8 @@ static uint64_t hook_checksum(void *obj, uint64_t flag) {
   const char *chars;
   uint32_t len;
   string_view(version, &chars, &len);
-  int n = snprintf(g_salted_version, sizeof g_salted_version, "%.*s+abm-hourly-%dh",
-                   (int)(len < 64 ? len : 64), chars, g_hours_per_tick);
+  int n = snprintf(g_salted_version, sizeof g_salted_version, "%.*s+abm-hourly-%dh%s",
+                   (int)(len < 64 ? len : 64), chars, g_hours_per_tick, g_movement ? "-move" : "");
   /* a heap-form string over our own buffer, flagged not-owned so the engine never frees it */
   *(char **)version = g_salted_version;
   *(uint32_t *)(version + 8) = (uint32_t)n;
@@ -413,8 +544,41 @@ static const build_t *check_build(uint8_t *base) {
   return ok ? b : NULL;
 }
 
+static int vftable_is_task(uint8_t *base, uint32_t vt_rva, const char *name) {
+  IMAGE_NT_HEADERS64 *nt = (IMAGE_NT_HEADERS64 *)(base + ((IMAGE_DOS_HEADER *)base)->e_lfanew);
+  uint8_t *end = base + nt->OptionalHeader.SizeOfImage;
+  uint8_t *col = *(uint8_t **)(base + vt_rva - 8);
+  if (col < base || col + 24 > end) return 0;
+  uint32_t td = *(uint32_t *)(col + 12);
+  if (td + 16 + 128 > nt->OptionalHeader.SizeOfImage) return 0;
+  char want[128];
+  int n = snprintf(want, sizeof want, ".?AVCTickTask_%s@", name);
+  return strncmp((const char *)base + td + 16, want, (size_t)n) == 0;
+}
+
+/* Checks the hourly-movement sites; fills the allowed task list. */
+static int check_movement(uint8_t *base, const build_t *b) {
+  if (!check_code(base, &b->graph_map_lookup, "task-graph map lookup") ||
+      !check_code(base, &b->graph_map_end, "task-graph map end") ||
+      !check_code(base, &b->graph_run_args, "task-graph run arguments") ||
+      !check_code(base, &b->prepare_call, "task Prepare call") ||
+      !rel32_target_is(base, b->graph_run_call, b->graph_run, "task-graph run call") ||
+      !rel32_target_is(base, b->unit_speed_call, b->unit_speed, "unit speed call"))
+    return 0;
+  g_allowed_n = 0;
+  for (int i = 0; i < 12 && b->hourly_tasks[i].name; i++) {
+    if (!vftable_is_task(base, b->hourly_tasks[i].vftable, b->hourly_tasks[i].name)) {
+      log_line("vftable rva 0x%x is not CTickTask_%s", b->hourly_tasks[i].vftable, b->hourly_tasks[i].name);
+      return 0;
+    }
+    g_allowed_vt[g_allowed_n] = base + b->hourly_tasks[i].vftable;
+    g_allowed_name[g_allowed_n++] = b->hourly_tasks[i].name;
+  }
+  return g_allowed_n > 0;
+}
+
 /* Applies every patch to the image at base (build already checked). */
-static int apply_patches(uint8_t *base, const build_t *b, int hours) {
+static int apply_patches(uint8_t *base, const build_t *b, int hours, int movement) {
   g_base = base;
   g_build = b;
   g_tick = (tick_fn)(void *)(base + b->combat_tick);
@@ -423,16 +587,23 @@ static int apply_patches(uint8_t *base, const build_t *b, int hours) {
   g_string_from_cstr = (string_from_cstr_fn)(void *)(base + b->string_from_cstr);
   g_free = (engine_free_fn)(void *)(base + b->engine_free);
   g_checksum = (checksum_fn)(void *)(base + b->checksum);
+  if (b->combat_manager_field) g_chain_offset = (int)b->combat_manager_field; /* rounds run right after a load */
+  g_graph_run = (graph_run_fn)(void *)(base + b->graph_run);
+  g_unit_speed = (unit_speed_fn)(void *)(base + b->unit_speed);
+  g_movement = movement && check_movement(base, b);
+  if (movement && !g_movement) log_line("hourly movement sites differ from the known build: movement stays daily");
 
   uint8_t *stubs = alloc_near(base);
   if (!stubs) {
     log_line("no free memory near the image for call stubs: nothing patched");
     return 0;
   }
-  uint8_t *step_stub = stubs, *checksum_stub = stubs + 16;
+  uint8_t *step_stub = stubs, *checksum_stub = stubs + 16, *prepare_stub = stubs + 32, *speed_stub = stubs + 48;
   make_abs_jump(step_stub, (void *)hook_step);
   make_abs_jump(checksum_stub, (void *)hook_checksum);
-  FlushInstructionCache(GetCurrentProcess(), stubs, 32);
+  make_abs_jump(prepare_stub, (void *)hook_prepare);
+  make_abs_jump(speed_stub, (void *)hook_unit_speed);
+  FlushInstructionCache(GetCurrentProcess(), stubs, 64);
 
   /* 1. checksum first: from here on a patched game never matches an unpatched one */
   for (int i = 0; i < 3; i++)
@@ -457,6 +628,24 @@ static int apply_patches(uint8_t *base, const build_t *b, int hours) {
       !write_code(base + b->step_offset_a.rva + 2, &offset, 4) ||
       !write_code(base + b->step_offset_b.rva + 2, &offset, 4))
     return 0;
+
+  /* 5. hourly movement: every task Prepare through hook_prepare, with the same
+     registers and return address (lea rdx,[rbp+X]; mov rcx,rbx; nop; call stub);
+     the movement job's speed scaled */
+  if (g_movement) {
+    uint8_t *site = base + b->prepare_call.rva;
+    uint8_t code[16];
+    memcpy(code, site + 3, 7);      /* lea rdx,[rbp+X] */
+    memcpy(code + 7, site + 10, 3); /* mov rcx,rbx */
+    code[10] = 0x90;
+    code[11] = 0xE8;
+    int64_t rel = prepare_stub - (site + 16);
+    if (rel != (int32_t)rel) return 0;
+    int32_t rel32 = (int32_t)rel;
+    memcpy(code + 12, &rel32, 4);
+    if (!write_code(site, code, sizeof code)) return 0;
+    if (!retarget_rel32(base, b->unit_speed_call, speed_stub)) return 0;
+  }
   return 1;
 }
 
@@ -503,7 +692,9 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved) {
   int enabled = GetPrivateProfileIntW(L"ticks", L"enabled", 1, ini);
   int hours = GetPrivateProfileIntW(L"ticks", L"hours_per_tick", 2, ini);
   int first = GetPrivateProfileIntW(L"ticks", L"first_hour", 7, ini);
-  log_line("Ars Belli hourly ticks loaded; %ls: enabled=%d hours_per_tick=%d first_hour=%d", ini, enabled, hours, first);
+  int movement = GetPrivateProfileIntW(L"ticks", L"hourly_movement", 1, ini);
+  log_line("Ars Belli hourly ticks loaded; %ls: enabled=%d hours_per_tick=%d first_hour=%d hourly_movement=%d", ini,
+           enabled, hours, first, movement);
   if (!enabled || hours == 24) {
     log_line("off: pass-through only");
     return TRUE;
@@ -526,9 +717,11 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved) {
   uint8_t *base = (uint8_t *)GetModuleHandleW(NULL);
   const build_t *b = check_build(base);
   if (!b) return TRUE;
-  if (apply_patches(base, b, hours))
-    log_line("build %s patched: a tick is %d hours, %d battle rounds a day, clock shows %02d:00 to %02d:00, checksum salted",
-             b->name, hours, 24 / hours, g_first_hour, g_first_hour + 24 / hours - 1);
+  if (apply_patches(base, b, hours, movement != 0))
+    log_line("build %s patched: a tick is %d hours, %d battle rounds a day, movement %s, clock %02d:00 to %02d:00, "
+             "checksum salted",
+             b->name, hours, 24 / hours, g_movement ? "every tick" : "daily", g_first_hour,
+             g_first_hour + 24 / hours - 1);
   else
     log_line("PATCHING FAILED part-way (see above); restart the game without the DLL");
   return TRUE;
