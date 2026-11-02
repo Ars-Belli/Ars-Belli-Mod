@@ -8,13 +8,13 @@ Workshop mod (the release zip takes only `in_game`, `main_menu`, `loading_screen
 ## What it does (eu5.exe 1.4.6)
 - **Date step** (`0x142fd82e0`): adds `hours_per_tick` instead of 24 hours. The date is still stored in hours,
   and each step sets new-day/week/month/year flags that pick the task list to run. A step inside a day sets
-  no flag, matches no list and runs nothing (the engine logs that once), so daily, monthly and yearly work
+  no flag, matches no list and runs nothing (no log row in game), so daily, monthly and yearly work
   keeps its pace. Patched: three constants (`lea r10,[rax+0x18]` and the two folded `24 - 43800000` offsets).
 - **Battles**: on steps that run no daily tasks the DLL runs one battle round itself: `CCombatManager`
   slot 8, the tick for every battle in progress. The manager is `*(field) + 0x26e40`; the DLL learns which
   game-state field from the first daily battle tick (it scans the game state for the pointer), and until then
-  uses the manager that tick passed, dropped on a date jump (save load). The first guess, global
-  `0x14fac1028 -> +0x108`, gave NULL in game, so in-between rounds were skipped. Day steps run it from the daily task as usual, so every tick is one round:
+  uses the manager that tick passed, dropped on a date jump (save load). In game (1.4.6) the field is
+  `game state + 0x108`; the first guess read it from global `0x14fac1028`, which gave NULL. Day steps run it from the daily task as usual, so every tick is one round:
   24 / `hours_per_tick` rounds a day. Movement, sieges and the rest stay daily.
 - **Game speed**: the mod defines 7 speeds in seconds per day (`01_abm_defines.txt`, `hud_topbar.gui`).
   `NGame.GAME_SPEED_TICKS` (seconds per tick, a float array at `*0x14fb229d0`, count at
