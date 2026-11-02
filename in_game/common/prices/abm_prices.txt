@@ -66,3 +66,49 @@ abm_sabotage_fort_price = {
 	scaled_recipient_gold = 3
 	min_scale = 25
 }
+
+# Reinforcement price option, switched off on 2026-11-02: reinforcing costs vanilla 5% of the build price. Remove the
+# leading # from the blocks below to charge a quarter of the build price (half was tried first). Study: section 15 of
+# EU5 Combat Mechanics (1.4.4).md and .tools/scripts/battle_sim/analysis/military_costs/.
+## Reinforcing costs a quarter of recruiting. Vanilla charges 5%, so losing men was almost free and replacing them gave no
+## reason to avoid a bad battle. Only gold changes: the manpower price is already one man per man. Navies stay vanilla.
+# REPLACE:army_heavy_infantry_reinforce = {
+# 	gold = 12.5 #a quarter of the build price 50, vanilla 2.5
+# 	manpower = 1
+# }
+
+# REPLACE:army_light_infantry_reinforce = {
+# 	gold = 10 #a quarter of the build price 40, vanilla 2
+# 	manpower = 1
+# }
+
+# REPLACE:army_heavy_cavalry_reinforce = {
+# 	gold = 37.5 #a quarter of the build price 150, vanilla 7.5
+# 	manpower = 1
+# }
+
+# REPLACE:army_light_cavalry_reinforce = {
+# 	gold = 25 #a quarter of the build price 100, vanilla 5
+# 	manpower = 1
+# }
+
+# REPLACE:army_artillery_reinforce = {
+# 	gold = 50 #a quarter of the build price 200, vanilla 10
+# 	manpower = 1
+# }
+
+# REPLACE:army_auxiliary_reinforce = {
+# 	gold = 25 #a quarter of the build price 100, vanilla 5
+# 	manpower = 1
+# }
+
+## The unit adds below are on top of the category price, so they have to follow it
+# REPLACE:a_clan_retainers_reinforce = {
+# 	gold = -7.5 #Base 12.5 - 7.5 = 5, a quarter of the build price 20
+# 	manpower = 0
+# }
+
+# REPLACE:a_clan_retainer_cavalry_reinforce = {
+# 	gold = -12.5 #Base 37.5 - 12.5 = 25, a quarter of the build price 100
+# 	manpower = 0
+# }
