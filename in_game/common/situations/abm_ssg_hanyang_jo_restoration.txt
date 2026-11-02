@@ -1,0 +1,43 @@
+﻿ssg_hanyang_jo_restoration = {
+	monthly_spawn_chance = monthly_spawn_chance_unique
+
+	can_start = {
+		country_exists = c:SSG
+		c:SSG = {
+			has_variable = ssg_jo_restoration_path
+			NOT = { has_variable = ssg_reunited_goryeo }
+		}
+	}
+
+	can_end = {
+		custom_tooltip = {
+			text = ssg_hanyang_jo_restoration_end_tt
+			OR = {
+				NOT = { country_exists = c:SSG }
+				c:SSG ?= { has_variable = ssg_reunited_goryeo }
+			}
+		}
+	}
+
+	visible = {
+		has_variable = ssg_jo_restoration_path
+		NOT = { has_variable = ssg_reunited_goryeo }
+	}
+
+	tooltip = {
+		if = {
+			limit = { owner ?= c:SSG }
+			custom_tooltip = ssg_hanyang_jo_restoration_map_tt
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = { owner ?= c:SSG }
+			value = owner.country_color
+		}
+		else = {
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+}
