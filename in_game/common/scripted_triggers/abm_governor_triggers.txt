@@ -28,14 +28,17 @@ abm_has_unused_local_governor = {
 }
 
 # Naval posts have no lieutenancy-style deductions and no minimum floor, so the
-# check is simply "built < cap" (vanilla naval_governor.allow). A Provincial
-# Administration holds a post without touching num_naval_governors, so it is subtracted
-# here: otherwise the second administration onwards would be free.
+# check is simply "built < cap" (vanilla naval_governor.allow). Buildings that hold a
+# post WITHOUT touching num_naval_governors are subtracted here, otherwise the second
+# one onwards would be free: abm_provincial_administration and abm_proconsulate.
+# Anything new that consumes a naval post has to be added to this list AND to
+# naval_governor.allow in abm_naval_governors.txt.
 abm_has_unused_naval_governor = {
 	modifier:num_naval_governors > 0
 	total_building_levels_including_construction:naval_governor < {
 		value = modifier:num_naval_governors
 		subtract = total_building_levels_including_construction:abm_provincial_administration
+		subtract = total_building_levels_including_construction:abm_proconsulate
 	}
 }
 

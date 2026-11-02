@@ -247,3 +247,66 @@ abm_admiralty_board = {
 	ai_forbid_shutdown = yes
 	important_for_AI = yes
 }
+
+# Ars Belli - Proconsulate.
+#
+# An annex to a local governor's seat: the governor's reach is extended by a naval
+# governor post that is repurposed for civil administration. Three rules, in order:
+#   - it can only stand where a local governor already stands (and it dies with him);
+#   - it holds one naval governor post, counted exactly like a Provincial Administration
+#     (see abm_has_unused_naval_governor - the post is subtracted, not a modifier);
+#   - it amplifies the proximity source the location already has, +25% on the local
+#     governor's 80, i.e. 100. raw_modifier, not modifier, so a badly supplied office
+#     still gives the full quarter instead of a goods-access fraction of it.
+#
+# No levels and no country-wide limit: the engine allows one instance per location, and
+# the local governor plus the naval post supply do the limiting.
+
+abm_proconsulate = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = nobles
+	max_levels = 1
+	forbidden_for_estates = yes
+
+	category = government_category
+	employment_size = large_noble_employment
+
+	rural_settlement = no
+	town = no
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		has_building = building_type:local_governor
+	}
+
+	allow = {
+		has_building = building_type:local_governor
+		owner ?= scope:actor
+		scope:actor = {
+			abm_has_unused_naval_governor = yes
+		}
+	}
+
+	# an annex to the governor's seat: no governor, no proconsulate
+	remove_if = {
+		location = {
+			NOT = { has_building = building_type:local_governor }
+		}
+	}
+
+	raw_modifier = {
+		local_proximity_source_modifier = 0.25
+	}
+
+	possible_production_methods = {
+		abm_governor_offices_maintenance
+	}
+
+	ai_forbid_shutdown = yes
+	important_for_AI = yes
+}
