@@ -28,8 +28,38 @@ abm_has_unused_local_governor = {
 }
 
 # Naval posts have no lieutenancy-style deductions and no minimum floor, so the
-# check is simply "built < cap" (vanilla naval_governor.allow).
+# check is simply "built < cap" (vanilla naval_governor.allow). A Provincial
+# Administration holds a post without touching num_naval_governors, so it is subtracted
+# here: otherwise the second administration onwards would be free.
 abm_has_unused_naval_governor = {
 	modifier:num_naval_governors > 0
-	total_building_levels_including_construction:naval_governor < modifier:num_naval_governors
+	total_building_levels_including_construction:naval_governor < {
+		value = modifier:num_naval_governors
+		subtract = total_building_levels_including_construction:abm_provincial_administration
+	}
+}
+
+# One copy per AREA per COUNTRY. Vanilla's country_has_no_other_copy_of_building is
+# country-wide, so this mirrors its shape with an area check. The location that already
+# holds the building passes, so upgrading/rebuilding is not blocked.
+#
+# The owner filter matters: areas straddle borders, and another country's copy is none of
+# our business - without it a neighbour holding one anywhere in the area blocked ours.
+# root.owner (= the location being built in) is used instead of scope:actor so the trigger
+# also works from location_potential, where scope:actor does not exist.
+abm_area_has_no_other_copy_of_building = {
+	custom_tooltip = {
+		text = abm_area_has_no_other_copy_of_building_tt
+		OR = {
+			has_building = building_type:$type$
+			area = {
+				NOT = {
+					any_location_in_area = {
+						has_building = building_type:$type$
+						owner ?= root.owner
+					}
+				}
+			}
+		}
+	}
 }

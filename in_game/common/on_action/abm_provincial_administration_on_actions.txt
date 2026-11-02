@@ -1,0 +1,66 @@
+﻿# Ars Belli - Provincial Administration upkeep of the area effect.
+#
+# The area effect is a static modifier pushed onto each owned location of the area by
+# on_built (building_types/abm_provincial_administration.txt), because buildings cannot
+# modify anything but their own location. Two things can leave it stale: a destruction
+# path that skips on_destroyed, and locations changing hands inside an area that still
+# has an administration. This pass runs once a year per country and does both jobs:
+# strips the modifier where our administration in that area is gone, re-applies it
+# around every administration we hold (add_location_modifier with mode = replace is
+# idempotent, so this can never stack).
+#
+# yearly_country_pulse is also defined by vanilla (country_yearly.txt) and by
+# abm_mp_limits_on_actions.txt; on_actions merge across files, root = country.
+
+yearly_country_pulse = {
+	on_actions = {
+		abm_provincial_administration_yearly
+	}
+}
+
+abm_provincial_administration_yearly = {
+	effect = {
+		# 1. remove it where the area no longer holds one of our administrations
+		every_owned_location = {
+			limit = {
+				has_location_modifier = abm_provincial_administration_area
+			}
+			save_temporary_scope_as = abm_pa_stale_loc
+			area = {
+				if = {
+					limit = {
+						NOT = {
+							any_location_in_area = {
+								owner ?= scope:abm_pa_stale_loc.owner
+								has_building = building_type:abm_provincial_administration
+							}
+						}
+					}
+					scope:abm_pa_stale_loc = {
+						remove_location_modifier = abm_provincial_administration_area
+					}
+				}
+			}
+		}
+
+		# 2. refresh it around every administration we still hold
+		every_owned_location = {
+			limit = {
+				has_building = building_type:abm_provincial_administration
+			}
+			save_temporary_scope_as = abm_pa_seat
+			area = {
+				every_location_in_area = {
+					limit = {
+						owner ?= scope:abm_pa_seat.owner
+					}
+					add_location_modifier = {
+						modifier = abm_provincial_administration_area
+						years = -1
+						mode = replace
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,150 @@
+﻿# Ars Belli - Provincial Administration.
+#
+# Takes one unused naval governor post (abm_has_unused_naval_governor, which subtracts
+# every administration already built or under construction) and spreads
+# control, development, prosperity and population growth over every owned location
+# of the area it stands in. One per AREA (abm_area_has_no_other_copy_of_building),
+# single level, and the area effect is applied with mode = replace so duplicate
+# buildings can never double it.
+#
+# Upkeep mirrors vanilla naval_governor: the production method is defined inline here
+# (naval_governor_maintenance is building-local in capital_buildings.txt, not a
+# global production method), and the construction demand is the same.
+#
+# Build gate: one per area, every location of ours in the area must be a core with our
+# religion and a primary/accepted dominant culture, average control >= 70%, and an
+# unused naval governor post. remove_if tears it down if average control drops below
+# 50% or if the location is no longer controlled by its owner (captured).
+#
+# The area cannot be covered by a building modifier - buildings only modify their own
+# location - hence the on_built / on_destroyed effect pass over every_location_in_area,
+# kept honest by abm_provincial_administration_yearly (on_action), which re-applies the
+# effect around every administration and strips it where ours is gone.
+# The seat takes its bonus from that same static modifier, so the building itself carries
+# no modifier block; one would apply a second time on the seat only.
+
+abm_provincial_administration = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = clergy
+	max_levels = 1
+	forbidden_for_estates = yes
+
+	category = government_category
+	employment_size = large_religious_building_employment
+
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		# is_port = yes
+		is_overseas_for_owner = no
+		is_capital = no
+		is_historical_capital = no
+		# no has_proximity_source_building = no: the administration provides no proximity
+		# source, so it neither blocks nor is blocked by a local governor.
+	}
+
+	allow = {
+		# own land only, like vanilla naval_governor ("owner = scope:actor #not in
+		# subjects"); also makes root.owner in abm_area_has_no_other_copy_of_building
+		# the building country
+		owner ?= scope:actor
+		abm_area_has_no_other_copy_of_building = { type = abm_provincial_administration }
+		scope:actor = {
+			average_control >= 0.10	#test: 0.75
+			abm_has_unused_naval_governor = yes
+		}
+		# every location of ours in the area must be a settled part of the realm
+		area = {
+			NOT = {
+				any_location_in_area = {
+					# ?= and not =: an unowned / colonisable location resolves owner to a
+					# null object, and comparing it is a script error on every evaluation.
+					# Same construct as vanilla assume_fort_command.txt -> visible.
+					owner ?= scope:actor
+					NOT = {
+						integration_level = core
+						# ?= because a location can have no dominant religion at all, and
+						# comparing an unset scope is an invalid-left-side script error
+						dominant_religion ?= owner.religion
+						owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+					}
+				}
+			}
+		}
+	}
+
+	# lost when the realm's hold on its provinces collapses, or when the seat is taken
+	remove_if = {
+		OR = {
+			owner ?= { average_control < 0.5 }
+			location = {
+				exists = owner
+				# exists = controller first: on a location that is not occupied the link
+				# may be unset, and NOT = { } of a failed comparison would destroy the
+				# building in a province nobody ever took
+				exists = controller
+				NOT = { controller = owner }
+			}
+		}
+	}
+
+	on_built = {
+		location = {
+			save_temporary_scope_as = abm_gov_loc
+			area = {
+				every_location_in_area = {
+					limit = { owner ?= scope:abm_gov_loc.owner }
+					add_location_modifier = {
+						modifier = abm_provincial_administration_area
+						years = -1
+						mode = replace
+					}
+				}
+			}
+		}
+	}
+
+	# Strip only. Deciding "does another administration survive in this area" from inside
+	# its own destruction is unreliable (the dying building may or may not still register),
+	# and a wrong answer leaves the area effect behind forever. Stripping is always safe:
+	# abm_provincial_administration_yearly (on_action) re-applies it around any survivor.
+	on_destroyed = {
+		location = {
+			area = {
+				every_location_in_area = {
+					remove_location_modifier = abm_provincial_administration_area
+				}
+			}
+		}
+	}
+
+	unique_production_methods = {
+		naval_governor_maintenance = {
+			icon_type = building_type
+			icon = naval_governor
+			tools = 1
+			masonry = 1
+			weaponry = 0.5
+			paper = 3
+			books = 1
+			goods_gold = 1
+			furniture = 2
+			naval_supplies = 0.5
+			fine_cloth = 0.5
+
+			category = building_maintenance
+		}
+	}
+
+	construction_demand = local_governor_construction
+
+	ai_forbid_shutdown = yes
+	important_for_AI = yes
+}

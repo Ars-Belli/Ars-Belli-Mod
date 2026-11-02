@@ -38,7 +38,12 @@ REPLACE:naval_governor = {
 			custom_tooltip = {
 				text = naval_governor_tt
 				scope:actor = {
-					total_building_levels_including_construction:naval_governor < modifier:num_naval_governors
+					# Provincial Administrations hold naval posts without changing
+					# num_naval_governors, so they count against the same cap
+					total_building_levels_including_construction:naval_governor < {
+						value = modifier:num_naval_governors
+						subtract = total_building_levels_including_construction:abm_provincial_administration
+					}
 				}
 			}
 		}
