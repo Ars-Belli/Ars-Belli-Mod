@@ -296,6 +296,15 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Food: combat doc section 8. No mod cause. Full-size rule, regiment supply weight, retreat food loss.
 - Castile against Morocco after 2%, 400 men and both x2: start 40/11 to 34/8, as they stand 95/68 to 98/78, full levies 61/23 to 77/42. castile_morocco README.
 
+### 3w. Military costs: horses and camel cavalry x10, reinforcement checkbox (2026-11-01, `feature/military-costs`)
+
+- Every `horses` line in the army baskets is x10: same-name `in_game/common/goods_demand/army_demands.txt`, D009 jinetes and cuantiosos by `TRY_REPLACE:` in `abm_d009_army_demands.txt`. Camel cavalry x10 camels too (2026-11-02, 8 camel_cavalry and camel_heavy_cavalry lines); camel auxiliaries and elephants untouched.
+- Reinforcement prices vanilla (user, 2026-11-02): the six army `_reinforce` `REPLACE:` blocks at a quarter of `_build` (half before) and the Clan Retainer adds are commented out in `abm_prices.txt`, ready to switch on. 25% leaves cavalry ahead at base price (20 / 78 wars), 50% gives infantry 56 / 15; from cavalry gold x1.5 infantry wins either way.
+- Reinforcement checkbox (2026-11-02, replaces the slider coupling): `button_checkbox` after both army `button_checkbox_auto` blocks in a same-name `in_game/gui/economy_lateralview.gui`; scripted GUIs `abm_toggle_reinforcement` / `abm_reinforcement_is_stopped` (`in_game/common/scripted_guis/abm_reinforcement_gui.txt`) add or remove static modifier `abm_reinforcement_stopped` (`regiment_reinforcement_speed = -10`, `years = -1`). Army slider vanilla again. AI never toggles. A real slider is not possible: maintenance sliders come from an engine list. Not tested in game.
+- Horses reach cavalry three ways: gold price (market goods impact, up to about x4), reinforcement speed (`goods_access_factor`, which horses now dominate, 0.057 without them), a recruit warning. Battle power is untouched, so a rich, patient country with horses keeps pure cavalry.
+- Not verified in a game. `TRY_REPLACE:` in goods_demand is unconfirmed; `REPLACE:` in prices bound for hire_mercenary_premium, not checked for these keys. Check in a save: `impacts` and `missing` show the baskets; reinforce tooltips show the price. Open risk: reinforcing runs into debt down to -10,000 gold, and how the AI copes is unknown.
+- Numbers: section 15 of the combat doc; scripts `.tools/scripts/battle_sim/analysis/military_costs/`.
+
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.
 - The real block is levies. The army list refuses any army with a levy, mercenary or prisoner regiment; vanilla's comment says the lend silently no-ops on levies. Three 1.4 saves: 5 of 76, 8 of 76, 9 of 96 subject armies can be lent, 2-4% of regiments (`analysis/meta_1.4/subject_armies.js`). Liberty desire is not it: 342 of 354 subjects are under 25.
