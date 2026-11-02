@@ -58,3 +58,73 @@ REPLACE:city_upgrade = {
 	gold = 600
 	min = 0.5
 }
+
+# Regiments and ships cost 30% to build, vanilla in in_game/common/prices/02_units.txt. Manpower and sailors stay 1, reinforcement and upkeep are vanilla.
+# Base price rather than a -70% *_build_cost_modifier, which would add up with the ones on advances.
+
+REPLACE:army_heavy_infantry_build = {
+	gold = 15		# vanilla 50
+	manpower = 1
+}
+
+REPLACE:army_light_infantry_build = {
+	gold = 12		# vanilla 40
+	manpower = 1
+}
+
+REPLACE:army_heavy_cavalry_build = {
+	gold = 45		# vanilla 150
+	manpower = 1
+}
+
+REPLACE:army_light_cavalry_build = {
+	gold = 30		# vanilla 100
+	manpower = 1
+}
+
+REPLACE:army_artillery_build = {
+	gold = 60		# vanilla 200
+	manpower = 1
+}
+
+REPLACE:army_auxiliary_build = {
+	gold = 30		# vanilla 100
+	manpower = 1
+}
+
+REPLACE:navy_heavy_ship_build = {
+	gold = 60		# vanilla 200
+	sailors = 1
+}
+
+REPLACE:navy_light_ship_build = {
+	gold = 30		# vanilla 100
+	sailors = 1
+}
+
+REPLACE:navy_galley_build = {
+	gold = 30		# vanilla 100
+	sailors = 1
+}
+
+REPLACE:navy_transport_build = {
+	gold = 30		# vanilla 100
+	sailors = 1
+}
+
+# Unit-specific adds on top of the category price, scaled the same way. Clan Retainers subtract from heavy infantry and cavalry, so at vanilla -30 they would cost less than nothing.
+
+REPLACE:n_panokseon_build = {
+	gold = 18		# vanilla 60
+	sailors = 1
+}
+
+REPLACE:a_clan_retainers_build = {
+	gold = -9		# vanilla -30: 15 - 9 = 6, 30% of vanilla's 20
+	manpower = 0
+}
+
+REPLACE:a_clan_retainer_cavalry_build = {
+	gold = -15		# vanilla -50: 45 - 15 = 30, 30% of vanilla's 100
+	manpower = 0
+}
