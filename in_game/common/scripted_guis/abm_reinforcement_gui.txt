@@ -1,0 +1,23 @@
+﻿# The reinforcement checkbox beside the army maintenance slider (in_game/gui/economy_lateralview.gui).
+# Unticked, the country carries abm_reinforcement_stopped and no regiment refills. The AI never uses it.
+abm_toggle_reinforcement = {
+	scope = country
+	effect = {
+		if = {
+			limit = { has_country_modifier = abm_reinforcement_stopped }
+			remove_country_modifier = abm_reinforcement_stopped
+		}
+		else = {
+			add_country_modifier = {
+				modifier = abm_reinforcement_stopped
+				years = -1
+			}
+		}
+	}
+}
+
+# Read by the checkbox for its state.
+abm_reinforcement_is_stopped = {
+	scope = country
+	is_shown = { has_country_modifier = abm_reinforcement_stopped }
+}

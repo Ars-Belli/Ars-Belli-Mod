@@ -588,8 +588,8 @@
 	// Each price is scaled by its army_<category>_<build|reinforce|maintenance>_cost_modifier (country costMod); upkeep is
 	// divided by (1 + army maintenance efficiency) and reinforcement gold by (1 + reinforce efficiency).
 	// Checked on a 1342 save: monthly manpower upkeep matched to the man; gold upkeep in the budget was ~68% of the
-	// price-list value (a factor not traced). scenario.costs[unitKey or category] = { buildGold, upkeepGold, reinforceGold }
-	// overrides gold (reinforceGold per 1,000 men).
+	// price-list value, the market's goods impact on the unit's basket (doc section 15), which is not modelled here.
+	// scenario.costs[unitKey or category] = { buildGold, upkeepGold, reinforceGold } overrides gold (reinforceGold per 1,000 men).
 	const NO_PRICE = { b: [0, 0], r: [0, 0], m: [0, 0] };
 	function unitCost(g, c, costs) {
 		const u = unitStats(g.type), levy = g.levy != null ? !!g.levy : !!u.levy;
@@ -750,8 +750,11 @@
 	// A side whose army is under collapseAt (default 50%) of its full men when a battle is due has lost the war.
 	// opts.endOn = 'manpower' instead: the war goes on (months default 600) until a side has exhausted its manpower, i.e. its pool
 	// is empty while its army is still short of men; that side has lost (both in the same month: the one with fewer men left).
-	// opts = { months, interval, collapseAt, endOn, experience, sides: [{ income, max, pool, expDecay, expGain }] } (men a month / men;
+	// opts = { months, interval, collapseAt, endOn, experience, sides: [{ income, max, pool, expDecay, expGain, goldIncome, gold }] } (men a month / men;
 	// expDecay default 0.04 = base 5% - 1% regulars; monarchies get another -1% from Military Traditions in age III).
+	// goldIncome = gold a month for the army (off when not given): it pays upkeep, what is left pays reinforcement at the reinforce
+	// price and wiped regiments at the build price, and no men come back while the balance is at or below 0. The game itself keeps
+	// reinforcing down to -10,000 gold (0x14352f210) unless reinforcement is switched off, so this is the budget a country holds to.
 	function simulateWar(scnIn, opts = {}, seed) {
 		const scn = JSON.parse(JSON.stringify(scnIn)), ns = normalize(scn);
 		// interval 'ready': the next battle comes once both sides are back to readyAt (default 99%) of their men, or once one side
@@ -767,7 +770,8 @@
 			const w = (opts.sides || [])[i] || {}, income = (+w.income || 0) / 1000;
 			const max = w.max != null ? w.max / 1000 : income * D.MAX_MANPOWER_YEARS * 12;
 			const expDecay = Math.max(0, w.expDecay != null ? w.expDecay : D.EXPERIENCE_DECAY + D.REGULAR_DECAY);
-			return { income, max, pool: w.pool != null ? w.pool / 1000 : max, upkeep: 0, reinforce: 0, won: 0, lost: 0, expDecay, expGain: w.expGain || 0 };
+			return { income, max, pool: w.pool != null ? w.pool / 1000 : max, upkeep: 0, reinforce: 0, won: 0, lost: 0, expDecay, expGain: w.expGain || 0,
+				goldIncome: w.goldIncome != null ? +w.goldIncome : null, gold: +w.gold || 0, goldSpent: 0 };
 		});
 		// the battle scenario shares these unit objects, so experience written here is what the next battle uses
 		const G = [0, 1].map(i => ns.sides[i].armies.flatMap((a, j) => {
@@ -817,8 +821,15 @@
 				P.upkeep += Math.min(up, P.pool); P.pool = Math.max(0, P.pool - up);
 				const asks = G[i].filter(x => x.total && str(x.g) < 1 - 1e-9).map(x => ({ x, men: Math.min(x.total * (1 - str(x.g)), x.rebuild ? Infinity : x.total * D.MONTHLY_REINFORCE * (1 + (x.c.reinforceSpeed || 0))) }));
 				const cost = asks.reduce((t, a) => t + a.men * a.x.x.reinforceManpower, 0);
+				if (P.goldIncome != null) {
+					const goldUp = G[i].reduce((t, x) => t + x.x.upkeep * (x.g.count | 0) * str(x.g), 0);
+					P.gold += P.goldIncome - goldUp; P.goldSpent += goldUp;
+				}
 				if (cost <= 0) return;
-				const share = Math.min(1, P.pool / cost);
+				// per 1,000 men: x.reinforce is priced per 1,000, a wiped regiment comes back at its build price
+				const goldCost = P.goldIncome == null ? 0 : asks.reduce((t, a) => t + a.men * (a.x.rebuild ? a.x.x.build / a.x.x.size : a.x.x.reinforce), 0);
+				const share = Math.min(1, P.pool / cost, P.goldIncome == null || goldCost <= 0 ? 1 : Math.max(0, P.gold) / goldCost);
+				if (P.goldIncome != null) { P.gold -= goldCost * share; P.goldSpent += goldCost * share; }
 				for (const a of asks) { a.x.g.strength = Math.min(1, str(a.x.g) + a.men * share / a.x.total); if (str(a.x.g) >= 1 - 1e-9) a.x.rebuild = false; }
 				P.pool -= cost * share; P.reinforce += cost * share;
 			};
@@ -839,7 +850,7 @@
 			} else for (let m = 0; m < interval && month < months; m++) { tick(0); tick(1); month++; if (exhausted()) break; }
 			trace.push({ battle: battles, month, men: [men(0), men(1)], pool: sides.map(p => p.pool), exp: [0, 1].map(avgExp) });
 		}
-		return { loser, battles, months: month, won: sides.map(p => p.won), lost: sides.map(p => p.lost), upkeep: sides.map(p => p.upkeep), reinforce: sides.map(p => p.reinforce),
+		return { loser, battles, months: month, won: sides.map(p => p.won), lost: sides.map(p => p.lost), upkeep: sides.map(p => p.upkeep), reinforce: sides.map(p => p.reinforce), goldSpent: sides.map(p => p.goldSpent),
 			end: [men(0) / full[0], men(1) / full[1]], pool: sides.map(p => p.pool), exp: [0, 1].map(avgExp), full, trace,
 			// pool share of max once the army is refilled (pool - missing men x reinforce manpower): how hard the war is being won
 			reserve: [0, 1].map(i => (sides[i].pool - G[i].reduce((t, x) => t + x.total * (1 - str(x.g)) * x.x.reinforceManpower, 0)) / (sides[i].max || 1)) };
