@@ -308,6 +308,11 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
   - Speed: scaled by h/24 at the movement job's one speed call, so a day's distance is unchanged and the tooltip's arrival date (other callers) stays in days.
   - Kept daily: SubUnitsProcessMoveCost charges march morale once per call, so it stays daily. Sieges, supply and AI orders are daily too.
   - First in-game run (19:47): armies stood still and the "Will arrive in" date slipped every day. The DLL had taken the map's key 0 graph, which is the engine's own every-tick list (13 tasks, no daily ones), so nothing moved between midnights and the midnight move was 1/12 of a day. Fixed: the DLL now takes the smallest graph that holds the movement task, and logs the map. Not yet rerun in game.
+- Arrival date to the hour (2026-11-02, the user's request).
+  - What changed: the unit tooltip's "Will arrive in X on DATE" counts in ticks and shows ", HH:00". Only the tooltip's calls to the engine estimate get the per-tick speed (TLS flag), so AI calls to the same function stay in days.
+  - Fallbacks: if the earliest-arrival date (unit +0x820) is still ahead, or the unit can't get there, the tooltip keeps the engine's date.
+  - Not covered: the map marker text UNIT_WILL_ARRIVE is not built in the exe and stays as is.
+  - Status: offline tests pass, including the calendar against the engine's tables for all 365 days. Not yet run in game.
 - Tests: first build (battle tick x12 a day, no real hours) ran in game on 2026-11-02: hook took, a great battle ended inside one day, no new errors. The user found it too fast (asked for 6) and wanted real hours with the date. The real-hours build passes its offline tests (all sites checked and patched on the mapped 1.4.6 image), not yet run in game.
 - 7 game speeds (2026-11-02, the user's request): `NGame.GAME_SPEED_TICKS` { 8 4 2 1 0.5 0.2 0 } seconds per day, the vanilla 5 unchanged with two slower ones in front; `GAME_SPEED_SCALES` { 0.5 0.6 0.75 1 1.25 1.5 2 }; `GAME_SPEED_FOR_MULTI_PLAYERS_WARS` 2 -> 4 (same speed). `in_game/gui/hud_topbar.gui` = vanilla 1.4.6 + SPEED 6, 7 boxes, width 147 (as 1.3). The DLL divides the table by ticks a day.
 - Never in a release: every player copies `version.dll` and the ini into the game's `binaries` folder by hand; deleting `version.dll` there goes back to daily ticks.

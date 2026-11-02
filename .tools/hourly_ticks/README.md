@@ -36,6 +36,16 @@ Workshop mod (the release zip takes only `in_game`, `main_menu`, `loading_screen
       only stores the rate on the unit (`+0x118`/`+0x120`/`+0x128`).
     - Sieges, supply and attrition.
     - AI orders.
+- **Arrival date to the hour** (with hourly movement): the unit tooltip's "Will arrive in X on DATE"
+  (`ESTIMATE_ARIVAL`, `DEFINITE_ESTIMATE_ARIVAL`). The engine estimate (`0x143531980`; `0x143531d70` adds the
+  next location) reads the daily speed, rounds the days left up and returns now + days * 24 hours.
+  - The tooltip's three calls to it go through a wrapper. On that thread only (TLS), its two speed reads
+    return the per-tick speed, and the wrapper turns the whole "days" into ticks: now + ticks * hours_per_tick.
+    The AI's own calls to the same functions stay in days.
+  - If the unit's earliest-arrival date (`unit +0x820`, `0x29c77f8` = not set) is still ahead, or the
+    estimate is the "can't get there" date (global `0x14fafbc50`), the engine's answer stays.
+  - Its four date-text calls (`0x140e58380`) add `, HH:00` with the same clock as the top bar.
+  - The map marker text `UNIT_WILL_ARRIVE` is not built in the exe and is untouched.
 - **Battles only** (`hourly_movement=0`): on those steps the DLL runs one battle round itself
   (`CCombatManager` slot 8). The manager is `*(game state + 0x108) + 0x26e40`, taken from the build table;
   a build without that field learns it from the first daily battle tick.
@@ -83,6 +93,9 @@ Re-find each site from stable anchors, then add a `KNOWN_BUILDS` entry and run `
   vftable xref) and calls the task's slot 9 right after.
 - hourly tasks: `node vtables.js <exe> CTickTask_<Name>@unity_<hash>`. The names come from RTTI; most of
   these classes sit in anonymous namespaces.
+- arrival estimate: string xrefs `ESTIMATE_ARIVAL` / `DEFINITE_ESTIMATE_ARIVAL` give the two tooltip
+  functions; their callees that call the unit speed and add `days * 0x18` are the estimates. The
+  `cmp ecx,0x29c77f8` on `+0x820` is in the first one.
 - unit speed: the call in the `UnitProgressMovementOneDay` job lambda (`_Func_impl_no_alloc<...Prepare...>`,
   slot 2) whose result is added to the unit's progress (`+0x8e0`).
 Tools and method: `E:\Tools\ghidra-scripts` (README there).

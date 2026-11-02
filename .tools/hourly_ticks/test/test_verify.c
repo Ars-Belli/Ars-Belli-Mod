@@ -20,6 +20,18 @@ static void fake_prepare_a(void *t, void *c) { (void)t; (void)c; prepare_calls[0
 static void fake_prepare_b(void *t, void *c) { (void)t; (void)c; prepare_calls[1]++; }
 static int64_t *fake_speed(void *unit, int64_t *out, uint64_t flag) { (void)unit; (void)flag; *out = 120000; return out; }
 
+/* stand-in for the engine estimate: reads the speed through the estimate hook, then
+   counts whole "days" for 3.0 of distance and returns now + days * 24 (like the engine) */
+static int32_t fake_now;
+static int32_t *fake_estimate(void *unit, int32_t *date, void *location) {
+  (void)location;
+  int64_t speed;
+  hook_estimate_speed(unit, &speed, 0);
+  int64_t days = (300000 + speed - 1) / speed;
+  set_date_hours(date, fake_now + (int32_t)days * 24);
+  return date;
+}
+
 /* stand-in for the engine checksum: records the version string it is fed */
 static char seen[128];
 static uint64_t fake_checksum(void *obj, uint64_t flag) {
@@ -74,6 +86,52 @@ int wmain(int argc, wchar_t **argv) {
            "task Prepare call -> hook_prepare, return address unchanged");
     EXPECT(abs_jump_dest(rel32_dest(base + b->unit_speed_call)) == (void *)hook_unit_speed, "movement job speed -> hook_unit_speed");
     EXPECT(g_graph_run == (graph_run_fn)(void *)(base + b->graph_run), "task-graph runner kept for calls");
+    EXPECT(g_arrival_hours == 1, "arrival estimate sites accepted");
+    int est_ok = abs_jump_dest(rel32_dest(base + b->estimate_call_b)) == (void *)hook_estimate_b;
+    for (int i = 0; i < 2; i++)
+      est_ok = est_ok && abs_jump_dest(rel32_dest(base + b->estimate_calls_a[i])) == (void *)hook_estimate_a &&
+               abs_jump_dest(rel32_dest(base + b->estimate_speed_calls[i])) == (void *)hook_estimate_speed;
+    for (int i = 0; i < 4; i++)
+      est_ok = est_ok && abs_jump_dest(rel32_dest(base + b->arrival_format_calls[i])) == (void *)hook_format_arrival;
+    EXPECT(est_ok, "tooltip arrival estimate, its speed reads and its date text -> hooks");
+  }
+
+  /* calendar: set_date_hours against the engine's own day/month tables, all 365 days */
+  {
+    const uint8_t *month_table = base + 0x0c452412, *day_table = base + 0x0c4522a5;
+    int bad = 0;
+    for (int doy = 0; doy < 365; doy++) {
+      int32_t d[2];
+      set_date_hours(d, DATE_EPOCH_HOURS + (1568 * 365 + doy) * 24 + 8);
+      const uint8_t *p = (const uint8_t *)d;
+      if (p[4] != day_table[doy] || p[5] != month_table[doy] || *(const int16_t *)(p + 6) != 1568) bad++;
+    }
+    EXPECT(bad == 0, "dates match the engine's calendar tables (%d of 365 differ)", bad);
+  }
+
+  /* arrival estimate: only the tooltip's call counts in ticks */
+  {
+    static uint8_t fake_gs[0x40], unit[0x1000];
+    uint8_t **gs_global = (uint8_t **)(base + b->game_state_global);
+    uint8_t *saved_gs = *gs_global;
+    *gs_global = fake_gs;
+    fake_now = DATE_EPOCH_HOURS + (1568 * 365 + 190) * 24 + 4; /* 1568.7.11, 04:00 stored */
+    *(int32_t *)(fake_gs + 8) = fake_now;
+    *(int32_t *)(unit + 0x820) = EARLIEST_ARRIVAL_UNSET;
+    unit_speed_fn real_speed = g_unit_speed;
+    g_unit_speed = fake_speed; /* 1.2 a day */
+    int32_t date[2];
+    estimate_to_hour(unit, date, NULL, fake_estimate);
+    /* per tick 1.2 * h / 24; 3.0 takes ceil(3.0 / (0.1 h)) ticks */
+    int ticks = (300000 + 120000 * hours / 24 - 1) / (120000 * hours / 24);
+    EXPECT(date[0] == fake_now + ticks * hours, "tooltip: arrival in %d ticks (%d hours), not 3 days", ticks, ticks * hours);
+    fake_estimate(unit, date, NULL);
+    EXPECT(date[0] == fake_now + 3 * 24, "other callers (AI): still 3 whole days");
+    *(int32_t *)(unit + 0x820) = fake_now + 100;
+    estimate_to_hour(unit, date, NULL, fake_estimate);
+    EXPECT(date[0] == fake_now + 3 * 24, "earliest arrival ahead: the engine's answer stays");
+    g_unit_speed = real_speed;
+    *gs_global = saved_gs;
   }
 
   /* the patched image must now be refused by a second check (bytes changed) */

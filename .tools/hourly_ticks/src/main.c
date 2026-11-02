@@ -18,6 +18,8 @@
        hourly_movement=0 it only runs the battle round (CCombatManager slot 8);
      - the game-speed table (seconds per tick) is scaled by hours_per_tick/24 so
        a day still takes as long as before;
+     - the unit tooltip's "Will arrive in X on DATE" counts in ticks and shows
+       the hour (with hourly movement);
      - the top-bar date (GetDateString) shows a 1.3-style clock: the ticks of a
        day are shown one hour apart from first_hour (07:00 to 18:00 at 12 ticks
        a day), whatever the stored hour is;
@@ -79,6 +81,13 @@ typedef struct {
   code_check_t prepare_call;        /* stage executor: mov rax,[rbx]; lea rdx,[rbp+X]; mov rcx,rbx; call [rax+0x48] */
   uint32_t unit_speed_call, unit_speed; /* E8 in the movement job -> unit speed (unit, int64 *out, flag) */
   struct { uint32_t vftable; const char *name; } hourly_tasks[12]; /* tasks that run on in-between ticks */
+  /* arrival estimate to the hour (unit tooltip) */
+  uint32_t estimate_a, estimate_b;      /* (unit, date *out, location): arrival date, counted in whole days */
+  uint32_t estimate_calls_a[2], estimate_call_b; /* the tooltip's calls: E8 -> estimate_a / estimate_b */
+  uint32_t estimate_speed_calls[2];     /* E8 -> unit_speed inside estimate_a and estimate_b */
+  uint32_t arrival_format_calls[4];     /* E8 -> date_format for the arrival date in the tooltip */
+  code_check_t earliest_arrival;        /* mov ecx,[rdi+0x820]; cmp ecx,UNSET: the unit's earliest arrival */
+  uint32_t estimate_never;              /* global date the estimate returns when the unit can't get there */
 } build_t;
 
 static const build_t KNOWN_BUILDS[] = {
@@ -117,6 +126,12 @@ static const build_t KNOWN_BUILDS[] = {
       { 0x0c9b2ad8, "ClearArrivingUnits" },                /* 916 */
       { 0x0c9b2d88, "UpdateArrivingUnits" },               /* 917 */
     },
+    .estimate_a = 0x03531980, .estimate_b = 0x03531d70,
+    .estimate_calls_a = { 0x034e0318, 0x047e97cb }, .estimate_call_b = 0x047e972c, /* ESTIMATE_ARIVAL, DEFINITE_ESTIMATE_ARIVAL */
+    .estimate_speed_calls = { 0x035319c4, 0x03531d8c },
+    .arrival_format_calls = { 0x034e032c, 0x047e9857, 0x047e9904, 0x047e99a7 },
+    .earliest_arrival = { 0x03531d0b, 12, { 0x8b, 0x8f, 0x20, 0x08, 0x00, 0x00, 0x81, 0xf9, 0xf8, 0x77, 0x9c, 0x02 } },
+    .estimate_never = 0x0fafbc50,
   },
 };
 
@@ -130,6 +145,7 @@ typedef uint64_t (*checksum_fn)(void *obj, uint64_t flag);
 
 static int g_hours_per_tick = 2;
 static int g_movement;           /* hourly movement on (ini hourly_movement and the build checks) */
+static int g_arrival_hours;      /* tooltip arrival date counted in ticks, with the hour */
 static int g_first_hour = 7;     /* hour the first tick of a day shows */
 static uint8_t *g_base;
 static const build_t *g_build;
@@ -432,6 +448,66 @@ static int run_hourly_tasks(uint8_t *gs) {
   return 1;
 }
 
+/* ---- arrival date in the unit tooltip, to the hour ----
+   The engine's estimate (estimate_a; estimate_b adds the next location) takes the
+   unit's daily speed, rounds the days left up and returns now + days * 24 hours.
+   For the tooltip's calls only, the DLL makes the speed it reads per tick (on that
+   thread, so the AI's own calls stay daily) and turns the days it returns into
+   ticks: now + ticks * hours_per_tick. If the unit has an earliest-arrival date
+   (unit +0x820) still ahead, or can't get there, the engine's answer stays. The
+   formatted date then gets ", HH:00" like the top bar. */
+#define EARLIEST_ARRIVAL_UNSET 0x29c77f8 /* 1.1.1, the engine's "not set" */
+typedef int32_t *(*estimate_fn)(void *unit, int32_t *date, void *location);
+static estimate_fn g_estimate_a, g_estimate_b;
+static DWORD g_tls_estimate = TLS_OUT_OF_INDEXES;
+
+static int64_t *hook_estimate_speed(void *unit, int64_t *out, uint64_t flag) {
+  int64_t *r = g_unit_speed(unit, out, flag);
+  if (g_tls_estimate != TLS_OUT_OF_INDEXES && TlsGetValue(g_tls_estimate)) *out = *out * g_hours_per_tick / 24;
+  return r;
+}
+
+/* date = hours since the epoch, plus the packed day (+4, from 0), month (+5, from 0), year (+6) */
+static void set_date_hours(int32_t *date, int32_t hours) {
+  static const uint8_t month_days[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+  int32_t days = (hours - DATE_EPOCH_HOURS) / 24;
+  int doy = days % 365, month = 0;
+  while (doy >= month_days[month]) doy -= month_days[month++];
+  uint8_t *p = (uint8_t *)date;
+  date[0] = hours;
+  p[4] = (uint8_t)doy;
+  p[5] = (uint8_t)month;
+  *(int16_t *)(p + 6) = (int16_t)(days / 365);
+}
+
+static int32_t *estimate_to_hour(void *unit, int32_t *date, void *location, estimate_fn fn) {
+  uint8_t *gs = game_state();
+  if (!gs) return fn(unit, date, location);
+  int32_t now = *(int32_t *)(gs + 8);
+  int32_t earliest = *(int32_t *)((uint8_t *)unit + 0x820);
+  if (earliest != EARLIEST_ARRIVAL_UNSET && earliest > now) return fn(unit, date, location);
+  TlsSetValue(g_tls_estimate, (void *)1);
+  fn(unit, date, location);
+  TlsSetValue(g_tls_estimate, NULL);
+  if (*(uint64_t *)date == *(uint64_t *)(g_base + g_build->estimate_never)) return date;
+  int32_t span = date[0] - now; /* whole "days" here are ticks */
+  if (span > 0 && span % 24 == 0) set_date_hours(date, now + span / 24 * g_hours_per_tick);
+  return date;
+}
+static int32_t *hook_estimate_a(void *unit, int32_t *date, void *location) {
+  return estimate_to_hour(unit, date, location, g_estimate_a);
+}
+static int32_t *hook_estimate_b(void *unit, int32_t *date, void *location) {
+  return estimate_to_hour(unit, date, location, g_estimate_b);
+}
+
+static void *date_text_with_hour(const void *date, void *out, uint64_t flag);
+
+static void *hook_format_arrival(const void *date, void *out, uint64_t flag) {
+  if (*(const uint64_t *)date == *(uint64_t *)(g_base + g_build->estimate_never)) return g_date_format(date, out, flag);
+  return date_text_with_hour(date, out, flag);
+}
+
 /* ---- date step: one tick ---- */
 static uint64_t g_ticks, g_extra_rounds;
 static void *g_last_gs;
@@ -478,21 +554,26 @@ static void hook_step(void *gs) {
   }
 }
 
-/* ---- top-bar date with the hour (replaces the GetDateString getter) ---- */
-static void *hook_get_date_string(void *out) {
-  uint8_t *gs = game_state();
-  if (!gs) return g_string_from_cstr(out, "");
-  uint64_t date = *(uint64_t *)(gs + 8);
+/* ---- dates with the hour: "<engine date>, HH:00" into a new engine string at out ---- */
+static void *date_text_with_hour(const void *date, void *out, uint64_t flag) {
   uint8_t text[16];
   memset(text, 0, sizeof text);
-  g_date_format(&date, text, 0);
+  g_date_format(date, text, flag);
   const char *chars;
   uint32_t len;
   string_view(text, &chars, &len);
   char buf[256];
-  snprintf(buf, sizeof buf, "%.*s, %02d:00", (int)(len < 200 ? len : 200), chars, shown_hour((int32_t)date));
+  snprintf(buf, sizeof buf, "%.*s, %02d:00", (int)(len < 200 ? len : 200), chars, shown_hour(*(const int32_t *)date));
   if ((text[15] & 0x80) && !(text[15] & 0x40) && *(void **)text) g_free(*(void **)text);
   return g_string_from_cstr(out, buf);
+}
+
+/* top-bar date (replaces the GetDateString getter) */
+static void *hook_get_date_string(void *out) {
+  uint8_t *gs = game_state();
+  if (!gs) return g_string_from_cstr(out, "");
+  uint64_t date = *(uint64_t *)(gs + 8);
+  return date_text_with_hour(&date, out, 0);
 }
 
 /* ---- checksum: feed a salted version string instead of the plain one ---- */
@@ -633,6 +714,16 @@ static int check_movement(uint8_t *base, const build_t *b) {
   return g_allowed_n > 0 && g_move_vt;
 }
 
+/* Checks the arrival-estimate sites (tooltip calls, speed reads, date formatting). */
+static int check_arrival(uint8_t *base, const build_t *b) {
+  int ok = check_code(base, &b->earliest_arrival, "earliest arrival check");
+  for (int i = 0; ok && i < 2; i++) ok = rel32_target_is(base, b->estimate_calls_a[i], b->estimate_a, "arrival estimate call");
+  ok = ok && rel32_target_is(base, b->estimate_call_b, b->estimate_b, "arrival estimate call (next location)");
+  for (int i = 0; ok && i < 2; i++) ok = rel32_target_is(base, b->estimate_speed_calls[i], b->unit_speed, "estimate speed call");
+  for (int i = 0; ok && i < 4; i++) ok = rel32_target_is(base, b->arrival_format_calls[i], b->date_format, "arrival date text call");
+  return ok;
+}
+
 /* Applies every patch to the image at base (build already checked). */
 static int apply_patches(uint8_t *base, const build_t *b, int hours, int movement) {
   g_base = base;
@@ -648,6 +739,11 @@ static int apply_patches(uint8_t *base, const build_t *b, int hours, int movemen
   g_unit_speed = (unit_speed_fn)(void *)(base + b->unit_speed);
   g_movement = movement && check_movement(base, b);
   if (movement && !g_movement) log_line("hourly movement sites differ from the known build: movement stays daily");
+  g_estimate_a = (estimate_fn)(void *)(base + b->estimate_a);
+  g_estimate_b = (estimate_fn)(void *)(base + b->estimate_b);
+  if (g_movement && g_tls_estimate == TLS_OUT_OF_INDEXES) g_tls_estimate = TlsAlloc();
+  g_arrival_hours = g_movement && g_tls_estimate != TLS_OUT_OF_INDEXES && check_arrival(base, b);
+  if (g_movement && !g_arrival_hours) log_line("arrival estimate sites differ: the tooltip keeps whole days");
 
   uint8_t *stubs = alloc_near(base);
   if (!stubs) {
@@ -655,11 +751,16 @@ static int apply_patches(uint8_t *base, const build_t *b, int hours, int movemen
     return 0;
   }
   uint8_t *step_stub = stubs, *checksum_stub = stubs + 16, *prepare_stub = stubs + 32, *speed_stub = stubs + 48;
+  uint8_t *est_a_stub = stubs + 64, *est_b_stub = stubs + 80, *est_speed_stub = stubs + 96, *arrival_text_stub = stubs + 112;
   make_abs_jump(step_stub, (void *)hook_step);
   make_abs_jump(checksum_stub, (void *)hook_checksum);
   make_abs_jump(prepare_stub, (void *)hook_prepare);
   make_abs_jump(speed_stub, (void *)hook_unit_speed);
-  FlushInstructionCache(GetCurrentProcess(), stubs, 64);
+  make_abs_jump(est_a_stub, (void *)hook_estimate_a);
+  make_abs_jump(est_b_stub, (void *)hook_estimate_b);
+  make_abs_jump(est_speed_stub, (void *)hook_estimate_speed);
+  make_abs_jump(arrival_text_stub, (void *)hook_format_arrival);
+  FlushInstructionCache(GetCurrentProcess(), stubs, 128);
 
   /* 1. checksum first: from here on a patched game never matches an unpatched one */
   for (int i = 0; i < 3; i++)
@@ -701,6 +802,17 @@ static int apply_patches(uint8_t *base, const build_t *b, int hours, int movemen
     memcpy(code + 12, &rel32, 4);
     if (!write_code(site, code, sizeof code)) return 0;
     if (!retarget_rel32(base, b->unit_speed_call, speed_stub)) return 0;
+  }
+
+  /* 6. the tooltip's arrival date in ticks, with the hour */
+  if (g_arrival_hours) {
+    for (int i = 0; i < 2; i++)
+      if (!retarget_rel32(base, b->estimate_calls_a[i], est_a_stub) ||
+          !retarget_rel32(base, b->estimate_speed_calls[i], est_speed_stub))
+        return 0;
+    if (!retarget_rel32(base, b->estimate_call_b, est_b_stub)) return 0;
+    for (int i = 0; i < 4; i++)
+      if (!retarget_rel32(base, b->arrival_format_calls[i], arrival_text_stub)) return 0;
   }
   return 1;
 }
@@ -774,10 +886,10 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved) {
   const build_t *b = check_build(base);
   if (!b) return TRUE;
   if (apply_patches(base, b, hours, movement != 0))
-    log_line("build %s patched: a tick is %d hours, %d battle rounds a day, movement %s, clock %02d:00 to %02d:00, "
-             "checksum salted",
-             b->name, hours, 24 / hours, g_movement ? "every tick" : "daily", g_first_hour,
-             g_first_hour + 24 / hours - 1);
+    log_line("build %s patched: a tick is %d hours, %d battle rounds a day, movement %s, arrival dates %s, "
+             "clock %02d:00 to %02d:00, checksum salted",
+             b->name, hours, 24 / hours, g_movement ? "every tick" : "daily", g_arrival_hours ? "to the hour" : "in days",
+             g_first_hour, g_first_hour + 24 / hours - 1);
   else
     log_line("PATCHING FAILED part-way (see above); restart the game without the DLL");
   return TRUE;
