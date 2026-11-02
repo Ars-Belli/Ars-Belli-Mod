@@ -14,7 +14,9 @@
        rounds a day;
      - the game-speed table (seconds per tick) is scaled by hours_per_tick/24 so
        a day still takes as long as before;
-     - the top-bar date (GetDateString) shows the hour;
+     - the top-bar date (GetDateString) shows a 1.3-style clock: the ticks of a
+       day are shown one hour apart from first_hour (07:00 to 18:00 at 12 ticks
+       a day), whatever the stored hour is;
      - the multiplayer checksum gets a salt, so players without the same DLL and
        setting can't join (they would go out of sync).
    Nothing in eu5.exe on disk changes. Every site is byte-checked against a known
@@ -96,7 +98,8 @@ typedef void *(*string_from_cstr_fn)(void *out, const char *s);
 typedef void (*engine_free_fn)(void *p);
 typedef uint64_t (*checksum_fn)(void *obj, uint64_t flag);
 
-static int g_hours_per_tick = 4;
+static int g_hours_per_tick = 2;
+static int g_first_hour = 7;     /* hour the first tick of a day shows */
 static uint8_t *g_base;
 static const build_t *g_build;
 static tick_fn g_tick;
@@ -144,12 +147,26 @@ static void string_view(const uint8_t *s, const char **chars, uint32_t *len) {
 /* ---- dates ---- */
 static uint8_t *game_state(void) { return *(uint8_t **)(g_base + g_build->game_state_global); }
 
-static void describe_date(uint64_t date, char *out, size_t n) {
-  int hours = (int32_t)date;
-  int hour = hours % 24;
+/* The hour shown for a date: tick n of the day (n = stored hour / hours_per_tick)
+   shows first_hour + n, so the clock goes one hour a tick, as in 1.3. The stored
+   hour stays a real one (0, 2, 4 ... at 2 hours a tick); only the text differs. */
+static int shown_hour(int32_t stored_hours) {
+  int hour = stored_hours % 24;
   if (hour < 0) hour += 24;
+  return g_first_hour + hour / g_hours_per_tick;
+}
+
+/* first_hour from the ini, moved earlier if the day's last tick would pass 23:00 */
+static int fit_first_hour(int first, int hours_per_tick) {
+  int ticks = 24 / hours_per_tick;
+  if (first < 0) first = 0;
+  if (first + ticks - 1 > 23) first = 24 - ticks;
+  return first;
+}
+
+static void describe_date(uint64_t date, char *out, size_t n) {
   snprintf(out, n, "%d.%d.%d %02d:00", (int)(int16_t)(date >> 48), (int)((date >> 40) & 0x7f) + 1,
-           (int)((date >> 32) & 0xff) + 1, hour);
+           (int)((date >> 32) & 0xff) + 1, shown_hour((int32_t)date));
 }
 
 /* ---- battles ----
@@ -286,10 +303,8 @@ static void *hook_get_date_string(void *out) {
   const char *chars;
   uint32_t len;
   string_view(text, &chars, &len);
-  int hour = (int32_t)date % 24;
-  if (hour < 0) hour += 24;
   char buf[256];
-  snprintf(buf, sizeof buf, "%.*s, %02d:00", (int)(len < 200 ? len : 200), chars, hour);
+  snprintf(buf, sizeof buf, "%.*s, %02d:00", (int)(len < 200 ? len : 200), chars, shown_hour((int32_t)date));
   if ((text[15] & 0x80) && !(text[15] & 0x40) && *(void **)text) g_free(*(void **)text);
   return g_string_from_cstr(out, buf);
 }
@@ -486,8 +501,9 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved) {
   g_log = _wfopen(logp, L"w");
 
   int enabled = GetPrivateProfileIntW(L"ticks", L"enabled", 1, ini);
-  int hours = GetPrivateProfileIntW(L"ticks", L"hours_per_tick", 4, ini);
-  log_line("Ars Belli hourly ticks loaded; %ls: enabled=%d hours_per_tick=%d", ini, enabled, hours);
+  int hours = GetPrivateProfileIntW(L"ticks", L"hours_per_tick", 2, ini);
+  int first = GetPrivateProfileIntW(L"ticks", L"first_hour", 7, ini);
+  log_line("Ars Belli hourly ticks loaded; %ls: enabled=%d hours_per_tick=%d first_hour=%d", ini, enabled, hours, first);
   if (!enabled || hours == 24) {
     log_line("off: pass-through only");
     return TRUE;
@@ -497,6 +513,9 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved) {
     return TRUE;
   }
   g_hours_per_tick = hours;
+  g_first_hour = fit_first_hour(first, hours);
+  if (g_first_hour != first)
+    log_line("first_hour %d moved to %d so the day's %d ticks end by 23:00", first, g_first_hour, 24 / hours);
 
   wchar_t exe_path[MAX_PATH];
   GetModuleFileNameW(NULL, exe_path, MAX_PATH);
@@ -508,8 +527,8 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved) {
   const build_t *b = check_build(base);
   if (!b) return TRUE;
   if (apply_patches(base, b, hours))
-    log_line("build %s patched: a tick is %d hours, %d battle rounds a day, date shows the hour, checksum salted",
-             b->name, hours, 24 / hours);
+    log_line("build %s patched: a tick is %d hours, %d battle rounds a day, clock shows %02d:00 to %02d:00, checksum salted",
+             b->name, hours, 24 / hours, g_first_hour, g_first_hour + 24 / hours - 1);
   else
     log_line("PATCHING FAILED part-way (see above); restart the game without the DLL");
   return TRUE;

@@ -6,7 +6,7 @@ patches eu5.exe in memory when the game starts. Nothing on disk is changed, and 
 Workshop mod (the release zip takes only `in_game`, `main_menu`, `loading_screen`, `.metadata`).
 
 ## What it does (eu5.exe 1.4.6)
-- **Date step** (`0x142fd82e0`): adds `hours_per_tick` instead of 24 hours. The date is still stored in hours,
+- **Date step** (`0x142fd82e0`): adds `hours_per_tick` (default 2: 12 ticks a day, as 1.3) instead of 24 hours. The date is still stored in hours,
   and each step sets new-day/week/month/year flags that pick the task list to run. A step inside a day sets
   no flag, matches no list and runs nothing (no log row in game), so daily, monthly and yearly work
   keeps its pace. Patched: three constants (`lea r10,[rax+0x18]` and the two folded `24 - 43800000` offsets).
@@ -20,7 +20,9 @@ Workshop mod (the release zip takes only `in_game`, `main_menu`, `loading_screen
   `NGame.GAME_SPEED_TICKS` (seconds per tick, a float array at `*0x14fb229d0`, count at
   `+0xc`) is scaled by `hours_per_tick / 24`, so a day takes as long as before.
 - **Date text**: the `GetDateString` getter (`0x1428fded0`) is replaced; it formats the date with the
-  engine's own formatter (`0x140e58380`) and adds `, HH:00`.
+  engine's own formatter (`0x140e58380`) and adds `, HH:00`. The clock goes one hour a tick from
+  `first_hour` (default 7): 07:00 to 18:00 at 12 ticks a day, then 07:00 the next day. Only the text: the
+  stored hour stays real (0, 2 ... 22) and the day turns at midnight. The log shows the same clock.
 - **Checksum**: the three entries into the checksum function (`0x140af8510`) go through a wrapper that feeds
   `1.4.6+abm-hourly-<h>h` instead of the game version string (`+0x1b8`). A player without the DLL, or with
   another `hours_per_tick`, has a different checksum and can't join.

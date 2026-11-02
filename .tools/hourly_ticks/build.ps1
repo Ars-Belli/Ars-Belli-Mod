@@ -21,9 +21,9 @@ Remove-Item "$out\*.pdb", "$out\*.lib" -ErrorAction SilentlyContinue
 Write-Host "`n== pass-through (stand-in host loads our version.dll)"
 Push-Location $out; & .\test_host.exe; $hostExit = $LASTEXITCODE; Pop-Location
 Write-Host "`n== checks and patches on the 1.4.6 image"
-& "$out\test_verify.exe" 'E:\Tools\eu5_exes\eu5_1.4.6.exe' 4; $verifyExit = $LASTEXITCODE
+& "$out\test_verify.exe" 'E:\Tools\eu5_exes\eu5_1.4.6.exe' 2; $verifyExit = $LASTEXITCODE
 Write-Host "`n== 1.3.11 image must be refused"
-& "$out\test_verify.exe" 'E:\Tools\eu5_exes\eu5_1.3.11.exe' 4; $refuseExit = $LASTEXITCODE
+& "$out\test_verify.exe" 'E:\Tools\eu5_exes\eu5_1.3.11.exe' 2; $refuseExit = $LASTEXITCODE
 Write-Host "`nexit codes: host $hostExit (0), verify $verifyExit (0), 1.3.11 $refuseExit (2)"
 if ($hostExit -ne 0 -or $verifyExit -ne 0 -or $refuseExit -ne 2) { throw 'tests failed' }
 Remove-Item "$out\ars_belli_hourly.log" -ErrorAction SilentlyContinue

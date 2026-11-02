@@ -27,7 +27,7 @@ static uint64_t fake_checksum(void *obj, uint64_t flag) {
 
 int wmain(int argc, wchar_t **argv) {
   if (argc < 2) { fputs("usage: test_verify <eu5.exe> [hours_per_tick]\n", stderr); return 9; }
-  int hours = argc > 2 ? _wtoi(argv[2]) : 4;
+  int hours = argc > 2 ? _wtoi(argv[2]) : 2;
   g_log = stdout;
   InitializeCriticalSection(&g_log_lock);
   g_hours_per_tick = hours;
@@ -60,6 +60,16 @@ int wmain(int argc, wchar_t **argv) {
   /* the patched image must now be refused by a second check (bytes changed) */
   printf("re-check of the patched image (must be refused):\n");
   EXPECT(check_build(base) == NULL, "patched image refused");
+
+  /* clock: tick n of a day shows first_hour + n, the next day starts at first_hour again */
+  int ticks = 24 / hours;
+  g_first_hour = fit_first_hour(7, hours);
+  EXPECT(shown_hour(DATE_EPOCH_HOURS) == g_first_hour, "first tick of a day shows %02d:00", shown_hour(DATE_EPOCH_HOURS));
+  EXPECT(shown_hour(DATE_EPOCH_HOURS + 24 - hours) == g_first_hour + ticks - 1, "last tick of a day shows %02d:00",
+         shown_hour(DATE_EPOCH_HOURS + 24 - hours));
+  EXPECT(shown_hour(DATE_EPOCH_HOURS + 24) == g_first_hour, "next day starts at %02d:00 again", shown_hour(DATE_EPOCH_HOURS + 24));
+  EXPECT(fit_first_hour(7, 2) == 7 && fit_first_hour(20, 2) == 12 && fit_first_hour(7, 1) == 0 && fit_first_hour(-3, 4) == 0,
+         "first_hour kept so the last tick ends by 23:00 (7 2h -> 7, 20 2h -> 12, 7 1h -> 0)");
 
   /* checksum salt: run hook_checksum's string swap with a stand-in object and checksum function */
   static uint8_t fake_obj[0x400];
