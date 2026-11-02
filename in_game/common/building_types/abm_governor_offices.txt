@@ -1,13 +1,14 @@
 ﻿# Ars Belli - governor offices.
 #
 # A nobles building that converts an unused local governor post into government
-# capacity. One copy per country, buildable in the capital or in any cored
-# town/city inside the capital's AREA; each level absorbs one more free governor
-# post (see abm_has_unused_local_governor). The reward itself lives in
-# auto_modifiers/abm_country.txt, keyed off the building's completed levels - a
-# building modifier cannot be shown outside the capital (capital_country_modifier
-# only applies "if built in the capital"), and this building may stand elsewhere
-# in the area.
+# capacity. No levels: max_levels = 1, and since the engine allows only one instance of
+# a building type per location that also makes each type unique per location. There is
+# no country-wide limit, so one copy may stand in every eligible location as long as a
+# free governor post remains (see abm_has_unused_local_governor) - each copy eats one.
+# The reward lives in auto_modifiers/abm_country.txt and scales with the NUMBER of
+# completed offices: a building modifier cannot be shown outside the capital
+# (capital_country_modifier only applies "if built in the capital"), and these may
+# stand elsewhere in the capital's area.
 #
 # Abolishing the office is allowed but expensive (on_destroyed): the governor post
 # comes back, so the only reason to demolish is to dodge the trade - it costs gold,
@@ -15,14 +16,13 @@
 # stay enacted, hence the penalty.
 #
 # Shapes copied from vanilla: royal_court / chancery (capital_buildings.txt) for the
-# location_potential + country_has_no_other_copy_of_building shell,
-# local_governor for forbidden_for_estates, itinerant_court_seat for can_close = no.
+# location_potential shell, local_governor for forbidden_for_estates.
 
 abm_provincial_chancellery = {
 	audio_tier = 3
 	is_foreign = no
 	pop_type = nobles
-	max_levels = 3
+	max_levels = 1
 	forbidden_for_estates = yes
 
 	category = government_category
@@ -56,7 +56,6 @@ abm_provincial_chancellery = {
 				area = owner.capital.area
 			}
 		}
-		country_has_no_other_copy_of_building = { type = abm_provincial_chancellery }
 		scope:actor = {
 			abm_has_unused_local_governor = yes
 		}
@@ -100,7 +99,7 @@ abm_court_secretariat = {
 	audio_tier = 3
 	is_foreign = no
 	pop_type = nobles
-	max_levels = 3
+	max_levels = 1
 	forbidden_for_estates = yes
 
 	category = government_category
@@ -134,7 +133,6 @@ abm_court_secretariat = {
 				area = owner.capital.area
 			}
 		}
-		country_has_no_other_copy_of_building = { type = abm_court_secretariat }
 		scope:actor = {
 			abm_has_unused_local_governor = yes
 		}
@@ -183,8 +181,7 @@ abm_admiralty_board = {
 	audio_tier = 3
 	is_foreign = no
 	pop_type = nobles
-	max_levels = 3
-	increase_per_level_cost = 0.5
+	max_levels = 1
 	forbidden_for_estates = yes
 
 	category = government_category
@@ -212,7 +209,6 @@ abm_admiralty_board = {
 		is_capital = no
 		is_historical_capital = no
 		has_proximity_source_building = no
-		country_has_no_other_copy_of_building = { type = abm_admiralty_board }
 		scope:actor = {
 			abm_has_unused_naval_governor = yes
 		}

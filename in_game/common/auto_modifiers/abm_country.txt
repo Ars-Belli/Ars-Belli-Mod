@@ -222,144 +222,156 @@ REPLACE:high_horde_unity = { #Hordes are already too volatile
 # }
 
 # Ars Belli - governor offices (building_types/abm_governor_offices.txt).
-# Each completed level of a governor office turns one unused local governor post
-# (tied up by the building's allow gate) into government capacity. Blocks stack.
+#
+# No levels any more: one office per LOCATION (max_levels = 1, and the engine allows only
+# one instance of a building type per location), unlimited copies per country, each one
+# eating one governor post through the building's own allow gate. The reward therefore
+# scales with the NUMBER of completed offices, not with levels: one auto modifier per
+# step, keyed on has_building + count. has_building sees completed buildings only, so
+# starting construction does not hand the slot out early
+# (total_building_levels_including_construction would).
+#
+# The ladder stops at 4 because that is as many offices as the posts allow: the local cap
+# tops out at 4 (base 1 + kingdom/empire + local_governor_advance +
+# power_projection_advance_5) and the naval cap at 4 (maritime_advance_age_3,
+# harbor_administration, naval_infrastructure_act, thalassocracy). Add a step if a new
+# source raises either cap.
 
-# Provincial Chancellery level 1. Counts COMPLETED levels only (location_building_level, not
-# total_building_levels_including_construction), so starting construction does not
-# hand out the slot early.
-abm_provincial_chancellery_l1 = {
+# Provincial Chancellery: one office held.
+abm_provincial_chancellery_1 = {
 	potential_trigger = {
 		any_owned_location = {
-			location_building_level = {
-				building_type = building_type:abm_provincial_chancellery
-				value >= 1
-			}
+			has_building = building_type:abm_provincial_chancellery
 		}
 	}
 	num_local_governors = -1
 	government_reform_slots = 1
 }
 
-# Provincial Chancellery level 2. Counts COMPLETED levels only (location_building_level, not
-# total_building_levels_including_construction), so starting construction does not
-# hand out the slot early.
-abm_provincial_chancellery_l2 = {
+# Provincial Chancellery: two offices held.
+abm_provincial_chancellery_2 = {
 	potential_trigger = {
 		any_owned_location = {
-			location_building_level = {
-				building_type = building_type:abm_provincial_chancellery
-				value >= 2
-			}
+			has_building = building_type:abm_provincial_chancellery
+			count >= 2
 		}
 	}
 	num_local_governors = -1
 	government_reform_slots = 1
 }
 
-# Provincial Chancellery level 3. Counts COMPLETED levels only (location_building_level, not
-# total_building_levels_including_construction), so starting construction does not
-# hand out the slot early.
-abm_provincial_chancellery_l3 = {
+# Provincial Chancellery: three offices held.
+abm_provincial_chancellery_3 = {
 	potential_trigger = {
 		any_owned_location = {
-			location_building_level = {
-				building_type = building_type:abm_provincial_chancellery
-				value >= 3
-			}
+			has_building = building_type:abm_provincial_chancellery
+			count >= 3
 		}
 	}
 	num_local_governors = -1
 	government_reform_slots = 1
 }
 
-# Court Secretariat level 1. Counts COMPLETED levels only (location_building_level, not
-# total_building_levels_including_construction), so starting construction does not
-# hand out the slot early.
-abm_court_secretariat_l1 = {
+# Provincial Chancellery: four offices held.
+abm_provincial_chancellery_4 = {
 	potential_trigger = {
 		any_owned_location = {
-			location_building_level = {
-				building_type = building_type:abm_court_secretariat
-				value >= 1
-			}
+			has_building = building_type:abm_provincial_chancellery
+			count >= 4
+		}
+	}
+	num_local_governors = -1
+	government_reform_slots = 1
+}
+
+# Court Secretariat: one office held.
+abm_court_secretariat_1 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_court_secretariat
 		}
 	}
 	num_local_governors = -1
 	government_size = 1
 }
 
-# Court Secretariat level 2. Counts COMPLETED levels only (location_building_level, not
-# total_building_levels_including_construction), so starting construction does not
-# hand out the slot early.
-abm_court_secretariat_l2 = {
+# Court Secretariat: two offices held.
+abm_court_secretariat_2 = {
 	potential_trigger = {
 		any_owned_location = {
-			location_building_level = {
-				building_type = building_type:abm_court_secretariat
-				value >= 2
-			}
+			has_building = building_type:abm_court_secretariat
+			count >= 2
 		}
 	}
 	num_local_governors = -1
 	government_size = 1
 }
 
-# Court Secretariat level 3. Counts COMPLETED levels only (location_building_level, not
-# total_building_levels_including_construction), so starting construction does not
-# hand out the slot early.
-abm_court_secretariat_l3 = {
+# Court Secretariat: three offices held.
+abm_court_secretariat_3 = {
 	potential_trigger = {
 		any_owned_location = {
-			location_building_level = {
-				building_type = building_type:abm_court_secretariat
-				value >= 3
-			}
+			has_building = building_type:abm_court_secretariat
+			count >= 3
 		}
 	}
 	num_local_governors = -1
 	government_size = 1
 }
 
-# Ars Belli - Admiralty Board (building_types/abm_governor_offices.txt). Each
-# completed level converts an unused naval governor post into a cabinet seat.
-
-# Admiralty Board level 1. Counts COMPLETED levels only, like the land offices.
-abm_admiralty_board_l1 = {
+# Court Secretariat: four offices held.
+abm_court_secretariat_4 = {
 	potential_trigger = {
 		any_owned_location = {
-			location_building_level = {
-				building_type = building_type:abm_admiralty_board
-				value >= 1
-			}
+			has_building = building_type:abm_court_secretariat
+			count >= 4
+		}
+	}
+	num_local_governors = -1
+	government_size = 1
+}
+
+# Admiralty Board: one office held.
+abm_admiralty_board_1 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_admiralty_board
 		}
 	}
 	num_naval_governors = -1
 	government_size = 1
 }
 
-# Admiralty Board level 2. Counts COMPLETED levels only, like the land offices.
-abm_admiralty_board_l2 = {
+# Admiralty Board: two offices held.
+abm_admiralty_board_2 = {
 	potential_trigger = {
 		any_owned_location = {
-			location_building_level = {
-				building_type = building_type:abm_admiralty_board
-				value >= 2
-			}
+			has_building = building_type:abm_admiralty_board
+			count >= 2
 		}
 	}
 	num_naval_governors = -1
 	government_size = 1
 }
 
-# Admiralty Board level 3. Counts COMPLETED levels only, like the land offices.
-abm_admiralty_board_l3 = {
+# Admiralty Board: three offices held.
+abm_admiralty_board_3 = {
 	potential_trigger = {
 		any_owned_location = {
-			location_building_level = {
-				building_type = building_type:abm_admiralty_board
-				value >= 3
-			}
+			has_building = building_type:abm_admiralty_board
+			count >= 3
+		}
+	}
+	num_naval_governors = -1
+	government_size = 1
+}
+
+# Admiralty Board: four offices held.
+abm_admiralty_board_4 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_admiralty_board
+			count >= 4
 		}
 	}
 	num_naval_governors = -1
