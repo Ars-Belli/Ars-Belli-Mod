@@ -123,23 +123,32 @@ int wmain(int argc, wchar_t **argv) {
     EXPECT(out == 120000LL * hours / 24, "speed 1.2 a day -> %lld per tick (fixed point)", (long long)out);
   }
 
-  /* graph lookup on a stand-in game state: occupied entries, the fewest flags wins */
+  /* graph lookup on a stand-in game state: the smallest graph holding the movement task */
   {
-    static uint8_t gs[0x200], table[8 * 0x28], stages[64];
+    static uint8_t gs[0x200], table[8 * 0x28];
+    static void *other_vt[10], *move_obj, *other_obj;
+    static void *tick_tasks[3], *day_tasks[7], *month_tasks[9];
+    move_obj = g_move_vt;      /* a task instance = its vftable pointer first */
+    other_obj = other_vt;
+    for (int i = 0; i < 3; i++) tick_tasks[i] = &other_obj;
+    for (int i = 0; i < 7; i++) day_tasks[i] = i == 4 ? (void *)&move_obj : (void *)&other_obj;
+    for (int i = 0; i < 9; i++) month_tasks[i] = i == 2 ? (void *)&move_obj : (void *)&other_obj;
     memset(gs, 0, sizeof gs);
     memset(table, 0, sizeof table);
     *(uint8_t **)(gs + 0xe0) = table;
     *(int *)(gs + 0xec) = 3; /* mask: 4 slots */
     gs[0xf0] = 2;            /* plus 2 probe slots */
-    uint8_t *month = table + 1 * 0x28, *day = table + 4 * 0x28, *broken = table + 2 * 0x28;
+    uint8_t *tick = table + 0 * 0x28, *month = table + 1 * 0x28, *day = table + 4 * 0x28, *broken = table + 2 * 0x28;
+    tick[4] = 1; /* key 0: every-tick list, no movement */
+    *(void **)(tick + 0x10) = tick_tasks; *(int *)(tick + 0x1c) = 3;
     month[4] = 1; month[8] = 1; month[10] = 1;
-    *(void **)(month + 0x10) = stages; *(int *)(month + 0x1c) = 9;
+    *(void **)(month + 0x10) = month_tasks; *(int *)(month + 0x1c) = 9;
     day[4] = 2; day[8] = 1;
-    *(void **)(day + 0x10) = stages; *(int *)(day + 0x1c) = 7;
-    broken[4] = 1; /* occupied, no stages: skipped */
-    EXPECT(find_graph(gs) == day + 0x10, "task graph found in the map (plain day, 7 stages)");
+    *(void **)(day + 0x10) = day_tasks; *(int *)(day + 0x1c) = 7;
+    broken[4] = 1; /* occupied, no tasks: skipped */
+    EXPECT(find_graph(gs, 1) == day + 0x10, "task graph = plain day (7 tasks, holds movement), not the every-tick list");
     *(int *)(gs + 0xec) = -1;
-    EXPECT(find_graph(gs) == NULL, "bad map refused");
+    EXPECT(find_graph(gs, 0) == NULL, "bad map refused");
   }
 
   /* checksum salt: run hook_checksum's string swap with a stand-in object and checksum function */

@@ -6,8 +6,8 @@
    date step sets four flags (new day / week / month / year) that pick the task
    list to run. So with a smaller step:
      - the date step adds hours_per_tick instead of 24 (three constants);
-     - ticks that don't start a new day set no flag, match no task list and run
-       nothing (the engine logs that once): daily, monthly and yearly work keeps
+     - ticks that don't start a new day set no flag and run only the engine's own
+       every-tick list (key 0, a few tasks): daily, monthly and yearly work keeps
        running once per day/month/year;
      - on those ticks this DLL runs the day's task graph again with every task
        skipped except army/navy movement, battle starts and the battle round
@@ -322,40 +322,95 @@ static int64_t *hook_unit_speed(void *unit, int64_t *out, uint64_t flag) {
   return r;
 }
 
-/* A task graph from the game state's map (key = new day/week/month/year flags).
-   Every graph holds the daily tasks, and all others are skipped, so any will do;
-   the one with the fewest flags (plain day) is the smallest. Read from the map each
-   time rather than remembered from the last day, so a player joining mid-day runs
-   the same as everyone else. */
-static void *find_graph(uint8_t *gs) {
+/* class name of a task instance from its RTTI (".?AVCTickTask_X@..." -> "CTickTask_X@...") */
+static const char *task_name(void *task) {
+  IMAGE_NT_HEADERS64 *nt = (IMAGE_NT_HEADERS64 *)(g_base + ((IMAGE_DOS_HEADER *)g_base)->e_lfanew);
+  uint8_t *end = g_base + nt->OptionalHeader.SizeOfImage;
+  if (readable_bytes(task, 8) < 8) return "?";
+  uint8_t **vt = *(uint8_t ***)task;
+  if ((uint8_t *)vt < g_base + 8 || (uint8_t *)vt >= end) return "?";
+  uint8_t *col = vt[-1];
+  if (col < g_base || col + 24 > end) return "?";
+  uint32_t td = *(uint32_t *)(col + 12);
+  if (td + 20 > nt->OptionalHeader.SizeOfImage) return "?";
+  return (const char *)g_base + td + 20;
+}
+
+/* graph = { task **tasks; ...; int count at +0xc }; returns 1 if it holds a task with vftable vt */
+static int graph_has(uint8_t *graph, void *vt) {
+  void **tasks = *(void ***)graph;
+  int n = *(int *)(graph + 0xc);
+  if (!tasks || n <= 0 || n > 100000 || readable_bytes(tasks, (size_t)n * 8) < (size_t)n * 8) return 0;
+  for (int i = 0; i < n; i++)
+    if (tasks[i] && readable_bytes(tasks[i], 8) == 8 && *(void **)tasks[i] == vt) return 1;
+  return 0;
+}
+
+/* The task graphs sit in the game state's map, keyed by the new day/week/month/year
+   flags. Key 0 (no flag) is the engine's own every-tick list, a few tasks; the day
+   graphs hold all daily tasks. The DLL takes the smallest graph that holds the
+   movement task (a plain day); every task not in hourly_tasks is skipped anyway.
+   Read from the game state (cached per map), not remembered from the last day, so a
+   player joining mid-day runs the same as everyone else. */
+static void *g_move_vt;
+static uint8_t *g_map_gs, *g_map_table;
+static int g_map_mask = -2;
+static void *g_map_graph;
+
+static void *find_graph(uint8_t *gs, int log_map) {
   uint8_t *table = *(uint8_t **)(gs + 0xe0);
   int mask = *(int *)(gs + 0xec);
   int n = mask + 1 + gs[0xf0];
   if (!table || mask < 0 || mask > 0xffff) return NULL;
   if (readable_bytes(table, (size_t)n * 0x28) < (size_t)n * 0x28) return NULL;
   void *best = NULL;
-  int best_flags = 99;
+  int best_tasks = 0x7fffffff;
   for (int i = 0; i < n; i++) {
     uint8_t *e = table + (size_t)i * 0x28;
     if (!e[4]) continue; /* empty slot */
-    int flags = !!e[8] + !!e[9] + !!e[10] + !!e[11];
-    int stages = *(int *)(e + 0x10 + 0xc);
-    if (stages <= 0 || stages > 100000 || !*(void **)(e + 0x10)) continue;
-    if (flags < best_flags) {
-      best = e + 0x10;
-      best_flags = flags;
+    uint8_t *graph = e + 0x10;
+    int tasks = *(int *)(graph + 0xc);
+    int has_move = graph_has(graph, g_move_vt);
+    if (log_map) {
+      char names[600] = "";
+      if (!e[8] && !e[9] && !e[10] && !e[11] && tasks > 0 && tasks <= 40 && readable_bytes(*(void **)graph, (size_t)tasks * 8))
+        for (int t = 0; t < tasks; t++) {
+          const char *nm = task_name((*(void ***)graph)[t]);
+          int len = (int)strcspn(nm, "@");
+          snprintf(names + strlen(names), sizeof names - strlen(names), "%s%.*s", t ? " " : ": ", len, nm);
+        }
+      log_line("task graph key %d %d %d %d: %d tasks%s%s", e[8], e[9], e[10], e[11], tasks,
+               has_move ? ", has movement" : "", names);
+    }
+    if (has_move && tasks < best_tasks) {
+      best = graph;
+      best_tasks = tasks;
     }
   }
   return best;
 }
 
+static void *graph_for(uint8_t *gs) {
+  uint8_t *table = *(uint8_t **)(gs + 0xe0);
+  int mask = *(int *)(gs + 0xec);
+  if (gs == g_map_gs && table == g_map_table && mask == g_map_mask && g_map_graph) return g_map_graph;
+  static int logged;
+  void *graph = find_graph(gs, logged++ < 2);
+  g_map_gs = gs;
+  g_map_table = table;
+  g_map_mask = mask;
+  g_map_graph = graph;
+  log_line("hourly movement: task graph %p (%d tasks)", graph, graph ? *(int *)((uint8_t *)graph + 0xc) : 0);
+  return graph;
+}
+
 static uint64_t g_hourly_runs;
 
 static int run_hourly_tasks(uint8_t *gs) {
-  void *graph = find_graph(gs);
+  void *graph = graph_for(gs);
   if (!graph) {
     static int warned;
-    if (!warned++) log_line("hourly movement: no task graph in the game state; only the battle round runs");
+    if (!warned++) log_line("hourly movement: no task graph with the movement task; only the battle round runs");
     return 0;
   }
   uint64_t date = *(uint64_t *)(gs + 8);
@@ -572,9 +627,10 @@ static int check_movement(uint8_t *base, const build_t *b) {
       return 0;
     }
     g_allowed_vt[g_allowed_n] = base + b->hourly_tasks[i].vftable;
+    if (strcmp(b->hourly_tasks[i].name, "UnitProgressMovementOneDay") == 0) g_move_vt = g_allowed_vt[g_allowed_n];
     g_allowed_name[g_allowed_n++] = b->hourly_tasks[i].name;
   }
-  return g_allowed_n > 0;
+  return g_allowed_n > 0 && g_move_vt;
 }
 
 /* Applies every patch to the image at base (build already checked). */
