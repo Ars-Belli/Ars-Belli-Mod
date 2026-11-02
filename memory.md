@@ -297,9 +297,11 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Castile against Morocco after 2%, 400 men and both x2 (results predate the feature/hourly-ticks revert): start 40/11 to 34/8, as they stand 95/68 to 98/78, full levies 61/23 to 77/42. castile_morocco README.
 
 ### 3w. Hourly ticks (feature/hourly-ticks, 2026-11-02)
-- Script can't add sub-day ticks (combat doc section 13). A version.dll proxy can: it wraps `CCombatManager` vtable slot 8 (the daily battle tick for every battle) and calls it N times a day. Source and README: `.tools/hourly_ticks/` (from this branch on).
+- Script can't add sub-day ticks (combat doc section 13). A version.dll proxy can: `.tools/hourly_ticks/` (README there has every address and how to re-find them after a game update). Not part of the Workshop zip.
+- Real hour ticks: the date step adds `hours_per_tick` (ini, default 4) instead of 24. Steps inside a day match no task list (the engine picks lists by new day/week/month/year flags) and run nothing, so economy etc. stay daily. On those steps the DLL runs one battle round (CCombatManager slot 8), so battles get 24/h rounds a day; movement and sieges stay daily. GAME_SPEED_TICKS scaled by h/24, top-bar date shows ", HH:00", MP checksum salted with `+abm-hourly-<h>h`.
 - Land damage x2 (update/1.4, 2026-11-01) is reverted here: battles get shorter in calendar time from more ticks a day, not from more damage per tick. Heavy infantry 2.25 stays for now.
-- First in-game test (12 calls a day, Workshop mod.27, 1568 save): hook took, one call per date, no new errors, a great battle ended inside one day. The user found it too fast and asked for 6, and for real hour ticks with the date showing hours, as in 1.3.
+- Tests: first build (battle tick x12 a day, no real hours) ran in game on 2026-11-02: hook took, a great battle ended inside one day, no new errors. The user found it too fast (asked for 6) and wanted real hours with the date. The real-hours build passes its offline tests (all sites checked and patched on the mapped 1.4.6 image), not yet run in game.
+- Never in a release: every player copies `version.dll` and the ini into the game's `binaries` folder by hand; deleting `version.dll` there goes back to daily ticks.
 
 ### 3r. Lend Army to War Leader (`lend_unit_to_ally`) (2026-10-31, not changed)
 - Scripted interaction, in `country_interactions/lend_unit_to_ally.txt`, so `ai_will_do` can be edited. Same-name file, not `INJECT`.
