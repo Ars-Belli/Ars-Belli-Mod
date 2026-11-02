@@ -8,14 +8,16 @@ Workshop mod (the release zip takes only `in_game`, `main_menu`, `loading_screen
 ## What it does (eu5.exe 1.4.6)
 - **Date step** (`0x142fd82e0`): adds `hours_per_tick` (default 2: 12 ticks a day, as 1.3) instead of 24 hours. The date is still stored in hours,
   and each step sets new-day/week/month/year flags that pick the task list to run. A step inside a day sets
-  no flag and runs only the list under key 0, the engine's own every-tick list (a few tasks; the log names
-  them). So daily, monthly and yearly work keeps its pace. Patched: three constants (`lea r10,[rax+0x18]` and the two folded `24 - 43800000` offsets).
+  no flag and matches the key 0 list, which is empty. So daily, monthly and yearly work keeps its pace.
+  The map holds a list for every combination of the four flags, each the union of its flags' tasks (1.4.6:
+  day 108 tasks, a second flag 2, month 107, year 13). Patched: three constants (`lea r10,[rax+0x18]` and the two folded `24 - 43800000` offsets).
 - **Movement and battles** (`hourly_movement=1`, default): on steps that run no daily tasks the DLL runs a
   task graph itself: the smallest one in the game state's map that holds `UnitProgressMovementOneDay`, which
   is the plain-day list. The map: table `+0xe0`, mask `+0xec`, max probe `+0xf0`, 0x28-byte entries, key at
   `+8`, graph at `+0x10`; a graph is an array of task instances (count at `+0xc`). The graph is read from the
   game state, not remembered from the last day, so a player joining mid-day runs the same as the host. The
-  key 0 list holds no daily tasks; the first build took it by mistake, so armies stood still. Every task's Prepare (vtable slot 9) is called from
+  first build took the list with the fewest flags, which was the year-only list (13 tasks, no movement), so
+  armies stood still. Every task's Prepare (vtable slot 9) is called from
   one site in the stage executor (`0x1435bbd9c`, `call [rax+0x48]`). That call now goes through a gate, which
   on these steps skips every task except:
   - 912 `UnitCancelRetreatIfNeeded`;

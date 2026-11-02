@@ -6,9 +6,9 @@
    date step sets four flags (new day / week / month / year) that pick the task
    list to run. So with a smaller step:
      - the date step adds hours_per_tick instead of 24 (three constants);
-     - ticks that don't start a new day set no flag and run only the engine's own
-       every-tick list (key 0, a few tasks): daily, monthly and yearly work keeps
-       running once per day/month/year;
+     - ticks that don't start a new day set no flag and match the key 0 list,
+       which is empty: daily, monthly and yearly work keeps running once per
+       day/month/year;
      - on those ticks this DLL runs the day's task graph again with every task
        skipped except army/navy movement, battle starts and the battle round
        (hourly movement: each task's Prepare goes through one call site, which
@@ -338,20 +338,6 @@ static int64_t *hook_unit_speed(void *unit, int64_t *out, uint64_t flag) {
   return r;
 }
 
-/* class name of a task instance from its RTTI (".?AVCTickTask_X@..." -> "CTickTask_X@...") */
-static const char *task_name(void *task) {
-  IMAGE_NT_HEADERS64 *nt = (IMAGE_NT_HEADERS64 *)(g_base + ((IMAGE_DOS_HEADER *)g_base)->e_lfanew);
-  uint8_t *end = g_base + nt->OptionalHeader.SizeOfImage;
-  if (readable_bytes(task, 8) < 8) return "?";
-  uint8_t **vt = *(uint8_t ***)task;
-  if ((uint8_t *)vt < g_base + 8 || (uint8_t *)vt >= end) return "?";
-  uint8_t *col = vt[-1];
-  if (col < g_base || col + 24 > end) return "?";
-  uint32_t td = *(uint32_t *)(col + 12);
-  if (td + 20 > nt->OptionalHeader.SizeOfImage) return "?";
-  return (const char *)g_base + td + 20;
-}
-
 /* graph = { task **tasks; ...; int count at +0xc }; returns 1 if it holds a task with vftable vt */
 static int graph_has(uint8_t *graph, void *vt) {
   void **tasks = *(void ***)graph;
@@ -362,10 +348,11 @@ static int graph_has(uint8_t *graph, void *vt) {
   return 0;
 }
 
-/* The task graphs sit in the game state's map, keyed by the new day/week/month/year
-   flags. Key 0 (no flag) is the engine's own every-tick list, a few tasks; the day
-   graphs hold all daily tasks. The DLL takes the smallest graph that holds the
-   movement task (a plain day); every task not in hourly_tasks is skipped anyway.
+/* The task graphs sit in the game state's map, keyed by four flags (in game, 1.4.6:
+   day 108 tasks, a second flag 2, month 107, year 13; every combination is built and
+   holds the union, key 0 0 0 0 holds none). The DLL takes the smallest graph that
+   holds the movement task (the plain day); every task not in hourly_tasks is skipped
+   anyway. Taking the fewest flags instead picked the year-only list (13 tasks).
    Read from the game state (cached per map), not remembered from the last day, so a
    player joining mid-day runs the same as everyone else. */
 static void *g_move_vt;
@@ -387,17 +374,8 @@ static void *find_graph(uint8_t *gs, int log_map) {
     uint8_t *graph = e + 0x10;
     int tasks = *(int *)(graph + 0xc);
     int has_move = graph_has(graph, g_move_vt);
-    if (log_map) {
-      char names[600] = "";
-      if (!e[8] && !e[9] && !e[10] && !e[11] && tasks > 0 && tasks <= 40 && readable_bytes(*(void **)graph, (size_t)tasks * 8))
-        for (int t = 0; t < tasks; t++) {
-          const char *nm = task_name((*(void ***)graph)[t]);
-          int len = (int)strcspn(nm, "@");
-          snprintf(names + strlen(names), sizeof names - strlen(names), "%s%.*s", t ? " " : ": ", len, nm);
-        }
-      log_line("task graph key %d %d %d %d: %d tasks%s%s", e[8], e[9], e[10], e[11], tasks,
-               has_move ? ", has movement" : "", names);
-    }
+    if (log_map)
+      log_line("task graph key %d %d %d %d: %d tasks%s", e[8], e[9], e[10], e[11], tasks, has_move ? ", has movement" : "");
     if (has_move && tasks < best_tasks) {
       best = graph;
       best_tasks = tasks;
