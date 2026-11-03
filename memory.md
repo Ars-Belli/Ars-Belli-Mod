@@ -158,10 +158,9 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Loc: `main_menu\localization\english\abm_player_coalition_l_english.yml`.
 
 ### 3m. Movement spread crash (1.3.11 only)
-- Crash: AV on `Network/Session thread`, top frame `ffxFsr2ResourceIsNull (+ 18700188)` = eu5+0x4b0b0cc, daily tick, `CMovement` spread (movement.cpp). NOT disease. Found 2026-10-30, 1568 MP game, Lutheranism movement. Two machines die same tick, same table slot. Reload no help.
-- Why: `FUN_144b0ab90` loop over regiments that carry movement (X, CMovement+0x178 set, 1595 ids, save key `#39a1`). Keep pointer to X slot in hash map, then loop army mates (Z), insert Z in same map. Insert can grow map (probe cap or load 0.9); old table freed; next Z read stale pointer. This only unsafe site found. Location -> unit inserts refetch pointer, safe.
-- Trap: set vtable say `CLocationSet` but ids are SUB-UNIT ids (save `#31dd`), high byte = generation. Low 24 bits not a location.
-- Fix: `NSpreadable.ESTIMATED_MIXING_WITHIN_UNITS = 0` in `loading_screencommondefines_abm_defines.txt`. Value 0 = insert never run. Side effect: regiment no pick up movement from army mates, only from location (`ESTIMATED_MIXING_WITH_UNITS` stay 0.06). Second reader `FUN_143cf4ac1` sit among disease_outbreak_manager functions, so disease likely same.
+- Crash: AV on `Network/Session thread`, daily tick, in the movement spread. NOT disease. Found 2026-10-30, 1568 MP game, Lutheranism movement. Two machines die same tick, same table slot. Reload no help.
+- Why: the spread between army mates keeps a stale pointer while its table can grow; the spread from a location is safe.
+- Fix: `NSpreadable.ESTIMATED_MIXING_WITHIN_UNITS = 0` in `loading_screencommondefines_abm_defines.txt`. Value 0 = insert never run. Side effect: regiment no pick up movement from army mates, only from location (`ESTIMATED_MIXING_WITH_UNITS` stay 0.06).
 - Map entries clear each pass but storage stay; load start small, so reload grow table again and can hit same crash.
 - 1.4.6 read X value once before loop, bug gone. Drop the define on 1.4.
 
