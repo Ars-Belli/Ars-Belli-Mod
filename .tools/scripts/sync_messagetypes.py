@@ -6,8 +6,7 @@ WHY THIS EXISTS
   `gui/messagetypes.txt`, so the mod had to ship a full copy of vanilla's
   13k-line file with the ABM block appended, and re-sync it on every patch.
 
-  Game 1.4 replaced that with a FOLDER, `gui/messagetypes/` (the only path left
-  in binaries/eu5.exe is the bare folder string; vanilla ships
+  Game 1.4 replaced that with a FOLDER, `gui/messagetypes/` (vanilla ships
   `gui/messagetypes/00_messagetypes.txt`). Every file in it is loaded and a
   later definition of the same key wins, so the mod now ships only its own
   types in `abm_messagetypes.txt`. No vanilla copy, no re-sync on patches.
