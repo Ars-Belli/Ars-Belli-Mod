@@ -3,8 +3,8 @@
 
 WHY THIS EXISTS
   EU5 registers message types ONLY from the hardcoded path `gui/messagetypes.txt`
-  (the literal string is embedded in binaries/eu5.exe, alongside
-  `messagetypes_custom.txt` which is the user-profile settings override). GUI
+  (next to the user-profile settings
+  override `messagetypes_custom.txt`). GUI
   files do not support the REPLACE:/INJECT: database entry modes used in
   common/, so the mod has to override that file wholesale. That makes it
   patch-sensitive: whenever vanilla updates messagetypes.txt, our copy must be
