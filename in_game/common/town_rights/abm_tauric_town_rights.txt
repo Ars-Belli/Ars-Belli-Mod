@@ -1,0 +1,35 @@
+﻿abm_abtau_black_soil_rights = {
+	is_specialization = yes
+	kept_at_conquest = no
+
+	location_modifier = {
+		local_max_rgo_size_modifier = 0.8
+		local_food_production_mult = 0.25
+	}
+
+	potential = {
+		original_capital ?= { region = region:steppes_region }
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:republic
+			government_type = government_type:theocracy
+		}
+	}
+
+	allow = {
+		scope:target = {
+			custom_tooltip = {
+				text = abm_abtau_black_soil_rights_rank_tt
+				location_rank = location_rank:town
+			}
+			OR = {
+				raw_material = goods:wheat
+				raw_material = goods:wine
+				raw_material = goods:millet
+				raw_material = goods:legumes
+			}
+		}
+	}
+
+	color = map_ABTAU
+}
