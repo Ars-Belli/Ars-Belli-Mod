@@ -7,11 +7,32 @@ ABLOM_f = { # Lombardia
 	potential = {
 		capital = { region = region:italy_region }
 		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:lombard
+			culture = culture:emilian
+		}
 	}
 
 	allow = {
-		capital = { region = region:italy_region }
-		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			capital = { area = area:lombardy_area }
+			capital = { area = area:emilia_area }
+		}
+		OR = {
+			culture = culture:lombard
+			culture = culture:emilian
+		}
+		NOT = {
+			any_owned_location = {
+				OR = {
+					area = area:lombardy_area
+					area = area:piemonte_area
+					area = area:emilia_area
+					area = area:liguria_area
+				}
+				NOT = { is_core_of = root }
+			}
+		}
 	}
 
 	name = ABLOM
@@ -25,6 +46,104 @@ ABLOM_f = { # Lombardia
 		piemonte_area
 		emilia_area
 		liguria_area
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+REPLACE:DAL_f = {
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		OR = {
+			culture = culture:dalmatian
+			culture = culture:croatian
+		}
+		OR = {
+			capital = { area = area:croatia_area }
+			capital = { area = area:veneto_area }
+		}
+	}
+	allow = {
+		owns = location:dubrovnik
+		OR = {
+			capital = { area = area:croatia_area }
+			capital = { area = area:veneto_area }
+		}
+		NOT = {
+			any_owned_location = {
+				area = area:croatia_area
+				NOT = { is_core_of = root }
+			}
+		}
+	}
+
+	name = DAL
+	flag = DAL	
+	adjective = DAL_ADJ
+	tag = DAL
+	color = map_DAL
+
+	areas = {
+		croatia_area
+	}
+
+	form_effect = {
+	}
+}
+
+REPLACE:SAR_piedmont_f = { 
+
+	level = 2
+	required_locations_fraction = 0.85
+	rule = historical
+
+	capital_required = no
+
+	potential = {
+		capital = { region = region:italy_region }
+		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:piedmontese
+			culture = culture:ligurian
+		}
+	}
+
+	allow = {
+		OR = {
+			capital = { area = area:liguria_area }
+			capital = { area = area:piemonte_area }
+		}
+		OR = {
+			culture = culture:piedmontese
+			culture = culture:ligurian
+		}
+		NOT = {
+			any_owned_location = {
+				OR = {
+					area = area:sardinia_area
+					area = area:piemonte_area
+				}
+				NOT = { is_core_of = root }
+			}
+		}
+	}
+	
+	name = SAR_piedmont
+	flag = SAR_piedmont
+	adjective = SAR_piedmont_ADJ
+	tag = SRP
+	color = map_sardinia
+	
+	areas = {
+		sardinia_area
+		piemonte_area
 	}
 	form_effect = {
 		if = {
