@@ -28,7 +28,7 @@ abm_abtau_tradition_2 = {
 	global_max_bureaucracy_slots = 1
 }
 
-abm_abtau_gothic_traditions = {
+abm_abtau_gothic_military_legacy = {
 	age = age_3_discovery
 	icon = a_central_power
 	potential = {
@@ -70,8 +70,7 @@ abm_abtau_steppe_black_soil = {
 	}
 	requires = food_advance_reformation
 
-	global_raw_material_output = 0.10
-	global_monthly_food_modifier = monthly_food_productivity_mild_bonus
+	global_monthly_food_modifier = monthly_food_productivity_extreme_bonus
 }
 
 abm_abtau_emporia_of_the_steppe = {
@@ -811,14 +810,32 @@ abm_steppe_redoubts_advance = {
 # Planted in the Age of Discovery alongside vanilla's other settlement tools
 # (send_people_to_colonial_charter, settle_the_frontier).
 #
-# No capital or culture gate here: the restriction the player cares about is on
-# the PROVINCE, and that lives in the cabinet action itself (which only offers
-# steppe provinces). Gating the advance on the capital would deny it to a
-# monarchy that conquers steppe land after moving its seat elsewhere.
+# Offered to any monarchy, republic or theocracy of a settled (non-pagan)
+# faith with a steppe foothold: an original capital there, a current capital
+# there, or any owned location there. The province restriction the player
+# actually cares about lives in the cabinet action itself, which only offers
+# steppe provinces.
 abm_settle_the_steppe_advance = {
 	age = age_3_discovery
+	icon = defensive_army_attrition
+	
+	potential = {
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:republic
+			government_type = government_type:theocracy
+		}
+		is_country_religion_pagan = no
+		OR = {
+			original_capital.region ?= region:steppes_region
+			capital.region ?= region:steppes_region
+			any_owned_location = {
+				region = region:steppes_region
+			}
+		}
+	}
 
-	requires = city_building_advance
+	requires = surgery_advance
 	unlock_cabinet_action = abm_settle_the_steppe
 }
 
