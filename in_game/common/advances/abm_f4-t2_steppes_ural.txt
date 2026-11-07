@@ -13,6 +13,7 @@ abm_abtau_tradition_1 = {
 	requires = ship_building_advance
 
 	global_max_literacy = 5
+	tolerance_own = 1
 }
 
 abm_abtau_tradition_2 = {
@@ -27,7 +28,7 @@ abm_abtau_tradition_2 = {
 	global_max_bureaucracy_slots = 1
 }
 
-abm_abtau_gothic_discipline = {
+abm_abtau_gothic_traditions = {
 	age = age_3_discovery
 	icon = a_central_power
 	potential = {
@@ -35,7 +36,7 @@ abm_abtau_gothic_discipline = {
 	}
 	requires = recruitment_law_advance
 
-	discipline = 0.05
+	monthly_army_tradition = 0.10
 }
 
 abm_abtau_harbours_of_gazaria = {
@@ -94,7 +95,7 @@ abm_abtau_tauric_granaries = {
 	requires = crown_power_advance_reformation
 
 	global_monthly_development_modifier = 0.10
-	building_upkeep_efficiency = 0.10
+	fort_limit_modifier = 0.25
 }
 
 abm_abtau_commune_of_caffa = {
@@ -117,7 +118,7 @@ abm_abtau_cave_cities_of_gothia = {
 	}
 	requires = scientific_mapping_advance
 
-	global_population_growth = 0.0005
+	global_population_growth = 0.0003
 }
 
 abm_abtau_ambition = {
@@ -863,8 +864,27 @@ REPLACE:feo_the_bastion_of_mangup_advance = {
 	requires = drill_army_advance
 }
 
-REPLACE:feo_black_sea_fur_trade_advance = {
+REPLACE:feo_the_gothic_red_guard_advance = {
 	age = age_3_discovery
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	discipline = 0.05
+
+	requires = new_world_advance
+}
+
+REPLACE:feo_black_sea_fur_trade_advance = {
+	age = age_4_reformation
 	icon = global_trade_routes_advance
 
 	potential = {
@@ -877,14 +897,14 @@ REPLACE:feo_black_sea_fur_trade_advance = {
 		}
 	}
 
-	global_merchant_power = 0.10
+	global_merchant_power = 0.20
 	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
 
-	requires = new_world_advance
+	requires = confessionalism_advance
 }
 
 REPLACE:feo_the_northern_star_of_greece_advance = {
-	age = age_4_reformation
+	age = age_5_absolutism
 	icon = crown_power_advance_renaissance
 
 	potential = {
@@ -902,26 +922,6 @@ REPLACE:feo_the_northern_star_of_greece_advance = {
 	monthly_republican_tradition = 0.1
 
 	monthly_religious_influence = 0.1
-
-	requires = confessionalism_advance
-}
-
-REPLACE:feo_the_gothic_red_guard_advance = {
-	age = age_5_absolutism
-	icon = glorious_arms
-
-	potential = {
-		OR = {
-			has_or_had_tag = FEO
-			AND = {
-				has_or_had_tag = ABGOT
-				culture = culture:gothic_culture
-			}
-		}
-	}
-
-	army_light_infantry_power = 0.10
-	army_heavy_infantry_power = 0.10
 
 	requires = absolute_rulership
 }
@@ -941,6 +941,7 @@ REPLACE:feo_the_iron_harvest_advance = {
 	}
 
 	global_war_score_efficiency = 0.2
+	global_max_control = 0.05
 
 	requires = hot_blast_furnace
 }

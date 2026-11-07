@@ -3,6 +3,7 @@
 ############################
 REPLACE:tre_pontic_trail_mastery = {
 	age = age_1_traditions
+	icon = tre_pontic_trail_mastery
 	potential = {
 		has_or_had_tag = TRE
 	}
@@ -14,27 +15,11 @@ REPLACE:tre_pontic_trail_mastery = {
 	hills_proximity_impact = -0.25
 }
 
-REPLACE:tre_komnenos_legacy = {
-	age = age_1_traditions
-	potential = {
-		has_or_had_tag = TRE
-	}
-
-	requires = written_alphabet
-
-	global_crown_estate_power = 0.10
-	monthly_army_tradition = 0.10
+INJECT:tre_komnenos_legacy = {
+	monthly_army_tradition = 0.05 # vanilla 0.05 + 0.05 = 0.10
 }
 
-REPLACE:tre_pontic_mountains = {
-	age = age_2_renaissance
-	potential = {
-		has_or_had_tag = TRE
-	}
-
-	requires = supply_depot_advance_age_2_renaissance
-
-	global_hostile_attrition = 0.50
+INJECT:tre_pontic_mountains = {
 	global_defensive = 0.10
 }
 
@@ -208,7 +193,7 @@ REPLACE:greek_group_the_spirit_of_resistance_advance = {
 
 REPLACE:greek_group_hesychast_traditions_advance = {
 	age = age_2_renaissance
-	icon = patriarchate_of_lithuania
+	icon = greek_group_hesychast_traditions_advance
 
 	potential = {
 		culture = { has_culture_group = culture_group:greek_group }
