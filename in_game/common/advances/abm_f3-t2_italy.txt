@@ -437,132 +437,33 @@ REPLACE:genoese_galley = {
 	unlock_unit = n_genoese_galley
 }
 
-REPLACE:genoese_flexibility = {
-	content_priority = 700
-	age = age_3_discovery
-	icon = genoese_flexibility
-
-	potential = {
-		has_or_had_tag = GEN
-	}
-
-	navy_maintenance_efficiency = 0.10
-
+INJECT:genoese_flexibility = { 
 	unlock_building = abm_genoese_arsenal
-
-	unlock_government_reform = alberghi_28
-
-	requires = crown_power_advance_discovery
 }
 
-REPLACE:ligurian_coastal_seafarers = {
-	content_priority = 300
-	age = age_1_traditions
-	icon = ship_building_advance
-
-	potential = {
-		OR = {
-			culture = culture:ligurian
-			culture = { merged_culture_group_contains_culture = culture:ligurian }
-		}
-	}
-
-	navy_galley_power = 0.15
-	export_efficiency = medium_trade_efficiency_bonus
-
-	requires = trade_advance_age_of_trad
-}
-
-
-REPLACE:ligurian_merchant_diaspora = {
-	content_priority = 300
-	age = age_2_renaissance
-	icon = river_trade
-
-	potential = {
-		OR = {
-			culture = culture:ligurian
-			culture = { merged_culture_group_contains_culture = culture:ligurian }
-		}
-	}
-
+INJECT:ligurian_coastal_seafarers = {
 	global_monthly_development = 0.001
-	global_merchant_power = 0.1
+	max_tariff = -0.1
+}
+
+
+INJECT:ligurian_merchant_diaspora = { 
 	max_tariff = 0.1
-
-	requires = banking_advance
 }
 
 
-REPLACE:ligurian_spirit_of_navigation = {
-	content_priority = 300
-	age = age_3_discovery
-	icon = maritime_advance_age_4
-
-	potential = {
-		OR = {
-			culture = culture:ligurian
-			culture = { merged_culture_group_contains_culture = culture:ligurian }
-		}
-	}
-
-	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
-	non_rural_migration_attraction = 0.1
-
-	requires = diplomatic_training
+INJECT:ligurian_spirit_of_navigation = {
+	diplomatic_reputation = -2
+	sea_cost_on_distance_from_capital_when_maritime = -0.5
 }
 
 
-REPLACE:ligurian_artisan_craft = {
-	content_priority = 300
-	age = age_4_reformation
-	icon = artists_advance
 
-	potential = {
-		OR = {
-			culture = culture:ligurian
-			culture = { merged_culture_group_contains_culture = culture:ligurian }
-		}
-	}
-
+INJECT:ligurian_artisan_craft = {
 	building_upkeep_efficiency = 0.10
-
-	requires = artists_advance_reformations
 }
 
-REPLACE:ligurian_communal_councils = {
-	content_priority = 300
-	age = age_5_absolutism
-	icon = administrative_leadership
-
-	potential = {
-		OR = {
-			culture = culture:ligurian
-			culture = { merged_culture_group_contains_culture = culture:ligurian }
-		}
-	}
-
-	country_cabinet_efficiency = 0.1
-	global_max_literacy = 5
-
-	requires = scientific_revolution_advance
-}
-
-
-REPLACE:ligurian_enlightenment = {
-	content_priority = 300
-	age = age_6_revolutions
-	icon = city_building_advance
-
-	potential = {
-		OR = {
-			culture = culture:ligurian
-			culture = { merged_culture_group_contains_culture = culture:ligurian }
-		}
-	}
-
-	legislative_efficiency = 0.1
-	stability_cost_efficiency = 0.1
-
-	requires = modern_bureaucracy
+INJECT:ligurian_communal_councils = {
+	global_max_literacy = 5 
+	global_burghers_max_literacy = -5
 }
