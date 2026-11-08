@@ -3,13 +3,17 @@
 # Each culture furnishes two or three historical unit types. They are ordinary
 # recruitable regiments, not levies and not estate private armies.
 #
-# Two of the ten lines are gated on something other than plain culture:
-#   - the Cossack regiments need the Cossacks estate and Cossack pops in the
-#     recruiting location (a service institution, not an ethnicity);
-#   - the Ruthenian regiments accept three routes: Ruthenian primary culture,
-#     accepted Ruthenians while seated in Ruthenia or the steppe, or being Kyiv
-#     or Ruthenia outright.
-# The other eight lines use the default cultural gate: primary culture, or an
+# The Cossacks are two institutions, not one, and are split by ARM:
+#   - the MOUNTED line is the Crown's REGISTERED Cossacks (the register of the
+#     Polish-Lithuanian Commonwealth) and is an ESTATE line: the Cossacks
+#     estate plus Cossack pops in the recruiting location, whatever the
+#     country's own culture;
+#   - the FOOT line is the ZAPOROZHIAN host beyond the rapids, made up of
+#     runaways, and is a CULTURE line gated on cossack_culture.
+# The Ruthenian regiments accept three routes: Ruthenian primary culture,
+# accepted Ruthenians while seated in Ruthenia or the steppe, or being Kyiv
+# or Ruthenia outright.
+# All other lines use the default cultural gate: primary culture, or an
 # accepted culture our primary culture views at `positive` or better, and in
 # either case an original capital inside the steppes region.
 #
@@ -515,7 +519,8 @@ abm_gothic_spearmen_4 = {
 	}
 }
 
-# cossack_culture cultural regiment, age_3_discovery.
+
+# registered light cavalry, age_3_discovery.
 abm_cossack_cavalry_3 = {
 	copy_from = a_age_3_discovery_light_cavalry
 	category = army_light_cavalry
@@ -545,10 +550,6 @@ abm_cossack_cavalry_3 = {
 	}
 	gfx_tags = { sword_tag light_tag }
 
-	# Cossack regiments are an estate privilege, not a cultural one: any country
-	# that has the Cossacks estate may raise them, whatever its own culture, and
-	# they may only be raised where Cossacks actually live - a handful is enough,
-	# they need not be the majority.
 	country_potential = {
 		country_has_estate = estate_type:cossacks_estate
 	}
@@ -560,7 +561,7 @@ abm_cossack_cavalry_3 = {
 	}
 }
 
-# cossack_culture cultural regiment, age_4_reformation.
+# registered light cavalry, age_4_reformation.
 abm_cossack_cavalry_4 = {
 	copy_from = a_age_4_reformation_light_cavalry
 	category = army_light_cavalry
@@ -572,7 +573,7 @@ abm_cossack_cavalry_4 = {
 
 	strength_damage_done = 0.10
 	morale_damage_taken = -0.10
-	supply_weight = -0.25	
+	supply_weight = -0.25
 
 	impact = {
 		flatland = -0.10
@@ -590,10 +591,6 @@ abm_cossack_cavalry_4 = {
 	}
 	gfx_tags = { sword_tag light_tag }
 
-	# Cossack regiments are an estate privilege, not a cultural one: any country
-	# that has the Cossacks estate may raise them, whatever its own culture, and
-	# they may only be raised where Cossacks actually live - a handful is enough,
-	# they need not be the majority.
 	country_potential = {
 		country_has_estate = estate_type:cossacks_estate
 	}
@@ -605,7 +602,7 @@ abm_cossack_cavalry_4 = {
 	}
 }
 
-# cossack_culture cultural regiment, age_5_absolutism.
+# registered light cavalry, age_5_absolutism.
 abm_cossack_cavalry_5 = {
 	copy_from = a_age_5_absolutism_light_cavalry
 	category = army_light_cavalry
@@ -634,10 +631,6 @@ abm_cossack_cavalry_5 = {
 	}
 	gfx_tags = { sword_tag light_tag }
 
-	# Cossack regiments are an estate privilege, not a cultural one: any country
-	# that has the Cossacks estate may raise them, whatever its own culture, and
-	# they may only be raised where Cossacks actually live - a handful is enough,
-	# they need not be the majority.
 	country_potential = {
 		country_has_estate = estate_type:cossacks_estate
 	}
@@ -656,6 +649,7 @@ abm_cossack_infantry_4 = {
 	is_special = yes
 	buildable = yes
 	upgrades_to = abm_cossack_infantry_5
+
 	morale_damage_taken = -0.15
 	strength_damage_taken = -0.10
 	impact = {
@@ -674,12 +668,23 @@ abm_cossack_infantry_4 = {
 	}
 	gfx_tags = { musket_tag medium_tag }
 
-	# Cossack regiments are an estate privilege, not a cultural one: any country
-	# that has the Cossacks estate may raise them, whatever its own culture, and
-	# they may only be raised where Cossacks actually live - a handful is enough,
-	# they need not be the majority.
+
 	country_potential = {
-		country_has_estate = estate_type:cossacks_estate
+		OR = {
+			culture = culture:cossack_culture
+			AND = {
+				has_accepted_culture = culture:cossack_culture
+				culture = {
+					cultural_view = {
+						target = culture:cossack_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
 	}
 
 	location_potential = {
@@ -695,6 +700,7 @@ abm_cossack_infantry_5 = {
 	category = army_light_infantry
 	is_special = yes
 	buildable = yes
+
 	morale_damage_taken = -0.15
 	strength_damage_taken = -0.10
 	impact = {
@@ -713,12 +719,25 @@ abm_cossack_infantry_5 = {
 	}
 	gfx_tags = { musket_tag medium_tag }
 
-	# Cossack regiments are an estate privilege, not a cultural one: any country
-	# that has the Cossacks estate may raise them, whatever its own culture, and
-	# they may only be raised where Cossacks actually live - a handful is enough,
-	# they need not be the majority.
+	# The Zaporozhian host was a nation of runaways rather than a register:
+	# Cossack primary culture, or an accepted Cossack culture our own views at
+	# `positive` or better, and in either case a steppe-rooted realm.
 	country_potential = {
-		country_has_estate = estate_type:cossacks_estate
+		OR = {
+			culture = culture:cossack_culture
+			AND = {
+				has_accepted_culture = culture:cossack_culture
+				culture = {
+					cultural_view = {
+						target = culture:cossack_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
 	}
 
 	location_potential = {
