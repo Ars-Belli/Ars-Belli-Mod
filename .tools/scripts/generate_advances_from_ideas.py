@@ -961,6 +961,24 @@ def localization_value(localization: dict[str, str], key: str) -> str:
     return localization.get(key) or humanize(key)
 
 
+def singular_tradition(name: str) -> str:
+    """EU4 localises the `start` block as "<Country> Traditions"; the mod's
+    advances use the singular ("Tradition I", "Tradition II")."""
+    return re.sub(
+        r"\btraditions\b",
+        lambda match: "Tradition" if match.group(0)[0].isupper() else "tradition",
+        name,
+        flags=re.IGNORECASE,
+    )
+
+
+def advance_name(localization: dict[str, str], source_key: str, suffix: str) -> str:
+    name = localization_value(localization, source_key)
+    if suffix:
+        name = singular_tradition(name)
+    return name + suffix
+
+
 # ---------------------------------------------------------------------------
 # Rendering
 # ---------------------------------------------------------------------------
@@ -1109,7 +1127,7 @@ def render_set(
             parts.extend(inherited_comments)
             parts.append("")
         parts.append(render_advance(key, index, spec, assignments, icon, requires[index]))
-        name = localization_value(localization, source_key) + suffix
+        name = advance_name(localization, source_key, suffix)
         description = localization.get(source_key + "_desc") or name
         loc_lines.append(f' {key}: "{name}"')
         loc_lines.append(f' {key}_desc: "{description}"')
