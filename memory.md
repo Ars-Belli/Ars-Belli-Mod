@@ -64,6 +64,7 @@ The mod implements a custom ranking system that classifies countries into tiers 
 - **Ticking Warscore:** Max 36 at +1/month (reduced from 50 because occupations give double warscore post-patch). Defined in `loading_screen\common\defines\01_ars_belli_defines.txt`.
 - **Unconditional Surrender:** Removed (base game now has one). Previously in `in_game\common\country_interactions\unconditional_surrender.txt`.
 - **Intervene in War / Threaten War / engine Enforce Peace:** all three removed, replaced by the scripted `ars_belli_enforce_peace`. See 3j.
+- **Restore Roman Borders CB nerfed (2026-11-08):** `REPLACE:superiority_restore_roman_borders` in `in_game\common\wargoals\abm_wargoals.txt`, attacker `conquer_cost` 0.5 -> 0.6 (-50% -> -40%). Subjugate and defender left vanilla 0.5. Peace deal cost also stacks engine `PEACE_COST_EFFICIENCY_*` (same culture/religion, rival), so in-game discount reads bigger than the CB value.
 
 ### 3b. Fort Rebalancing
 Significant changes to siege mechanics and fort limits (documented in `changes.txt` and `loading_screen\common\defines\01_ars_belli_defines.txt`):
