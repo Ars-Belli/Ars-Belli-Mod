@@ -318,3 +318,11 @@ All files should have UTF-8 BOM encoding, especially localisation files
 ## Language Association
 - Repo uses EU5 syntax. `paradox-highlight` only auto-detects `eu5` under a game-named folder (Europa Universalis V/EU/EU5/3450310), which this repo is not, so it falls back to generic `paradox`.
 - Fixed via `files.associations` in `.vscode/settings.json`: `in_game/**`, `loading_screen/**`, `main_menu/**` `*.txt`/`*.gui` -> `eu5`.
+
+## Advances: EU4 national ideas imported as EU5 advances (2026-11-08)
+- **Qoyunlu sets (QAR / AQQ).** `.tools/scripts/generate_qoyunlu_advances.py` reads `QAR_ideas` / `AKK_ideas` from `.tools/eu4/ideas/00_country_ideas.txt` and writes `in_game/common/advances/abm_f3-t2_caucasus_qoyunlu.txt` (20 advances: 2 traditions + 7 ideas + ambition per set; BOM + CRLF). `--check` validates without writing; it also asserts every `requires` exists and is no later than the advance's age, and every `icon` exists in vanilla.
+- **EU4 tag AKK is AQQ in EU5.** Advance ids keep the EU4 idea-set keys (`abm_akk_*`) so `generate_advance_loc.py` resolves EU4 loc 1:1, but `potential` uses `has_or_had_tag = AQQ`. QAR is QAR in both; both are live in `main_menu/setup/1337/10_countries_caucasus_region.txt`.
+- **Modifier conversions** live in the script's `CONVERSIONS` table, each row copied from an earlier import (ME/CIR/SRV/CPA/Indonesia advances); raw EU4 lines stay in the file as `# eu4_modifier = value` comments. EU4 `yearly_government_power` has no EU5 modifier, so it expands to the five monthly government-power sources (legitimacy / republican tradition / devotion / horde unity / tribal cohesion) at 0.10 each.
+- **QAR `in_honor_of_ali` is empty in EU4** (`#Same as Ajam`); the script's `IDEA_OVERRIDES` mirrors Ajam's `tolerance_heretic = 3` → EU5 `tolerance_heretic = 1`.
+- **`generate_advance_loc.py --out` append mode double-CR bug fixed**: it opened the file with `newline="\r\n"` while writing explicit `\r\n`, producing `\r\r\n`. Now `newline=""`.
+- Localisation for these advances is appended to `main_menu/localization/english/abm_advances_caucasus_l_english.yml` (append-only; existing keys skipped).

@@ -70,7 +70,8 @@ potential = {
 1. **`split_traditions_ambitions.py`** — splits age_1 double-modifier into tradition_1/2, renames last to ambition
 2. **`update_advance_names_icons_requires.py`** — updates names/icons/requires based on modifier-to-vanilla mapping
 3. **`diversify_icons.py`** — assigns unique vanilla icons via global round-robin
-4. **`sync_messagetypes.py`** — regenerates `main_menu/gui/messagetypes/abm_messagetypes.txt` (the Ars Belli message types only) from the tables in the script. `--check` reports drift without writing. Since game 1.4.4 message types load from the `gui/messagetypes/` folder (all files, later key wins), so no vanilla copy is needed and nothing to re-sync on patches; add new actions to the tables.
+4. **`generate_qoyunlu_advances.py`** — imports the EU4 Qoyunlu idea sets (`QAR_ideas`, `AKK_ideas` → EU5 tags QAR/AQQ) as advances: converts each EU4 modifier with its `CONVERSIONS` table (every row copied from an existing advance in this mod or vanilla), validates prerequisites/ages/icons, and writes `in_game/common/advances/abm_f3-t2_caucasus_qoyunlu.txt` (BOM + CRLF). `--check` validates without writing. Localisation is generated separately with `generate_advance_loc.py <file> --out main_menu/localization/english/abm_advances_caucasus_l_english.yml` (append-only, skips existing keys).
+5. **`sync_messagetypes.py`** — regenerates `main_menu/gui/messagetypes/abm_messagetypes.txt` (the Ars Belli message types only) from the tables in the script. `--check` reports drift without writing. Since game 1.4.4 message types load from the `gui/messagetypes/` folder (all files, later key wins), so no vanilla copy is needed and nothing to re-sync on patches; add new actions to the tables.
 
 ## Key Modifier Categories → Icon/Requires Mapping
 - **trade** → `red_sea_trade`/`saharan_gold_trade` → `guilds`

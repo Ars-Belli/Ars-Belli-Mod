@@ -1,0 +1,141 @@
+﻿namespace = flavor_chb
+
+flavor_chb.1 = {
+	type = country_event
+	title = flavor_chb.1.title
+	desc = flavor_chb.1.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = JAL
+		from = 1338.1.1
+		to = 1343.1.1
+		monthly_chance = 5
+	}
+
+	major = yes
+	major_trigger = {
+		tag = ERE
+	}
+
+	trigger = {
+		character:chb_hasan_kuchak ?= { is_alive = yes }
+		NOT = { country_exists = c:CHB }
+		owns = location:tabriz
+	}
+
+	illustration_tags = {
+		10 = exterior
+		10 = regular
+	}
+
+	immediate = {
+		event_illustration_poptype_effect = { foreground = pop_type:soldiers background = pop_type:soldiers }
+		character:chb_hasan_kuchak = { save_scope_as = target_character }
+		c:CHB = { save_scope_as = target_country }
+		location:tabriz = {
+			save_scope_as = target_location
+			area = {
+				every_location_in_area = {
+					limit = { owner ?= root }
+					add_core = scope:target_country
+				}
+			}
+			floodfill_locations = {
+				limit = { 
+					owner ?= root
+					OR = {
+						is_core_of = scope:target_country
+						"this.distance_to(root.capital)" > "this.distance_to(scope:target_location)"
+						local_control < 0.1
+					}
+				}
+				add_core = scope:target_country
+			}
+		}
+		create_country_from_cores_in_our_locations = scope:target_country
+		scope:target_location = {
+			while =  {
+				count = 6
+				create_sub_unit_with_owner = {
+					type = a_steppe_horse_archers
+					owner = scope:target_country
+				}
+			}
+		}
+		force_recalc_country_active_status = scope:target_country
+		if = {
+			limit = {
+				character:chb_malek_ashraf ?= { is_alive = yes }
+			}
+			character:chb_malek_ashraf = { move_country = scope:target_country }
+		}
+		scope:target_country = {
+			set_capital = scope:target_location
+			change_culture = culture:mongolian_culture
+			change_country_type = army
+			change_country_color = map_CHB
+			add_gold = 3000
+			add_estate_satisfaction = { type = estate_type:nobles_estate value = estate_satisfaction_radical_bonus }
+			add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_radical_bonus }
+			add_estate_satisfaction = { type = estate_type:peasants_estate value = estate_satisfaction_radical_bonus }
+			add_estate_satisfaction = { type = estate_type:burghers_estate value = estate_satisfaction_radical_bonus }
+			every_owned_location = {
+				change_control = control_radical_bonus
+			}
+			every_province = {
+				limit = { any_location_in_province = { NOT = { integration_level = core } } }
+				change_province_integration = core
+			}
+		}
+		scope:target_location = {
+			if = {
+				limit = {
+					NOT = { has_building = building_type:kurultai }
+				}
+				construct_building = {
+					building_type = building_type:kurultai
+					cost_multiplier = 0
+					cost_multiplier_reason = "game_concept_event"
+					instant = yes
+				}
+			}
+		}
+		cancel_subject = scope:target_country
+		if = {
+			limit = {
+				character:jal_muhammad_khan ?= { is_alive = yes }
+			}
+			kill_character = {
+				target = character:jal_muhammad_khan
+				reason = execution
+				killer = scope:target_character
+			}
+		}
+		if = {
+			limit = {
+				scope:target_country = {
+					NOT = { is_member_of_international_organization = international_organization:ilkhanate }
+				}
+			}
+			international_organization:ilkhanate = { add_country_to_international_organization = scope:target_country }
+		}
+	}
+
+	option = {
+		name = flavor_chb.1.a
+		custom_tooltip = flavor_chb.1.tt
+	}
+	option = {
+		name = flavor_chb.1.b
+		high_risk_option = yes
+		custom_tooltip = flavor_chb.1.tt
+		change_player = scope:target_country
+	}
+	after = {
+		scope:target_country = {
+			set_new_ruler = scope:target_character
+		}
+	}
+}

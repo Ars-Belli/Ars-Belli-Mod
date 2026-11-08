@@ -510,7 +510,9 @@ def main(argv=None):
                 print(f"No new entries to append to {outpath} "
                       f"(all {len(all_entries)} already present)")
             else:
-                with open(outpath, "a", encoding="utf-8-sig", newline="\r\n") as f:
+                # newline="" keeps the explicit CRLF below from being
+                # translated again into CR CR LF.
+                with open(outpath, "a", encoding="utf-8-sig", newline="") as f:
                     for key, name, desc in missing:
                         f.write(f' {key}: "{name}"\r\n')
                         f.write(f' {key}_desc: "{desc}"\r\n')
