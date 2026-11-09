@@ -45,26 +45,45 @@
 	years = 2
 }
 
-REPLACE:kingdom_of_god_reform = {
-	unique = yes
-	potential = {
-		has_unlocked_government_reform_trigger = { type = kingdom_of_god_reform }
-	}
-	country_modifier = {
-		prestige_decay = -0.005
+INJECT:kingdom_of_god_reform = {
 		damage_done_versus_heretics_modifier = 0.10
 		damage_done_versus_heathens_modifier = 0.10
-		government_reform_slots = 1
+}
+
+abm_koj_kingdom_of_heaven_reform = {
+	unique = yes
+	government = theocracy
+
+	potential = {
+		has_unlocked_government_reform_trigger = { type = abm_koj_kingdom_of_heaven_reform }
+		government_type = government_type:theocracy
+		religion = religion:catholic
 	}
+
+	allow = {
+		has_unlocked_government_reform_trigger = { type = abm_koj_kingdom_of_heaven_reform }
+		government_type = government_type:theocracy
+		religion = religion:catholic
+	}	
+
+	country_modifier = {
+		government_reform_slots = 1
+		blocked_from_conversion = yes
+		prestige_decay = -0.002
+
+		damage_done_versus_heretics_modifier = 0.10
+		tolerance_own = 1
+		global_max_literacy = 0.05
+
+		monthly_towards_spiritualist = societal_value_monthly_move
+	}
+
 	locked = {
 		is_locked_mechanic = {
 			mechanic = government_reform
-			type = kingdom_of_god_reform
+			type = abm_koj_kingdom_of_heaven_reform
 		}
 	}
-
-	#1.4: on_deactivate dropped - it only cleaned up kingdom_of_god_slot_modifier, which 1.4 no longer
-	#defines (this reform grants government_reform_slots = 1 itself, so nothing temporary is added)
 
 	years = 2
 }
