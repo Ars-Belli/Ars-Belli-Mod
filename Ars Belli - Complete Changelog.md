@@ -4,8 +4,9 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.4.6.mod.27 | **Supported game version:** 1.4.\*
-**Compiled:** 31 October 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.4.6.mod.28 | **Supported game version:** 1.4.\*
+**Compiled:** 9 November 2026 (cumulative section verified against the mod files on 31 October
+2026, and the mod.28 changes on 9 November 2026)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -36,7 +37,8 @@ here in full, but these can be easily seen in-game on the world map.
 
 **[Release History (Patchnotes)](#release-history-patchnotes)**
 
-- [game.1.4.6.mod.27](#game146mod27-current)
+- [game.1.4.6.mod.28](#game146mod28-current)
+- [game.1.4.6.mod.27](#game146mod27)
 - [game.1.4.4.mod.26](#game144mod26)
 - [game.1.3.11.mod.23](#game1311mod23-current)
 - [game.1.3.11.mod.22](#game1311mod22)
@@ -406,6 +408,17 @@ Rebuilt from scratch.
   the Deus Vult advance, so every country is granted that advance at game start, with a monthly
   catch-up for nations formed later.
 - **Dissolve the Hanseatic League** costs the full 100 warscore cap. [vanilla 90]
+- **Restore Roman Borders CB:** conquer cost for the attacker −40%. [vanilla −50%]
+
+### Battles and armies
+
+- Land battles end sooner: strength and morale damage are doubled. [vanilla land strength damage
+  0.04, morale damage 0.25]
+- Heavy infantry combat speed 2.25. [vanilla 2] Reserve regiments join the front line more often, so
+  big infantry armies get to use their reserves.
+- Armies and navies move 25% slower.
+- Tribal levies raise 400-man regiments [vanilla 200]: Tribal Cavalry, Tribal Camelry and the
+  Zenata, Sanhaja, Tuareg and Hilali levies. The same men in half as many regiments.
 
 ## 9. Forts and Sieges
 
@@ -597,8 +610,11 @@ in-game.
 - **Christiana Pietas** (Catholic) gives +1 heathen tolerance and +0.01 monthly literacy. [vanilla +2
   heathen tolerance and no literacy]
 
-- **Across the Pillars:** Sanhaja, Zenata and Tuareg cavalry levies raise 3% of tribesmen. [vanilla
-  10%]
+- **Across the Pillars:** Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen. [vanilla
+  10%] Masmuda tribesmen still raise Atlas Infantry and do not switch to the bigger Tribal Cavalry.
+- **Battle for the Strait:** Castile can only **Vassalize Granada** while the AI plays Granada.
+  Portugal and Granada no longer get the event that makes them ally Castile or Morocco or lose
+  prestige and legitimacy.
 
 ## 16. Pops, Map and Campaign Setup
 
@@ -674,6 +690,7 @@ in-game.
 - Foreign country panel shows the viewed country's MP rank, power score, and point usage and limits.
 - Alerts: mutable alert when over the alliance limit; toggleable monthly popup when over the fort
   limit (default ON).
+- Multiplayer events wait 5 months before their first option is taken for you. [vanilla 3]
 - Enforce Peace button on the war view is always visible and explains what is missing when
   unavailable.
 - Vanilla actions that are against the house rules are relabelled in-game (Send Economic Support,
@@ -704,10 +721,11 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.4.\*** (mod version game.1.4.6.mod.27). Every base-game file the mod
+- Supported game version: **1.4.\*** (mod version game.1.4.6.mod.28). Every base-game file the mod
   replaces is re-based on 1.4.4 and checked against 1.4.6 and the Across the Pillars DLC (interface,
   diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start: pops, buildings, roads,
-  diplomacy and country cultures).
+  diplomacy and country cultures). Not yet checked against 1.4.7: where the mod replaces a
+  base-game file, 1.4.7's changes to that file do not apply.
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -736,7 +754,47 @@ Every advance and value, with the history of changes: https://claude.ai/artifact
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.4.6.mod.27 (current)
+## game.1.4.6.mod.28 (current)
+
+Since game.1.4.6.mod.27 → game.1.4.6.mod.28:
+
+### Patch Compatibility
+
+- built and checked on game 1.4.6. The 1.4.7 update is not in this version yet: where the mod
+  replaces a base-game file, 1.4.7's changes to that file do not apply
+
+### Battles and Armies
+
+- land battles end sooner: strength and morale damage are doubled
+- heavy infantry combat speed 2.25 [vanilla 2]: reserve regiments join the front line more often,
+  so big infantry armies get to use their reserves
+- armies and navies move 25% slower
+- tribal levies raise 400-man regiments [vanilla 200]: Tribal Cavalry, Tribal Camelry and the
+  Zenata, Sanhaja, Tuareg and Hilali levies. The same men in half as many regiments
+
+### Focus Picks
+
+- Levy: **Designated Instruction** gives +15% levy combat efficiency [was +30%]
+
+### War, Wargoals and Peace
+
+- **Restore Roman Borders** CB: conquer cost for the attacker −40% [vanilla −50%]
+
+### National Flavour
+
+- Across the Pillars: Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen [was 3%,
+  vanilla 10%]
+- Across the Pillars: Masmuda tribesmen still raise Atlas Infantry and do not switch to the bigger
+  Tribal Cavalry
+- Battle for the Strait: Castile can only **Vassalize Granada** while the AI plays Granada
+- Battle for the Strait: Portugal and Granada no longer get the event that makes them ally Castile
+  or Morocco or lose prestige and legitimacy
+
+### UI and Quality of Life
+
+- multiplayer events wait 5 months before their first option is taken for you [vanilla 3]
+
+## game.1.4.6.mod.27
 
 Since game.1.4.4.mod.26 → game.1.4.6.mod.27:
 
