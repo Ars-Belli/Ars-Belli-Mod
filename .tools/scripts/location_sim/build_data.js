@@ -372,7 +372,7 @@ const keptScripted = {};
 for (const k of used) if (scripted[k]) keptScripted[k] = scripted[k];
 
 const data = {
-	built: new Date().toISOString().slice(0, 10), game: '1.4.4',
+	built: new Date().toISOString().slice(0, 10), game: '1.4.7', // the installed game's version, set by hand when the game updates
 	defines: Object.fromEntries(KEEP_DEFINES.filter(s => defines[s]).map(s => [s, defines[s]])),
 	values, scripted: keptScripted, pops, estates, ranks, ages, roadTypes, townRights, locationObjects, static: staticMods, countryBase,
 	goods, methods, demands, prices, buildings, levies, levyTriggers, dlcs: dlcFolders.map(d => d.toLowerCase()),
