@@ -7,7 +7,7 @@
 	const D = {
 		COMBAT_BASE: 5, COMBAT_MAX: 15, DICE_SIDES: 10, DAMAGE_MULT: 0.12,
 		// STR_MOD and MOR_MOD are the mod's land damage modifiers, loading_screen/common/defines/01_abm_defines.txt (vanilla 0.04 and 0.25)
-		STR_MOD: 0.08, MOR_MOD: 0.5, DAILY_MORALE: 0.03, DAYS_PER_PHASE: 4, MIN_DAYS: 5, BOMBARD_DAYS: 3,
+		STR_MOD: 0.04, MOR_MOD: 0.25, DAILY_MORALE: 0.03, DAYS_PER_PHASE: 4, MIN_DAYS: 5, BOMBARD_DAYS: 3,
 		COLLAPSE: 0.05,            // absolute morale points (MORALE_COLLAPSE_THRESHOLD)
 		LOW_MORALE: 0.5,           // absolute; below it a lost battle is a shattered retreat
 		MIN_STRENGTH: 0.001,       // regiments with less strength (thousands of men) leave the line

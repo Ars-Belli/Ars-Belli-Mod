@@ -2,9 +2,9 @@
 
 Everything behind section 11d of `EU5 Combat Mechanics (1.4.4).md`. Asked on 2026-10-30: would slower armies stop endless battles, and armies stepping out of a battle to rest and coming back? Numbers are 1.4 only, run 2026-10-31 with the engage limit, the fixed dice timing and `units.json` from 1.4.6.
 
-**Answer:** slower armies barely help. Raising the land damage modifiers does. The mod runs both at ×2 since 2026-11-01: `LAND_MORALE_DAMAGE_MODIFIER = 0.5`, `LAND_STRENGTH_DAMAGE_MODIFIER = 0.08`, with heavy infantry combat speed at 2.25 so big stacks can use their reserves.
+**Answer:** slower armies barely help. Raising the land damage modifiers does. The mod ran both at ×2 from 2026-11-01 to 2026-11-10: `LAND_MORALE_DAMAGE_MODIFIER = 0.5`, `LAND_STRENGTH_DAMAGE_MODIFIER = 0.08`, with heavy infantry combat speed at 2.25 so big stacks could use their reserves. All of it, and the slower armies, went back to vanilla on 2026-11-10 at the user's request.
 
-**2026-11-01:** after the Iberia playtest the mod runs those modifiers with armies and navies at 0.75. Two settings came before it the same day: 2/3 damage took the relay to 100%, and morale ×4 + strength ×3 left 6 and 7 armies of age V infantry unable to use their reserves, 7 v 5 49%. Both ×2: infantry II 34 to 21 days, cavalry II 39 to 23, infantry V 19 to 13. Relay with the slower armies and heavy infantry 2.25: 58% / 70% / 96%. `engine.js` holds the mod's values, and the scripts here reset their baseline to vanilla, heavy infantry 2 included, so `vanilla` rows are vanilla and the tables in `results/` can be rerun.
+**2026-11-01:** after the Iberia playtest the mod ran those modifiers with armies and navies at 0.75 (until 2026-11-10). Two settings came before it the same day: 2/3 damage took the relay to 100%, and morale ×4 + strength ×3 left 6 and 7 armies of age V infantry unable to use their reserves, 7 v 5 49%. Both ×2: infantry II 34 to 21 days, cavalry II 39 to 23, infantry V 19 to 13. Relay with the slower armies and heavy infantry 2.25: 58% / 70% / 96%. `engine.js` holds the mod's values, and the scripts here reset their baseline to vanilla, heavy infantry 2 included, so `vanilla` rows are vanilla and the tables in `results/` can be rerun.
 
 ## The model
 

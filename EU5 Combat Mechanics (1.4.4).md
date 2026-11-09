@@ -694,7 +694,7 @@ Taking an army out needs no replacement either: on the same terms, 5 armies of 3
 
 **What doesn't work:** raising `MINIMUM_COMBAT_DAYS` (15 changes nothing, 30 costs infantry about 10 points), halving morale recovery (cavalry stays at 100%), and `COMBAT_DAILY_MORALE_TICK` ×2 (battles 15–30% shorter, relay unchanged).
 
-**The stronger option, not used. The mod runs both ×2, see section 14:** `LAND_MORALE_DAMAGE_MODIFIER` 0.25 → 1.0 and `LAND_STRENGTH_DAMAGE_MODIFIER` 0.04 → 0.12. Only the land hit function reads them (`0x142481f60`), so sieges and navies are untouched; `COMBAT_DAMAGE_MULT` also reaches sieges (`0x143475bf0`). Losses stay close to vanilla at normal sizes (1,200 battles a cell, +30% morale, 50 experience):
+**The stronger option, not used. The mod ran both ×2 from 2026-11-01 to 2026-11-10 and is back to vanilla:** `LAND_MORALE_DAMAGE_MODIFIER` 0.25 → 1.0 and `LAND_STRENGTH_DAMAGE_MODIFIER` 0.04 → 0.12. Only the land hit function reads them (`0x142481f60`), so sieges and navies are untouched; `COMBAT_DAMAGE_MULT` also reaches sieges (`0x143475bf0`). Losses stay close to vanilla at normal sizes (1,200 battles a cell, +30% morale, 50 experience):
 
 | Battle | Days | Men lost, first side | Men lost, second side |
 |---|---|---|---|
@@ -711,7 +711,7 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - **Quality decides a little less.** +5% discipline wins 66% → 62% (infantry 30 v 30), 73% → 63% (120 v 120), 70% → 62% (cavalry 30 v 30).
 - **Cavalry keeps some edge.** 84% in the table, and a player who adapts how they swap gets more: 94% at both damage ×4 (`levers.txt`). The infantry case, which is what players reported, goes.
 
-**Limits.** The opponent never reacts, forces are even, there is no artillery, days per location are assumed, and none of this is tested in game. At the mod's both ×2 with armies and navies 25% slower, the relay is 58% / 70% / 96% with heavy infantry 2.25 (`results/land_damage_relay.txt`), and at 6 and 7 armies 61–71% on infantry V, 98–100% on cavalry III. Rerun the focus and army balance before releasing the change: sections 11 to 11b and the focus numbers predate it.
+**Limits.** The opponent never reacts, forces are even, there is no artillery, days per location are assumed, and none of this is tested in game. At both ×2 with armies and navies 25% slower (the mod from 2026-11-01 to 2026-11-10), the relay is 58% / 70% / 96% with heavy infantry 2.25 (`results/land_damage_relay.txt`), and at 6 and 7 armies 61–71% on infantry V, 98–100% on cavalry III.
 
 ---
 
@@ -777,7 +777,6 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - D009's Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen, vanilla 10% (section 11b).
 - All six 200-man land levies on tribesmen raise 400-man regiments (`abm_tribal_levy_sizes.txt`, 2026-11-01): Tribal Cavalry, Tribal Camelry, Zenata, Sanhaja, Tuareg, Hilali. Same men from the same pops, half as many regiments. At 400 men Tribal Cavalry would out-power Atlas Infantry in the levy pick, so `REPLACE:levy_tribal_cavalry` keeps Masmuda tribesmen off it.
 - Mercenary hiring costs back to vanilla (2026-10-28).
-- Land damage modifiers doubled: `LAND_STRENGTH_DAMAGE_MODIFIER` 0.08, `LAND_MORALE_DAMAGE_MODIFIER` 0.5 (2026-11-01). The formulas in section 2 show vanilla's 0.04 and 0.25; `engine.js` uses the mod's. 30 v 30: infantry II 34 → 21 days, cavalry II 39 → 23, infantry V 19 → 13. 6 v 6 with heavy infantry 2.25: infantry II 106 → 73, cavalry III 110 → 80, infantry V 69 → 44. A side loses 58% of its men, not 53%. +5% discipline wins 67% on infantry and 63% on cavalry, not 70%. Section 11d has why not more. Raw numbers in `analysis/battle_length/results/land_damage.txt` and `big_battles.txt`.
 - Heavy infantry combat speed 2.25, vanilla 2 (`abm_army_heavy_infantry.txt`, 2026-11-01), so reserves join the line 12.5% more often. Combat speed lines on unit types still add to it. Section 11d has why. A save shows `REPLACE:` binds in `unit_categories`: 58 of 67 armies with auxiliaries match the mod's 7,000 food storage exactly, and the other 9 sit higher.
 
 ---
