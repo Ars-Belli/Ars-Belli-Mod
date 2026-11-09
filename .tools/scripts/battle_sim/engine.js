@@ -26,7 +26,7 @@
 	};
 	const CAT = {
 		li: { name: 'Light infantry', dt: 1.0, sdd: -0.1, mdt: 0.1, i: 5, cs: 3, fl: 1.1, sf: 0.05 },
-		hi: { name: 'Heavy infantry', dt: 1.0, sdd: 0, mdt: 0, i: 1, cs: 2.25, fl: 1.0, sf: 0.05 },
+		hi: { name: 'Heavy infantry', dt: 1.0, sdd: 0, mdt: 0, i: 1, cs: 2, fl: 1.0, sf: 0.05 },
 		lc: { name: 'Light cavalry', dt: 0.3, sdd: -0.1, mdt: 0.1, i: 5, cs: 5, fl: 1.6, sf: 0, ct: { jungle: -0.1, wetlands: -0.1, mountains: -0.1 } },
 		hc: { name: 'Heavy cavalry', dt: 0.3, sdd: 0, mdt: 0, i: 2, cs: 5, fl: 1.6, sf: 0, ct: { jungle: -0.1, wetlands: -0.1, mountains: -0.1, river: -0.1 } },
 		art: { name: 'Artillery', dt: 1.25, sdd: 0, mdt: 0, i: 1, cs: 1, fl: 1.0, sf: 0, bombard: 1 },
