@@ -291,3 +291,166 @@ REPLACE:greek_group_the_modern_greek_enlightenment_advance = {
 
 	requires = enlightened_court
 }
+
+########################################
+# Cilicia (CIL) Ideas
+# Armenian Kingdom of Cilicia, 1337: mountain fortresses, nakharar cavalry,
+# the Ayas entrepot, Frankish quarter-privileges, the Sis Catholicosate and
+# the Cilician scriptorium.
+########################################
+
+# Control of the Taurus and Amanus passes - the Cilician Gates - on the roads
+# between Anatolia, Syria and Mesopotamia.
+abm_cil_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = keepers_of_the_gate
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = castle_advance
+
+	fort_maintenance_efficiency = 0.20
+	global_hostile_attrition = 0.5
+}
+
+# The nakharar legacy: Armenian feudal heavy cavalry, the core of the army.
+abm_cil_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = teu_teutonic_heavy_cavalry
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = noble_knights
+
+	army_heavy_cavalry_power = 0.15
+}
+
+# Ayas (Lajazzo), terminus of the Tabriz caravan road and one of the great
+# entrepots of the eastern Mediterranean.
+abm_cil_ayas_entrepot = {
+	age = age_2_renaissance
+	icon = karimi_merchants
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = protected_harbor_advance
+
+	global_merchant_capacity_modifier = 0.15
+	global_production_efficiency = medium_production_efficiency_bonus
+}
+
+# Genoese, Venetian and Pisan quarters held their own privileges in our ports;
+# the Latin merchant communes were part of the kingdom's fabric.
+abm_cil_frankish_quarters = {
+	age = age_2_renaissance
+	icon = genoese_maritime_diplomacy
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = benign_diplomats
+
+	global_trade_center_power = 0.15
+	sea_cost_on_distance_from_capital_when_maritime = -0.5
+}
+
+# The Cilician school of illumination, heir to Toros Roslin: scriptoria that
+# made the kingdom the centre of Armenian letters while the homeland was lost.
+abm_cil_armenian_scriptorium = {
+	age = age_3_discovery
+	icon = birch_bark_manuscript
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = arts_academy_advance
+
+	global_max_literacy = 5
+}
+
+# Mountain warfare in the Taurus: Armenian foot skirmishers who know every
+# defile, ambushing columns that try to force the passes into the plain.
+abm_cil_tauros_ambushes = {
+	age = age_3_discovery
+	icon = arm_mountain_armies
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = military_traditions
+
+	army_light_infantry_power = 0.10
+	land_morale_modifier = 0.10
+}
+
+# The Catholicosate moved to Sis in 1293; the kingdom holds the see, the
+# monasteries and the loyalty of the Armenian Church.
+abm_cil_catholicosate_of_sis = {
+	age = age_4_reformation
+	icon = city_of_churches
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = arm_apostolic_church
+
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
+	global_pop_food_consumption = -0.10
+}
+
+# Survival by appeasement: tribute and truce with Cairo bought the kingdom
+# decades it could not have won by arms.
+abm_cil_tribute_to_cairo = {
+	age = age_4_reformation
+	icon = diplomatic_training
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = cunning_diplomacy
+
+	antagonism_received_modifier = -0.10
+}
+
+# The last independent Armenian kingdom and the last Christian crown in the
+# Levant: a symbol that draws men and coin from every Armenian community.
+abm_cil_last_christian_kingdom = {
+	age = age_5_absolutism
+	icon = LIV_crusader_forts
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = preserver_of_national_identity
+
+	monthly_prestige = 0.10
+	religious_influence_modifier = 0.10
+	monthly_religious_influence = 0.10
+}
+
+# The nation outlived the kingdom: Armenian burghers and merchant colonies
+# from Caffa to Lvov carried Cilician wealth and memory forward.
+abm_cil_ideas_ambition = {
+	age = age_6_revolutions
+	icon = arm_legacy_of_hayk
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = a_modern_nation
+
+	burghers_estate_target_satisfaction = medium_permanent_target_satisfaction
+}
