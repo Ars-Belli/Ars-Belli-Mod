@@ -1,0 +1,1027 @@
+﻿namespace = flavor_ssg
+
+# The Jo house can abandon its hereditary Yuan office and claim a northern Goryeo restoration.
+flavor_ssg.1 = {
+	type = country_event
+	title = flavor_ssg.1.title
+	desc = flavor_ssg.1.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SSG
+		from = 1337.1.1
+		to = 1400.1.1
+		monthly_chance = 100
+	}
+
+	trigger = {
+		custom_tooltip = {
+			text = ssg_jo_restoration_undecided_tt
+			NOR = {
+				has_variable = ssg_jo_restoration_path
+				has_variable = ssg_jo_restoration_rejected
+			}
+		}
+	}
+
+	option = {
+		name = flavor_ssg.1.a
+		set_variable = ssg_jo_restoration_path
+		if = {
+			limit = {
+				situation:ssg_hanyang_jo_restoration = {
+					situation_is_active = no
+					situation_has_ended = no
+				}
+			}
+			activate_situation = situation:ssg_hanyang_jo_restoration
+		}
+		change_country_name = SSG_NORTHERN_GORYEO
+		change_country_adjective = SSG_NORTHERN_GORYEO_ADJ
+		change_country_flag = SSG_NORTHERN_GORYEO
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+		add_legitimacy = legitimacy_severe_penalty
+		add_stability = stability_mild_penalty
+		add_country_modifier = {
+			modifier = ssg_contested_royal_claim
+			years = -1
+			mode = replace
+		}
+		set_variable = {
+			name = ssg_chief_minister_next_election_year
+			value = current_year
+		}
+		hidden_effect = {
+			trigger_event_non_silently = {
+				id = flavor_ssg.60
+				days = 7
+			}
+		}
+		ai_chance = { base = 10 }
+	}
+
+	option = {
+		name = flavor_ssg.1.b
+		historical_option = yes
+		set_variable = ssg_jo_restoration_rejected
+		add_legitimacy = legitimacy_mild_bonus
+		ai_chance = { base = 90 }
+	}
+}
+
+# The Hanyang Jo king remains hereditary while the court elects its chief minister.
+flavor_ssg.60 = {
+	type = country_event
+	title = flavor_ssg.60.title
+	desc = flavor_ssg.60.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/situation/ssg_hanyang_jo_restoration.dds"
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		has_variable = ssg_chief_minister_next_election_year
+		current_year >= var:ssg_chief_minister_next_election_year
+	}
+
+	immediate = {
+		ssg_ensure_chief_minister_candidates = yes
+		var:ssg_administrative_candidate ?= { save_scope_as = ssg_administrative_candidate }
+		var:ssg_diplomatic_candidate ?= { save_scope_as = ssg_diplomatic_candidate }
+		var:ssg_military_candidate ?= { save_scope_as = ssg_military_candidate }
+		var:ssg_balanced_candidate ?= { save_scope_as = ssg_balanced_candidate }
+	}
+
+	option = {
+		name = flavor_ssg.60.a
+		trigger = { exists = scope:ssg_administrative_candidate }
+		ssg_elect_chief_minister = {
+			target = scope:ssg_administrative_candidate
+			archetype = administrative
+		}
+		ai_chance = {
+			base = 25
+			modifier = { factor = 2 stability < 0 }
+			modifier = { factor = 2 num_loans > 0 }
+			modifier = {
+				factor = 1.5
+				has_variable = ssg_elected_chief_minister
+				var:ssg_elected_chief_minister = scope:ssg_administrative_candidate
+			}
+		}
+	}
+
+	option = {
+		name = flavor_ssg.60.b
+		trigger = { exists = scope:ssg_diplomatic_candidate }
+		ssg_elect_chief_minister = {
+			target = scope:ssg_diplomatic_candidate
+			archetype = diplomatic
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 2
+				OR = {
+					has_country_modifier = ssg_contested_royal_claim
+					has_country_modifier = ssg_measured_opening
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_variable = ssg_elected_chief_minister
+				var:ssg_elected_chief_minister = scope:ssg_diplomatic_candidate
+			}
+		}
+	}
+
+	option = {
+		name = flavor_ssg.60.c
+		trigger = { exists = scope:ssg_military_candidate }
+		ssg_elect_chief_minister = {
+			target = scope:ssg_military_candidate
+			archetype = military
+		}
+		ai_chance = {
+			base = 25
+			modifier = { factor = 3 at_war = yes }
+			modifier = {
+				factor = 1.5
+				has_variable = ssg_elected_chief_minister
+				var:ssg_elected_chief_minister = scope:ssg_military_candidate
+			}
+		}
+	}
+
+	option = {
+		name = flavor_ssg.60.d
+		trigger = { exists = scope:ssg_balanced_candidate }
+		ssg_elect_chief_minister = {
+			target = scope:ssg_balanced_candidate
+			archetype = balanced
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 2
+				at_war = no
+				stability >= 0
+				num_loans <= 0
+			}
+			modifier = {
+				factor = 1.5
+				has_variable = ssg_elected_chief_minister
+				var:ssg_elected_chief_minister = scope:ssg_balanced_candidate
+			}
+		}
+	}
+
+	after = {
+		set_variable = {
+			name = ssg_chief_minister_next_election_year
+			value = {
+				value = current_year
+				add = 4
+			}
+		}
+		trigger_event_non_silently = {
+			id = flavor_ssg.60
+			years = 4
+		}
+	}
+}
+
+# Economy pillar
+flavor_ssg.10 = {
+	type = country_event
+	title = flavor_ssg.10.title
+	desc = flavor_ssg.10.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	immediate = {
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_restore_royal_granaries
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_economy_stage_1
+	}
+
+	option = {
+		name = flavor_ssg.10.a
+		add_country_modifier = { modifier = ssg_crown_granaries years = -1 mode = replace }
+		add_legitimacy = legitimacy_mild_bonus
+		ai_chance = { base = 50 }
+	}
+	option = {
+		name = flavor_ssg.10.b
+		add_country_modifier = { modifier = ssg_chartered_frontier_markets years = -1 mode = replace }
+		add_gold = { value = monthly_income_total multiply = 3 }
+		ai_chance = { base = 50 }
+	}
+}
+
+flavor_ssg.11 = {
+	type = country_event
+	title = flavor_ssg.11.title
+	desc = flavor_ssg.11.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_ssg.11.a
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_link_the_mountain_valleys
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_economy_stage_2
+		add_country_modifier = { modifier = ssg_economy_roads years = -1 mode = replace }
+		custom_tooltip = {
+			text = flavor_ssg.11.infrastructure_tt
+			location:hwaju.province = {
+				every_location_in_province = {
+					limit = { owner ?= root }
+					change_prosperity = prosperity_mild_bonus
+					change_control = control_mild_bonus
+				}
+			}
+		}
+	}
+}
+
+flavor_ssg.12 = {
+	type = country_event
+	title = flavor_ssg.12.title
+	desc = flavor_ssg.12.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_ssg.12.a
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_establish_frontier_workshops
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_economy_complete
+		remove_country_modifier = ssg_economy_roads
+		add_country_modifier = { modifier = ssg_economy_complete years = -1 mode = replace }
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+# Military pillar
+flavor_ssg.20 = {
+	type = country_event
+	title = flavor_ssg.20.title
+	desc = flavor_ssg.20.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	immediate = {
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_organize_frontier_musters
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_military_stage_1
+	}
+
+	option = {
+		name = flavor_ssg.20.a
+		add_country_modifier = { modifier = ssg_household_retainers years = -1 mode = replace }
+		add_army_tradition = army_tradition_mild_bonus
+		ai_chance = { base = 50 }
+	}
+	option = {
+		name = flavor_ssg.20.b
+		add_country_modifier = { modifier = ssg_village_levies years = -1 mode = replace }
+		add_manpower = { value = max_manpower multiply = 0.10 }
+		ai_chance = { base = 50 }
+	}
+}
+
+flavor_ssg.21 = {
+	type = country_event
+	title = flavor_ssg.21.title
+	desc = flavor_ssg.21.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_ssg.21.a
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_raise_beacons_and_forts
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_military_stage_2
+		add_country_modifier = { modifier = ssg_military_beacons years = -1 mode = replace }
+		add_army_tradition = army_tradition_mild_bonus
+	}
+}
+
+flavor_ssg.22 = {
+	type = country_event
+	title = flavor_ssg.22.title
+	desc = flavor_ssg.22.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_ssg.22.a
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_build_the_royal_arsenal
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_military_complete
+		remove_country_modifier = ssg_military_beacons
+		add_country_modifier = { modifier = ssg_military_complete years = -1 mode = replace }
+		add_navy_tradition = navy_tradition_mild_bonus
+	}
+}
+
+# Research pillar
+flavor_ssg.30 = {
+	type = country_event
+	title = flavor_ssg.30.title
+	desc = flavor_ssg.30.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	immediate = {
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_acquire_foreign_manuscripts
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_research_stage_1
+	}
+
+	option = {
+		name = flavor_ssg.30.a
+		add_country_modifier = { modifier = ssg_bribed_manuscript_clerks years = -1 mode = replace }
+		add_legitimacy = legitimacy_mild_penalty
+		ai_chance = { base = 50 }
+	}
+	option = {
+		name = flavor_ssg.30.b
+		add_country_modifier = { modifier = ssg_foreign_artisans years = -1 mode = replace }
+		add_gold = { value = monthly_income_total multiply = -2 }
+		ai_chance = { base = 50 }
+	}
+}
+
+flavor_ssg.31 = {
+	type = country_event
+	title = flavor_ssg.31.title
+	desc = flavor_ssg.31.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_ssg.31.a
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_found_experimental_workshops
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_research_stage_2
+		add_country_modifier = { modifier = ssg_research_workshops years = -1 mode = replace }
+		add_research_progress = research_progress_mild_bonus
+	}
+}
+
+flavor_ssg.32 = {
+	type = country_event
+	title = flavor_ssg.32.title
+	desc = flavor_ssg.32.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_ssg.32.a
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_open_the_court_academy
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_research_complete
+		remove_country_modifier = ssg_research_workshops
+		add_country_modifier = { modifier = ssg_research_complete years = -1 mode = replace }
+		add_country_modifier = { modifier = ssg_powder_alarm years = 15 mode = replace }
+		add_research_progress = research_progress_mild_bonus
+	}
+}
+
+# Diplomacy pillar
+flavor_ssg.40 = {
+	type = country_event
+	title = flavor_ssg.40.title
+	desc = flavor_ssg.40.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	immediate = {
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_choose_the_frontier_posture
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_diplomacy_stage_1
+	}
+
+	option = {
+		name = flavor_ssg.40.a
+		add_country_modifier = { modifier = ssg_controlled_isolation years = -1 mode = replace }
+		add_stability = stability_mild_bonus
+		ai_chance = { base = 50 }
+	}
+	option = {
+		name = flavor_ssg.40.b
+		add_country_modifier = { modifier = ssg_measured_opening years = -1 mode = replace }
+		if = {
+			limit = { country_exists = c:CHI }
+			add_opinion_mutual_effect = { modifier = ssg_measured_opening_opinion target = c:CHI }
+		}
+		if = {
+			limit = { country_exists = c:KOR }
+			add_opinion_mutual_effect = { modifier = ssg_measured_opening_opinion target = c:KOR }
+		}
+		ai_chance = { base = 50 }
+	}
+}
+
+flavor_ssg.41 = {
+	type = country_event
+	title = flavor_ssg.41.title
+	desc = flavor_ssg.41.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_ssg.41.a
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_authorize_privy_merchants
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_diplomacy_stage_2
+		add_country_modifier = { modifier = ssg_privy_courier_network years = -1 mode = replace }
+		add_prestige = prestige_mild_bonus
+	}
+}
+
+flavor_ssg.42 = {
+	type = country_event
+	title = flavor_ssg.42.title
+	desc = flavor_ssg.42.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_ssg.42.a
+		remove_variable = ssg_active_project
+		remove_variable = ssg_active_press_restoration_claims
+		remove_variable = ssg_project_midpoint
+		remove_country_modifier = ssg_national_project_underway
+		set_variable = ssg_diplomacy_complete
+		remove_country_modifier = ssg_privy_courier_network
+		add_country_modifier = { modifier = ssg_diplomacy_complete years = -1 mode = replace }
+		add_legitimacy = legitimacy_mild_penalty
+		if = {
+			limit = { country_exists = c:KOR }
+			add_opinion_mutual_effect = { modifier = ssg_restoration_claims_opinion target = c:KOR }
+			add_casus_belli = { target = c:KOR type = casus_belli:cb_subjugation }
+		}
+	}
+}
+
+# Midpoint events make every national project visible as an unfolding effort rather than a delayed reward.
+flavor_ssg.110 = {
+	type = country_event
+	title = flavor_ssg.110.title
+	desc = flavor_ssg.110.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_restore_royal_granaries }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.110.a
+		add_legitimacy = legitimacy_weak_bonus
+		ai_chance = { base = 60 }
+	}
+	option = {
+		name = flavor_ssg.110.b
+		add_gold = { value = monthly_income_total multiply = 1 }
+		add_stability = stability_weak_penalty
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.111 = {
+	type = country_event
+	title = flavor_ssg.111.title
+	desc = flavor_ssg.111.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_link_the_mountain_valleys }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.111.a
+		add_gold = { value = monthly_income_total multiply = -1 }
+		add_prestige = prestige_weak_bonus
+		ai_chance = { base = 60 }
+	}
+	option = {
+		name = flavor_ssg.111.b
+		add_legitimacy = legitimacy_weak_penalty
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.112 = {
+	type = country_event
+	title = flavor_ssg.112.title
+	desc = flavor_ssg.112.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_establish_frontier_workshops }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.112.a
+		add_research_progress = research_progress_weak_bonus
+		ai_chance = { base = 60 }
+	}
+	option = {
+		name = flavor_ssg.112.b
+		add_gold = { value = monthly_income_total multiply = 1 }
+		add_legitimacy = legitimacy_weak_penalty
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.120 = {
+	type = country_event
+	title = flavor_ssg.120.title
+	desc = flavor_ssg.120.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_organize_frontier_musters }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.120.a
+		add_legitimacy = legitimacy_weak_bonus
+		ai_chance = { base = 60 }
+	}
+	option = {
+		name = flavor_ssg.120.b
+		add_manpower = { value = max_manpower multiply = 0.05 }
+		add_stability = stability_weak_penalty
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.121 = {
+	type = country_event
+	title = flavor_ssg.121.title
+	desc = flavor_ssg.121.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_raise_beacons_and_forts }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.121.a
+		add_gold = { value = monthly_income_total multiply = -0.5 }
+		add_army_tradition = army_tradition_weak_bonus
+		ai_chance = { base = 60 }
+	}
+	option = {
+		name = flavor_ssg.121.b
+		add_prestige = prestige_weak_bonus
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.122 = {
+	type = country_event
+	title = flavor_ssg.122.title
+	desc = flavor_ssg.122.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_build_the_royal_arsenal }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.122.a
+		add_army_tradition = army_tradition_weak_bonus
+		ai_chance = { base = 50 }
+	}
+	option = {
+		name = flavor_ssg.122.b
+		add_navy_tradition = navy_tradition_weak_bonus
+		ai_chance = { base = 50 }
+	}
+}
+
+flavor_ssg.130 = {
+	type = country_event
+	title = flavor_ssg.130.title
+	desc = flavor_ssg.130.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_acquire_foreign_manuscripts }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.130.a
+		add_gold = { value = monthly_income_total multiply = -1 }
+		add_research_progress = research_progress_weak_bonus
+		ai_chance = { base = 60 }
+	}
+	option = {
+		name = flavor_ssg.130.b
+		add_prestige = prestige_weak_bonus
+		add_legitimacy = legitimacy_weak_penalty
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.131 = {
+	type = country_event
+	title = flavor_ssg.131.title
+	desc = flavor_ssg.131.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_found_experimental_workshops }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.131.a
+		add_research_progress = research_progress_weak_bonus
+		ai_chance = { base = 70 }
+	}
+	option = {
+		name = flavor_ssg.131.b
+		add_research_progress = research_progress_mild_bonus
+		add_stability = stability_weak_penalty
+		ai_chance = { base = 30 }
+	}
+}
+
+flavor_ssg.132 = {
+	type = country_event
+	title = flavor_ssg.132.title
+	desc = flavor_ssg.132.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_open_the_court_academy }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.132.a
+		add_legitimacy = legitimacy_weak_bonus
+		ai_chance = { base = 50 }
+	}
+	option = {
+		name = flavor_ssg.132.b
+		add_research_progress = research_progress_weak_bonus
+		add_legitimacy = legitimacy_weak_penalty
+		ai_chance = { base = 50 }
+	}
+}
+
+flavor_ssg.140 = {
+	type = country_event
+	title = flavor_ssg.140.title
+	desc = flavor_ssg.140.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_choose_the_frontier_posture }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.140.a
+		add_stability = stability_weak_bonus
+		ai_chance = { base = 60 }
+	}
+	option = {
+		name = flavor_ssg.140.b
+		add_prestige = prestige_weak_bonus
+		add_legitimacy = legitimacy_weak_penalty
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.141 = {
+	type = country_event
+	title = flavor_ssg.141.title
+	desc = flavor_ssg.141.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_authorize_privy_merchants }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.141.a
+		add_gold = { value = monthly_income_total multiply = -1 }
+		add_prestige = prestige_weak_bonus
+		ai_chance = { base = 60 }
+	}
+	option = {
+		name = flavor_ssg.141.b
+		add_prestige = prestige_mild_penalty
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.142 = {
+	type = country_event
+	title = flavor_ssg.142.title
+	desc = flavor_ssg.142.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	trigger = { has_variable = ssg_active_press_restoration_claims }
+	immediate = { set_variable = ssg_project_midpoint }
+
+	option = {
+		name = flavor_ssg.142.a
+		add_legitimacy = legitimacy_weak_bonus
+		ai_chance = { base = 60 }
+	}
+	option = {
+		name = flavor_ssg.142.b
+		add_prestige = prestige_mild_bonus
+		add_stability = stability_weak_penalty
+		ai_chance = { base = 40 }
+	}
+}
+
+# The restoration court can prepare a specifically northern response to the Black Death.
+flavor_ssg.200 = {
+	type = country_event
+	title = flavor_ssg.200.title
+	desc = flavor_ssg.200.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/situation/ssg_hanyang_jo_restoration.dds"
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SSG
+		from = 1340.1.1
+		to = 1400.1.1
+		monthly_chance = 100
+	}
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		disease_is_active = disease:bubonic_plague
+		NOT = { has_variable = ssg_plague_preparations_set }
+	}
+
+	immediate = {
+		set_variable = ssg_plague_preparations_set
+	}
+
+	option = {
+		name = flavor_ssg.200.a
+		set_variable = ssg_plague_policy_cordons
+		add_gold = { value = monthly_income_total multiply = -4 }
+		add_stability = stability_mild_penalty
+		add_country_modifier = { modifier = ssg_mountain_cordons years = 10 mode = replace }
+		if = {
+			limit = { has_variable = ssg_economy_stage_1 }
+			add_country_modifier = { modifier = ssg_granary_quarantine_reserves years = 10 mode = replace }
+		}
+		hidden_effect = { trigger_event_silently = { id = flavor_ssg.201 months = 12 } }
+		ai_chance = { base = 65 }
+	}
+
+	option = {
+		name = flavor_ssg.200.b
+		set_variable = ssg_plague_policy_guarded_roads
+		add_gold = { value = monthly_income_total multiply = -2 }
+		add_prestige = prestige_weak_bonus
+		add_country_modifier = { modifier = ssg_guarded_caravan_stations years = 10 mode = replace }
+		if = {
+			limit = { has_variable = ssg_research_stage_1 }
+			add_country_modifier = { modifier = ssg_court_remedy_network years = 10 mode = replace }
+		}
+		hidden_effect = { trigger_event_silently = { id = flavor_ssg.201 months = 12 } }
+		ai_chance = { base = 35 }
+	}
+}
+
+flavor_ssg.201 = {
+	type = country_event
+	title = flavor_ssg.201.title
+	desc = flavor_ssg.201.desc
+	outcome = neutral
+	image = "gfx/interface/illustrations/situation/ssg_hanyang_jo_restoration.dds"
+	fire_only_once = yes
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		has_variable = ssg_plague_preparations_set
+		disease_is_active = disease:bubonic_plague
+	}
+
+	option = {
+		name = flavor_ssg.201.a
+		add_legitimacy = legitimacy_mild_penalty
+		add_country_modifier = { modifier = ssg_village_cordon_network years = 8 mode = replace }
+		ai_chance = { base = 60 }
+	}
+
+	option = {
+		name = flavor_ssg.201.b
+		add_gold = { value = monthly_income_total multiply = -3 }
+		add_stability = stability_weak_bonus
+		add_country_modifier = { modifier = ssg_temple_relief_network years = 8 mode = replace }
+		ai_chance = { base = 40 }
+	}
+}
+
+flavor_ssg.202 = {
+	type = country_event
+	title = flavor_ssg.202.title
+	desc = flavor_ssg.202.desc
+	outcome = negative
+	image = "gfx/interface/illustrations/situation/black_death.dds"
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SSG
+		from = 1340.1.1
+		to = 1420.1.1
+		monthly_chance = 100
+	}
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		has_variable = ssg_plague_preparations_set
+		country_has_disease = disease:bubonic_plague
+		NOT = { has_variable = ssg_black_death_reached_realm }
+	}
+
+	immediate = {
+		set_variable = ssg_black_death_reached_realm
+	}
+
+	option = {
+		name = flavor_ssg.202.a
+		add_gold = { value = monthly_income_total multiply = -4 }
+		custom_tooltip = flavor_ssg.202.a.tt
+		hidden_effect = {
+			if = {
+				limit = { has_variable = ssg_economy_stage_1 }
+				every_owned_location = {
+					limit = { disease_presence = { disease = disease:bubonic_plague value > 0 } }
+					change_disease_presence = { disease = disease:bubonic_plague value = -0.15 }
+				}
+			}
+			else = {
+				every_owned_location = {
+					limit = { disease_presence = { disease = disease:bubonic_plague value > 0 } }
+					change_disease_presence = { disease = disease:bubonic_plague value = -0.05 }
+				}
+			}
+		}
+		add_stability = stability_weak_bonus
+		ai_chance = { base = 70 }
+	}
+
+	option = {
+		name = flavor_ssg.202.b
+		add_country_modifier = { modifier = ssg_sheltered_royal_court years = 5 mode = replace }
+		if = {
+			limit = {
+				owns = location:hwaju
+				location:hwaju = { disease_presence = { disease = disease:bubonic_plague value > 0 } }
+			}
+			location:hwaju = {
+				change_disease_presence = { disease = disease:bubonic_plague value = -0.25 }
+			}
+		}
+		add_legitimacy = legitimacy_weak_bonus
+		ai_chance = { base = 30 }
+	}
+}
+
+flavor_ssg.203 = {
+	type = country_event
+	title = flavor_ssg.203.title
+	desc = flavor_ssg.203.desc
+	outcome = positive
+	image = "gfx/interface/illustrations/situation/ssg_hanyang_jo_restoration.dds"
+	fire_only_once = yes
+
+	dynamic_historical_event = {
+		tag = SSG
+		from = 1347.1.1
+		to = 1425.1.1
+		monthly_chance = 100
+	}
+
+	trigger = {
+		has_variable = ssg_jo_restoration_path
+		has_variable = ssg_plague_preparations_set
+		NOT = { has_variable = ssg_plague_outcome_recorded }
+		situation:black_death = {
+			situation_is_active = no
+			situation_has_ended = yes
+		}
+	}
+
+	immediate = {
+		set_variable = ssg_plague_outcome_recorded
+		remove_country_modifier = ssg_mountain_cordons
+		remove_country_modifier = ssg_guarded_caravan_stations
+		remove_country_modifier = ssg_granary_quarantine_reserves
+		remove_country_modifier = ssg_court_remedy_network
+		remove_country_modifier = ssg_village_cordon_network
+		remove_country_modifier = ssg_temple_relief_network
+		remove_country_modifier = ssg_sheltered_royal_court
+	}
+
+	option = {
+		name = flavor_ssg.203.a
+		trigger = {
+			NOR = {
+				has_variable = ssg_black_death_reached_realm
+				has_variable = had_black_death
+			}
+		}
+		add_prestige = prestige_severe_bonus
+		add_legitimacy = legitimacy_mild_bonus
+		add_stability = stability_mild_bonus
+		ai_chance = { base = 100 }
+	}
+
+	option = {
+		name = flavor_ssg.203.b
+		trigger = {
+			OR = {
+				has_variable = ssg_black_death_reached_realm
+				has_variable = had_black_death
+			}
+		}
+		add_gold = { value = monthly_income_total multiply = -3 }
+		add_country_modifier = { modifier = ssg_post_plague_restoration years = 10 mode = replace }
+		add_stability = stability_weak_bonus
+		ai_chance = { base = 100 }
+	}
+}
+
+# Reunification changes presentation, not the internal tag, so existing KOR DHEs remain coherent.
+flavor_ssg.50 = {
+	type = country_event
+	title = flavor_ssg.50.title
+	desc = flavor_ssg.50.desc
+	outcome = neutral
+	fire_only_once = yes
+
+	option = {
+		name = flavor_ssg.50.a
+		set_variable = ssg_reunited_goryeo
+		if = {
+			limit = {
+				is_situation_active = situation:ssg_hanyang_jo_restoration
+			}
+			end_situation = situation:ssg_hanyang_jo_restoration
+		}
+		change_country_name = KOR
+		change_country_adjective = KOR_ADJ
+		change_country_flag = KOR
+		hidden_effect = { change_country_color = map_KOR }
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+		remove_country_modifier = ssg_contested_royal_claim
+		add_country_modifier = { modifier = ssg_reunification_burdens years = 20 mode = replace }
+		custom_tooltip = {
+			text = flavor_ssg.50.integration_tt
+			region:korea_region = {
+				every_location_in_region = {
+					limit = { owner ?= root }
+					change_control = control_mild_penalty
+				}
+			}
+		}
+		add_prestige = prestige_severe_bonus
+		add_legitimacy = legitimacy_severe_bonus
+	}
+}
