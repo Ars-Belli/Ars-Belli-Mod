@@ -777,7 +777,7 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - D009's Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen, vanilla 10% (section 11b).
 - All six 200-man land levies on tribesmen raise 400-man regiments (`abm_tribal_levy_sizes.txt`, 2026-11-01): Tribal Cavalry, Tribal Camelry, Zenata, Sanhaja, Tuareg, Hilali. Same men from the same pops, half as many regiments. At 400 men Tribal Cavalry would out-power Atlas Infantry in the levy pick, so `REPLACE:levy_tribal_cavalry` keeps Masmuda tribesmen off it.
 - Mercenary hiring costs back to vanilla (2026-10-28).
-- Heavy infantry combat speed 2.25, vanilla 2 (`abm_army_heavy_infantry.txt`, 2026-11-01), so reserves join the line 12.5% more often. Combat speed lines on unit types still add to it. Section 11d has why. A save shows `REPLACE:` binds in `unit_categories`: 58 of 67 armies with auxiliaries match the mod's 7,000 food storage exactly, and the other 9 sit higher.
+- `REPLACE:` binds in `unit_categories` (a save: 58 of 67 armies with auxiliaries match the mod's 7,000 food storage exactly, and the other 9 sit higher). Heavy infantry combat speed 2.25 (2026-11-01) is back to vanilla 2 since 2026-11-10.
 
 ---
 
