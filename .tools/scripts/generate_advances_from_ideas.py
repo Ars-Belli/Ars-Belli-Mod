@@ -318,6 +318,12 @@ _FIXED_CONVERSIONS: dict[str, tuple[str, ...]] = {
     "shock_damage": ("army_heavy_infantry_power = 0.10",),
     "heavy_ship_power": ("navy_heavy_ship_power = 0.10",),
     "global_sailors_modifier": ("global_sailors_modifier = 0.10",),
+    # --- galley warfare and claims (Cyprus import; EU5 has no claim-cost or
+    # galley-power equivalent under the EU4 name, so map to the live ones) ---
+    "galley_cost": ("navy_galley_build_cost_modifier = -0.20",),
+    "galley_power": ("navy_galley_power = 0.20",),
+    # EU4 made claims cheaper; EU5 expresses the same intent as faster CB creation.
+    "fabricate_claims_cost": ("casus_belli_creation_speed_modifier = 0.25",),
     # --- Qoyunlu import (leader pips and government power) ---
     # army_fire_damage is non-functional, so fire pips become the fire-phase arm
     # (cf. fire_damage -> army_artillery_power above).
