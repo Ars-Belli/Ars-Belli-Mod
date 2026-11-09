@@ -1,6 +1,6 @@
 // node .tools/scripts/battle_sim/analysis/army_meta.js regulars [--ages 2,3,4,5,6] [--views regiments,manpower,gold] [--regs 30]
 //      [--n 60] [--nm 300] [--iters 10] [--tol 0.01] [--step 0.2] [--frontage 10] [--loc '{"topography":"hills"}'] [--balanced-only]
-//      [--no-combined] [--combined-per-type 0.025] [--days-per-phase 4] [--levies L] [--out file]
+//      [--no-combined] [--combined-per-type 0.025] [--days-per-phase 4] [--levies L] [--score wins|casualties] [--out file]
 // --levies L: the levy meta. Both sides also bring L free levy regiments, so a strategy is a regular composition plus the share of
 // knights among its levies (0, 25 or 50%). Levies count for combined arms by category: levy infantry as li, knights as hc.
 // node .tools/scripts/battle_sim/analysis/army_meta.js named [--comps "name=hi:0.4,li:0.4,lc:0.2;..."] [--ages ...] [--views ...]
@@ -130,6 +130,7 @@ function equilibrium(M, T = 60000) {
 const location = () => opt('--loc') ? JSON.parse(opt('--loc')) : { frontage: +opt('--frontage', 10) };
 // --rules 1.3 needs EU5_UNITS=<units_1.3.11.json> in the environment (pool.js reads it too)
 const PATCH = opt('--rules') === '1.3' ? { D: S.RULES_13 } : opt('--days-per-phase') ? { D: { DAYS_PER_PHASE: +opt('--days-per-phase') } } : undefined;
+const SCORE = opt('--score', 'wins');
 // win rate of a against b: both seat orders, draws count half
 async function duel(a, b, age, view, regs, n, seed = 11) {
 	const x = army(a, age, view, regs), y = army(b, age, view, regs);
@@ -137,7 +138,10 @@ async function duel(a, b, age, view, regs, n, seed = 11) {
 		pool.mc({ location: location(), attacker: { armies: [x] }, defender: { armies: [y] } }, n, { seed, patch: PATCH }),
 		pool.mc({ location: location(), attacker: { armies: [y] }, defender: { armies: [x] } }, n, { seed: seed + 500000, patch: PATCH }),
 	]);
-	return { win: (m1.wins[0] + m1.draws / 2 + m2.wins[1] + m2.draws / 2) / (2 * n), lost: (m1.losses[0] + m2.losses[1]) / 2, killed: (m1.losses[1] + m2.losses[0]) / 2, days: (m1.days + m2.days) / 2 };
+	const r = { win: (m1.wins[0] + m1.draws / 2 + m2.wins[1] + m2.draws / 2) / (2 * n), lost: (m1.losses[0] + m2.losses[1]) / 2, killed: (m1.losses[1] + m2.losses[0]) / 2, days: (m1.days + m2.days) / 2 };
+	// --score casualties: an army's score is its share of the men killed in the battle (killed more than it lost = above 50%), not who won
+	if (SCORE === 'casualties') { r.battleWin = r.win; r.win = r.killed + r.lost > 0 ? r.killed / (r.killed + r.lost) : 0.5; }
+	return r;
 }
 async function solveCell(age, view, regs, o) {
 	const G = grid(o.step), byKey = new Map(), memo = new Map();
