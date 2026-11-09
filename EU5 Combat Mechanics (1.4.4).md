@@ -779,7 +779,6 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - Mercenary hiring costs back to vanilla (2026-10-28).
 - Land damage modifiers doubled: `LAND_STRENGTH_DAMAGE_MODIFIER` 0.08, `LAND_MORALE_DAMAGE_MODIFIER` 0.5 (2026-11-01). The formulas in section 2 show vanilla's 0.04 and 0.25; `engine.js` uses the mod's. 30 v 30: infantry II 34 → 21 days, cavalry II 39 → 23, infantry V 19 → 13. 6 v 6 with heavy infantry 2.25: infantry II 106 → 73, cavalry III 110 → 80, infantry V 69 → 44. A side loses 58% of its men, not 53%. +5% discipline wins 67% on infantry and 63% on cavalry, not 70%. Section 11d has why not more. Raw numbers in `analysis/battle_length/results/land_damage.txt` and `big_battles.txt`.
 - Heavy infantry combat speed 2.25, vanilla 2 (`abm_army_heavy_infantry.txt`, 2026-11-01), so reserves join the line 12.5% more often. Combat speed lines on unit types still add to it. Section 11d has why. A save shows `REPLACE:` binds in `unit_categories`: 58 of 67 armies with auxiliaries match the mod's 7,000 food storage exactly, and the other 9 sit higher.
-- Armies and navies 25% slower: `ARMY_MOVEMENT_SPEED` 0.675, `NAVY_MOVEMENT_SPEED` 2.64375 (`0x14351cef0` multiplies each regiment's speed by these). Morale lost to marching is per day, so a march costs a third more morale.
 
 ---
 
