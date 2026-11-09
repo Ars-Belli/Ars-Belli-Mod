@@ -549,7 +549,7 @@ Morocco's real levy is not `a_tribesmen`. D009's `levy_sanhaja_camel_cavalry`, `
 - **Sparse terrain** (Sanhaja +20%) moves the age I stack vs 30 hi from 11% to 36%, and elsewhere changes little.
 - **Not checked against a real battle.** Saves keep battle records only for wars still running, and the 1372 war had no levy battle. Regiment counts, men and maximum morale were checked on saves: levies reach the same 4.53 as regulars. A 250-regiment stack's supply and attrition are not modelled.
 
-**The Ars Belli rate.** Since 2026-11-01 it is 2% with 400-man regiments, see section 14; the rest of this section is the 3% run. `TRY_REPLACE:` in `abm_d009_maghreb_levies.txt` puts all three at `abm_levy_maghreb_cavalry_size` = 3%, so Morocco raises 24k men, not 55k, Accepted. The same-population country is worth 33 / 23 / 17 heavy cavalry at ages I / II / III. Whole levy, one stack, open farmland (`levy_meta.js rate`; the Sanhaja and Zenata regiments follow the rate, the rest of the levy stays):
+**The Ars Belli rate.** Since 2026-11-01 it is 2% with bigger regiments (400 men, 350 since 2026-11-10), see section 14; the rest of this section is the 3% run. `TRY_REPLACE:` in `abm_d009_maghreb_levies.txt` puts all three at `abm_levy_maghreb_cavalry_size` = 3%, so Morocco raises 24k men, not 55k, Accepted. The same-population country is worth 33 / 23 / 17 heavy cavalry at ages I / II / III. Whole levy, one stack, open farmland (`levy_meta.js rate`; the Sanhaja and Zenata regiments follow the rate, the rest of the levy stays):
 
 | Share of tribesmen | Tolerated: men, worth in hc at ages I / II | Accepted: men, worth in hc at ages I / II / III |
 |---|---|---|
@@ -775,7 +775,7 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - `high_horde_unity`: discipline +5% (vanilla +10%). `horde_army_expectation`: land morale −10% (vanilla −50%).
 - Steppe unit sizes: `a_steppe_horde` and `a_steppe_horse_archers` lose vanilla's +0.4 `max_strength` (200 men, not 600). `a_late_steppe_horde` (400 men, advance `abm_steppe_renaissance_levy`, age II) takes over from `a_steppe_horde`. Levy men come from pops, so this means more, smaller regiments, not fewer men; section 11b has what that is worth.
 - D009's Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen, vanilla 10% (section 11b).
-- All six 200-man land levies on tribesmen raise 400-man regiments (`abm_tribal_levy_sizes.txt`, 2026-11-01): Tribal Cavalry, Tribal Camelry, Zenata, Sanhaja, Tuareg, Hilali. Same men from the same pops, half as many regiments. At 400 men Tribal Cavalry would out-power Atlas Infantry in the levy pick, so `REPLACE:levy_tribal_cavalry` keeps Masmuda tribesmen off it.
+- All six 200-man land levies on tribesmen raise 350-man regiments (`abm_tribal_levy_sizes.txt`; 400 from 2026-11-01, 350 since 2026-11-10): Tribal Cavalry, Tribal Camelry, Zenata, Sanhaja, Tuareg, Hilali. Same men from the same pops, about 43% fewer regiments. At 350 men Tribal Cavalry would out-power Atlas Infantry in the levy pick, so `REPLACE:levy_tribal_cavalry` keeps Masmuda tribesmen off it.
 - Mercenary hiring costs back to vanilla (2026-10-28).
 - `REPLACE:` binds in `unit_categories` (a save: 58 of 67 armies with auxiliaries match the mod's 7,000 food storage exactly, and the other 9 sit higher). Heavy infantry combat speed 2.25 (2026-11-01) is back to vanilla 2 since 2026-11-10.
 
