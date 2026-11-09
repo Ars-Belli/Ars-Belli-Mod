@@ -62,6 +62,34 @@ In the tables, "x [y]" is mod power [vanilla power]; win % is the row army again
 | 5 | 20hi 40li 20hc 20lc 55% / 40hi 20li 20hc 20lc 44% | 40hi 20li 20hc 20lc 98% | 30hi 30li 20hc 20lc (68) | 30hi 30li 20hc 20lc (67) | 43 [27] | 62 [51] | 73 [66] |
 | 6 | 40hi 20li 20hc 20lc 96% | 40hi 20li 20hc 20lc 97% | 30hi 30li 20hc 20lc (70) | 30hi 30li 20hc 20lc (70) | 84 [82] | 95 [94] | 96 [95] |
 
+## Casualties (battles, mod power)
+
+Each army against pure heavy cavalry: share of battles won, then men lost per battle by that army / by the heavy cavalry, averaged over wins and losses. Pure heavy cavalry has 6k / 12k / 18k / 24k / 30k / 36k men at the same regiment count; the infantry armies are bigger, because infantry regiments are.
+
+### Same regiments
+
+| Age | Infantry 50hi 50li | 40hi 40li 20lc | 25hi 25li 25hc 25lc | 45hi 45hc 10lc |
+|---|---|---|---|---|
+| 1 | 25%, 8.2k / 2.6k | 42%, 6.8k / 2.9k | 51%, 5.3k / 3.0k | 57%, 5.0k / 3.2k |
+| 2 | 26%, 18.3k / 5.6k | 39%, 15.1k / 6.1k | 52%, 11.6k / 6.6k | 49%, 10.9k / 6.7k |
+| 3 | 5%, 32.1k / 7.2k | 18%, 26.8k / 8.4k | 33%, 20.6k / 9.6k | 39%, 19.7k / 10.2k |
+| 4 | 52%, 38.7k / 15.8k | 69%, 30.6k / 16.9k | 72%, 24.4k / 17.2k | 73%, 23.8k / 17.8k |
+| 5 | 97%, 33.9k / 26.5k | 97%, 28.7k / 26.5k | 94%, 25.2k / 26.0k | 96%, 24.7k / 26.9k |
+| 6 | 100%, 33.7k / 34.9k | 100%, 28.5k / 34.9k | 100%, 26.1k / 34.7k | 99%, 26.3k / 35.2k |
+
+### Same maintenance manpower
+
+| Age | Infantry 50hi 50li | 40hi 40li 20lc | 25hi 25li 25hc 25lc | 45hi 45hc 10lc |
+|---|---|---|---|---|
+| 1 | 0%, 7.5k / 1.5k | 1%, 6.8k / 1.8k | 15%, 5.5k / 2.4k | 18%, 5.2k / 2.5k |
+| 2 | 0%, 16.6k / 3.2k | 2%, 15.0k / 3.9k | 14%, 12.2k / 5.1k | 13%, 11.1k / 5.2k |
+| 3 | 0%, 27.3k / 4.2k | 0%, 24.8k / 5.3k | 7%, 20.3k / 7.5k | 9%, 19.5k / 7.8k |
+| 4 | 2%, 38.8k / 9.0k | 9%, 34.4k / 11.2k | 33%, 26.9k / 14.2k | 32%, 26.1k / 14.5k |
+| 5 | 43%, 55.6k / 26.8k | 62%, 45.5k / 29.4k | 73%, 35.8k / 30.5k | 78%, 34.9k / 31.8k |
+| 6 | 84%, 54.0k / 40.6k | 95%, 42.0k / 42.0k | 96%, 35.0k / 42.1k | 96%, 35.3k / 42.9k |
+
+Through age 4 the heavy cavalry loses fewer men than every one of these armies, battles it loses included (age 4: 45hi 45hc 10lc wins 73% but loses 23.8k men to the cavalry's 17.8k). From age 5 the mixes with cavalry lose about as many or fewer at the same regiments, while infantry only still loses more (age 5 33.9k to 26.5k; at the same manpower it loses more through age 6). As a share of their own army the mixes lose less from age 4. Losing more men per battle is why the mixes lose the wars of attrition to 100hc through age 5 even where they win the battles.
+
 ### Age 3 sweep (the other ages as the mod)
 
 | Age 3 cavalry power | Same regiments: best (avg win %) | 100hc avg | 50hi 50li v 100hc | 40hi 40li 20lc v 100hc | 25x4 v 100hc | 45hi 45hc 10lc v 100hc | Same manpower: 100hc avg |
