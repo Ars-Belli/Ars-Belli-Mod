@@ -4,6 +4,46 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.4.6.mod.28
+
+Since game.1.4.6.mod.27 → game.1.4.6.mod.28:
+
+### Patch Compatibility
+
+- built and checked on game 1.4.6. The 1.4.7 update is not in this version yet: where the mod
+  replaces a base-game file, 1.4.7's changes to that file do not apply
+
+### Battles and Armies
+
+- land battles end sooner: strength and morale damage are doubled
+- heavy infantry combat speed 2.25 [vanilla 2]: reserve regiments join the front line more often,
+  so big infantry armies get to use their reserves
+- armies and navies move 25% slower
+- tribal levies raise 400-man regiments [vanilla 200]: Tribal Cavalry, Tribal Camelry and the
+  Zenata, Sanhaja, Tuareg and Hilali levies. The same men in half as many regiments
+
+### Focus Picks
+
+- Levy: **Designated Instruction** gives +15% levy combat efficiency [was +30%]
+
+### War, Wargoals and Peace
+
+- **Restore Roman Borders** CB: conquer cost for the attacker −40% [vanilla −50%]
+
+### National Flavour
+
+- Across the Pillars: Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen [was 3%,
+  vanilla 10%]
+- Across the Pillars: Masmuda tribesmen still raise Atlas Infantry and do not switch to the bigger
+  Tribal Cavalry
+- Battle for the Strait: Castile can only **Vassalize Granada** while the AI plays Granada
+- Battle for the Strait: Portugal and Granada no longer get the event that makes them ally Castile
+  or Morocco or lose prestige and legitimacy
+
+### UI and Quality of Life
+
+- multiplayer events wait 5 months before their first option is taken for you [vanilla 3]
+
 ## game.1.4.6.mod.27
 
 Since game.1.4.4.mod.26 → game.1.4.6.mod.27:
