@@ -25,6 +25,40 @@ Named armies: infantry only (50hi 50li), heavy infantry only, cavalry only (100h
 
 ## Results
 
+### Rerun with cavalry upkeep +50% (2026-11-10, current mod)
+
+Cavalry maintenance manpower 6% of its men a month (vanilla 4%), on top of the power change. The sections further down are the power-only run, kept in `results/power_only/`; `results/` is this rerun, and its `vanilla` files are vanilla power and upkeep. Battles at the same regiment count do not change (upkeep is not in a battle), so those tables below still hold. What changes is the same-manpower comparison and the wars.
+
+#### Same maintenance manpower, battles against pure heavy cavalry
+
+Win %, men lost per battle (army / heavy cavalry), and in brackets the win % before the upkeep change.
+
+| Age | Best mix found | Infantry 50hi 50li | 100hi | 40hi 40li 20lc | 25hi 25li 25hc 25lc |
+|---|---|---|---|---|---|
+| 1 | 50hi 20li 10hc 10lc 10art | 76%, 7.8k / 3.3k [0%] | 81%, 7.6k / 3.5k [0%] | 79%, 6.7k / 3.4k [1%] | 77%, 5.1k / 3.4k [15%] |
+| 2 | 40hi 40li 10hc 10art 94% / 40hi 40li 20art 5% | 75%, 17.4k / 7.2k [0%] | 69%, 17.0k / 7.3k [0%] | 80%, 14.6k / 7.3k [2%] | 76%, 11.1k / 7.3k [14%] |
+| 3 | 20hi 20li 20hc 20lc 20art | 40%, 33.7k / 9.9k [0%] | 49%, 33.7k / 10.8k [0%] | 53%, 27.7k / 10.5k [0%] | 63%, 19.9k / 11.1k [7%] |
+| 4 | 40hi 20li 10hc 30art | 93%, 34.6k / 18.5k [2%] | 96%, 34.1k / 19.6k [3%] | 93%, 29.5k / 18.6k [9%] | 91%, 22.9k / 18.5k [33%] |
+| 5 | 100hi | 100%, 21.8k / 23.0k [43%] | 100%, 22.1k / 23.7k [48%] | 100%, 19.2k / 22.9k [62%] | 99%, 18.4k / 22.3k [73%] |
+| 6 | 40hi 30li 30art 73% / 30hi 40li 30art 23% | 100%, 22.4k / 29.4k [84%] | 100%, 22.6k / 29.8k [89%] | 100%, 19.8k / 29.3k [95%] | 100%, 19.5k / 29.1k [96%] |
+
+#### Wars of attrition: share of wars won by the first army, now [before the upkeep change]
+
+| Age | Same regiments: best mix v 100hc | 100hc v 100hi | Same manpower: best mix v 100hc | 100hc v 100hi |
+|---|---|---|---|---|
+| 1 | 0% [0%] | 100% [100%] | 0% [–] | 100% [100%] |
+| 2 | 0% [0%] | 100% [100%] | 0% [–] | 100% [100%] |
+| 3 | – [–] | 100% [100%] | 0% [–] | 100% [100%] |
+| 4 | 0% [0%] | 100% [100%] | 0% [–] | 100% [100%] |
+| 5 | 3% [1%] | 100% [100%] | 10% [4%] | 78% [100%] |
+| 6 | 62% [40%] | 81% [94%] | 72% [43%] | 48% [98%] |
+
+- **Battles at the same manpower flip.** Pure heavy cavalry no longer wins ages 1, 2 and 4 (infantry and mixes win 69-96% against it) and age 3 is about even (40-63%). The best mixes are mostly infantry with 10-20% cavalry and, new here, artillery; from age 5 pure heavy infantry or infantry with artillery.
+- **Wars do not flip before age 6.** Pure heavy cavalry still wins every war to age 4 and most at age 5, because it still loses about half the men per battle (age 1: 3.3k against 7.8k) and a war ends when manpower runs out. At age 6 the mixes now win (62-72%, many undecided).
+- Heavy infantry alone and infantry + 10% light cavalry: `results/infantry_mix`, `results/infantry_10lc` are rerun too; at the same regiments they are as below.
+
+### Power only (before the upkeep change)
+
 **What the change does.** It turns ages 1 and 2 from pure cavalry into mixed armies in battle at the same regiment count, and nothing else much. Ages 3 and 4 are unchanged by design (2.6 and 2.85 stay), age 5 is a small infantry gain, and age 6 moves too little to show.
 
 - **Same regiments, age 1:** vanilla = 100% heavy cavalry. Mod = 40hi 10li 40hc 10lc, which beats 100hc 58%. Of the named armies 45hi 45hc 10lc does best. Infantry only still loses to 100hc (25%, vanilla 7%), 40hi 40li 20lc loses 42% (vanilla 20%), 25hi 25li 25hc 25lc is even (51%, vanilla 34%).
