@@ -1,6 +1,7 @@
 #!/bin/sh
 # Every run of the cavalry combat power study, from the repo root: sh .tools/scripts/battle_sim/analysis/cav_power/run_all.sh
-# "mod" = units.json (cavalry 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2), "vanilla" = the same data with vanilla cavalry power.
+# "mod" = units.json (cavalry power 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2 and upkeep 6% of its men a month), "vanilla" = the same data
+# with vanilla cavalry power and upkeep (4%). results/power_only/ is the run before the upkeep change (power only).
 # Two comparisons only: the same regiment count, and the same MAINTENANCE manpower a month (army_meta.js "manpower").
 # The simulators lower their own priority to the lowest, so this never slows other programs.
 set -e
@@ -10,7 +11,7 @@ R=$D/results
 VAN="$(pwd)/$R/units_vanilla_cav.json"
 AGES=1,2,3,4,5,6
 VIEWS=regiments,manpower
-node $D/units_with_cav_power.js "$VAN" 2.6,2.6,2.6,2.85,3.25,3.25
+node $D/units_with_cav_power.js "$VAN" 2.6,2.6,2.6,2.85,3.25,3.25 0.04
 run() { name=$1; shift; echo "$(date +%H:%M:%S) $name"; "$@" > $R/$name.log 2>&1; }
 # the named armies, round robin
 run named_mod node $A named --ages $AGES --views $VIEWS --n 800 --out $R/named_mod.json
