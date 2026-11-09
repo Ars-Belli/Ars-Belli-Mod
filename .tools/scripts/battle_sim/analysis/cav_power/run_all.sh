@@ -23,6 +23,8 @@ run wars_mod node $A wars --in $R/meta_mod.json --ages $AGES --wars 500 --months
 run wars_vanilla env EU5_UNITS="$VAN" node $A wars --in $R/meta_vanilla.json --ages $AGES --wars 500 --months 120 --interval ready --out $R/wars_vanilla.json
 # hills and woods, mod power, same regiments
 run named_mod_hills node $A named --ages $AGES --views regiments --n 800 --loc '{"topography":"hills","vegetation":"woods"}' --out $R/named_mod_hills.json
+# heavy or light infantry, infantry-only armies
+run infantry_mix node $A named --ages $AGES --views $VIEWS --n 800 --comps "100hi=hi:1;70hi 30li=hi:0.7,li:0.3;50hi 50li=hi:0.5,li:0.5;30hi 70li=hi:0.3,li:0.7;100li=li:1" --out $R/infantry_mix.json
 # age 3 sweep: the mod's other ages, age 3 cavalry at 2.6 (the mod), 2.4, 2.2, 2.0
 C="inf 50/50=hi:0.5,li:0.5;100hc=hc:1;40hi 40li 20lc=hi:0.4,li:0.4,lc:0.2;25x4=hi:0.25,li:0.25,hc:0.25,lc:0.25;45hi 45hc 10lc=hi:0.45,hc:0.45,lc:0.1;30hi 30li 20hc 20lc=hi:0.3,li:0.3,hc:0.2,lc:0.2"
 for p in 2.6 2.4 2.2 2.0; do

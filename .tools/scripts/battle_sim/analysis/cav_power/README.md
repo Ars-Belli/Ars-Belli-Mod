@@ -120,3 +120,18 @@ Through age 4 the heavy cavalry loses fewer men than every one of these armies, 
 | 4 | 0% [0%] | 98% [98%] | 100% [100%] | – [–] | 100% [100%] | 100% [100%] |
 | 5 | 1% [0%] | 78% [80%] | 100% [100%] | 4% [2%] | 96% [97%] | 100% [100%] |
 | 6 | 40% [37%] | 79% [79%] | 94% [96%] | 43% [41%] | 93% [94%] | 98% [99%] |
+
+## Heavy or light infantry (infantry-only armies, mod power)
+
+`results/infantry_mix` (added 2026-11-10): 100hi, 70hi 30li, 50hi 50li, 30hi 70li, 100li, battles. Win % of 100hi against 50hi 50li and men lost per battle (100hi / 50-50); best and worst by average win rate. An infantry-only army never gets combined arms: with two categories one is always 50% or more.
+
+| Age | Same regiments: 100hi v 50/50 | Same manpower: 100hi v 50/50 | Best | Worst |
+|---|---|---|---|---|
+| 1 | 59%, 7.0k / 7.9k | 58%, 5.6k / 6.2k | 100hi | 100li |
+| 2 | 44%, 15.5k / 16.1k | 47%, 12.2k / 13.0k | 100li | 100hi |
+| 3 | 56%, 25.8k / 27.5k | 59%, 20.4k / 22.1k | 100hi | 100li |
+| 4 | 53%, 39.2k / 41.0k | 58%, 30.6k / 33.2k | 100hi | 100li |
+| 5 | 54%, 55.0k / 57.4k | 54%, 55.0k / 57.4k | 100hi | 100li |
+| 6 | 52%, 71.5k / 73.7k | 52%, 71.5k / 73.7k | 100hi | 100li |
+
+Pure heavy infantry beats every heavy/light mix and loses fewer men in every age but 2, by a small margin (52-59%). Age 2 is the exception: light infantry (Handgonners) is better, and 100li comes first. From age 5 both cost the same manpower a regiment, so the two comparisons give the same armies.
