@@ -775,7 +775,7 @@ abm_cnd_ideas_tradition_2 = {
 	requires = legalism_advance
 
 	# core_creation = -0.2
-	global_integration_speed_modifier = 0.15
+	global_integration_speed_modifier = 0.20
 }
 
 abm_cnd_genoese_connections = {
@@ -828,7 +828,7 @@ abm_cnd_anatolian_center_of_learning = {
 
 	# advisor_cost = -0.1
 	# advisor_pool = 1
-	hire_advisor_cost_modifier = -0.10
+	country_cabinet_efficiency = 0.20
 }
 
 abm_cnd_candar_corps = {
@@ -841,7 +841,8 @@ abm_cnd_candar_corps = {
 	requires = pike_and_shot_advance
 
 	# discipline = 0.05
-	discipline = 0.05
+	discipline = 0.025
+	land_morale_modifier = 0.10
 }
 
 abm_cnd_sinop_shipyard = {
@@ -854,7 +855,8 @@ abm_cnd_sinop_shipyard = {
 	requires = maritime_advance_age_4
 
 	# naval_forcelimit_modifier = 0.25
-	expected_navy_size_modifier = 0.25
+	global_maritime_presence_decay = -0.001
+	global_maritime_presence_modifier = 0.10
 }
 
 abm_cnd_kure_copper_mine = {
@@ -867,7 +869,8 @@ abm_cnd_kure_copper_mine = {
 	requires = merchant_power_from_maritime_absolutism_advance
 
 	# global_trade_goods_size_modifier = 0.1
-	global_max_rgo_size_modifier = 0.10
+	global_copper_output_modifier = 0.25
+	global_tin_output_modifier = 0.15
 }
 
 abm_cnd_ideas_ambition = {
@@ -891,6 +894,7 @@ abm_anatolian_beyliks_ideas_tradition_1 = {
 	icon = glorious_arms
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -909,6 +913,7 @@ abm_anatolian_beyliks_ideas_tradition_2 = {
 	icon = smooth_administration
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -919,7 +924,7 @@ abm_anatolian_beyliks_ideas_tradition_2 = {
 	requires = legalism_advance
 
 	# core_creation = -0.20
-	global_integration_speed_modifier = 0.15
+	global_integration_speed_modifier = 0.20
 }
 
 abm_anatolian_beyliks_travelling_ozan = {
@@ -927,6 +932,7 @@ abm_anatolian_beyliks_travelling_ozan = {
 	icon = irish_travelling_bards_advance
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -937,7 +943,7 @@ abm_anatolian_beyliks_travelling_ozan = {
 	requires = crown_power_advance_renaissance
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	pop_join_rebel_threshold = -0.03
 }
 
 abm_anatolian_beyliks_seljuq_marches = {
@@ -945,6 +951,7 @@ abm_anatolian_beyliks_seljuq_marches = {
 	icon = a_fortified_border
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -963,6 +970,7 @@ abm_anatolian_beyliks_akinci_cavalry = {
 	icon = hun_composite_light_cavalry
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -974,7 +982,7 @@ abm_anatolian_beyliks_akinci_cavalry = {
 
 	# cavalry_power = 0.15
 	# loot_amount = 0.10
-	army_heavy_cavalry_power = 0.10
+	army_light_cavalry_power = 0.15
 	amount_looted_modifier = 0.25
 }
 
@@ -983,6 +991,7 @@ abm_anatolian_beyliks_ghazi = {
 	icon = ghazi
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -1001,6 +1010,7 @@ abm_anatolian_beyliks_caravanserais = {
 	icon = trade_caravans
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -1019,6 +1029,7 @@ abm_anatolian_beyliks_anatolian_architecture = {
 	icon = fortified_towns
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -1037,6 +1048,7 @@ abm_anatolian_beyliks_legacy_seljuqs_empire = {
 	icon = seljuk_roots
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -1048,6 +1060,7 @@ abm_anatolian_beyliks_legacy_seljuqs_empire = {
 
 	# prestige = 1
 	monthly_prestige = 0.10
+	court_spending_efficiency = 0.10
 }
 
 abm_anatolian_beyliks_ideas_ambition = {
@@ -1055,6 +1068,7 @@ abm_anatolian_beyliks_ideas_ambition = {
 	icon = offensive_army
 	potential = {
 		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
 			has_or_had_tag = TUR
 			has_or_had_tag = KAR
@@ -1065,7 +1079,7 @@ abm_anatolian_beyliks_ideas_ambition = {
 	requires = enlightened_court
 
 	# army_tradition = 0.5
-	monthly_army_tradition = 0.05
+	monthly_army_tradition = 0.10
 }
 
 ########################################
@@ -1080,7 +1094,7 @@ abm_rum_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = dan_levy_recruitment
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = feudalism_advance
@@ -1093,7 +1107,7 @@ abm_rum_ideas_tradition_2 = {
 	age = age_1_traditions
 	icon = glorious_arms
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = noble_knights
@@ -1106,27 +1120,27 @@ abm_rum_abul_fath = {
 	age = age_2_renaissance
 	icon = imperial_artillery
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = drill_army_advance
 
 	# discipline = 0.05
-	discipline = 0.05
+	possible_frontage_modifier = 0.10
 }
 
 abm_rum_king_of_the_east_and_west = {
 	age = age_2_renaissance
 	icon = multicultural_empire
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = crown_power_advance_renaissance
 
 	# core_creation = -0.20
 	# num_accepted_cultures = 1
-	global_integration_speed_modifier = 0.15
+	global_integration_speed_modifier = 0.20
 	cultures_capacity = 1
 }
 
@@ -1134,7 +1148,7 @@ abm_rum_shahanshah = {
 	age = age_3_discovery
 	icon = crown_power_advance_renaissance
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = crown_power_advance_discovery
@@ -1155,7 +1169,7 @@ abm_rum_sultan_of_rum = {
 	age = age_3_discovery
 	icon = cultural_acceptance_advance
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = cha_religious_tolerance
@@ -1168,33 +1182,33 @@ abm_rum_sulan_al_bahrayn = {
 	age = age_4_reformation
 	icon = royal_navy
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = maritime_advance_age_4
 
 	# naval_maintenance_modifier = -0.15
-	navy_maintenance_efficiency = 0.10
+	navy_maintenance_efficiency = 0.15
 }
 
 abm_rum_sultan_al_muazzam = {
 	age = age_4_reformation
 	icon = splendor_of_anatolia
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = fortified_towns
 
 	# build_cost = -0.15
-	global_build_buildings_efficiency = 0.10
+	global_build_buildings_efficiency = 0.15
 }
 
 abm_rum_protector_of_dar_al_islam = {
 	age = age_5_absolutism
 	icon = church_councils
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = absolutist_court
@@ -1207,11 +1221,11 @@ abm_rum_ideas_ambition = {
 	age = age_6_revolutions
 	icon = offensive_army
 	potential = {
-		has_or_had_tag = RUM
+		has_or_had_tag = ABRUM
 	}
 
 	requires = military_revolution_advance
 
 	# land_forcelimit_modifier = 0.25
-	global_levy_size_modifier = 0.20
+	global_manpower_modifier = 0.20
 }
