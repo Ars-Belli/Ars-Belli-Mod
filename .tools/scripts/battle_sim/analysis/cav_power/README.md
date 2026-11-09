@@ -135,3 +135,31 @@ Through age 4 the heavy cavalry loses fewer men than every one of these armies, 
 | 6 | 52%, 71.5k / 73.7k | 52%, 71.5k / 73.7k | 100hi | 100li |
 
 Pure heavy infantry beats every heavy/light mix and loses fewer men in every age but 2, by a small margin (52-59%). Age 2 is the exception: light infantry (Handgonners) is better, and 100li comes first. From age 5 both cost the same manpower a regiment, so the two comparisons give the same armies.
+
+## Infantry with 10% light cavalry (mod power)
+
+`results/infantry_10lc` (added 2026-11-10). Win % of the first army and men lost per battle (first / second). 45hi 45li 10lc is the only infantry + 10% light cavalry army with combined arms (three types, none at 50%); 90hi 10lc has none.
+
+### Same regiments
+
+| Age | 45hi 45li 10lc v 100hi | v 50hi 50li | v 40hi 40li 20lc | v 100hc | 90hi 10lc v 100hi |
+|---|---|---|---|---|---|
+| 1 | 57%, 6.9k / 7.6k | 65%, 6.2k / 7.8k | 50%, 6.8k / 6.3k | 39%, 7.3k / 2.9k | 48%, 7.3k / 7.5k |
+| 2 | 70%, 14.0k / 16.4k | 63%, 13.9k / 16.9k | 49%, 14.9k / 13.9k | 39%, 16.2k / 6.2k | 49%, 14.7k / 15.5k |
+| 3 | 62%, 23.4k / 28.3k | 71%, 21.4k / 28.0k | 46%, 24.5k / 21.9k | 14%, 29.2k / 8.2k | 53%, 25.7k / 27.8k |
+| 4 | 62%, 35.4k / 42.5k | 69%, 32.3k / 42.3k | 50%, 36.0k / 33.8k | 69%, 32.7k / 17.1k | 47%, 39.7k / 40.8k |
+| 5 | 56%, 50.8k / 58.1k | 63%, 47.0k / 57.8k | 53%, 49.5k / 48.3k | 98%, 29.3k / 26.9k | 41%, 56.6k / 55.1k |
+| 6 | 60%, 64.5k / 76.2k | 66%, 60.6k / 76.1k | 55%, 64.3k / 63.8k | 100%, 28.9k / 35.1k | 43%, 72.3k / 71.0k |
+
+### Same maintenance manpower
+
+| Age | 45hi 45li 10lc v 100hi | v 50hi 50li | v 40hi 40li 20lc | v 100hc | 90hi 10lc v 100hi |
+|---|---|---|---|---|---|
+| 1 | 53%, 5.6k / 5.9k | 61%, 5.2k / 6.1k | 31%, 6.0k / 4.7k | 0%, 7.1k / 1.6k | 50%, 5.8k / 6.1k |
+| 2 | 65%, 11.6k / 12.8k | 59%, 11.4k / 13.2k | 29%, 13.2k / 10.3k | 0%, 15.7k / 3.4k | 50%, 11.8k / 12.4k |
+| 3 | 56%, 19.6k / 21.9k | 63%, 18.0k / 21.6k | 24%, 21.7k / 16.1k | 0%, 25.8k / 4.6k | 54%, 20.6k / 22.3k |
+| 4 | 55%, 29.5k / 32.7k | 62%, 27.2k / 32.5k | 30%, 32.1k / 25.0k | 3%, 36.4k / 9.8k | 48%, 31.8k / 32.8k |
+| 5 | 63%, 50.4k / 59.8k | 65%, 48.0k / 58.5k | 50%, 52.4k / 48.9k | 62%, 48.8k / 29.4k | 55%, 54.7k / 59.3k |
+| 6 | 64%, 64.0k / 77.2k | 64%, 62.9k / 75.9k | 50%, 68.4k / 64.1k | 94%, 45.4k / 42.0k | 54%, 70.7k / 75.3k |
+
+Adding 10% light cavalry to the 50/50 infantry (45hi 45li 10lc) beats both 50/50 and pure heavy infantry in every age and loses fewer men than either. The gain is the combined arms bonus: 90hi 10lc, with no bonus, is no better than pure heavy infantry. Against 40hi 40li 20lc it is about even at the same regiments, but 40hi 40li 20lc loses fewer men and, at the same manpower, wins ages 1 to 4 because its cavalry regiments cost less manpower. Against pure heavy cavalry it still loses ages 1 to 3 (39 / 39 / 14% at the same regiments) and wins from age 4.
