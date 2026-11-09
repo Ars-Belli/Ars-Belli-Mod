@@ -324,6 +324,29 @@ _FIXED_CONVERSIONS: dict[str, tuple[str, ...]] = {
     "galley_power": ("navy_galley_power = 0.20",),
     # EU4 made claims cheaper; EU5 expresses the same intent as faster CB creation.
     "fabricate_claims_cost": ("casus_belli_creation_speed_modifier = 0.25",),
+    # EU4 culture-conversion cost: EU5 has no such key, assimilation speed is the live equivalent.
+    "culture_conversion_cost": ("global_pop_assimilation_speed_modifier = 0.20",),
+    # --- Catholic Church mechanics (Kingdom of Jerusalem import) ---
+    "papal_influence": ("monthly_papal_authority = 0.05",),
+    "curia_powers_cost": ("propose_curia_action_cost_modifier = -0.10",),
+    # EU4 missionary upkeep: EU5 has no upkeep key, effort is the live equivalent.
+    "missionary_maintenance_cost": ("building_missionary_effort_modifier = 0.25",),
+    # EU4 "church power" has no EU5 resource; clergy estate power is the live analogue.
+    "church_power_modifier": ("global_clergy_estate_power = 0.15",),
+    # --- Egypt (Mamluk) mechanics with no direct EU5 key ---
+    # EU4 admin efficiency (cheaper coring, less AE) -> integration speed.
+    "administrative_efficiency": ("global_integration_speed_modifier = 0.05",),
+    "burghers_loyalty_modifier": (
+        "burghers_estate_target_satisfaction = small_permanent_target_satisfaction",
+    ),
+    # EU4 monarch military power has no EU5 resource; military tradition is the analogue.
+    "country_military_power": ("monthly_army_tradition = 0.10",),
+    # EU4 free policy slot -> more legislative capacity.
+    "free_policy": ("legislative_efficiency = 0.10",),
+    # General fire pips map onto the fire-phase arm, like leader_land_fire.
+    "max_general_fire": ("army_artillery_power = 0.10",),
+    # EU4 "can repair at sea" -> EU5 at-sea repair rate.
+    "sea_repair": ("ship_repair_at_sea = 0.05",),
     # --- Qoyunlu import (leader pips and government power) ---
     # army_fire_damage is non-functional, so fire pips become the fire-phase arm
     # (cf. fire_damage -> army_artillery_power above).
@@ -423,17 +446,32 @@ def apply_conversion_mode(preserve_values: bool) -> None:
         CONVERSIONS.update(_SCALED_CONVERSIONS)
 
 ICON_RULES = (
-    (("army_", "discipline", "siege_", "regiment_", "global_manpower"), "glorious_arms"),
-    (("navy_", "naval_", "sailors", "privateer", "blockade"), "royal_navy"),
+    (("army_", "discipline", "siege_", "regiment_", "global_manpower", "cavalry", "land_"), "glorious_arms"),
+    (("navy_", "naval_", "sailors", "privateer", "blockade", "galley", "maritime", "ship_"), "royal_navy"),
     (
-        ("trade_", "global_trade", "global_merchant", "export_", "import_", "merchant_"),
+        ("trade_", "global_trade", "global_merchant", "export_", "import_", "merchant_", "caravan"),
         "merchants_and_trade",
     ),
     (("tolerance_", "clergy_", "global_pop_conversion", "religious_"), "church_councils"),
-    (("research_", "institution", "absorb_"), "library_advance"),
-    (("tax_", "production_", "global_build", "global_max_rgo", "minting_"), "abacus_advance"),
+    (("cultural_", "culture_", "assimilation", "global_pop_promotion"), "cultural_acceptance_advance"),
+    (("research_", "institution", "absorb_", "_tech_cost", "literacy"), "library_advance"),
+    (("tax_", "production_", "global_build", "global_max_rgo", "minting_", "build_cost"), "abacus_advance"),
     (
-        ("monthly_", "stability_", "global_monthly_control", "global_max_control"),
+        (
+            "monthly_legitimacy",
+            "monthly_devotion",
+            "monthly_republican",
+            "monthly_horde",
+            "monthly_tribal",
+            "crown_",
+        ),
+        "crown_power_advance_renaissance",
+    ),
+    (("diplomat", "improve_relation", "antagonism", "casus_belli", "war_score"), "diplomatic_training"),
+    (("fort_", "defensive", "hostile_attrition", "garrison"), "a_fortified_border"),
+    (("prestige", "legitimacy"), "diplomatic_influence"),
+    (
+        ("monthly_", "stability_", "global_monthly_control", "global_max_control", "core_"),
         "smooth_administration",
     ),
     (("can_colonize", "colonial_migration", "native_"), "colonies"),
@@ -458,6 +496,13 @@ ICON_POOL = (
     "abacus_advance",
     "smooth_administration",
     "colonies",
+    "crown_power_advance_renaissance",
+    "diplomatic_training",
+    "diplomatic_influence",
+    "a_fortified_border",
+    "cultural_acceptance_advance",
+    "artists_advance",
+    "finest_of_horses",
 ) + DEFAULT_ICONS
 
 # EU4 ships a few idea slots as comment-only stubs (nothing to parse). The
