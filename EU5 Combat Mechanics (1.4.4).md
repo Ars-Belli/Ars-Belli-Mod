@@ -778,6 +778,7 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - All six 200-man land levies on tribesmen raise 350-man regiments (`abm_tribal_levy_sizes.txt`; 400 from 2026-11-01, 350 since 2026-11-10): Tribal Cavalry, Tribal Camelry, Zenata, Sanhaja, Tuareg, Hilali. Same men from the same pops, about 43% fewer regiments. At 350 men Tribal Cavalry would out-power Atlas Infantry in the levy pick, so `REPLACE:levy_tribal_cavalry` keeps Masmuda tribesmen off it.
 - Mercenary hiring costs back to vanilla (2026-10-28).
 - `REPLACE:` binds in `unit_categories` (a save: 58 of 67 armies with auxiliaries match the mod's 7,000 food storage exactly, and the other 9 sit higher). Heavy infantry combat speed 2.25 (2026-11-01) is back to vanilla 2 since 2026-11-10.
+- Cavalry combat power by age 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2, vanilla 2.6 / 2.6 / 2.6 / 2.85 / 3.25 / 3.25, light and heavy alike (2026-11-10, feature/military-costs; the table in section 10 shows vanilla). At the same regiment count ages 1 and 2 go from pure cavalry to mixed armies; age 3 stays pure cavalry; at the same maintenance manpower cavalry still wins to age 4, and pure heavy cavalry still wins wars to age 5. `analysis/cav_power/README.md`.
 
 ---
 
