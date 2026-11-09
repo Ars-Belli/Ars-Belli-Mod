@@ -3,6 +3,10 @@
 //      [--no-combined] [--combined-per-type 0.025] [--days-per-phase 4] [--levies L] [--out file]
 // --levies L: the levy meta. Both sides also bring L free levy regiments, so a strategy is a regular composition plus the share of
 // knights among its levies (0, 25 or 50%). Levies count for combined arms by category: levy infantry as li, knights as hc.
+// node .tools/scripts/battle_sim/analysis/army_meta.js named [--comps "name=hi:0.4,li:0.4,lc:0.2;..."] [--ages ...] [--views ...]
+//      [--n 800] [--loc ...] [--out file]
+//      round robin of a fixed list of armies (default: NAMED below), n battles a seat order a pair; prints each army's
+//      average win rate against the rest and the full table.
 // node .tools/scripts/battle_sim/analysis/army_meta.js wars --in results.json [--wars 500] [--months 120] [--interval ready|2]
 //      plays the best mixed army of each age against pure cavalry and pure infantry in wars of attrition (simulateWar): same
 //      manpower income, same regiments or same upkeep, 75% of income spent on upkeep by the dearer side, pool full at the start.
@@ -48,6 +52,7 @@ const baseCountry = (age, extra = {}) => ({
 	initiativeMod: age >= 2 ? 0.2 : 0, speedMod: age >= 6 ? 0.1 : 0, frontageMod: age >= 5 ? 0.1 : 0, correctBoxChance: 0.1 * (age - 1), ...extra,
 });
 const size = (cat, age) => S.unitStats(ROSTER[age][cat]).s;
+// manpower = the MAINTENANCE manpower a month (prices <category>_maintenance), not the build price
 const regCost = (cat, age, view) => {
 	const u = S.unitStats(ROSTER[age][cat]);
 	return view === 'manpower' ? u.pr.m[1] * u.s : view === 'gold' ? u.pr.m[0] * u.s / S.D.PRICE_SCALE : 1;
@@ -67,6 +72,24 @@ const army = (comp, age, view, regs, extra) => {
 	const lv = LEVIES ? [[LEVY[age].inf, Math.round(LEVIES * (1 - (comp.lk || 0)))], [LEVY[age].knights, Math.round(LEVIES * (comp.lk || 0))]].filter(x => x[1]).map(([type, count]) => ({ type, count })) : [];
 	return { name: 'x', formation: comp.f || 'balanced', general: GENERAL, country: baseCountry(age, extra), units: [...CATS.filter(c => n[c]).map(c => ({ type: ROSTER[age][c], count: n[c] })), ...lv] };
 };
+// The armies of `named` (cavalry combat power study, 2026-11-10): the user's picks and a few more, balanced formation.
+const NAMED = [
+	['infantry only (50hi 50li)', { hi: 0.5, li: 0.5 }],
+	['heavy infantry only', { hi: 1 }],
+	['cavalry only (100hc)', { hc: 1 }],
+	['cavalry only (50hc 50lc)', { hc: 0.5, lc: 0.5 }],
+	['40hi 40li 20lc', { hi: 0.4, li: 0.4, lc: 0.2 }],
+	['25hi 25li 25hc 25lc', { hi: 0.25, li: 0.25, hc: 0.25, lc: 0.25 }],
+	['40hi 40li 20hc', { hi: 0.4, li: 0.4, hc: 0.2 }],
+	['30hi 30li 20hc 20lc', { hi: 0.3, li: 0.3, hc: 0.2, lc: 0.2 }],
+	['45hi 45hc 10lc', { hi: 0.45, hc: 0.45, lc: 0.1 }],
+	['30hi 30li 20hc 10lc 10art', { hi: 0.3, li: 0.3, hc: 0.2, lc: 0.1, art: 0.1 }],
+	['40hi 20li 20hc 20art', { hi: 0.4, li: 0.2, hc: 0.2, art: 0.2 }],
+];
+const parseComps = s => s.split(';').filter(Boolean).map(x => {
+	const [name, body] = x.includes('=') ? x.split('=') : [x, x];
+	return [name.trim(), Object.fromEntries(body.split(',').map(kv => kv.split(':')).map(([k, v]) => [k.trim(), +v]))];
+});
 const compKey = c => CATS.map(k => Math.round((c[k] || 0) * 100)).join('/') + (c.f === 'cav_inf_cav' ? ' cic' : '') + (c.lk ? ` lk${Math.round(100 * c.lk)}` : '');
 const compName = c => CATS.filter(k => c[k]).map(k => `${Math.round(c[k] * 100)}${k}`).join(' ') + (c.f === 'cav_inf_cav' ? ' (cav_inf_cav)' : '') + (LEVIES ? ` +${LEVIES} levies ${Math.round(100 * (c.lk || 0))}% knights` : '');
 const isPure = c => CATS.filter(k => c[k]).length === 1;
@@ -182,6 +205,24 @@ async function solveCell(age, view, regs, o) {
 			console.log(`\n=== age ${age}, ${view} parity, ${regs} regiments' budget: ${r.iters} iterations, ${(r.battles / 1000).toFixed(0)}k battles, ${((Date.now() - t1) / 1000).toFixed(0)} s, best remaining counter +${(100 * r.counterGain).toFixed(1)}`);
 			for (const m of r.meta) console.log(`  meta ${(100 * m.p).toFixed(0).padStart(3)}%  ${m.comp.padEnd(38)} vs meta ${(100 * m.vsEq).toFixed(1)}%  ${JSON.stringify(m.regiments)}`);
 			if (r.headToHead) console.log(`  best mixed ${r.topMixed.comp} beats best pure ${r.topPure.comp}: ${(100 * r.headToHead.win).toFixed(1)}% [${r.headToHead.ci.map(x => (100 * x).toFixed(1)).join('-')}], men lost ${(1000 * r.headToHead.lost).toFixed(0)} vs ${(1000 * r.headToHead.killed).toFixed(0)}, ${r.headToHead.days.toFixed(0)} days`);
+			if (opt('--out')) fs.writeFileSync(opt('--out'), JSON.stringify(out, null, 1));
+		}
+	}
+	if (mode === 'named') {
+		const list = opt('--comps') ? parseComps(opt('--comps')) : NAMED, n = +opt('--n', 800), out = [];
+		console.log(`${list.length} armies, ${2 * n} battles a pair (both seat orders), ${regs} regiments' budget, ${JSON.stringify(location())}`);
+		list.forEach(([name], i) => console.log(`  ${String(i + 1).padStart(2)}  ${name}`));
+		for (const age of ages) for (const view of views) {
+			const t1 = Date.now(), W = list.map(() => list.map(() => 0.5)), R = list.map(() => list.map(() => null)), jobs = [];
+			for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++)
+				jobs.push(duel(list[i][1], list[j][1], age, view, regs, n).then(r => { W[i][j] = r.win; W[j][i] = 1 - r.win; R[i][j] = r; }));
+			await Promise.all(jobs);
+			const rows = list.map(([name, c], i) => ({ i, name, regiments: counts(c, age, view, regs), avg: W[i].reduce((t, w, j) => t + (j === i ? 0 : w), 0) / (list.length - 1), worst: Math.min(...W[i].filter((_, j) => j !== i)) }));
+			console.log(`\n=== age ${age}, ${view} parity, ${((Date.now() - t1) / 1000).toFixed(0)} s. avg = mean win rate against the other ${list.length - 1}, worst = its worst pairing`);
+			for (const r of [...rows].sort((a, b) => b.avg - a.avg)) console.log(`  ${(100 * r.avg).toFixed(1).padStart(5)}%  worst ${(100 * r.worst).toFixed(0).padStart(3)}%  ${String(r.i + 1).padStart(2)} ${r.name.padEnd(28)} ${CATS.filter(c => r.regiments[c]).map(c => `${r.regiments[c]} ${c}`).join(', ')}`);
+			console.log('  row beats column, %: ' + list.map((_, j) => String(j + 1).padStart(4)).join(''));
+			W.forEach((row, i) => console.log(`  ${String(i + 1).padStart(19)}  ` + row.map((w, j) => j === i ? '   -' : String(Math.round(100 * w)).padStart(4)).join('')));
+			out.push({ age, view, n, names: list.map(x => x[0]), comps: list.map(x => x[1]), W, rows, pairs: R });
 			if (opt('--out')) fs.writeFileSync(opt('--out'), JSON.stringify(out, null, 1));
 		}
 	}
