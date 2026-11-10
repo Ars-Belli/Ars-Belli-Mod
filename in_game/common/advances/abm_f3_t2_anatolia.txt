@@ -145,7 +145,7 @@ abm_pon_border_military_contracts = {
 
 	army_maintenance_efficiency = 0.10
 
-	requires = unlock_baochuan
+	requires = organised_mercenary_payment
 }
 
 abm_pon_young_can_serve = {
@@ -188,106 +188,951 @@ abm_pon_ideas_ambition = {
 	requires = napoleonic_warfare
 }
 
+########################################
+# Cilicia (CIL) Ideas
+# Armenian Kingdom of Cilicia, 1337: mountain fortresses, nakharar cavalry,
+# the Ayas entrepot, Frankish quarter-privileges, the Sis Catholicosate and
+# the Cilician scriptorium.
+########################################
 
-REPLACE:greek_group_the_spirit_of_resistance_advance = {
+# Control of the Taurus and Amanus passes - the Cilician Gates - on the roads
+# between Anatolia, Syria and Mesopotamia.
+abm_cil_ideas_tradition_1 = {
 	age = age_1_traditions
-	icon = offensive_army
+	icon = keepers_of_the_gate
 
 	potential = {
-		culture = { has_culture_group = culture_group:greek_group }
-		NOR = {
-			has_or_had_tag = BYZ
-		}
+		has_or_had_tag = CIL
 	}
 
-	morale_recovery_in_friendly = 0.05
-	selling_efficiency = small_trade_efficiency_bonus
+	requires = castle_advance
 
-	requires = feudalism_advance
+	fort_maintenance_efficiency = 0.20
+	global_hostile_attrition = 0.5
 }
 
-REPLACE:greek_group_hesychast_traditions_advance = {
+# The nakharar legacy: Armenian feudal heavy cavalry, the core of the army.
+abm_cil_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = teu_teutonic_heavy_cavalry
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = noble_knights
+
+	army_heavy_cavalry_power = 0.15
+}
+
+# Ayas (Lajazzo), terminus of the Tabriz caravan road and one of the great
+# entrepots of the eastern Mediterranean.
+abm_cil_ayas_entrepot = {
 	age = age_2_renaissance
-	icon = patriarchate_of_lithuania
+	icon = karimi_merchants
 
 	potential = {
-		culture = { has_culture_group = culture_group:greek_group }
-		religion = religion:orthodox
-		NOR = {
-			has_or_had_tag = BYZ
-		}
+		has_or_had_tag = CIL
 	}
 
-	global_clergy_max_literacy = 5
-	tolerance_own = 1
+	requires = protected_harbor_advance
 
-	requires = renaissance_development
+	global_merchant_capacity_modifier = 0.15
+	global_production_efficiency = medium_production_efficiency_bonus
 }
 
-REPLACE:greek_group_stratioti_levies_advance = {
-	age = age_3_discovery
-	icon = professional_armies_advance
+# Genoese, Venetian and Pisan quarters held their own privileges in our ports;
+# the Latin merchant communes were part of the kingdom's fabric.
+abm_cil_frankish_quarters = {
+	age = age_2_renaissance
+	icon = genoese_maritime_diplomacy
 
 	potential = {
-		culture = { has_culture_group = culture_group:greek_group }
-		NOR = {
-			has_or_had_tag = BYZ
+		has_or_had_tag = CIL
+	}
+
+	requires = benign_diplomats
+
+	global_trade_center_power = 0.15
+	sea_cost_on_distance_from_capital_when_maritime = -0.5
+}
+
+# The Cilician school of illumination, heir to Toros Roslin: scriptoria that
+# made the kingdom the centre of Armenian letters while the homeland was lost.
+abm_cil_armenian_scriptorium = {
+	age = age_3_discovery
+	icon = birch_bark_manuscript
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = arts_academy_advance
+
+	global_max_literacy = 5
+}
+
+# Mountain warfare in the Taurus: Armenian foot skirmishers who know every
+# defile, ambushing columns that try to force the passes into the plain.
+abm_cil_tauros_ambushes = {
+	age = age_3_discovery
+	icon = arm_mountain_armies
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = military_traditions
+
+	army_light_infantry_power = 0.10
+	land_morale_modifier = 0.10
+}
+
+# The Catholicosate moved to Sis in 1293; the kingdom holds the see, the
+# monasteries and the loyalty of the Armenian Church.
+abm_cil_catholicosate_of_sis = {
+	age = age_4_reformation
+	icon = city_of_churches
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = religious_tradition
+
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
+	global_pop_food_consumption = -0.10
+}
+
+# Guns and gunners bought from the West: Cilician envoys hired French and
+# Italian masters, and the kingdom's ports made importing bronze cannon and
+# foreign instructors far easier than raising a native artillery corps.
+abm_cil_western_artillery = {
+	age = age_4_reformation
+	icon = artillery_institution_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = CIL
+			AND = {
+				OR = {
+					has_reform = government_reform:abm_geo_greater_georgia_reform
+					has_reform = government_reform:abm_arm_greater_armenia_reform
+					has_reform = government_reform:abm_greater_caucasus_reform
+				}
+				has_accepted_culture = culture:armenian_culture
+			}
 		}
 	}
 
-	army_light_cavalry_power = 0.1
-	army_initiative = 0.1
+	requires = gunpowder_advance
+
+	army_artillery_power = 0.10
+}
+
+# The last independent Armenian kingdom and the last Christian crown in the
+# Levant: a symbol that draws men and coin from every Armenian community.
+abm_cil_last_christian_kingdom = {
+	age = age_5_absolutism
+	icon = LIV_crusader_forts
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = national_sovereignty
+
+	monthly_prestige = 0.10
+	religious_influence_modifier = 0.10
+	monthly_religious_influence = 0.10
+}
+
+# The nation outlived the kingdom: Armenian burghers and merchant colonies
+# from Caffa to Lvov carried Cilician wealth and memory forward.
+abm_cil_ideas_ambition = {
+	age = age_6_revolutions
+	icon = arm_legacy_of_hayk
+
+	potential = {
+		has_or_had_tag = CIL
+	}
+
+	requires = nation_state_advance
+
+	burghers_estate_target_satisfaction = medium_permanent_target_satisfaction
+}
+
+########################################
+# Cyprus (CYP) Ideas - imported from EU4 CYP_ideas
+########################################
+
+# CYP (EU4 idea set CYP_ideas, 00_country_ideas.txt)
+
+abm_cyp_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = ship_building_advance
+
+	# galley_cost = -0.2
+	navy_galley_build_cost_modifier = -0.20
+}
+
+abm_cyp_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = church_councils
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = cha_religious_tolerance
+
+	# tolerance_heretic = 4
+	tolerance_heretic = 1
+}
+
+abm_cyp_king_of_jerusalem = {
+	age = age_2_renaissance
+	icon = the_the_thessalonican_crown_advance
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = crown_power_advance_renaissance
+
+	# legitimacy = 0.5
+	# devotion = 0.5
+	# republican_tradition = 0.15
+	# meritocracy = 0.5
+	# horde_unity = 0.5
+	# fabricate_claims_cost = -0.25
+	monthly_legitimacy = 0.10
+	monthly_devotion = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_tribal_cohesion = 0.10
+	monthly_horde_unity = 0.10
+	casus_belli_creation_speed_modifier = 0.25
+}
+
+abm_cyp_frankish_crusaders = {
+	age = age_2_renaissance
+	icon = crusader_tradition
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = drill_army_advance
+
+	# army_tradition = 0.5
+	monthly_army_tradition = 0.10
+}
+
+abm_cyp_commandaria_wine = {
+	age = age_3_discovery
+	icon = pal_cultivate_vineyards
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = coastal_trade_routes_advance
+
+	# production_efficiency = 0.1
+	global_production_efficiency = medium_production_efficiency_bonus
+}
+
+abm_cyp_lusignan_diplomacy = {
+	age = age_3_discovery
+	icon = genoese_maritime_diplomacy
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = benign_diplomats
+
+	# diplomatic_reputation = 1
+	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	diplomatic_spending_cost = -0.005
+}
+
+abm_cyp_cypriot_fortifications = {
+	age = age_4_reformation
+	icon = LIV_crusader_forts
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = supply_depot_advance_age_3_discovery
+
+	# defensiveness = 0.25
+	global_defensive = 0.25
+}
+
+abm_cyp_repel_the_corsairs = {
+	age = age_4_reformation
+	icon = scourge_of_the_corsairs
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = maritime_advance_age_4
+
+	# galley_power = 0.2
+	navy_galley_power = 0.20
+}
+
+abm_cyp_raid_turkish_commerce = {
+	age = age_5_absolutism
+	icon = fra_reliance_on_privateers
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = sturdy_privateers
+
+	# embargo_efficiency = 0.1
+	# privateer_efficiency = 0.15
+	blockade_efficiency = 0.25
+	privateer_durability = 0.10
+}
+
+abm_cyp_ideas_ambition = {
+	age = age_6_revolutions
+	icon = hsa_mastery_of_the_sea
+	potential = {
+		has_or_had_tag = CYP
+	}
+
+	requires = maritime_advance_age_6
+
+	# naval_forcelimit_modifier = 0.33
+	navy_repair_efficiency = 0.20
+}
+
+########################################
+# Karaman (KAR), Candar (CND) and generic Anatolian beylik ideas
+########################################
+
+# KAR (EU4 idea set KAR_ideas, 00_country_ideas.txt)
+
+abm_kar_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = noble_knights
+
+	# army_tradition = 0.5
+	monthly_army_tradition = 0.05
+}
+
+abm_kar_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = smooth_administration
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = legalism_advance
+
+	# core_creation = -0.2
+	global_integration_speed_modifier = 0.15
+}
+
+abm_kar_mehmet_bey_firman = {
+	age = age_2_renaissance
+	icon = lawcode_of_suleiman
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = crown_power_advance_renaissance
+
+	# stability_cost_modifier = -0.1
+	# culture_conversion_cost = -0.2
+	stability_cost_efficiency = 0.10
+	global_pop_assimilation_speed_modifier = 0.20
+}
+
+abm_kar_ghazi = {
+	age = age_2_renaissance
+	icon = ghazi
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = drill_army_advance
+
+	# manpower_recovery_speed = 0.2
+	army_reinforce_efficiency = 0.10
+}
+
+abm_kar_karamanid_cavalry = {
+	age = age_3_discovery
+	icon = teu_teutonic_heavy_cavalry
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = military_traditions
+
+	# cavalry_power = 0.15
+	army_heavy_cavalry_power = 0.10
+}
+
+abm_kar_seize_the_opportunity = {
+	age = age_3_discovery
+	icon = diplomatic_training
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = benign_diplomats
+
+	# diplomats = 1
+	monthly_diplomats = 0.10
+}
+
+abm_kar_karamanid_architecture = {
+	age = age_4_reformation
+	icon = splendor_of_anatolia
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = supply_depot_advance_age_3_discovery
+
+	# development_cost = -0.1
+	global_monthly_prosperity = 0.001
+}
+
+abm_kar_home_of_the_whirling_dervishes = {
+	age = age_4_reformation
+	icon = sos_jazuli_sufi_movement
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = clergy_rights_laws_advance
+
+	# religious_unity = 0.2
+	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
+}
+
+abm_kar_true_heirs_seljuk_empire = {
+	age = age_5_absolutism
+	icon = crown_power_advance_renaissance
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = absolutist_court
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_devotion = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_tribal_cohesion = 0.10
+	monthly_horde_unity = 0.10
+}
+
+abm_kar_ideas_ambition = {
+	age = age_6_revolutions
+	icon = offensive_army
+	potential = {
+		has_or_had_tag = KAR
+	}
+
+	requires = military_revolution_advance
+
+	# discipline = 0.05
+	discipline = 0.05
+}
+
+# CND (EU4 idea set CND_ideas, 00_country_ideas.txt)
+
+abm_cnd_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = CND
+	}
+
+	requires = ship_building_advance
+
+	# naval_morale = 0.1
+	naval_morale_modifier = 0.10
+}
+
+abm_cnd_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = smooth_administration
+	potential = {
+		has_or_had_tag = CND
+	}
+
+	requires = legalism_advance
+
+	# core_creation = -0.2
+	global_integration_speed_modifier = 0.20
+}
+
+abm_cnd_genoese_connections = {
+	age = age_2_renaissance
+	icon = genoese_maritime_diplomacy
+	potential = {
+		has_or_had_tag = CND
+	}
+
+	requires = protected_harbor_advance
+
+	# merchants = 1
+	global_merchant_capacity_modifier = 0.10
+}
+
+abm_cnd_candarid_literature = {
+	age = age_2_renaissance
+	icon = library_advance
+	potential = {
+		has_or_had_tag = CND
+	}
+
+	requires = university_advance
+
+	# adm_tech_cost_modifier = -0.1
+	research_speed_modifier = 0.05
+}
+
+abm_cnd_ismail_bey_complex = {
+	age = age_3_discovery
+	icon = dje_tozeur_madrasa
+	potential = {
+		has_or_had_tag = CND
+	}
+
+	requires = supply_depot_advance_age_3_discovery
+
+	# development_cost = -0.1
+	global_monthly_prosperity = 0.001
+}
+
+abm_cnd_anatolian_center_of_learning = {
+	age = age_3_discovery
+	icon = bah_madrasa_of_mahmud_gawan
+	potential = {
+		has_or_had_tag = CND
+	}
+
+	requires = arts_academy_advance
+
+	# advisor_cost = -0.1
+	# advisor_pool = 1
+	country_cabinet_efficiency = 0.20
+}
+
+abm_cnd_candar_corps = {
+	age = age_4_reformation
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = CND
+	}
 
 	requires = pike_and_shot_advance
+
+	# discipline = 0.05
+	discipline = 0.025
+	land_morale_modifier = 0.10
 }
 
-REPLACE:greek_group_the_phanariote_network_advance = {
+abm_cnd_sinop_shipyard = {
 	age = age_4_reformation
-	icon = diplomatic_influence
-
+	icon = baltic_shipyard
 	potential = {
-		culture = { has_culture_group = culture_group:greek_group }
+		has_or_had_tag = CND
+	}
+
+	requires = maritime_advance_age_4
+
+	# naval_forcelimit_modifier = 0.25
+	global_maritime_presence_decay = -0.001
+	global_maritime_presence_modifier = 0.10
+}
+
+abm_cnd_kure_copper_mine = {
+	age = age_5_absolutism
+	icon = swedish_copper_coins
+	potential = {
+		has_or_had_tag = CND
+	}
+
+	requires = merchant_power_from_maritime_absolutism_advance
+
+	# global_trade_goods_size_modifier = 0.1
+	global_copper_output_modifier = 0.25
+	global_tin_output_modifier = 0.15
+}
+
+abm_cnd_ideas_ambition = {
+	age = age_6_revolutions
+	icon = hsa_mastery_of_the_sea
+	potential = {
+		has_or_had_tag = CND
+	}
+
+	requires = maritime_advance_age_6
+
+	# navy_tradition_decay = -0.01
+	navy_tradition_decay = -0.01
+}
+
+# Anatolian beyliks: generic set for Turkish-culture states without national ideas
+# (EU4 anatolian_beyliks_ideas, zz_group_ideas.txt)
+
+abm_anatolian_beyliks_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
-			has_or_had_tag = BYZ
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
 		}
 	}
 
-	global_burghers_max_literacy = 10
-	monthly_diplomats = 0.05
+	requires = noble_knights
+
+	# discipline = 0.05
+	discipline = 0.05
+}
+
+abm_anatolian_beyliks_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = smooth_administration
+	potential = {
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
+		NOR = {
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
+		}
+	}
+
+	requires = legalism_advance
+
+	# core_creation = -0.20
+	global_integration_speed_modifier = 0.20
+}
+
+abm_anatolian_beyliks_travelling_ozan = {
+	age = age_2_renaissance
+	icon = irish_travelling_bards_advance
+	potential = {
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
+		NOR = {
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
+		}
+	}
+
+	requires = crown_power_advance_renaissance
+
+	# global_unrest = -1
+	pop_join_rebel_threshold = -0.03
+}
+
+abm_anatolian_beyliks_seljuq_marches = {
+	age = age_2_renaissance
+	icon = a_fortified_border
+	potential = {
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
+		NOR = {
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
+		}
+	}
+
+	requires = drill_army_advance
+
+	# global_manpower_modifier = 0.10
+	global_manpower_modifier = 0.10
+}
+
+abm_anatolian_beyliks_akinci_cavalry = {
+	age = age_3_discovery
+	icon = hun_composite_light_cavalry
+	potential = {
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
+		NOR = {
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
+		}
+	}
+
+	requires = military_traditions
+
+	# cavalry_power = 0.15
+	# loot_amount = 0.10
+	army_light_cavalry_power = 0.15
+	amount_looted_modifier = 0.25
+}
+
+abm_anatolian_beyliks_ghazi = {
+	age = age_3_discovery
+	icon = ghazi
+	potential = {
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
+		NOR = {
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
+		}
+	}
+
+	requires = pike_and_shot_advance
+
+	# manpower_recovery_speed = 0.2
+	army_reinforce_efficiency = 0.10
+}
+
+abm_anatolian_beyliks_caravanserais = {
+	age = age_4_reformation
+	icon = trade_caravans
+	potential = {
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
+		NOR = {
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
+		}
+	}
 
 	requires = global_trade_advance
+
+	# trade_efficiency = 0.1
+	trade_income = 0.10
 }
 
-REPLACE:greek_group_aegean_coastal_defence_advance = {
+abm_anatolian_beyliks_anatolian_architecture = {
+	age = age_4_reformation
+	icon = fortified_towns
+	potential = {
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
+		NOR = {
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
+		}
+	}
+
+	requires = supply_depot_advance_age_3_discovery
+
+	# build_cost = -0.10
+	global_build_buildings_efficiency = 0.10
+}
+
+abm_anatolian_beyliks_legacy_seljuqs_empire = {
 	age = age_5_absolutism
-	icon = ship_building_advance
-
+	icon = seljuk_roots
 	potential = {
-		culture = { has_culture_group = culture_group:greek_group }
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
-			has_or_had_tag = BYZ
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
 		}
 	}
 
-	naval_damage_taken = -0.10
-	own_coast_naval_combat_bonus = 0.10
+	requires = absolutist_court
 
-	requires = scientific_mapping_advance
+	# prestige = 1
+	monthly_prestige = 0.10
+	court_spending_efficiency = 0.10
 }
 
-REPLACE:greek_group_the_modern_greek_enlightenment_advance = {
+abm_anatolian_beyliks_ideas_ambition = {
 	age = age_6_revolutions
-	icon = students_of_foreign_courts
-
+	icon = offensive_army
 	potential = {
-		culture = { has_culture_group = culture_group:greek_group }
+		culture = { has_culture_group = culture_group:turkic_group }
+		original_capital ?= { region = region:anatolia_region }
 		NOR = {
-			has_or_had_tag = BYZ
+			has_or_had_tag = TUR
+			has_or_had_tag = KAR
+			has_or_had_tag = CND
 		}
 	}
-
-	cultural_influence_modifier = 0.1
-	research_speed_modifier = 0.10
 
 	requires = enlightened_court
+
+	# army_tradition = 0.5
+	monthly_army_tradition = 0.10
+}
+
+########################################
+# Sultanate of Rum (RUM) Ideas
+########################################
+# NOTE: RUM is not a tag in EU5 (no setup block, no formable as of 2026-11);
+# these advances stay dormant until such a tag exists.
+
+# RUM (EU4 idea set RUM_ideas, 00_country_ideas.txt)
+
+abm_rum_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = dan_levy_recruitment
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = feudalism_advance
+
+	# manpower_recovery_speed = 0.2
+	army_reinforce_efficiency = 0.10
+}
+
+abm_rum_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = noble_knights
+
+	# land_morale = 0.1
+	land_morale_modifier = 0.10
+}
+
+abm_rum_abul_fath = {
+	age = age_2_renaissance
+	icon = imperial_artillery
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = drill_army_advance
+
+	# discipline = 0.05
+	possible_frontage_modifier = 0.10
+}
+
+abm_rum_king_of_the_east_and_west = {
+	age = age_2_renaissance
+	icon = multicultural_empire
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = crown_power_advance_renaissance
+
+	# core_creation = -0.20
+	# num_accepted_cultures = 1
+	global_integration_speed_modifier = 0.20
+	cultures_capacity = 1
+}
+
+abm_rum_shahanshah = {
+	age = age_3_discovery
+	icon = crown_power_advance_renaissance
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = crown_power_advance_discovery
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_devotion = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_tribal_cohesion = 0.10
+	monthly_horde_unity = 0.10
+}
+
+abm_rum_sultan_of_rum = {
+	age = age_3_discovery
+	icon = cultural_acceptance_advance
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = cha_religious_tolerance
+
+	# tolerance_heathen = 3
+	tolerance_heathen = 2
+}
+
+abm_rum_sulan_al_bahrayn = {
+	age = age_4_reformation
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = maritime_advance_age_4
+
+	# naval_maintenance_modifier = -0.15
+	navy_maintenance_efficiency = 0.15
+}
+
+abm_rum_sultan_al_muazzam = {
+	age = age_4_reformation
+	icon = splendor_of_anatolia
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = supply_depot_advance_age_3_discovery
+
+	# build_cost = -0.15
+	global_build_buildings_efficiency = 0.15
+}
+
+abm_rum_protector_of_dar_al_islam = {
+	age = age_5_absolutism
+	icon = church_councils
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = absolutist_court
+
+	# global_heretic_missionary_strength = 0.03
+	global_heretic_pop_conversion_speed_modifier = 0.20
+}
+
+abm_rum_ideas_ambition = {
+	age = age_6_revolutions
+	icon = offensive_army
+	potential = {
+		has_or_had_tag = ABRUM
+	}
+
+	requires = military_revolution_advance
+
+	# land_forcelimit_modifier = 0.25
+	global_manpower_modifier = 0.20
 }

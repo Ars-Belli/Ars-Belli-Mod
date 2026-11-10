@@ -1,0 +1,321 @@
+﻿REPLACE:defense_of_the_faith = {
+	age = age_1_traditions
+	icon = defense_of_the_faith
+	potential = {
+		has_or_had_tag = KNI
+	}
+	discipline = 0.05
+}
+
+REPLACE:a_neverending_crusade = {
+	age = age_4_reformation
+	icon = a_neverending_crusade
+	potential = {
+		has_or_had_tag = KNI
+	}
+	combat_speed_modifier = 0.10
+	correct_box_chance = 0.10
+}
+
+########################################
+# Greek culture group ideas (EU4 greek_ideas)
+########################################
+
+# Greek culture group: generic set for Greek states without national ideas
+# (EU4 greek_ideas, zz_group_ideas.txt)
+
+abm_greek_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = nav_shipyards_ironworks
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = ship_building_advance
+
+	# galley_cost = -0.2
+	global_monthly_development = 0.001
+}
+
+abm_greek_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = natural_seamanship
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = feudalism_advance
+
+	# sailor_maintenance_modifer = -0.1
+	navy_maintenance_efficiency = 0.10
+}
+
+abm_greek_orthodox_faith = {
+	age = age_2_renaissance
+	icon = church_councils
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = cha_religious_tolerance
+
+	# tolerance_own = 2
+	tolerance_own = 1
+	tolerance_heretic = 1
+	tolerance_heathen = 1
+}
+
+abm_greek_maritime_heritage = {
+	age = age_2_renaissance
+	icon = royal_navy
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = maritime_advance_age_2
+
+	# navy_tradition = 1
+	monthly_navy_tradition = 0.10
+	global_selling_efficiency = mild_selling_efficiency_bonus
+}
+
+abm_greek_klephtic_irregulars = {
+	age = age_3_discovery
+	icon = swiss_halberd_infantry
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = military_traditions
+
+	# infantry_power = 0.1
+	army_maintenance_efficiency = 0.10
+}
+
+abm_greek_phanariotes = {
+	age = age_3_discovery
+	icon = smooth_administration
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = university_advance
+
+	# advisor_cost = -0.1
+	global_max_literacy = 5
+}
+
+abm_greek_strengthen_control_over_the_trade_routes = {
+	age = age_4_reformation
+	icon = merchants_and_trade
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = merchant_power_from_maritime_reformation_advance
+
+	# trade_efficiency = 0.1
+	trade_income = 0.10
+}
+
+abm_greek_philhellenism = {
+	age = age_4_reformation
+	icon = diplomatic_training
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = diplomatic_training
+
+	# diplomatic_reputation = 1
+	# diplomatic_upkeep = 1
+	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	diplomatic_upkeep_efficiency = 0.10
+}
+
+abm_greek_enlightenment = {
+	age = age_5_absolutism
+	icon = library_advance
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = absolutist_court
+
+	# idea_cost = -0.1
+	research_speed_modifier = 0.10
+}
+
+abm_greek_ideas_ambition = {
+	age = age_6_revolutions
+	icon = the_the_thessalonican_crown_advance
+	potential = {
+		OR = {
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+		NOR = { has_or_had_tag = BYZ }
+	}
+
+	requires = nation_state_advance
+
+	# core_creation = -0.1
+	global_integration_speed_modifier = 0.20
+}
+
+
+REPLACE:greek_group_the_spirit_of_resistance_advance = {
+	age = age_1_traditions
+	icon = offensive_army
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+			has_or_had_tag = TRE
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+	}
+
+	morale_recovery_in_friendly = 0.05
+	selling_efficiency = small_selling_efficiency_bonus
+
+	requires = feudalism_advance
+}
+
+REPLACE:greek_group_hesychast_traditions_advance = {
+	age = age_2_renaissance
+	icon = greek_group_hesychast_traditions_advance
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+			has_or_had_tag = TRE
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+	}
+
+	global_clergy_max_literacy = 5
+	tolerance_own = 1
+
+	requires = renaissance_development
+}
+
+REPLACE:greek_group_stratioti_levies_advance = {
+	age = age_3_discovery
+	icon = professional_armies_advance
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+			has_or_had_tag = TRE
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+	}
+
+	army_light_cavalry_power = 0.1
+	army_initiative = 0.1
+
+	requires = pike_and_shot_advance
+}
+
+REPLACE:greek_group_the_phanariote_network_advance = {
+	age = age_4_reformation
+	icon = diplomatic_influence
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+			has_or_had_tag = TRE
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+	}
+
+	global_burghers_max_literacy = 10
+	monthly_diplomats = 0.05
+
+	requires = global_trade_advance
+}
+
+REPLACE:greek_group_aegean_coastal_defence_advance = {
+	age = age_5_absolutism
+	icon = ship_building_advance
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+			has_or_had_tag = TRE
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+	}
+
+	navy_galley_power = 0.15
+	own_coast_naval_combat_bonus = 0.1
+
+	requires = scientific_mapping_advance
+}
+
+REPLACE:greek_group_the_modern_greek_enlightenment_advance = {
+	age = age_6_revolutions
+	icon = students_of_foreign_courts
+
+	potential = {
+		culture = { has_culture_group = culture_group:greek_group }
+		NOR = {
+			has_or_had_tag = BYZ 
+			has_or_had_tag = TRE
+			culture = culture:pontic_greek_culture
+			culture = culture:gothic_culture
+		}
+	}
+
+	cultural_influence_modifier = 0.1
+	research_speed_modifier = 0.2
+
+	requires = enlightened_court
+}

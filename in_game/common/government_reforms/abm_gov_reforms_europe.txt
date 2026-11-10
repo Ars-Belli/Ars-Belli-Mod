@@ -45,26 +45,143 @@
 	years = 2
 }
 
-REPLACE:kingdom_of_god_reform = {
-	unique = yes
-	potential = {
-		has_unlocked_government_reform_trigger = { type = kingdom_of_god_reform }
-	}
-	country_modifier = {
-		prestige_decay = -0.005
+INJECT:kingdom_of_god_reform = {
 		damage_done_versus_heretics_modifier = 0.10
 		damage_done_versus_heathens_modifier = 0.10
-		government_reform_slots = 1
+}
+
+abm_koj_kingdom_of_heaven_reform = {
+	unique = yes
+	government = theocracy
+
+	potential = {
+		has_unlocked_government_reform_trigger = { type = abm_koj_kingdom_of_heaven_reform }
+		government_type = government_type:theocracy
+		religion = religion:catholic
 	}
+
+	allow = {
+		has_unlocked_government_reform_trigger = { type = abm_koj_kingdom_of_heaven_reform }
+		government_type = government_type:theocracy
+		religion = religion:catholic
+	}	
+
+	country_modifier = {
+		government_reform_slots = 1
+		blocked_from_conversion = yes
+		prestige_decay = -0.002
+
+		damage_done_versus_heretics_modifier = 0.10
+		tolerance_own = 1
+		global_max_literacy = 0.05
+
+		monthly_towards_spiritualist = societal_value_monthly_move
+	}
+
 	locked = {
 		is_locked_mechanic = {
 			mechanic = government_reform
-			type = kingdom_of_god_reform
+			type = abm_koj_kingdom_of_heaven_reform
 		}
 	}
 
-	#1.4: on_deactivate dropped - it only cleaned up kingdom_of_god_slot_modifier, which 1.4 no longer
-	#defines (this reform grants government_reform_slots = 1 itself, so nothing temporary is added)
+	years = 2
+}
+
+# Greater Georgia: the united Georgian crown restored over the whole Caucasus.
+abm_geo_greater_georgia_reform = {
+	unique = yes
+
+	potential = {
+		has_unlocked_government_reform_trigger = { type = abm_geo_greater_georgia_reform }
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+
+		global_crown_estate_power = 0.20
+		monthly_legitimacy = 0.10
+		monthly_prestige = 0.10
+	}
+
+	locked = {
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = abm_geo_greater_georgia_reform
+		}
+	}
 
 	years = 2
 }
+
+# Greater Armenia: the Armenian crown restored from Cilicia to the highlands.
+abm_arm_greater_armenia_reform = {
+	unique = yes
+
+	potential = {
+		has_unlocked_government_reform_trigger = { type = abm_arm_greater_armenia_reform }
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+
+		global_estate_power_satisfaction = 0.05
+		global_estate_max_tax = 0.05
+		monthly_prestige = 0.10
+	}
+
+	locked = {
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = abm_arm_greater_armenia_reform
+		}
+	}
+
+	years = 2
+}
+
+# Greater Caucasus: a non-Georgian, non-Armenian Caucasus state crowned over the region.
+abm_greater_caucasus_reform = {
+	unique = yes
+
+	potential = {
+		has_unlocked_government_reform_trigger = { type = abm_greater_caucasus_reform }
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:theocracy
+			government_type = government_type:republic
+		}
+	}
+
+	allow = {
+		has_unlocked_government_reform_trigger = { type = abm_greater_caucasus_reform }
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:theocracy
+			government_type = government_type:republic
+		}
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+
+		global_crown_estate_power = 0.10
+
+		# One of these applies, per the government type using it.
+		monthly_legitimacy = 0.10
+		monthly_devotion = 0.10
+		monthly_republican_tradition = 0.10
+
+		monthly_prestige = 0.10
+	}
+
+	locked = {
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = abm_greater_caucasus_reform
+		}
+	}
+
+	years = 2
+}
+
