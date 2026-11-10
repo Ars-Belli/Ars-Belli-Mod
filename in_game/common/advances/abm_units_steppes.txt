@@ -1,0 +1,564 @@
+﻿# Advances that unlock the steppe cultural regiments in
+# in_game/common/unit_types/abm_units_steppes.txt.
+#
+# One advance per regiment, so a unit never appears in the build list before
+# its own age's upgrade of the same role has been researched (every
+# `requires` below points at the vanilla advance that unlocks the baseline
+# unit the regiment copies from, and sits in the same age).
+#
+# The `potential` mirrors each unit's own `country_potential` - culture, or
+# accepted culture with a positive cultural view, or the Cossacks estate for
+# the Cossack lines - and then adds the steppe capital requirement, so moving
+# the seat into the steppe later does not retroactively unlock them.
+
+#############################
+# Crimean
+#############################
+
+abm_crimean_horse_archers_2_advance = {
+	content_priority = 900
+	age = age_2_renaissance
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			culture = culture:crimean
+			AND = {
+				has_accepted_culture = culture:crimean
+				culture = {
+					cultural_view = {
+						target = culture:crimean
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_cavalry_advance
+
+	unlock_unit = abm_crimean_horse_archers_2
+}
+
+abm_crimean_horse_archers_3_advance = {
+	content_priority = 900
+	age = age_3_discovery
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			culture = culture:crimean
+			AND = {
+				has_accepted_culture = culture:crimean
+				culture = {
+					cultural_view = {
+						target = culture:crimean
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_light_lancers_advance
+
+	unlock_unit = abm_crimean_horse_archers_3
+}
+
+#############################
+# Mishar
+#############################
+
+abm_mishar_horsemen_2_advance = {
+	content_priority = 900
+	age = age_2_renaissance
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			culture = culture:mishar
+			AND = {
+				has_accepted_culture = culture:mishar
+				culture = {
+					cultural_view = {
+						target = culture:mishar
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_cavalry_advance
+
+	unlock_unit = abm_mishar_horsemen_2
+}
+
+abm_mishar_horsemen_3_advance = {
+	content_priority = 900
+	age = age_3_discovery
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			culture = culture:mishar
+			AND = {
+				has_accepted_culture = culture:mishar
+				culture = {
+					cultural_view = {
+						target = culture:mishar
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_light_lancers_advance
+
+	unlock_unit = abm_mishar_horsemen_3
+}
+
+#############################
+# Astrakhani
+#############################
+
+abm_astrakhani_horse_archers_3_advance = {
+	content_priority = 900
+	age = age_3_discovery
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			culture = culture:astrakhani
+			AND = {
+				has_accepted_culture = culture:astrakhani
+				culture = {
+					cultural_view = {
+						target = culture:astrakhani
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_light_lancers_advance
+
+	unlock_unit = abm_astrakhani_horse_archers_3
+}
+
+abm_astrakhani_horse_archers_4_advance = {
+	content_priority = 900
+	age = age_4_reformation
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			culture = culture:astrakhani
+			AND = {
+				has_accepted_culture = culture:astrakhani
+				culture = {
+					cultural_view = {
+						target = culture:astrakhani
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_pistoleers_advance
+
+	unlock_unit = abm_astrakhani_horse_archers_4
+}
+
+#############################
+# Gothic
+#############################
+
+abm_gothic_cataphracts_2_advance = {
+	content_priority = 900
+	age = age_2_renaissance
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			culture = culture:gothic_culture
+			AND = {
+				has_accepted_culture = culture:gothic_culture
+				culture = {
+					cultural_view = {
+						target = culture:gothic_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_heavy_cavalry_advance
+
+	unlock_unit = abm_gothic_cataphracts_2
+}
+
+abm_gothic_cataphracts_3_advance = {
+	content_priority = 900
+	age = age_3_discovery
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			culture = culture:gothic_culture
+			AND = {
+				has_accepted_culture = culture:gothic_culture
+				culture = {
+					cultural_view = {
+						target = culture:gothic_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_lancers_advance
+
+	unlock_unit = abm_gothic_cataphracts_3
+}
+
+abm_gothic_spearmen_3_advance = {
+	content_priority = 900
+	age = age_3_discovery
+	icon = pike_and_shot_advance
+
+	potential = {
+		OR = {
+			culture = culture:gothic_culture
+			AND = {
+				has_accepted_culture = culture:gothic_culture
+				culture = {
+					cultural_view = {
+						target = culture:gothic_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_halberdiers_advance
+
+	unlock_unit = abm_gothic_spearmen_3
+}
+
+abm_gothic_spearmen_4_advance = {
+	content_priority = 900
+	age = age_4_reformation
+	icon = pike_and_shot_advance
+
+	potential = {
+		OR = {
+			culture = culture:gothic_culture
+			AND = {
+				has_accepted_culture = culture:gothic_culture
+				culture = {
+					cultural_view = {
+						target = culture:gothic_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_pikemen_advance
+
+	unlock_unit = abm_gothic_spearmen_4
+}
+#############################
+# Cossacks - registered (estate, mounted) and Zaporozhian (culture, foot)
+#############################
+
+abm_cossack_cavalry_3_advance = {
+	content_priority = 900
+	age = age_3_discovery
+	icon = glorious_arms
+
+	potential = {
+		country_has_estate = estate_type:cossacks_estate
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_light_lancers_advance
+
+	unlock_unit = abm_cossack_cavalry_3
+}
+
+abm_cossack_cavalry_4_advance = {
+	content_priority = 900
+	age = age_4_reformation
+	icon = glorious_arms
+
+	potential = {
+		country_has_estate = estate_type:cossacks_estate
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_pistoleers_advance
+
+	unlock_unit = abm_cossack_cavalry_4
+}
+
+abm_cossack_cavalry_5_advance = {
+	content_priority = 900
+	age = age_5_absolutism
+	icon = glorious_arms
+
+	potential = {
+		country_has_estate = estate_type:cossacks_estate
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_hussars_advance
+
+	unlock_unit = abm_cossack_cavalry_5
+}
+
+abm_cossack_infantry_4_advance = {
+	content_priority = 900
+	age = age_4_reformation
+	icon = pike_and_shot_advance
+
+	potential = {
+		OR = {
+			culture = culture:cossack_culture
+			AND = {
+				has_accepted_culture = culture:cossack_culture
+				culture = {
+					cultural_view = {
+						target = culture:cossack_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_arquebusiers_advance
+
+	unlock_unit = abm_cossack_infantry_4
+}
+
+abm_cossack_infantry_5_advance = {
+	content_priority = 900
+	age = age_5_absolutism
+	icon = drill_army_advance
+
+	potential = {
+		OR = {
+			culture = culture:cossack_culture
+			AND = {
+				has_accepted_culture = culture:cossack_culture
+				culture = {
+					cultural_view = {
+						target = culture:cossack_culture
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_hunters_advance
+
+	unlock_unit = abm_cossack_infantry_5
+}
+
+#############################
+# Ligurian
+#############################
+
+abm_ligurian_infantry_4_advance = {
+	content_priority = 900
+	age = age_4_reformation
+	icon = pike_and_shot_advance
+
+	potential = {
+		OR = {
+			culture = culture:ligurian
+			AND = {
+				has_accepted_culture = culture:ligurian
+				culture = {
+					cultural_view = {
+						target = culture:ligurian
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_pikemen_advance
+
+	unlock_unit = abm_ligurian_infantry_4
+}
+
+abm_ligurian_infantry_5_advance = {
+	content_priority = 900
+	age = age_5_absolutism
+	icon = drill_army_advance
+
+	potential = {
+		OR = {
+			culture = culture:ligurian
+			AND = {
+				has_accepted_culture = culture:ligurian
+				culture = {
+					cultural_view = {
+						target = culture:ligurian
+						value >= positive
+					}
+				}
+			}
+		}
+		original_capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = unlock_musketeers_advance
+
+	unlock_unit = abm_ligurian_infantry_5
+}
+
+#############################
+# Ruthenian
+#############################
+
+abm_ruthenian_infantry_4_advance = {
+	content_priority = 900
+	age = age_4_reformation
+	icon = pike_and_shot_advance
+
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			AND = {
+				has_accepted_culture = culture:ruthenian
+				original_capital ?= {
+					OR = {
+						region = region:ruthenia_region
+						region = region:steppes_region
+					}
+				}
+			}
+			has_or_had_tag = KIE
+			has_or_had_tag = UKR
+		}
+	}
+
+	requires = unlock_pikemen_advance
+
+	unlock_unit = abm_ruthenian_infantry_4
+}
+
+abm_ruthenian_infantry_5_advance = {
+	content_priority = 900
+	age = age_5_absolutism
+	icon = drill_army_advance
+
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			AND = {
+				has_accepted_culture = culture:ruthenian
+				original_capital ?= {
+					OR = {
+						region = region:ruthenia_region
+						region = region:steppes_region
+					}
+				}
+			}
+			has_or_had_tag = KIE
+			has_or_had_tag = UKR
+		}
+	}
+
+	requires = unlock_musketeers_advance
+
+	unlock_unit = abm_ruthenian_infantry_5
+}
+
+abm_ruthenian_infantry_6_advance = {
+	content_priority = 900
+	age = age_6_revolutions
+	icon = drill_army_advance
+
+	potential = {
+		OR = {
+			culture = culture:ruthenian
+			AND = {
+				has_accepted_culture = culture:ruthenian
+				original_capital ?= {
+					OR = {
+						region = region:ruthenia_region
+						region = region:steppes_region
+					}
+				}
+			}
+			has_or_had_tag = KIE
+			has_or_had_tag = UKR
+		}
+	}
+
+	requires = unlock_fusiliers_advance
+
+	unlock_unit = abm_ruthenian_infantry_6
+}
+

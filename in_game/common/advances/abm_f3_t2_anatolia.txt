@@ -3,6 +3,7 @@
 ############################
 REPLACE:tre_pontic_trail_mastery = {
 	age = age_1_traditions
+	icon = tre_pontic_trail_mastery
 	potential = {
 		has_or_had_tag = TRE
 	}
@@ -14,27 +15,11 @@ REPLACE:tre_pontic_trail_mastery = {
 	hills_proximity_impact = -0.25
 }
 
-REPLACE:tre_komnenos_legacy = {
-	age = age_1_traditions
-	potential = {
-		has_or_had_tag = TRE
-	}
-
-	requires = written_alphabet
-
-	global_crown_estate_power = 0.10
-	monthly_army_tradition = 0.10
+INJECT:tre_komnenos_legacy = {
+	monthly_army_tradition = 0.05 # vanilla 0.05 + 0.05 = 0.10
 }
 
-REPLACE:tre_pontic_mountains = {
-	age = age_2_renaissance
-	potential = {
-		has_or_had_tag = TRE
-	}
-
-	requires = supply_depot_advance_age_2_renaissance
-
-	global_hostile_attrition = 0.50
+INJECT:tre_pontic_mountains = {
 	global_defensive = 0.10
 }
 
@@ -65,7 +50,7 @@ abm_pon_ideas_tradition_2 = {
 	}
 
 	navy_galley_power = 0.10
-	own_coast_naval_combat_bonus = 0.10
+	naval_damage_taken = -0.10
 
 	requires = maritime_advance_age_2
 }
@@ -136,7 +121,7 @@ abm_pon_republic_admiralty = {
 }
 
 abm_pon_border_military_contracts = {
-	age = age_3_discovery
+	age = age_4_reformation
 	icon = defensive_army_attrition
 
 	potential = {
@@ -145,7 +130,7 @@ abm_pon_border_military_contracts = {
 
 	army_maintenance_efficiency = 0.10
 
-	requires = organised_mercenary_payment
+	requires = correct_box_advance_reformation
 }
 
 abm_pon_young_can_serve = {

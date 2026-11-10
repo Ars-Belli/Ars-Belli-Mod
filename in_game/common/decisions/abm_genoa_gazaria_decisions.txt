@@ -1,0 +1,127 @@
+﻿# Gazaria's break with Genoa, as decisions rather than events.
+#
+# The old version fired an on_game_start event, which meant the choice only
+# appeared when BOTH Gazaria and Genoa were human players. As decisions the
+# Gazaria player always sees them, whoever runs Genoa. GAZ starts as GEN's
+# vassal (main_menu/setup/1337/12_diplomacy.txt:
+# `dependency = { first = GEN second = GAZ subject_type = vassal }`).
+
+# Step one: break free of Genoa. Disappears once GAZ is no longer a subject.
+abm_gazaria_independence = {
+	decision_category = country_specific_decisions
+	only_once = yes
+
+	potential = {
+		tag = GAZ
+		is_human = yes
+		is_subject = yes
+		overlord ?= { has_or_had_tag = GEN }
+	}
+
+	allow = {
+		is_subject = yes
+		overlord ?= { has_or_had_tag = GEN }
+	}
+
+	ai_will_do = {
+		value = 0
+	}
+
+	option = {
+		name = abm_gazaria_independence.a
+		ai_chance = { value = 0 }
+
+		effect = {
+			overlord ?= { cancel_subject = root }
+		}
+	}
+
+	option = {
+		name = abm_gazaria_independence.b
+		ai_chance = { value = 0 }
+
+		effect = {
+			overlord ?= { cancel_subject = root }
+			if = {
+				limit = { country_exists = c:GEN }
+				create_alliance = { target = c:GEN }
+			}
+		}
+	}
+}
+
+# Step two: who are we now?
+#
+# Only after independence, and only once we actually hold both Gothic heartlands
+# - Theodoro and Lusta. Taking the Gothic principality is what puts the question
+# to the Gazarian captains: are we still a Genoese factory, or have we become
+# the Gothic state that was here before us, or a Greek one?
+#
+# Still requires Ligurian primary culture, so the decision cannot be re-taken
+# after a change. only_once then hides it, which makes "stay Ligurian" a real
+# choice rather than simply ignoring the button.
+abm_gazaria_culture_choice = {
+	decision_category = country_specific_decisions
+	only_once = yes
+
+	potential = {
+		tag = GAZ
+		is_human = yes
+		NOT = { is_subject = yes }
+		culture = culture:ligurian
+		owns = location:theodoro
+		owns = location:lusta
+	}
+
+	allow = {
+		NOT = { is_subject = yes }
+		culture = culture:ligurian
+		owns = location:theodoro
+		owns = location:lusta
+	}
+
+	ai_will_do = {
+		value = 0
+	}
+
+	# a: stay Ligurian. No mechanical change; the flag just records the choice.
+	option = {
+		name = abm_gazaria_culture_choice.a
+		ai_chance = { value = 0 }
+
+		effect = {
+			set_variable = { name = abm_gazaria_stayed_ligurian value = yes }
+		}
+	}
+
+	# b: become Gothic - the inheritance of Theodoro.
+	# Deliberately no grant_culture_bonus_advances: that hands over the whole
+	# culture-locked advance set at once, with no can_change_primary_culture
+	# check, price or cooldown. The Gothic advances simply become researchable.
+	option = {
+		name = abm_gazaria_culture_choice.b
+		ai_chance = { value = 0 }
+
+		effect = {
+			change_culture = culture:gothic_culture
+			add_accepted_culture = culture:ligurian
+			custom_tooltip = abm_gazaria_culture_choice.b.tt
+		}
+	}
+
+	# c: become Pontic Greek - DISABLED FOR NOW. Kept here so the text, the
+	# effect and the tooltip keys survive; uncomment the block to restore it.
+	# The Pontic culture legacy (sharing TRE's advances) is not implemented yet
+	# either, so offering the culture without its inheritance would be a trap.
+	#
+	# option = {
+	#	name = abm_gazaria_culture_choice.c
+	#	ai_chance = { value = 0 }
+	#
+	#	effect = {
+	#		change_culture = culture:pontic_greek_culture
+	#		add_accepted_culture = culture:ligurian
+	#		custom_tooltip = abm_gazaria_culture_choice.c.tt
+	#	}
+	# }
+}

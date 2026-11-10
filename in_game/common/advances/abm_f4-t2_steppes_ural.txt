@@ -1,4 +1,138 @@
 ﻿#############################
+# Taurica (ABTAU) - custom formable
+# Greek colonies (Chersonesus, Bosporan Kingdom), Crimean Goths,
+# Genoese Gazaria (Caffa) and the Pontic steppe.
+#############################
+
+abm_abtau_tradition_1 = {
+	age = age_2_renaissance
+	icon = city_building_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = ship_building_advance
+
+	global_max_literacy = 5
+	tolerance_own = 1
+}
+
+abm_abtau_tradition_2 = {
+	age = age_2_renaissance
+	icon = legalism_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = ship_building_advance
+
+	government_size = 1
+	global_max_bureaucracy_slots = 1
+}
+
+abm_abtau_gothic_military_legacy = {
+	age = age_3_discovery
+	icon = a_central_power
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = recruitment_law_advance
+
+	monthly_army_tradition = 0.10
+}
+
+abm_abtau_harbours_of_gazaria = {
+	age = age_3_discovery
+	icon = rudimentary_coastal_ship_repair
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = naval_repair_ren
+
+	sea_cost_on_distance_from_capital_when_maritime = -0.5
+	port_cost_distance_from_capital = -5
+}
+
+abm_abtau_steppe_warriors = {
+	age = age_3_discovery
+	icon = nor_bounties_of_the_sea
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = ship_building_techniques_discovery
+
+	army_maintenance_efficiency = 0.10
+}
+
+abm_abtau_steppe_black_soil = {
+	age = age_4_reformation
+	icon = agriculture_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = food_advance_reformation
+
+	global_monthly_food_modifier = monthly_food_productivity_extreme_bonus
+}
+
+abm_abtau_emporia_of_the_steppe = {
+	age = age_4_reformation
+	icon = new_world_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = rgo_logistics_discovery
+
+	trade_range_modifier = 0.20
+	trade_income = 0.10
+}
+
+abm_abtau_tauric_granaries = {
+	age = age_4_reformation
+	icon = local_nobility
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = crown_power_advance_reformation
+
+	global_monthly_development_modifier = 0.10
+	fort_limit_modifier = 0.25
+}
+
+abm_abtau_commune_of_caffa = {
+	age = age_5_absolutism
+	icon = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = sturdy_privateers
+
+	monthly_republican_tradition = 0.10
+	court_spending_efficiency = 0.10
+}
+
+abm_abtau_cave_cities_of_gothia = {
+	age = age_5_absolutism
+	icon = merchant_power_from_maritime_reformation_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = scientific_mapping_advance
+
+	global_population_growth = 0.0003
+}
+
+abm_abtau_ambition = {
+	age = age_6_revolutions
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = maritime_advance_age_6
+
+	global_defensive = 0.20
+	global_garrison_size_modifier = 0.20
+}
+
+#############################
 # Gazaria (GAZ) - Genoese Ideas
 #############################
 
@@ -25,6 +159,8 @@ abm_gen_ideas_tradition_2 = {
 
 	# interest = -0.5
 	bank_interest = -0.01
+	global_monthly_prosperity = 0.001
+
 	unlock_building = galley_barracks
 }
 
@@ -38,8 +174,8 @@ abm_reunited_genoa = {
 
 	# stability_cost_modifier = -0.10
 	# justify_trade_conflict_cost = -0.10
-	stability_cost_efficiency = 0.10
-	diplomatic_upkeep_efficiency = 0.10
+	court_spending_efficiency = 0.10
+	global_pop_assimilation_speed_modifier = 0.25
 }
 
 abm_lessons_of_chiogga = {
@@ -52,7 +188,7 @@ abm_lessons_of_chiogga = {
 
 	# naval_morale = 0.20
 	naval_morale_modifier = 0.10
-	own_coast_naval_combat_bonus = 0.10
+	naval_damage_taken = -0.10
 }
 
 abm_genoese_trade = {
@@ -78,8 +214,11 @@ abm_the_genoese_arsenal = {
 	requires = rgo_logistics_discovery
 
 	# galley_cost = -0.33
-	navy_galley_build_cost_modifier = -0.20
-	can_convert_galleys_to_light = yes
+	global_burghers_estate_power = -0.25
+	possible_frontage_modifier = 0.10
+
+	unlock_building = abm_gazarian_arsenal
+	#unlock_building = abm_gazarian_headquarters
 }
 
 abm_overhauled_bureaucracy = {
@@ -91,8 +230,8 @@ abm_overhauled_bureaucracy = {
 	requires = crown_power_advance_reformation
 
 	# global_tax_modifier = 0.1
-	burghers_estate_max_tax = 0.10
-	burghers_estate_target_satisfaction = small_permanent_target_satisfaction
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+	trade_land_efficiency = medium_trade_land_efficiency_bonus
 }
 
 abm_the_office_of_grand_admiral = {
@@ -294,6 +433,10 @@ abm_cri_tradition_2 = {
 	army_initiative = 0.10
 }
 
+INJECT:cri_genghisid_legacy = {
+	army_light_cavalry_power = -0.10
+}
+
 # abm_cri_genghisid_legacy = {
 # 	age = age_2_renaissance
 # 	icon = cavalry_warfare
@@ -391,6 +534,13 @@ abm_cri_ambition = {
 	global_integration_speed_modifier = 0.25
 }
 
+############################
+# Golden Horde
+############################
+
+INJECT:glh_tatar_traditions = {
+	army_light_cavalry_power = -0.10
+}
 
 ############################
 # Astrakhan
@@ -681,4 +831,186 @@ abm_kaz_ambition = {
 
 	# cavalry_flanking = 0.5
 	army_initiative = 0.20
+}
+
+#############################################
+# Steppe redoubts (building)
+#############################################
+
+# Unlocks abm_steppe_redoubts (building_types/abm_steppe_buildings.txt). The
+# capital gate keeps the advance out of the trees of countries that will never
+# own flat steppe land; the building itself is gated on the location.
+abm_steppe_redoubts_advance = {
+	age = age_1_traditions
+
+	potential = {
+		capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = castle_advance
+	unlock_building = abm_steppe_redoubts
+	allow_children = no
+}
+
+#############################################
+# Settle the Steppe (cabinet action)
+#############################################
+
+# Unlocks abm_settle_the_steppe (cabinet_actions/abm_settle_the_steppe.txt).
+# Planted in the Age of Discovery alongside vanilla's other settlement tools
+# (send_people_to_colonial_charter, settle_the_frontier).
+#
+# Offered to any monarchy, republic or theocracy of a settled (non-pagan)
+# faith with a steppe foothold: an original capital there, a current capital
+# there, or any owned location there. The province restriction the player
+# actually cares about lives in the cabinet action itself, which only offers
+# steppe provinces.
+abm_settle_the_steppe_advance = {
+	age = age_3_discovery
+	icon = defensive_army_attrition
+	
+	potential = {
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:republic
+			government_type = government_type:theocracy
+		}
+		is_country_religion_pagan = no
+		OR = {
+			original_capital.region ?= region:steppes_region
+			capital.region ?= region:steppes_region
+			any_owned_location = {
+				region = region:steppes_region
+			}
+		}
+	}
+
+	requires = surgery_advance
+	unlock_cabinet_action = abm_settle_the_steppe
+}
+
+REPLACE:feo_gothic_hellenic_synthesis_advance = {
+	age = age_1_traditions
+	icon = cultural_acceptance_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+
+	}
+
+	accepted_culture_maintenance_cost_modifier = -0.25
+	cultures_capacity = 2
+
+	requires = cultural_acceptance_advance
+}
+
+REPLACE:feo_the_bastion_of_mangup_advance = {
+	age = age_2_renaissance
+	icon = feo_the_bastion_of_mangup_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	global_defensive = 0.25
+	global_monthly_development = 0.001
+
+
+	requires = drill_army_advance
+}
+
+REPLACE:feo_the_gothic_red_guard_advance = {
+	age = age_3_discovery
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	discipline = 0.05
+
+	requires = new_world_advance
+}
+
+REPLACE:feo_black_sea_fur_trade_advance = {
+	age = age_4_reformation
+	icon = global_trade_routes_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	global_merchant_power = 0.20
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+
+	requires = confessionalism_advance
+}
+
+REPLACE:feo_the_northern_star_of_greece_advance = {
+	age = age_5_absolutism
+	icon = crown_power_advance_renaissance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	monthly_devotion = 0.1
+	monthly_legitimacy = 0.1
+	monthly_republican_tradition = 0.1
+
+	monthly_religious_influence = 0.1
+
+	requires = absolute_rulership
+}
+
+REPLACE:feo_the_iron_harvest_advance = {
+	age = age_6_revolutions
+	icon = imperial_ambitions
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	global_war_score_efficiency = 0.2
+	global_max_control = 0.05
+
+	requires = hot_blast_furnace
 }

@@ -1,0 +1,63 @@
+﻿swe_slash_and_burn_new_farms = {
+	ability = adm
+	icon = pop_promote_action
+	allow_multiple = yes
+	
+	potential = {
+		OR = {
+			has_or_had_tag = SWE
+			has_or_had_tag = FIN
+		}
+	}
+	
+	
+	select_trigger = {
+		looking_for_a = province
+		source = actor
+		target_flag = target
+		name = "swe_slash_and_burn_new_farms_select_province"
+		none_available_msg_key = "swe_slash_and_burn_new_farms_no_provinces"
+		column = {
+			data = name
+		}
+		column = {
+			data = population
+		}
+		visible = {
+			province_average_development < 20
+			population < 10
+			OR = {
+				area = area:finland_area
+				area = area:norrland_area
+			}
+			province_definition != province_definition:finland_province
+			province_definition != province_definition:nyland_province
+			
+			NOT = { cabinet_already_performing_same_task_on_target = { cabinet_action = swe_slash_and_burn_new_farms interaction_target = target } }
+			NOT = { cabinet_already_performing_same_task_on_target = { cabinet_action = expel_people interaction_target = target } }
+		}
+		map_color = {
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = province.province_average_development
+			}
+		}
+	}
+
+	is_finished = {
+		scope:target ?= {
+			population > 15
+		}
+	}
+	
+	location_modifier = {
+		local_population_growth = 0.02
+		local_monthly_development = 0.01
+		local_migration_attraction = 0.25
+	}
+
+	map_marker = {
+		show_for_owner = yes
+	}
+}

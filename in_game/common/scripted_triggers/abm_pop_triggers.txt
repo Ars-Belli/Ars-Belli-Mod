@@ -1,0 +1,44 @@
+﻿# Cossacks estate: Christian, settled, steppe-rooted nations only.
+#
+# An estate exists for a country only while some of its pops belong to it, and
+# pop_types/00_default.txt assigns pops to the Cossacks via
+# `cossacks_estate = { is_cossacks = yes }`. So this one trigger controls the
+# estate's whole existence - no on_action or removal effect needed (the engine
+# has no add_estate/remove_estate effect at all).
+#
+# The pop must be cossack_culture (vanilla), and its owner must be all of:
+#   - of the Christian religion group
+#   - a monarchy, republic or theocracy (not a tribe, not a steppe_horde)
+#   - EITHER a primary culture in the Russian, Lithuanian or Polish group,
+#     OR both cossack_culture among its accepted cultures AND its ORIGINAL
+#     capital in the steppes region (acceptance only counts inside the steppe)
+#
+# The capital is checked as `original_capital`, not `capital`, so that moving a
+# capital into the steppe later does not conjure the estate up.
+#
+# 1337: kyiv holds the only cossack_culture pop in the setup and KIE is a
+# Ruthenian (russian_group) Orthodox monarchy, so Kyiv starts with a token
+# estate. ZAZ is a steppe_horde at kichkas and holds no cossack pops, so it
+# does not qualify until it settles.
+REPLACE:is_cossacks = {
+	culture = culture:cossack_culture
+	owner ?= {
+		religion.group = religion_group:christian
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:republic
+			government_type = government_type:theocracy
+		}
+		OR = {
+			culture = { has_culture_group = culture_group:russian_group }
+			culture = { has_culture_group = culture_group:lithuanian_group }
+			culture = { has_culture_group = culture_group:polish_group }
+			AND = {
+				has_accepted_culture = culture:cossack_culture
+				original_capital ?= {
+					region = region:steppes_region
+				}
+			}
+		}
+	}
+}
