@@ -116,7 +116,7 @@ function terrain(rel) {
 	return out;
 }
 const data = {
-	built: new Date().toISOString().slice(0, 10), game: '1.4.7', // the installed game's version, set by hand when the game updates
+	built: new Date().toISOString().slice(0, 10), game: '1.4.8', // the installed game's version, set by hand when the game updates
 	// category prices, used for the simulator's generic units
 	catPrice: Object.fromEntries(Object.entries(CAT_SHORT).map(([k, c]) => [c, unitPrice(k)])),
 	units, terrain: { topography: terrain('in_game/common/topography'), vegetation: terrain('in_game/common/vegetation'), climate: terrain('in_game/common/climates') },
