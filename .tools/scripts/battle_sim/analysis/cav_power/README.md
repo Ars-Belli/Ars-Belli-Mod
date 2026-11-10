@@ -4,7 +4,7 @@ The user's change: cavalry combat power 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2 by ag
 
 ## Setup
 
-- Data: `units.json` rebuilt from game 1.4.7 and this branch (1.4.7 changes no unit stat, price or terrain). Battle rules as the game's 1.4.7 defines; this branch's damage, speed and heavy infantry are vanilla. "vanilla" runs use `results/units_vanilla_cav.json`, the same data with vanilla cavalry power (`units_with_cav_power.js`).
+- Data: `units.json` rebuilt from game 1.4.8 and this branch (1.4.7 and 1.4.8 change no unit stat, price or terrain). Battle rules as game 1.4.8 in a daily game, including its reserve rule; this branch's damage, speed and heavy infantry are vanilla. "vanilla" runs use `results/units_vanilla_cav.json`, the same data with vanilla cavalry power (`units_with_cav_power.js`).
 - Armies as `army_meta.js` builds them: the age's tech-line units, 30 regiments' budget, generals 60/59/61, Spain 1547's discipline and morale, every universal advance of the age (combined arms +1% at ages 4 and 6), frontage 10, plains unless noted, balanced formation for the named armies.
 - Two comparisons only: **same regiments**, and **same maintenance manpower** a month (2% of the men for infantry, 4% for cavalry). Never equal gold.
 - Combined arms (game rule): no bonus if any category is 50% or more of the regiments; otherwise +2.5% for every category with at least 10%.
@@ -67,7 +67,7 @@ Win %, men lost per battle (army / heavy cavalry), and in brackets the win % bef
 - **Age 4 to 6 (same regiments):** mixed armies win: 40hi 30li 20hc 10lc at age 4, 40hi 40li 10hc 10lc at 5 and 6. Infantry only is even with 100hc at age 4 and beats it from age 5.
 - **Same maintenance manpower: cavalry to age 4 whatever the power.** A cavalry regiment pays 4% of its men a month but has far fewer men (age 1: 200 against 500), so it is the cheaper regiment and the cavalry side fields more of them. 100hc wins ages 1 to 4 with or without the change; mixes from age 5. Combat power does not touch this.
 - **Wars: pure heavy cavalry still wins every war to age 5.** The age 1 and 2 mixes now win about as many battles as 100hc (47%) but lose more men, so they lose the war. Wars are manpower-limited and gold is not counted.
-- **Hills and woods** cut cavalry further: at age 1 the mix leads, at age 2 100hc is just ahead (57).
+- **Hills and woods** cut cavalry further (table below, rerun 2026-11-10 on the game 1.4.8 reserve rule; the other tables did not move, since at frontage 10 these armies fit in the line and have no reserves).
 - **Artillery** in a 30-regiment army never paid in these battles; 40hi 20li 20hc 20art comes last at every age.
 
 The horse costs of this branch are not in any of this: they limit cavalry through gold and goods, which these comparisons leave out.
@@ -137,12 +137,12 @@ Through age 4 the heavy cavalry loses fewer men than every one of these armies, 
 
 | Age | Best named (avg win %) | 50hi 50li v 100hc | 40hi 40li 20lc v 100hc | 25hi 25li 25hc 25lc v 100hc |
 |---|---|---|---|---|
-| 1 | 45hi 45hc 10lc (57) | 38 | 44 | 49 |
-| 2 | cavalry only (100hc) (57) | 36 | 45 | 48 |
-| 3 | cavalry only (100hc) (67) | 19 | 29 | 38 |
-| 4 | 30hi 30li 20hc 10lc 10art (56) | 50 | 58 | 61 |
-| 5 | heavy infantry only (62) | 88 | 90 | 85 |
-| 6 | 40hi 40li 20hc (65) | 99 | 99 | 97 |
+| 1 | 45hi 45hc 10lc (59) | 39 | 46 | 51 |
+| 2 | 25hi 25li 25hc 25lc (58) | 36 | 46 | 51 |
+| 3 | cavalry only (100hc) (66) | 17 | 30 | 43 |
+| 4 | 45hi 45hc 10lc (56) | 51 | 58 | 60 |
+| 5 | 40hi 40li 20hc (63) | 88 | 92 | 84 |
+| 6 | 40hi 40li 20hc (66) | 99 | 99 | 98 |
 
 ### Wars of attrition (500 wars, 10 years, fight when reinforced, same manpower income): share of wars won by the first army, mod [vanilla]
 
