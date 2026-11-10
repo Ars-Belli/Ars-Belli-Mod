@@ -108,8 +108,6 @@ abm_base_purity = {
 		religion = { has_purity = yes }
 	}
 
-
-
 	monthly_purity = 0.20
 }
 
@@ -220,3 +218,152 @@ REPLACE:high_horde_unity = { #Hordes are already too volatile
 
 # 	fort_maintenance_efficiency = 0.50
 # }
+
+# Ars Belli - governor offices (building_types/abm_governor_offices.txt).
+#
+# No levels: one office per LOCATION (max_levels = 1, and the engine allows only one
+# instance of a building type per location) and unlimited copies per country. The REWARD
+# scales with the NUMBER of completed offices, hence one auto modifier per step, keyed on
+# has_building + count. has_building sees completed buildings only, so starting
+# construction does not hand out a cabinet seat or reform slot early.
+#
+# These blocks do NOT take the governor post. The post is taken by the building's own
+# allow gate, which calls abm_has_unused_local_governor / abm_has_unused_naval_governor -
+# those subtract every office from the cap, vanilla-style, in one place
+# (scripted_triggers/abm_governor_triggers.txt). Reducing num_local_governors here as
+# well would count the same post twice.
+#
+# The ladder stops at 4 because that is as many offices as the posts allow: the local cap
+# tops out at 4 (base 1 + kingdom/empire + local_governor_advance +
+# power_projection_advance_5) and the naval cap at 4 (maritime_advance_age_3,
+# harbor_administration, naval_infrastructure_act, thalassocracy). Add a step if a new
+# source raises either cap.
+
+# Provincial Chancellery: one office held.
+abm_provincial_chancellery_1 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_provincial_chancellery
+		}
+	}
+	government_reform_slots = 1
+}
+
+# Provincial Chancellery: two offices held.
+abm_provincial_chancellery_2 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_provincial_chancellery
+			count >= 2
+		}
+	}
+	government_reform_slots = 1
+}
+
+# Provincial Chancellery: three offices held.
+abm_provincial_chancellery_3 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_provincial_chancellery
+			count >= 3
+		}
+	}
+	government_reform_slots = 1
+}
+
+# Provincial Chancellery: four offices held.
+abm_provincial_chancellery_4 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_provincial_chancellery
+			count >= 4
+		}
+	}
+	government_reform_slots = 1
+}
+
+# Court Secretariat: one office held.
+abm_court_secretariat_1 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_court_secretariat
+		}
+	}
+	government_size = 1
+}
+
+# Court Secretariat: two offices held.
+abm_court_secretariat_2 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_court_secretariat
+			count >= 2
+		}
+	}
+	government_size = 1
+}
+
+# Court Secretariat: three offices held.
+abm_court_secretariat_3 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_court_secretariat
+			count >= 3
+		}
+	}
+	government_size = 1
+}
+
+# Court Secretariat: four offices held.
+abm_court_secretariat_4 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_court_secretariat
+			count >= 4
+		}
+	}
+	government_size = 1
+}
+
+# Admiralty Board: one office held.
+abm_admiralty_board_1 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_admiralty_board
+		}
+	}
+	government_size = 1
+}
+
+# Admiralty Board: two offices held.
+abm_admiralty_board_2 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_admiralty_board
+			count >= 2
+		}
+	}
+	government_size = 1
+}
+
+# Admiralty Board: three offices held.
+abm_admiralty_board_3 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_admiralty_board
+			count >= 3
+		}
+	}
+	government_size = 1
+}
+
+# Admiralty Board: four offices held.
+abm_admiralty_board_4 = {
+	potential_trigger = {
+		any_owned_location = {
+			has_building = building_type:abm_admiralty_board
+			count >= 4
+		}
+	}
+	government_size = 1
+}

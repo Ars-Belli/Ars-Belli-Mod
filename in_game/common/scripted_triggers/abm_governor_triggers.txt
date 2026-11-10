@@ -1,0 +1,80 @@
+﻿# Ars Belli - governor post triggers.
+#
+# "Unused post" = cap minus everything that occupies one. This is vanilla's own idiom
+# (capital_buildings.txt -> local_governor.allow, unique_buildings.txt -> lieutenancy.allow):
+# a building that parks on a governor post without touching the modifier is SUBTRACTED
+# from the cap inside an inline value block, so the check is live and cannot drift.
+# Vanilla subtracts lieutenancy / itinerant_court_seat / kings_manor that way; we add our
+# own buildings to the same list.
+#
+# All three vanilla enforcers and every Ars Belli building call these two triggers, so
+# adding a future post consumer is a single line in one place:
+#   - local governor: REPLACE:local_governor (abm_local_governors.txt),
+#     REPLACE:lieutenancy (abm_lieutenancy.txt), abm_has_unused_local_governor
+#     by abm_provincial_chancellery / abm_court_secretariat
+#   - naval governor: REPLACE:naval_governor (abm_naval_governors.txt),
+#     abm_has_unused_naval_governor by abm_admiralty_board /
+#     abm_provincial_administration / abm_proconsulate
+
+# Local governors compete with lieutenancy / itinerant court seat / king's manor for the
+# same cap (vanilla local_governor.allow), and with our two court offices.
+abm_has_unused_local_governor = {
+	trigger_if = {
+		limit = { has_dlc = "d009_across_the_pillars" }
+		total_building_levels_including_construction:local_governor < {
+			value = effective_num_local_governors
+			subtract = total_building_levels_including_construction:itinerant_court_seat
+			subtract = total_building_levels_including_construction:kings_manor
+			subtract = total_building_levels_including_construction:abm_provincial_chancellery
+			subtract = total_building_levels_including_construction:abm_court_secretariat
+		}
+	}
+	trigger_else = {
+		total_building_levels_including_construction:local_governor < {
+			value = effective_num_local_governors
+			subtract = total_building_levels_including_construction:lieutenancy
+			subtract = total_building_levels_including_construction:itinerant_court_seat
+			subtract = total_building_levels_including_construction:kings_manor
+			subtract = total_building_levels_including_construction:abm_provincial_chancellery
+			subtract = total_building_levels_including_construction:abm_court_secretariat
+		}
+	}
+}
+
+# Naval posts have no lieutenancy-style deductions and no minimum floor, so vanilla's check
+# is a plain "G < modifier:num_naval_governors". The Admiralty Board, the Provincial
+# Administration and the Proconsulate each occupy a post without touching the modifier, so
+# they are subtracted here - exactly the shape above.
+abm_has_unused_naval_governor = {
+	total_building_levels_including_construction:naval_governor < {
+		value = modifier:num_naval_governors
+		subtract = total_building_levels_including_construction:abm_admiralty_board
+		subtract = total_building_levels_including_construction:abm_provincial_administration
+		subtract = total_building_levels_including_construction:abm_proconsulate
+	}
+}
+
+# One copy per AREA per COUNTRY. Vanilla's country_has_no_other_copy_of_building is
+# country-wide, so this mirrors its shape with an area check. The location that already
+# holds the building passes, so upgrading/rebuilding is not blocked.
+#
+# The owner filter matters: areas straddle borders, and another country's copy is none of
+# our business - without it a neighbour holding one anywhere in the area blocked ours.
+# root.owner (= the location being built in) is used instead of scope:actor so the trigger
+# also works from location_potential, where scope:actor does not exist.
+abm_area_has_no_other_copy_of_building = {
+	custom_tooltip = {
+		text = abm_area_has_no_other_copy_of_building_tt
+		OR = {
+			has_building = building_type:$type$
+			area = {
+				NOT = {
+					any_location_in_area = {
+						has_building = building_type:$type$
+						owner ?= root.owner
+					}
+				}
+			}
+		}
+	}
+}

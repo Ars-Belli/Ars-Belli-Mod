@@ -1,0 +1,48 @@
+﻿# Ars Belli - upkeep for the governor-office buildings and the Proconsulate.
+# no_upkeep mirrors vanilla cardinal_maintenance (unsorted_building_inputs.txt:65).
+#
+# One production method per building, so the upkeep slot shows that building's own icon
+# (icon_type = building_type + icon = the building's own key, resolved from
+# gfx/interface/icons/buildings). abm_governor_offices_maintenance is kept only so that
+# saves made before the split still resolve a valid upkeep method - no building uses it.
+
+abm_provincial_chancellery_maintenance = {
+	icon_type = building_type
+	icon = abm_provincial_chancellery
+
+	no_upkeep = yes
+	category = building_maintenance
+}
+
+abm_court_secretariat_maintenance = {
+	icon_type = building_type
+	icon = abm_court_secretariat
+
+	no_upkeep = yes
+	category = building_maintenance
+}
+
+abm_admiralty_board_maintenance = {
+	icon_type = building_type
+	icon = abm_admiralty_board
+
+	no_upkeep = yes
+	category = building_maintenance
+}
+
+abm_proconsulate_maintenance = {
+	icon_type = building_type
+	icon = abm_proconsulate
+
+	no_upkeep = yes
+	category = building_maintenance
+}
+
+# Legacy: pre-split upkeep method, still referenced by buildings in older saves.
+abm_governor_offices_maintenance = {
+	icon_type = building_type
+	icon = abm_provincial_chancellery
+
+	no_upkeep = yes
+	category = building_maintenance
+}
