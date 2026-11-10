@@ -1,6 +1,7 @@
-﻿# Armenia (ARM): restore the united Armenian realm from Cilicia to the highlands.
+﻿# Armenia (ARM) and Cilicia (CIL): restore the united Armenian realm from the
+# Cilician plain to the highlands of the homeland.
 #
-# scope:actor = country (ARM)
+# scope:actor = country (ARM or CIL)
 #
 # The 80% requirement counts owned AND cored locations across four areas.
 # Together they hold 201 locations (map_data/definitions.txt:
@@ -15,7 +16,10 @@ abm_arm_greater_armenia = {
 
 	potential = {
 		scope:actor = {
-			has_or_had_tag = ARM
+			OR = {
+				has_or_had_tag = ARM
+				has_or_had_tag = CIL
+			}
 			NOT = { has_reform = government_reform:abm_arm_greater_armenia_reform }
 		}
 	}
