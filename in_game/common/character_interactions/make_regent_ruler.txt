@@ -41,14 +41,14 @@
 	
 	select_trigger = {
 		looking_for_a = character
-		source = actor
+		source_object = scope:actor.regent
 		target_flag = recipient
 		name = "choose_character"
 		column = {
 			data = name
 		}
 		visible = {
-			is_regent = yes
+			this = scope:actor.regent
 		}
 		enabled = {
 			is_eligible_heir = scope:actor

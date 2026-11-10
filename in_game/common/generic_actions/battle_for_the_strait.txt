@@ -157,7 +157,6 @@ gra_construct_alhambra = {
 	show_message_if = {
 		is_battle_for_the_strait_principal = yes
 	}
-	show_in_gui_list = no
 
 	ai_tick = monthly
 	ai_tick_frequency = 1
@@ -536,6 +535,7 @@ attract_andalusi_refugees = {
 gra_patronize_shadhili_order = {
 	type = situation
 	show_message = no
+	show_in_gui_list = no
 
 	ai_tick = monthly
 	ai_tick_frequency = 12
@@ -564,12 +564,23 @@ gra_patronize_shadhili_order = {
 	}
 
 	potential = {
-		scope:actor = {
-			has_variable = gra_shadhili_invited
-		}
+		country_exists = c:GRA
 		has_dlc = "d009_across_the_pillars"
 		is_situation_active = situation:battle_for_the_strait
 		
+	}
+
+	allow = {
+		custom_tooltip = {
+			text = BFTS_ACTION_REQUIRES_GRANADA
+			scope:actor = c:GRA
+		}
+		custom_tooltip = {
+			text = gra_shadhili_order_unlocked_via_event_tt
+			scope:actor = {
+				has_variable = gra_shadhili_invited
+			}
+		}
 	}
 
 	cooldown = {
@@ -602,6 +613,7 @@ gra_patronize_shadhili_order = {
 				custom_tooltip = {
 					text = stop_patronizing_shadhili_order_tt
 					remove_country_modifier = patronizing_shadhili_order_modifier
+					remove_variable = patronizing_shadhili_order_variable
 				}
 			}
 			else = {
@@ -613,6 +625,7 @@ gra_patronize_shadhili_order = {
 						years = -1
 						desc = until_we_cease_our_patronship_tt
 					}
+					set_variable = patronizing_shadhili_order_variable
 				}
 			}
 		}
@@ -694,15 +707,6 @@ hire_granadan_jinetes = {
 		custom_tooltip = {
 			text = BFTS_ACTION_REQUIRES_CASTILE
 			c:CAS ?= scope:actor
-		}
-		custom_tooltip = {
-			text = unlocked_jinetes_via_decision_tt
-			scope:actor = {
-				OR = {
-					culture = culture:andalusi
-					has_variable = unlock_jinetes_variable
-				}
-			}
 		}
 		c:GRA = {
 			OR = {
@@ -1312,6 +1316,10 @@ cas_force_tribute = {
 			}
 			c:GRA ?= {
 				NOT = { has_truce_with = scope:actor }
+				custom_tooltip = {
+					text = BFTS_ACTION_GRANADA_NOT_RECENTLY_VICTORIOUS
+					NOT = { has_variable = bfts_won_war_against_castile }
+				}
 				at_war = no
 				is_subject = no
 				relative_strength = {
@@ -2116,6 +2124,10 @@ claim_andalusi_inheritance = {
 	potential = {
 		has_dlc = "d009_across_the_pillars"
 		is_situation_active = situation:battle_for_the_strait
+		OR = {
+			scope:actor = c:GRA
+			c:MOR ?= scope:actor
+		}
 	}
 
 	allow = {
@@ -2157,6 +2169,7 @@ claim_andalusi_inheritance = {
 					limit = {
 						NOT = { this = scope:actor }
 						num_locations > 0
+						has_presence_in = area:andalusia_area
 						NOT = { has_truce_with = scope:actor }
 						scope:actor = { can_declare_war_on = prev }
 					}
