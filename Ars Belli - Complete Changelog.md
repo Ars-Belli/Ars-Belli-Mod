@@ -4,8 +4,9 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.4.4.mod.26 | **Supported game version:** 1.4.\*
-**Compiled:** 28 October 2026 (cumulative section verified against the mod files on that date)
+**Mod version:** game.1.4.6.mod.28 | **Supported game version:** 1.4.\*
+**Compiled:** 9 November 2026 (cumulative section verified against the mod files on 31 October
+2026, and the mod.28 changes on 9 November 2026)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -32,9 +33,13 @@ here in full, but these can be easily seen in-game on the world map.
 - [16. Pops, Map and Campaign Setup](#16-pops-map-and-campaign-setup)
 - [17. UI and Quality of Life](#17-ui-and-quality-of-life)
 - [18. Compatibility](#18-compatibility)
+- [19. Focus Picks](#19-focus-picks)
 
 **[Release History (Patchnotes)](#release-history-patchnotes)**
 
+- [game.1.4.6.mod.28](#game146mod28-current)
+- [game.1.4.6.mod.27](#game146mod27)
+- [game.1.4.4.mod.26](#game144mod26)
 - [game.1.3.11.mod.23](#game1311mod23-current)
 - [game.1.3.11.mod.22](#game1311mod22)
 - [game.1.3.11.mod.21](#game1311mod21)
@@ -222,6 +227,30 @@ Alliance, Defensive and Guarantee points.
 **Force Break Union** is in [section 7](#7-personal-unions); **Enforce Peace** is in
 [section 6](#6-enforce-peace).
 
+### Sabotage Fort
+
+- An Espionage focus action, usable only at war. Every soldier pop in one enemy location becomes
+  peasants, leaving its fort with nobody to work it until the location raises new soldiers.
+- Costs 50 spy network and gold worth 3 months of the target's income, at least 25. Capitals are
+  immune.
+- You can use it once every 2 years, and a sabotaged country cannot be targeted again by anyone for
+  2 years.
+
+### Lesser Infiltration
+
+- A Renaissance advance. Lifts the fog of war over a country for 3 months, for 50 spy network.
+
+### Trade Office Rights
+
+- Between players, building a Trade Office needs the location owner's permission, which can be
+  offered, requested and revoked. Revoking leaves existing offices standing. Anything involving the
+  AI works as in the base game.
+- **Expel Trade Offices:** destroy every Trade Office a country holds in your lands and revoke its
+  rights, for one diplomat.
+- **Expel Fondacos, Kontors and Enclaves:** the same for those trade posts, but the victim gets a
+  casus belli against you for 10 years, and your trade income, merchant capacity and trade range
+  drop 10% for 10 years.
+
 ## 5. Changes to Vanilla Diplomatic Actions
 
 ### Opinion and alliances
@@ -288,6 +317,8 @@ These are vanilla's own rank modifiers, rewritten.
 ### Espionage
 
 - Steal Technology costs 100 spy network. [vanilla 75]
+- Steal Technology needs the Industrial Espionage advance from the Espionage focus, and no longer
+  costs the target research progress. You still gain 20% of its progress.
 - Stealing maps generates 1 antagonism. [vanilla 10]
 
 ### Subjects
@@ -377,6 +408,17 @@ Rebuilt from scratch.
   the Deus Vult advance, so every country is granted that advance at game start, with a monthly
   catch-up for nations formed later.
 - **Dissolve the Hanseatic League** costs the full 100 warscore cap. [vanilla 90]
+- **Restore Roman Borders CB:** conquer cost for the attacker −40%. [vanilla −50%]
+
+### Battles and armies
+
+- Land battles end sooner: strength and morale damage are doubled. [vanilla land strength damage
+  0.04, morale damage 0.25]
+- Heavy infantry combat speed 2.25. [vanilla 2] Reserve regiments join the front line more often, so
+  big infantry armies get to use their reserves.
+- Armies and navies move 25% slower.
+- Tribal levies raise 400-man regiments [vanilla 200]: Tribal Cavalry, Tribal Camelry and the
+  Zenata, Sanhaja, Tuareg and Hilali levies. The same men in half as many regiments.
 
 ## 9. Forts and Sieges
 
@@ -442,10 +484,13 @@ Cut hard, to make wars less static.
   menu. It is also unreachable by the AI and by delegation automation.
 - Delisting a unit already on the market still works.
 
-### Mercenary availability and cost nerfed
+### Age-based mercenaries
 
-- Mercenary hire premium 1.0 of the unit's hire cost. [vanilla 0.4]
-- Hiring prisoners costs 1.0 of the unit's hire cost. [vanilla 0.25]
+- Companies use the units of the current age, not whatever the location's owner has researched, and
+  each one shows an age badge.
+
+### Mercenary availability nerfed
+
 - Base mercenary range halved to 250. [vanilla 500]
 - Country rank no longer extends mercenary range: empire −100%, kingdom −50% and duchy −25% cancel
   out the vanilla rank bonuses, and Great Power status no longer grants +50% range.
@@ -495,10 +540,26 @@ Cut hard, to make wars less static.
   +1 government reform slot, +20% maritime presence, and sharply reduced sea, port, road and land
   costs over distance from the capital.
 - **Trade Emporium:** a major government reform for republics and monarchies whose original capital
-  lies in West Africa, East Africa, Southeast Asia or the Middle East. +20% merchant capacity,
-  merchant power and trades per burgher, +50% foreign construction efficiency and sea trade
-  efficiency, +15 court-language importance, −5% crown estate power and −2.5% noble satisfaction, and
+  lies in West Africa, East Africa, North Africa, Southeast Asia or the Middle East. +25% merchant
+  capacity, merchant power, trades per burgher, foreign construction efficiency and sea trade
+  efficiency, +15 court-language importance, −5% crown estate power and −5% noble satisfaction, and
   a push toward capital economy, innovation and naval focus.
+- **Merchant Republic:** Christian countries in western and eastern Europe can always take it. North
+  Africa and the Middle East need 50 or more in four mercantile societal values. It does not lower
+  integration speed.
+- **Chinese Meritocratic Government:** a major reform for Chinese-culture monarchies and republics
+  in East Asia, with +20% merchant capacity, foreign construction efficiency and merchant
+  maintenance efficiency.
+- **Trade Office:** at most 1 level in a town, 2 in a city and 3 in a megalopolis, for each country.
+  [vanilla about 10 in a city]
+- **Fondaco:** any merchant republic except the Hansa, with twice the base game's effects, one level
+  and only one trade post per location.
+- **Hanseatic Kontor:** one level, sharing that one trade post per location with fondacos.
+- **Merchant Enclave:** a trade post with about 75% of a fondaco's effects, for the Chinese
+  Meritocratic Government, Indian Maritime League, Bazaar Republic, Bengaleese Meritocracy and Trade
+  Emporium. It needs fondaco rights.
+- All four trade posts use the expensive building price, 200 to 5,000 gold by age. [vanilla 50 to
+  1,200]
 - **Form China (CHI):** requires 70% of the listed locations across the four Chinese regions, forms
   as an empire-rank monarchy. Dead Middle Kingdom / Red Turban gating removed.
 - New culture buildings and event-only buildings, plus a set of vanilla unique buildings marked
@@ -549,6 +610,12 @@ in-game.
 - **Christiana Pietas** (Catholic) gives +1 heathen tolerance and +0.01 monthly literacy. [vanilla +2
   heathen tolerance and no literacy]
 
+- **Across the Pillars:** Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen. [vanilla
+  10%] Masmuda tribesmen still raise Atlas Infantry and do not switch to the bigger Tribal Cavalry.
+- **Battle for the Strait:** Castile can only **Vassalize Granada** while the AI plays Granada.
+  Portugal and Granada no longer get the event that makes them ally Castile or Morocco or lose
+  prestige and legitimacy.
+
 ## 16. Pops, Map and Campaign Setup
 
 - **India and China** have dozens of playable tags, many with their own advancement sets based on the
@@ -589,6 +656,10 @@ in-game.
   friendly neighbours is a quarter to a third lower, so hostile neighbours can no longer lock a
   country out of an institution. Both follow game 1.4's higher vanilla neighbour spread.
 
+- **Across the Pillars:** Catalonia, Andorra, Mallorca, León, Granada, Navarre and Morocco start with
+  their DLC reforms, laws and privileges if you own the DLC.
+- Hanseatic Kontors start at level 1, and starting Trade Offices fit the level cap.
+
 ### Formables
 
 - **Hindustan** — any Indian-culture country of South Asia, the whole subcontinent at 80% ownership,
@@ -619,6 +690,7 @@ in-game.
 - Foreign country panel shows the viewed country's MP rank, power score, and point usage and limits.
 - Alerts: mutable alert when over the alliance limit; toggleable monthly popup when over the fort
   limit (default ON).
+- Multiplayer events wait 5 months before their first option is taken for you. [vanilla 3]
 - Enforce Peace button on the war view is always visible and explains what is missing when
   unavailable.
 - Vanilla actions that are against the house rules are relabelled in-game (Send Economic Support,
@@ -640,6 +712,8 @@ in-game.
   kept rural, and rich locations with medium-value goods (lumber, fibre, ...) below cheap ones;
   stripes mark locations short of the population the next rank needs (5,000 for a town, 30,000 for
   a city).
+- **Advanced Create Town map mode:** which rural settlements to raise to a town first, by how much of
+  the raw goods a town cuts and what that does to food.
 - The campaign timeline button is removed from the age bar, where it sat under the MP rank and Tier
   List; the timeline is still reachable from the decisions screen.
 - Observers do not get the player-only MP counters, rank label and partner lists.
@@ -647,12 +721,32 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.4.\*** (mod version game.1.4.4.mod.26). Every base-game file the mod
-  replaces is re-based on 1.4.4 (interface, diplomacy, laws, the HRE, buildings, levies, advances and
-  the 1337 start: pops, buildings, roads, diplomacy and country cultures). 1.3 saves load.
+- Supported game version: **1.4.\*** (mod version game.1.4.6.mod.28). Every base-game file the mod
+  replaces is re-based on 1.4.4 and checked against 1.4.6 and the Across the Pillars DLC (interface,
+  diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start: pops, buildings, roads,
+  diplomacy and country cultures). Not yet checked against 1.4.7: where the mod replaces a
+  base-game file, 1.4.7's changes to that file do not apply.
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
+
+## 19. Focus Picks
+
+- From the Age of Renaissance on, each new age lets you pick one of three Economic focuses and one
+  of three Military focuses, in place of the base game's age focus. Each focus unlocks its own
+  advances.
+- Pick in the Focus Picks panel, opened from the notice when an age starts or from the button in the
+  top bar. A pick can be changed until you have researched one of its advances. The AI does not pick.
+
+| Age | Economic | Military |
+|---|---|---|
+| Renaissance | Court, Trade, Influence | Levy, Mercenary, Standing Forces |
+| Discovery | Infrastructure, Exploration, Espionage | Quality, Quantity, Leadership |
+| Reformation | Religion, Expansion, Humanism | Offense, Defense, Balanced |
+| Absolutism | Administration, Commerce, Diplomatic | Maneuver, Logistics, Firepower |
+| Revolutions | Industry, Empire, Innovation | Voluntary Service, Conscription, Insurrection |
+
+Every advance and value, with the history of changes: https://claude.ai/artifact/29vc2LhdPrB3yGwZ2P5MQT
 
 ---
 
@@ -660,7 +754,148 @@ in-game.
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.4.4.mod.26 (current)
+## game.1.4.6.mod.28 (current)
+
+Since game.1.4.6.mod.27 → game.1.4.6.mod.28:
+
+### Patch Compatibility
+
+- built and checked on game 1.4.6. The 1.4.7 update is not in this version yet: where the mod
+  replaces a base-game file, 1.4.7's changes to that file do not apply
+
+### Battles and Armies
+
+- land battles end sooner: strength and morale damage are doubled
+- heavy infantry combat speed 2.25 [vanilla 2]: reserve regiments join the front line more often,
+  so big infantry armies get to use their reserves
+- armies and navies move 25% slower
+- tribal levies raise 400-man regiments [vanilla 200]: Tribal Cavalry, Tribal Camelry and the
+  Zenata, Sanhaja, Tuareg and Hilali levies. The same men in half as many regiments
+
+### Focus Picks
+
+- Levy: **Designated Instruction** gives +15% levy combat efficiency [was +30%]
+
+### War, Wargoals and Peace
+
+- **Restore Roman Borders** CB: conquer cost for the attacker −40% [vanilla −50%]
+
+### National Flavour
+
+- Across the Pillars: Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen [was 3%,
+  vanilla 10%]
+- Across the Pillars: Masmuda tribesmen still raise Atlas Infantry and do not switch to the bigger
+  Tribal Cavalry
+- Battle for the Strait: Castile can only **Vassalize Granada** while the AI plays Granada
+- Battle for the Strait: Portugal and Granada no longer get the event that makes them ally Castile
+  or Morocco or lose prestige and legitimacy
+
+### UI and Quality of Life
+
+- multiplayer events wait 5 months before their first option is taken for you [vanilla 3]
+
+## game.1.4.6.mod.27
+
+Since game.1.4.4.mod.26 → game.1.4.6.mod.27:
+
+### Patch Compatibility
+
+- updated for game 1.4.6 (supports 1.4.\*) and the Across the Pillars DLC
+- start a new game for this version: the focus picks and setup changes do not reach existing saves
+- more edits the 1.4 update had dropped are back, as in mod.25: no release cost on the coalition
+  wargoal, no −10% art chance for Christians, the mod's societal value effects and Occitania's map
+  colour
+
+### Focus Picks
+
+- **Focus Picks replace the age focus:** from the Age of Renaissance on, each new age lets you pick
+  one of three Economic focuses and one of three Military focuses, and each focus unlocks its own
+  advances. Pick in the Focus Picks panel, opened from the notice when an age starts or from the
+  button in the top bar. A pick can be changed until you have researched one of its advances. The AI
+  does not pick
+- Renaissance: Court, Trade, Influence; Levy, Mercenary, Standing Forces
+- Discovery: Infrastructure, Exploration, Espionage; Quality, Quantity, Leadership
+- Reformation: Religion, Expansion, Humanism; Offense, Defense, Balanced
+- Absolutism: Administration, Commerce, Diplomatic; Maneuver, Logistics, Firepower
+- Revolutions: Industry, Empire, Innovation; Voluntary Service, Conscription, Insurrection
+- every advance and value, with the history of changes:
+  https://claude.ai/artifact/29vc2LhdPrB3yGwZ2P5MQT
+
+### New Diplomatic Actions
+
+- **Sabotage Fort** (Espionage focus): at war, turn every soldier pop in an enemy location into
+  peasants, leaving its fort with nobody to work it. Costs 50 spy network and gold worth 3 months of
+  the target's income, at least 25. Capitals are immune. You can use it once every 2 years, and a
+  sabotaged country cannot be targeted again by anyone for 2 years
+- **Lesser Infiltration** (Renaissance advance): lifts the fog of war over a country for 3 months,
+  for 50 spy network
+- **Trade Office Rights:** between players, building a Trade Office now needs the location owner's
+  permission, which can be offered, requested and revoked. Revoking leaves existing offices
+  standing, and anything involving the AI works as before
+- **Expel Trade Offices:** destroy every Trade Office a country holds in your lands and revoke its
+  rights, for one diplomat
+- **Expel Fondacos, Kontors and Enclaves:** the same for those trade posts, but the victim gets a
+  casus belli against you for 10 years, and your trade income, merchant capacity and trade range
+  drop 10% for 10 years
+
+### Changes to Vanilla Diplomatic Actions
+
+- Steal Technology needs the Industrial Espionage advance from the Espionage focus, and no longer
+  costs the target research progress. You still gain 20% of its progress
+- back as in mod.25: hegemons can ally each other, and alliances and guarantees get no bonus from
+  shared rivals
+
+### Mercenaries
+
+- **mercenaries follow the age** (by Stabshot): companies now use the units of the current age, not
+  whatever the location's owner has researched, and each one shows an age badge
+- hiring costs are back to the base game: hire premium 0.4 [was 1.0], hiring prisoners 0.25 [was
+  1.0]
+- Great Power status gives no mercenary range again [the 1.4 update had brought back +50%]
+
+### Buildings and Reforms
+
+- **Trade Office:** at most 1 level in a town, 2 in a city and 3 in a megalopolis, for each country.
+  [vanilla about 10 in a city]
+- **Fondaco:** any merchant republic except the Hansa can build one, not only Italian ones, with
+  twice the base game's effects, but only one level and only one trade post per location
+- **Hanseatic Kontor:** one level, and it shares that one trade post per location with fondacos
+- **Merchant Enclave:** a new trade post with about 75% of a fondaco's effects, for the Chinese
+  Meritocratic Government, Indian Maritime League, Bazaar Republic, Bengaleese Meritocracy and Trade
+  Emporium. It needs fondaco rights
+- Trade Offices, Fondacos, Kontors and Enclaves all use the expensive building price, 200 to 5,000
+  gold by age. [vanilla 50 to 1,200]
+- **Merchant Republic:** Christian countries in western and eastern Europe can always take it. North
+  Africa and the Middle East need 50 or more in four mercantile societal values, and it no longer
+  lowers integration speed
+- **Trade Emporium:** now also in North Africa. +25% merchant capacity, merchant power and trades
+  per burgher [was +20%], +25% foreign construction and sea trade efficiency [was +50%], −5% noble
+  satisfaction [was −2.5%]
+- **Chinese Meritocratic Government** (was Republic): monarchies can take it too, it no longer
+  changes succession, and its trade bonuses are lower: +20% merchant capacity and maintenance
+  efficiency [was +25%], +20% foreign construction [was +50%], smaller selling efficiency
+- advances that give trade land efficiency now give the game 1.4 strength, about half of what they
+  gave in mod.26
+
+### National Flavour
+
+- Zimbabwe's advances are again for Zimbabwe and Mutapa only, not every Shona country
+- Across the Pillars: Sanhaja, Zenata and Tuareg cavalry levies raise 3% of tribesmen. [vanilla 10%]
+
+### Pops, Map and Campaign Setup
+
+- Catalonia, Andorra, Mallorca, León, Granada, Navarre and Morocco start with their Across the
+  Pillars reforms, laws and privileges if you own the DLC
+- 15 tribal countries that started without a succession law now have one
+- Hanseatic Kontors start at level 1, and starting Trade Offices fit the new level cap
+
+### UI and Quality of Life
+
+- **Advanced Create Town map mode:** which rural settlements to raise to a town first, by how much
+  of the raw goods a town cuts and what that does to food
+- map modes now work for observers
+
+## game.1.4.4.mod.26
 
 Since game.1.3.11.mod.25 → game.1.4.4.mod.26:
 

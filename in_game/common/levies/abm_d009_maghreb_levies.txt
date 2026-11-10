@@ -1,0 +1,77 @@
+﻿#####ArsBelliMod#####
+
+# D009 raised these at levy_generic_noble_cavalry_size, 10% of tribesmen (8% since game 1.4.8, levy_maghrebi_tribal_cavalry_size), where every other land levy on tribesmen raises 2%.
+# Nobles are a small class, tribesmen are not: Morocco with Sanhaja Accepted raised 55k men, worth 5 times a country of its population in age 1.
+# TRY_REPLACE: the keys exist only with D009, and without it the entry is skipped with no error. A plain REPLACE would log one.
+# REPLACE resets the entry, so each body is the full D009 one. Keep in step with d009_traditions_levies.txt.
+
+TRY_REPLACE:levy_zenati_horse = {
+	size = abm_levy_maghreb_cavalry_size
+	allowed_pop_type = tribesmen
+
+	allowed_culture = zenati
+
+	country_allow = {
+		has_dlc = "d009_across_the_pillars"
+	}
+
+	unit = a_zenata_cavalry
+}
+
+TRY_REPLACE:levy_sanhaja_camel_cavalry = {
+	size = abm_levy_maghreb_cavalry_size
+	allowed_pop_type = tribesmen
+
+	allowed_culture = sanhaja
+
+	country_allow = {
+		has_dlc = "d009_across_the_pillars"
+	}
+
+	unit = a_sanhaja_camel_cavalry
+}
+
+TRY_REPLACE:levy_saharan_camelry = {
+	size = abm_levy_maghreb_cavalry_size
+	allowed_pop_type = tribesmen
+
+	allowed_culture = tuareg
+	allowed_culture = eastern_amazigh
+
+	country_allow = {
+		has_dlc = "d009_across_the_pillars"
+	}
+
+	unit = a_tuareg_camelry
+}
+
+# The engine raises the strongest unit a pop can reach. At 400 men Tribal Cavalry out-powers Atlas Infantry (1.17 against 0.62, it was 0.58),
+# so this keeps Masmuda tribesmen on foot, as they were. Vanilla body from 06_tribal_levies.txt apart from the NOT.
+REPLACE:levy_tribal_cavalry = {
+	size = levy_generic_infantry_size		#yes, its infantry, as it scales
+
+	allowed_pop_type = tribesmen
+
+	allow = {
+		location = {
+			market = {
+				OR = {
+					is_produced_in_market = goods:horses
+					is_traded_in_market = goods:horses
+				}
+			}
+		}
+		NOT = {
+			AND = {
+				has_dlc = "d009_across_the_pillars"
+				culture = culture:masmuda
+			}
+		}
+	}
+	country_allow = {
+		has_estate_privilege = estate_privilege:tribes_tribal_levies
+		NOT = { government_type = government_type:steppe_horde }
+	}
+
+	unit = a_tribal_cavalry
+}

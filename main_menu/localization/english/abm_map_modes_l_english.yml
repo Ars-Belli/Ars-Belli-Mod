@@ -39,6 +39,32 @@
  ABM_TOWN_MM_FOOD_3_TT: "#G Good town:#! [ROOT.GetLocation.GetRawMaterial.GetName] in [ROOT.GetLocation.GetName] is cheap and only a light [food|e] source.\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a town needs 5,000)"
  ABM_TOWN_MM_FIRST_TT: "#G Create a town in [ROOT.GetLocation.GetName] first:#! its [raw_material|e] is cheap.\n[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a town needs 5,000)"
 
+ mapmode_abm_advanced_create_town_name: "Advanced Create Town"
+ MAPMODE_ABM_ADVANCED_CREATE_TOWN: "#T $mapmode_abm_advanced_create_town_name$#!\n$mapmode_common_start$ which rural settlements to raise to a town first, by how much of the [rgo|e] a town cuts and what that does to the [food|e] of the whole [province|e]. A town halves the [rgo|e] limit and makes less [food|e], so a food [rgo|e] among many is fine and the only one is not.\n\nLight green: a town cuts the [rgo|e] by under 25%: create a town first.\n#G Green#!: the [rgo|e] is cut, but the [province|e] has [food|e] to spare.\n#Y Yellow#!: lower priority: a medium-value [rgo|e] is cut, a food-8 staple would leave under +50% [food|e] surplus, or a small high-value [rgo|e] would be limited for good.\nOrange: the [province|e] would fall under the +25% surplus that gives full growth.\n#R Red#!: [food|e] shortage: the only food [rgo|e] in the [province|e], or it would make less than it eats.\nDark red: a high-value [rgo|e] is cut by 25% or more: keep it rural.\nBlack stripes: under the 5,000 [population|e] a town needs."
+
+ ABM_ADV_TOWN_MM_LEGEND_FIRST: "Create a town first: RGO cut under 25%"
+ ABM_ADV_TOWN_MM_LEGEND_GOOD: "Good: RGO cut, food to spare"
+ ABM_ADV_TOWN_MM_LEGEND_LOWER: "Lower priority"
+ ABM_ADV_TOWN_MM_LEGEND_GROWTH: "Last: costs food growth"
+ ABM_ADV_TOWN_MM_LEGEND_SHORTAGE: "Food shortage"
+ ABM_ADV_TOWN_MM_LEGEND_KEEP_RURAL: "Keep rural: high-value RGO cut"
+ ABM_ADV_TOWN_MM_LEGEND_POPULATION: "Stripes: under 5,000 population"
+ ABM_ADV_TOWN_MM_LEGEND_URBAN: "Already a town or city"
+
+ ABM_ADV_TOWN_MM_FOOD_LINE: "[food|e] surplus of the [province|e]: [ROOT.ScriptValue('abm_adv_town_food_surplus_now')|%0+=] now, [ROOT.ScriptValue('abm_adv_town_food_surplus_after')|%0+=] with a town"
+ ABM_ADV_TOWN_MM_RGO_LINE: "A town cuts the [rgo|e] by [ROOT.ScriptValue('abm_adv_town_rgo_cut')|%0Y]"
+ ABM_ADV_TOWN_MM_POP_LINE: "[population|e]: [ROOT.GetLocation.GetTotalPopulation|Y] (a town needs 5,000)"
+ ABM_ADV_TOWN_MM_KEEP_RURAL_TT: "#R Keep [ROOT.GetLocation.GetName] rural:#! [ROOT.GetLocation.GetRawMaterial.GetName] is a high-value [raw_material|e].\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+ ABM_ADV_TOWN_MM_ONLY_FOOD_TT: "#R Do not urbanise [ROOT.GetLocation.GetName]:#! it is the only food [rgo|e] in its [province|e].\n$ABM_ADV_TOWN_MM_FOOD_LINE$\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+ ABM_ADV_TOWN_MM_ALREADY_SHORT_TT: "#R Food shortage:#! the [province|e] already makes less [food|e] than it eats, and a town in [ROOT.GetLocation.GetName] makes that worse.\n$ABM_ADV_TOWN_MM_FOOD_LINE$\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+ ABM_ADV_TOWN_MM_SHORTAGE_TT: "#R Food shortage:#! a town in [ROOT.GetLocation.GetName] would leave its [province|e] making less [food|e] than it eats.\n$ABM_ADV_TOWN_MM_FOOD_LINE$\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+ ABM_ADV_TOWN_MM_GROWTH_TT: "#Y Make [ROOT.GetLocation.GetName] a town last:#! its [province|e] would fall under the +25% [food|e] surplus that gives full growth.\n$ABM_ADV_TOWN_MM_FOOD_LINE$\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+ ABM_ADV_TOWN_MM_SMALL_RGO_TT: "#Y Lower priority:#! [ROOT.GetLocation.GetRawMaterial.GetName] is a high-value [raw_material|e]. Its [rgo|e] still fits in a town, but a town limits it to half for good.\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+ ABM_ADV_TOWN_MM_MEDIUM_TT: "#Y Lower priority:#! a town cuts this medium-value [rgo|e], and that rarely pays back.\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+ ABM_ADV_TOWN_MM_TIGHT_STAPLE_TT: "#Y Lower priority:#! [ROOT.GetLocation.GetRawMaterial.GetName] is a major staple, and its [province|e] would have under +50% [food|e] surplus left.\n$ABM_ADV_TOWN_MM_FOOD_LINE$\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+ ABM_ADV_TOWN_MM_GOOD_TT: "#G Good town:#! a town cuts the [rgo|e] of [ROOT.GetLocation.GetName], but its [province|e] has [food|e] to spare.\n$ABM_ADV_TOWN_MM_FOOD_LINE$\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+ ABM_ADV_TOWN_MM_FIRST_TT: "#G Create a town in [ROOT.GetLocation.GetName] first:#! its [rgo|e] already fits in a town, so what the town unlocks pays off.\n$ABM_ADV_TOWN_MM_FOOD_LINE$\n$ABM_ADV_TOWN_MM_RGO_LINE$\n$ABM_ADV_TOWN_MM_POP_LINE$"
+
  mapmode_abm_create_city_name: "Create City"
  MAPMODE_ABM_CREATE_CITY: "#T $mapmode_abm_create_city_name$#!\n$mapmode_common_start$ which towns to raise to a city first. A city keeps the town's [rgo|e] but makes 20% less [food|e] instead of 10%, so the more [food|e] a town makes, the later it should become a city.\n\nLight green: not a food source: create a city first.\n#G Green#!: light food (olives, fruit, game, wool).\n#Y Yellow#!: food-5 staple (fish, millet, legumes).\n#R Red#!: food-8 staple (wheat, rice, maize, potato, livestock): last.\nBlack stripes: under the 30,000 [population|e] a city needs.\nLight blue: already a city."
 

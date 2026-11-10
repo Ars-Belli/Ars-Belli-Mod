@@ -1,0 +1,31 @@
+const path=require('path');
+const R=require('path').resolve(__dirname,'..','..','..','..','..');
+const P=require(R+'/.tools/scripts/battle_sim/paradox.js');
+const dir=path.join(process.env.USERPROFILE,'Documents/Paradox Interactive/Europa Universalis V/save games');
+const file=path.join(dir,process.argv[2]);
+const TAG=process.argv[3]||'MOR';
+const s=P.openSave(file);
+console.log(s.constructor.name,'date',s.date());
+const countries=s.section('countries'), tags=countries.tags;
+const id=Object.keys(tags).find(k=>tags[k]===TAG);
+const c=countries.database[id];
+const cult=s.section('culture_manager').database, rel=null;
+const cn=x=>{const o=cult[x];return o?(o.culture_definition||o.name||o.definition||x):x};
+console.log('tag',TAG,'id',id,'gov',c.government.type,'primary',cn(c.primary_culture),'accepted',JSON.stringify([].concat(c.accepted_cultures||[]).map(cn)),'tolerated',JSON.stringify([].concat(c.tolerated_cultures||[]).map(cn)).slice(0,160));
+const adv=Object.keys(c.researched_advances||{});
+console.log('n advances',adv.length,'levy-ish:',adv.filter(a=>/sanhaja|zenata|hilali|kabyle|masmuda|levy|feudalism|tuareg/.test(a)).join(' '));
+console.log('privileges tribes',[].concat(c.government.implemented_privileges||[]).map(p=>p.object).filter(p=>/tribes|tribal|levy/.test(p)).join(' '));
+console.log('reforms',[].concat(c.government.implemented_reforms||[]).map(p=>p.object).join(' '));
+console.log('estates',JSON.stringify(c.government.estates||'').slice(0,600));
+const locs=s.section('locations').locations, pops=s.section('population').database;
+const owned=[].concat(c.owned_locations||[]);
+console.log('owned',owned.length, c.owned_locations?'':'(no owned_locations key)', 'provinces',JSON.stringify(c.provinces).slice(0,100));
+const by={}; let tot=0;
+for(const l of owned){const L=locs[l]; if(!L) continue; for(const pid of [].concat(L.population?.pops||[])){const p=pops[pid]; if(!p) continue; const k=p.type+'/'+cn(p.culture)+'/'+(p.status||'-'); by[k]=(by[k]||0)+(+p.size||0); tot+=+p.size||0;}}
+const rows=Object.entries(by).map(([k,v])=>[k,+(v).toFixed(2)]).sort((a,b)=>b[1]-a[1]);
+console.log('population (thousands)',tot.toFixed(1)); console.log(rows.slice(0,30).map(r=>r.join(' = ')).join('\n'));
+const sampleL=locs[owned[0]]; console.log('sample loc keys',Object.keys(sampleL).join(' ').slice(0,700));
+const pv=s.section('provinces'); console.log('prov keys',Object.keys(pv).slice(0,6).join(' '));
+const pdb=pv.database||pv; let sum=0, sample=null; const list=[].concat(c.provinces||[]); 
+for(const [k,o] of Object.entries(pdb)){ if(!o||+o.owner!==+id) continue; sample=sample||o; }
+console.log('prov sample',JSON.stringify(sample||{}).slice(0,800));

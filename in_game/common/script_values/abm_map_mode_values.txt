@@ -9,3 +9,136 @@ abm_bailiff_min_tax_base = 8
 # least this tax base has a big RGO that a town would halve, so it drops to lower priority.
 # The ABM_TOWN_MM_* loc quotes this number; change both together.
 abm_town_rich_rgo_tax_base = 15
+
+# Advanced Create Town map mode: what a town does to its RGO and to its province's food (EU5 Location Mechanics, Urbanisation).
+# Location scope. Checked against the location simulator on 759 town candidates (Spain 1448 and 1547, Great Britain 1547).
+# The ABM_ADV_TOWN_MM_* loc quotes these numbers; change both together.
+
+# The surplus of food over consumption that gives a province full food growth.
+abm_adv_town_full_growth_surplus = 0.25
+
+# Under this surplus after the town, a food-8 staple is lower priority.
+abm_adv_town_comfortable_surplus = 0.5
+
+# A town that keeps less than this share of the RGO's workers rarely pays back: 39% do, against 83% to 100% above it.
+abm_adv_town_min_rgo_kept = 0.75
+
+# What the pops of this location's province eat a month: vanilla pop_food_consumption by pop type with the owner's modifiers
+# (estate privileges give -10% to peasants and laborers). Local modifiers are left out.
+abm_province_food_consumption = {
+	value = 0
+	add = {
+		value = province.num_pop_type_in_province:nobles
+		multiply = 20
+		multiply = {
+			value = 1
+			add = owner.modifier:global_nobles_food_consumption
+		}
+	}
+	add = {
+		value = province.num_pop_type_in_province:clergy
+		multiply = 5
+		multiply = {
+			value = 1
+			add = owner.modifier:global_clergy_food_consumption
+		}
+	}
+	add = {
+		value = province.num_pop_type_in_province:soldiers
+		multiply = 5
+		multiply = {
+			value = 1
+			add = owner.modifier:global_soldiers_food_consumption
+		}
+	}
+	add = {
+		value = province.num_pop_type_in_province:burghers
+		multiply = 4
+		multiply = {
+			value = 1
+			add = owner.modifier:global_burghers_food_consumption
+		}
+	}
+	add = {
+		value = province.num_pop_type_in_province:laborers
+		multiply = {
+			value = 1
+			add = owner.modifier:global_laborers_food_consumption
+		}
+	}
+	add = {
+		value = province.num_pop_type_in_province:peasants
+		multiply = {
+			value = 1
+			add = owner.modifier:global_peasants_food_consumption
+		}
+	}
+	add = {
+		value = province.num_pop_type_in_province:slaves
+		multiply = {
+			value = 1
+			add = owner.modifier:global_slaves_food_consumption
+		}
+	}
+	multiply = {
+		value = 1
+		add = owner.modifier:global_pop_food_consumption
+	}
+}
+
+# The share of the RGO's workers a town keeps: it loses the rural +100% size, so about half of max_rgo_workers fit.
+abm_adv_town_rgo_kept = {
+	value = 1
+	if = {
+		limit = { rgo_workers > 0 }
+		multiply = max_rgo_workers
+		multiply = 0.5
+		divide = rgo_workers
+		max = 1
+	}
+}
+
+abm_adv_town_rgo_cut = {
+	value = 1
+	subtract = abm_adv_town_rgo_kept
+}
+
+# Food a town costs the province a month: what its smaller RGO no longer makes, and on the rest the town's -10% and the lost
+# rural +7.5% (0.84 left). 1.25 covers the location's other food, fitted to the simulator.
+abm_adv_town_food_loss = {
+	value = 0
+	if = {
+		limit = { abm_is_food_rgo = yes }
+		add = raw_material_output
+		multiply = raw_material.food_value
+		multiply = 1.25
+		multiply = {
+			value = 1
+			subtract = {
+				value = abm_adv_town_rgo_kept
+				multiply = 0.84
+			}
+		}
+	}
+}
+
+# The province's surplus over consumption: 0.25 is +25%, below 0 it makes less food than it eats.
+abm_adv_town_food_surplus_now = {
+	value = province.province_monthly_food_production
+	if = {
+		limit = { abm_province_food_consumption > 0 }
+		divide = abm_province_food_consumption
+		subtract = 1
+	}
+}
+
+abm_adv_town_food_surplus_after = {
+	value = abm_adv_town_food_surplus_now
+	if = {
+		limit = { abm_province_food_consumption > 0 }
+		subtract = {
+			value = abm_adv_town_food_loss
+			divide = abm_province_food_consumption
+		}
+	}
+}

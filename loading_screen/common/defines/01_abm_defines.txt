@@ -1,4 +1,9 @@
-﻿NDiplomacy = {
+﻿NGame = {
+	# months a multiplayer event waits before its first option is taken. One define for every event; the clock starts when the window is created.
+	EVENT_MP_TIMEOUT_MONTHS = 5 # vanilla 3
+}
+
+NDiplomacy = {
     DEFAULT_WARGOAL_TICKINGWARSCORE_BONUS = 2		# 2 means 1/month, as in vanilla
     WARGOAL_MAX_TICKING_WAR_SCORE = 36 # 25 in vanilla, reduced from 50 because occupations now give double warscore
 
@@ -23,9 +28,29 @@ NUnit = {
 	DEPOSIT_FOOD_FRACTION = 0.5 # vanilla 0.25
 	SUPPLY_DEPOT_FOOD_FRACTION = 0.5 # vanilla 0.1
 	# LEVY_MAINTENANCE_FACTOR = 0.01
+
+	# armies and navies 25% slower. The engine multiplies each regiment's speed by these, so every unit slows alike.
+	ARMY_MOVEMENT_SPEED = 0.675 # vanilla 0.9 (game 1.4.7 and older)
+	NAVY_MOVEMENT_SPEED = 2.64375 # vanilla 3.525 (game 1.4.7 and older)
+	# Game 1.4.8 split these into a daily and an hourly value (the Time Steps game rule); the old names are gone there.
+	ARMY_MOVEMENT_SPEED_DAILY = 0.675 # vanilla 0.9
+	ARMY_MOVEMENT_SPEED_HOURLY = 0.0975 # vanilla 0.13
+	NAVY_MOVEMENT_SPEED_DAILY = 2.64375 # vanilla 3.525
+	NAVY_MOVEMENT_SPEED_HOURLY = 0.375 # vanilla 0.5
 }
 
 NEconomy = {
 	# cap the interest rate on loans offered between countries
 	LOAN_MAX_INTEREST = 0.10 # vanilla 0.25
+}
+
+# Shorter land battles, 2026-11-01 MP playtest: both land damage modifiers doubled, so a big stack still gets to use its reserves.
+NCombat = {
+	LAND_STRENGTH_DAMAGE_MODIFIER = 0.08 # vanilla 0.04 (game 1.4.7 and older)
+	LAND_MORALE_DAMAGE_MODIFIER = 0.5 # vanilla 0.25 (game 1.4.7 and older)
+	# Game 1.4.8 names, daily and hourly (the Time Steps game rule), both doubled like the old ones.
+	LAND_STRENGTH_DAMAGE_MODIFIER_DAILY = 0.08 # vanilla 0.04
+	LAND_STRENGTH_DAMAGE_MODIFIER_HOURLY = 0.32 # vanilla 0.16
+	LAND_MORALE_DAMAGE_MODIFIER_DAILY = 0.5 # vanilla 0.25
+	LAND_MORALE_DAMAGE_MODIFIER_HOURLY = 2.0 # vanilla 1.0
 }

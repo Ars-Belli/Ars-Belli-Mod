@@ -1,0 +1,518 @@
+﻿namespace = flavor_cas_rio_salado
+
+flavor_cas_rio_salado.1 = { #Río Salado Prelude
+	hide_portraits = yes
+	type = country_event
+	title = flavor_cas_rio_salado.1.title
+	desc = flavor_cas_rio_salado.1.desc
+	outcome = neutral
+	historical_info = flavor_cas_rio_salado.1.historical_info
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = CAS
+		from = 1337.1.1
+		to = 1350.1.1
+		monthly_chance = 2
+	}
+
+	illustration_tags = {
+		10 = armed
+		10 = exterior
+	}
+
+	immediate = {
+		c:MOR = {
+			event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		}
+		#event_illustration_estate_background_effect = { background = type:army }
+
+		ruler = {
+			save_scope_as = target_character
+		}
+		c:CAS = {
+			save_scope_as = target_ally
+		}
+	}
+
+	trigger = {
+		religion = religion:catholic
+		has_ruler = yes
+		c:MOR = {
+			owns = location:algeciras
+		}
+		c:POR = {
+			NOR = {
+				is_rival_of = c:CAS
+				is_enemy_of = c:CAS
+			}
+		}
+		NOT = {
+			is_at_war_with = c:POR
+			is_at_war_with = c:MOR
+		}
+	}
+
+	option = {
+		name = flavor_cas_rio_salado.1.a
+		historical_option = yes
+
+		c:MOR = {
+			add_opinion = { target = root modifier = claimed_our_land }
+			trigger_event_non_silently = flavor_cas_rio_salado.2
+		}
+		add_casus_belli =  { type = casus_belli:cb_conquer_province province = location:algeciras.province target = c:MOR }
+		#####ArsBelliMod##### Portugal's ally-or-pay event (.4) removed: forced diplomacy on a third country
+	}
+	option = {
+		name = flavor_cas_rio_salado.1.b
+		
+		add_prestige = prestige_severe_penalty
+		c:MOR = {
+			add_opinion = { target = root modifier = refused_claim }
+		}
+	}
+}
+
+flavor_cas_rio_salado.2 = { #Moroccos response
+	hide_portraits = no
+	type = country_event
+	title = flavor_cas_rio_salado.2.title
+	desc = flavor_cas_rio_salado.2.desc
+	outcome = neutral
+	
+	fire_only_once = yes
+	
+	illustration_tags = {
+		10 = armed
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate } #event_illustration_estate_background_effect = { background = type:army }
+
+		ruler_or_regent = {
+			save_scope_as = target_ruler
+		}
+		save_scope_as = target_ally
+	}
+
+	option = {
+		name = flavor_cas_rio_salado.2.a
+
+		c:CAS = {
+			add_opinion = { target = root modifier = claimed_our_land }
+		}
+		add_casus_belli =  { type = casus_belli:cb_insulted_us target = c:CAS }
+
+		#####ArsBelliMod##### Granada's ally-or-pay event (.3) removed: forced diplomacy on a third country
+	}
+}
+
+flavor_cas_rio_salado.3 = { #Granadas response
+	type = country_event
+	title = flavor_cas_rio_salado_response.34.title
+	desc = flavor_cas_rio_salado_response.34.desc
+	outcome = neutral
+
+	major = yes
+	major_trigger = {
+		OR = {
+			has_or_had_tag = CAS
+			has_or_had_tag = MOR
+		}
+	}
+	
+	illustration_tags = {
+		10 = armed
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+		#event_illustration_estate_background_effect = { background = type:army }
+
+		c:MOR = {
+			save_scope_as = target_ally
+		}
+		c:CAS = {
+			save_scope_as = target_enemy
+		}
+	}
+
+	option = {
+		name = flavor_cas_rio_salado_response.34.a
+
+		ai_will_select = {
+			value = 200
+			add = "opinion(c:MOR)"
+		}
+
+		if = {
+			limit = { is_subject_of = c:CAS }
+			c:CAS = {
+				cancel_subject = root
+				add_casus_belli = {
+					target = root
+					type = casus_belli:cb_conquer_province
+					province = root.capital.province
+				}
+			}
+			if = {
+				limit = {
+					has_dlc = "d009_across_the_pillars"
+					is_situation_active = situation:battle_for_the_strait
+					situation:battle_for_the_strait = {
+						has_variable = influence_over_granada
+						var:influence_over_granada < 0
+					}
+				}
+				reset_influence_over_granada_effect = yes
+			}
+		}
+
+		if = {
+			limit = {
+				NOT = {
+					is_allied_with = { target = c:MOR }
+				}
+			}
+			create_relation = {
+				first = this
+				second = c:MOR
+				type = relation_type:alliance
+			}
+		}
+		else_if = {
+			limit = {
+				is_allied_with = { target = c:MOR }
+			}
+			add_opinion = { target = c:MOR modifier = opinion_diplomatic_move }
+		}
+		if = {
+			limit = {
+				has_dlc = "d009_across_the_pillars"
+				is_situation_active = situation:battle_for_the_strait
+			}
+			change_influence_over_granada_effect = { value = bfts_pull_toward_mor_mid }
+			change_granadan_sovereignty_effect = { value = 5 }
+		}
+		
+	}
+
+	option = {
+		name = flavor_cas_rio_salado_response.34.b
+
+		ai_will_select = {
+			value = 200
+			add = "opinion(c:CAS)"
+		}
+
+		if = {
+			limit = { is_subject_of = c:CAS }
+			add_opinion_mutual_effect = {
+				modifier = gra_maintained_tributary
+				target = c:CAS
+			}
+		}
+
+		if = {
+			limit = {
+				has_dlc = "d009_across_the_pillars"
+				is_situation_active = situation:battle_for_the_strait
+			}
+			change_influence_over_granada_effect = { value = bfts_pull_toward_cas_mid }
+			change_granadan_sovereignty_effect = { value = -10 }
+		}
+		else_if = {
+			limit = { is_subject = no }
+			add_prestige = prestige_extreme_penalty
+			add_legitimacy = legitimacy_extreme_penalty
+		}
+
+	}
+}
+
+flavor_cas_rio_salado.4 = { #Portugals response
+	type = country_event
+	title = flavor_cas_rio_salado_response.34.title
+	desc = flavor_cas_rio_salado_response.34.desc
+	outcome = neutral
+	
+	fire_only_once = yes
+	
+	illustration_tags = {
+		10 = armed
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+
+		c:CAS = {
+			save_scope_as = target_ally
+		}
+		c:MOR = {
+			save_scope_as = target_enemy
+		}
+	}
+
+	option = {
+		name = flavor_cas_rio_salado_response.34.a
+
+		if = {
+			limit = {
+				NOT = {
+					is_allied_with = { target = c:CAS }
+				}
+			}
+			create_relation = {
+				first = this
+				second = c:CAS
+				type = relation_type:alliance
+			}
+		}
+		else_if = {
+			limit = {
+				is_allied_with = { target = c:CAS }
+			}
+			add_opinion = { target = c:CAS modifier = opinion_diplomatic_move }
+		}
+		custom_tooltip = {
+			text = castile_less_likely_to_conquer_portugal_tt
+			c:CAS = {
+				add_area_preference = castile_no_portugal_conquest
+			}
+		}
+	}
+
+	option = {
+		name = flavor_cas_rio_salado_response.34.b
+
+		add_prestige = prestige_extreme_penalty
+		add_legitimacy = legitimacy_extreme_penalty
+
+	}
+}
+
+flavor_cas_rio_salado.5 = { #Battle of Río Salado Morocco driven out of Iberia
+	hide_portraits = yes
+	type = country_event
+	title = flavor_cas_rio_salado.5.title
+	desc = flavor_cas_rio_salado.5.desc
+	outcome = neutral
+	
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = CAS
+		from = 1337.1.1
+		to = 1360.1.1
+		monthly_chance = 100
+	}
+	
+	illustration_tags = {
+		10 = happy
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:nobles_estate background = estate_type:nobles_estate }
+
+		ruler = {
+			save_scope_as = target_ruler
+		}
+	}
+
+	trigger = {
+		has_ruler = yes
+		owns = location:algeciras
+		c:MOR = {
+			NOT = {
+				has_presence_in = region:iberia_region
+			}
+		}
+	}
+
+	option = {
+		name = flavor_cas_rio_salado.5.a
+		historical_option = yes
+
+		add_religious_influence = religious_influence_mild_bonus
+		change_gold_effect = { scale = 3 }
+		set_variable = won_battle_of_rio_salado
+	}
+}
+
+flavor_cas_rio_salado.6 = { #Monastery Guadalupe
+	type = country_event
+	title = flavor_cas_rio_salado.6.title
+	desc = flavor_cas_rio_salado.6.desc
+	outcome = neutral
+	
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = CAS
+		from = 1337.1.1
+		to = 1360.1.1
+		monthly_chance = 100
+	}
+	
+	illustration_tags = {
+		10 = happy
+		10 = exterior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+
+		ruler = {
+			save_scope_as = target_ruler
+		}
+	}
+
+	trigger = {
+		has_ruler = yes
+		owns = location:guadalupe
+		custom_tooltip = {
+			text = variable_won_battle_of_rio_salado_tt
+			has_variable = won_battle_of_rio_salado
+		}
+	}
+
+	option = {
+		name = flavor_cas_rio_salado.6.a
+		historical_option = yes
+
+		location:guadalupe = {
+			create_art = {
+				quality = 72
+				type = work_of_art_type:statue
+				key = virgin_of_guadalupe
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_building = building_type:monastery
+					}
+				}
+				construct_building = {
+					building_type = building_type:monastery
+				}
+			}
+		}
+
+		religion:catholic = {
+			create_holy_site = {
+				name = guadalupe_monastery
+				type = christian_holy_site
+				importance = 2
+				location = location:guadalupe
+				religions = { religion:catholic }
+			}
+		}
+	}
+
+	option = {
+		name = flavor_cas_rio_salado.6.b
+
+		add_prestige = prestige_mild_penalty
+	}
+}
+
+flavor_cas_rio_salado.7 = { #Monastery Tordesillas
+	hide_portraits = yes
+	type = country_event
+	title = flavor_cas_rio_salado.7.title
+	desc = flavor_cas_rio_salado.7.desc
+	outcome = neutral
+	
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = CAS
+		from = 1337.1.1
+		to = 1360.1.1
+		monthly_chance = 20
+	}
+	
+	illustration_tags = {
+		10 = happy
+		10 = interior
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+
+		ruler = {
+			save_scope_as = target_ruler
+		}
+	}
+
+	trigger = {
+		has_ruler = yes
+		owns = location:valladolid
+		custom_tooltip = {
+			text = variable_won_battle_of_rio_salado_tt
+			has_variable = won_battle_of_rio_salado
+		}
+	}
+
+	option = {
+		name = flavor_cas_rio_salado.7.a
+		historical_option = yes
+
+		location:valladolid = {
+			create_art = {
+				quality = 78
+				type = work_of_art_type:monument
+				key = palace_monastery_of_santa_clara
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_building = building_type:monastery
+					}
+				}
+				construct_building = {
+					building_type = building_type:monastery
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				has_dlc = "d009_across_the_pillars"
+				religion = {
+					any_religious_order_in_religion = {
+						any_location_in_religious_order = { this = location:assisi }
+					}
+				}
+			}
+			religion = {
+				random_religious_order_in_religion = {
+					limit = {
+						any_location_in_religious_order = { this = location:assisi }
+					}
+					save_scope_as = target_order
+				}
+				every_religious_order_in_religion = {
+					limit = {
+						any_location_in_religious_order = { this = location:assisi }
+					}
+					change_religious_order_zeal = religious_order_mild_bonus
+				}
+			}
+			if = {
+				limit = { exists = scope:target_order }
+				location:valladolid = {
+					attach_to_religious_order = scope:target_order
+				}
+			}
+		}
+	}
+
+	option = {
+		name = flavor_cas_rio_salado.7.b
+
+		add_prestige = prestige_mild_penalty
+	}
+}

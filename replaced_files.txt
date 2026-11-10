@@ -16,9 +16,15 @@ in_game/gui/panels/organization/union.gui
 in_game/gui/panels/right_panel/right_panel.gui
 in_game/gui/select_war_to_intervene.gui
 in_game/gui/sell_location_action_view.gui
+in_game/gui/regiments_overview.gui # mercenary age badge (zero naval stat marker -> abm_age_badge_N)
+in_game/gui/setup_mercenary_requirements.gui # same badge on the mercenary contract window
+in_game/gui/shared/combat_tooltips.gui # same badge in the unit tooltips
 
 # in_game/common
 in_game/common/advances/3_fort_level.txt
+in_game/common/advances/4_choices_adm.txt # emptied - focus picks moved to abm_focus_picks_*.txt
+in_game/common/advances/4_choices_dip.txt # emptied - focus picks moved to abm_focus_picks_*.txt
+in_game/common/advances/4_choices_mil.txt # emptied - focus picks moved to abm_focus_picks_*.txt
 in_game/common/advances/colonial_nations.txt
 in_game/common/advances/country_ILK.txt
 in_game/common/advances/country_chg.txt # lower-case since 1.4.4 (was country_CHG.txt; a case-only mismatch no longer overrides vanilla)
@@ -37,6 +43,7 @@ in_game/common/casus_belli/unify_china.txt
 in_game/common/country_interactions/break_others_alliance.txt
 in_game/common/country_interactions/give_subject_location_to_other_subject.txt
 in_game/common/country_interactions/sell_work_of_art.txt
+in_game/common/country_interactions/steal_technology.txt # allow gated on abm_industrial_espionage (Espionage focus pick); target loses no research progress
 in_game/common/country_interactions/transfer_subject.txt
 in_game/common/character_interactions/make_regent_ruler.txt # removed lordship_of_ireland_regency check (Lordship of Ireland IO removed)
 in_game/common/cabinet_actions/reform_taxation_system.txt # disabled - gated on removed crisis_of_the_chinese_dynasty disaster
@@ -49,6 +56,7 @@ in_game/common/disasters/dissolution_of_delhi.txt
 in_game/common/generic_action_ai_lists/crisis_of_the_chinese_dynasty_list.txt
 in_game/common/generic_action_ai_lists/decline_of_majapahit_list.txt
 in_game/common/generic_action_ai_lists/lordship_of_ireland.txt
+in_game/common/generic_actions/battle_for_the_strait.txt # copy of dlc/D009_across_the_pillars/in_game/common/generic_actions/; vassalize_granada allow needs an AI Granada, re-sync from the DLC
 in_game/common/generic_actions/make_unit_available_for_hire.txt
 in_game/common/generic_actions/muslim.txt # holds only call_jihad; ABM 100-year global cooldown
 in_game/common/generic_actions/red_turban_rebellions.txt
@@ -87,12 +95,17 @@ in_game/common/scripted_relations/sow_discontent.txt
 in_game/common/situations/fall_of_delhi.txt
 in_game/common/situations/red_turban_rebellions.txt
 in_game/common/situations/rise_of_timur.txt
+ #1.4.6: in_game/common/levies/abm_d009_maghreb_levies.txt also holds REPLACE:levy_tribal_cavalry, a copy from 06_tribal_levies.txt with a NOT added to allow; re-sync the rest
+ #1.4.6: in_game/common/unit_categories/abm_army_heavy_infantry.txt holds REPLACE:army_heavy_infantry, a copy of 01_army_heavy_infantry.txt with combat_speed 2.25; re-sync the rest
+ #1.4.6: in_game/common/levies/abm_d009_maghreb_levies.txt holds TRY_REPLACE: copies of levy_zenati_horse, levy_sanhaja_camel_cavalry and levy_saharan_camelry from dlc/D009_across_the_pillars/in_game/common/levies/d009_traditions_levies.txt; only size differs, re-sync the rest
+ #1.4: in_game/common/unit_types/abm_tech_line_no_mercenaries.txt holds REPLACE: copies of the 34 tech-line land units from 2_unlocked_through_tech.txt with the stats of 00_age_templates_land.txt written out; abm_mercenary_unit_types.txt repeats them as a_abm_merc_* (pool weights included). Re-sync both when vanilla changes those units or templates
  #1.4: in_game/common/town_setups/00_default.txt is NO LONGER a full-file replacement - ABM's town_setup changes moved to in_game/common/town_setups/abm_town_setups.txt as REPLACE:<name> entries
 in_game/common/age/00_default.txt
 
 # in_game/events (same-name full-file replacements; reapply Ars Belli flavor/edits on vanilla update)
 in_game/events/DHE/flavor_DLH.txt
 in_game/events/DHE/flavor_ayu.txt
+in_game/events/DHE/flavor_cas_rio_salado.txt # 2026-11-01: only the calls to .3 and .4 removed, see the #####ArsBelliMod##### comments
 in_game/events/DHE/flavor_chi_mon.txt
 in_game/events/DHE/flavor_chi_por.txt
 in_game/events/DHE/flavor_chi_treasure_expedition.txt
@@ -104,6 +117,7 @@ in_game/events/disaster/death_of_hayan_wuruk.txt
 in_game/events/disaster/decline_of_majapahit.txt
 in_game/events/disaster/decline_of_mali.txt
 in_game/events/disaster/dissolution_of_delhi.txt
+in_game/events/ages.txt # GENERATED focus-pick events (.tools/scripts/focus_picks); vanilla adm/dip/mil pick removed
 in_game/events/imperial_examination_events.txt
 in_game/events/situations/fall_of_delhi.txt
 in_game/events/situations/red_turban_rebellions.txt
