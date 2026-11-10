@@ -467,3 +467,37 @@ INJECT:ligurian_communal_councils = {
 	global_max_literacy = 5 
 	global_burghers_max_literacy = -5
 }
+
+REPLACE:tws_ensure_loyal_families = {
+	age = age_2_renaissance
+	icon = tws_ensure_loyal_families
+
+	potential = {
+		has_or_had_tag = TWS
+	}
+
+	monthly_devotion = 0.1
+	monthly_legitimacy = 0.1
+	monthly_republican_tradition = 0.1
+	
+	global_manpower_modifier = 0.15
+
+	requires = coastal_fort_advance
+}
+
+REPLACE:sic_sicilian_silk = {
+	age = age_3_discovery
+	icon = fla_cloth
+
+	potential = {
+		OR = {
+			culture = culture:sicilian
+			culture = { merged_culture_group_contains_culture = culture:sicilian }
+		}
+	}
+
+	global_population_growth = 0.0002
+	global_silk_output_modifier = 0.2
+
+	requires = rgo_size_advance_discovery
+}

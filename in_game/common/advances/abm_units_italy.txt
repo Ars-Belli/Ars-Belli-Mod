@@ -152,6 +152,12 @@ abm_italian_balestrieri_stradioti = {
 
 	potential = {
 		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:tuscan
+			has_accepted_culture = culture:tuscan
+			culture = culture:piedmontese
+			has_accepted_culture = culture:piedmontese
+		}
 	}
 
 	requires = gunpowder_advance
@@ -167,6 +173,12 @@ abm_italian_late_balestrieri_stradioti = {
 
 	potential = {
 		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:median
+			has_accepted_culture = culture:median
+			culture = culture:romagnol
+			has_accepted_culture = culture:romagnol
+		}
 	}
 
 	requires = unlock_early_arquebusiers_advance
@@ -182,6 +194,12 @@ abm_italian_archibugieri_cappelletti = {
 
 	potential = {
 		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:emilian
+			has_accepted_culture = culture:emilian
+			culture = culture:sicilian
+			has_accepted_culture = culture:sicilian
+		}
 	}
 
 	requires = unlock_arquebusiers_advance
@@ -197,9 +215,66 @@ abm_italian_corazze = {
 
 	potential = {
 		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:neapolitan
+			has_accepted_culture = culture:neapolitan
+		}
 	}
 
 	requires = unlock_musketeers_advance
 
 	unlock_unit = a_abm_corazze
+}
+abm_italian_corazzieri = {
+	content_priority = 900
+	age = age_5_absolutism
+	icon = glorious_arms
+
+	potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:tuscan
+			has_accepted_culture = culture:tuscan
+		}
+	}
+
+	requires = unlock_gallop_cavalry_advance
+
+	unlock_unit = a_abm_italian_corazzieri
+}
+
+abm_italian_bersaglieri = {
+	content_priority = 900
+	age = age_6_revolutions
+	icon = drill_army_advance
+
+	potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:lombard
+			has_accepted_culture = culture:lombard
+		}
+	}
+
+	requires = unlock_fusiliers_advance
+
+	unlock_unit = a_abm_bersaglieri
+}
+
+abm_italian_carabinieri = {
+	content_priority = 900
+	age = age_6_revolutions
+	icon = glorious_arms
+
+	potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:lombard
+			has_accepted_culture = culture:lombard
+		}
+	}
+
+	requires = unlock_cuirassiers_advance
+
+	unlock_unit = a_abm_italian_carabinieri
 }

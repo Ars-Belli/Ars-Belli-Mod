@@ -1,4 +1,50 @@
-﻿
+﻿ITA_f = {
+	level = 3
+	required_locations_fraction = 0.75
+	rule = plausible
+
+	potential = {
+		culture = { has_culture_group = culture_group:italian_group }
+	}
+
+	allow = {
+		OR = {
+			AND = {
+				owns = location:milano
+				owns = location:florence
+				owns = location:naples
+			}
+			custom_tooltip = {
+				text = gag_guelphs_winner_may_form_italy_without_location_requirements_tt
+				has_variable = gag_guelphs_winner_may_form_italy_without_location_requirements
+			}
+		}
+		NOT = {
+			any_owned_location = {
+				region = region:italy_region
+				NOT = { is_core_of = root }
+			}
+		}
+	}
+	
+	name = ITA
+	flag = ITA
+	adjective = ITA_ADJ
+	tag = ITA
+	color = map_ITA
+
+	regions = {
+		italy_region
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+
 ABLOM_f = { # Lombardia
 	level = 2
 	required_locations_fraction = 0.60
@@ -7,11 +53,32 @@ ABLOM_f = { # Lombardia
 	potential = {
 		capital = { region = region:italy_region }
 		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:lombard
+			culture = culture:emilian
+		}
 	}
 
 	allow = {
-		capital = { region = region:italy_region }
-		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			capital = { area = area:lombardy_area }
+			capital = { area = area:emilia_area }
+		}
+		OR = {
+			culture = culture:lombard
+			culture = culture:emilian
+		}
+		NOT = {
+			any_owned_location = {
+				OR = {
+					area = area:lombardy_area
+					area = area:piemonte_area
+					area = area:emilia_area
+					area = area:liguria_area
+				}
+				NOT = { is_core_of = root }
+			}
+		}
 	}
 
 	name = ABLOM
@@ -31,6 +98,180 @@ ABLOM_f = { # Lombardia
 			limit = { country_rank_level < 3 }
 			set_country_rank = country_rank:rank_kingdom
 		}
+	}
+}
+
+REPLACE:DAL_f = {
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		OR = {
+			culture = culture:dalmatian
+			culture = culture:croatian
+		}
+		OR = {
+			capital = { area = area:croatia_area }
+			capital = { area = area:veneto_area }
+		}
+	}
+	allow = {
+		owns = location:dubrovnik
+		owns = location:venice
+		OR = {
+			capital = { area = area:croatia_area }
+			capital = { area = area:veneto_area }
+		}
+		NOT = {
+			any_owned_location = {
+				area = area:croatia_area
+				NOT = { is_core_of = root }
+			}
+		}
+	}
+
+	name = DAL
+	flag = DAL	
+	adjective = DAL_ADJ
+	tag = DAL
+	color = map_DAL
+
+	areas = {
+		croatia_area
+	}
+
+	form_effect = {
+	}
+}
+
+REPLACE:SAR_piedmont_f = { 
+
+	level = 2
+	required_locations_fraction = 0.85
+	rule = historical
+
+	capital_required = no
+
+	potential = {
+		capital = { region = region:italy_region }
+		culture = { has_culture_group = culture_group:italian_group }
+		OR = {
+			culture = culture:piedmontese
+			culture = culture:ligurian
+		}
+	}
+
+	allow = {
+		OR = {
+			capital = { area = area:liguria_area }
+			capital = { area = area:piemonte_area }
+		}
+		OR = {
+			culture = culture:piedmontese
+			culture = culture:ligurian
+		}
+		NOT = {
+			any_owned_location = {
+				OR = {
+					area = area:sardinia_area
+					area = area:piemonte_area
+				}
+				NOT = { is_core_of = root }
+			}
+		}
+	}
+	
+	name = SAR_piedmont
+	flag = SAR_piedmont
+	adjective = SAR_piedmont_ADJ
+	tag = SRP
+	color = map_sardinia
+	
+	areas = {
+		sardinia_area
+		piemonte_area
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 3 }
+			set_country_rank = country_rank:rank_kingdom
+		}
+	}
+}
+
+TWS_f = {
+	level = 2
+	required_locations_fraction = 0.8
+	rule = historical
+	content_priority = 800
+	potential = {
+		# not = { tag = ITA }
+		OR = {
+			culture = culture:sicilian
+			culture = culture:neapolitan
+		}
+	}
+	allow = {
+		owns = location:naples
+		owns = location:palermo
+
+		# 3 Cases
+		trigger_if = {
+			limit = { tag = SIC }
+			OR = {
+				NOT = { country_exists = c:NAP }
+				c:NAP = { NOT = { has_presence_in = region:italy_region } }
+			}
+		}
+		trigger_else_if = {
+			limit = { tag = NAP }
+			OR = {
+				NOT = { country_exists = c:SIC }
+				c:SIC = { NOT = { has_presence_in = region:italy_region } }
+			}
+		}
+		trigger_else = {
+			OR = {
+				NOT = { country_exists = c:NAP }
+				c:NAP = { NOT = { has_presence_in = region:italy_region } }
+			}
+			OR = {
+				NOT = { country_exists = c:SIC }
+				c:SIC = { NOT = { has_presence_in = region:italy_region } }
+			}
+		}
+
+		capital = { region = region:italy_region }
+		
+		NOT = {
+			any_owned_location = {
+				OR = {
+					area = area:sicily_area
+					area = area:campania_area
+					area = area:basilicata_area
+					area = area:apulia_area
+					area = area:abruzzo_area
+				}
+				NOT = { is_core_of = root }
+			}
+		}
+	}
+	
+	name = TWS
+	flag = TWS
+	adjective = TWS_ADJ
+	tag = TWS
+	color = map_TWS
+
+	areas = {
+		basilicata_area
+		apulia_area
+		abruzzo_area
+		campania_area
+		sicily_area
+	}
+	form_effect = {
 	}
 }
 
