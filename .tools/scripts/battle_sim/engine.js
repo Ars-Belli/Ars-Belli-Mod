@@ -13,7 +13,7 @@
 		MIN_STRENGTH: 0.001,       // regiments with less strength (thousands of men) leave the line
 		LINE_EMPTY: 0.01,          // a section counts as empty below this total strength
 		INIT_BASE: 0.6, INIT_EACH: 0.025, INIT_MAX: 0.3, INIT_DAY: 0.03,
-		ENGAGE_W: true, SPEED_SCALE: 0.1, OVERSTACK: 1.25, SIZE_RATIO_MAX: 4, LEVY_IMPACT: 0.75, EXP_RED: 0.5,
+		ENGAGE_W: true, RESERVE_ROOM_ALL: true, SPEED_SCALE: 0.1, OVERSTACK: 1.25, SIZE_RATIO_MAX: 4, LEVY_IMPACT: 0.75, EXP_RED: 0.5,
 		NOT_ENG_STR: 1.1, NOT_ENG_MOR: 1.2, INITIAL_OVERRUN: 10, MORALE_OVERRUN: 2,
 		BOMBARD_CHANCE: 0.2, LAND_MORALE: 3, LEVY_DISCIPLINE: -0.2, RETREAT_STRENGTH_DAMAGE: 0.1,
 		COMBINED_PER_TYPE: 0.025, COMBINED_MIN: 0.1, COMBINED_MAX: 0.5,
@@ -431,18 +431,24 @@
 				for (const i of [0, 1]) {
 					const own = all[i], foe = all[1 - i];
 					const W = Ws[i];
-					let budget = W; // HandleReserves
+					// HandleReserves. A section's score = its room + the enemy's engaged frontage facing it, 0 without room for
+					// the regiment. Room is 1.25 x W minus the frontage of EVERY regiment in the section since game 1.4.8
+					// (RESERVE_ROOM_ALL); up to 1.4.7 only the engaged ones counted, so a section never looked full.
+					// The pick, in every version: centre if it beats both wings, else left if it beats right, else right if
+					// its score is above 0. Equal scores therefore go right, then left, then centre: with the old room rule
+					// nearly all reserves piled into the right wing, with the new one they spread over the three sections.
+					let budget = W;
 					const reserves = own.filter(r => r.section === 'reserve' && canFight(r) && !r.u.aux).sort((a, b) => b.str - a.str);
 					for (const r of reserves) {
 						if (budget <= 0) break;
-						let best = null, bestScore = -Infinity;
-						for (const s of SECTIONS) {
-							const usedEng = own.filter(x => x.section === s && x.engaged && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0);
-							const free = D.OVERSTACK * W - usedEng;
-							if (free < (r.u.f || 1)) continue;
-							const score = foe.filter(x => x.section === MIRROR[s] && x.engaged && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0) + free;
-							if (score > bestScore) { bestScore = score; best = s; }
-						}
+						const score = s => {
+							const used = own.filter(x => x.section === s && canFight(x) && (D.RESERVE_ROOM_ALL || x.engaged)).reduce((t, x) => t + (x.u.f || 1), 0);
+							const free = D.OVERSTACK * W - used;
+							if (free <= 0 || free < (r.u.f || 1)) return 0;
+							return foe.filter(x => x.section === MIRROR[s] && x.engaged && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0) + free;
+						};
+						const sc = score('C'), sl = score('L'), sr = score('R');
+						const best = sc > sl && sc > sr ? 'C' : sl > sr ? 'L' : sr > 0 ? 'R' : null;
 						budget -= (r.u.f || 1);
 						if (best && rng() <= r.u.cs * (1 + r.c.speedMod) * D.SPEED_SCALE) r.section = best;
 					}
@@ -902,7 +908,7 @@
 
 	// 1.3.11 rules, read from eu5.exe 1.3.11 (tick 0x1443e8d20, damage 0x1442e5580) and its defines. A tick is 2 hours, so 'days' are ticks here.
 	// Same flow as 1.4; no REGIMENT_SIZE morale factor; melee from tick 5; initiative's time term uses the phase counter (combat+0x30), not the age.
-	const RULES_13 = { RULES_13: true, DAMAGE_MULT: 0.01, STR_MOD: 0.2, MOR_MOD: 1, DAILY_MORALE: 0.01, DAYS_PER_PHASE: 5, BOMBARD_DAYS: 5, MIN_DAYS: 24, SIZE_RATIO_MAX: 0,
+	const RULES_13 = { RULES_13: true, RESERVE_ROOM_ALL: false, DAMAGE_MULT: 0.01, STR_MOD: 0.2, MOR_MOD: 1, DAILY_MORALE: 0.01, DAYS_PER_PHASE: 5, BOMBARD_DAYS: 5, MIN_DAYS: 24, SIZE_RATIO_MAX: 0,
 		INIT_BASE: 0.1, INIT_EACH: 0.02, INIT_MAX: 0.1, INIT_DAY: 0.01, SPEED_SCALE: 0.05, LEVY_DISCIPLINE: -0.1, MAX_DAYS: 2400 };
 	const api = { RULES_13, D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, drilledExperience, simulateWar, summarizeWars, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) {
