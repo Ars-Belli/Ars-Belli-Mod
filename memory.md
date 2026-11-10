@@ -247,6 +247,9 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - No engine modifier for: unit starting experience (Thorough Training -> monthly_experience_gain), artillery move speed (Limbers -> army_movement_speed 0.05), flat monthly manpower (Guerillas -> max_manpower 1). Stand-ins, verify in game.
 - Modifier/icon validation: modifier keys = `MODIFIER_TYPE_NAME_*` in vanilla `modifier_types_l_english.yml` (engine modifiers have no def file). Icon must be an existing advance icon name.
 
+### 3n-b. Save editing (2026-11-10)
+- A save is changed from inside the game: a local helper mod with script effects built from the save, one decision per step. Method, script commands that worked and the pitfalls: `.claude/skills/save-edit/SKILL.md`. Tools and the first use (1549 campaign, two rounds) as a worked example: `.tools/scripts/save_edit/`.
+
 ### 3o. Battle simulator and army meta (2026-10-30)
 - Simulator `.tools/scripts/battle_sim/` (`sim.js`, `engine.js`). Rules + tables: `EU5 Combat Mechanics (1.4.4).md`, 11b = 1.4, 11c = 1.3.11. Raw results, real battles, one-off checks, commands: `analysis/meta_1.3/`, `analysis/meta_1.4/` (README in each). Quote game version with ANY meta claim, the two differ.
 - Data: `units.json` = 1.4.6, `units_1.3.11.json` = 1.3.11 + mod tag `game.1.3.11.mod.25`. NEVER rebuild `units.json` while the game is on 1.3 (writes 1.3 data under a 1.4 label). 1.3 run = `EU5_UNITS=<units_1.3.11.json>` + `--rules 1.3` (`S.RULES_13`). Sims always use every core at the lowest priority (`engine.js`), game running or not. `EU5_THREADS=n` only caps workers.
