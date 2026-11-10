@@ -145,7 +145,7 @@ abm_pon_border_military_contracts = {
 
 	army_maintenance_efficiency = 0.10
 
-	requires = unlock_baochuan
+	requires = organised_mercenary_payment
 }
 
 abm_pon_young_can_serve = {
@@ -298,25 +298,36 @@ abm_cil_catholicosate_of_sis = {
 		has_or_had_tag = CIL
 	}
 
-	requires = arm_apostolic_church
+	requires = religious_tradition
 
 	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
 	global_pop_food_consumption = -0.10
 }
 
-# Survival by appeasement: tribute and truce with Cairo bought the kingdom
-# decades it could not have won by arms.
-abm_cil_tribute_to_cairo = {
+# Guns and gunners bought from the West: Cilician envoys hired French and
+# Italian masters, and the kingdom's ports made importing bronze cannon and
+# foreign instructors far easier than raising a native artillery corps.
+abm_cil_western_artillery = {
 	age = age_4_reformation
-	icon = diplomatic_training
+	icon = artillery_institution_advance
 
 	potential = {
-		has_or_had_tag = CIL
+		OR = {
+			has_or_had_tag = CIL
+			AND = {
+				OR = {
+					has_reform = government_reform:abm_geo_greater_georgia_reform
+					has_reform = government_reform:abm_arm_greater_armenia_reform
+					has_reform = government_reform:abm_greater_caucasus_reform
+				}
+				has_accepted_culture = culture:armenian_culture
+			}
+		}
 	}
 
-	requires = cunning_diplomacy
+	requires = gunpowder_advance
 
-	antagonism_received_modifier = -0.10
+	army_artillery_power = 0.10
 }
 
 # The last independent Armenian kingdom and the last Christian crown in the
@@ -329,7 +340,7 @@ abm_cil_last_christian_kingdom = {
 		has_or_had_tag = CIL
 	}
 
-	requires = preserver_of_national_identity
+	requires = national_sovereignty
 
 	monthly_prestige = 0.10
 	religious_influence_modifier = 0.10
@@ -346,7 +357,7 @@ abm_cil_ideas_ambition = {
 		has_or_had_tag = CIL
 	}
 
-	requires = a_modern_nation
+	requires = nation_state_advance
 
 	burghers_estate_target_satisfaction = medium_permanent_target_satisfaction
 }
@@ -426,7 +437,7 @@ abm_cyp_commandaria_wine = {
 		has_or_had_tag = CYP
 	}
 
-	requires = crt_the_malvasia_wine_export_advance
+	requires = coastal_trade_routes_advance
 
 	# production_efficiency = 0.1
 	global_production_efficiency = medium_production_efficiency_bonus
@@ -453,7 +464,7 @@ abm_cyp_cypriot_fortifications = {
 		has_or_had_tag = CYP
 	}
 
-	requires = fortified_towns
+	requires = supply_depot_advance_age_3_discovery
 
 	# defensiveness = 0.25
 	global_defensive = 0.25
@@ -593,7 +604,7 @@ abm_kar_karamanid_architecture = {
 		has_or_had_tag = KAR
 	}
 
-	requires = fortified_towns
+	requires = supply_depot_advance_age_3_discovery
 
 	# development_cost = -0.1
 	global_monthly_prosperity = 0.001
@@ -606,7 +617,7 @@ abm_kar_home_of_the_whirling_dervishes = {
 		has_or_had_tag = KAR
 	}
 
-	requires = church_councils
+	requires = clergy_rights_laws_advance
 
 	# religious_unity = 0.2
 	clergy_estate_target_satisfaction = medium_permanent_target_satisfaction
@@ -707,7 +718,7 @@ abm_cnd_ismail_bey_complex = {
 		has_or_had_tag = CND
 	}
 
-	requires = fortified_towns
+	requires = supply_depot_advance_age_3_discovery
 
 	# development_cost = -0.1
 	global_monthly_prosperity = 0.001
@@ -933,7 +944,7 @@ abm_anatolian_beyliks_anatolian_architecture = {
 		}
 	}
 
-	requires = fortified_towns
+	requires = supply_depot_advance_age_3_discovery
 
 	# build_cost = -0.10
 	global_build_buildings_efficiency = 0.10
@@ -1094,7 +1105,7 @@ abm_rum_sultan_al_muazzam = {
 		has_or_had_tag = ABRUM
 	}
 
-	requires = fortified_towns
+	requires = supply_depot_advance_age_3_discovery
 
 	# build_cost = -0.15
 	global_build_buildings_efficiency = 0.15

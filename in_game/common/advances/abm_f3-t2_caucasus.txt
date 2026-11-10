@@ -1,6 +1,10 @@
-﻿REPLACE:geo_legacy_of_saint_george = {
+﻿INJECT:geo_legacy_of_saint_george = {
 	age = age_1_traditions
 	potential = {
+		OR = {
+			has_reform = government_reform:abm_arm_greater_armenia_reform
+			has_reform = government_reform:abm_greater_caucasus_reform
+		}
 		has_or_had_tag = GEO
 	}
 
@@ -123,41 +127,23 @@ REPLACE:arm_land_reclamation = {
 	global_monthly_development = 0.001
 }
 
-REPLACE:cir_horsemen_of_the_steppe = {
-	age = age_2_renaissance
-	potential = {
-		OR = {
-			AND = {
-				has_accepted_culture = culture:circassian_culture
-				culture = { has_culture_group = culture_group:caucasian_group }
-			}
-			culture = culture:circassian_culture
-		}
-	}
-	icon = merchants_and_trade
-	army_light_cavalry_power = 0.10
-	army_light_cavalry_build_cost_modifier = -0.10
+# REPLACE:cir_horsemen_of_the_steppe = {
+# 	age = age_2_renaissance
+# 	potential = {
+# 		OR = {
+# 			AND = {
+# 				has_accepted_culture = culture:circassian_culture
+# 				culture = { has_culture_group = culture_group:caucasian_group }
+# 			}
+# 			culture = culture:circassian_culture
+# 		}
+# 	}
+# 	icon = merchants_and_trade
+# 	army_light_cavalry_power = 0.10
+# 	army_light_cavalry_build_cost_modifier = -0.10
 
-	requires = recruitment_improvements_renaissance
-}
-
-REPLACE:cir_grand_prince_of_circassia = {
-	age = age_3_discovery
-	potential = {
-		OR = {
-			AND = {
-				has_accepted_culture = culture:circassian_culture
-				culture = { has_culture_group = culture_group:caucasian_group }
-			}
-			culture = culture:circassian_culture
-		}
-	}
-	icon = supply_depot_advance_age_3_discovery
-	land_morale_modifier = 0.10
-	ai_weight = { add = 10 }
-
-	requires = paved_road_advance
-}
+# 	requires = recruitment_improvements_renaissance
+# }
 
 
 # Caucasus Ideas - Avaria, Nah, etc
@@ -378,7 +364,7 @@ abm_eastern_influence = {
 		}
 	}
 
-	requires = italian_galleass
+	requires = organised_mercenary_payment
 
 	# army_tradition = 0.5
 	#Auto: monthly_army_tradition = 0.05
@@ -524,6 +510,17 @@ abm_srv_tribesmen_of_the_caucasus = {
 		OR = {
 			has_or_had_tag = SRV
 			has_or_had_tag = TRK
+			AND = {
+				OR = {
+					has_reform = government_reform:abm_geo_greater_georgia_reform
+					has_reform = government_reform:abm_arm_greater_armenia_reform
+					has_reform = government_reform:abm_greater_caucasus_reform
+				}
+				OR = {
+					has_accepted_culture = culture:adhari_culture
+					has_accepted_culture = culture:azeri_culture
+				}
+			}
 		}
 	}
 
@@ -661,15 +658,25 @@ abm_horsemen_of_the_steppe = {
 	age = age_2_renaissance
 	icon = professional_armies_advance
 	potential = {
-		has_or_had_tag = CIR
+		OR = {
+			has_or_had_tag = CIR
+			AND = {
+				OR = {
+					has_reform = government_reform:abm_geo_greater_georgia_reform
+					has_reform = government_reform:abm_arm_greater_armenia_reform
+					has_reform = government_reform:abm_greater_caucasus_reform
+				}
+				has_accepted_culture = culture:circassian_culture
+			}
+		}
 	}
 
 	requires = land_morale_recovery_renaissance_advance
 
 	# cavalry_power = 0.05
 	# cavalry_cost = -0.1
-	army_heavy_cavalry_power=0.10
-	army_heavy_cavalry_build_cost_modifier=-0.10
+	army_heavy_cavalry_power = 0.10
+	army_heavy_cavalry_maintenance_cost_modifier = -0.10
 }
 
 abm_merchants_of_genoa = {
@@ -735,6 +742,7 @@ abm_steppe_diplomats = {
 
 	# diplomats = 1
 	monthly_diplomats = 0.10
+	court_spending_efficiency = 0.10
 }
 
 abm_religious_flexibility = {

@@ -87,3 +87,101 @@ abm_koj_kingdom_of_heaven_reform = {
 
 	years = 2
 }
+
+# Greater Georgia: the united Georgian crown restored over the whole Caucasus.
+abm_geo_greater_georgia_reform = {
+	unique = yes
+
+	potential = {
+		has_unlocked_government_reform_trigger = { type = abm_geo_greater_georgia_reform }
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+
+		global_crown_estate_power = 0.20
+		monthly_legitimacy = 0.10
+		monthly_prestige = 0.10
+	}
+
+	locked = {
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = abm_geo_greater_georgia_reform
+		}
+	}
+
+	years = 2
+}
+
+# Greater Armenia: the Armenian crown restored from Cilicia to the highlands.
+abm_arm_greater_armenia_reform = {
+	unique = yes
+
+	potential = {
+		has_unlocked_government_reform_trigger = { type = abm_arm_greater_armenia_reform }
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+
+		global_estate_power_satisfaction = 0.05
+		global_estate_max_tax = 0.05
+		monthly_prestige = 0.10
+	}
+
+	locked = {
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = abm_arm_greater_armenia_reform
+		}
+	}
+
+	years = 2
+}
+
+# Greater Caucasus: a non-Georgian, non-Armenian Caucasus state crowned over the region.
+abm_greater_caucasus_reform = {
+	unique = yes
+
+	potential = {
+		has_unlocked_government_reform_trigger = { type = abm_greater_caucasus_reform }
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:theocracy
+			government_type = government_type:republic
+		}
+	}
+
+	allow = {
+		has_unlocked_government_reform_trigger = { type = abm_greater_caucasus_reform }
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:theocracy
+			government_type = government_type:republic
+		}
+	}
+
+	country_modifier = {
+		government_reform_slots = 1
+
+		global_crown_estate_power = 0.10
+
+		# One of these applies, per the government type using it.
+		monthly_legitimacy = 0.10
+		monthly_devotion = 0.10
+		monthly_republican_tradition = 0.10
+
+		monthly_prestige = 0.10
+	}
+
+	locked = {
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = abm_greater_caucasus_reform
+		}
+	}
+
+	years = 2
+}
+
