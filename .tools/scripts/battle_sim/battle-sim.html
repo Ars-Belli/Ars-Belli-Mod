@@ -110,13 +110,19 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 .notes p { margin: 0 0 10px; break-inside: avoid; }
 .notes b { color: var(--ink); }
 .err { color: var(--bad); font-size: 13.5px; }
+.check { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.bar .hint { flex: 1 1 320px; max-width: 80ch; }
 </style>
 
 <div class="wrap">
 	<header>
 		<h1>Ars Belli Battle Simulator</h1>
-		<p class="lede">Land battles with the combat rules of Europa Universalis V 1.4.4, read from the game code: dice, initiative, reserves, frontage, every damage factor, morale collapse and stack wipes. Run hundreds of battles for the odds, watch one day by day, and take a single hit apart.</p>
+		<p class="lede">Land battles with the combat rules of Europa Universalis V 1.4.8: dice, initiative, reserves, frontage, every damage factor, morale collapse and stack wipes. Run hundreds of battles for the odds, watch one day by day, and take a single hit apart.</p>
 	</header>
+	<div class="bar">
+		<label class="check" for="hourly"><input type="checkbox" id="hourly"> Hourly time steps</label>
+		<span class="hint">The game's Time Steps rule. Unticked is Daily: one battle round a day. Ticked is Hourly: 12 two-hour steps a day, each one a battle round with its own, smaller numbers. Everything on this page follows the choice.</span>
+	</div>
 	<nav class="tabs" role="tablist" aria-label="Mode">
 		<button type="button" role="tab" id="tab-quick" aria-selected="true">Quick battle</button>
 		<button type="button" role="tab" id="tab-full" aria-selected="false">Full battle</button>
@@ -232,7 +238,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 				<div class="field"><label for="hit-die">Die shown in game (1–10)</label><input id="hit-die" type="number" min="1" max="10" value="5"></div>
 				<div class="field"><label for="hit-flank">Attack from a flank</label><select id="hit-flank"><option value="0">No</option><option value="1">Yes</option></select></div>
 				<div class="field"><label for="hit-eng">Target already engaged</label><select id="hit-eng"><option value="1">Yes</option><option value="0">No</option></select></div>
-				<p class="hint">The code adds the raw die (shown − 1) to 5, plus dice modifiers (commander; terrain and crossings for the attacker), capped at 15.</p>
+				<p class="hint">The game adds the raw die (shown − 1) to 5, plus dice modifiers (commander; terrain and crossings for the attacker), capped at 15.</p>
 			</div>
 			<ul class="factors" id="factors"></ul>
 		</div>
@@ -249,7 +255,8 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	</section>
 
 	<section class="notes" aria-label="How the simulator works">
-		<p><b>A day of battle.</b> The first 3 days are the bombard phase: only artillery in the battle line fires, up to the battle frontage of guns per section, each with a 20% × (1 + bombard efficiency) chance a day. Dice re-roll when it ends. After that, each day reserves move up (chance combat speed × 0.1, a frontage budget of the battle width), regiments not yet engaged try to engage (per section, only as many as fit in the battle frontage minus what is already engaged may roll each day, in order, and a failed roll still uses that slot; the chance is 60% + initiative bonus up to 30% + 3% per day of battle), engaged regiments hit the enemy section facing them (keeping their target while it stays in that section, otherwise a random engaged enemy there, or any enemy if none is engaged), everyone loses 0.03 morale, and losses land at once. Dice re-roll on day 5 and every 4 days after that.</p>
+		<p><b>A day of battle.</b> The first 3 days are the bombard phase: only artillery in the battle line fires, up to the battle frontage of guns per section, each with a 20% × (1 + bombard efficiency) chance a day. Dice re-roll when it ends. After that, each day reserves move up (chance combat speed × 0.1, a frontage budget of the battle width; each goes to the section with the most room plus engaged enemy frontage facing it, and since 1.4.8 a section's room is 1.25 × the frontage minus every regiment already in it, so a full section takes no more), regiments not yet engaged try to engage (per section, only as many as fit in the battle frontage minus what is already engaged may roll each day, in order, and a failed roll still uses that slot; the chance is 60% + initiative bonus up to 30% + 3% per day of battle), engaged regiments hit the enemy section facing them (keeping their target while it stays in that section, otherwise a random engaged enemy there, or any enemy if none is engaged), everyone loses 0.03 morale, and losses land at once. Dice re-roll on day 5 and every 4 days after that.</p>
+		<p><b>Hourly time steps.</b> With the game's Hourly rule a day has 12 two-hour steps and every step is a battle round, with these numbers instead: the bombard phase is the first 4 steps; dice re-roll when it ends (step 5), on step 6 and every 5 steps after that; reserves move up with chance combat speed × 0.05; the chance to engage is 10% + initiative bonus up to 15% (1% a point) + 1% per step into the current 5-step dice phase; everyone loses 0.01 morale a step; a hit is (roll) × 0.01, then × 0.16 for strength and × 1.0 for morale; the minimum battle length is 24 steps (2 days). A step does a third of a daily round's damage, so a day does four times as much and battles end in about a quarter of the days: armies that arrive a few days late can miss them. Days you enter (arrival, days marched) stay days. This mode follows the game's rules and numbers but has not been checked against battles played with hourly steps.</p>
 		<p><b>Damage per hit.</b> (raw die + 5 + dice modifiers, capped at 15) × 0.12, then × 0.04 for strength and × 0.25 for morale; morale × attacker men/max and × attacker size ÷ target size (0.25–4); × (1 + unit power); × flanking ability on flank attacks; × (1 + discipline) ÷ (1 + target discipline); × religion modifier; × combat power; ÷ (1 + tactics gap) when the target has more; × levy factor for a levy hitting a regular; strength × attacker men; × (1 − 0.5 × target experience/100); × target damage taken (cavalry 0.30); × combined arms; secured flanks; × terrain (unit's combat values for the location's topography, vegetation, climate, coast and river); strength/morale damage done and taken; +10% strength and +20% morale damage against a target not yet engaged.</p>
 		<p><b>Ending.</b> At the start, a side with 10 times the enemy's men (levies at their levy factor) wipes it out at once, whatever the morale. During the first 4 days, a side whose battle line has broken (morale at or under 0.05) is wiped out if the enemy has twice its men. From day 5, a side whose battle line is empty loses and retreats, shattered if its average morale is under 0.5; only a 10:1 ratio still wipes it. So the 2:1 wipe mostly hits armies that enter a battle already broken.</p>
 		<p><b>Terrain and movement.</b> Battle frontage 10, minus terrain (mountains 4, hills and wetlands 3, forests 2–4), at least 2; three sections hold 1.25 × that each. Terrain gives the attacker minus dice (mountains 2; hills, plateau, wetlands, narrows, woods, forest, jungle 1), river crossing −1, strait −2, sea landing −1. Marching costs 0.69% of max morale a day (land morale movement cost) and armies cannot recover morale while moving.</p>
@@ -259,7 +266,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		<p><b>Generals.</b> Dice only come from traits (Offensive Planner +1 and others). Skills give the general's army, per point: military +0.1% discipline and +0.5% combat speed; diplomatic +0.2% morale and +1% initiative; administrative +0.1% correct section chance. The side uses the best-rated general's dice.</p>
 		<p><b>Location.</b> Frontage is 10 + terrain + location rank (town −1, city −2, megalopolis −3), at least 2, and then each side multiplies it by (1 + its possible frontage modifier: the general's administrative skill gives +0.1% a point, Absolutism +10%), so the two sides can have different widths. A fort does nothing in a field battle: no dice, no frontage. Units' terrain values (e.g. cavalry −10% in mountains) apply per terrain layer, plus coast or inland and river. No country-wide terrain modifiers exist in 1.4.4.</p>
 		<p><b>Approximated.</b> The order regiments overflow into reserve when a section is full, reinforcements' boxes, the 120-day cap, and the war of attrition (expected losses per battle, one manpower pool per side). Not modelled: naval combat.</p>
-		<p><b>Source.</b> “EU5 Combat Mechanics (1.4.4).md” in the Ars Belli repository; unit stats from the 1.4.4 unit types and Ars Belli’s overrides.</p>
+		<p><b>Source.</b> “EU5 Combat Mechanics (1.4.4).md” in the Ars Belli repository, with the 1.4.8 reserve rule; unit stats from the game 1.4.8 unit types and Ars Belli’s overrides, including the cavalry changes of the version now in testing (combat power 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2 by age). Generic units use the age templates of that data.</p>
 	</section>
 </div>
 
@@ -276,6 +283,10 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 	const pct = x => (100 * x).toFixed(1) + '%';
 	const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 	let mode = 'quick', lastScenario = null;
+	// time steps: the engine's rules switch as a whole; workers get the choice with every job
+	const steps = () => S.D.HOURLY ? 'hourly' : 'daily';
+	const TPD = () => S.D.TICKS_PER_DAY || 1;
+	const stepOf = t => `Day ${Math.ceil(t / TPD())}, step ${(t - 1) % TPD() + 1}`;
 
 	// ---------- tabs
 	function setMode(m) {
@@ -364,7 +375,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 				done: r => { parts.push(r); got++; onProgress && onProgress(got / chunks); if (got === chunks) onDone(S.mergeMC(parts)); },
 				fail: () => { if (failed) return; failed = true; pool.broken = true; runManyLocal(scn, n, onDone, onProgress); },
 			});
-			pool.workers[c % pool.workers.length].postMessage({ id, scn, n: k });
+			pool.workers[c % pool.workers.length].postMessage({ id, scn, n: k, steps: steps() });
 		}
 	}
 	function runManyLocal(scn, n, onDone, onProgress) {
@@ -396,7 +407,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		$('tiles').innerHTML =
 			t('a', 'Attacker wins', pct(m.wins[0] / m.n), `95% range ${r(m.winsCI[0])}<br>wipes out the defender ${pct(m.overrun[1] / m.n)}`) +
 			t('b', 'Defender wins', pct(m.wins[1] / m.n), `95% range ${r(m.winsCI[1])}<br>wipes out the attacker ${pct(m.overrun[0] / m.n)}`) +
-			t('', 'Average length', m.days.toFixed(1) + ' days', `95% range ${r(m.daysCI, x => x.toFixed(1))}<br>${m.draws} undecided`) +
+			t('', 'Average length', m.days.toFixed(1) + ' days', `95% range ${r(m.daysCI, x => x.toFixed(1))}<br>${S.D.HOURLY ? `${Math.round(m.days * TPD())} two-hour steps · ` : ''}${m.draws} undecided`) +
 			t('a', 'Attacker losses', fmtMen(m.losses[0]), `95% range ${r(m.lossesCI[0], fmtMen)}<br>of ${fmtMen(m.start[0])} men`) +
 			t('b', 'Defender losses', fmtMen(m.losses[1]), `95% range ${r(m.lossesCI[1], fmtMen)}<br>of ${fmtMen(m.start[1])} men`);
 		$('ci-note').textContent = `Ranges are 95% confidence intervals for ${m.n} simulated battles: with these inputs the true odds lie in the range 19 times in 20. They shrink by half with 4 times the battles. They do not cover wrong inputs or mechanics the simulator does not model.`;
@@ -480,7 +491,7 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		const x = d => L + (W - L - R) * (days ? d / days : 0), y = v => T + (H - T - B) * (1 - v / top);
 		let g = '';
 		for (let v = 0; v <= top + 1e-9; v += step) g += `<line class="gridline" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${fmt(v, true)}</text>`;
-		const xt = Math.max(1, Math.ceil(days / 6));
+		const unit = xs.unit || 1, xt = Math.max(1, Math.ceil(days / unit / 6)) * unit;
 		for (let d = 0; d <= days; d += xt) g += `<text x="${x(d)}" y="${H - 8}" text-anchor="middle">${xs.tick(d)}</text>`;
 		let paths = '', ends = '';
 		const endY = series.map(s => y(s.pts[days]));
@@ -506,10 +517,12 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		const r = S.simulateScenario(scn);
 		const tl = r.timeline;
 		const who = r.winner < 0 ? 'Nobody won' : `The ${r.winner ? 'defender' : 'attacker'} won`;
-		$('sample-sub').textContent = `${who} after ${r.days} days${r.overrun ? ', wiping out the enemy' : r.shattered ? '; the loser retreats shattered' : ''}. Frontage ${+r.frontages[0].toFixed(2)} for the attacker, ${+r.frontages[1].toFixed(2)} for the defender. Attacker lost ${fmtMen(r.losses[0])} men, defender ${fmtMen(r.losses[1])}. Men counts include armies once they arrive; morale is the average of regiments in the battle line.`;
-		lineChart($('chart-men'), 'Men in the battle', [{ name: 'Attacker', c: '--side-a', pts: tl.map(t => t.men[0]) }, { name: 'Defender', c: '--side-b', pts: tl.map(t => t.men[1]) }], (v, axis) => axis ? (v >= 1 ? v.toFixed(0) + 'K' : Math.round(v * 1000)) : fmtMen(v));
-		lineChart($('chart-mor'), 'Average morale in the line', [{ name: 'Attacker', c: '--side-a', pts: tl.map(t => t.morale[0]) }, { name: 'Defender', c: '--side-b', pts: tl.map(t => t.morale[1]) }], v => Math.round(v * 100) + '%', 1);
-		$('sample-table').innerHTML = `<table><thead><tr><th>Day</th><th>Roll A</th><th>Roll D</th><th>Men A</th><th>Men D</th><th>Morale A</th><th>Morale D</th><th>Line A</th><th>Line D</th><th>Reserve A</th><th>Reserve D</th></tr></thead><tbody>${tl.map(t => `<tr><td>${t.day}${t.day <= 3 && t.day > 0 ? ' (bombard)' : ''}</td><td>${t.dice[0] + 5}</td><td>${t.dice[1] + 5}</td><td>${fmtMen(t.men[0])}</td><td>${fmtMen(t.men[1])}</td><td>${Math.round(t.morale[0] * 100)}%</td><td>${Math.round(t.morale[1] * 100)}%</td><td>${t.front[0]}</td><td>${t.front[1]}</td><td>${t.reserve[0]}</td><td>${t.reserve[1]}</td></tr>`).join('')}</tbody></table>`;
+		const hourly = S.D.HOURLY, bombard = t => t.day > 0 && (hourly ? t.day < S.D.BOMBARD_DAYS : t.day <= S.D.BOMBARD_DAYS);
+		const xs = hourly ? { unit: TPD(), tick: d => d / TPD(), name: d => d ? stepOf(d) : 'Start', aria: 'by two-hour step' } : undefined;
+		$('sample-sub').textContent = `${who} after ${hourly ? `${r.days.toFixed(1)} days (${r.ticks} two-hour steps)` : `${r.days} days`}${r.overrun ? ', wiping out the enemy' : r.shattered ? '; the loser retreats shattered' : ''}. Frontage ${+r.frontages[0].toFixed(2)} for the attacker, ${+r.frontages[1].toFixed(2)} for the defender. Attacker lost ${fmtMen(r.losses[0])} men, defender ${fmtMen(r.losses[1])}. Men counts include armies once they arrive; morale is the average of regiments in the battle line.`;
+		lineChart($('chart-men'), 'Men in the battle', [{ name: 'Attacker', c: '--side-a', pts: tl.map(t => t.men[0]) }, { name: 'Defender', c: '--side-b', pts: tl.map(t => t.men[1]) }], (v, axis) => axis ? (v >= 1 ? v.toFixed(0) + 'K' : Math.round(v * 1000)) : fmtMen(v), 0, xs);
+		lineChart($('chart-mor'), 'Average morale in the line', [{ name: 'Attacker', c: '--side-a', pts: tl.map(t => t.morale[0]) }, { name: 'Defender', c: '--side-b', pts: tl.map(t => t.morale[1]) }], v => Math.round(v * 100) + '%', 1, xs);
+		$('sample-table').innerHTML = `<table><thead><tr><th>${hourly ? 'Day, step' : 'Day'}</th><th>Roll A</th><th>Roll D</th><th>Men A</th><th>Men D</th><th>Morale A</th><th>Morale D</th><th>Line A</th><th>Line D</th><th>Reserve A</th><th>Reserve D</th></tr></thead><tbody>${tl.map(t => `<tr><td>${hourly ? (t.day ? stepOf(t.day).replace('Day ', '').replace(' step ', ' ') : 'Start') : t.day}${bombard(t) ? ' (bombard)' : ''}</td><td>${t.dice[0] + 5}</td><td>${t.dice[1] + 5}</td><td>${fmtMen(t.men[0])}</td><td>${fmtMen(t.men[1])}</td><td>${Math.round(t.morale[0] * 100)}%</td><td>${Math.round(t.morale[1] * 100)}%</td><td>${t.front[0]}</td><td>${t.front[1]}</td><td>${t.reserve[0]}</td><td>${t.reserve[1]}</td></tr>`).join('')}</tbody></table>`;
 	}
 	// hit explorer: options are [label, type, countrySpec, side, levy]
 	let hitOptions = [];
@@ -535,20 +548,21 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		const die = Math.max(1, Math.min(10, parseInt($('hit-die').value, 10) || 5));
 		const dice = die - 1 + ((A.country && A.country.commanderDice) | 0) + (A.side === 0 ? terr.attackerDice : 0);
 		const h = S.hitBreakdown(A.type, B.type, A.country, B.country, { dice, flanking: $('hit-flank').value === '1', targetEngaged: $('hit-eng').value === '1', location: loc, attLevy: A.levy, defLevy: B.levy });
-		const rows = [`<li><span>Roll ${h.roll} (die ${die}${dice - die + 1 ? `, dice ${dice - die + 1 > 0 ? '+' : ''}${dice - die + 1}` : ''}) × 0.12 = base ${h.base.toFixed(2)}</span><span class="v">str ${(h.base * S.D.STR_MOD).toFixed(4)} · mor ${(h.base * S.D.MOR_MOD).toFixed(3)}</span></li>`];
+		const rows = [`<li><span>Roll ${h.roll} (die ${die}${dice - die + 1 ? `, dice ${dice - die + 1 > 0 ? '+' : ''}${dice - die + 1}` : ''}) × ${S.D.DAMAGE_MULT} = base ${h.base.toFixed(2)}</span><span class="v">str ${(h.base * S.D.STR_MOD).toFixed(4)} · mor ${(h.base * S.D.MOR_MOD).toFixed(3)}</span></li>`];
 		for (const [k, x, what] of h.factors) rows.push(`<li class="${x > 1 ? 'up' : 'down'}"><span>${esc(k)}${what !== 'both' ? ` <span class="hint">(${what})</span>` : ''}</span><span class="v">× ${x.toFixed(3)}</span></li>`);
-		rows.push(`<li class="total"><span>One day: ${fmtMen(h.s)} men and ${h.m.toFixed(3)} morale</span><span class="v">${pct(h.s / h.target.maxStr)} of the regiment · ${pct(h.m / h.target.maxMor)} of its morale</span></li>`);
+		rows.push(`<li class="total"><span>One ${S.D.HOURLY ? 'two-hour step' : 'day'}: ${fmtMen(h.s)} men and ${h.m.toFixed(3)} morale</span><span class="v">${pct(h.s / h.target.maxStr)} of the regiment · ${pct(h.m / h.target.maxMor)} of its morale</span></li>`);
 		$('factors').innerHTML = rows.join('');
 	}
 	for (const id of ['hit-a', 'hit-b', 'hit-die', 'hit-flank', 'hit-eng']) $(id).addEventListener('input', renderHit);
 	$('resample').onclick = () => lastScenario && renderSample(lastScenario);
 
+	let rerunWanted = false; // the time steps changed while battles were running: run again when they finish
 	function runScenario(scn, n, progEl, btn) {
 		lastScenario = scn;
 		btn.disabled = true;
 		try { renderSample(scn); } catch (e) { progEl.textContent = e.message; btn.disabled = false; return; }
 		setHitOptions(scn);
-		runMany(scn, n, m => { renderOdds(m); renderCosts(scn, m); progEl.textContent = `${m.n} battles fought.`; btn.disabled = false; }, f => { progEl.textContent = `Fighting… ${Math.round(f * 100)}%`; });
+		runMany(scn, n, m => { renderOdds(m); renderCosts(scn, m); progEl.textContent = `${m.n} battles fought.`; btn.disabled = false; if (rerunWanted) { rerunWanted = false; btn.click(); } }, f => { progEl.textContent = `Fighting… ${Math.round(f * 100)}%`; });
 	}
 	$('q-run').onclick = () => runScenario(quickScenario(), Math.max(50, Math.min(10000, +$('q-runs').value || 500)), $('q-progress'), $('q-run'));
 	$('q-copy').onclick = () => { for (const [, f] of QSCHEMA) for (const [key] of f) $('b-' + key.replace('.', '-')).value = $('a-' + key.replace('.', '-')).value; $('q-run').click(); };
@@ -848,6 +862,17 @@ th { color: var(--muted); font-weight: 600; font-family: var(--font-body); }
 		q.attacker.armies[0].country = 'A'; q.defender.armies[0].country = 'B';
 		q.name = 'From quick battle'; loadScenario(q); setMode('full');
 	};
+
+	// time steps switch: the same battle again under the other rule; the slower panels are cleared, not re-run
+	$('hourly').checked = false;
+	$('hourly').addEventListener('change', () => {
+		S.setTimeSteps($('hourly').checked ? 'hourly' : 'daily');
+		for (const id of ['chart-worth', 'chart-worth-loss', 'worth-table', 'chart-war-army', 'chart-war-mp', 'war-table', 'w-verdict']) $(id).innerHTML = '';
+		$('measure-progress').textContent = `Measure the bonuses again for ${steps()} time steps.`;
+		$('w-progress').textContent = '';
+		const run = $(mode === 'quick' ? 'q-run' : 'f-run');
+		if (run.disabled) rerunWanted = true; else run.click();
+	});
 
 	if (!DB) $('tab-full').disabled = true;
 	setMode('quick');

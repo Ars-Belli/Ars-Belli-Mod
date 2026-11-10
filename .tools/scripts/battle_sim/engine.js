@@ -1,5 +1,6 @@
-// EU5 1.4.4 land battle simulator engine (v3).
-// Mechanics read from eu5.exe 1.4.4; see "EU5 Combat Mechanics (1.4.4).md" in the repo root.
+// EU5 land battle simulator engine (v3), on the rules of game 1.4.8.
+// See "EU5 Combat Mechanics (1.4.4).md" in the repo root. Time steps: daily by default, setTimeSteps('hourly') for the
+// game's hourly rule (12 two-hour steps a day; inside the loop a "day" is then one step).
 // Unit stats come from units.json (build_units.js). Works in the browser (window.BattleSim) and Node.
 (function (root) {
 	'use strict';
@@ -23,7 +24,21 @@
 		// army_reinforce_efficiency divides reinforcement gold AND manpower (the modifier tooltip says so; checked on Spain 1527:
 		// 7 Falconets taking 178.2 men a month each = 1,247 men cost 1,043 manpower = / 1.196 with +20% efficiency).
 		REINFORCE_EFF_MANPOWER: true,
+		HOURLY: false, TICKS_PER_DAY: 1,
 	};
+	// The game's hourly Time Steps rule (1.4.8): its own value for every "_HOURLY" define, per two-hour step. The battle
+	// runs the same steps as a daily battle, with two differences: the bombard phase ends ON step BOMBARD_DAYS (daily:
+	// after that day), and the engage chance grows with the steps since the last dice roll, not with the battle's length.
+	const HOURLY = { HOURLY: true, TICKS_PER_DAY: 12, DAMAGE_MULT: 0.01, STR_MOD: 0.16, MOR_MOD: 1.0, DAILY_MORALE: 0.01, DAYS_PER_PHASE: 5, BOMBARD_DAYS: 5, MIN_DAYS: 24,
+		INIT_BASE: 0.1, INIT_EACH: 0.01, INIT_MAX: 0.15, INIT_DAY: 0.01, SPEED_SCALE: 0.05, MAX_DAYS: 4800 };
+	let DAILY = null;
+	// 'hourly' or 'daily'. Changes the rules in D for every battle after it; day inputs (arrivalDay, retreatDay) stay in days
+	// and results report days (result.ticks has the steps). opts.rotate settings count steps.
+	function setTimeSteps(mode) {
+		if (!DAILY) { DAILY = {}; for (const k of Object.keys(HOURLY)) DAILY[k] = D[k]; }
+		Object.assign(D, mode === 'hourly' ? HOURLY : DAILY);
+		return D.HOURLY ? 'hourly' : 'daily';
+	}
 	const CAT = {
 		li: { name: 'Light infantry', dt: 1.0, sdd: -0.1, mdt: 0.1, i: 5, cs: 3, fl: 1.1, sf: 0.05 },
 		hi: { name: 'Heavy infantry', dt: 1.0, sdd: 0, mdt: 0, i: 1, cs: 2, fl: 1.0, sf: 0.05 },
@@ -46,6 +61,8 @@
 		vegetation: { sparse: [0, 0], grasslands: [0, 0], farmland: [0, 0], woods: [1, -2], forest: [1, -3], jungle: [1, -4] },
 		climate: {},
 	};
+	const AGE_NAMES = ['traditions', 'renaissance', 'discovery', 'reformation', 'absolutism', 'revolutions'];
+	const TEMPLATE_CAT = { li: 'light_infantry', hi: 'heavy_infantry', lc: 'light_cavalry', hc: 'heavy_cavalry', art: 'artillery', aux: 'auxiliary' };
 	const MIRROR = { L: 'R', C: 'C', R: 'L' };
 	const SECTIONS = ['C', 'L', 'R'];       // game order: centre, left, right
 	const FALLBACK = ['C', 'L', 'R', 'reserve'];
@@ -80,6 +97,9 @@
 		const m = /^generic:(li|hi|lc|hc|art|aux):([1-6])$/.exec(type || '');
 		if (!m) throw new Error('unknown unit type ' + type + (DB ? '' : ' (no unit database loaded)'));
 		const c = CAT[m[1]], [p, s] = AGE[m[1]][+m[2] - 1];
+		// with a unit database, the game's (and the mod's) age template of that category: its power, bombard efficiency and the rest
+		const tpl = DB && DB.units && DB.units[`a_age_${m[2]}_${AGE_NAMES[+m[2] - 1]}_${TEMPLATE_CAT[m[1]]}`];
+		if (tpl) return { ...tpl, n: `${c.name} (age ${m[2]})`, hidden: undefined };
 		return { n: `${c.name} (age ${m[2]})`, c: m[1], a: +m[2], levy: 0, p, s, i: c.i, cs: c.cs, f: c.f || 1, fl: c.fl, sf: c.sf, dt: c.dt, sdd: c.sdd, sdt: 0, mdd: c.mdd || 0, mdt: c.mdt, be: 0, bombard: c.bombard || 0, aux: c.aux || 0, ct: c.ct };
 	}
 	function terrainInfo(loc) {
@@ -216,7 +236,7 @@
 		const terr = terrainInfo(scn.location);
 		const sides = scn.sides.map((s, i) => s.armies.map((a, j) => buildArmy(a, i, j, scn.countries)));
 		// side.retreatDay: order a retreat at the end of that day (not before the minimum battle length)
-		const retreatDay = scn.sides.map(s => s.retreatDay != null ? Math.max(D.MIN_DAYS, +s.retreatDay) : null);
+		const retreatDay = scn.sides.map(s => s.retreatDay != null ? Math.max(D.MIN_DAYS, +s.retreatDay * D.TICKS_PER_DAY) : null);
 		// each side's width: the location's frontage x (1 + possible_frontage_modifier of one of its armies; the code's pick
 		// was not decoded, the first army is used)
 		const Ws = [0, 1].map(i => terr.frontage * (1 + ((sides[i][0] || {}).c?.frontageMod || 0)));
@@ -227,7 +247,7 @@
 		let curDay = 0;
 		// arrivalDay 'needed': the army waits next door and comes in (one a day, in list order) once its side has no fighting
 		// regiment left in reserve, so big stacks are fed in as the line needs them instead of draining morale in reserve
-		const arrivedAt = sides.map(s => s.map(a => a.army.arrivalDay === 'needed' ? Infinity : (+a.army.arrivalDay || 0)));
+		const arrivedAt = sides.map(s => s.map(a => a.army.arrivalDay === 'needed' ? Infinity : (+a.army.arrivalDay || 0) * D.TICKS_PER_DAY));
 		const arrived = i => sides[i].filter((a, j) => arrivedAt[i][j] <= curDay);
 		const leadCountry = i => (arrived(i)[0] || sides[i][0]).c;
 		const arrive = (i, day) => {
@@ -258,7 +278,7 @@
 			const shattered = loser >= 0 && overrunSide !== loser && lr.length > 0 && lr.reduce((t, r) => t + r.mor, 0) / lr.length < D.LOW_MORALE;
 			const sum = (i, f) => all[i].filter(r => r.section !== 'absent').reduce((t, r) => t + f(r), 0);
 			return {
-				winner, days: day, overrun: overrunSide != null, shattered, frontage: Ws[0], frontages: Ws, start: startMen,
+				winner, days: day / D.TICKS_PER_DAY, ticks: day, overrun: overrunSide != null, shattered, frontage: Ws[0], frontages: Ws, start: startMen,
 				...(opts.rotate ? {
 					trips: rot.map(R => R ? R.trips : 0),
 					state: sides.map(s => s.map(x => x.regs.filter(r => r.str >= D.MIN_STRENGTH).map(r => ({ s: r.str / r.maxStr, m: r.mor / r.maxMor, sec: r.section })))),
@@ -423,7 +443,7 @@
 			for (const i of [0, 1]) if (rot[i]) (rot[i].cfg.relay ? relayStep : pullOutStep)(i, rot[i], day);
 			arrive(0, day); arrive(1, day);
 			let justEnded = false;
-			if ((D.RULES_13 ? day >= D.BOMBARD_DAYS : day > D.BOMBARD_DAYS) && !bombardOver) { bombardOver = true; justEnded = true; if (D.RULES_13) for (const i of [0, 1]) for (const r of all[i]) r.target = null; }
+			if ((D.RULES_13 || D.HOURLY ? day >= D.BOMBARD_DAYS : day > D.BOMBARD_DAYS) && !bombardOver) { bombardOver = true; justEnded = true; if (D.RULES_13 || D.HOURLY) for (const i of [0, 1]) for (const r of all[i]) r.target = null; }
 			// the counter is compared first and goes up at the end of the tick, so 1.4 re-rolls on day 4 (bombard ends), then 5, 9, 13
 			if (phase >= D.DAYS_PER_PHASE) { phase = 0; roll(); } else if (justEnded) roll();
 			if (!bombardOver) { attackSide(0, true); attackSide(1, true); }
@@ -457,12 +477,12 @@
 						for (const r of own) {
 							if (r.section !== s || r.engaged || !canFight(r) || (r.u.f || 1) > free) continue;
 							free -= (r.u.f || 1);
-							if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * (D.RULES_13 ? phase : day)) r.engaged = true;
+							if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * (D.RULES_13 || D.HOURLY ? phase : day)) r.engaged = true;
 						}
 					}
 					else for (const s of SECTIONS) for (const r of own) { // ENGAGE_W false: the model before 2026-10-31, every regiment in the section rolls
 						if (r.section !== s || r.engaged || !canFight(r)) continue;
-						if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * (D.RULES_13 ? phase : day)) r.engaged = true;
+						if (rng() <= D.INIT_BASE + Math.min(D.INIT_EACH * r.u.i * (1 + r.c.initiativeMod), D.INIT_MAX) + D.INIT_DAY * (D.RULES_13 || D.HOURLY ? phase : day)) r.engaged = true;
 					}
 				}
 				attackSide(0, false); attackSide(1, false);
@@ -910,7 +930,7 @@
 	// Same flow as 1.4; no REGIMENT_SIZE morale factor; melee from tick 5; initiative's time term uses the phase counter (combat+0x30), not the age.
 	const RULES_13 = { RULES_13: true, RESERVE_ROOM_ALL: false, DAMAGE_MULT: 0.01, STR_MOD: 0.2, MOR_MOD: 1, DAILY_MORALE: 0.01, DAYS_PER_PHASE: 5, BOMBARD_DAYS: 5, MIN_DAYS: 24, SIZE_RATIO_MAX: 0,
 		INIT_BASE: 0.1, INIT_EACH: 0.02, INIT_MAX: 0.1, INIT_DAY: 0.01, SPEED_SCALE: 0.05, LEVY_DISCIPLINE: -0.1, MAX_DAYS: 2400 };
-	const api = { RULES_13, D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, drilledExperience, simulateWar, summarizeWars, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
+	const api = { RULES_13, HOURLY, setTimeSteps, D, CAT, CATS, AGE, GENERAL_PER_POINT, wilson, confidence, mergeMC, drilledExperience, simulateWar, summarizeWars, setUnitDB, unitStats, terrainInfo, simulateScenario, monteCarloScenario, hitBreakdown, unitCost, armyCosts, battleCosts, manpowerSurplus, campaign, campaignSteps, combinedArms, defaultSide, simpleScenario, simulate, monteCarlo, levyFactor };
 	if (typeof module !== 'undefined' && module.exports) {
 		// Node: always the lowest priority, so a simulation never takes time from any other program
 		try { const os = require('os'); os.setPriority(os.constants.priority.PRIORITY_LOW); } catch (e) {}
