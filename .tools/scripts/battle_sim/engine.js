@@ -47,7 +47,7 @@
 		climate: {},
 	};
 	const MIRROR = { L: 'R', C: 'C', R: 'L' };
-	const SECTIONS = ['C', 'L', 'R'];       // code order: centre (0x198), left (0xf0), right (0x240)
+	const SECTIONS = ['C', 'L', 'R'];       // game order: centre, left, right
 	const FALLBACK = ['C', 'L', 'R', 'reserve'];
 	let DB = null;
 	const setUnitDB = db => { DB = db; };
@@ -89,7 +89,7 @@
 			return (TERRAIN_FALLBACK[layer] || {})[key] || [0, 0];
 		};
 		const topo = t('topography', loc.topography || 'flatland'), veg = t('vegetation', loc.vegetation || 'farmland'), cli = t('climate', loc.climate || '');
-		// local_frontage_allowed: 10 + terrain + location rank (town -1, city -2, megalopolis -3), at least 2 (0x14247a0d0)
+		// local_frontage_allowed: 10 + terrain + location rank (town -1, city -2, megalopolis -3), at least 2
 		const frontage = loc.frontage != null ? loc.frontage : Math.max(D.MIN_FRONTAGE, D.BASE_FRONTAGE + topo[1] + veg[1] + cli[1] + (+loc.rankFrontage || 0));
 		const crossing = { river: 1, strait: 2, landing: 1 }[loc.crossing] || 0;
 		return { frontage, attackerDice: -(topo[0] + veg[0] + cli[0]) - crossing, keys: [loc.topography, loc.vegetation, loc.climate].filter(Boolean), river: !!loc.river, coastal: !!loc.coastal };
@@ -123,7 +123,7 @@
 	const present = r => r.section !== 'absent' && r.section !== 'routed' && r.section !== 'away';
 	const inLine = r => SECTIONS.includes(r.section);
 	const canFight = r => present(r) && r.str >= D.MIN_STRENGTH && r.mor >= D.COLLAPSE;
-	// overrun "men": every regiment of the side's armies in the battle, levies at their factor (0x143519150)
+	// overrun "men": every regiment of the side's armies in the battle, levies at their factor
 	const sideMen = regs => regs.reduce((t, r) => t + (r.section === 'absent' || r.section === 'away' ? 0 : r.str * (r.levy ? levyFactor(r.c) : 1)), 0);
 
 	// Formation boxes (the army's autobalance, as stored in saves): "balanced" deals regiments out in a snake,
@@ -137,7 +137,7 @@
 			r.box = formation === 'cav_inf_cav' ? ((r.cat === 'lc' || r.cat === 'hc') ? SNAKE2[j++ % 4] : 'C') : SNAKE3[i++ % 6];
 		}
 	}
-	// AddUnit (0x142473ae0): a regiment enters its box while that section holds less than 1.25 x W frontage, else
+	// AddUnit: a regiment enters its box while that section holds less than 1.25 x W frontage, else
 	// reserve. Armies arriving after the start reach their box only with correct_box_chance, else reserve.
 	function deploy(armyRegs, formation, width, sideRegs, late, rng) {
 		const cap = D.OVERSTACK * width;
@@ -151,7 +151,7 @@
 		}
 	}
 
-	// Combined arms (0x142486dd0): regiment COUNT per category over the side's armies (auxiliaries excluded).
+	// Combined arms: regiment COUNT per category over the side's armies (auxiliaries excluded).
 	// If any category is >= combined_arms_max_threshold of the regiments: no bonus at all.
 	// Otherwise every category with >= combined_arms_min_percent_for_bonus adds combined_bonus_per_type.
 	function combinedArms(regs, c) {
@@ -163,7 +163,7 @@
 		return shares.filter(s => s >= c.combinedMin).length * c.combinedPerType;
 	}
 
-	// Damage function 0x142482130: one hit of A on B
+	// Damage function: one hit of A on B
 	function hit(A, B, ctx) {
 		const { dice, flanking, secured, combinedA, terr, breakdown } = ctx;
 		const ua = A.u, ub = B.u, ca = A.c, cb = B.c;
@@ -365,7 +365,7 @@
 			const combinedA = combinedArms(own, leadCountry(i));
 			const d = dice[i] + sideDice(i);
 			for (const sec of SECTIONS) {
-				let budget = Ws[i]; // bombard: up to W frontage of artillery per section (0x142486c70)
+				let budget = Ws[i]; // bombard: up to W frontage of artillery per section
 				for (const A of own) {
 					if (A.section !== sec || !canFight(A)) continue;
 					if (bombard) {
@@ -382,9 +382,9 @@
 						continue;
 					}
 					if (!A.engaged) continue;
-					// melee target (0x142481230): facing section, keep target; else centre, left, right, reserve
+					// melee target: facing section, keep target; else centre, left, right, reserve
 					if (D.ENGAGE_W) {
-						// 1.4.6 0x142481060, 1.3.11 0x1443e3ba0 + 0x1443e5170: keep the target; else an ENGAGED enemy facing; else any enemy facing; a section with nobody
+						// keep the target; else an ENGAGED enemy facing; else any enemy facing; a section with nobody
 						// facing falls back to centre, left, right, reserve, and there only an engaged regiment can be picked
 						const all = t => foe.filter(x => x.section === t && canFight(x));
 						let t13 = MIRROR[sec], list = all(t13);
@@ -424,7 +424,7 @@
 			arrive(0, day); arrive(1, day);
 			let justEnded = false;
 			if ((D.RULES_13 ? day >= D.BOMBARD_DAYS : day > D.BOMBARD_DAYS) && !bombardOver) { bombardOver = true; justEnded = true; if (D.RULES_13) for (const i of [0, 1]) for (const r of all[i]) r.target = null; }
-			// 1.4.6 0x1424a7620, 1.3.11 0x1443e8d20: the counter is compared first and goes up at the end of the tick, so 1.4 re-rolls on day 4 (bombard ends), then 5, 9, 13
+			// the counter is compared first and goes up at the end of the tick, so 1.4 re-rolls on day 4 (bombard ends), then 5, 9, 13
 			if (phase >= D.DAYS_PER_PHASE) { phase = 0; roll(); } else if (justEnded) roll();
 			if (!bombardOver) { attackSide(0, true); attackSide(1, true); }
 			else {
@@ -452,7 +452,7 @@
 						budget -= (r.u.f || 1);
 						if (best && rng() <= r.u.cs * (1 + r.c.speedMod) * D.SPEED_SCALE) r.section = best;
 					}
-					if (D.ENGAGE_W) for (const s of SECTIONS) { // 1.4.6 0x142485e40, 1.3.11 0x1443e55a0: candidates in section order while W minus the engaged frontage lasts, then each rolls
+					if (D.ENGAGE_W) for (const s of SECTIONS) { // candidates in section order while W minus the engaged frontage lasts, then each rolls
 						let free = W - own.filter(x => x.section === s && x.engaged && canFight(x)).reduce((t, x) => t + (x.u.f || 1), 0);
 						for (const r of own) {
 							if (r.section !== s || r.engaged || !canFight(r) || (r.u.f || 1) > free) continue;
@@ -477,10 +477,10 @@
 			}
 			phase++;
 			snap(day);
-			// end of day (0x1424a77f0): before the minimum length only overruns; after it a side with an empty line loses
+			// end of day: before the minimum length only overruns; after it a side with an empty line loses
 			const men = [0, 1].map(i => sideMen(all[i]));
 			const overrun = f => {
-				// 1.3 (0x1443e8920): a side whose line holds no men counts as 0, and the check is a strict <
+				// 1.3: a side whose line holds no men counts as 0, and the check is a strict <
 				if (D.RULES_13) { for (const i of [1, 0]) if (lineMorale(i) <= D.COLLAPSE && (lineEmpty(i) ? 0 : men[i]) < men[1 - i] / f) return i; return -1; }
 				for (const i of [0, 1]) if (lineMorale(i) <= D.COLLAPSE && !lineEmpty(1 - i) && men[1 - i] >= f * men[i]) return i;
 				return -1;
@@ -549,7 +549,7 @@
 		return Object.assign(out, confidence(out));
 	}
 
-	// Regiment experience over months (0x143485830): each month
+	// Regiment experience over months: each month
 	//   E += monthly_experience_gain - max(0, experience_decay) x E x (2 - goods access) [+ 1 on a mission]
 	// Drilling (unit ability drill_army) adds 2.5 a month (and costs -90% morale and -25% maintenance efficiency while on).
 	// Decay: country base 5%, regulars -1%, levies +2%; monarchies -1% more from age III (Military Traditions). gain/decay here
@@ -748,10 +748,10 @@
 	//   pool -= manpower upkeep: price x men x current strength / (1 + maintenance efficiency)   (game tooltip, Spain 1547)
 	//   reinforcement: up to MONTHLY_REINFORCE x (1 + reinforce speed) of each regiment a month, one manpower a man (x reinforce
 	//   cost modifier), while the pool lasts; regiments destroyed in a wipe are rebuilt without the monthly cap.
-	// Experience (eu5.exe 0x14249c2d0 battle end, 0x142475d80): after a land battle every regiment of a side gains the same
+	// Experience: after a land battle every regiment of a side gains the same
 	//   EXPERIENCE_GAIN 30 x max(0.01, side's men lost / (side's men at the start + 1))   (thousands of men)
-	// so the side that bleeds more learns more. Monthly: E += expGain - expDecay x E (0x143485830, full goods access). Refilled
-	// men keep the regiment's experience (the reinforcement setter 0x1423fbcc0 only writes strength); wiped regiments are
+	// so the side that bleeds more learns more. Monthly: E += expGain - expDecay x E (full goods access). Refilled
+	// men keep the regiment's experience (reinforcing only changes strength); wiped regiments are
 	// rebuilt from scratch at 0. opts.experience = false turns this off.
 	// A side whose army is under collapseAt (default 50%) of its full men when a battle is due has lost the war.
 	// opts.endOn = 'manpower' instead: the war goes on (months default 600) until a side has exhausted its manpower, i.e. its pool
@@ -760,7 +760,7 @@
 	// expDecay default 0.04 = base 5% - 1% regulars; monarchies get another -1% from Military Traditions in age III).
 	// goldIncome = gold a month for the army (off when not given): it pays upkeep, what is left pays reinforcement at the reinforce
 	// price and wiped regiments at the build price, and no men come back while the balance is at or below 0. The game itself keeps
-	// reinforcing down to -10,000 gold (0x14352f210) unless reinforcement is switched off, so this is the budget a country holds to.
+	// reinforcing down to -10,000 gold unless reinforcement is switched off, so this is the budget a country holds to.
 	function simulateWar(scnIn, opts = {}, seed) {
 		const scn = JSON.parse(JSON.stringify(scnIn)), ns = normalize(scn);
 		// interval 'ready': the next battle comes once both sides are back to readyAt (default 99%) of their men, or once one side
@@ -906,7 +906,7 @@
 		return { ...r, target: B };
 	}
 
-	// 1.3.11 rules, read from eu5.exe 1.3.11 (tick 0x1443e8d20, damage 0x1442e5580) and its defines. A tick is 2 hours, so 'days' are ticks here.
+	// 1.3.11 rules, read from eu5.exe 1.3.11 and its defines. A tick is 2 hours, so 'days' are ticks here.
 	// Same flow as 1.4; no REGIMENT_SIZE morale factor; melee from tick 5; initiative's time term uses the phase counter (combat+0x30), not the age.
 	const RULES_13 = { RULES_13: true, RESERVE_ROOM_ALL: false, DAMAGE_MULT: 0.01, STR_MOD: 0.2, MOR_MOD: 1, DAILY_MORALE: 0.01, DAYS_PER_PHASE: 5, BOMBARD_DAYS: 5, MIN_DAYS: 24, SIZE_RATIO_MAX: 0,
 		INIT_BASE: 0.1, INIT_EACH: 0.02, INIT_MAX: 0.1, INIT_DAY: 0.01, SPEED_SCALE: 0.05, LEVY_DISCIPLINE: -0.1, MAX_DAYS: 2400 };
