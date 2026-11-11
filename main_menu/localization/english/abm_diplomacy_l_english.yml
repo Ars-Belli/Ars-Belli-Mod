@@ -1,0 +1,403 @@
+﻿l_english:
+
+# --- from abm_economic_support_l_english.yml ---
+ abm_economic_support_relation: "Economic Support"
+ abm_economic_support_relation_desc: "A wealthier [country|e] sends an agreed sum of [gold_i] to another every month. The sum is capped at a quarter of the recipient's [tax_base|e], and can never exceed two and a half months of the sender's income. Both parties spend a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as the arrangement stands."
+
+ # The interaction that starts the relation - this is what players click.
+ abm_send_economic_support: "Send $abm_economic_support_relation$"
+ abm_send_economic_support_desc: "Send a country a sum of [gold_i] every month. We may send at most a quarter of their [tax_base|e] each month, and never more than two and a half months of our own income - a small economy cannot absorb a large [country|e]'s gold. It costs us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e], and costs them the same."
+ CATEGORY_ECONOMY_ACTIONS_abm_send_economic_support: "Send $abm_economic_support_relation$"
+ abm_send_economic_support_act: "Offer $abm_economic_support_relation$"
+ INCOMING_OFFER_abm_send_economic_support: "$ACTOR$ have offered to send us $abm_economic_support_relation$. Accepting will cost us a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as it lasts. Do we wish to accept?\n\n$INFO$"
+ PROPOSE_abm_send_economic_support: "Offer $abm_economic_support_relation$ to $RECIPIENT$?\n$INFO$."
+ abm_send_economic_support_effect_text: "[SCOPE.sCountry('actor').GetName] begins sending $abm_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ abm_send_economic_support_effect_text_past: "[SCOPE.sCountry('actor').GetName] began sending $abm_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ abm_send_economic_support_reject_effect_text: "$generic_reject_demand_effect_string$"
+ abm_send_economic_support_reject_effect_text_past: "$generic_reject_demand_effect_string_past$"
+ dip_abm_send_economic_support_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ INCOMING_OFFER_TITLE_abm_send_economic_support: "Economic Support Offered"
+
+ # Auto-generated relation keys the engine asks for (see game.log on load).
+ abm_economic_support_effect_text: "[SCOPE.sCountry('actor').GetName] sends $abm_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ abm_economic_support_effect_text_past: "[SCOPE.sCountry('actor').GetName] sent $abm_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ diplomatic_status_giving_abm_economic_support_name: "Sending $abm_economic_support_relation$"
+ diplomatic_status_giving_abm_economic_support_tooltip: "We are sending them [gold_i] every month."
+ giving_abm_economic_support_list_who_tt: "We are sending $abm_economic_support_relation$ to:"
+ diplomatic_status_receiving_abm_economic_support_name: "Receiving $abm_economic_support_relation$"
+ diplomatic_status_receiving_abm_economic_support_tooltip: "They are sending us [gold_i] every month."
+ receiving_abm_economic_support_list_who_tt: "We are receiving $abm_economic_support_relation$ from:"
+ STATIC_MODIFIER_NAME_giving_abm_economic_support: "Sending $abm_economic_support_relation$"
+ STATIC_MODIFIER_DESC_giving_abm_economic_support: "We send this country a monthly sum of [gold_i], capped at their [tax_base|e]."
+ STATIC_MODIFIER_NAME_receiving_abm_economic_support: "Receiving $abm_economic_support_relation$"
+ STATIC_MODIFIER_DESC_receiving_abm_economic_support: "This country sends us a monthly sum of [gold_i], capped at our [tax_base|e]."
+
+ # Relation action and popup keys. The engine builds these from the offer_/cancel_/
+ # break_ prefixes (the same set vanilla gives every scripted relation in
+ # scripted_relations_l_english.yml). The offer popup appears when the interaction's
+ # create_relation fires, so its text names no country - the effect list under it
+ # already does.
+ offer_abm_economic_support_happened_title: "$abm_economic_support_relation$ Agreed"
+ offer_abm_economic_support_happened_desc: "A new $abm_economic_support_relation$ arrangement has been agreed. Both sides spend a #H Defensive Point#! and #R -0.10#! monthly [diplomats|e] for as long as it lasts."
+ cancel_abm_economic_support: "Cancel $abm_economic_support_relation$"
+ cancel_abm_economic_support_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ cancel_abm_economic_support_cta: "Stop sending $abm_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]"
+ cancel_abm_economic_support_desc: "We will stop sending them gold, freeing the #H Defensive Point#! and the monthly [diplomats|e] it costs us."
+ cancel_abm_economic_support_cta_to_unknown: "Stop sending $abm_economic_support_relation$ to a [country|e]"
+ cancel_abm_economic_support_desc_to_unknown: "$cancel_abm_economic_support_desc$"
+ cancel_abm_economic_support_happened_title: "$abm_economic_support_relation$ Cancelled"
+ cancel_abm_economic_support_happened_desc: "[SCOPE.sCountry('actor').GetName] stopped sending $abm_economic_support_relation$ to [SCOPE.sCountry('recipient').GetName]."
+ cancel_abm_economic_support_proposal_question: "Stop sending $abm_economic_support_relation$ to [TARGET_COUNTRY.GetName]?\n$INFO$"
+ break_abm_economic_support: "Refuse $abm_economic_support_relation$"
+ break_abm_economic_support_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ break_abm_economic_support_cta: "Stop accepting $abm_economic_support_relation$ from [SCOPE.sCountry('recipient').GetName]"
+ break_abm_economic_support_desc: "We will refuse further gold, freeing the #H Defensive Point#! and the monthly [diplomats|e] it costs us."
+ break_abm_economic_support_cta_to_unknown: "Stop accepting $abm_economic_support_relation$ from a [country|e]"
+ break_abm_economic_support_desc_to_unknown: "$break_abm_economic_support_desc$"
+ break_abm_economic_support_happened_title: "$abm_economic_support_relation$ Refused"
+ break_abm_economic_support_happened_desc: "[SCOPE.sCountry('actor').GetName] refused further $abm_economic_support_relation$ from [SCOPE.sCountry('recipient').GetName]."
+ break_abm_economic_support_proposal_question: "Stop accepting $abm_economic_support_relation$ from [TARGET_COUNTRY.GetName]?\n$INFO$"
+
+ abm_economic_support_select_amount: "Gold sent each month - limited by their [tax_base|e]"
+ abm_economic_support_one_patron_tt: "They must not already be receiving $abm_economic_support_relation$ from another [country|e]"
+ abm_economic_support_points_tt: "We must not be over our #H Defensive Point#! limit"
+ abm_economic_support_recipient_points_tt: "They must not be over their #H Defensive Point#! limit"
+
+ # ---------------------------------------------------------------------------
+ # The vanilla engine action cannot be removed - it is not exposed to script in
+ # any form - so it is relabelled to steer players onto the mod action instead. The
+ # warning leads the title because the diplomacy list truncates long button labels.
+ # ---------------------------------------------------------------------------
+ ECONOMIC_SUPPORTTITLE: "(#R AGAINST THE RULES#!) Send Economic Support"
+ ECONOMIC_SUPPORT_TOOLTIP_HEADER: "#R Do not use#! - Send Economic Support to [TARGET_COUNTRY.GetName]"
+ ECONOMIC_SUPPORT_TOOLTIP_HEADER_NO_TARGET: "#R Do not use#! - Send Economic Support to a [country|e]"
+ ECONOMIC_SUPPORT_DESC: "#R This is the vanilla action and is against the rules in Ars Belli.#!\n\nIt bypasses the recipient's consent, costs no #H Defensive Point#!, and costs no monthly [diplomats|e]. Use $abm_economic_support_relation$ instead.\n\nSelect how much [gold_i] we should send them each month."
+ ECONOMIC_SUPPORT_FLAVOR: "#R Against the rules.#! Use $abm_economic_support_relation$ instead - it asks the recipient first and charges both sides properly."
+ CANCEL_ECONOMIC_SUPPORTTITLE: "Cancel Economic Support (vanilla)"
+ CANCEL_ECONOMIC_SUPPORT_TOOLTIP_HEADER: "Cancel our vanilla Economic Support to [TARGET_COUNTRY.GetName]"
+ CANCEL_ECONOMIC_SUPPORT_TOOLTIP_HEADER_NO_TARGET: "Cancel our vanilla Economic Support to a [country|e]"
+ CANCEL_ECONOMIC_SUPPORT_FLAVOR: "This ends a vanilla Economic Support arrangement, which should not have been started. Use $abm_economic_support_relation$ instead."
+
+# --- from abm_enforce_peace_l_english.yml ---
+ abm_enforce_peace: "Enforce Peace"
+ abm_enforce_peace_desc: "Demand that a war be brought to a white peace. The defender is asked first, and only if they agree is the demand put to the attacker. If the attacker refuses, we enter the war on the defender's side."
+ CATEGORY_MILITARY_ACTIONS_abm_enforce_peace: "Enforce Peace"
+ abm_enforce_peace_act: "Demand a white peace in a war"
+ abm_enforce_peace_select_defender: "Select a Defender to Offer Peace To"
+ abm_enforce_peace_select_war: "Select a War to End"
+ abm_enforce_peace_no_defenders: "@trigger_no! No country is currently defending a war we could demand a [white_peace|e] in."
+ abm_enforce_peace_no_wars: "$no_valid_wars$"
+ abm_enforce_peace_select_a_war: "Select a war to bring to a white peace"
+ abm_enforce_peace_standing_tt: "We must be a #H Great Power#! or a #H Major Power#!, or one of the war's leaders must be our [rival|e]"
+ # War-view button requirement lines. Shown passed or failed so a player who cannot
+ # use the action still learns what it needs.
+ abm_ep_req_standing_met: "@trigger_yes! We are a #H Great Power#! or a #H Major Power#!, or one of the war's leaders is our [rival|e]"
+ abm_ep_req_standing_unmet: "@trigger_no! We must be a #H Great Power#! or a #H Major Power#!, or one of the war's leaders must be our [rival|e]"
+ abm_ep_req_not_participant_met: "@trigger_yes! We are not fighting in this [war|e]"
+ abm_ep_req_not_participant_unmet: "@trigger_no! We cannot demand peace in a [war|e] we are fighting in ourselves"
+ abm_enforce_peace_defender_refused_tt: "The war continues unchanged"
+ INCOMING_OFFER_abm_enforce_peace: "$ACTOR$ demands that our war be brought to a white peace. If we agree, the demand will then be put to the enemy, and $ACTOR$ will join the war on our side should they refuse. Do we accept?\n\n$INFO$"
+ PROPOSE_abm_enforce_peace: "Demand a white peace from $RECIPIENT$?\n$INFO$."
+ abm_enforce_peace_effect_text: "[SCOPE.sCountry('actor').GetName] demands a white peace in the [SCOPE.sWar('target').GetName]"
+ abm_enforce_peace_effect_text_past: "[SCOPE.sCountry('actor').GetName] demanded a white peace in the [SCOPE.sWar('target').GetName]"
+ abm_enforce_peace_reject_effect_text: "$generic_reject_demand_effect_string$"
+ abm_enforce_peace_reject_effect_text_past: "$generic_reject_demand_effect_string_past$"
+ dip_abm_enforce_peace_CATEGORY: "CATEGORY_MILITARY_ACTIONS"
+ INCOMING_OFFER_TITLE_abm_enforce_peace: "Enforce Peace"
+
+ abm_enforce_peace.1.title: "A Demand for Peace"
+ abm_enforce_peace.1.desc: "[SCOPE.sCountry('ep_enforcer').GetNameWithNoTooltip] has demanded that we bring our war against [SCOPE.sCountry('ep_defender').GetNameWithNoTooltip] to a close, and [SCOPE.sCountry('ep_defender').GetNameWithNoTooltip] has already consented to a white peace.\n\nThe choice now rests with us. We may lay down our arms and accept that nothing is to be gained from this war, or we may press on regardless - though if we do, [SCOPE.sCountry('ep_enforcer').GetNameWithNoTooltip] has made plain that they will take the field against us."
+ abm_enforce_peace.1.a: "Very well. Let there be peace."
+ abm_enforce_peace.1.b: "We will not be dictated to. The war goes on."
+
+ abm_enforce_peace.2.title: "The War Is Ended"
+ abm_enforce_peace.2.desc: "Both sides have accepted our terms. The war has been brought to a white peace, and neither party takes anything from the other. Our word carried weight where armies would otherwise have marched."
+ abm_enforce_peace.2.a: "As it should be."
+
+ abm_enforce_peace.3.title: "Our Demand Is Refused"
+ abm_enforce_peace.3.desc: "[SCOPE.sWar('ep_war').GetName] continues. Though the defenders were willing to accept a white peace, the attackers have refused our demand outright.\n\nWe said we would stand with the defenders if it came to this, and so we shall. We are now at war."
+ abm_enforce_peace.3.a: "Then we honour our word."
+
+ # Retarget the vanilla rival-war alert: it used to advertise Intervene in War.
+ ALERT_INTERVENE_RIVAL_WAR_AVAILABLE_TITLE: "Enforce Peace on a Rival"
+ ALERT_INTERVENE_RIVAL_WAR_AVAILABLE: "One of our [rivals|e] is at war. We can demand a [white_peace|e] to bring it to an end."
+ ALERT_INTERVENE_RIVAL_WAR_ENTRY: "[WAR.GetName]: Demand a [white_peace|e] against [COUNTRY.GetName]."
+
+ # Shown in the emptied Intervene in War picker (in_game/gui/select_war_to_intervene.gui).
+ # That window is the last gate on every remaining path to the action, including the
+ # rival path the engine grants regardless of rank, so it lists no wars at all.
+ abm_intervene_removed_popup: "#R Intervene in War has been removed in Ars Belli.#!\n\nIt dragged one country into another's [war|e] with no say from either side. No rank grants it, the HRE Emperor does not get it, and being someone's [rival|e] does not bring it back - there is nothing here to pick.\n\nUse #Y Enforce Peace#! instead: the defender is asked for a [white_peace|e] first, and only if they accept is the demand put to the attacker, who takes us into the war against them if they refuse."
+
+# --- from abm_expel_fondacos_l_english.yml ---
+ abm_expel_fondacos: "Expel Fondacos, Kontors and Enclaves"
+ abm_expel_fondacos_desc: "Destroy every Fondaco, Hanseatic Kontor and Merchant Enclave they hold in our lands and revoke their [ShowRelationTypeName('fondaco_rights')], so they cannot build here again. Costs one [diplomats|e]. They gain a #R claim for war#! against us for 10 years, and our own trade suffers $STATIC_MODIFIER_NAME_abm_expelled_foreign_merchants$ (#R -10%#! [trade_income|e], [merchant_capacity|e] and [trade_range|e]) for 10 years."
+ abm_expel_fondacos_act: "Expel the Fondacos, Kontors and Enclaves held by [SCOPE.sCountry('recipient').GetName] in our lands"
+ abm_expel_fondacos_SELECT_TITLE: "Select Country"
+ abm_expel_fondacos_no_countries: "@trigger_no! No countries available."
+ abm_expel_fondacos_has_fondacos_tt: "They must hold a Fondaco, Kontor or Merchant Enclave in our lands"
+ abm_expel_fondacos_effect_text: "[SCOPE.sCountry('actor').GetName] expel the Fondacos, Kontors and Enclaves of [SCOPE.sCountry('recipient').GetName] from their lands and revoke their [ShowRelationTypeName('fondaco_rights')]."
+ abm_expel_fondacos_effect_text_past: "[SCOPE.sCountry('actor').GetName] expelled the Fondacos, Kontors and Enclaves of [SCOPE.sCountry('recipient').GetName] from their lands and revoked their [ShowRelationTypeName('fondaco_rights')]."
+ PROPOSE_abm_expel_fondacos: "Expel every Fondaco, Kontor and Enclave $RECIPIENT$ holds in our lands, and revoke their rights?\n\n$INFO$"
+
+ # Game 1.3.11 key family (dip_<action>_CATEGORY). The older CATEGORY_<KIND>_<action> form is kept
+ # alongside it, as the mod's other country actions do, in case a UI path still reads it.
+ CATEGORY_ECONOMY_ACTIONS_abm_expel_fondacos: "Expel Fondacos, Kontors and Enclaves"
+ dip_abm_expel_fondacos_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+
+# --- from abm_expel_trade_offices_l_english.yml ---
+ abm_expel_trade_offices: "Expel Trade Offices"
+ abm_expel_trade_offices_desc: "Destroy every Trade Office they hold in our lands and revoke their [ShowRelationTypeName('abm_trade_office_rights')], so they cannot build here again. Costs one [diplomats|e]."
+ abm_expel_trade_offices_act: "Expel the Trade Offices held by [SCOPE.sCountry('recipient').GetName] in our lands"
+ abm_expel_trade_offices_SELECT_TITLE: "Select Country"
+ abm_expel_trade_offices_no_countries: "@trigger_no! No countries available."
+ abm_expel_trade_offices_has_offices_tt: "They must hold Trade Offices in our lands"
+ abm_expel_trade_offices_effect_text: "[SCOPE.sCountry('actor').GetName] expel the Trade Offices of [SCOPE.sCountry('recipient').GetName] from their lands and revoke their [ShowRelationTypeName('abm_trade_office_rights')]."
+ abm_expel_trade_offices_effect_text_past: "[SCOPE.sCountry('actor').GetName] expelled the Trade Offices of [SCOPE.sCountry('recipient').GetName] from their lands and revoked their [ShowRelationTypeName('abm_trade_office_rights')]."
+ PROPOSE_abm_expel_trade_offices: "Expel every Trade Office $RECIPIENT$ holds in our lands, and revoke their rights?\n\n$INFO$"
+
+ # Game 1.3.11 key family (dip_<action>_CATEGORY). The older CATEGORY_<KIND>_<action> form is kept
+ # alongside it, as the mod's other country actions do, in case a UI path still reads it.
+ CATEGORY_ECONOMY_ACTIONS_abm_expel_trade_offices: "Expel Trade Offices"
+ dip_abm_expel_trade_offices_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+
+# --- from abm_trade_office_rights_l_english.yml ---
+ abm_trade_office_rights_relation: "Trade Office Rights"
+ abm_trade_office_rights_relation_desc: "A [country|e] will grant another country the right to build [ShowBuildingTypeName('trade_office')] in their territory. In Ars Belli a player needs this permission before constructing a Trade Office in another player's [locations|e]."
+ offer_abm_trade_office_rights: "Grant Trade Office Rights"
+ offer_abm_trade_office_rights_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ offer_abm_trade_office_rights_cta: "Grant [SCOPE.sCountry('recipient').GetName] the right to construct Trade Offices"
+ offer_abm_trade_office_rights_desc: "This will allow them to construct Trade Offices in our territory, granting them [merchant_power|e] and [merchant_capacity|e] in our [markets|e]."
+ offer_abm_trade_office_rights_cta_to_unknown: "Grant a [country|e] the right to construct Trade Offices"
+ offer_abm_trade_office_rights_desc_to_unknown: "This will allow them to construct Trade Offices in our territory, granting them [merchant_power|e] and [merchant_capacity|e] in our [markets|e]."
+ offer_abm_trade_office_rights_happened_title: "Trade Office Rights Granted"
+ offer_abm_trade_office_rights_happened_desc: "[SCOPE.sCountry('recipient').GetName] is free to construct Trade Offices within our borders."
+ offer_abm_trade_office_rights_proposal_question: "Offer the right to construct Trade Offices in [COUNTRY.GetName]'s territory?\n$INFO$"
+ offer_abm_trade_office_rights_incoming_proposal_title: "Trade Office Rights Offer"
+ offer_abm_trade_office_rights_incoming_proposal_question: "[COUNTRY.GetName] has offered us Trade Office Rights. Do we wish to accept?"
+ request_abm_trade_office_rights: "Request Trade Office Rights"
+ request_abm_trade_office_rights_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ request_abm_trade_office_rights_cta: "Request the right from [TARGET_COUNTRY.GetName] to construct Trade Offices"
+ request_abm_trade_office_rights_desc: "This will allow us to construct Trade Offices in their territory, granting us [merchant_power|e] and [merchant_capacity|e] in their [markets|e]."
+ request_abm_trade_office_rights_cta_to_unknown: "Request the right from a [country|e] to construct Trade Offices"
+ request_abm_trade_office_rights_desc_to_unknown: "This will allow us to construct Trade Offices in their territory, granting us [merchant_power|e] and [merchant_capacity|e] in their [markets|e]."
+ request_abm_trade_office_rights_happened_title: "Trade Office Rights Granted"
+ request_abm_trade_office_rights_happened_desc: "[SCOPE.sCountry('recipient').GetName] now allows us to construct Trade Offices within their borders."
+ request_abm_trade_office_rights_proposal_question: "Request the right to construct Trade Offices in [TARGET_COUNTRY.GetName]'s territory?\n$INFO$"
+ request_abm_trade_office_rights_incoming_proposal_title: "Trade Office Rights Request"
+ request_abm_trade_office_rights_incoming_proposal_question: "[COUNTRY.GetName] has requested Trade Office Rights. Do we wish to accept?"
+ cancel_abm_trade_office_rights: "Revoke Trade Office Rights"
+ cancel_abm_trade_office_rights_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ cancel_abm_trade_office_rights_cta: "Cancel [SCOPE.sCountry('recipient').GetName]'s right to construct Trade Offices"
+ cancel_abm_trade_office_rights_desc: "This stops them from constructing new Trade Offices in our territory. Ones they already built remain."
+ cancel_abm_trade_office_rights_cta_to_unknown: "Cancel a [country|e]'s right to construct Trade Offices"
+ cancel_abm_trade_office_rights_desc_to_unknown: "This stops them from constructing new Trade Offices in our territory. Ones they already built remain."
+ cancel_abm_trade_office_rights_happened_title: "Revoked Trade Office Rights"
+ cancel_abm_trade_office_rights_happened_desc: "Revoked [SCOPE.sCountry('recipient').GetName]'s right to construct Trade Offices."
+ cancel_abm_trade_office_rights_proposal_question: "Revoke the right to construct Trade Offices in [COUNTRY.GetName]'s territory?\n$INFO$"
+ break_abm_trade_office_rights: "Cancel Trade Office Rights"
+ break_abm_trade_office_rights_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ break_abm_trade_office_rights_cta: "Cancel our right to construct Trade Offices in [SCOPE.sCountry('recipient').GetName]"
+ break_abm_trade_office_rights_desc: "We will no longer be able to construct new Trade Offices in their territory. Ones we already built remain."
+ break_abm_trade_office_rights_cta_to_unknown: "Cancel our right to construct Trade Offices in a [country|e]"
+ break_abm_trade_office_rights_desc_to_unknown: "We will no longer be able to construct new Trade Offices in their territory. Ones we already built remain."
+ break_abm_trade_office_rights_happened_title: "Cancelled Trade Office Rights"
+ break_abm_trade_office_rights_happened_desc: "We cancelled our right to construct Trade Offices in [SCOPE.sCountry('recipient').GetName]"
+ break_abm_trade_office_rights_proposal_question: "We will no longer be able to construct Trade Offices in [TARGET_COUNTRY.GetName]."
+ abm_trade_office_rights_effect_text: "[SCOPE.sCountry('actor').GetName] receive the right to construct Trade Offices within [SCOPE.sCountry('recipient').GetAdjective] borders."
+ abm_trade_office_rights_effect_text_past: "[SCOPE.sCountry('actor').GetName] received the right to construct Trade Offices within [SCOPE.sCountry('recipient').GetAdjective] borders."
+ diplomatic_status_giving_abm_trade_office_rights_name: "Granting Trade Office Rights"
+ diplomatic_status_giving_abm_trade_office_rights_tooltip: "#T Granting Trade Office Rights#!\nThis country grants the following countries the right to construct Trade Offices."
+ diplomatic_status_receiving_abm_trade_office_rights_name: "Receiving Trade Office Rights"
+ diplomatic_status_receiving_abm_trade_office_rights_tooltip: "#T Receiving Trade Office Rights#!\nThis country has the right to construct Trade Offices in the following countries."
+ giving_abm_trade_office_rights_list_who_tt: "$WHO$ is granting the right to construct Trade Offices to $LIST$"
+ receiving_abm_trade_office_rights_list_who_tt: "$WHO$ may construct Trade Offices in $LIST$"
+
+ # Shared single slot: a location takes one fondaco OR one hanseatic kontor, whoever owns it
+ # (see building_types/abm_foreign_buildings.txt).
+ abm_fondaco_slot_taken_tt: "This location already has a Fondaco or Hanseatic Kontor"
+
+ # Requirement shown on the disabled build button for a foreign location owned by a player.
+ abm_trade_office_rights_required_tt: "Owner gives [ShowRelationTypeName('abm_trade_office_rights')] to us"
+
+ # Overrides of vanilla fondaco_rights text: the same right now also permits a Merchant Enclave for
+ # the ABM merchant governments (see the shadowed scripted_relations/fondaco_rights.txt).
+ fondaco_rights_relation_desc: "A [country|e] will grant another country the right to build [ShowBuildingTypeName('fondaco')] - or, for merchant governments of their own tradition, a [ShowBuildingTypeName('abm_merchant_enclave')] - in their territory."
+ offer_fondaco_rights_cta: "Grant Rights to [SCOPE.sCountry('recipient').GetName] to construct Fondacos or a Merchant Enclave"
+ offer_fondaco_rights_desc: "This will allow them to construct Fondacos or a Merchant Enclave in our territory, which grant them increased [merchant_power|e] in our [markets|e] in exchange for a monthly fee."
+ request_fondaco_rights_cta: "Request the Right from [TARGET_COUNTRY.GetName] to construct Fondacos or a Merchant Enclave"
+ request_fondaco_rights_desc: "This will allow us to construct Fondacos or a Merchant Enclave in their territory, which grant us increased [merchant_power|e] in their [markets|e] in exchange for a monthly fee."
+
+# --- from abm_lesser_infiltration_l_english.yml ---
+ # Lesser Infiltration scripted relation (in_game/common/scripted_relations/abm_lesser_infiltration.txt)
+ abm_lesser_infiltration_advance: "Lesser Infiltration"
+ abm_lesser_infiltration_advance_desc: "A few well-placed clerks and servants can tell us much about a rival's lands, even if they cannot reach the inner circles of power."
+ abm_lesser_infiltration_cost: "$abm_lesser_infiltration_relation$ Cost"
+
+ abm_lesser_infiltration_relation: "Lesser Infiltration"
+ abm_lesser_infiltration_relation_desc: "A [country|e] places informants in another country's administration, lifting the [fog_of_war|e] over its entire territory for 3 months. Costs as much [spy_network|e] as the full Infiltrate Administration, which requires the Espionage focus, but lasts only an eighth as long."
+ offer_abm_lesser_infiltration: "Lesser Infiltration"
+ offer_abm_lesser_infiltration_CATEGORY: "CATEGORY_COVERT_ACTIONS"
+ offer_abm_lesser_infiltration_cta: "Infiltrate [SCOPE.sCountry('recipient').GetName]"
+ offer_abm_lesser_infiltration_desc: "This will lift the [fog_of_war|e] over their entire territory for 3 months."
+ offer_abm_lesser_infiltration_cta_to_unknown: "Infiltrate a [country|e]"
+ offer_abm_lesser_infiltration_desc_to_unknown: "This will lift the [fog_of_war|e] over their entire territory for 3 months."
+ offer_abm_lesser_infiltration_happened_title: "Informants Placed"
+ offer_abm_lesser_infiltration_happened_desc: "[SCOPE.sCountry('actor').GetName] placed informants in the administration of [SCOPE.sCountry('recipient').GetName]."
+ offer_abm_lesser_infiltration_proposal_question: "Infiltrate [TARGET_COUNTRY.GetName]?\n$INFO$"
+ cancel_abm_lesser_infiltration: "Withdraw Informants"
+ cancel_abm_lesser_infiltration_CATEGORY: "CATEGORY_COVERT_ACTIONS"
+ cancel_abm_lesser_infiltration_cta: "Withdraw our informants from [SCOPE.sCountry('recipient').GetName]"
+ cancel_abm_lesser_infiltration_desc: "Our informants will be recalled and the [fog_of_war|e] will return over their territory."
+ cancel_abm_lesser_infiltration_cta_to_unknown: "Withdraw our informants from a [country|e]"
+ cancel_abm_lesser_infiltration_desc_to_unknown: "Our informants will be recalled and the [fog_of_war|e] will return over their territory."
+ cancel_abm_lesser_infiltration_happened_title: "Informants Withdrawn"
+ cancel_abm_lesser_infiltration_happened_desc: "[SCOPE.sCountry('actor').GetName] withdrew their informants from [SCOPE.sCountry('recipient').GetName]."
+ cancel_abm_lesser_infiltration_proposal_question: "Withdraw our informants from [TARGET_COUNTRY.GetName]?\n$INFO$"
+ break_abm_lesser_infiltration: "Expel Informants"
+ break_abm_lesser_infiltration_CATEGORY: "CATEGORY_COVERT_ACTIONS"
+ break_abm_lesser_infiltration_cta: "Expel [SCOPE.sCountry('actor').GetName]'s informants"
+ break_abm_lesser_infiltration_desc: "We will root out the foreign informants in our administration."
+ break_abm_lesser_infiltration_cta_to_unknown: "Expel foreign informants"
+ break_abm_lesser_infiltration_desc_to_unknown: "We will root out the foreign informants in our administration."
+ break_abm_lesser_infiltration_happened_title: "Informants Expelled"
+ break_abm_lesser_infiltration_happened_desc: "[SCOPE.sCountry('recipient').GetName] expelled the informants of [SCOPE.sCountry('actor').GetName]."
+ break_abm_lesser_infiltration_proposal_question: "Expel [TARGET_COUNTRY.GetName]'s informants?\n$INFO$"
+ abm_lesser_infiltration_effect_text: "[SCOPE.sCountry('actor').GetName] infiltrate the administration of [SCOPE.sCountry('recipient').GetName]"
+ abm_lesser_infiltration_effect_text_past: "[SCOPE.sCountry('actor').GetName] infiltrated the administration of [SCOPE.sCountry('recipient').GetName]"
+ abm_lesser_infiltration_ongoing_tooltip: "Informants in the administration of [TARGET_COUNTRY.GetName], lifting the [fog_of_war|e] over their territory"
+ diplomatic_status_giving_abm_lesser_infiltration_name: "Infiltrating (Lesser)"
+ diplomatic_status_giving_abm_lesser_infiltration_tooltip: "#T Infiltrating (Lesser)#!\nThis country has informants in the administration of the following [countries|e], lifting the [fog_of_war|e] over their territory:"
+ diplomatic_status_receiving_abm_lesser_infiltration_name: "Infiltrated (Lesser)"
+ diplomatic_status_receiving_abm_lesser_infiltration_tooltip: "#T Infiltrated (Lesser)#!\nThis country's administration has informants from the following [countries|e]:"
+ giving_abm_lesser_infiltration_list_who_tt: "$WHO$ is infiltrating the administration of $LIST$"
+ receiving_abm_lesser_infiltration_list_who_tt: "$WHO$ has its administration infiltrated by $LIST$"
+
+# --- from abm_pay_for_access_l_english.yml ---
+ pay_for_trade_access: "Pay for Trade Access"
+ pay_for_trade_access_desc: "Offer gold for access to their markets."
+ pay_for_fondaco_rights: "Pay for Fondaco Rights"
+ pay_for_fondaco_rights_desc: "Offer gold for the right to establish a fondaco in their merchant republic."
+ pay_for_access_select_gold_amount: "Gold offered"
+ CATEGORY_ECONOMY_ACTIONS_pay_for_trade_access: "Pay for Trade Access"
+ CATEGORY_ECONOMY_ACTIONS_pay_for_fondaco_rights: "Pay for Fondaco Rights"
+
+ # Game 1.3.11 key family (dip_<action>_CATEGORY / PROPOSE_ / INCOMING_OFFER_ / *_act / *_effect_text / *_reject_effect_text).
+ # The old CATEGORY_<KIND>_<action> keys above are kept for compatibility but are no longer read.
+
+ dip_pay_for_trade_access_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ PROPOSE_pay_for_trade_access: "Offer gold to $RECIPIENT$ for access to their markets?\n\n$INFO$"
+ INCOMING_OFFER_pay_for_trade_access: "$ACTOR$ offer us gold for access to our markets. Do we accept?\n\n$INFO$"
+ INCOMING_OFFER_TITLE_pay_for_trade_access: "Trade Access Offered"
+ pay_for_trade_access_act: "Pay for trade access from [SCOPE.sCountry('recipient').GetName]."
+ pay_for_trade_access_effect_text: "[SCOPE.sCountry('actor').GetName] pay [SCOPE.sCountry('recipient').GetName] gold for trade access."
+ pay_for_trade_access_effect_text_past: "[SCOPE.sCountry('actor').GetName] paid [SCOPE.sCountry('recipient').GetName] gold for trade access."
+ pay_for_trade_access_reject_effect_text: "$generic_reject_effect_string$"
+ pay_for_trade_access_reject_effect_text_past: "$generic_reject_effect_string_past$"
+
+ dip_pay_for_fondaco_rights_CATEGORY: "CATEGORY_ECONOMY_ACTIONS"
+ PROPOSE_pay_for_fondaco_rights: "Offer gold to $RECIPIENT$ for the right to establish a fondaco in their merchant republic?\n\n$INFO$"
+ INCOMING_OFFER_pay_for_fondaco_rights: "$ACTOR$ offer us gold for the right to establish a fondaco in our merchant republic. Do we accept?\n\n$INFO$"
+ INCOMING_OFFER_TITLE_pay_for_fondaco_rights: "Fondaco Rights Offered"
+ pay_for_fondaco_rights_act: "Pay for fondaco rights from [SCOPE.sCountry('recipient').GetName]."
+ pay_for_fondaco_rights_effect_text: "[SCOPE.sCountry('actor').GetName] pay [SCOPE.sCountry('recipient').GetName] gold for fondaco rights."
+ pay_for_fondaco_rights_effect_text_past: "[SCOPE.sCountry('actor').GetName] paid [SCOPE.sCountry('recipient').GetName] gold for fondaco rights."
+ pay_for_fondaco_rights_reject_effect_text: "$generic_reject_effect_string$"
+ pay_for_fondaco_rights_reject_effect_text_past: "$generic_reject_effect_string_past$"
+
+# --- from abm_vision_sharing_l_english.yml ---
+ # Vision sharing scripted relation (abm_vision_sharing.txt).
+ # Auto-generated relation keys the engine asks for (see game.log on load).
+ Vision_sharing_relation: "Vision Sharing"
+ Vision_sharing_effect_text: "[SCOPE.sCountry('actor').GetName] share their knowledge of the world with [SCOPE.sCountry('recipient').GetName]."
+ Vision_sharing_effect_text_past: "[SCOPE.sCountry('actor').GetName] shared their knowledge of the world with [SCOPE.sCountry('recipient').GetName]."
+ diplomatic_status_Vision_sharing_name: "Vision Sharing"
+ diplomatic_status_Vision_sharing_tooltip: "#T Vision Sharing\n#!Countries sharing vision see each other's explored territory and developments."
+ Vision_sharing_list_who_tt: "$WHO$ shares their vision of the world with $LIST$."
+
+# --- from abm_force_break_union_l_english.yml ---
+ force_break_union: "Force Break Union"
+ force_break_union_desc: "Hand power to a freshly-elevated outsider, severing this realm from the union. The new ruler is generated at random, costs 20 legitimacy, and the act may not be repeated for 50 years."
+ CATEGORY_UNION_ACTIONS_force_break_union: "Force Break Union"
+ force_break_union_legitimacy_tt: "We have at least 20 [legitimacy|e]"
+
+# --- from abm_forgive_antagonism_l_english.yml ---
+ abm_forgive_half_antagonism: "Forgive half antagonism"
+ abm_forgive_half_antagonism_desc: "Set aside half of the grievances we hold against them, halving their [antagonism|e] towards our realm."
+ abm_forgive_200_antagonism: "Forgive 200 antagonism"
+ abm_forgive_200_antagonism_desc: "Set aside a measure of the grievances we hold against them, cutting 200 from their [antagonism|e] towards our realm."
+ CATEGORY_FRIENDLY_ACTIONS_abm_forgive_half_antagonism: "Forgive half antagonism"
+ CATEGORY_FRIENDLY_ACTIONS_abm_forgive_200_antagonism: "Forgive 200 antagonism"
+ abm_forgive_antagonism_requirement_tt: "Our [antagonism|e] towards them must be at least 10"
+ abm_antagonism_forgiven_half: "Grievances Forgiven"
+ abm_antagonism_forgiven_flat: "Grievances Forgiven"
+
+ # Game 1.3.11 key family (dip_/PROPOSE_/INCOMING_OFFER_). The old CATEGORY_FRIENDLY_ACTIONS_* keys above are kept for compatibility.
+ dip_abm_forgive_half_antagonism_CATEGORY: "CATEGORY_FRIENDLY_ACTIONS"
+ PROPOSE_abm_forgive_half_antagonism: "Forgive half of our [antagonism|e] towards $RECIPIENT$?\n\n$INFO$"
+ INCOMING_OFFER_abm_forgive_half_antagonism: "$ACTOR$ wishes to set aside half of the grievances they hold against us. Do we accept?\n\n$INFO$"
+ INCOMING_OFFER_TITLE_abm_forgive_half_antagonism: "Half Our Grievances Forgiven"
+ abm_forgive_half_antagonism_act: "Forgive half of our [antagonism|e] towards [SCOPE.sCountry('recipient').GetName]."
+ abm_forgive_half_antagonism_effect_text: "[SCOPE.sCountry('actor').GetName] forgive half of their [antagonism|e] towards [SCOPE.sCountry('recipient').GetName]."
+ abm_forgive_half_antagonism_effect_text_past: "[SCOPE.sCountry('actor').GetName] forgave half of their [antagonism|e] towards [SCOPE.sCountry('recipient').GetName]."
+ abm_forgive_half_antagonism_reject_effect_text: "$generic_reject_effect_string$"
+ abm_forgive_half_antagonism_reject_effect_text_past: "$generic_reject_effect_string_past$"
+
+ dip_abm_forgive_200_antagonism_CATEGORY: "CATEGORY_FRIENDLY_ACTIONS"
+ PROPOSE_abm_forgive_200_antagonism: "Forgive 200 [antagonism|e] towards $RECIPIENT$?\n\n$INFO$"
+ INCOMING_OFFER_abm_forgive_200_antagonism: "$ACTOR$ wishes to set aside a measure of the grievances they hold against us. Do we accept?\n\n$INFO$"
+ INCOMING_OFFER_TITLE_abm_forgive_200_antagonism: "Grievances Forgiven"
+ abm_forgive_200_antagonism_act: "Forgive 200 [antagonism|e] towards [SCOPE.sCountry('recipient').GetName]."
+ abm_forgive_200_antagonism_effect_text: "[SCOPE.sCountry('actor').GetName] forgive 200 [antagonism|e] towards [SCOPE.sCountry('recipient').GetName]."
+ abm_forgive_200_antagonism_effect_text_past: "[SCOPE.sCountry('actor').GetName] forgave 200 [antagonism|e] towards [SCOPE.sCountry('recipient').GetName]."
+ abm_forgive_200_antagonism_reject_effect_text: "$generic_reject_effect_string$"
+ abm_forgive_200_antagonism_reject_effect_text_past: "$generic_reject_effect_string_past$"
+
+# --- from abm_player_coalition_l_english.yml ---
+ abm_player_coalition: "Player Coalition"
+ abm_player_coalition_desc: "A Player Coalition is a league of player-controlled [countries|e] banded together against a #R Great Power#! or #Y Major Power#!. Joining requires more than 50 [antagonism|e] towards the target, and members leave once it falls below 30 while not at [war|e] with the target. Unlike a regular [coalition|e] it needs no [opinion|e] of the target, and only players may join. Members defend each other if the target attacks one of them, and may collectively declare [war|e] on the target with the regular Coalition [casus_belli|e]."
+ abm_player_coalition_leader: "Player Coalition Leader"
+ abm_player_coalition_hint_1: "A Player Coalition can only be started against a #R Great Power#! or #Y Major Power#!, and only player-controlled [countries|e] can join it. It cannot exist without its leader: if the leading country leaves, it immediately dissolves."
+ abm_player_coalition_players_only_tt: "Is controlled by a player"
+ abm_player_coalition_target_rank_tt: "Is a #R Great Power#! or #Y Major Power#!"
+ io_opinion_abm_player_coalition: "In Coalition Together"
+ diplomatic_status_abm_player_coalition_name: "Player Coalition"
+ diplomatic_status_abm_player_coalition_tooltip: "#T Player Coalition#!\nThis country is in a Player Coalition. If they are attacked by the coalition target, all other [members|e] of the coalition will be called to arms. The coalition may decide to declare war on the target, at which time all other coalition members will be called too."
+ abm_player_coalition_list_who_tt: "$WHO$ is in a Player Coalition with $LIST$. They will protect each other against the coalition target"
+
+ abm_dissolve_player_coalition: "Dissolve Player Coalition"
+ abm_dissolve_player_coalition_entry: "Disallow members of the player coalition to form another one against us in the next 15 years."
+ abm_dissolve_player_coalition_entry_short: "$abm_dissolve_player_coalition$"
+ abm_dissolve_player_coalition_desc: "This league of rivals shall be scattered, its members cowed and divided, no longer united against us."
+
+# --- from abm_tributaries_l_english.yml ---
+ # Used by the tributary exclusions in country_interactions/transfer_subject.txt and
+ # country_interactions/give_subject_location_to_other_subject.txt.
+ abm_not_a_tributary_tt: "Must not be a [ShowSubjectTypeNameWithNoTooltip('tributary')] - a tributary owes tribute, it is not a territorial dependency to be handed around"
+
+# --- from abm_sell_location_l_english.yml ---
+ # Overrides the vanilla label above the sell/buy location price slider, whose ceiling the mod
+ # lowers to a flat 100 gold in in_game/gui/sell_location_action_view.gui.
+ sell_buy_location_price: "Total Cost (at most 100@gold!):"
+
+# --- from abm_sabotage_fort_l_english.yml ---
+ abm_sabotage_fort: "Sabotage Fort"
+ abm_sabotage_fort_desc: "Our agents buy off, scatter and discharge the men who man the walls of a single [location|e]. Every [pop|e] of [ShowPopTypeName('soldiers')] living there is turned into [ShowPopTypeName('peasants')], leaving the [fort|e] with nobody to work it until the [location] raises new soldiers of its own.\n\nBuying off a garrison costs [gold_i] scaled to the target's own monthly income, so the richer the realm we strike at, the dearer the bribe.\n\nA [capital|e] cannot be sabotaged this way - its garrison is too close to the throne to be bought.\n\nOnly usable against a [country|e] we are at [war|e] with, at most once every 2 years, and a country that has just been sabotaged cannot be targeted again by anyone for 2 years. Unlocked by the #Y Espionage#! focus pick."
+ abm_sabotage_fort_victim_cd_tt: "Has not had a [fort|e] sabotaged in the last 2 years"
+ abm_sabotage_fort_cd_cooldown: "Sabotage Fort"
+ CATEGORY_COVERT_ACTIONS_abm_sabotage_fort: "Sabotage Fort"
+ dip_abm_sabotage_fort_CATEGORY: "CATEGORY_COVERT_ACTIONS"
+ abm_sabotage_fort_price: "Bribe Cost"
+ abm_sabotage_fort_act: "Sabotage a Fort of [SCOPE.sCountry('recipient').GetName]"
+ PROPOSE_abm_sabotage_fort: "Sabotage a fort belonging to $RECIPIENT$?\n$INFO$."
+
+ abm_sabotage_fort_select_country: "Select a [country|e] whose [fort|e] we will sabotage"
+ abm_sabotage_fort_no_countries: "@trigger_no! We are not at [war|e] with any [country|e] in [diplomatic_range|e] whose [fort|e] we could sabotage."
+ abm_sabotage_fort_select_location: "Select the [location|e] whose [fort|e] we will sabotage"
+ abm_sabotage_fort_no_locations: "@trigger_no! They hold no [location|e] with a [fort|e] that we can reach. Their [capital|e] cannot be targeted."
+
+ abm_sabotage_fort_tt: "Every [pop|e] of [ShowPopTypeName('soldiers')] in the selected [location|e] becomes [ShowPopTypeName('peasants')], leaving its [fort|e] unmanned."
+ abm_sabotage_fort_needs_a_fort_tt: "They must own at least one [location|e] with a [fort|e] outside their [capital|e]"
+ abm_sabotage_fort_needs_soldiers_tt: "The [location|e] must still have [ShowPopTypeName('soldiers')] living in it"
+
+ abm_sabotage_fort_effect_text: "[SCOPE.sCountry('actor').GetName] sabotages the [fort|e] in [SCOPE.sLocation('target').GetName]"
+ abm_sabotage_fort_effect_text_past: "[SCOPE.sCountry('actor').GetName] sabotaged the [fort|e] in [SCOPE.sLocation('target').GetName]"
