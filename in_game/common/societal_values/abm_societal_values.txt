@@ -44,7 +44,7 @@ REPLACE:aristocracy_vs_plutocracy = { #
 	right_modifier = {
 		military_tactics = 0.20				#NEW - to compensate for discipline
 		global_burghers_estate_power = 0.50
-		global_burghers_desired_pop_scaled = 0.01	# 1% of all pops, not just in cities
+		global_burghers_desired_pop_scaled = 0.02	# 1% of all pops, not just in cities
 		selling_efficiency = small_selling_efficiency_bonus
 
 		court_spending_efficiency  = 0.5
@@ -53,5 +53,73 @@ REPLACE:aristocracy_vs_plutocracy = { #
 
 		bias_for_patron_of_arts_policies = 50
 		bias_for_capitalist_policies = 25
+	}
+}
+
+REPLACE:capital_economy_vs_traditional_economy = {
+	left_modifier = {
+		global_production_efficiency = huge_production_efficiency_bonus
+		bank_interest = -0.03
+		global_building_establishment_speed = 0.2
+		global_build_buildings_efficiency = 0.2
+
+		#global_monthly_food_modifier = monthly_food_productivity_extreme_penalty
+
+		court_language_is_market_language_importance_modifier = 1.5
+		bias_for_capitalist_policies = 100
+	}
+	right_modifier = {
+		global_raw_material_output = 0.2
+		global_population_capacity_modifier = 0.25
+		#global_building_establishment_speed = -0.25
+
+		global_max_rgo_size_modifier_in_rural = 0.33
+
+		global_monthly_food_modifier = monthly_food_productivity_extreme_bonus
+		court_language_is_market_language_importance_modifier = -1.5
+		bias_for_capitalist_policies = -100
+	}
+}
+
+REPLACE:spiritualist_vs_humanist = {
+	left_modifier = {
+		global_clergy_city_desired_pop_scaled = 0.02
+		tolerance_own = 2
+
+		global_pop_conversion_speed_modifier = 0.50
+		global_pop_assimilation_speed_modifier = 0.50
+
+		tolerance_heretic = -2
+		tolerance_heathen = -2
+		pops_join
+
+
+		religious_unity_importance_modifier = 0.2
+		court_language_is_liturgical_language_importance_modifier = 0.75
+		bias_for_scholar_policies = 25
+		bias_for_tolerant_policies = -100
+		antagonism_religion_influence = 0.5
+
+		national_lutheranism_movement_resistance_modifier = 0.1
+		national_calvinism_movement_resistance_modifier = 0.1
+	}
+	right_modifier = {
+		tolerance_heretic = 2
+		tolerance_heathen = 2
+
+		accepted_culture_maintenance_cost_modifier = -0.25
+		cultures_capacity_modifier = 1.0
+
+		global_pop_conversion_speed_modifier = -0.25
+		global_pop_assimilation_speed_modifier = -0.25
+
+		religious_unity_importance_modifier = -0.2
+		court_language_is_liturgical_language_importance_modifier = -0.75
+		bias_for_scholar_policies = 25
+		bias_for_tolerant_policies = 100
+		antagonism_religion_influence = -0.5
+
+		national_lutheranism_movement_resistance_modifier = -0.2
+		national_calvinism_movement_resistance_modifier = -0.2
 	}
 }
