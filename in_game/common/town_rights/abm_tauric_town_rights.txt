@@ -22,11 +22,25 @@
 				text = abm_abtau_black_soil_rights_rank_tt
 				location_rank = location_rank:town
 			}
-			OR = {
-				raw_material = goods:wheat
-				raw_material = goods:wine
-				raw_material = goods:millet
-				raw_material = goods:legumes
+			# Arable crops only: the grain/root/pulse and orchard goods from
+			# common/goods/03_food.txt, plus wine. Deliberately EXCLUDES the other
+			# `method = farming` goods - livestock, horses and wool (animals), beeswax
+			# (apiaries), the plantation goods in 01_plantation_goods.txt (cotton, sugar,
+			# tobacco) and the tree/spice crops (tea, coffee, cocoa, dyes, incense, silk,
+			# saffron, pepper, cloves, chili).
+			custom_tooltip = {
+				text = abm_abtau_black_soil_rights_arable_tt
+				OR = {
+					raw_material = goods:wheat
+					raw_material = goods:maize
+					raw_material = goods:rice
+					raw_material = goods:millet
+					raw_material = goods:legumes
+					raw_material = goods:potato
+					raw_material = goods:olives
+					raw_material = goods:fruit
+					raw_material = goods:wine
+				}
 			}
 		}
 	}
