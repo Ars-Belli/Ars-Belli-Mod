@@ -535,14 +535,6 @@ abm_cri_ambition = {
 }
 
 ############################
-# Golden Horde
-############################
-
-INJECT:glh_tatar_traditions = {
-	army_light_cavalry_power = -0.10
-}
-
-############################
 # Astrakhan
 ############################
 abm_horde_ideas_tradition_1 = {
@@ -1013,4 +1005,37 @@ REPLACE:feo_the_iron_harvest_advance = {
 	global_max_control = 0.05
 
 	requires = hot_blast_furnace
+}
+
+############################
+# Golden Horde (GLH) - vanilla tag rebalance
+############################
+#
+# Three of the eight vanilla advances are touched. Two are INJECT deltas; the
+# third has to stay a REPLACE because the mod *swaps* a modifier key there
+# (maintenance cost -> reinforce cost) and INJECT can only append, never remove.
+# INJECT deltas are relative to the vanilla figure - recompute them if vanilla
+# rebalances the base value.
+#
+# glh_legacy_of_jochi: REPLACE, because `army_light_cavalry_maintenance_cost_modifier
+# -0.20` has to disappear and `army_light_cavalry_reinforce_cost_modifier -0.15`
+# take its place.
+REPLACE:glh_legacy_of_jochi = {
+	age = age_1_traditions
+	icon = glh_legacy_of_jochi
+	potential = {
+		has_or_had_tag = GLH
+	}
+
+	requires = horse_riding_advance
+
+	army_light_cavalry_reinforce_cost_modifier = -0.15 #was army_light_cavalry_maintenance_cost_modifier = -0.20
+}
+
+INJECT:glh_perso_mongol_administration = {
+	global_integration_speed_modifier = -0.05 # 0.25 -> 0.20
+}
+
+INJECT:glh_tatar_traditions = {
+	army_light_cavalry_power = -0.10 # 0.20 -> 0.10
 }

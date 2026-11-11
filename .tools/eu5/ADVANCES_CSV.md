@@ -24,7 +24,7 @@ One file → CSV written next to the script (same basename):
 
 ```bash
 cd .tools/eu5
-python3 parse_advances.py ../../in_game/common/advances/abm_f5-t3_egypt.txt
+python3 parse_advances.py ../../in_game/common/advances/abm_africa_east.txt
 ```
 
 One or more files → CSVs written to a chosen folder:
@@ -32,8 +32,8 @@ One or more files → CSVs written to a chosen folder:
 ```bash
 cd .tools/eu5
 python3 parse_advances.py \
-  ../../in_game/common/advances/abm_f5-t3_africa_west.txt \
-  ../../in_game/common/advances/abm_f5-t3_guinea.txt \
+  ../../in_game/common/advances/abm_africa_west.txt \
+  ../../in_game/common/advances/abm_africa_guinea.txt \
   ... \
   --out .
 ```
@@ -42,7 +42,7 @@ Using shell globs:
 
 ```bash
 cd .tools/eu5
-python3 parse_advances.py ../../in_game/common/advances/abm_f5-t3_*.txt --out .
+python3 parse_advances.py ../../in_game/common/advances/abm_*.txt --out .
 ```
 
 ## Region batches (as of 2026-08-14)
@@ -50,17 +50,16 @@ python3 parse_advances.py ../../in_game/common/advances/abm_f5-t3_*.txt --out .
 ```bash
 cd .tools/eu5
 
-# Africa / Egypt / Ethiopia / Guinea / Madagascar / Sahel / Somalia / Zimbabwe
+# Africa / Ethiopia / Guinea / Madagascar / Sahel / Somalia / Zimbabwe
 python3 parse_advances.py \
-  ../../in_game/common/advances/abm_f5-t3_africa_west.txt \
-  ../../in_game/common/advances/abm_f5-t3_africa_east.txt \
-  ../../in_game/common/advances/abm_f5-t3_egypt.txt \
-  ../../in_game/common/advances/abm_f5-t3_ethiopia.txt \
-  ../../in_game/common/advances/abm_f5-t3_guinea.txt \
-  ../../in_game/common/advances/abm_f5-t3_madagascar.txt \
-  ../../in_game/common/advances/abm_f5-t3_sahel.txt \
-  ../../in_game/common/advances/abm_f5-t3_somalia.txt \
-  ../../in_game/common/advances/abm_f5-t3_zimbabwe.txt \
+  ../../in_game/common/advances/abm_africa_west.txt \
+  ../../in_game/common/advances/abm_africa_east.txt \
+  ../../in_game/common/advances/abm_africa_ethiopia.txt \
+  ../../in_game/common/advances/abm_africa_guinea.txt \
+  ../../in_game/common/advances/abm_madagascar.txt \
+  ../../in_game/common/advances/abm_africa_sahel.txt \
+  ../../in_game/common/advances/abm_africa_somalia.txt \
+  ../../in_game/common/advances/abm_africa_zimbabwe.txt \
   --out .
 ```
 

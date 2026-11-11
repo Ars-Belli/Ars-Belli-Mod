@@ -4,7 +4,7 @@
 Reads the idea sets from .tools/eu4/ideas/00_country_ideas.txt, converts each
 EU4 modifier to its EU5 equivalent (CONVERSIONS below, every entry taken from
 an existing advance in this mod or from vanilla), and writes
-in_game/common/advances/abm_f3-t2_caucasus_qoyunlu.txt (UTF-8 BOM, CRLF).
+in_game/common/advances/abm_caucasus_qoyunlu.txt (UTF-8 BOM, CRLF).
 
 Advance ids keep the EU4 idea-set keys (abm_qar_*, abm_akk_*) because EU4
 localisation keys are `QAR_ideas_start`, `akk_white_sheep`, ... and
@@ -13,7 +13,7 @@ in EU5, so the advances' `has_or_had_tag` uses AQQ.
 
 Localisation is not written here; run afterwards:
     python3 .tools/scripts/generate_advance_loc.py \
-        in_game/common/advances/abm_f3-t2_caucasus_qoyunlu.txt \
+        in_game/common/advances/abm_caucasus_qoyunlu.txt \
         --out main_menu/localization/english/abm_advances_caucasus_l_english.yml
 """
 
@@ -27,7 +27,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EU4_IDEAS = REPO_ROOT / ".tools/eu4/ideas/00_country_ideas.txt"
 ADVANCE_DIR = REPO_ROOT / "in_game/common/advances"
-OUTPUT = ADVANCE_DIR / "abm_f3-t2_caucasus_qoyunlu.txt"
+OUTPUT = ADVANCE_DIR / "abm_caucasus_qoyunlu.txt"
 
 DEFAULT_GAME_ROOT = Path(
     "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game"

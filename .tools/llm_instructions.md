@@ -6,7 +6,7 @@ Mod root: `/home/zp/Games/Modding/Ars-Belli-Mod`
 Game root: `/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game`
 
 ## Advance Files
-All tag-specific China advances are in `in_game/common/advances/abm_f3-t2_*_china.txt`:
+All tag-specific China advances are in `in_game/common/advances/abm_china_*.txt`:
 - `_east`: CGU, CFN, WUU, CNP, ABJNX, CTW, ABCHU, CHE, MNG (9 tags)
 - `_south`: ABLEZ, CDN, MNE, LNG (4 tags)
 - `_norh`: YUA, CMO, ABANX, ABSAI, ABKHA, ABSHD, ABAYG, CSO (8 tags)
@@ -70,7 +70,7 @@ potential = {
 1. **`split_traditions_ambitions.py`** — splits age_1 double-modifier into tradition_1/2, renames last to ambition
 2. **`update_advance_names_icons_requires.py`** — updates names/icons/requires based on modifier-to-vanilla mapping
 3. **`diversify_icons.py`** — assigns unique vanilla icons via global round-robin
-4. **`generate_qoyunlu_advances.py`** — imports the EU4 Qoyunlu idea sets (`QAR_ideas`, `AKK_ideas` → EU5 tags QAR/AQQ) as advances: converts each EU4 modifier with its `CONVERSIONS` table (every row copied from an existing advance in this mod or vanilla), validates prerequisites/ages/icons, and writes `in_game/common/advances/abm_f3-t2_caucasus_qoyunlu.txt` (BOM + CRLF). `--check` validates without writing. Localisation is generated separately with `generate_advance_loc.py <file> --out main_menu/localization/english/abm_advances_caucasus_l_english.yml` (append-only, skips existing keys).
+4. **`generate_qoyunlu_advances.py`** — imports the EU4 Qoyunlu idea sets (`QAR_ideas`, `AKK_ideas` → EU5 tags QAR/AQQ) as advances: converts each EU4 modifier with its `CONVERSIONS` table (every row copied from an existing advance in this mod or vanilla), validates prerequisites/ages/icons, and writes `in_game/common/advances/abm_caucasus_qoyunlu.txt` (BOM + CRLF). `--check` validates without writing. Localisation is generated separately with `generate_advance_loc.py <file> --out main_menu/localization/english/abm_advances_caucasus_l_english.yml` (append-only, skips existing keys).
 5. **`sync_messagetypes.py`** — regenerates `main_menu/gui/messagetypes/abm_messagetypes.txt` (the Ars Belli message types only) from the tables in the script. `--check` reports drift without writing. Since game 1.4.4 message types load from the `gui/messagetypes/` folder (all files, later key wins), so no vanilla copy is needed and nothing to re-sync on patches; add new actions to the tables.
 6. **`generate_advances_from_ideas.py`** — the universal EU4-idea-set → EU5-advance importer (generalizes `generate_africa_advances.py`, `generate_middle_east_advances.py`, `generate_colonial_nations_advances.py` and `generate_qoyunlu_advances.py`). Takes any EU4 idea file / spec list (`--set SET=TAG` or a file of those lines) or `--all`, and writes the 10-advance set (2 traditions + 7 ideas + ambition, ages 1-6 ladder) plus localisation, both BOM + CRLF. Checks 7 idea slots, 2 tradition effects, missing `CONVERSIONS` rows (summarized), duplicate ids, `requires` existence/age and icon validity before writing anything. `--check` validates only, `--stdout` prints, `--preserve-values` reproduces the Qoyunlu (value-keeping) mapping, `--idea-key-prefix always` gives `abm_<set>_<idea>` ids, and `--overrides` / `--conversions` / `--requires-file` take JSON for per-run data.
 

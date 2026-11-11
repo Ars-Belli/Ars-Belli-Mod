@@ -11,7 +11,7 @@ are imported by naming them on the command line, e.g. the Qoyunlu sets
 
     python3 .tools/scripts/generate_colonial_nations_advances.py \
         --set QAR_ideas=QAR --set AKK_ideas=AQQ \
-        --output in_game/common/advances/abm_f3-t2_caucasus_qoyunlu.txt \
+        --output in_game/common/advances/abm_caucasus_qoyunlu.txt \
         --loc-output main_menu/localization/english/abm_advances_qoyunlu_l_english.yml
 """
 
@@ -41,7 +41,7 @@ COLONIAL_GROUPS = (
     ("NZL", "NZL_ideas"),
 )
 
-OUTPUT = Path("in_game/common/advances/abm_f4_colonial_nations.txt")
+OUTPUT = Path("in_game/common/advances/abm_colonial_nations.txt")
 LOC_OUTPUT = Path("main_menu/localization/english/abm_advances_colonial_l_english.yml")
 
 AGES = (

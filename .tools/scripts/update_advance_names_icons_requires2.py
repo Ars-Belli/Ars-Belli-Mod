@@ -37,8 +37,8 @@ automatically); existing line endings (LF or CRLF) are preserved.
 
 Examples:
   python .tools/update_advance_names_icons_requires2.py
-  python .tools/update_advance_names_icons_requires2.py in_game/common/advances/abm_f4-t2_india_bengal.txt
-  python .tools/update_advance_names_icons_requires2.py --icons BNG abm_f4-t2_india_bengal.txt
+  python .tools/update_advance_names_icons_requires2.py in_game/common/advances/abm_india_bengal.txt
+  python .tools/update_advance_names_icons_requires2.py --icons BNG abm_india_bengal.txt
   python .tools/update_advance_names_icons_requires2.py --requires abm_bng_combat_piracy
   python .tools/update_advance_names_icons_requires2.py --dir /path/to/eu5/advances --dry-run file.txt
 """

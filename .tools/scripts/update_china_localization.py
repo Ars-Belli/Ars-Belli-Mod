@@ -9,10 +9,10 @@ ADVANCE_DIR = BASE / "in_game/common/advances"
 LOC_FILE = BASE / "main_menu/localization/english/abm_advances_china_l_english.yml"
 
 CHINA_FILES = [
-    "abm_f3-t2_china_north.txt",
-    "abm_f3-t2_china_east.txt",
-    "abm_f3-t2_china_south.txt",
-    "abm_f3-t2_china_west.txt",
+    "abm_china_north.txt",
+    "abm_china_east.txt",
+    "abm_china_south.txt",
+    "abm_china_west.txt",
 ]
 
 # Tag display names

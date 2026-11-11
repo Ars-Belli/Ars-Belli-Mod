@@ -74,7 +74,7 @@ Examples
 
   # import a spec file into an existing advance file
   python3 .tools/scripts/generate_advances_from_ideas.py sets.txt \
-      --output in_game/common/advances/abm_f3-t2_caucasus_qoyunlu.txt \
+      --output in_game/common/advances/abm_caucasus_qoyunlu.txt \
       --loc-output main_menu/localization/english/abm_advances_caucasus_l_english.yml
 
   # convert every set of an out-of-tree idea file, tag = AB + set prefix

@@ -19,11 +19,11 @@ Usage:
   <dir>/<basename>.csv.
 
 Examples:
-  # one file -> .tools/eu5/abm_f5-t3_egypt.csv
-  python3 parse_advances.py ../../in_game/common/advances/abm_f5-t3_egypt.txt
+  # one file -> .tools/eu5/abm_africa_east.csv
+  python3 parse_advances.py ../../in_game/common/advances/abm_africa_east.txt
 
   # many files -> .tools/eu5/*.csv
-  python3 parse_advances.py ../../in_game/common/advances/abm_f5-t3_*.txt --out .
+  python3 parse_advances.py ../../in_game/common/advances/abm_*.txt --out .
 """
 
 import csv

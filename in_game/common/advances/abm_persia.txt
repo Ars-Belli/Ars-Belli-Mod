@@ -3,12 +3,184 @@
 
 # PERSIA
 
-##########################
-### Ilkhanate Formable ###
-##########################
+############################
+# Ilkhanate (ILK) - vanilla tag rebalance
+############################
+#
+# Vanilla still owns the file, and two of its five advances are used as-is
+# (ilk_restore_yam, ilk_ilkhanate_resurgent). Only these three are touched:
+#  - ilk_persian_arts_and_architecture: INJECT delta (research speed 0.1 -> 0.05)
+#  - ilk_new_roots: REPLACE, because the `allow` gate and `allow_children = no`
+#    have to be *removed*, and INJECT can only append
+#  - ilk_descendants_of_genghis_khan: retired (no DELETE keyword in EU5, so the
+#    potential is forced false and the id stays defined but unobtainable)
+# INJECT deltas are relative to the vanilla figure - recompute if vanilla changes it.
+#
+# The abm_ilk_* blocks below are new content, not overrides.
 
-#Merged into the basegame file.
+abm_ilk_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ILK
+	}
 
+	requires = feudalism_advance
+
+	# cavalry_power = 0.2
+	prestige_from_land_battle = 1 #was army_heavy_cavalry_power = 0.10
+}
+
+abm_ilk_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = feudalism_advance
+
+	# cavalry_cost = -0.15
+	#army_light_cavalry_build_cost_modifier = -0.10
+	#army_heavy_cavalry_build_cost_modifier = -0.10
+	tribes_estate_levy_size = 0.25 #new
+}
+
+#abm_ilk_restored_ilkhanate = {
+#	age = age_2_renaissance
+#	icon = smooth_administration
+#	potential = {
+#		has_or_had_tag = ILK
+#	}
+#
+#	requires = renaissance_thought
+#
+#	# legitimacy = 1
+#	# devotion = 1
+#	# republican_tradition = 0.3
+#	# meritocracy = 1
+#	# horde_unity = 1
+#	monthly_legitimacy = 0.10
+#	monthly_devotion = 0.10
+#	monthly_republican_tradition = 0.10
+#	monthly_tribal_cohesion = 0.10
+#	monthly_horde_unity = 0.10
+#}
+
+#abm_ilk_favor_sufism = {
+#	age = age_2_renaissance
+#	icon = church_councils
+#	potential = {
+#		has_or_had_tag = ILK
+#	}
+#
+#	requires = legalism_advance
+#
+#	# tolerance_heretic = 2
+#	tolerance_heretic = 1
+#}
+
+abm_ilk_persian_language_at_court = {
+	age = age_3_discovery
+	icon = cultural_acceptance_advance
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = printing_press_advance
+
+	# num_accepted_cultures = 1
+	cultures_capacity = 1
+}
+
+#abm_ilk_yam_networks = {
+#	age = age_3_discovery
+#	icon = glorious_arms
+#	potential = {
+#		has_or_had_tag = ILK
+#	}
+#
+#	requires = paved_road_advance
+#
+#	# movement_speed = 0.15
+#	# envoy_travel_time = -0.25
+#	army_movement_speed = 0.10
+#	diplomatic_range_modifier = 0.10
+#}
+
+INJECT:ilk_persian_arts_and_architecture = {
+	research_speed_modifier = -0.05 # 0.1 -> 0.05
+}
+
+REPLACE:ilk_descendants_of_genghis_khan = {
+	age = age_3_discovery
+	potential = { always = no }
+	requires = pike_and_shot_advance
+	icon = successors_of_genghis_khan
+
+	army_light_cavalry_power = 0.2
+}
+
+abm_ilk_mongol_peace = {
+	age = age_4_reformation
+	icon = administrative_leadership
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# years_of_nationalism = -5
+	global_separatism = -0.1 #was pop_join_rebel_threshold = -0.05
+}
+
+#abm_ilk_patronize_observatories = {
+#	age = age_4_reformation
+#	icon = library_advance
+#	potential = {
+#		has_or_had_tag = ILK
+#	}
+#
+#	requires = global_trade_advance
+#
+#	# technology_cost = -0.05
+#	research_speed_modifier = 0.05
+#}
+
+REPLACE:ilk_new_roots = {	#They move away from being horde-like to a more reformed state, more stable and robust
+	age = age_4_reformation
+	potential = { has_or_had_tag = ILK}
+	requires = early_modern_administation
+	icon = administrative_leadership
+
+	government_reform_slots = 1
+}
+
+abm_ilk_recruit_turkoman_gunners = {
+	age = age_5_absolutism
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = absolutist_court
+
+	# fire_damage = 0.1
+	army_light_infantry_power = 0.15 #was army_fire_damage = 0.10 - non-functional
+}
+
+abm_ilk_ideas_ambition = {
+	age = age_6_revolutions
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = ILK
+	}
+
+	requires = napoleonic_warfare
+
+	# cavalry_flanking = 0.5
+	army_light_cavalry_power = 0.10
+}
 #######################
 ### Fars - formable ###
 #######################
@@ -1676,4 +1848,42 @@ abm_afg_ideas_ambition = {
 
 	# general_cost = -0.33
 	war_score_vs_other_religion_efficiency = 0.25 #was train_general_cost_modifier = -0.10
+}
+
+############################
+# Persia (IRA) - vanilla tag rebalance
+############################
+#
+# Layered on top of vanilla country_ira.txt. The abm_frs_* / abm_aja_* blocks
+# elsewhere in this file are the mod's own Persia-region idea imports; the blocks
+# below only adjust the IRA tag's vanilla advances.
+#
+# ira_persian_plateau is NOT handled here: abm_rough_terrain_advances.txt already
+# carries an identical REPLACE block for it (vanilla's three country-wide
+# *_proximity_impact keys swapped for unlock_government_reform), so restating it
+# would be a duplicate definition. Left to that file.
+#
+# ira_islamized_persia is retired. Vanilla's jurisprudence push was the wrong
+# direction for a Persia that should drift towards mysticism, and an add-on file
+# cannot delete an entry, so the potential is forced false: the id stays defined
+# (nothing requires it) but is unobtainable.
+REPLACE:ira_islamized_persia = {
+	age = age_1_traditions
+	icon = ira_islamized_persia
+	potential = {
+		always = no
+	}
+
+	requires = legalism_advance
+}
+
+# The two below are INJECT deltas against the vanilla figure - they must be
+# recomputed if vanilla rebalances the base value.
+INJECT:ira_restoration_of_cities = {
+	town_upgrade_cost_modifier = 0.05 # -0.25 -> -0.20
+	city_upgrade_cost_modifier = 0.05 # -0.25 -> -0.20
+}
+
+INJECT:ira_persian_rug_production = {
+	global_cloth_output_modifier = -0.08 # 0.33 -> 0.25
 }

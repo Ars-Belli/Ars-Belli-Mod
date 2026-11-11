@@ -721,3 +721,29 @@ abm_trs_ideas_ambition = {
 	# idea_cost = -0.1
 	global_max_literacy = 10 #was research_speed_modifier = 0.05
 }
+
+############################
+# Chagatai (CHG) - vanilla tag rebalance
+############################
+#
+# These are INJECT blocks, not a full-file replacement, so vanilla keeps owning
+# the file and any 1.4.x patch to the other five Chagatai advances flows through
+# untouched. INJECT appends to the existing entry and already-present modifier
+# keys ADD, so every value below is a DELTA against the vanilla figure, with the
+# resulting total in the comment. If vanilla ever rebalances a base value, the
+# delta has to be recomputed.
+INJECT:chg_border_wars = {
+	army_reinforce_efficiency = -0.10 # 0.20 -> 0.10
+}
+
+INJECT:chg_tradition_of_conquest = {
+	global_integration_speed_modifier = -0.05 # 0.25 -> 0.20
+}
+
+INJECT:chg_scheming_court = {
+	counter_espionage = 0.2 #new
+}
+
+INJECT:chg_glory_of_conquest = {
+	global_manpower_modifier = -0.025 # 0.125 -> 0.100
+}
