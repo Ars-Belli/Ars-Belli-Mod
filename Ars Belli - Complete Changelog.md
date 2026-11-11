@@ -4,9 +4,9 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.4.6.mod.28 | **Supported game version:** 1.4.\*
-**Compiled:** 9 November 2026 (cumulative section verified against the mod files on 31 October
-2026, and the mod.28 changes on 9 November 2026)
+**Mod version:** game.1.4.8.mod.29 | **Supported game version:** 1.4.\*
+**Compiled:** 11 November 2026 (cumulative section verified against the mod files on 31 October
+2026, the mod.28 changes on 9 November 2026 and the mod.29 changes on 11 November 2026)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -37,7 +37,8 @@ here in full, but these can be easily seen in-game on the world map.
 
 **[Release History (Patchnotes)](#release-history-patchnotes)**
 
-- [game.1.4.6.mod.28](#game146mod28-current)
+- [game.1.4.8.mod.29](#game148mod29-current)
+- [game.1.4.6.mod.28](#game146mod28)
 - [game.1.4.6.mod.27](#game146mod27)
 - [game.1.4.4.mod.26](#game144mod26)
 - [game.1.3.11.mod.23](#game1311mod23-current)
@@ -412,13 +413,13 @@ Rebuilt from scratch.
 
 ### Battles and armies
 
-- Land battles end sooner: strength and morale damage are doubled. [vanilla land strength damage
-  0.04, morale damage 0.25]
-- Heavy infantry combat speed 2.25. [vanilla 2] Reserve regiments join the front line more often, so
-  big infantry armies get to use their reserves.
-- Armies and navies move 25% slower.
-- Tribal levies raise 400-man regiments [vanilla 200]: Tribal Cavalry, Tribal Camelry and the
-  Zenata, Sanhaja, Tuareg and Hilali levies. The same men in half as many regiments.
+- Cavalry needs ten times the horses: every horse unit pays ×10 horses to build, reinforce and
+  maintain, and every camel unit ×10 camels. Their other goods are unchanged.
+- Cavalry combat power by age, from Traditions to Revolutions: 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2.
+  [vanilla 2.6 / 2.6 / 2.6 / 2.85 / 3.25 / 3.25] Light and heavy cavalry, mercenaries included.
+- Cavalry maintenance costs 6% of its men in manpower a month. [vanilla 4%; infantry 2%]
+- Tribal levies raise 350-man regiments [vanilla 200]: Tribal Cavalry, Tribal Camelry and the
+  Zenata, Sanhaja, Tuareg and Hilali levies. The same men in fewer regiments.
 
 ## 9. Forts and Sieges
 
@@ -555,6 +556,7 @@ Cut hard, to make wars less static.
 - **Fondaco:** any merchant republic except the Hansa, with twice the base game's effects, one level
   and only one trade post per location.
 - **Hanseatic Kontor:** one level, sharing that one trade post per location with fondacos.
+- **Stud Farm:** at most 2 levels per location.
 - **Merchant Enclave:** a trade post with about 75% of a fondaco's effects, for the Chinese
   Meritocratic Government, Indian Maritime League, Bazaar Republic, Bengaleese Meritocracy and Trade
   Emporium. It needs fondaco rights.
@@ -611,7 +613,7 @@ in-game.
   heathen tolerance and no literacy]
 
 - **Across the Pillars:** Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen. [vanilla
-  10%] Masmuda tribesmen still raise Atlas Infantry and do not switch to the bigger Tribal Cavalry.
+  8%] Masmuda tribesmen still raise Atlas Infantry and do not switch to the bigger Tribal Cavalry.
 - **Battle for the Strait:** Castile can only **Vassalize Granada** while the AI plays Granada.
   Portugal and Granada no longer get the event that makes them ally Castile or Morocco or lose
   prestige and legitimacy.
@@ -691,6 +693,9 @@ in-game.
 - Alerts: mutable alert when over the alliance limit; toggleable monthly popup when over the fort
   limit (default ON).
 - Multiplayer events wait 5 months before their first option is taken for you. [vanilla 3]
+- Economy panel: a checkbox beside the army maintenance slider stops reinforcement in all your
+  armies. While it is off your regiments do not refill and cost nothing to reinforce. The AI does
+  not use it.
 - Enforce Peace button on the war view is always visible and explains what is missing when
   unavailable.
 - Vanilla actions that are against the house rules are relabelled in-game (Send Economic Support,
@@ -721,11 +726,11 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.4.\*** (mod version game.1.4.6.mod.28). Every base-game file the mod
-  replaces is re-based on 1.4.4 and checked against 1.4.6 and the Across the Pillars DLC (interface,
-  diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start: pops, buildings, roads,
-  diplomacy and country cultures). Not yet checked against 1.4.7: where the mod replaces a
-  base-game file, 1.4.7's changes to that file do not apply.
+- Supported game version: **1.4.\*** (mod version game.1.4.8.mod.29). Every base-game file the mod
+  replaces is brought up to game 1.4.8, the 1.4.7 changes and the Across the Pillars DLC included
+  (interface, diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start: pops,
+  buildings, roads, diplomacy and country cultures). Play it on 1.4.8: some of the updated files
+  use script that game 1.4.7 does not have.
 - Base-game files were refreshed to the 1.2.5 baseline (pops, town setups, country, market,
   institution, disease and development setup, diplomacy, wars and localisation) and to the 1.3
   baseline for the Holy Roman Empire organisation definition.
@@ -754,7 +759,44 @@ Every advance and value, with the history of changes: https://claude.ai/artifact
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.4.6.mod.28 (current)
+## game.1.4.8.mod.29 (current)
+
+Since game.1.4.6.mod.28 → game.1.4.8.mod.29:
+
+### Patch Compatibility
+
+- updated for game 1.4.8, the 1.4.7 changes included. Play this version on 1.4.8: some of the
+  updated files use script that game 1.4.7 does not have
+
+### Battles and Armies
+
+- cavalry needs ten times the horses: every horse unit pays ×10 horses to build, reinforce and
+  maintain, and every camel unit ×10 camels. Their other goods are unchanged
+- cavalry combat power by age, from Traditions to Revolutions: 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2
+  [vanilla 2.6 / 2.6 / 2.6 / 2.85 / 3.25 / 3.25]. Light and heavy cavalry, mercenaries included
+- cavalry maintenance costs 6% of its men in manpower a month [vanilla 4%; infantry 2%]
+- land battle damage is back to vanilla [was doubled]
+- heavy infantry combat speed is back to vanilla 2 [was 2.25]
+- armies and navies move at vanilla speed again [was 25% slower]
+- tribal levies raise 350-man regiments [was 400, vanilla 200]: Tribal Cavalry, Tribal Camelry and
+  the Zenata, Sanhaja, Tuareg and Hilali levies
+
+### Buildings and Reforms
+
+- **Stud Farm:** at most 2 levels per location
+- **Hanseatic Kontor:** fixed an error in its definition that could drop the limit to Hanseatic
+  League members
+
+### UI and Quality of Life
+
+- economy panel: a checkbox beside the army maintenance slider stops reinforcement in all your
+  armies. While it is off your regiments do not refill and cost nothing to reinforce. The AI does
+  not use it
+- **Expel Trade Offices** and **Expel Fondacos, Kontors and Enclaves** have their own messages for
+  both sides, with toggles in the message settings
+- regiment, mercenary and battle tooltips: fixed the rules that hide ship-only stats on land units
+
+## game.1.4.6.mod.28
 
 Since game.1.4.6.mod.27 → game.1.4.6.mod.28:
 
