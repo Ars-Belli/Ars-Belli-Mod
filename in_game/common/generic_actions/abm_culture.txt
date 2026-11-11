@@ -1,0 +1,226 @@
+﻿# ARS BELLI: `change_primary_culture` override - the ruler's own culture is no longer a
+# valid basis for switching the state culture (vanilla accepted `ruler ?= { culture = root }`
+# next to the dominant-culture paths, which let a foreign-born ruler re-root the realm).
+#
+# `REPLACE:` is real engine syntax (see `abm_general_religion.txt` for the binary evidence
+# and the caveat about the mod's one recorded failure in this folder).
+#
+# Also new: the target culture must be >= 50% of the country's pops, and > 75% when it
+# sits outside the country's own culture group.
+#
+# VERIFY IN GAME: if the ruler's culture still shows up as a reason to change the state
+# culture, `REPLACE:` is not honoured in generic_actions and this file must go back to
+# being a full copy of vanilla `generic_actions/culture.txt`.
+
+REPLACE:change_primary_culture = {
+	type = owncountry
+
+	potential = {
+	}
+
+	allow = {
+		scope:actor = {
+			is_colonial_subject = no
+			in_civil_war = no
+		}
+	}
+
+	ai_tick = monthly
+	ai_tick_frequency = 12
+
+	automation_tick = monthly
+	automation_tick_frequency = 1
+
+	price = price:change_primary_culture
+
+	cooldown = {
+		type = convert_culture
+		years = 10
+	}
+
+	select_trigger = {
+		looking_for_a = culture
+		source = actor
+		target_flag = target
+		name = "change_culture_select_culture"
+		none_available_msg_key = "change_primary_culture_no_cultures"
+
+		ai_interaction_source_list = {
+			scope:actor = {
+				if = {
+					limit = { exists = dominant_culture }
+					dominant_culture = {
+						add_to_list = source
+					}
+				}
+				else = {
+					culture = {
+						add_to_list = source
+					}
+				}
+			}
+		}
+
+		column = {
+			data = name
+		}
+		visible = {
+			trigger_if = {
+				limit = {
+					has_game_rule = dynamic_culture
+				}
+				always = yes
+			}
+			trigger_else_if = {
+				limit = {
+					has_game_rule = culture_group_only
+				}
+				scope:actor = {
+					culture = {
+						any_culture_group = {
+							root = {
+								has_culture_group = prev
+							}
+						}
+					}
+				}
+			}
+			trigger_else_if = {
+				limit = {
+					has_game_rule = culture_present_in_country
+				}
+				scope:actor = {
+					culture_population_in_country = {
+						culture = root
+						value > 0
+					}
+				}
+			}
+			trigger_else = {
+				always = yes
+			}
+		}
+		enabled = {
+			trigger_if = {
+				limit = {
+					has_game_rule = dynamic_culture
+				}
+				scope:actor = {
+					has_accepted_culture = root
+					not = { culture = root }
+					# Ars Belli: the ruler's own culture is NOT a valid reason to change the
+					# state culture (vanilla allowed `ruler ?= { culture = root }` here). A
+					# foreign-born doge or king must not be able to re-root the realm.
+					OR = {
+						dominant_culture ?= root
+						dominant_upper_class_culture ?= root
+					}
+				}
+			}
+			# Ars Belli: the target culture must actually be the country's people before it
+			# can become the state culture - at least half the population, and over three
+			# quarters once it lies outside our own culture group. Independent of the
+			# conversion game rule, so `culture_group_only` / `any_culture` cannot bypass it.
+			scope:actor = {
+				culture_percentage_in_country = {
+					culture = root
+					value >= 0.5
+				}
+				trigger_if = {
+					limit = {
+						NOT = {
+							culture = {
+								any_culture_group = {
+									root = { has_culture_group = prev }
+								}
+							}
+						}
+					}
+					culture_percentage_in_country = {
+						culture = root
+						value > 0.75
+					}
+				}
+			}
+			can_change_primary_culture = {
+				country = scope:actor
+				culture = root
+			}
+		}
+	}
+
+	effect = {
+		scope:actor = {
+			if = {
+				limit = {
+					exists = scope:target
+				}
+				culture = {
+					save_scope_as = old_culture
+				}
+				change_culture = scope:target
+				add_accepted_culture = scope:old_culture
+				grant_culture_bonus_advances = scope:target
+			}
+		}
+	}
+	
+	ai_will_do = {
+		if = {
+			limit = {
+				scope:actor = {
+					at_war = yes
+				}
+			}
+			multiply = 0
+		}
+
+		# change our primiary culture if it is 10% bigger than our current one and we are at peace
+		if = {
+			limit = {
+				scope:actor = {
+					"culture_percentage_in_country(scope:target)" > { value = "culture_percentage_in_country(scope:actor.culture)" add = 0.1 }
+				}
+			}
+			add = 1000
+		}
+
+		subtract = {
+			desc = "less accepted pops"
+			scope:actor = {
+				value = 100
+				multiply = "culture_percentage_in_country(scope:target)"
+			}
+		}
+		
+		
+		if = {
+			limit = {
+				scope:actor = {
+					ruler ?= { culture = scope:actor.culture }
+				}
+			}
+			multiply = 0
+		}
+
+		if = {
+			limit = { 
+				has_game_rule = historical_ai_choices
+				scope:actor = {
+					has_or_had_tag = TUR
+				}
+			}
+
+			add = {
+				desc = "historical ottomans"
+				value = -10000
+			}
+		}
+		
+		add = {
+			desc = "inertia"
+			value = -1
+		}
+
+	}
+}

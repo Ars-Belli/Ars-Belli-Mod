@@ -1,8 +1,14 @@
-﻿# scope:actor ?= country, scope:recipient = religion
-
+﻿# ARS BELLI: `demand_extra_payment_from_shogun_court` override - the shogun court must
+# actively like you (opinion > 0, was >= -50) and the payout is 4x monthly income, not 24x.
 #
-# Imperial Court
+# `REPLACE:` is real engine syntax - the binary carries the keyword table
+# INJECT: / TRY_INJECT: / INJECT_OR_CREATE: / REPLACE: / REPLACE_OR_CREATE: - although
+# vanilla and the DLCs never use `REPLACE:` themselves. The alternative, a same-name copy
+# of the whole vanilla file, was rejected here because 19 of its 20 actions are untouched.
 #
+# VERIFY IN GAME: if the payout is still 24x monthly income, `REPLACE:` is not honoured in
+# generic_actions and this file must go back to being a full copy of vanilla
+# `generic_actions/religious_factions.txt` (see `abm_general_religion.txt` for the same note).
 
 REPLACE:demand_extra_payment_from_shogun_court = {
 	icon = become_shogun_from_imperial_court
