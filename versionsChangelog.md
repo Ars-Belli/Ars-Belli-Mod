@@ -4,6 +4,43 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.4.8.mod.29
+
+Since game.1.4.6.mod.28 → game.1.4.8.mod.29:
+
+### Patch Compatibility
+
+- updated for game 1.4.8, the 1.4.7 changes included. Play this version on 1.4.8: some of the
+  updated files use script that game 1.4.7 does not have
+
+### Battles and Armies
+
+- cavalry needs ten times the horses: every horse unit pays ×10 horses to build, reinforce and
+  maintain, and every camel unit ×10 camels. Their other goods are unchanged
+- cavalry combat power by age, from Traditions to Revolutions: 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2
+  [vanilla 2.6 / 2.6 / 2.6 / 2.85 / 3.25 / 3.25]. Light and heavy cavalry, mercenaries included
+- cavalry maintenance costs 6% of its men in manpower a month [vanilla 4%; infantry 2%]
+- land battle damage is back to vanilla [was doubled]
+- heavy infantry combat speed is back to vanilla 2 [was 2.25]
+- armies and navies move at vanilla speed again [was 25% slower]
+- tribal levies raise 350-man regiments [was 400, vanilla 200]: Tribal Cavalry, Tribal Camelry and
+  the Zenata, Sanhaja, Tuareg and Hilali levies
+
+### Buildings and Reforms
+
+- **Stud Farm:** at most 2 levels per location
+- **Hanseatic Kontor:** fixed an error in its definition that could drop the limit to Hanseatic
+  League members
+
+### UI and Quality of Life
+
+- economy panel: a checkbox beside the army maintenance slider stops reinforcement in all your
+  armies. While it is off your regiments do not refill and cost nothing to reinforce. The AI does
+  not use it
+- **Expel Trade Offices** and **Expel Fondacos, Kontors and Enclaves** have their own messages for
+  both sides, with toggles in the message settings
+- regiment, mercenary and battle tooltips: fixed the rules that hide ship-only stats on land units
+
 ## game.1.4.6.mod.28
 
 Since game.1.4.6.mod.27 → game.1.4.6.mod.28:
