@@ -1,20 +1,57 @@
 ﻿REPLACE:offensive_vs_defensive = {
 	left_modifier = {
-		global_defensive = -0.2
-		siege_ability = 0.2
-		assault_ability = 0.2
+		siege_ability = 0.20
+		assault_ability = 0.20
+
+		global_defensive = -0.20
+		army_movement_speed = 0.10
 		army_logistics_distance_modifier = 0.25
-		defence_importance_modifier = -0.2
+		defence_importance_modifier = -0.20
+		regiment_reinforcement_speed = 0.10
 		# Ars Belli: vanilla's bias_for_militarist_policies = 50 and
 		# antagonism_declared_war_no_cb_giving_modifier = -0.1 are left out (as in mod.25)
 	}
 	right_modifier = {
+		fort_maintenance_efficiency = 0.40
+		combat_speed_modifier = 0.10
+
 		global_defensive = 0.5
-		siege_ability = -0.1
+		siege_ability = -0.10
+		morale_recovery_in_friendly = 0.05
+
 		fort_limit_modifier = 0.25
-		fort_maintenance_efficiency = 0.4
-		defence_importance_modifier = 0.2
+
+		defence_importance_modifier = 0.20
 		# Ars Belli: vanilla's bias_for_diplomat_policies = 50 is left out (as in mod.25)
 	}
 }
 
+REPLACE:aristocracy_vs_plutocracy = { #
+
+	left_modifier = {
+		discipline = 0.10
+		global_nobles_estate_power = 0.50
+		global_nobles_city_desired_pop_scaled = 0.01
+		global_nobles_pop_growth = 0.25
+
+		court_spending_efficiency = -0.25
+		court_language_is_market_language_importance_modifier = -1.5
+		monthly_diplomats = 0.25			#NEW
+
+		bias_for_patron_of_arts_policies = 50
+		bias_for_militarist_policies = 25
+	}
+	right_modifier = {
+		military_tactics = 0.20				#NEW - to compensate for discipline
+		global_burghers_estate_power = 0.50
+		global_burghers_desired_pop_scaled = 0.01	# 1% of all pops, not just in cities
+		selling_efficiency = small_selling_efficiency_bonus
+
+		court_spending_efficiency  = 0.5
+		court_language_is_market_language_importance_modifier = 1.5
+		market_building_levels = 0.5
+
+		bias_for_patron_of_arts_policies = 50
+		bias_for_capitalist_policies = 25
+	}
+}
