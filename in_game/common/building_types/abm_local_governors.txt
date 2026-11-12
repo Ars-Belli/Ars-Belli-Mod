@@ -1,11 +1,11 @@
 ﻿# Ars Belli - local governor, pointed at abm_has_unused_local_governor.
 #
-# The ONLY change against vanilla (capital_buildings.txt) is the cap check: the two inline
-# value blocks are replaced by a call to the shared trigger, which is vanilla's own idiom
-# plus the court offices that park on a local governor post
-# (abm_provincial_chancellery, abm_court_secretariat). Everything else - tooltips, DLC
-# branch, location_potential, remove_if, upkeep - is a verbatim copy, so re-diff this
-# block against vanilla after every game patch (expected delta: the two allow lines).
+# The ONLY change against vanilla (capital_buildings.txt, game 1.4.8) is the cap check: the
+# inline value block is replaced by a call to the shared trigger, which is vanilla's own
+# idiom plus the court offices that park on a local governor post
+# (abm_provincial_chancellery, abm_court_secretariat). Everything else - tooltip,
+# location_potential, remove_if, upkeep - is a verbatim copy, so re-diff this block
+# against vanilla after every game patch (expected delta: the one allow line).
 
 REPLACE:local_governor = {
 	audio_tier = 2
@@ -24,18 +24,9 @@ REPLACE:local_governor = {
 	megalopolis = yes
 
 	allow = {
-		trigger_if = {
-			limit = { has_dlc = "d009_across_the_pillars" }
-			custom_tooltip = {
-				text = local_governor_dlc_tt
-				scope:actor = { abm_has_unused_local_governor = yes }
-			}
-		}
-		trigger_else = {
-			custom_tooltip = {
-				text = local_governor_tt
-				scope:actor = { abm_has_unused_local_governor = yes }
-			}
+		custom_tooltip = {
+			text = local_governor_tt
+			scope:actor = { abm_has_unused_local_governor = yes } # Ars Belli: shared cap check
 		}
 		owner = scope:actor #not in subjects
 	}
