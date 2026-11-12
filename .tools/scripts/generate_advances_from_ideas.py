@@ -378,6 +378,9 @@ _FIXED_CONVERSIONS: dict[str, tuple[str, ...]] = {
     # Galicia (EU4 GAL_ideas): no EU5 key for the morale hit of losing a ship,
     # so navy morale is the analogue (cf. naval_morale above).
     "sunk_ship_morale_hit_recieved": ("naval_morale_modifier = 0.10",),
+    # Offaly (EU4 FLY_ideas): EU4 mercenary_cost has no EU5 hire-cost key; the
+    # maintenance-efficiency row is what the other imports use for merc costs.
+    "mercenary_cost": ("mercenary_maintenance_efficiency = 0.15",),
     # --- HRE / German idea sets ---
     # EU4 state maintenance has no EU5 key; court spending is the analogue the
     # India/Ruthenia imports already use for it.

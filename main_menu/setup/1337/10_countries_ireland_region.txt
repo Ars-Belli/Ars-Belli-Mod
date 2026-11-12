@@ -15,12 +15,10 @@ current_age = age_1_traditions
 countries = {
 	countries = {
 	CLA = {
-		own_control_core = {
-			belfast newtownards ballymena
-		}
 		our_cores_conquered_by_others = {
 			# TYR Tyrone
 			dungannon magherafelt strabane clogher
+			belfast newtownards ballymena
 		}
 
 		include = "gaelic_tribe"
@@ -41,6 +39,10 @@ countries = {
 		own_control_core = {
 			killarney muskerry dunhallow kilbrittain
 		}
+		own_control_conquered = {
+			# the Pale's Cork and Beare's Carbery
+			cork carbery
+		}
 
 		include = "gaelic_tribe"
 		include = "expl_western_europe"
@@ -55,7 +57,7 @@ countries = {
 		capital = killarney
 	}
 	BEA = { # Beare
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			carbery
 		}
 
@@ -71,25 +73,17 @@ countries = {
 		capital = carbery
 	}
 	PLE = { # The Pale
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			# the pale proper
-			dublin navan fingal glendalough
+			dublin navan fingal drogheda dundalk
 
-			wexford new_ross
+			waterford wexford new_ross
 			# lordship of meath
-			trim kells  ballymore
+			trim kells ballymore
 			# kilkenny frontier
-			carlow kilkenny
-			mullingar
-			wicklow
-			# rest of Meath, Kildare, Wexford and Kilkenny
-			longford ardagh tullamore ferns athy kildare naas daingean dunamase cullahill
-		}
-		own_control_integrated = {
-			
-		}
-		own_control_conquered = {
+			carlow kilkenny mullingar wicklow
 
+			limerick cork
 		}
 		government = {
 			type = monarchy
@@ -140,6 +134,10 @@ countries = {
 		own_control_core = {
 			dungannon magherafelt strabane clogher
 		}
+		own_control_conquered = {
+			# Derry, Inishowen and Fermanagh
+			derry coleraine inishowen enniskillen belcoo
+		}
 		our_cores_conquered_by_others = {
 			# CLA Clandeboye
 			ballymena belfast iveagh newtownards
@@ -184,7 +182,7 @@ countries = {
 		capital = dungannon
 	}
 	INI = { # Inishowen
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			inishowen
 		}
 
@@ -200,6 +198,10 @@ countries = {
 		own_control_core = {
 			raphoe
 		}
+		own_control_conquered = {
+			# Tyrconnell
+			donegal kilmacrennan
+		}
 
 		include = "gaelic_tribe_no_coast"
 		include = "expl_western_europe"
@@ -210,7 +212,7 @@ countries = {
 		capital = raphoe
 	}
 	KEE = {
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			derry coleraine
 		}
 
@@ -222,7 +224,7 @@ countries = {
 		capital = derry
 	}
 	IVG = {
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			iveagh
 		}
 
@@ -234,7 +236,7 @@ countries = {
 		capital = iveagh
 	}
 	TGH = {
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			skreen
 		}
 
@@ -246,11 +248,8 @@ countries = {
 		capital = skreen
 	}
 	IMA = {
-		own_control_core = {
-			# glendalough
-		}
-
 		our_cores_conquered_by_others = {
+			glendalough
 			carlow # Castledermot ancestral homeland
 		}
 
@@ -262,7 +261,7 @@ countries = {
 		capital = glendalough
 	}
 	GLS = {
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			ballycastle
 		}
 
@@ -276,9 +275,20 @@ countries = {
 		capital = ballycastle
 	}
 	LEI = { # Leinster
-		our_cores_conquered_by_others = {
+		own_control_core = {
 			ferns
-			wexford new_ross carlow athy kildare naas glendalough dublin wicklow # the fifth of leinster
+		}
+		own_control_conquered = {
+			# annexation of the Pale
+			dublin navan fingal drogheda dundalk
+			waterford wexford new_ross
+			trim kells ballymore carlow kilkenny mullingar wicklow
+			# Ima
+			glendalough
+		}
+
+		our_cores_conquered_by_others = {
+			athy kildare naas # the fifth of leinster
 		}
 
 		tolerated_cultures = { anglo_irish }
@@ -293,7 +303,7 @@ countries = {
 		capital = wicklow
 	}
 	TRY = {
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			donegal kilmacrennan
 		}
 
@@ -306,7 +316,7 @@ countries = {
 		capital = donegal
 	}
 	OIL = {
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			monaghan carrickmacross
 		}
 
@@ -319,7 +329,7 @@ countries = {
 		capital = monaghan
 	}
 	AMA = { #Archbishopric of Armagh
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			armagh oriel
 		}
 
@@ -344,6 +354,10 @@ countries = {
 		own_control_core = {
 			roscommon castlereagh
 		}
+		own_control_conquered = {
+			# Clanricarde, Hy Many and Thomond
+			galway athenry tuam athlone kilconnell ennis bunratty moyarta
+		}
 
 		include = "gaelic_tribe_no_coast"
 		include = "expl_western_europe"
@@ -357,6 +371,8 @@ countries = {
 	ANN = { # Annaly
 		our_cores_conquered_by_others = {
 			longford ardagh
+			# Breifne, Oriel and the rest of Armagh's lands
+			cavan killycolly monaghan carrickmacross dromahair leitrim killeshandra oriel
 		}
 
 		include = "gaelic_tribe_no_coast"
@@ -370,20 +386,27 @@ countries = {
 	}
 	MTH = { # Meath Midhe
 		own_control_core = {
-			drogheda dundalk
+			longford ardagh
+		}
+		own_control_conquered = {
+			# Annaly's lands: Breifne, Oriel and Armagh
+			cavan killycolly monaghan carrickmacross dromahair leitrim killeshandra oriel
 		}
 
 		our_cores_conquered_by_others = {
-			dublin fingal trim navan kells mullingar longford ardagh ballymore
+			dublin fingal drogheda trim navan kells dundalk mullingar ballymore
 		}
 
-		include = "gaelic_tribe_not_present"
+		include = "gaelic_tribe_no_coast"
 		include = "expl_western_europe"
+		government = {
+			ruler = random
+		}
 		country_rank = rank_duchy # remnants of an old provincial kingdom
-		capital = drogheda
+		capital = longford
 	}
 	CMA = { # Connemara
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			clifden
 		}
 
@@ -409,7 +432,7 @@ countries = {
 		capital = cullahill
 	}
 	FMA = { # Fermanagh
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			enniskillen belcoo
 		}
 
@@ -422,11 +445,8 @@ countries = {
 		capital = enniskillen
 	}
 	BFN = { # West Breffny
-		own_control_core = {
-			dromahair leitrim killeshandra
-		}
-
 		our_cores_conquered_by_others = {
+			dromahair leitrim killeshandra
 			cavan killycolly
 		}
 
@@ -439,11 +459,8 @@ countries = {
 		capital = dromahair
 	}
 	CVN = { # East Breffny Cavan
-		own_control_core = {
-			cavan killycolly
-		}
-
 		our_cores_conquered_by_others = {
+			cavan killycolly
 			dromahair leitrim killeshandra
 		}
 
@@ -456,7 +473,7 @@ countries = {
 		capital = cavan
 	}
 	HYM = { # Hy Many
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			athlone kilconnell
 		}
 
@@ -468,11 +485,8 @@ countries = {
 		capital = athlone
 	}
 	ELY = { # Ely
-		own_control_core = {
-			moycarn # Birr
-		}
-
 		our_cores_conquered_by_others = {
+			moycarn # Birr
 			roscrea
 		}
 
@@ -484,7 +498,7 @@ countries = {
 		capital = moycarn # Birr
 	}
 	CLR = {
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			galway athenry tuam
 		}
 
@@ -500,8 +514,8 @@ countries = {
 		accepted_cultures = { irish }
 	}
 	CWM = { # Clanwilliam
-		own_control_core = {
-			castleconnell tipperary limerick
+		our_cores_conquered_by_others = {
+			castleconnell tipperary
 		}
 
 		government = {
@@ -519,13 +533,12 @@ countries = {
 		own_control_core = {
 			carrickfergus downpatrick dunluce
 		}
-
+		own_control_conquered = {
+			# Iveagh, Clandeboye, the Glens and Armagh
+			iveagh belfast newtownards ballymena ballycastle armagh
+		}
 
 		our_cores_conquered_by_others = {
-			# Glens
-			ballycastle
-			# CLA clandeboye
-			ballymena belfast iveagh newtownards
 			#CWM Clanwilliam
 			castleconnell
 			# CLR Clanricarde
@@ -548,7 +561,7 @@ countries = {
 		capital = carrickfergus
 	}
 	MYO = { # Mayo
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			castlebar erris ballaghaderreen
 		}
 
@@ -567,6 +580,10 @@ countries = {
 		own_control_core = {
 			clonmel cashel roscrea nenagh
 		}
+		own_control_conquered = {
+			# Decies and Clanwilliam
+			carrickbeg castleconnell tipperary
+		}
 
 		government = {
 			type = monarchy
@@ -580,7 +597,7 @@ countries = {
 		capital = clonmel
 	}
 	DCI = { # Decies
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			carrickbeg waterford
 		}
 
@@ -594,10 +611,15 @@ countries = {
 	}
 	DMS = { # Desmond
 		own_control_core = {
-			kinsale youghal dungarvan cork
+			kinsale youghal dungarvan
 		}
 		own_control_conquered = {
 			dingle tralee adare killmallock fermoy
+			limerick # the Pale's Limerick
+		}
+
+		our_cores_conquered_by_others = {
+			cork
 		}
 
 		government = {
@@ -615,8 +637,12 @@ countries = {
 		capital = youghal
 	}
 	KID = { # Kildare
-		our_cores_conquered_by_others = {
+		own_control_core = {
 			athy kildare naas
+		}
+		own_control_conquered = {
+			# Faly, Ossory, Ely and Firceall
+			daingean dunamase cullahill moycarn tullamore
 		}
 
 		government = {
@@ -637,7 +663,7 @@ countries = {
 		capital = kildare
 	}
 	UMH = { #Umhaill Owill
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			burrishoole
 		}
 
@@ -650,7 +676,7 @@ countries = {
 		capital = burrishoole
 	}
 	THO = { # Thomond
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			ennis bunratty moyarta
 		}
 
@@ -671,6 +697,10 @@ countries = {
 	SLN = {
 		own_control_core = {
 			sligo
+		}
+		own_control_conquered = {
+			# Tireragh, Mayo, Umhaill and Connemara
+			skreen castlebar erris ballaghaderreen burrishoole clifden
 		}
 
 		include = "gaelic_tribe"
