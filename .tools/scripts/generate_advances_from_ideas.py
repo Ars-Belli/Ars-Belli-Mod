@@ -361,6 +361,44 @@ _FIXED_CONVERSIONS: dict[str, tuple[str, ...]] = {
         "monthly_horde_unity = 0.10",
         "monthly_tribal_cohesion = 0.10",
     ),
+    # --- Irish idea sets (EU4 minors) ---
+    "garrison_size": ("global_garrison_size_modifier = 0.25",),
+    "global_garrison_growth": ("global_garrison_growth = 0.25",),
+    # EU4 war exhaustion is a monthly trickle; EU5's live key is the monthly one.
+    "war_exhaustion": ("monthly_war_exhaustion = -0.02",),
+    "mil_tech_cost_modifier": ("research_speed_modifier = 0.05",),
+    # No EU5 morale-damage key; discipline is the family the other imports use.
+    "morale_damage": ("discipline = 0.05",),
+    # EU5 has no free leader pool; general quality is the live analogue (cf. leader_siege).
+    "free_leader_pool": ("train_general_ability = 0.10",),
+    # EU4 harsh treatment lowers unrest; EU5's unrest key is pop_join_rebel_threshold.
+    "harsh_treatment_cost": ("pop_join_rebel_threshold = -0.05",),
+    # No EU5 support-rebel efficiency; spy actions are the analogue (cf. spy_offence).
+    "rebel_support_efficiency": ("spy_network_construction = 0.20",),
+    # Galicia (EU4 GAL_ideas): no EU5 key for the morale hit of losing a ship,
+    # so navy morale is the analogue (cf. naval_morale above).
+    "sunk_ship_morale_hit_recieved": ("naval_morale_modifier = 0.10",),
+    # --- HRE / German idea sets ---
+    # EU4 state maintenance has no EU5 key; court spending is the analogue the
+    # India/Ruthenia imports already use for it.
+    "state_maintenance_modifier": ("court_spending_efficiency = 0.15",),
+    # EU4 extra policy slots -> EU5 legislative capacity (same row as free_policy).
+    "possible_policy": ("legislative_efficiency = 0.10",),
+    "free_adm_policy": ("legislative_efficiency = 0.10",),
+    # EU4 governing capacity -> EU5 bureaucracy slots.
+    "governing_capacity_modifier": ("global_max_bureaucracy_slots = 1",),
+    # Reformed fervor is a religion-only mechanic in EU4; monthly_purity is
+    # Shinto-only in EU5, so religious-institution power is the analogue.
+    "monthly_fervor_increase": ("global_clergy_estate_power = 0.10",),
+    # HRE authority modifier is live in the EU5 hre international organization.
+    "imperial_authority_value": ("imperial_authority_modifier = 0.05",),
+    # EU4 cheaper trade-conflict CBs -> faster CB creation (cf. fabricate_claims_cost).
+    "justify_trade_conflict_cost": ("casus_belli_creation_speed_modifier = 0.25",),
+    # Loan interest: the mod's own advances use -0.01 for this modifier.
+    "interest": ("bank_interest = -0.01",),
+    # Admiral fire pips -> heavy ship firepower (cf. leader_land_fire); the
+    # Indonesia import already uses this row.
+    "leader_naval_fire": ("navy_heavy_ship_power = 0.10",),
 }
 
 CONVERSIONS: dict[str, Conversion] = {
@@ -656,13 +694,14 @@ def split_set_token(token: str) -> tuple[str, str | None]:
     tag = tag.strip().upper() if sep else None
     if not set_key:
         raise SystemExit(f"bad idea-set token {token!r}, expected EU4_SET=EU5_TAG")
-    if not set_key.endswith("_ideas"):
+    # EU4 does not spell every set consistently (BUR_Ideas has a capital I).
+    if not set_key.lower().endswith("_ideas"):
         set_key += "_ideas"
     return set_key, tag
 
 
 def derive_tag(set_key: str, prefix: str) -> str:
-    base = re.sub(r"_ideas$", "", set_key)
+    base = re.sub(r"_ideas$", "", set_key, flags=re.IGNORECASE)
     tag = re.sub(r"[^A-Za-z0-9]+", "_", base).upper().strip("_")
     return f"{prefix.upper()}{tag}" if prefix else tag
 
@@ -718,6 +757,7 @@ def resolve_specs(
 ) -> list[Spec]:
     specs: list[Spec] = []
     seen: set[str] = set()
+    groups_ci = {key.casefold(): key for key in groups}
 
     if args.all:
         if tokens:
@@ -728,8 +768,9 @@ def resolve_specs(
         missing = []
         for token in tokens:
             set_key, tag = split_set_token(token)
-            if set_key not in groups:
-                missing.append(set_key)
+            set_key = set_key if set_key in groups else groups_ci.get(set_key.casefold())
+            if set_key is None:
+                missing.append(token)
                 continue
             specs.append(
                 Spec(
@@ -781,10 +822,14 @@ def split_traditions(
     assignments: tuple[tuple[str, str], ...],
 ) -> tuple[tuple[tuple[str, str], ...], tuple[tuple[str, str], ...]]:
     """Split EU4 traditions into two advances, keeping authority modifiers
-    together in the first one (same rule as the other importers)."""
+    together in the first one (same rule as the other importers). A set with
+    more than two tradition units (Münster has three) folds everything after
+    the first unit into the second advance."""
     authority = tuple(a for a in assignments if a[0] in AUTHORITY_MODIFIERS)
     others = tuple(a for a in assignments if a[0] not in AUTHORITY_MODIFIERS)
     units = ((authority,) if authority else ()) + tuple((item,) for item in others)
+    if len(units) > 2:
+        units = (units[0], tuple(item for unit in units[1:] for item in unit))
     if len(units) != 2:
         raise ConversionError(
             f"expected two tradition effects, found {len(units)}: {assignments}"
