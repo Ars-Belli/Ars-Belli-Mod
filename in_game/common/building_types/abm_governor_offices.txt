@@ -61,8 +61,10 @@ abm_provincial_chancellery = {
 		}
 	}
 
+	# mirrors allow: the capital may hold the office at any rank, so it is never removed there
 	remove_if = {
 		location = {
+			is_capital = no
 			OR = {
 				NOT = { is_city = yes }
 				NOT = { is_core_of = owner }
@@ -138,8 +140,10 @@ abm_court_secretariat = {
 		}
 	}
 
+	# mirrors allow: the capital may hold the office at any rank, so it is never removed there
 	remove_if = {
 		location = {
+			is_capital = no
 			OR = {
 				NOT = { is_city = yes }
 				NOT = { is_core_of = owner }
