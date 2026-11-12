@@ -18,26 +18,17 @@
 
 # Local governors compete with lieutenancy / itinerant court seat / king's manor for the
 # same cap (vanilla local_governor.allow), and with our two court offices.
+# Game 1.4.8 shape: no DLC branch any more. Lieutenancies count against the cap only above
+# the country's own allowance (lieutenancies_in_governor_pool = lieutenancies minus
+# modifier:num_lieutenancy, floor 0).
 abm_has_unused_local_governor = {
-	trigger_if = {
-		limit = { has_dlc = "d009_across_the_pillars" }
-		total_building_levels_including_construction:local_governor < {
-			value = effective_num_local_governors
-			subtract = total_building_levels_including_construction:itinerant_court_seat
-			subtract = total_building_levels_including_construction:kings_manor
-			subtract = total_building_levels_including_construction:abm_provincial_chancellery
-			subtract = total_building_levels_including_construction:abm_court_secretariat
-		}
-	}
-	trigger_else = {
-		total_building_levels_including_construction:local_governor < {
-			value = effective_num_local_governors
-			subtract = total_building_levels_including_construction:lieutenancy
-			subtract = total_building_levels_including_construction:itinerant_court_seat
-			subtract = total_building_levels_including_construction:kings_manor
-			subtract = total_building_levels_including_construction:abm_provincial_chancellery
-			subtract = total_building_levels_including_construction:abm_court_secretariat
-		}
+	total_building_levels_including_construction:local_governor < {
+		value = effective_num_local_governors
+		subtract = lieutenancies_in_governor_pool
+		subtract = total_building_levels_including_construction:itinerant_court_seat
+		subtract = total_building_levels_including_construction:kings_manor
+		subtract = total_building_levels_including_construction:abm_provincial_chancellery
+		subtract = total_building_levels_including_construction:abm_court_secretariat
 	}
 }
 
