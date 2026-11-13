@@ -361,6 +361,34 @@ _FIXED_CONVERSIONS: dict[str, tuple[str, ...]] = {
         "monthly_horde_unity = 0.10",
         "monthly_tribal_cohesion = 0.10",
     ),
+    # --- Baltic + Russia import (Poland, Lithuania, Livonia, Novgorod, Muscovy) ---
+    # EU4 "all estates" loyalty equilibrium -> the three estates EU5 models here.
+    "all_estate_loyalty_equilibrium": (
+        "nobles_estate_target_satisfaction = medium_permanent_target_satisfaction",
+        "clergy_estate_target_satisfaction = medium_permanent_target_satisfaction",
+        "burghers_estate_target_satisfaction = medium_permanent_target_satisfaction",
+    ),
+    # EU4 auto-exploration of colony-adjacent land -> EU5 exploration missions.
+    "auto_explore_adjacent_to_colony": ("may_explore = yes",),
+    # EU4 hussar unlock is a unit gate: emit the same line as vanilla unlock_hussars_advance.
+    "can_recruit_hussars": ("unlock_unit = a_hussars",),
+    # EU4 monarch admin power has no EU5 resource; it buys tech/ideas, so research speed.
+    "country_admin_power": ("research_speed_modifier = 0.05",),
+    # No EU5 drill-gain modifier; drilled regiments fight better, so tactics.
+    "drill_gain_modifier": ("military_tactics = 0.10",),
+    # EU4 governing capacity -> EU5 integration speed (cf. administrative_efficiency).
+    "governing_capacity_modifier": ("global_integration_speed_modifier = 0.15",),
+    # EU4 true-faith manpower has no EU5 split; plain manpower.
+    "manpower_in_true_faith_provinces": ("global_manpower_modifier = 0.10",),
+    # EU4 "may establish frontier" -> the EU5 cabinet action it stands for.
+    "may_establish_frontier": ("unlock_cabinet_action = settle_the_frontier",),
+    # EU4 nobles influence -> EU5 nobles estate power (negative value calms them).
+    "nobles_influence_modifier": ("global_nobles_estate_power = -0.10",),
+    # EU4 `range` is colonial range.
+    "range": ("colonial_range_modifier = 0.20",),
+    # EU4 heretic-tolerance cap -> a tolerance point, like tolerance_of_heathens_capacity.
+    "tolerance_of_heretics_capacity": ("tolerance_heretic = 1",),
+    "war_exhaustion": ("monthly_war_exhaustion = -0.05",),
 }
 
 CONVERSIONS: dict[str, Conversion] = {
