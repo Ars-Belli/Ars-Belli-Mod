@@ -7,7 +7,7 @@
 # OCC (EU4 idea set french_culture_ideas, zz_group_ideas.txt)
 
 abm_french_culture_ideas_tradition_1 = {
-	age = age_1_traditions
+	age = age_2_renaissance
 	icon = a_fortified_border
 	potential = {
 		has_or_had_tag = OCC
@@ -16,11 +16,11 @@ abm_french_culture_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# fort_maintenance_modifier = -0.1
-	fort_maintenance_efficiency = 0.10
+	siege_ability = 0.10
 }
 
 abm_french_culture_ideas_tradition_2 = {
-	age = age_1_traditions
+	age = age_2_renaissance
 	icon = glorious_arms
 	potential = {
 		has_or_had_tag = OCC
@@ -29,12 +29,12 @@ abm_french_culture_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# cavalry_cost = -0.1
-	army_light_cavalry_build_cost_modifier = -0.10
-	army_heavy_cavalry_build_cost_modifier = -0.10
+	army_heavy_cavalry_power = 0.10
+	army_heavy_cavalry_maintenance_cost_modifier = -0.10
 }
 
 abm_french_men_of_trade = {
-	age = age_2_renaissance
+	age = age_3_discovery
 	icon = merchants_and_trade
 	potential = {
 		has_or_had_tag = OCC
@@ -43,11 +43,12 @@ abm_french_men_of_trade = {
 	requires = renaissance_thought
 
 	# global_own_trade_power = 0.10
-	global_trade_center_power = 0.10
+	trade_land_efficiency = medium_trade_land_efficiency_bonus
+	max_tariff = 0.10
 }
 
 abm_french_renaissance_palaces = {
-	age = age_2_renaissance
+	age = age_3_discovery
 	icon = diplomatic_influence
 	potential = {
 		has_or_had_tag = OCC
@@ -56,7 +57,7 @@ abm_french_renaissance_palaces = {
 	requires = legalism_advance
 
 	# prestige_decay = -0.01
-	prestige_decay = -0.005
+	prestige_decay = -0.001
 }
 
 abm_french_qui_ruit_et_lethum = {
@@ -73,7 +74,7 @@ abm_french_qui_ruit_et_lethum = {
 }
 
 abm_french_religious_conviction = {
-	age = age_3_discovery
+	age = age_4_reformation
 	icon = church_councils
 	potential = {
 		has_or_had_tag = OCC
@@ -108,7 +109,7 @@ abm_french_enlightenment = {
 	requires = global_trade_advance
 
 	# diplomatic_upkeep = 1
-	diplomatic_upkeep_efficiency = 0.10
+	diplomatic_upkeep_efficiency = 0.20
 }
 
 abm_french_la_petite_nation = {
@@ -134,155 +135,13 @@ abm_french_culture_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# global_tax_modifier = 0.1
-	tax_income_efficiency = 0.10
-}
-
-
-
-abm_bri_ideas_tradition_1 = {
-	age = age_1_traditions
-	icon = smooth_administration
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = feudalism_advance
-
-	# navy_tradition = 1
-	monthly_navy_tradition = 0.10
-}
-
-abm_bri_ideas_tradition_2 = {
-	age = age_1_traditions
-	icon = merchants_and_trade
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = feudalism_advance
-
-	# trade_steering = 0.10
-	global_trade_center_power = 0.10
-}
-
-abm_legacy_of_breton_independence = {
-	age = age_2_renaissance
-	icon = crown_power_advance_renaissance
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = renaissance_thought
-
-	# legitimacy = 1
-	# devotion = 1
-	# republican_tradition = 0.3
-	# meritocracy = 1
-	# horde_unity = 1
-	monthly_legitimacy = 0.10
-	monthly_devotion = 0.10
-	monthly_republican_tradition = 0.10
-	monthly_tribal_cohesion = 0.10
-	monthly_horde_unity = 0.10
-}
-
-abm_estates_of_brittany = {
-	age = age_2_renaissance
-	icon = defensive_mentality
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = legalism_advance
-
-	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
-}
-
-abm_breton_march = {
-	age = age_3_discovery
-	icon = cultural_acceptance_advance
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = military_traditions
-
-	# defensiveness = 0.2
-	global_defensive = 0.15
-}
-
-abm_breton_catholicism = {
-	age = age_3_discovery
-	icon = glorious_arms
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = paved_road_advance
-
-	# papal_influence = 2
-	# global_missionary_strength = 0.01
-	monthly_papal_authority = 0.05
-	global_pop_conversion_speed_modifier = 0.20
-}
-
-abm_protect_the_coastline = {
-	age = age_4_reformation
-	icon = royal_navy
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = supply_depot_advance_age_4_reformation
-
-	# global_ship_cost = -0.1
-	navy_maintenance_efficiency = 0.10
-}
-
-abm_league_of_the_public_weal = {
-	age = age_4_reformation
-	icon = diplomatic_training
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = global_trade_advance
-
-	# diplomatic_reputation = 1
-	diplomatic_reputation = diplomatic_reputation_mild_bonus
-}
-
-abm_catholicon = {
-	age = age_5_absolutism
-	icon = church_councils
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = absolutist_court
-
-	# prestige = 1
-	monthly_prestige = 0.10
-}
-
-abm_bri_ideas_ambition = {
-	age = age_6_revolutions
-	icon = library_advance
-	potential = {
-		has_or_had_tag = BRI
-	}
-
-	requires = imperial_ambitions
-
-	# naval_forcelimit_modifier = 0.25
-	expected_navy_size_modifier = 0.25
+	tax_income_efficiency = large_tax_income_efficiency_bonus
 }
 
 # BUR (EU4 idea set BUR_Ideas, 00_country_ideas.txt)
 
 abm_bur_ideas_tradition_1 = {
-	age = age_1_traditions
+	age = age_2_renaissance
 	icon = glorious_arms
 	potential = {
 		has_or_had_tag = BGP
@@ -295,7 +154,7 @@ abm_bur_ideas_tradition_1 = {
 }
 
 abm_bur_ideas_tradition_2 = {
-	age = age_1_traditions
+	age = age_2_renaissance
 	icon = diplomatic_training
 	potential = {
 		has_or_had_tag = BGP
@@ -308,7 +167,7 @@ abm_bur_ideas_tradition_2 = {
 }
 
 abm_golden_fleece = {
-	age = age_2_renaissance
+	age = age_3_discovery
 	icon = smooth_administration
 	potential = {
 		has_or_had_tag = BGP
@@ -318,10 +177,11 @@ abm_golden_fleece = {
 
 	# prestige = 1
 	monthly_prestige = 0.10
+	skill_of_new_artists = 0.10
 }
 
 abm_compagnies_ordonnance = {
-	age = age_2_renaissance
+	age = age_3_discovery
 	icon = defensive_mentality
 	potential = {
 		has_or_had_tag = BGP
@@ -330,7 +190,8 @@ abm_compagnies_ordonnance = {
 	requires = legalism_advance
 
 	# merc_maintenance_modifier = -0.15
-	mercenary_maintenance_efficiency = 0.15
+	mercenary_maintenance_efficiency = 0.25
+	global_mercenaries_modifier = 0.25
 }
 
 abm_bur_estates_general = {
@@ -343,11 +204,11 @@ abm_bur_estates_general = {
 	requires = military_traditions
 
 	# mercenary_manpower = 0.5
-	global_mercenaries_modifier = 0.20
+	global_manpower_modifier = 0.10
 }
 
 abm_reform_of_feudal_army = {
-	age = age_3_discovery
+	age = age_4_reformation
 	icon = royal_navy
 	potential = {
 		has_or_had_tag = BGP
@@ -395,7 +256,8 @@ abm_bur_regimental_system = {
 	requires = absolutist_court
 
 	# global_manpower_modifier = 0.25
-	global_manpower_modifier = 0.10
+	army_heavy_infantry_maintenance_cost_modifier = 0.10
+	army_light_infantry_maintenance_cost_modifier = 0.10
 }
 
 abm_bur_ideas_ambition = {
@@ -408,7 +270,151 @@ abm_bur_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# global_trade_goods_size_modifier = 0.15
-	global_max_rgo_size_modifier = 0.10
+	global_max_rgo_size_modifier = 0.15
+}
+
+abm_bri_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = smooth_administration
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = feudalism_advance
+
+	# navy_tradition = 1
+	monthly_navy_tradition = 0.10
+}
+
+abm_bri_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = feudalism_advance
+
+	# trade_steering = 0.10
+	army_heavy_cavalry_power = 0.10
+	army_light_cavalry_power = 0.10
+}
+
+abm_legacy_of_breton_independence = {
+	age = age_2_renaissance
+	icon = crown_power_advance_renaissance
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = renaissance_thought
+
+	# legitimacy = 1
+	# devotion = 1
+	# republican_tradition = 0.3
+	# meritocracy = 1
+	# horde_unity = 1
+	monthly_legitimacy = 0.10
+	monthly_devotion = 0.10
+	monthly_republican_tradition = 0.10
+	monthly_tribal_cohesion = 0.10
+	monthly_horde_unity = 0.10
+}
+
+abm_estates_of_brittany = {
+	age = age_2_renaissance
+	icon = defensive_mentality
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = legalism_advance
+
+	# global_unrest = -1
+	global_estate_target_satisfaction = global_estate_target_satisfaction
+	global_crown_estate_power = 0.10
+}
+
+abm_breton_march = {
+	age = age_3_discovery
+	icon = cultural_acceptance_advance
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = military_traditions
+
+	# defensiveness = 0.2
+	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.10
+}
+
+abm_breton_catholicism = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = paved_road_advance
+
+	# papal_influence = 2
+	# global_missionary_strength = 0.01
+	monthly_papal_authority = 0.02
+	global_pop_conversion_speed_modifier = 0.20
+}
+
+abm_protect_the_coastline = {
+	age = age_4_reformation
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+	# global_ship_cost = -0.1
+	navy_maintenance_efficiency = 0.10
+}
+
+abm_league_of_the_public_weal = {
+	age = age_4_reformation
+	icon = diplomatic_training
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = global_trade_advance
+
+	# diplomatic_reputation = 1
+	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	global_non_rural_monthly_development = 0.002
+}
+
+abm_catholicon = {
+	age = age_5_absolutism
+	icon = church_councils
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = absolutist_court
+
+	# prestige = 1
+	global_crown_estate_power = 0.15
+}
+
+abm_bri_ideas_ambition = {
+	age = age_6_revolutions
+	icon = library_advance
+	potential = {
+		has_or_had_tag = BRI
+	}
+
+	requires = imperial_ambitions
+
+	# naval_forcelimit_modifier = 0.25
+	army_artillery_power = 0.10
 }
 
 # PRO (EU4 idea set PRO_ideas, 00_country_ideas.txt)
@@ -423,7 +429,7 @@ abm_pro_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# land_morale = 0.10
-	land_morale_modifier = 0.10
+	siege_ability = 0.10
 }
 
 abm_pro_ideas_tradition_2 = {
@@ -437,6 +443,7 @@ abm_pro_ideas_tradition_2 = {
 
 	# diplomatic_reputation = 1
 	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	diplomatic_annexation_efficiency = 0.10
 }
 
 abm_memory_of_angevin_claims = {
@@ -450,6 +457,7 @@ abm_memory_of_angevin_claims = {
 
 	# fabricate_claims_cost = -0.25
 	casus_belli_creation_speed_modifier = 0.25
+	spy_network_construction = 0.25
 }
 
 abm_revive_house_of_anjou = {
@@ -483,7 +491,8 @@ abm_composite_monarchy = {
 	requires = military_traditions
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	global_estate_max_tax = small_permanent_target_satisfaction
+	global_crown_estate_power = 0.10
 }
 
 abm_tarascon_castle = {
@@ -496,7 +505,9 @@ abm_tarascon_castle = {
 	requires = paved_road_advance
 
 	# defensiveness = 0.15
-	global_defensive = 0.15
+	global_defensive = 0.10
+	fort_limit = 2
+	fort_limit_modifier = 0.10
 }
 
 abm_public_weal = {
@@ -510,6 +521,7 @@ abm_public_weal = {
 
 	# diplomatic_upkeep = 2
 	diplomatic_upkeep_efficiency = 0.10
+	court_spending_efficiency = 0.10
 }
 
 abm_toulon_dockyard = {
@@ -537,7 +549,8 @@ abm_provencal_quilting = {
 	requires = absolutist_court
 
 	# production_efficiency = 0.1
-	global_production_efficiency = 0.10
+	global_cloth_output_modifier = 0.20
+	global_fine_cloth_output_modifier = 0.10
 }
 
 abm_pro_ideas_ambition = {
@@ -550,6 +563,7 @@ abm_pro_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# prestige = 1
-	monthly_prestige = 0.10
+	combat_speed_modifier = 0.10
+	army_initiative = 0.10
 }
 
