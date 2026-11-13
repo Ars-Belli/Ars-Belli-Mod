@@ -56,6 +56,7 @@ abm_the_clanns = {
 
 	# same_culture_advisor_cost = -0.2
 	hire_advisor_cost_modifier = -0.10
+	government_size = 1
 }
 
 abm_more_than_irish = {
@@ -68,7 +69,7 @@ abm_more_than_irish = {
 	requires = military_traditions
 
 	# global_unrest = -2
-	global_estate_target_satisfaction = small_permanent_target_satisfaction
+	global_estate_target_satisfaction = medium_permanent_target_satisfaction
 }
 
 abm_loyal_catholics = {
@@ -82,7 +83,7 @@ abm_loyal_catholics = {
 
 	# papal_influence = 1
 	# global_heretic_missionary_strength = 0.02
-	monthly_papal_authority = 0.05
+	global_monthly_development = 0.001
 	global_heretic_pop_conversion_speed_modifier = 0.20
 }
 
@@ -511,6 +512,7 @@ abm_cnn_irish_hobby = {
 
 	# cavalry_flanking = 0.5
 	army_light_cavalry_power = 0.10
+	combat_speed_modifier = 0.10
 }
 
 abm_cnn_hell_or_connacht = {
@@ -1095,7 +1097,7 @@ abm_sln_pragmatism = {
 	# tolerance_heretic = 1
 	# tolerance_heathen = 1
 	tolerance_heretic = 1
-	tolerance_heathen = 2
+	tolerance_heathen = 1
 }
 
 abm_sln_ideas_ambition = {
@@ -1402,7 +1404,7 @@ abm_try_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# production_efficiency = 0.1
-	global_raw_material_output = 0.15
+	global_raw_material_output = 0.10
 }
 
 abm_try_ideas_tradition_2 = {
@@ -1676,7 +1678,8 @@ abm_mns_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# core_creation = -0.1
-	global_integration_speed_modifier = 0.15
+	global_integration_speed_modifier = 0.10
+	global_annexation_speed_modifier = 0.10
 }
 
 abm_mns_ideas_tradition_2 = {
@@ -1689,7 +1692,7 @@ abm_mns_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# tolerance_own = 1
-	tolerance_own = 1
+	global_monthly_prosperity = 0.001
 }
 
 abm_mns_fierce_rivalry = {
@@ -1703,6 +1706,7 @@ abm_mns_fierce_rivalry = {
 
 	# diplomatic_reputation = 1
 	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	monthly_diplomats = 0.10
 }
 
 abm_mns_subdue_the_clans = {
@@ -1728,7 +1732,7 @@ abm_mns_cios_dubh = {
 	requires = military_traditions
 
 	# global_tax_modifier = 0.15
-	tax_income_efficiency = 0.10
+	tax_income_efficiency = large_tax_income_efficiency_bonus
 }
 
 abm_mns_foreign_contracts = {
@@ -1741,7 +1745,8 @@ abm_mns_foreign_contracts = {
 	requires = paved_road_advance
 
 	# merc_maintenance_modifier = -0.15
-	mercenary_maintenance_efficiency = 0.15
+	mercenary_maintenance_efficiency = 0.10
+	army_maintenance_efficiency = 0.10
 }
 
 abm_mns_pasture_of_ireland = {
@@ -1754,7 +1759,8 @@ abm_mns_pasture_of_ireland = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# production_efficiency = 0.1
-	global_production_efficiency = 0.10
+	global_livestock_output_modifier = 0.10
+	global_wool_output_modifier = 0.10
 }
 
 abm_mns_thmond_army_reform = {
@@ -1767,7 +1773,7 @@ abm_mns_thmond_army_reform = {
 	requires = global_trade_advance
 
 	# army_tradition_from_battle = 0.5
-	monthly_army_tradition = 0.05
+	monthly_army_tradition = 0.10
 }
 
 abm_mns_overseas_ambition = {
@@ -1780,7 +1786,8 @@ abm_mns_overseas_ambition = {
 	requires = absolutist_court
 
 	# global_colonial_growth = 15
-	colonial_migration_size_modifier = 0.25
+	trade_range_modifier = 0.20
+	trade_sea_efficiency = 0.20
 }
 
 abm_mns_ideas_ambition = {
@@ -1792,8 +1799,7 @@ abm_mns_ideas_ambition = {
 
 	requires = imperial_ambitions
 
-	# fabricate_claims_cost = -0.25
-	casus_belli_creation_speed_modifier = 0.25
+	army_artillery_power = 0.10
 }
 
 # FLY (EU4 idea set FLY_ideas, 00_country_ideas.txt)
@@ -1808,7 +1814,7 @@ abm_fly_ideas_tradition_1 = {
 	requires = feudalism_advance
 
 	# improve_relation_modifier = 0.25
-	improve_relation_impact = 0.20
+	raw_material_in_province_impact = 0.025
 }
 
 abm_fly_ideas_tradition_2 = {
@@ -1821,7 +1827,8 @@ abm_fly_ideas_tradition_2 = {
 	requires = feudalism_advance
 
 	# hostile_attrition = 1
-	global_hostile_attrition = 1
+	food_consumption_modifier = -0.10
+	siege_ability = 0.10
 }
 
 abm_fly_galloglas = {
@@ -1835,8 +1842,8 @@ abm_fly_galloglas = {
 
 	# mercenary_cost = -0.05
 	# mercenary_discipline = 0.05
-	mercenary_maintenance_efficiency = 0.15
-	discipline = 0.05
+	army_heavy_infantry_power = 0.10
+	army_light_infantry_power = 0.10
 }
 
 abm_fly_gracious_hosts = {
@@ -1851,6 +1858,7 @@ abm_fly_gracious_hosts = {
 	# advisor_pool = 1
 	# advisor_cost = -0.15
 	hire_advisor_cost_modifier = -0.10
+	government_reform_slots = 1
 }
 
 abm_fly_trade_shannon = {
@@ -1863,7 +1871,7 @@ abm_fly_trade_shannon = {
 	requires = military_traditions
 
 	# global_own_trade_power = 0.2
-	global_trade_center_power = 0.10
+	global_trade_center_power = 0.05
 }
 
 abm_fly_clonmacnoise = {
@@ -1877,6 +1885,7 @@ abm_fly_clonmacnoise = {
 
 	# tolerance_own = 2
 	tolerance_own = 1
+	clergy_estate_target_satisfaction = small_permanent_target_satisfaction
 }
 
 abm_fly_tower_houses = {
@@ -1889,7 +1898,7 @@ abm_fly_tower_houses = {
 	requires = supply_depot_advance_age_4_reformation
 
 	# defensiveness = 0.2
-	global_defensive = 0.15
+	global_defensive = 0.20
 }
 
 abm_fly_family_affair = {
@@ -1923,7 +1932,7 @@ abm_fly_buannacht = {
 	requires = absolutist_court
 
 	# global_manpower_modifier = 0.15
-	global_manpower_modifier = 0.10
+	global_manpower_modifier = 0.15
 }
 
 abm_fly_ideas_ambition = {
@@ -1936,5 +1945,5 @@ abm_fly_ideas_ambition = {
 	requires = imperial_ambitions
 
 	# production_efficiency = 0.1
-	global_production_efficiency = 0.10
+	global_production_efficiency = large_production_efficiency_bonus
 }
