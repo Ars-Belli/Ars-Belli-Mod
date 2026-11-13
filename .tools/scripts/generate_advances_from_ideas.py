@@ -269,6 +269,8 @@ _FIXED_CONVERSIONS: dict[str, tuple[str, ...]] = {
     "tolerance_own": ("tolerance_own = 1",),
     "trade_efficiency": ("trade_income = 0.10",),
     "trade_steering": ("global_trade_center_power = 0.10",),
+    # EU4 unjustified demands (peace-treaty cost of unclaimed land) -> EU5 antagonism given for taking land
+    "unjustified_demands": ("antagonism_taking_land_giving_modifier = -0.25",),
     "war_exhaustion_cost": ("monthly_war_exhaustion = -0.05",),
     "warscore_cost_vs_other_religion": (
         "war_score_vs_other_religion_efficiency = 0.10",
