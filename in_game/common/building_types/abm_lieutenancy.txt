@@ -1,10 +1,12 @@
 ﻿# Ars Belli - lieutenancy, pointed at abm_has_unused_local_governor.
 #
-# lieutenancy is the non-DLC alternative to a local governor and shares its cap, so it has
-# to see the same occupants (vanilla unique_buildings.txt). The ONLY change is the non-DLC
-# cap check, replaced by the shared trigger; the DLC branch (modifier:num_lieutenancy) is
-# untouched. Everything else is a verbatim copy - re-diff against vanilla after every game
-# patch (expected delta: one allow line).
+# A lieutenancy above the country's own lieutenancy allowance (modifier:num_lieutenancy)
+# takes a local governor post, so it has to see the same occupants as a local governor
+# (vanilla unique_buildings.txt, game 1.4.8). The ONLY change is the second half of the cap
+# check, replaced by the shared trigger: with every free lieutenancy used, vanilla's inline
+# value (cap + allowance - lieutenancies - ...) equals the trigger's
+# (cap - lieutenancies above the allowance - ...). Everything else is a verbatim copy -
+# re-diff against vanilla after every game patch (expected delta: one allow line).
 
 REPLACE:lieutenancy = {
 	audio_tier = 2
@@ -26,41 +28,37 @@ REPLACE:lieutenancy = {
 	build_time = government_build_time
 
 	location_potential = {
-		trigger_if = {
-			limit = { exists = owner }
-			is_capital = no
-			is_historical_capital = no
-			has_proximity_source_building = no
-			trigger_if = {
-					limit = { has_dlc = "d009_across_the_pillars" }
-					OR = {
-						AND = {
-							is_in_scripted_geography = scripted_geography:castile_geography
-							owner = { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_castile_bureaucracy }
-						}
-						AND = {
-							is_in_scripted_geography = scripted_geography:aragon_geography
-							owner = { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_aragon_bureaucracy }
-						}
-						AND = {
-							is_in_scripted_geography = scripted_geography:portugal_geography
-							owner = { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_portugal_bureaucracy }
-						}
-						AND = {
-							is_in_scripted_geography = scripted_geography:spanish_netherlands_geography
-							owner = { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_flanders_bureaucracy }
-						}
-						AND = {
-							region = region:italy_region
-							owner = { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_italy_bureaucracy }
-						}
+		is_capital = no
+		is_historical_capital = no
+		has_proximity_source_building = no
+		OR = {
+			has_road_to_capital = yes
+			AND = {
+				has_dlc = "d009_across_the_pillars"
+				OR = {
+					AND = {
+						is_in_scripted_geography = scripted_geography:castile_geography
+						owner ?= { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_castile_bureaucracy }
+					}
+					AND = {
+						is_in_scripted_geography = scripted_geography:aragon_geography
+						owner ?= { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_aragon_bureaucracy }
+					}
+					AND = {
+						is_in_scripted_geography = scripted_geography:portugal_geography
+						owner ?= { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_portugal_bureaucracy }
+					}
+					AND = {
+						is_in_scripted_geography = scripted_geography:spanish_netherlands_geography
+						owner ?= { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_flanders_bureaucracy }
+					}
+					AND = {
+						region = region:italy_region
+						owner ?= { has_bureaucracy_of_type = bureaucracy_type:spa_council_of_italy_bureaucracy }
 					}
 				}
-				trigger_else = {
-					has_road_to_capital = yes
-				}
+			}
 		}
-		trigger_else = { always = no }
 	}
 
 	important_for_AI = yes
@@ -78,25 +76,22 @@ REPLACE:lieutenancy = {
 	}
 
 	allow = {
-		trigger_if = {
-			limit = { has_dlc = "d009_across_the_pillars" }
-			custom_tooltip = {
-				text = lieutenancy_dlc_tt
-				scope:actor = {
+		custom_tooltip = {
+			text = lieutenancy_tt
+			scope:actor = {
+				OR = {
 					total_building_levels_including_construction:lieutenancy < modifier:num_lieutenancy
+					abm_has_unused_local_governor = yes # Ars Belli: shared cap check
 				}
-			}
-		}
-		trigger_else = {
-			custom_tooltip = {
-				text = lieutenancy_tt
-				scope:actor = { abm_has_unused_local_governor = yes }
 			}
 		}
 		owner = scope:actor
 	}
 
 	remove_if = {
+		location = { has_road_to_capital = no }
+		NOT = { owner = { at_war = yes } }
+		NOT = { owner = { in_civil_war = yes } }
 		trigger_if = {
 			limit = { has_dlc = "d009_across_the_pillars" }
 			NOT = {
@@ -123,11 +118,6 @@ REPLACE:lieutenancy = {
 					}
 				}
 			}
-		}
-		trigger_else = {
-			location = { has_road_to_capital = no }
-			NOT = { owner = { at_war = yes } }
-			NOT = { owner = { in_civil_war = yes } }
 		}
 	}
 

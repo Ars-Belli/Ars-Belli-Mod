@@ -1,20 +1,12 @@
-﻿# ARS BELLI: `convert_religion` override - the ruler's own faith is never a valid
-# conversion target (vanilla let a ruler of another religion flip the state).
-#
-# `REPLACE:` is real engine syntax - the binary carries the keyword table
-# INJECT: / TRY_INJECT: / INJECT_OR_CREATE: / REPLACE: / REPLACE_OR_CREATE: - even though
-# vanilla and the DLCs never use `REPLACE:` themselves. The mod's one documented failure
-# in this folder (`REPLACE:make_unit_available_for_hire`, 17a2076) is the reason the
-# earlier version of this change was a same-name full-file copy instead.
-#
-# Second change: adopting a faith from OUTSIDE the country's religious group requires
-# > 75% of the population to already follow it.
-#
-# VERIFY IN GAME: if a country whose ruler follows another faith can still convert to it,
-# `REPLACE:` is not honoured in generic_actions and this file must go back to being a
-# full copy of vanilla `generic_actions/general_religion.txt`.
-
-REPLACE:convert_religion = {
+﻿# Ars Belli: same-name full-file replacement of vanilla general_religion.txt (game 1.4.8).
+# REPLACE: does not bind in the generic_actions database (see make_unit_available_for_hire.txt),
+# so overriding the file by name is the only mechanism that is guaranteed to apply.
+# Everything is vanilla except the "Ars Belli" lines in convert_religion:
+# - the ruler's own faith is never a valid conversion target (vanilla let a ruler of
+#   another religion flip the state)
+# - adopting a faith from OUTSIDE the country's religious group requires > 75% of the
+#   population to already follow it
+convert_religion = {
 	type = owncountry
 
 	sound = UI_action_religion_generic	
@@ -376,3 +368,282 @@ REPLACE:convert_religion = {
 		}		
 	}
 }
+
+change_religious_aspect = {
+	icon = add_religious_aspect
+	type = owncountry
+
+	sound = UI_action_religion_aspect_change
+
+	ai_tick = monthly
+	ai_tick_frequency = 48
+
+	automation_tick = monthly
+	automation_tick_frequency = 1
+	player_automated_category = religiousdoctrines
+
+	
+	potential = {
+		scope:actor = {
+			religion = {
+				max_religious_aspects > 0
+			}
+		}
+	}
+
+	ai_prerequisite = {
+		num_of_religious_aspects = religion.max_religious_aspects
+	}
+	
+	price = {
+		if = {
+			limit = {
+				scope:actor = {
+					religion.group = religion_group:christian
+				}
+			}
+			value = price:add_religious_aspect_christian
+		}
+		else_if = {
+			limit = {
+				scope:actor = {
+					religion = religion:hellenism_religion
+				}
+			}
+			value = price:change_religious_aspect_hellenism
+		}
+		else = {
+			value = price:change_religious_aspect_inti
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = religious_aspect
+		target_flag = existing_religious_aspect
+		source = actor
+		name = "change_religious_aspect_select_which"
+		none_available_msg_key = "change_religious_aspect_no_religious_aspects"
+		column = {
+			data = name
+		}
+		column = {
+			data = effect
+		}
+		visible = {
+		}
+	}
+	
+	select_trigger = {
+		looking_for_a = religious_aspect
+		source_object = scope:actor.religion
+		target_flag = replacement_religious_aspect
+		cache_targets = yes
+		cache_order = yes
+		name = "change_religious_aspect_select_which"
+		none_available_msg_key = "change_religious_aspect_no_religious_aspects"
+		column = {
+			data = name
+		}
+		column = {
+			data = effect
+		}
+		visible = {
+			scope:actor = { can_see_religious_aspect = prev }
+		}
+		enabled = {
+			NOT = { scope:actor = { has_religious_aspect = prev } }
+			scope:actor = { is_religious_aspect_enabled = prev }
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:replacement_religious_aspect
+				exists = scope:existing_religious_aspect
+			}
+			scope:actor = {
+				remove_religious_aspect = scope:existing_religious_aspect
+				add_religious_aspect = scope:replacement_religious_aspect
+			}
+		}
+	}
+
+	ai_will_do = {
+		#inertia
+		value = -1
+		#how useful is it for this aspect to be added?
+		subtract = {
+			value = "scope:existing_religious_aspect.modifier_utility(scope:actor)"
+		}
+		add = {
+			value = "scope:replacement_religious_aspect.modifier_utility(scope:actor)"
+		}
+	}
+}
+
+add_religious_aspect = {
+	type = owncountry
+
+	sound = UI_action_religion_aspect_add
+
+	ai_tick = monthly
+	ai_tick_frequency = 24
+
+	automation_tick = monthly
+	automation_tick_frequency = 1
+	player_automated_category = religiousdoctrines
+
+	
+	potential = {
+		scope:actor = {
+			religion = {
+				max_religious_aspects > 0
+			}
+		}
+	}
+
+	allow = {
+		scope:actor = { 
+			num_of_religious_aspects < religion.max_religious_aspects
+		}
+	}
+	
+	price = {
+		if = {
+			limit = {
+				scope:actor = {
+					religion.group = religion_group:christian
+				}
+			}
+			value = price:add_religious_aspect_christian
+		}
+		else_if = {
+			limit = {
+				scope:actor = {
+					religion = religion:hellenism_religion
+				}
+			}
+			value = price:add_religious_aspect_hellenism
+		}
+		else = {
+			value = price:add_religious_aspect_inti
+		}
+	}
+	
+	select_trigger = {
+		looking_for_a = religious_aspect
+		target_flag = target
+		source_object = scope:actor.religion
+		name = "add_religious_aspect_select_which"
+		none_available_msg_key = "add_religious_aspect_no_religious_aspects"
+		column = {
+			data = name
+		}
+		column = {
+			data = effect
+		}
+		visible = {
+			NOT = { scope:actor = { has_religious_aspect = prev } }
+			scope:actor = { can_see_religious_aspect = prev }
+		}
+		enabled = {
+			scope:actor = { is_religious_aspect_enabled = prev }
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:target
+			}
+			scope:actor = {
+				add_religious_aspect = scope:target
+			}
+		}
+	}
+	
+	ai_will_do = {
+		#how useful is it for this aspect to be added?
+		add = {
+			value = "scope:target.modifier_utility(scope:actor)"
+		}
+	}
+}
+
+remove_religious_aspect = {
+	icon = add_religious_aspect
+	type = owncountry
+
+	sound = UI_action_religion_aspect_remove
+	
+	ai_tick = never
+	ai_tick_frequency = 720
+
+	automation_tick = monthly
+	automation_tick_frequency = 1
+	player_automated_category = religiousdoctrines
+
+	
+	potential = {
+		scope:actor = {
+			religion = {
+				max_religious_aspects > 0
+			}
+		}
+	}
+
+	allow = {
+		scope:actor = { 
+			num_of_religious_aspects > 0
+		}
+	}
+	
+	price = {
+		if = {
+			limit = {
+				scope:actor = {
+					religion.group = religion_group:christian
+				}
+			}
+			value = price:remove_religious_aspect_christian
+		}
+		else_if = {
+			limit = {
+				scope:actor = {
+					religion = religion:hellenism_religion
+				}
+			}
+			value = price:remove_religious_aspect_hellenism
+		}
+		else = {
+			value = price:remove_religious_aspect_inti
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = religious_aspect
+		source = actor
+		target_flag = existing_religious_aspect
+		name = "remove_religious_aspect_select_which"
+		none_available_msg_key = "remove_religious_aspect_no_religious_aspects"
+		column = {
+			data = name
+		}
+		visible = {
+		}
+	}
+
+	effect = {
+		scope:actor = {
+			remove_religious_aspect = scope:existing_religious_aspect
+		}
+	}
+
+	ai_will_do = {
+		subtract = {
+			value = "scope:existing_religious_aspect.modifier_utility(scope:actor)"
+		}
+	}
+}
+

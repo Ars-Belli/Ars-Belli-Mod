@@ -8,8 +8,9 @@
 # buildings can never double it.
 #
 # Upkeep mirrors vanilla naval_governor: the production method is defined inline here
-# (naval_governor_maintenance is building-local in capital_buildings.txt, not a
-# global production method), and the construction demand is the same.
+# under its own name (naval_governor_maintenance is building-local in capital_buildings.txt,
+# not a global production method; vanilla never gives two buildings the same name), and the
+# construction demand is the same.
 #
 # Build gate: one per area, every location of ours in the area must be a core with our
 # religion and a primary/accepted dominant culture, average control >= 70%, and an
@@ -57,7 +58,7 @@ abm_provincial_administration = {
 		owner ?= scope:actor
 		abm_area_has_no_other_copy_of_building = { type = abm_provincial_administration }
 		scope:actor = {
-			average_control >= 0.10	#test: 0.75
+			average_control >= 0.7
 			abm_has_unused_naval_governor = yes
 		}
 		# every location of ours in the area must be a settled part of the realm
@@ -68,7 +69,7 @@ abm_provincial_administration = {
 					# null object, and comparing it is a script error on every evaluation.
 					# Same construct as vanilla assume_fort_command.txt -> visible.
 					owner ?= scope:actor
-					NOT = {
+					NAND = {
 						integration_level = core
 						# ?= because a location can have no dominant religion at all, and
 						# comparing an unset scope is an invalid-left-side script error
@@ -126,7 +127,7 @@ abm_provincial_administration = {
 	}
 
 	unique_production_methods = {
-		naval_governor_maintenance = {
+		abm_provincial_administration_maintenance = {
 			icon_type = building_type
 			icon = abm_provincial_administration
 			tools = 1
