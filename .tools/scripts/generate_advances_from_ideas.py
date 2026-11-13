@@ -402,6 +402,12 @@ _FIXED_CONVERSIONS: dict[str, tuple[str, ...]] = {
     # Admiral fire pips -> heavy ship firepower (cf. leader_land_fire); the
     # Indonesia import already uses this row.
     "leader_naval_fire": ("navy_heavy_ship_power = 0.10",),
+    # --- British Isles minors ---
+    # Cornwall (EU4 CRN_ideas): EU4 recruit *speed* is EU5 levy recruitment
+    # speed; EU4's -0.10 is the same 10% faster, so the sign flips.
+    "global_regiment_recruit_speed": ("global_levy_recruitment_speed_modifier = 0.10",),
+    # EU5 keeps this one verbatim (vanilla country_kni.txt uses 0.05).
+    "capture_ship_chance": ("ship_capture_chance = 0.10",),
 }
 
 CONVERSIONS: dict[str, Conversion] = {

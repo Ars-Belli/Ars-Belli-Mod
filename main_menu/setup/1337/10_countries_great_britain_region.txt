@@ -16,7 +16,14 @@ countries = {
 	countries = {
 	ENG = { # England
 		own_control_core = {
-			hythe barnstaple bedford dunstable birmingham boston bosworth shoreham lewes bristol buckingham bury glossop cambridge canterbury rochester cheltenham chelmsford chesterfield chichester chippenham colchester kettering coventry cirencester derby dorchester dover exeter gloucester grimsby guildford reigate harrow hastings hedingham hertford huntingdon ipswich grantham kidderminster leicester lincoln london loughborough lowestoft lynn daventry newark northampton norwich nottingham oxford ely plymouth bideford bampton okehampton poole portsmouth amesbury lymington retford rutland salisbury southampton prittlewell kingston stafford stoke stratford trowbridge taunton wells barking weymouth shaftesbury wight winchester windsor worcester yarmouth tamworth louth thetford fakenham reading tonbridge minehead portishead bath henley royston aylesbury wycombe lavenham abingdon st_albans banbury walden spalding woking basingstoke
+			hythe bedford dunstable birmingham boston bosworth shoreham lewes bristol buckingham bury glossop
+			cambridge canterbury rochester cheltenham chelmsford chesterfield chichester chippenham colchester kettering coventry cirencester
+			derby dover gloucester grimsby guildford reigate harrow hastings hedingham hertford huntingdon ipswich
+			grantham kidderminster leicester lincoln london loughborough lowestoft lynn daventry newark northampton norwich
+			nottingham oxford ely portsmouth amesbury lymington retford rutland salisbury southampton prittlewell kingston
+			stafford stoke stratford trowbridge barking wight winchester windsor worcester yarmouth tamworth louth
+			thetford fakenham reading tonbridge henley royston aylesbury wycombe lavenham abingdon st_albans banbury
+			walden spalding woking basingstoke
 
 			# Earldom of Chester
 			#chester macclesfield nantwich
@@ -29,6 +36,10 @@ countries = {
 			hull bridlington selby norton #East Riding
 			leeds pontefract wakefield doncaster ripon #West Riding
 
+			# Somerset and Dorset (Cornish core)
+			wells taunton bath portishead minehead
+			poole weymouth dorchester shaftesbury
+
 			# france
 			jersey
 			abbeville montreuil saint_pol saint_omer bethune calais hesdin boulogne_sur_mer
@@ -37,11 +48,6 @@ countries = {
 			caen bayeux falaise
 			cherbourg st_sauveur
 			rouen gisors lisieux louviers pont_audemer
-		}
-		own_control_integrated = {
-			# Earldom of Chester
-			# cornwall
-			launceston truro bodmin
 		}
 
 		include = "catholic_monarchy"
@@ -174,10 +180,10 @@ countries = {
 		}
 	}
 	GWR = { # Gower Marcher Lordship
-		include = "catholic_monarchy_english_lordship_welsh_marcher_lord"
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			swansea kidwelly
 		}
+		include = "catholic_monarchy_english_lordship_welsh_marcher_lord"
 		capital = swansea
 
 		government = {
@@ -187,10 +193,10 @@ countries = {
 		}
 	}
 	GMG = { # Glamorgan Marcher Lordship
-		include = "catholic_monarchy_english_lordship_welsh_marcher_lord"
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			cardiff caerphilly neath newport monmouth
 		}
+		include = "catholic_monarchy_english_lordship_welsh_marcher_lord"
 		capital = cardiff
 
 		government = {
@@ -200,13 +206,10 @@ countries = {
 		}
 	}
 	MAC = { # March Marcher Lordship
-		include = "catholic_monarchy_english_lordship_welsh_marcher_lord"
-		own_control_core = {
-			radnor builth wigmore ludlow
-		}
 		our_cores_conquered_by_others = {
-			denbigh montgomery
+			radnor builth wigmore ludlow denbigh montgomery
 		}
+		include = "catholic_monarchy_english_lordship_welsh_marcher_lord"
 		capital = wigmore
 
 		government = {
@@ -216,10 +219,10 @@ countries = {
 		}
 	}
 	AUD = { # Arundel Marcher Lordship
-		include = "catholic_monarchy_english_lordship_welsh_marcher_lord_no_coast"
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			llangollen oswestry
 		}
+		include = "catholic_monarchy_english_lordship_welsh_marcher_lord_no_coast"
 		capital = oswestry
 
 		government = {
@@ -229,10 +232,10 @@ countries = {
 		}
 	}
 	BRO = { # Brecknock Brecon Marcher Lordship
-		include = "catholic_monarchy_english_lordship_welsh_marcher_lord_no_coast"
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			brecknock
 		}
+		include = "catholic_monarchy_english_lordship_welsh_marcher_lord_no_coast"
 		capital = brecknock
 
 		government = {
@@ -242,10 +245,10 @@ countries = {
 		}
 	}
 	POS = { # Powis Marcher Lordship
-		include = "catholic_monarchy_english_lordship_welsh_marcher_lord_no_coast"
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			machynlleth montgomery
 		}
+		include = "catholic_monarchy_english_lordship_welsh_marcher_lord_no_coast"
 		capital = machynlleth
 
 		government = {
@@ -255,10 +258,10 @@ countries = {
 		}
 	}
 	EWY = { # Ewyas Marcher Lordship
-		include = "catholic_monarchy_english_lordship_welsh_marcher_lord_no_coast"
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			ewyas
 		}
+		include = "catholic_monarchy_english_lordship_welsh_marcher_lord_no_coast"
 		capital = ewyas
 
 		government = {
@@ -278,10 +281,10 @@ countries = {
 		}
 	}
 	PMB = { # Pembroke Marcher Lordship
-		include = "catholic_monarchy_english_lordship_welsh_marcher_lord"
-		own_control_core = {
+		our_cores_conquered_by_others = {
 			pembroke
 		}
+		include = "catholic_monarchy_english_lordship_welsh_marcher_lord"
 		capital = pembroke
 
 		government = {
@@ -366,14 +369,11 @@ countries = {
 	}
 	WLS = { # Wales
 		own_control_core = {
-			# Principality of Wales
-			aberystwyth anglesey cardigan carnarvon harlech conwy carmarthen penllyn flint denbigh fishguard
-		}
-		our_cores_conquered_by_others = {
-			# Earldom of Chester
-
-			# Marcher Lordships
-			brecknock cardiff caerphilly swansea monmouth montgomery builth llangollen ewyas machynlleth radnor kidwelly
+			aberystwyth anglesey cardigan carnarvon harlech conwy carmarthen
+			penllyn flint denbigh fishguard swansea kidwelly cardiff
+			caerphilly neath newport monmouth radnor builth wigmore
+			ludlow llangollen oswestry brecknock machynlleth montgomery ewyas
+			pembroke
 		}
 
 		include = "catholic_monarchy_english_lordship"
@@ -406,12 +406,20 @@ countries = {
 		capital = carnarvon
 	}
 	CRN = { # Cornwall
+		own_control_core = {
+			launceston truro bodmin plymouth exeter barnstaple bideford
+			bampton okehampton
+		}
+
+		# Somerset and Dorset are held by the English crown; Cornwall keeps its
+		# cores on them.
 		our_cores_conquered_by_others = {
-			launceston truro bodmin
+			wells taunton bath portishead minehead
+			poole weymouth dorchester shaftesbury
 		}
 
 		include = "expl_western_europe"
-		include = "catholic_monarchy_not_present"
+		include = "catholic_monarchy"
 
 		government = {
 			type = monarchy
