@@ -83,3 +83,34 @@ ls -1 ../../in_game/common/advances/ | grep -iE 'africa|egypt|ethiopia|guinea|ma
   `trade_range = 200 #new` → `trade_range = 200`).
 - Only commented lines that contain `=` count as `eu4_modifiers`
   (plain `#` notes and `#` section headers are ignored).
+
+## Region schema (`--region-csv`)
+
+`.tools/scripts/export_advances_json_csv.py` can also emit the compact
+per-advance table used for region review:
+
+| column         | content                                                          |
+|----------------|------------------------------------------------------------------|
+| `tag/culture`  | `has_or_had_tag` value, or the `culture:` values of `potential` for culture-gated blocks (joined with `/`) |
+| `tier`         | `level` of the formable that grants that tag (0 when the tag is not formable) |
+| `age`          | raw `age = <value>`                                              |
+| `advance_name` | advance key, `REPLACE:` prefix removed                           |
+| `modifier`     | current uncommented `key = value` modifiers, joined with `; `    |
+| `eu4_ideas`    | the `# key = value` (EU4) lines, joined with `; `                |
+
+`tier` comes from `formable_countries` (`level`, not the `tag =` field of a
+nested `potential`). Pass vanilla first and the mod second so a repeated
+formable id resolves to the mod's version:
+
+```bash
+cd ../..
+python3 .tools/scripts/export_advances_json_csv.py \
+  in_game/common/advances/abm_german.txt --region-csv \
+  --formables "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/formable_countries" \
+  --formables in_game/common/formable_countries \
+  --out .tools/parsed
+```
+
+Culture-gated blocks (e.g. the Silesian set, since EU5 has no start-date
+Silesia tag) take the tier of the formable whose `potential` names that
+culture — `silesian` → `SIL_f` (level 2).
