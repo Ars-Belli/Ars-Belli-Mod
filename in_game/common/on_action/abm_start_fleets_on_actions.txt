@@ -1,0 +1,25 @@
+﻿# Ars Belli: starting navies.
+# `create_sub_unit_with_owner` is the vanilla effect that hands a country a ship
+# (in_game/events/disaster/D008_fate_of_the_phoenix.txt creates five galleys with it),
+# and `on_game_start` is the same hook vanilla uses for the AI personalities.
+on_game_start = {
+	on_actions = {
+		abm_start_fleets_game_start
+	}
+}
+
+abm_start_fleets_game_start = {
+	effect = {
+		# Castile starts with fifteen galleys in Seville.
+		location:sevilla = {
+			while = {
+				count = 15
+				create_sub_unit_with_owner = {
+					type = n_traditional_galley
+					owner = c:CAS
+					origin = this
+				}
+			}
+		}
+	}
+}
