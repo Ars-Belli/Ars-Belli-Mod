@@ -1,0 +1,48 @@
+﻿# Great Moravia: a Czech, Moravian or Silesian power seated in the old core of
+# the realm crowns itself and takes the Crown of Great Moravia reform, which is
+# what unlocks the imported GMA advances (see abm_german.txt, abm_gma_* blocks).
+abm_crown_of_great_moravia_decision = {
+	decision_category = country_specific_decisions
+	only_once = yes
+
+	potential = {
+		OR = {
+			culture = culture:czech
+			culture = culture:moravian
+			culture = culture:silesian
+		}
+		OR = {
+			original_capital.area = area:moravia_area
+			original_capital.area = area:silesia_area
+			original_capital.area = area:bohemia_area
+		}
+		NOT = { has_reform = government_reform:abm_crown_of_great_moravia_reform }
+	}
+
+	allow = {
+		at_war = no
+		# 70% of the ownable locations of each area, counted by owner
+		bohemia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 27 } }
+		moravia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 11 } }
+		slovakia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 34 } }
+		silesia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 34 } }
+		upper_saxony_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 34 } }
+		lesser_poland_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 27 } }
+		austria_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 12 } }
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_crown_of_great_moravia_decision.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_country_rank_effect = { rank = country_rank:rank_empire }
+			add_reform = government_reform:abm_crown_of_great_moravia_reform
+			change_country_color = map_GMA
+		}
+	}
+}
