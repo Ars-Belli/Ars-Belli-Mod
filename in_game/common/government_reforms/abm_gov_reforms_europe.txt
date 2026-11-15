@@ -272,3 +272,30 @@ REPLACE:great_and_minor_councils_of_genoa = {
 	}
 	years = 2
 }
+REPLACE:hanseatic_merchant_federation = {
+	# Ars Belli: the Hansa is a landed country now, so the reform no longer requires
+	# country_type = building. Without this it would be dropped at game start and every
+	# hanseatic_kontor (country_potential = allows_hanseatic_federation_buildings) with it.
+	content_priority = 1100
+	unique = yes
+	government = republic
+
+	potential = {
+		has_or_had_tag = HSA
+	}
+
+	locked = {
+		has_or_had_tag = HSA
+	}
+
+	country_modifier = {
+		cannot_be_subjugated = yes
+		global_burghers_estate_power = -0.5
+		merchant_maintenance_efficiency = 0.50
+		allows_hanseatic_federation_buildings = yes
+		legislative_efficiency = -0.5
+		court_language_is_market_language_importance_modifier = 15
+	}
+
+	years = 2
+}
