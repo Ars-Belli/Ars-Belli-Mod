@@ -304,3 +304,26 @@ REPLACE:TWS_f = {
 #		 set_variable = { name = abm_is_kingdom_of_god value = 1 }
 #	 }
 # }
+
+# Venice
+# Ars Belli: VEN exists at start (main_menu/setup/1337/10_countries_italy_region.txt)
+# and is already a duchy, so this entry only gives the tag a formable definition of
+# the same level. potential = { always = no } means nobody can ever form it.
+VEN_f = {
+	level = 2
+	required_locations_fraction = 1.0
+	rule = historical
+
+	potential = { always = no }
+	allow = { }
+
+	name = VEN
+	flag = VEN
+	adjective = VEN_ADJ
+	tag = VEN
+	color = map_venice
+
+	areas = {
+		veneto_area
+	}
+}

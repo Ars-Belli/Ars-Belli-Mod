@@ -501,3 +501,311 @@ REPLACE:sic_sicilian_silk = {
 
 	requires = rgo_size_advance_discovery
 }
+
+REPLACE:dalmatian_the_maritime_commune_spirit = {
+	age = age_1_traditions
+	icon = zmw_merchant_taxes
+
+	potential = {
+		OR = {
+			culture = culture:dalmatian
+			culture = { merged_culture_group_contains_culture = culture:dalmatian }
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+	
+	global_urban_build_buildings_efficiency = 0.2
+	global_salt_output_modifier = 0.1
+
+	requires = legalism_advance
+}
+
+REPLACE:dal_comune_privileges = {
+	age = age_1_traditions
+	icon = scholasticism
+
+	potential = {
+		OR = {
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	global_monthly_control = 0.002
+
+	requires = codified_laws
+}
+
+REPLACE:dalmatian_the_cult_of_the_local_patron_saint = {
+	age = age_2_renaissance
+	icon = dalmatian_the_cult_of_the_local_patron_saint
+
+	potential = {
+		OR = {
+			culture = culture:dalmatian
+			culture = { merged_culture_group_contains_culture = culture:dalmatian }
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+		religion.group = religion_group:christian
+	}
+
+	tolerance_own = 1
+
+	requires = renaissance_court
+}
+
+REPLACE:dal_the_union_of_the_two_souls = {
+	age = age_2_renaissance
+	icon = ship_building_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	export_efficiency = medium_trade_efficiency_bonus
+	
+	requires = trade_range_advance_age_2
+}
+
+REPLACE:dalmatian_the_guild_of_the_stone_master = {
+	age = age_3_discovery
+	icon = patron_of_art
+
+	potential = {
+		OR = {
+			culture = culture:dalmatian
+			culture = { merged_culture_group_contains_culture = culture:dalmatian }
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	global_build_buildings_efficiency = 0.2
+	global_stone_output_modifier = 0.10
+
+	requires = artists_advance_discovery
+}
+
+REPLACE:dal_the_soldato_dalmantine = {
+	age = age_3_discovery
+	icon = regiment_reinforcement_speed_renaissance
+
+	potential = {
+		OR = {
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	discipline = 0.05
+
+	requires = pike_and_shot_advance
+}
+
+REPLACE:dalmatian_the_high_chancery_style = {
+	age = age_4_reformation
+	icon = printing_press_advance
+
+	potential = {
+		OR = {
+			culture = culture:dalmatian
+			culture = { merged_culture_group_contains_culture = culture:dalmatian }
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	diplomatic_reputation = diplomatic_reputation_mild_bonus
+	embrace_institution_cost_modifier = -0.10
+
+	requires = global_trade_advance
+}
+
+REPLACE:dal_adriatic_oak_galleys = {
+	age = age_4_reformation
+	icon = slavery_before_death
+
+	potential = {
+		OR = {
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	navy_galley_power = 0.1
+	own_coast_naval_combat_bonus = 0.1
+
+	requires = letters_of_marque
+}
+
+REPLACE:dalmatian_the_accademia_degli_oziosi = {
+	age = age_5_absolutism
+	icon = enlightenment_advance
+
+	potential = {
+		OR = {
+			culture = culture:dalmatian
+			culture = { merged_culture_group_contains_culture = culture:dalmatian }
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	cultural_tradition_modifier = 0.10
+	global_max_literacy = 5
+
+	requires = absolute_rulership
+}
+
+REPLACE:dal_morlach_frontier_levies = {
+	age = age_5_absolutism
+	icon = efficient_spies
+
+	potential = {
+		OR = {
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	counter_espionage = 0.10
+	global_manpower_modifier = 0.10
+	
+	requires = line_infantry
+}
+
+REPLACE:dalmatian_mediterranean_cosmopolitanism = {
+	age = age_6_revolutions
+	icon = global_supply_limit_modifier_advance_5
+
+	potential = {
+		OR = {
+			culture = culture:dalmatian
+			culture = { merged_culture_group_contains_culture = culture:dalmatian }
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	global_trade_center_power = 0.05
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+
+	requires = enlightenment_advance
+}
+
+REPLACE:dal_dalmatian_olive_pacts = {
+	age = age_6_revolutions
+	icon = expanded_supply_trains
+
+	potential = {
+		OR = {
+			has_or_had_tag = DAL
+			AND = {
+				has_or_had_tag = VEN
+				has_reform = government_reform:signoria_of_venice
+				has_country_modifier = abm_secured_dalmatia
+				OR = {
+					culture = culture:dalmatian
+					has_accepted_culture = culture:dalmatian
+				}
+			}
+		}
+	}
+
+	expand_rgo_farming_cost_modifier = -0.20
+
+	requires = rgo_size_advance_revolutions
+}
