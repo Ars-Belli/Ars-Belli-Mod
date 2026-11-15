@@ -1,4 +1,12 @@
-﻿REPLACE:PRU_f = { #Prussia
+﻿# ---------------------------------------------------------------------------
+# Ars Belli: the formables of the north_german_region and south_german_region,
+# as REPLACE: blocks so they can be edited here instead of in vanilla
+# 00_formable_countries.txt. Bodies are verbatim vanilla except where noted; a
+# comment line above each block carries the formable name as the game shows it.
+# Formables of other regions live in abm_formables_<region>.txt.
+# ---------------------------------------------------------------------------
+# Prussia
+REPLACE:PRU_f = { #Prussia
 	content_priority = 800
 	level = 3
 	required_locations_fraction = 0.7
@@ -75,5 +83,584 @@
 			}
 			set_country_rank_effect = { rank = country_rank:rank_kingdom }
 		}
+	}
+}
+
+# Pomerania
+REPLACE:POM_f = { #Pomerania
+	required_locations_fraction = 1.0
+	level = 2
+	rule = historical
+	potential = {
+		OR = {
+			culture = culture:eastern_pomeranian
+			culture = culture:western_pomeranian
+			culture = culture:polabian # Ars Belli: the Polabian Slavs of the Pomeranian shore
+		}
+		# Ars Belli: and only from a capital in Mecklenburg or Pomerania
+		OR = {
+			original_capital.area = area:mecklenburg_area
+			original_capital.area = area:pomerania_area
+		}
+	}
+
+	name = POM
+	flag = POM
+	adjective = POM_ADJ
+	tag = POM
+	color = map_POM
+
+	areas = {
+		pomerania_area
+	}
+	form_effect = {
+	}
+}
+
+# Germany
+REPLACE:GER_f = {
+
+	level = 4
+	required_locations_fraction = 0.70
+	rule = plausible
+	potential = {
+		culture = { has_culture_group = culture_group:german_group }
+	}
+	
+	name = GER
+	flag = GER
+	adjective = GER_ADJ
+	tag = GER
+	color = map_GER
+	
+	regions = {
+		north_german_region
+		south_german_region
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 4 }
+			set_country_rank_effect = { rank = country_rank:rank_empire }
+		}
+	}
+}
+
+# Holy Roman Empire
+REPLACE:HRE_f = {
+
+	level = 4
+	required_locations_fraction = 0.75
+	rule = plausible
+	potential = {
+		exists = international_organization:hre
+		is_member_of_international_organization = international_organization:hre
+	}
+
+	allow = {
+		custom_tooltip = {
+			text = HRE_f_tt
+			always = no
+		}
+	}
+	
+	name = HRE
+	flag = HRE
+	adjective = HRE_ADJ
+	tag = HRE
+	color = map_HRE
+	
+	regions = {
+		north_german_region
+		south_german_region
+	}
+	form_effect = {
+	}
+}
+
+# Bavaria
+REPLACE:BAV_f = { 
+
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = culture:danube_bavarian
+	}
+
+	allow = {
+		NOT = {
+			has_estate_privilege = estate_privilege:bavarian_share_of_land
+		}
+		owns = location:munich
+	}
+	
+	name = BAV
+	flag = BAV
+	adjective = BAV_ADJ
+	tag = BAV
+	color = map_BAV
+	
+	areas = {
+		bavaria_area
+	}
+	locations = {
+		braunau
+		ried
+		scharding
+	}
+	form_effect = {
+	}
+}
+
+# Austria
+REPLACE:HAB_f = { 
+
+	level = 2
+	required_locations_fraction = 0.6
+	rule = historical
+	
+	potential = {
+		OR = {
+			culture = culture:danube_bavarian
+			culture = culture:southern_bavarian
+		}
+	}
+	allow = {
+		owns = location:vienna
+	}
+	
+	name = HAB
+	flag = HAB
+	adjective = HAB_ADJ
+	tag = HAB
+	color = map_austrian
+
+	areas = {
+		austria_area
+		styria_area
+		carinthia_area
+	}
+	provinces = {
+		traungau_province
+		muhlviertel_province
+	}
+	
+	locations = {
+		st_georgen linz braunau
+	}
+	form_effect = {
+	}
+}
+
+# Bohemia
+REPLACE:BOH_f = { 
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+	
+	potential = {
+		OR = {
+			culture = culture:czech
+			culture = culture:moravian
+		}
+	}
+	allow = {
+		owns = location:prague
+	}
+	
+	name = BOH
+	flag = BOH
+	adjective = BOH_ADJ
+	tag = BOH
+	color = map_BOH
+
+	areas = {
+		bohemia_area
+		moravia_area
+	}
+	form_effect = {
+	}
+}
+
+# Saxony
+REPLACE:SAX_f = { # Saxony
+
+	level = 2
+	required_locations_fraction = 0.25
+	rule = historical
+
+	potential = {
+		OR = {
+			culture = culture:saxon
+			culture = culture:lower_saxon
+		}
+	}
+
+	allow = {
+		international_organization:hre ?= {
+			country_has_special_status = {
+				type = special_status:elector
+				country = root
+			}
+		}
+	}
+
+	name = SAX
+	flag = SAX
+	adjective = SAX_ADJ
+	tag = SAX
+	color = map_SAX
+	
+	areas = {
+		lower_saxony_area upper_saxony_area 
+	}
+	provinces = {
+		flaming_province
+	}
+	form_effect = {
+	}
+}
+
+# Nassau
+REPLACE:NSA_f = { # Nassau
+
+	level = 1
+	required_locations_fraction = 1
+	rule = historical
+
+	potential = {
+		OR = {
+			culture = culture:rhine_franconian
+			culture = culture:moselle_franconian
+		}
+	}
+
+	name = NSA
+	flag = NSA
+	adjective = NSA_ADJ
+	tag = NSA
+	color = map_NSA
+	
+	locations = {
+		dillenburg hadamar siegen usingen wiesbaden
+	}
+	form_effect = {
+	}
+}
+
+# Mecklenburg
+REPLACE:MKL_f = { 
+
+	required_locations_fraction = 0.75
+	level = 1
+	rule = historical
+	potential = {
+		culture = culture:western_pomeranian
+	}
+	
+	name = MKL
+	flag = MKL
+	adjective = MKL_ADJ
+	tag = MKL
+	color = map_MKL
+	
+	areas = {
+		mecklenburg_area
+	}
+	form_effect = {
+	}
+}
+
+# Holstein
+REPLACE:SHL_f = {
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+	
+	potential = {
+		culture = culture:holsatian
+	}
+
+	name = SHL
+	flag = SHL
+	adjective = SHL_ADJ
+	tag = SHL
+	color = map_SHL
+	areas = {
+		holstein_area
+	}
+	form_effect = {
+	}
+}
+
+# Swabia
+REPLACE:SWA_f = {
+	level = 2
+	required_locations_fraction = 0.8
+	rule = plausible
+
+	potential = {
+		culture = culture:swabian
+	}
+	allow = {
+		
+	}
+
+	name = SWA
+	flag = SWA	
+	adjective = SWA_ADJ
+	tag = SWA
+	color = map_SWA
+
+	areas = {
+		swabia_area
+	}
+
+	form_effect = {
+		
+	}
+}
+
+# Westphalia
+REPLACE:WES_f = {
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = culture:westphalian
+	}
+	allow = {
+		NOT = {
+			government_type = government_type:theocracy
+		}
+		OR = {
+			NOT = {
+				country_exists = c:KOL
+			}
+			current_age_or_later = { age = age_6_revolutions }
+		}
+	}
+
+	name = WES
+	flag = WES	
+	adjective = WES_ADJ
+	tag = WES
+	color = map_WES
+
+	areas = {
+		westphalia_area
+	}
+
+	form_effect = {
+		
+	}
+}
+
+# Franconia
+REPLACE:FKN_f = {
+	level = 2
+	required_locations_fraction = 0.6
+	rule = plausible
+
+	potential = {
+		culture = culture:east_franconian
+	}
+	allow = {
+		
+	}
+
+	name = FKN
+	flag = FKN	
+	adjective = FKN_ADJ
+	tag = FKN
+	color = map_FKN
+
+	areas = {
+		franconia_area
+	}
+
+	form_effect = {
+		
+	}
+}
+
+# Hanover
+REPLACE:HAN_f = {
+	level = 2
+	required_locations_fraction = 0.6
+	rule = historical
+
+	potential = {
+		culture = culture:lower_saxon
+	}
+	allow = {
+		owns = location:hanover
+	}
+
+	name = HAN
+	flag = HAN	
+	adjective = HAN_ADJ
+	tag = HAN
+	color = map_HAN
+
+	areas = {
+		lower_saxony_area
+	}
+
+	form_effect = {
+		
+	}
+}
+
+# Netherlands
+REPLACE:NED_f = {
+	level = 3
+	required_locations_fraction = 0.3
+	rule = historical
+
+	potential = {
+		culture = { has_culture_group = culture_group:netherlandish_group }
+	}
+
+	allow = {
+	}
+	
+	name = NED
+	flag = NED
+	adjective = NED_ADJ
+	tag = NED
+	color = map_NED
+
+	areas = {
+		brabant_area
+		flanders_area
+		friesland_area
+		holland_area
+		wallonia_area
+	}
+	form_effect = {
+	}
+}
+
+# Belgium
+REPLACE:BEL_f = {
+	level = 3
+	required_locations_fraction = 0.75
+	rule = historical #how did a fantasy country get in here?
+
+	potential = {
+		OR = {
+			culture = culture:walloon
+			culture = culture:low_franconian
+		}
+		current_age_or_later = { age = age_6_revolutions }
+	}
+	allow = {
+		
+	}
+
+	name = BEL
+	flag = BEL	
+	adjective = BEL_ADJ
+	tag = BEL
+	color = map_BEL
+
+	areas = {
+		brabant_area
+		flanders_area
+		wallonia_area
+	}
+
+	form_effect = {
+		
+	}
+}
+
+# Switzerland
+REPLACE:SWI_f = {
+	level = 3
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = { has_culture_group = culture_group:swiss_group }
+	}
+
+	allow = {
+		custom_tooltip = {
+			text = SWI_f_tt
+			NOT = { exists = international_organization:swiss_confederation }
+		}
+	}
+	
+	name = SWI
+	flag = SWI
+	adjective = SWI_ADJ
+	tag = SWI
+	color = map_SWI
+
+	areas = {
+		central_switzerland_area
+		eastern_switzerland_area
+		western_switzerland_area
+	}
+	form_effect = {
+		set_country_rank_effect = { rank = country_rank:rank_duchy }
+		unlock_government_reform_effect = { type = autonomous_swiss_cantons_reform }
+		add_replacing_gov_reform = { reform = government_reform:autonomous_swiss_cantons_reform }
+		if = {
+			limit = {
+				NOT = { government_type = government_type:monarchy }
+				NOT = { government_type = government_type:theocracy }
+				NOT = { government_type = government_type:republic }
+			}
+			change_government_type = government_type:republic
+		}
+	}
+}
+
+# Lotharingia
+REPLACE:LOT_f = {
+	level = 3
+	required_locations_fraction = 0.5
+	rule = plausible
+
+	potential = {
+		OR = {
+			culture = culture:rhine_alemannic
+			culture = culture:burgundian
+			culture = culture:franc_comtois
+			culture = culture:lorrain
+			culture = culture:walloon
+			OR = {
+				tag = LOR
+				tag = BUR
+			}
+		}
+	}
+
+	allow = {
+	}
+	
+	name = LOT
+	flag = LOT
+	adjective = LOT_ADJ
+	tag = LOT
+	color = map_LOT
+	provinces = {
+		palatinate_province
+		rhine_valley_province
+	}
+	areas = {
+		lorraine_area
+		wallonia_area
+		brabant_area
+		friesland_area
+		rhineland_area
+		alsace_area
+	}
+	form_effect = {
 	}
 }
