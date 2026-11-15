@@ -278,14 +278,20 @@ REPLACE:hanseatic_merchant_federation = {
 	# hanseatic_kontor (country_potential = allows_hanseatic_federation_buildings) with it.
 	content_priority = 1100
 	unique = yes
-	government = republic
 
+	# Ars Belli: granted only by abm_hanseatic_federation_decision, never picked from
+	# the reform list (self-referencing potential + is_locked_mechanic, the vanilla
+	# legatus_natus pattern). No government_type lock either, so a monarchy that
+	# takes the decision keeps the reform.
 	potential = {
-		has_or_had_tag = HSA
+		has_reform = government_reform:hanseatic_merchant_federation
 	}
 
 	locked = {
-		has_or_had_tag = HSA
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = hanseatic_merchant_federation
+		}
 	}
 
 	country_modifier = {

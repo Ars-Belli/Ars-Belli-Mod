@@ -22,13 +22,13 @@ abm_crown_of_great_moravia_decision = {
 	allow = {
 		at_war = no
 		# 70% of the ownable locations of each area, counted by owner
-		bohemia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 27 } }
-		moravia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 11 } }
-		slovakia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 34 } }
-		silesia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 34 } }
-		upper_saxony_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 34 } }
-		lesser_poland_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 27 } }
-		austria_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 12 } }
+		area:bohemia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 27 } }
+		area:moravia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 11 } }
+		area:slovakia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 34 } }
+		area:silesia_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 34 } }
+		area:upper_saxony_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 34 } }
+		area:lesser_poland_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 27 } }
+		area:austria_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 12 } }
 	}
 
 	ai_will_do = {
@@ -43,6 +43,76 @@ abm_crown_of_great_moravia_decision = {
 			set_country_rank_effect = { rank = country_rank:rank_empire }
 			add_reform = government_reform:abm_crown_of_great_moravia_reform
 			change_country_color = map_GMA
+			area:bohemia_area = {
+				every_location_in_area = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			area:moravia_area = {
+				every_location_in_area = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			area:slovakia_area = {
+				every_location_in_area = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			area:silesia_area = {
+				every_location_in_area = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			area:upper_saxony_area = {
+				every_location_in_area = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			area:lesser_poland_area = {
+				every_location_in_area = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			area:austria_area = {
+				every_location_in_area = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
 		}
 	}
 }
