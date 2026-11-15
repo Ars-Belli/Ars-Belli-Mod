@@ -1088,8 +1088,12 @@ countries = {
 				mostar metkovic glamoc
 				vrhbosna konjic srebrenica doboj soli
 				jajce livno drijeva zenica kljuc srebrenik
-				kozara gradiski_brod #Sana
+				kozara #Sana
 				glaz teocak olovo borac nevesinje makarska
+			}
+
+			our_cores_conquered_by_others = {
+				gradiski_brod #Lost to the Banate of Slavonia
 			}
 
 			starting_technology_level = 3
@@ -1270,17 +1274,53 @@ countries = {
 			capital = zagreb #was knin
 			country_rank = rank_kingdom
 		}
+	ABSUM = { #Sumadija
+		own_control_core = {
+			belgrad debrc sabac
+			sremska_mitrovica petrovaradin pancevo
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_monarchy_no_coast"
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = random
+		}
+		country_rank = rank_duchy
+		capital = belgrad
+	}
+	ABBAN = { #Banat
+		own_control_core = {
+			kovin carasova mihalt caransebes semlacu_mare
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_monarchy_no_coast"
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = random
+		}
+		country_rank = rank_duchy
+		capital = caransebes
+	}
 		SVN = {	#Added to keep up with patch 1.2
 			own_control_core = {
-			}
-			our_cores_conquered_by_others = {
-				zagreb karlovac petrinja sisak slunj varazdin
+				varazdin
 				bjelovar koprivnica kutina pakrac vaska virovitica
-				gradiski_brod dubica
+				pozega osijek vukovar ilok
+				gradiski_brod
+			}
+
+			our_cores_conquered_by_others = {
+				zagreb karlovac petrinja sisak slunj dubica #Held by Croatia
 			}
 			starting_technology_level = 3
 			include = "expl_mediterranean"
-			include = "catholic_monarchy_not_present"
+			include = "catholic_monarchy"
 			government = {
 				type = monarchy
 				heir_selection = cognatic_primogeniture
@@ -1291,7 +1331,7 @@ countries = {
 				hungarian
 			}
 
-			capital = zagreb
+			capital = pozega #was zagreb, returned to Croatia
 			country_rank = rank_duchy
 		}
 		BUL = {

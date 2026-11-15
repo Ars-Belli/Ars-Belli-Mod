@@ -290,7 +290,8 @@ diplomacy_manager = {
     dependency = { first = LIT second = VBK subject_type = vassal }
 
     #-------Bohemia-------
-	dependency = { first = BOH second = MVA subject_type = fiefdom }
+	# MVA: Moravia is independent (the fiefdom of Bohemia was dissolved).
+	#dependency = { first = BOH second = MVA subject_type = fiefdom }
     scripted_mutual = { first = BOH second = LBV type = alliance }
 
     #-------Poland-------
@@ -302,6 +303,9 @@ diplomacy_manager = {
     dependency = { first = POL second = PLK subject_type = vassal }
     dependency = { first = POL second = RAW subject_type = vassal }
     dependency = { first = POL second = CZK subject_type = vassal }
+
+    #-------Hungary-------
+    dependency = { first = HUN second = SLO subject_type = vassal } #Slovakia
 
     #Balkans:
     scripted_oneway = { first = HUN second = HAB type = embargo_nation }
