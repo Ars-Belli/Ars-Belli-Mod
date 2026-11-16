@@ -275,6 +275,36 @@ REPLACE:TWS_f = {
 	}
 }
 
+# Tuscany
+# Ars Belli: vanilla TUS_f is level = 1 (county); this raises it to a tier 2
+# (duchy-level) formable. Everything else is the vanilla block verbatim.
+REPLACE:TUS_f = {
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = culture:tuscan
+	}
+	allow = {
+		owns = location:florence
+	}
+
+	name = TUS
+	flag = TUS	
+	adjective = TUS_ADJ
+	tag = TUS
+	color = map_TUS
+
+	areas = {
+		tuscany_area
+	}
+
+	form_effect = {
+		
+	}
+}
+
 # ABKOG_f = { # Kingdom of God — commented out, use generic_action instead (papacy reform blocks forming)
 #	 level = 4
 #	 required_locations_fraction = 0.60
