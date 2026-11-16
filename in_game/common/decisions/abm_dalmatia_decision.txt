@@ -1,15 +1,15 @@
 ﻿# Dalmatia: once Venice holds every ownable location of the two Dalmatian
-# provinces it may be ruled as a possession outright. The modifier it grants
-# (abm_secured_dalmatia) is one of the conditions the Dalmatian advances check
-# for the Venetian branch - see the dalmatian_* / dal_* blocks at the end of
-# in_game/common/advances/abm_italy.txt.
+# provinces it may be ruled as a possession outright. The privilege it grants to the
+# Commoners (common/estate_privileges/abm_peasants_estate.txt) is one of the conditions
+# the Dalmatian advances check for the Venetian branch - see the dalmatian_* / dal_*
+# blocks at the end of in_game/common/advances/abm_italy.txt.
 abm_secure_dalmatia_decision = {
 	decision_category = country_specific_decisions
 	only_once = yes
 
 	potential = {
 		has_or_had_tag = VEN
-		NOT = { has_country_modifier = abm_secured_dalmatia }
+		NOT = { has_variable = abm_secured_dalmatia }
 	}
 
 	allow = {
@@ -32,7 +32,8 @@ abm_secure_dalmatia_decision = {
 		ai_chance = { value = 100 }
 
 		effect = {
-			add_country_modifier = { modifier = abm_secured_dalmatia months = -1 mode = add }
+			set_variable = { name = abm_secured_dalmatia value = 1 }
+			grant_estate_privilege = estate_privilege:abm_secured_dalmatia
 		}
 	}
 }
