@@ -16,11 +16,6 @@
 	}
 }
 
-# ARS BELLI: Venice's grip on Dalmatia, granted by abm_secure_dalmatia_decision
-# (in_game/common/decisions/abm_dalmatia_decision.txt). Not selectable by hand:
-# the decision sets the abm_secured_dalmatia variable, which is what makes the
-# privilege appear. Not revocable either, because the Dalmatian advances are
-# gated on it and the decision is only_once.
 abm_secured_dalmatia = {
 	estate = peasants_estate
 
@@ -35,10 +30,11 @@ abm_secured_dalmatia = {
 		always = no
 	}
 
-	country_modifier = {
-		global_monthly_control = 0.005
-		navy_galley_power = 0.10
-		trade_sea_efficiency = 0.05
+	location_modifier = {
+		potential_trigger = {
+			area = area:croatia_area
+		}
+		local_monthly_control = 0.002
+		local_monthly_development = 0.001
 	}
 }
-
