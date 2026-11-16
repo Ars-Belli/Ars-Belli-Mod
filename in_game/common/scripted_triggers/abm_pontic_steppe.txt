@@ -103,6 +103,8 @@ abm_steppe_pastoral_location = {
 #   decision        -> abm_steppe_pastoral_province = { COUNTRY = root }
 abm_steppe_pastoral_province = {
 	region = region:steppes_region
+	# the whole province must be ours, not just the pastoral part of it
+	abm_owns_entire_province = { PROVINCE = this COUNTRY = $COUNTRY$ }
 	# at least one location still open for reorganisation
 	any_location_in_province = {
 		has_owner = yes
@@ -116,6 +118,21 @@ abm_steppe_pastoral_province = {
 			NAND = {
 				development >= 10
 				abm_steppe_pastoral_location = { COUNTRY = $COUNTRY$ }
+			}
+		}
+	}
+}
+
+# Country-scope: $COUNTRY$ owns every ownable location of $PROVINCE$, so the
+# province-wide RGO decisions cannot be taken off a single foothold. Wasteland
+# (is_ownable = no) is ignored; unowned ownable land counts against full ownership.
+#   abm_owns_entire_province = { PROVINCE = province:luhan_province COUNTRY = root }
+abm_owns_entire_province = {
+	$PROVINCE$ = {
+		NOT = {
+			any_location_in_province = {
+				is_ownable = yes
+				NOT = { owner ?= $COUNTRY$ }
 			}
 		}
 	}

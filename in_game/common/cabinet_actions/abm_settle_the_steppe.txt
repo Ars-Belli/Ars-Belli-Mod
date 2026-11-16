@@ -14,7 +14,9 @@
 #     location in it must have a primary or accepted culture as its dominant
 #     culture. Vanilla's action colonises culturally foreign land, which is not
 #     what we want here - this is about filling up land we have already
-#     assimilated.
+#     assimilated;
+#   - and it must be ours in full (abm_owns_entire_province, wasteland aside),
+#     matching the full-ownership rule the steppe RGO decisions use.
 #
 # Unlock: vanilla cabinet actions are unlocked either by a `modifier:allow_...`
 # country modifier on an advance, or by `unlock_cabinet_action`. This one uses
@@ -40,7 +42,8 @@ abm_settle_the_steppe = {
 	allow = {
 		any_province = {
 			region = region:steppes_region
-			owner ?= root # allow has no scope:actor; root is the country
+			# the whole province, not just the settled part of it
+			abm_owns_entire_province = { PROVINCE = this COUNTRY = root } # allow has no scope:actor
 			abm_steppe_province_is_our_culture = yes
 			abm_steppe_province_needs_settling = yes
 		}
@@ -67,14 +70,8 @@ abm_settle_the_steppe = {
 			any_location_in_province = {
 				region = region:steppes_region
 			}
-			# only land we actually hold
-			NOT = {
-				any_location_in_province = {
-					has_owner = yes
-					is_land = yes
-					NOT = { owner ?= scope:actor }
-				}
-			}
+			# only land we hold in full, wasteland aside
+			abm_owns_entire_province = { PROVINCE = this COUNTRY = scope:actor }
 			# room left to fill: some location is still short of 20 development
 			# or of half its population capacity
 			abm_steppe_province_needs_settling = yes
