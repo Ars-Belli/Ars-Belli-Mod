@@ -8,6 +8,10 @@
 #
 # Each block is a REPLACE: of the vanilla entry, copied verbatim minus the
 # proximity modifiers - keep it in sync with vanilla when the game updates.
+#
+# Exception: swiss_alpine_passes and sav_alpine_identity unlock
+# abm_alpine_proximity_reform instead, which covers the whole Alpine arc rather
+# than the capital's region (Provence joins them through abm_tarascon_castle).
 
 REPLACE:ira_persian_plateau = {
 	age = age_1_traditions
@@ -39,18 +43,19 @@ REPLACE:hab_expert_mountaineers = {
 	requires = renaissance_urbanisation
 }
 
-# Swiss
+# Swiss - Alpine arc variant: the bonus covers the whole Alpine range, not the
+# capital's region (government_reforms/abm_gov_reforms_rough_terrain.txt).
 REPLACE:swiss_alpine_passes = {
 	age = age_1_traditions
 	potential = {
 		is_swiss_for_advances = yes
 	}
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_government_reform = abm_alpine_proximity_reform
 
 	requires = swiss_halberd_infantry
 }
 
-# Savoy
+# Savoy - Alpine arc variant
 REPLACE:sav_alpine_identity = {
 	age = age_1_traditions
 	icon = arduous_terrain
@@ -59,7 +64,7 @@ REPLACE:sav_alpine_identity = {
 		has_or_had_tag = SAV
 	}
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_government_reform = abm_alpine_proximity_reform
 
 	requires = codified_laws
 }

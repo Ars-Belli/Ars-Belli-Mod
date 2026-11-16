@@ -1,10 +1,14 @@
-﻿# Ars Belli - rough-terrain homeland reform.
+﻿# Ars Belli - rough-terrain homeland reforms.
 #
 # Every advance that used to grant a country-wide <topography>_proximity_impact
-# bonus now unlocks this single reform instead (see in_game/common/advances/). The
-# bonus is a location modifier: the country only gets the proximity benefit inside
-# the region of its own home capital - the historical capital if it has one,
-# otherwise the original capital.
+# bonus now unlocks one of the reforms below instead (see in_game/common/advances/).
+# The bonus is a location modifier: the country only gets the proximity benefit
+# inside a set of locations fixed by the reform, never country-wide.
+#
+# - abm_homeland_proximity_reform: the set is the region of the country's own home
+#   capital - the historical capital if it has one, otherwise the original capital.
+# - abm_alpine_proximity_reform: the set is the Alpine arc (Savoy, the Swiss,
+#   Provence), regardless of where the capital is.
 #
 # mountains_proximity_impact / plateau_proximity_impact / hills_proximity_impact
 # only exist at country scope (main_menu/common/modifier_type_definitions), so the
@@ -34,8 +38,6 @@ abm_homeland_proximity_reform = {
 			has_advance = abm_che_wetland_adaptation
 			has_advance = abm_hng_mountain_adaptation
 			has_advance = hab_expert_mountaineers
-			has_advance = swiss_alpine_passes
-			has_advance = sav_alpine_identity
 			has_advance = albanian_prokletije
 			has_advance = scottish_highland_tradition
 			has_advance = drokpa
@@ -91,6 +93,54 @@ abm_homeland_proximity_reform = {
 
 	country_modifier = {
 		pure_tooltip_entry = abm_homeland_proximity_reform_tt
+	}
+
+	years = 2
+	ai_will_do = { add = 10 }
+}
+
+# Savoy, the Swiss and Provence live on the Alpine passes themselves, so for them
+# the benefit follows the mountain range rather than the capital: it covers every
+# location in the Alpine arc below, wherever the court sits. Area ids and their
+# vanilla names: provence_area (Provence), savoy_area (Savoy and Dauphine),
+# western/central/eastern_switzerland_area (Romandy, Switzerland, Raetia),
+# tirol_area (Tyrol and Trentino), lombardy_area, veneto_area (Veneto and Friuli),
+# carinthia_area, styria_area.
+abm_alpine_proximity_reform = {
+	unique = yes
+	age = age_1_traditions
+
+	potential = {
+		OR = {
+			has_advance = swiss_alpine_passes
+			has_advance = sav_alpine_identity
+			has_advance = abm_tarascon_castle
+		}
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			custom_tooltip = {
+				text = abm_tt_alpine_areas
+				OR = {
+					area = area:provence_area
+					area = area:savoy_area
+					area = area:western_switzerland_area
+					area = area:central_switzerland_area
+					area = area:eastern_switzerland_area
+					area = area:tirol_area
+					area = area:lombardy_area
+					area = area:veneto_area
+					area = area:carinthia_area
+					area = area:styria_area
+				}
+			}
+		}
+		local_distance_from_capital_speed_propagation = 1.0
+	}
+
+	country_modifier = {
+		pure_tooltip_entry = abm_alpine_proximity_reform_tt
 	}
 
 	years = 2
