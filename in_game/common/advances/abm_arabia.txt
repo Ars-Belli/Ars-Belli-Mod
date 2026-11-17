@@ -9,7 +9,7 @@
 
 REPLACE:arabian_horsemanship = {
 	age = age_1_traditions
-	icon = glorious_arms
+	icon = finest_of_horses
 
 	potential = {
 		culture ?= { has_culture_group = culture_group:arabian_group }
@@ -17,19 +17,19 @@ REPLACE:arabian_horsemanship = {
 	#global_horses_output_modifier = 0.2 #removed to control modifier stacking
 	army_light_cavalry_power = 0.1
 
-	requires = guilds
+	requires = power_projection_advance_1
 }
 
 REPLACE:arabian_desert_warfare = {
 	age = age_2_renaissance
-	icon = glorious_arms
+	icon = local_nobility
 	potential = {
 		culture ?= { has_culture_group = culture_group:arabian_group }
 	}
 	tribes_estate_levy_size = 0.33 #was land_morale_modifier = 0.1
 	ai_weight = { add = 10 }
 
-	requires = correct_box_advance_renaissance
+	requires = global_clergy_max_literacy_advance
 }
 
 ################
@@ -43,7 +43,7 @@ abm_msy_ideas_tradition_1 = {
 		has_or_had_tag = ABMSY
 	}
 
-	requires = unlock_feudal_levy_advance
+	requires = power_projection_advance_1
 
 	# defensiveness = 0.2
 	global_defensive = 0.15
@@ -56,7 +56,7 @@ abm_msy_ideas_tradition_2 = {
 		has_or_had_tag = ABMSY
 	}
 
-	requires = faster_levy_recruitment
+	requires = power_projection_advance_1
 
 	# infantry_power = 0.1
 	army_heavy_infantry_power = 0.10
@@ -69,7 +69,7 @@ abm_msy_fervent_millenarianism = {
 		has_or_had_tag = ABMSY
 	}
 
-	requires = army_initiative_ren
+	requires = professional_armies_advance
 
 	# land_morale = 0.1
 	# monthly_piety = -0.001
@@ -85,7 +85,7 @@ abm_msy_messianic_legacy = {
 		has_or_had_tag = ABMSY
 	}
 
-	requires = pop_promotion_speed_age_2
+	requires = renaissance_development
 
 	# missionaries = 1
 	number_of_allowed_religious_figures = 1
@@ -98,7 +98,7 @@ abm_msy_swamp_warfare = {
 		has_or_had_tag = ABMSY
 	}
 
-	requires = military_drill
+	requires = pike_and_shot_advance
 
 	# hostile_attrition = 1
 	global_hostile_attrition = 1
@@ -111,7 +111,7 @@ abm_msy_arabistan = {
 		has_or_had_tag = ABMSY
 	}
 
-	requires = unlock_supply_convoy
+	requires = unlock_flute_advance
 
 	# global_manpower_modifier = 0.15
 	global_manpower_modifier = 0.10
@@ -172,7 +172,7 @@ abm_msy_ideas_ambition = {
 		has_or_had_tag = ABMSY
 	}
 
-	requires = artists_advance_revolutions
+	requires = enlightenment_advance
 
 	# tolerance_own = 2
 	tolerance_own = 1
@@ -203,7 +203,7 @@ abm_arb_ideas_tradition_2 = {
 		has_or_had_tag = AIA
 	}
 
-	requires = republic_reform_traditions_advance
+	requires = organized_religion
 
 	# years_of_nationalism = -10
 	global_separatism = -0.10 #was pop_join_rebel_threshold = -0.05
@@ -216,7 +216,7 @@ abm_arb_arabian_pincers = {
 		has_or_had_tag = AIA
 	}
 
-	requires = crown_power_advance_renaissance
+	requires = national_assemblies_advance
 
 	# cav_to_inf_ratio = 0.25
 	# cavalry_power = 0.25
@@ -231,7 +231,7 @@ abm_arb_pact_of_umar = {
 		has_or_had_tag = AIA
 	}
 
-	requires = rgo_size_advance_renaissance
+	requires = banking_advance
 
 	# dhimmi_loyalty_modifier = 0.1
 	# global_tax_modifier = 0.2
@@ -273,7 +273,7 @@ abm_arb_jihad = {
 		has_or_had_tag = AIA
 	}
 
-	requires = professional_armies_advance
+	requires = unlock_flintlock_levy
 
 	# warscore_cost_vs_other_religion = -0.1
 	war_score_vs_other_religion_efficiency = 0.10
@@ -286,7 +286,7 @@ abm_arb_new_caliphate_rising = {
 		has_or_had_tag = AIA
 	}
 
-	requires = crown_power_advance_reformation
+	requires = gov_reform_reformation_a
 
 	# missionaries = 2
 	court_spending_efficiency = 0.10 #was number_of_allowed_religious_figures = 1
@@ -299,7 +299,7 @@ abm_arb_mubarizun = {
 		has_or_had_tag = AIA
 	}
 
-	requires = army_movement_speed_absolutism
+	requires = military_revolution_advance
 
 	# army_tradition_decay = -0.01
 	army_tradition_decay = -0.001
@@ -312,7 +312,7 @@ abm_arb_ideas_ambition = {
 		has_or_had_tag = AIA
 	}
 
-	requires = unlock_heavy_frigate_advance
+	requires = conscription_advance
 
 	# siege_ability = 0.15
 	assault_ability = 0.25 #was siege_ability = 0.10
@@ -329,7 +329,7 @@ abm_naj_ideas_tradition_1 = {
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = temporary_appointments
+	requires = meritocracy_advance
 
 	# global_missionary_strength = 0.02
 	global_pop_conversion_speed_modifier = 0.20
@@ -342,7 +342,7 @@ abm_naj_ideas_tradition_2 = {
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = horse_riding_advance
+	requires = power_projection_advance_1
 
 	# movement_speed = 0.15
 	army_movement_speed = 0.15 #was 0.1
@@ -355,7 +355,7 @@ abm_bedouin_poets = {
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = power_projection_advance_2
+	requires = professional_armies_advance
 
 	# army_tradition = 0.5
 	monthly_army_tradition = 0.05
@@ -368,7 +368,7 @@ abm_hanbali_school_ni = {
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = global_clergy_max_literacy_advance
+	requires = global_nobles_max_literacy_advance
 
 	# missionaries = 1
 	clergy_estate_satisfaction_recovery = 0.002 #new
@@ -382,7 +382,7 @@ abm_ships_of_the_desert = {
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = new_currency_demands
+	requires = trade_through_owned_disc_advance
 
 	# global_trade_power = 0.1
 	trade_land_efficiency = large_trade_land_efficiency_bonus #was global_merchant_power = 0.10
@@ -395,7 +395,7 @@ abm_bedouin_raiders = {
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = unlock_light_lancers_advance
+	requires = unlock_matchlock_levy
 
 	# hostile_attrition = 1.0
 	global_hostile_attrition = 1
@@ -408,7 +408,7 @@ abm_arabian_horsemanship = { #name, but not bonus or description is shared with 
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = leader_recruit_cost_advance
+	requires = standardisation_of_calibre
 
 	# cavalry_flanking = 0.5
 	army_light_cavalry_power = 0.10
@@ -421,7 +421,7 @@ abm_unite_the_tribes = {
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = unlock_pistoleers_advance
+	requires = unlock_baggage_train
 
 	# land_maintenance_modifier = -0.05
 	army_maintenance_efficiency = 0.10
@@ -434,7 +434,7 @@ abm_enforce_tawhid = {
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = pop_promotion_speed_age_5
+	requires = sanitation_advance
 
 	# tolerance_own = 2
 	tolerance_own = 1
@@ -447,7 +447,7 @@ abm_naj_ideas_ambition = {
 		has_or_had_tag = ABNAJ
 	}
 
-	requires = modern_bureaucracy
+	requires = slave_trade_act_advance
 
 	# missionaries = 1
 	clergy_estate_target_satisfaction = large_permanent_target_satisfaction
@@ -475,7 +475,7 @@ abm_arabian_ideas_tradition_1 = {
 		}
 	}
 
-	requires = feudalism_advance
+	requires = power_projection_advance_1
 
 	# global_manpower_modifier = 0.15
 	army_initiative = 0.10 #moved from abm_arabian_ideas_ambition
@@ -500,7 +500,7 @@ abm_arabian_ideas_tradition_2 = {
 		}
 	}
 
-	requires = feudalism_advance
+	requires = power_projection_advance_1
 
 	# land_attrition = -0.15
 	land_unit_attrition = -0.10
@@ -528,7 +528,7 @@ abm_arab_indian_ocean_trade = {
 	requires = banking_advance
 
 	# trade_steering = 0.15
-	trade_sea_efficiency = medium_trade_sea_efficiency_bonus #was global_trade_center_power = 0.10
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus #was global_trade_center_power = 0.05
 	merchant_power_from_maritime = 0.025 #new
 }
 
@@ -550,7 +550,7 @@ abm_arabian_horses = {
 		}
 	}
 
-	requires = pound_lock_canals_advance
+	requires = banking_advance
 
 	# cavalry_cost = -0.1
 	# cavalry_flanking = 0.25
@@ -578,7 +578,7 @@ abm_land_of_the_prophet = {
 		}
 	}
 
-	requires = colonial_charters
+	requires = foreign_cultural_law_advance
 
 	# global_unrest = -1
 	global_estate_target_satisfaction = 0.01 #was pop_join_rebel_threshold = -0.05
@@ -626,7 +626,7 @@ abm_bedouin_traders = {
 		}
 	}
 
-	requires = dyes_workshop_advance
+	requires = bastion_advance
 
 	# global_trade_power = 0.1
 	merchant_maintenance_efficiency = 0.2 #was global_merchant_power = 0.10
@@ -650,7 +650,7 @@ abm_arab_clan_loyalties = {
 		}
 	}
 
-	requires = power_projection_advance_3
+	requires = artillery_institution_advance
 
 	# leader_land_manuever = 1
 	land_morale_movement_cost = -0.0002 #was army_movement_speed = 0.10
@@ -674,7 +674,7 @@ abm_arabia = {
 		}
 	}
 
-	requires = national_sovereignty
+	requires = spy_construction_absolutism
 
 	# prestige = 1
 	monthly_prestige = 0.10
@@ -698,7 +698,7 @@ abm_arabian_ideas_ambition = {
 		}
 	}
 
-	requires = unlock_threedecker_advance
+	requires = global_supply_limit_modifier_advance_6
 
 	# leader_land_shock = 1
 	army_reinforce_efficiency = 0.15 #new
@@ -732,7 +732,7 @@ abm_bedouin_ideas_tradition_1 = {
 		}
 	}
 
-	requires = unlock_feudal_levy_advance
+	requires = power_projection_advance_1
 
 	food_consumption_modifier = -0.1
 	movement_speed_if_no_road = 0.20
@@ -762,7 +762,7 @@ abm_bedouin_ideas_tradition_2 = {
 		}
 	}
 
-	requires = unlock_horsemen_advance
+	requires = organized_religion
 
 	tribes_estate_levy_size = 0.33
 }
@@ -791,7 +791,7 @@ abm_bedouin_hierarchy_of_loyalties  = {
 		}
 	}
 
-	requires = crown_power_advance_renaissance
+	requires = renaissance_development
 
 	tribes_estate_target_satisfaction = large_permanent_target_satisfaction
 	stability_decay = -0.001
@@ -821,7 +821,7 @@ abm_bedouin_diyafa = {
 		}
 	}
 
-	requires = late_feudal_relations
+	requires = improve_relation_impact_renaissance
 
 	improve_relation_impact = 0.2
 	monthly_diplomats = 0.05
@@ -851,7 +851,7 @@ abm_bedouin_sharaf_and_ird = {
 		}
 	}
 
-	requires = hire_artist_cost_modifier_advance_disc
+	requires = printing_press_advance
 
 	prestige_decay = -0.001
 	cultural_tradition_modifier = 0.25
@@ -881,7 +881,7 @@ abm_bedouin_hamasa_and_muruwah = {
 		}
 	}
 
-	requires = correct_box_advance_discovery
+	requires = pike_and_shot_advance
 
 	land_morale_modifier = 0.125
 }
@@ -910,7 +910,7 @@ abm_bedouin_asabiyyah = {
 		}
 	}
 
-	requires = supreme_court_advance
+	requires = confessional_court
 
 	global_estate_target_satisfaction = 0.01
 }
@@ -939,7 +939,7 @@ abm_bedouin_vocal_poetry = {
 		}
 	}
 
-	requires = artists_advance_reformations
+	requires = naval_battery_advance
 
 	num_possible_artists = 1
 	artist_salary_modifier = -0.33
@@ -969,7 +969,7 @@ abm_bedouin_camelry = {
 		}
 	}
 
-	requires = absolutism_agressive_advance
+	requires = militiamen_advance
 
 	army_logistics_distance_modifier = 0.20
 }
@@ -998,7 +998,7 @@ abm_bedouin_arabian_ideas_ambition = {
 		}
 	}
 
-	requires = unlock_light_dragoons_advance
+	requires = levee_en_masse_advance
 
 	army_light_cavalry_power = 0.2
 }
@@ -1014,7 +1014,7 @@ abm_alh_ideas_tradition_1 = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = scholasticism
+	requires = meritocracy_advance
 
 	# tolerance_heretic = 2
 	tolerance_heretic = 2 #was 1
@@ -1027,7 +1027,7 @@ abm_alh_ideas_tradition_2 = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = unlock_cog_advance
+	requires = power_projection_advance_1
 
 	# cavalry_power = 0.1
 	army_light_cavalry_maintenance_cost_modifier = -0.15 #was army_heavy_cavalry_power = 0.10
@@ -1040,7 +1040,7 @@ abm_alh_desert_warfare = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = fort_limit_2_advance
+	requires = professional_armies_advance
 
 	# cavalry_cost = -0.1
 	#army_light_cavalry_build_cost_modifier = -0.10
@@ -1055,7 +1055,7 @@ abm_alh_lord_of_the_eastern_bedouin = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = patron_of_art
+	requires = renaissance_advance
 
 	# tolerance_own = 2
 	tolerance_own = 1
@@ -1068,7 +1068,7 @@ abm_alh_pearls_of_the_persian_gulf = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = trading_hub_advance
+	requires = house_of_parliament_advance
 
 	# global_trade_goods_size_modifier = 0.1
 	global_fish_output_modifier = 0.1 #new
@@ -1082,7 +1082,7 @@ abm_alh_fortify_the_coastline = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = supply_lines
+	requires = unlock_flute_advance
 
 	# defensiveness = 0.2
 	global_fort_build_buildings_efficiency = 0.33 #was global_defensive = 0.15
@@ -1095,7 +1095,7 @@ abm_alh_entrepot_of_india = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = military_administration
+	requires = shipyard_advance
 
 	# trade_efficiency = 0.1
 	export_efficiency = medium_trade_efficiency_bonus #was trade_income = 0.10
@@ -1109,7 +1109,7 @@ abm_alh_a_modern_navy = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = naval_morale_advance_3
+	requires = unlock_galleon_advance
 
 	# ship_durability = 0.05
 	naval_damage_taken = -0.05
@@ -1123,7 +1123,7 @@ abm_alh_legacy_of_rahmah_ibn_jabir = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = maritime_advance_age_5
+	requires = unlock_frigate_advance
 
 	# navy_tradition = 1
 	# privateer_efficiency = 0.15
@@ -1138,7 +1138,7 @@ abm_alh_ideas_ambition = {
 		has_or_had_tag = ABHAS
 	}
 
-	requires = superior_ship_design
+	requires = unlock_heavy_frigate_advance
 
 	# naval_forcelimit_modifier = 0.2
 	global_sailors_modifier = 0.2 #was expected_navy_size_modifier = 0.25
@@ -1156,7 +1156,7 @@ abm_hed_ideas_tradition_1 = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = faster_levy_recruitment
+	requires = power_projection_advance_1
 
 	# global_manpower_modifier = 0.1
 	global_manpower_modifier = 0.10
@@ -1169,7 +1169,7 @@ abm_hed_ideas_tradition_2 = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = fort_limit_1_advance
+	requires = power_projection_advance_1
 
 	# cavalry_cost = -0.1
 	#army_light_cavalry_build_cost_modifier = -0.10
@@ -1184,7 +1184,7 @@ abm_custodian_of_the_two_holy_cities = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = pop_promotion_speed_age_2
+	requires = renaissance_development
 
 	# tolerance_own = 2
 	tolerance_own = 1
@@ -1197,7 +1197,7 @@ abm_hed_red_sea_trade = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = cannon_maker_advance
+	requires = banking_advance
 
 	# global_own_trade_power = 0.1
 	global_trade_center_power = 0.05 #was 0.1
@@ -1211,7 +1211,7 @@ abm_sharifs_of_mecca = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = unlock_halberdiers_advance
+	requires = unlock_flute_advance
 
 	# ae_impact = -0.1
 	antagonism_received_modifier = -0.10
@@ -1225,7 +1225,7 @@ abm_hed_desert_warfare = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = unlock_falconet_advance
+	requires = unlock_matchlock_levy
 
 	# land_attrition = -0.10
 	land_unit_attrition = -0.10
@@ -1238,7 +1238,7 @@ abm_cradle_of_gold = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = trade_companies_advance #1.4: was viceroyalty_advance
+	requires = global_trade_advance
 
 	# global_tax_modifier = 0.1
 	minting_income_factor = 0.15 #was tax_income_efficiency = 0.10
@@ -1251,7 +1251,7 @@ abm_hajj = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = pop_promotion_speed_age_4
+	requires = confessionalism_advance
 
 	# global_missionary_strength = 0.01
 	cultural_influence_modifier = 0.1 #was global_pop_conversion_speed_modifier = 0.20
@@ -1265,7 +1265,7 @@ abm_successor_to_the_caliphate = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = diplomatic_range_age_5
+	requires = spy_construction_absolutism
 
 	# prestige = 1
 	# monthly_piety = 0.001
@@ -1280,7 +1280,7 @@ abm_hed_ideas_ambition = {
 		has_or_had_tag = ABHED
 	}
 
-	requires = unlock_light_dragoons_advance
+	requires = conscription_advance
 
 	# cavalry_power = 0.15
 	food_consumption_modifier = -0.1 #was army_heavy_cavalry_power = 0.10
@@ -1302,7 +1302,7 @@ abm_ras_ideas_tradition_1 = {
 		}
 	}
 
-	requires = unlock_armored_horsemen_advance
+	requires = power_projection_advance_1
 
 	# infantry_power = 0.1
 	army_heavy_infantry_power = 0.1
@@ -1319,7 +1319,7 @@ abm_ras_ideas_tradition_2 = {
 		}
 	}
 
-	requires = faster_levy_recruitment
+	requires = power_projection_advance_1
 
 	# global_manpower_modifier = 0.2
 	global_levy_size_modifier = 0.125 #was global_manpower_modifier = 0.10
@@ -1337,7 +1337,7 @@ abm_ras_living_imam = {
 		}
 	}
 
-	requires = army_initiative_ren
+	requires = professional_armies_advance
 
 	# land_morale = 0.1
 	land_morale_modifier = 0.10
@@ -1371,7 +1371,7 @@ abm_coffea_arabica = {
 		}
 	}
 
-	requires = trading_hub_advance
+	requires = trade_through_owned_disc_advance
 
 	# global_trade_power = 0.1
 	global_merchant_power = 0.10
@@ -1389,7 +1389,7 @@ abm_ras_unite_rassid_state = {
 		}
 	}
 
-	requires = government_size_discovery
+	requires = foreign_cultural_law_advance
 
 	# legitimacy = 1
 	# devotion = 1
@@ -1414,7 +1414,7 @@ abm_ras_mountain_strongholds = {
 		}
 	}
 
-	requires = unlock_galiot
+	requires = unlock_flintlock_levy
 
 	# shock_damage_received = -0.15
 	global_defensive = 0.2 #was army_shock_damage_taken = -0.10
@@ -1431,7 +1431,7 @@ abm_ras_salt_in_water = {
 		}
 	}
 
-	requires = coastal_trade_routes_advance
+	requires = artillery_institution_advance
 
 	# leader_land_shock = 1
 	global_hostile_attrition = 1 #army_initiative = 0.10
@@ -1448,7 +1448,7 @@ abm_ras_secure_trade_monopolies = {
 		}
 	}
 
-	requires = mint_advance
+	requires = grand_shipyard_advance
 
 	# trade_efficiency = 0.1
 	global_merchant_capacity_modifier = 0.25 #was trade_income = 0.10
@@ -1465,7 +1465,7 @@ abm_ras_ideas_ambition = {
 		}
 	}
 
-	requires = fort_limit_6_advance
+	requires = global_supply_limit_modifier_advance_6
 
 	# defensiveness = 0.2
 	army_heavy_infantry_reinforce_cost_modifier = -0.2 #was global_defensive = 0.15
@@ -1495,7 +1495,7 @@ abm_hdr_ideas_tradition_2 = {
 		has_or_had_tag = ABHDR
 	}
 
-	requires = weapon_guild_advance
+	requires = mining_advance
 
 	# global_foreign_trade_power = 0.10
 	selling_efficiency = small_trade_efficiency_bonus #was global_merchant_power = 0.10
@@ -1522,7 +1522,7 @@ abm_hdr_tribes_of_hadramut = {
 		has_or_had_tag = ABHDR
 	}
 
-	requires = unlock_peasant_levy_advance
+	requires = professional_armies_advance
 
 	# global_manpower_modifier = 0.15
 	global_manpower_modifier = 0.10
@@ -1535,7 +1535,7 @@ abm_hdr_hawtas = {
 		has_or_had_tag = ABHDR
 	}
 
-	requires = regiment_reinforcement_speed_discovery
+	requires = pike_and_shot_advance
 
 	# global_unrest = -1
 	pop_join_rebel_threshold = -0.04 #was -0.05
@@ -1549,7 +1549,7 @@ abm_hdr_encouraging_the_incense_trade = {
 		has_or_had_tag = ABHDR
 	}
 
-	requires = new_currency_demands
+	requires = house_of_parliament_advance
 
 	# trade_efficiency = 0.1
 	global_incense_output_modifier = 0.25 #was trade_income = 0.10
@@ -1562,7 +1562,7 @@ abm_hdr_sailors_of_the_indian_ocean = {
 		has_or_had_tag = ABHDR
 	}
 
-	requires = naval_morale_advance_3
+	requires = unlock_galleon_advance
 
 	# naval_forcelimit_modifier = 0.25
 	# sailors_recovery_speed = 0.05
@@ -1577,7 +1577,7 @@ abm_hdr_hadramhi_diaspora = {
 		has_or_had_tag = ABHDR
 	}
 
-	requires = tribal_migration_law_advance
+	requires = clergy_rights_laws_advance
 
 	# technology_cost = -0.05
 	research_speed_modifier = 0.05
@@ -1590,7 +1590,7 @@ abm_hdr_distant_diplomacy = {
 		has_or_had_tag = ABHDR
 	}
 
-	requires = national_sovereignty
+	requires = spy_construction_absolutism
 
 	# improve_relation_modifier = 0.3
 	improve_relation_impact = 0.30 #was 0.2
@@ -1603,7 +1603,7 @@ abm_hdr_ideas_ambition = {
 		has_or_had_tag = ABHDR
 	}
 
-	requires = fortress_advance
+	requires = textile_mill_advance
 
 	# colonists = 1
 	trade_range_modifier = 0.3 #was can_colonize = yes
@@ -1661,7 +1661,7 @@ abm_mhr_mercenary_traditions = {
 		has_or_had_tag = DHF
 	}
 
-	requires = fort_limit_2_advance
+	requires = professional_armies_advance
 
 	# merc_maintenance_modifier = -0.1
 	mercenary_maintenance_efficiency = 0.15
@@ -1688,7 +1688,7 @@ abm_mhr_pilots_of_the_arabian_sea = {
 		has_or_had_tag = DHF
 	}
 
-	requires = naval_ambitions
+	requires = unlock_carrack_advance
 
 	# leader_naval_manuever = 1
 	navy_movement_speed = 0.20 #was 0.1
@@ -1701,7 +1701,7 @@ abm_mhr_camels = {
 		has_or_had_tag = DHF
 	}
 
-	requires = unlock_arquebusiers_advance
+	requires = unlock_flintlock_levy
 
 	# movement_speed = 0.15
 	# cavalry_cost = -0.05
@@ -1717,7 +1717,7 @@ abm_mhr_book_of_navigation = {
 		has_or_had_tag = DHF
 	}
 
-	requires = letters_of_marque
+	requires = unlock_galleon_advance
 
 	# navy_tradition_decay = -0.01
 	navy_tradition_decay = -0.001 #was -0.01
@@ -1731,7 +1731,7 @@ abm_mhr_rein_in_the_chiefs = {
 		has_or_had_tag = DHF
 	}
 
-	requires = absolutist_court
+	requires = crown_rights_laws_advance
 
 	# global_autonomy = -0.05
 	global_monthly_control_decline = -0.001 #was global_monthly_control = 0.001
@@ -1745,7 +1745,7 @@ abm_mhr_ideas_ambition = {
 		has_or_had_tag = DHF
 	}
 
-	requires = repair_at_sea_aorev
+	requires = unlock_heavy_frigate_advance
 
 	# naval_maintenance_modifier = -0.2
 	naval_morale_recovery = 0.05 #was navy_maintenance_efficiency = 0.10

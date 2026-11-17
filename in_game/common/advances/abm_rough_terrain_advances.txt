@@ -15,6 +15,7 @@
 
 REPLACE:ira_persian_plateau = {
 	age = age_1_traditions
+	icon = feudalism_advance
 	potential = {
 		OR = {
 			has_or_had_tag = IRA
@@ -23,7 +24,7 @@ REPLACE:ira_persian_plateau = {
 	}
 	unlock_government_reform = abm_homeland_proximity_reform
 
-	requires = ira_shahnameh
+	requires = cultural_traditions_law_advance
 }
 
 # Austria (HAB/TIR/STY) -> South Germany
@@ -40,19 +41,20 @@ REPLACE:hab_expert_mountaineers = {
 
 	unlock_government_reform = abm_homeland_proximity_reform
 
-	requires = renaissance_urbanisation
+	requires = national_assemblies_advance
 }
 
 # Swiss - Alpine arc variant: the bonus covers the whole Alpine range, not the
 # capital's region (government_reforms/abm_gov_reforms_rough_terrain.txt).
 REPLACE:swiss_alpine_passes = {
 	age = age_1_traditions
+	icon = feudalism_advance
 	potential = {
 		is_swiss_for_advances = yes
 	}
 	unlock_government_reform = abm_alpine_proximity_reform
 
-	requires = swiss_halberd_infantry
+	requires = mapmaking
 }
 
 # Savoy - Alpine arc variant
@@ -66,7 +68,7 @@ REPLACE:sav_alpine_identity = {
 
 	unlock_government_reform = abm_alpine_proximity_reform
 
-	requires = codified_laws
+	requires = mining_law_advance
 }
 
 # Albania
@@ -83,14 +85,15 @@ REPLACE:albanian_prokletije = {
 
 	unlock_government_reform = abm_homeland_proximity_reform
 
-	requires = albanian_the_kanun
+	requires = codified_laws
 }
 
 # Scotland
 REPLACE:scottish_highland_tradition = {
 	content_priority = 1000
 	age = age_1_traditions
-	requires = peel_towers_advance
+	icon = feudalism_advance
+	requires = cultural_traditions_law_advance
 	potential = {
 		OR = {
 			has_or_had_tag = SCO
@@ -106,7 +109,7 @@ REPLACE:drokpa = {
 	potential = { has_or_had_tag = TIB }
 
 	icon = drokpa
-	requires = the_yak
+	requires = agriculture_advance
 
 	global_merchant_capacity_modifier = 0.05
 
@@ -116,6 +119,7 @@ REPLACE:drokpa = {
 # Inca
 REPLACE:inc_vertical_economy = {
 	age = age_1_traditions
+	icon = feudalism_advance
 	potential = {
 		OR = {
 			has_or_had_tag = INC
@@ -124,7 +128,7 @@ REPLACE:inc_vertical_economy = {
 	}
 	unlock_government_reform = abm_homeland_proximity_reform
 
-	requires = mitma
+	requires = mapmaking
 }
 
 # Morocco
@@ -138,12 +142,13 @@ REPLACE:mor_atlas_strongholds = {
 
 	unlock_government_reform = abm_homeland_proximity_reform
 
-	requires = alchemy_advance
+	requires = mining_law_advance
 }
 
 # Ethiopia
 REPLACE:a_permanent_capital = {
 	age = age_3_discovery
+	requires = foreign_cultural_law_advance
 	icon = a_permanent_capital
 	potential = {
 		has_or_had_tag = ETH
@@ -156,9 +161,10 @@ REPLACE:a_permanent_capital = {
 # Nepal
 REPLACE:npl_himalayan_homeland = {
 	age = age_1_traditions
+	icon = feudalism_advance
 	potential = { OR = { culture.language = language:nepali_language has_or_had_tag = NPL } }
 	unlock_government_reform = abm_homeland_proximity_reform
 
-	requires = feudalism_advance
+	requires = codified_laws
 }
 
