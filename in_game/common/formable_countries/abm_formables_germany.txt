@@ -133,21 +133,33 @@ REPLACE:SWI_f = {
 
 
 # Pomerania
+# Ars Belli: tier 3 over the whole Wendish coast - Holstein, Mecklenburg and
+# Pomerania - plus the Danzig province, and it requires Lubeck, Danzig and
+# Stettin outright. The Danzig province sits in prussia_area/baltic_region, so
+# this claim deliberately reaches outside the north German region.
 REPLACE:POM_f = { #Pomerania
-	required_locations_fraction = 1.0
-	level = 2
+	required_locations_fraction = 0.6
+	level = 3
 	rule = historical
 	potential = {
 		OR = {
 			culture = culture:eastern_pomeranian
 			culture = culture:western_pomeranian
+			culture = culture:hanseatic
 			culture = culture:polabian # Ars Belli: the Polabian Slavs of the Pomeranian shore
 		}
-		# Ars Belli: and only from a capital in Mecklenburg or Pomerania
+		# Ars Belli: and only from a capital in one of the required areas
 		OR = {
+			original_capital.area = area:holstein_area
 			original_capital.area = area:mecklenburg_area
 			original_capital.area = area:pomerania_area
 		}
+	}
+	allow = {
+		# Ars Belli: the three ports, held outright
+		owns = location:lubeck
+		owns = location:gdansk # the Danzig location is gdansk in EU5
+		owns = location:stettin
 	}
 
 	name = POM
@@ -157,7 +169,12 @@ REPLACE:POM_f = { #Pomerania
 	color = map_POM
 
 	areas = {
+		holstein_area
+		mecklenburg_area
 		pomerania_area
+	}
+	provinces = {
+		danzig_province
 	}
 	form_effect = {
 	}
