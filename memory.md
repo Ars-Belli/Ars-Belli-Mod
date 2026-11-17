@@ -960,3 +960,21 @@ The user's rule: an advance that unlocks a custom `abm_*` unit must require what
 - `STOCK_UNIT_REQUIRES` maps `(age, category)` -> the prerequisite of the vanilla advance unlocking that slot, taken from `.tools/eu5/advances/2_army_unlocks.txt`: e.g. age 3 heavy infantry = `unlock_halberdiers_advance` -> `training_fields_advance`; age 4 = `unlock_pikemen_advance` -> `barracks_advance`; age 5 = `unlock_musketeers_advance` -> `unlock_hunters_advance`; age 6 = `unlock_fusiliers_advance` -> `conscription_center_advance`. All 20 targets are generic, ungated, same-age advances (verified against the reference table).
 - This is the single documented exception to the "basic root only" policy; it applies to every advance with an `unlock_unit` whose unit resolves to a slot (stock or custom), and it is idempotent.
 - Applied to 45 advances in `abm_units_arabia/india/italy/steppes.txt` (only `requires =` lines changed; BOM + CRLF preserved, braces balanced). `REPLACE:genoese_galley` is skipped: `n_genoese_galley` has no `copy_from`/`category`, so it has no slot.
+
+## 2026-11-17 - German formables: three-area tier 3 tiles (WES, SWA, FKN)
+User rule: a *regional* German formable is `level = 3` and spans **three areas**, and the potentials of
+different tiles are allowed to cross. Only the three below follow it so far; SHL (holstein_area), HAN
+(lower_saxony_area) and POM (pomerania_area) are still vanilla single-area level 2.
+- `WES_f`: westphalia_area + rhineland_area + hesse_area = **120 locations**, `required_locations_fraction = 0.6` (72). The user set `level = 3` and emptied `allow` (dropped the vanilla "KOL gone / age 6" gate).
+- `SWA_f`: swabia_area + upper_rhine_area + alsace_area = **80 locations**, fraction 0.6 (48). Was one area at 0.8.
+- `FKN_f`: franconia_area + upper_rhine_area + hesse_area = **103 locations**, fraction 0.6 (62). Was `level = 2`, one area.
+- Shared shape: `potential` = `culture = { has_culture_group = culture_group:german_group }` plus an OR of `original_capital.area = area:<each of the three>`. `original_capital.area` is vanilla-attested (`in_game/common/advances/region_north_america.txt:30`); every German culture is in `german_group` (`culture_groups/00_culture_groups.txt:90`), so the area list is the real gate.
+- Overlap is deliberate: upper_rhine_area is in both SWA and FKN, hesse_area in both FKN and WES.
+- Region sizes (parsed from `map_data/definitions.txt`): north_german_region 419 locations / 14 areas, south_german_region 380 / 16. Fractions were set by hand from those totals, not from vanilla.
+- Checker 0 errors on the file and on the whole `formable_countries/` folder. In-game confirm still needed (new campaign) for the three requirement lists.
+- Same day, follow-up: `HAN_f` and `FKN_f` converted to the same three-area tier 3 shape.
+  - `HAN_f`: `level = 2 -> 3`, areas lower_saxony_area + holstein_area + mecklenburg_area = **82 locations**, fraction 0.6 (~49).
+  - `FKN_f`: the user replaced the area set - now franconia_area + swabia_area + bavaria_area = **118 locations** (~71 at 0.6), and the `original_capital.area` OR was changed to match. swabia_area is therefore shared by SWA and FKN.
+  - `HAN_f` kept its vanilla `allow = { owns = location:hanover }`; note that this now also gates a Holstein/Mecklenburg-rooted contender.
+  - Still single-area level 2: SHL (holstein_area), POM (pomerania_area at fraction 1.0 with its own area capital gate).
+  - Hansa research (same day): EU5 has exactly one Hansa tag - `HSA: "Hansa"` / `HSA_ADJ: "Hanseatic"` (country_names_l_english.yml:69) - and no Hansa international organization (nothing in `in_game/common/international_organizations/`). EU4 also uses `HSA` (`HSA_ideas` at `.tools/eu4/ideas/00_country_ideas.txt:2697`) and additionally has LUB/HAM/BRE/RIG with idea sets. In this mod HSA owns lubeck+hamburg+bremen at start and LUB/HAM/BRM are landless tags holding `our_cores_conquered_by_others` on their own city.

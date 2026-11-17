@@ -86,6 +86,52 @@ REPLACE:PRU_f = { #Prussia
 	}
 }
 
+# Switzerland
+REPLACE:SWI_f = {
+	level = 3
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = { has_culture_group = culture_group:swiss_group }
+		# Ars Belli: only a south German power may claim this
+		original_capital.region = region:south_german_region
+	}
+
+	allow = {
+		custom_tooltip = {
+			text = SWI_f_tt
+			NOT = { exists = international_organization:swiss_confederation }
+		}
+	}
+	
+	name = SWI
+	flag = SWI
+	adjective = SWI_ADJ
+	tag = SWI
+	color = map_SWI
+
+	areas = {
+		central_switzerland_area
+		eastern_switzerland_area
+		western_switzerland_area
+	}
+	form_effect = {
+		set_country_rank_effect = { rank = country_rank:rank_duchy }
+		unlock_government_reform_effect = { type = autonomous_swiss_cantons_reform }
+		add_replacing_gov_reform = { reform = government_reform:autonomous_swiss_cantons_reform }
+		if = {
+			limit = {
+				NOT = { government_type = government_type:monarchy }
+				NOT = { government_type = government_type:theocracy }
+				NOT = { government_type = government_type:republic }
+			}
+			change_government_type = government_type:republic
+		}
+	}
+}
+
+
 # Pomerania
 REPLACE:POM_f = { #Pomerania
 	required_locations_fraction = 1.0
@@ -420,14 +466,18 @@ REPLACE:SHL_f = {
 
 # Swabia
 REPLACE:SWA_f = {
-	level = 2
-	required_locations_fraction = 0.8
+	level = 3
+	required_locations_fraction = 0.6
 	rule = plausible
 
 	potential = {
-		culture = culture:swabian
-		# Ars Belli: only a south German power may claim this
-		original_capital.region = region:south_german_region
+		culture = { has_culture_group = culture_group:german_group }
+		# Ars Belli: a capital in any of the three required areas
+		OR = {
+			original_capital.area = area:swabia_area
+			original_capital.area = area:upper_rhine_area
+			original_capital.area = area:alsace_area
+		}
 	}
 	allow = {
 		
@@ -441,6 +491,8 @@ REPLACE:SWA_f = {
 
 	areas = {
 		swabia_area
+		upper_rhine_area
+		alsace_area
 	}
 
 	form_effect = {
@@ -449,26 +501,24 @@ REPLACE:SWA_f = {
 }
 
 # Westphalia
+# Ars Belli: tier 3 over the three areas of the German west (Westphalia,
+# Rhineland, Hesse). The land overlaps Franconia on purpose - a power rooted in
+# Hesse or the Upper Rhine may legitimately form either.
 REPLACE:WES_f = {
-	level = 2
-	required_locations_fraction = 0.75
+	level = 3
+	required_locations_fraction = 0.6
 	rule = historical
 
 	potential = {
-		culture = culture:westphalian
-		# Ars Belli: only a north German power may claim this
-		original_capital.region = region:north_german_region
+		culture = { has_culture_group = culture_group:german_group }
+		# Ars Belli: a capital in any of the three required areas
+		OR = {
+			original_capital.area = area:westphalia_area
+			original_capital.area = area:rhineland_area
+			original_capital.area = area:hesse_area
+		}
 	}
 	allow = {
-		NOT = {
-			government_type = government_type:theocracy
-		}
-		OR = {
-			NOT = {
-				country_exists = c:KOL
-			}
-			current_age_or_later = { age = age_6_revolutions }
-		}
 	}
 
 	name = WES
@@ -479,6 +529,8 @@ REPLACE:WES_f = {
 
 	areas = {
 		westphalia_area
+		rhineland_area
+		hesse_area
 	}
 
 	form_effect = {
@@ -487,15 +539,21 @@ REPLACE:WES_f = {
 }
 
 # Franconia
+# Ars Belli: tier 3 over Franconia, Swabia and Bavaria - the southern German
+# centre. Shares Swabia with the Swabian tile on purpose.
 REPLACE:FKN_f = {
-	level = 2
+	level = 3
 	required_locations_fraction = 0.6
 	rule = plausible
 
 	potential = {
-		culture = culture:east_franconian
-		# Ars Belli: only a south German power may claim this
-		original_capital.region = region:south_german_region
+		culture = { has_culture_group = culture_group:german_group }
+		# Ars Belli: a capital in any of the three required areas
+		OR = {
+			original_capital.area = area:franconia_area
+			original_capital.area = area:swabia_area
+			original_capital.area = area:bavaria_area
+		}
 	}
 	allow = {
 		
@@ -509,6 +567,8 @@ REPLACE:FKN_f = {
 
 	areas = {
 		franconia_area
+		swabia_area
+		bavaria_area
 	}
 
 	form_effect = {
@@ -517,15 +577,21 @@ REPLACE:FKN_f = {
 }
 
 # Hanover
+# Ars Belli: tier 3 over Lower Saxony, Holstein and Mecklenburg - the north-west
+# and the Elbe duchies. Overlaps Holstein's and Pomerania's own areas on purpose.
 REPLACE:HAN_f = {
-	level = 2
+	level = 3
 	required_locations_fraction = 0.6
 	rule = historical
 
 	potential = {
-		culture = culture:lower_saxon
-		# Ars Belli: only a north German power may claim this
-		original_capital.region = region:north_german_region
+		culture = { has_culture_group = culture_group:german_group }
+		# Ars Belli: a capital in any of the three required areas
+		OR = {
+			original_capital.area = area:lower_saxony_area
+			original_capital.area = area:holstein_area
+			original_capital.area = area:mecklenburg_area
+		}
 	}
 	allow = {
 		owns = location:hanover
@@ -539,6 +605,8 @@ REPLACE:HAN_f = {
 
 	areas = {
 		lower_saxony_area
+		holstein_area
+		mecklenburg_area
 	}
 
 	form_effect = {
@@ -614,50 +682,7 @@ REPLACE:BEL_f = {
 	}
 }
 
-# Switzerland
-REPLACE:SWI_f = {
-	level = 3
-	required_locations_fraction = 0.75
-	rule = historical
 
-	potential = {
-		culture = { has_culture_group = culture_group:swiss_group }
-		# Ars Belli: only a south German power may claim this
-		original_capital.region = region:south_german_region
-	}
-
-	allow = {
-		custom_tooltip = {
-			text = SWI_f_tt
-			NOT = { exists = international_organization:swiss_confederation }
-		}
-	}
-	
-	name = SWI
-	flag = SWI
-	adjective = SWI_ADJ
-	tag = SWI
-	color = map_SWI
-
-	areas = {
-		central_switzerland_area
-		eastern_switzerland_area
-		western_switzerland_area
-	}
-	form_effect = {
-		set_country_rank_effect = { rank = country_rank:rank_duchy }
-		unlock_government_reform_effect = { type = autonomous_swiss_cantons_reform }
-		add_replacing_gov_reform = { reform = government_reform:autonomous_swiss_cantons_reform }
-		if = {
-			limit = {
-				NOT = { government_type = government_type:monarchy }
-				NOT = { government_type = government_type:theocracy }
-				NOT = { government_type = government_type:republic }
-			}
-			change_government_type = government_type:republic
-		}
-	}
-}
 
 # Lotharingia
 REPLACE:LOT_f = {
