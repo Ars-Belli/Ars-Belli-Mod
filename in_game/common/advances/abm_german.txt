@@ -4312,10 +4312,10 @@ abm_brb_ideas_tradition_1 = {
 		has_or_had_tag = BRB
 	}
 
-	requires = mining_advance
+	requires = organized_religion
 
 	# global_tax_modifier = 0.10
-	tax_income_efficiency = 0.10
+	global_estate_max_tax = 0.02
 }
 
 abm_brb_ideas_tradition_2 = {
@@ -4338,10 +4338,10 @@ abm_brb_charter_of_liberty = {
 		has_or_had_tag = BRB
 	}
 
-	requires = professional_armies_advance
+	requires = late_feudal_relations
 
 	# global_unrest = -1
-	pop_join_rebel_threshold = -0.05
+	subject_opinions = 5
 }
 
 abm_brb_marsh_warfare = {
@@ -4355,6 +4355,7 @@ abm_brb_marsh_warfare = {
 
 	# leader_land_manuever = 1
 	army_movement_speed = 0.10
+	correct_box_chance = 0.10
 }
 
 abm_brb_palace_coudenberg = {
@@ -4364,10 +4365,11 @@ abm_brb_palace_coudenberg = {
 		has_or_had_tag = BRB
 	}
 
-	requires = new_world_advance
+	requires = dry_dock_advance
 
 	# prestige = 1
 	monthly_prestige = 0.10
+	global_build_buildings_efficiency = 0.10
 }
 
 abm_brb_sugar_capital = {
@@ -4408,7 +4410,7 @@ abm_brb_religious_tolerance = {
 	# tolerance_heretic = 2
 	# tolerance_heathen = 1
 	tolerance_heretic = 1
-	tolerance_heathen = 2
+	tolerance_heathen = 1
 }
 
 abm_brb_generality_lands = {
@@ -4449,7 +4451,7 @@ abm_fla_ideas_tradition_1 = {
 	requires = agriculture_advance
 
 	# global_trade_goods_size_modifier = 0.1
-	global_max_rgo_size_modifier = 0.10
+	global_monthly_food_modifier = monthly_food_productivity_severe_bonus
 }
 
 abm_fla_ideas_tradition_2 = {
@@ -4462,7 +4464,7 @@ abm_fla_ideas_tradition_2 = {
 	requires = meritocracy_advance
 
 	# embracement_cost = -0.1
-	absorb_institutions_cost_modifier = -0.10
+	global_institution_growth_modifier = 0.10
 }
 
 # ABM 2026-11-18: disabled - duplicates a vanilla advance of the same name for the same tag (sheet mark "--abm_fla_cloth").
@@ -4486,10 +4488,11 @@ abm_fla_land_reclamation = {
 		has_or_had_tag = FLA
 	}
 
-	requires = renaissance_advance
+	requires = global_nobles_max_literacy_advance
 
 	# development_cost = -0.1
-	global_monthly_prosperity = 0.001
+	peasants_estate_target_satisfaction = medium_permanent_target_satisfaction
+	peasants_estate_max_tax = 0.03
 }
 
 abm_fla_beeldenstorm = {
@@ -4515,7 +4518,7 @@ abm_fla_painters = {
 	requires = printing_press_advance
 
 	# global_institution_spread = 0.1
-	global_institution_growth_modifier = 0.10
+	num_possible_artists = 1
 }
 
 abm_fla_ship_building = {
@@ -4538,10 +4541,10 @@ abm_fla_university = {
 		has_or_had_tag = FLA
 	}
 
-	requires = clergy_rights_laws_advance
+	requires = confessionalism_advance
 
 	# technology_cost = -0.05
-	research_speed_modifier = 0.05
+	global_monthly_literacy = 0.001
 }
 
 abm_fla_noose_bearers = {
@@ -4573,29 +4576,29 @@ abm_fla_ideas_ambition = {
 # NED (EU4 idea set NED_ideas, 00_country_ideas.txt)
 
 abm_ned_ideas_tradition_1 = {
-	age = age_1_traditions
+	age = age_2_renaissance
 	icon = administrative_leadership
 	potential = {
 		has_or_had_tag = NED
 	}
 
-	requires = ship_building_advance
+	requires = rudimentary_coastal_ship_repair
 
 	# global_sailors_modifier = 0.25
-	global_sailors_modifier = 0.10
+	global_upper_class_capacity_modifier = 0.01
 }
 
 abm_ned_ideas_tradition_2 = {
-	age = age_1_traditions
+	age = age_2_renaissance
 	icon = diplomatic_training
 	potential = {
 		has_or_had_tag = NED
 	}
 
-	requires = ship_building_advance
+	requires = professional_armies_advance
 
 	# naval_forcelimit_modifier = 0.50
-	expected_navy_size_modifier = 0.25
+	army_light_infantry_power = 0.15
 }
 
 abm_amsterdam_wisselbank = {
@@ -4611,33 +4614,35 @@ abm_amsterdam_wisselbank = {
 	minting_income_factor = 0.10
 }
 
-abm_dutch_trading_spirit = {
-	age = age_2_renaissance
-	icon = merchants_and_trade
-	potential = {
-		has_or_had_tag = NED
-	}
+# ABM 2026-11-18: disabled - duplicates a vanilla advance of the same name for the same tag (sheet mark "--abm_dutch_trading_spirit").
+#abm_dutch_trading_spirit = {
+#	age = age_2_renaissance
+#	icon = merchants_and_trade
+#	potential = {
+#		has_or_had_tag = NED
+#	}
+#
+#	requires = banking_advance
+#
+#	# merchants = 1
+#	# trade_range_modifier = 0.1
+#	global_merchant_capacity_modifier = 0.10
+#	trade_range_modifier = 0.10
+#}
 
-	requires = banking_advance
-
-	# merchants = 1
-	# trade_range_modifier = 0.1
-	global_merchant_capacity_modifier = 0.10
-	trade_range_modifier = 0.10
-}
-
-abm_polders = {
-	age = age_3_discovery
-	icon = cultural_acceptance_advance
-	potential = {
-		has_or_had_tag = NED
-	}
-
-	requires = surgery_advance
-
-	# development_cost = -0.1
-	global_monthly_prosperity = 0.001
-}
+# ABM 2026-11-18: disabled - duplicates a vanilla advance of the same name for the same tag (sheet mark "--abm_polders").
+#abm_polders = {
+#	age = age_3_discovery
+#	icon = cultural_acceptance_advance
+#	potential = {
+#		has_or_had_tag = NED
+#	}
+#
+#	requires = surgery_advance
+#
+#	# development_cost = -0.1
+#	global_monthly_prosperity = 0.001
+#}
 
 abm_instructie_voor_de_admiraliteiten = {
 	age = age_3_discovery
@@ -4651,20 +4656,19 @@ abm_instructie_voor_de_admiraliteiten = {
 	# leader_naval_fire = 2
 	# allowed_marine_fraction = 0.25
 	navy_heavy_ship_power = 0.10
-	army_light_infantry_power = 0.10
 }
 
 abm_embrace_humanism = {
-	age = age_4_reformation
+	age = age_5_absolutism
 	icon = church_councils
 	potential = {
 		has_or_had_tag = NED
 	}
 
-	requires = confessionalism_advance
+	requires = sanitation_advance
 
 	# tolerance_heretic = 3
-	tolerance_heretic = 1
+	cultures_capacity = 1
 }
 
 abm_army_sappers = {
@@ -4678,6 +4682,7 @@ abm_army_sappers = {
 
 	# siege_ability = 0.10
 	siege_ability = 0.10
+	army_artillery_power = 0.15
 }
 
 # ABM 2026-11-18: disabled - duplicates a vanilla advance of the same name for the same tag (sheet mark "--abm_platoon_fire").
@@ -4704,5 +4709,5 @@ abm_ned_ideas_ambition = {
 	requires = distiller_mill_advance
 
 	# trade_efficiency = 0.15
-	trade_income = 0.10
+	tax_income_efficiency = medium_tax_income_efficiency_bonus
 }
