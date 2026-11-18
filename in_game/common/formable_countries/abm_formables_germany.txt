@@ -4,7 +4,109 @@
 # 00_formable_countries.txt. Bodies are verbatim vanilla except where noted; a
 # comment line above each block carries the formable name as the game shows it.
 # Formables of other regions live in abm_formables_<region>.txt.
+# Blocks are sorted by rank, highest first: level 4 = empire, 3 = kingdom,
+# 2 = duchy, 1 = county. Disabled (commented-out) blocks sort with their rank.
 # ---------------------------------------------------------------------------
+
+# Germany
+REPLACE:GER_f = {
+
+	level = 4
+	required_locations_fraction = 0.70
+	rule = plausible
+	potential = {
+		culture = { has_culture_group = culture_group:german_group }
+		# Ars Belli: only a German power may claim this
+		OR = {
+			original_capital.region = region:north_german_region
+			original_capital.region = region:south_german_region
+		}
+	}
+	
+	name = GER
+	flag = GER
+	adjective = GER_ADJ
+	tag = GER
+	color = map_GER
+	
+	regions = {
+		north_german_region
+		south_german_region
+	}
+	form_effect = {
+		if = {
+			limit = { country_rank_level < 4 }
+			set_country_rank_effect = { rank = country_rank:rank_empire }
+		}
+	}
+}
+
+# Holy Roman Empire
+REPLACE:HRE_f = {
+
+	level = 4
+	required_locations_fraction = 0.75
+	rule = plausible
+	potential = {
+		exists = international_organization:hre
+		is_member_of_international_organization = international_organization:hre
+		# Ars Belli: only a German power may claim this
+		OR = {
+			original_capital.region = region:north_german_region
+			original_capital.region = region:south_german_region
+		}
+	}
+
+	allow = {
+		custom_tooltip = {
+			text = HRE_f_tt
+			always = no
+		}
+	}
+	
+	name = HRE
+	flag = HRE
+	adjective = HRE_ADJ
+	tag = HRE
+	color = map_HRE
+	
+	regions = {
+		north_german_region
+		south_german_region
+	}
+	form_effect = {
+	}
+}
+
+BOH_f = { 
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+	
+	potential = {
+		OR = {
+			culture = culture:czech
+			culture = culture:moravian
+		}
+	}
+	allow = {
+		owns = location:prague
+	}
+	
+	name = BOH
+	flag = BOH
+	adjective = BOH_ADJ
+	tag = BOH
+	color = map_BOH
+
+	areas = {
+		bohemia_area
+		moravia_area
+	}
+	form_effect = {
+	}
+}
+
 # Prussia
 REPLACE:PRU_f = { #Prussia
 	content_priority = 800
@@ -131,7 +233,6 @@ REPLACE:SWI_f = {
 	}
 }
 
-
 # Pomerania
 # Ars Belli: tier 3 over the whole Wendish coast - Holstein, Mecklenburg and
 # Pomerania - plus the Danzig province, and it requires Lubeck, Danzig and
@@ -175,307 +276,6 @@ REPLACE:POM_f = { #Pomerania
 	}
 	provinces = {
 		danzig_province
-	}
-	form_effect = {
-	}
-}
-
-# Germany
-REPLACE:GER_f = {
-
-	level = 4
-	required_locations_fraction = 0.70
-	rule = plausible
-	potential = {
-		culture = { has_culture_group = culture_group:german_group }
-		# Ars Belli: only a German power may claim this
-		OR = {
-			original_capital.region = region:north_german_region
-			original_capital.region = region:south_german_region
-		}
-	}
-	
-	name = GER
-	flag = GER
-	adjective = GER_ADJ
-	tag = GER
-	color = map_GER
-	
-	regions = {
-		north_german_region
-		south_german_region
-	}
-	form_effect = {
-		if = {
-			limit = { country_rank_level < 4 }
-			set_country_rank_effect = { rank = country_rank:rank_empire }
-		}
-	}
-}
-
-# Holy Roman Empire
-REPLACE:HRE_f = {
-
-	level = 4
-	required_locations_fraction = 0.75
-	rule = plausible
-	potential = {
-		exists = international_organization:hre
-		is_member_of_international_organization = international_organization:hre
-		# Ars Belli: only a German power may claim this
-		OR = {
-			original_capital.region = region:north_german_region
-			original_capital.region = region:south_german_region
-		}
-	}
-
-	allow = {
-		custom_tooltip = {
-			text = HRE_f_tt
-			always = no
-		}
-	}
-	
-	name = HRE
-	flag = HRE
-	adjective = HRE_ADJ
-	tag = HRE
-	color = map_HRE
-	
-	regions = {
-		north_german_region
-		south_german_region
-	}
-	form_effect = {
-	}
-}
-
-# # Bavaria
-# REPLACE:BAV_f = { 
-
-# 	level = 2
-# 	required_locations_fraction = 0.75
-# 	rule = historical
-
-# 	potential = {
-# 		culture = culture:danube_bavarian
-# 		# Ars Belli: only a south German power may claim this
-# 		original_capital.region = region:south_german_region
-# 	}
-
-# 	allow = {
-# 		NOT = {
-# 			has_estate_privilege = estate_privilege:bavarian_share_of_land
-# 		}
-# 		owns = location:munich
-# 	}
-	
-# 	name = BAV
-# 	flag = BAV
-# 	adjective = BAV_ADJ
-# 	tag = BAV
-# 	color = map_BAV
-	
-# 	areas = {
-# 		bavaria_area
-# 	}
-# 	locations = {
-# 		braunau
-# 		ried
-# 		scharding
-# 	}
-# 	form_effect = {
-# 	}
-# }
-
-# # Austria
-# REPLACE:HAB_f = { 
-
-# 	level = 2
-# 	required_locations_fraction = 0.6
-# 	rule = historical
-	
-# 	potential = {
-# 		OR = {
-# 			culture = culture:danube_bavarian
-# 			culture = culture:southern_bavarian
-# 		}
-# 		# Ars Belli: only a south German power may claim this
-# 		original_capital.region = region:south_german_region
-# 	}
-# 	allow = {
-# 		owns = location:vienna
-# 	}
-	
-# 	name = HAB
-# 	flag = HAB
-# 	adjective = HAB_ADJ
-# 	tag = HAB
-# 	color = map_austrian
-
-# 	areas = {
-# 		austria_area
-# 		styria_area
-# 		carinthia_area
-# 	}
-# 	provinces = {
-# 		traungau_province
-# 		muhlviertel_province
-# 	}
-	
-# 	locations = {
-# 		st_georgen linz braunau
-# 	}
-# 	form_effect = {
-# 	}
-# }
-
-# # Bohemia
-# REPLACE:BOH_f = { 
-# 	level = 2
-# 	required_locations_fraction = 0.75
-# 	rule = historical
-	
-# 	potential = {
-# 		OR = {
-# 			culture = culture:czech
-# 			culture = culture:moravian
-# 		}
-# 		# Ars Belli: only a south German power may claim this
-# 		original_capital.region = region:south_german_region
-# 	}
-# 	allow = {
-# 		owns = location:prague
-# 	}
-	
-# 	name = BOH
-# 	flag = BOH
-# 	adjective = BOH_ADJ
-# 	tag = BOH
-# 	color = map_BOH
-
-# 	areas = {
-# 		bohemia_area
-# 		moravia_area
-# 	}
-# 	form_effect = {
-# 	}
-# }
-
-# # Saxony
-# REPLACE:SAX_f = { # Saxony
-
-# 	level = 2
-# 	required_locations_fraction = 0.25
-# 	rule = historical
-
-# 	potential = {
-# 		OR = {
-# 			culture = culture:saxon
-# 			culture = culture:lower_saxon
-# 		}
-# 		# Ars Belli: only a north German power may claim this
-# 		original_capital.region = region:north_german_region
-# 	}
-
-# 	allow = {
-# 		international_organization:hre ?= {
-# 			country_has_special_status = {
-# 				type = special_status:elector
-# 				country = root
-# 			}
-# 		}
-# 	}
-
-# 	name = SAX
-# 	flag = SAX
-# 	adjective = SAX_ADJ
-# 	tag = SAX
-# 	color = map_SAX
-	
-# 	areas = {
-# 		lower_saxony_area upper_saxony_area 
-# 	}
-# 	provinces = {
-# 		flaming_province
-# 	}
-# 	form_effect = {
-# 	}
-# }
-
-# # Nassau
-# REPLACE:NSA_f = { # Nassau
-
-# 	level = 1
-# 	required_locations_fraction = 1
-# 	rule = historical
-
-# 	potential = {
-# 		OR = {
-# 			culture = culture:rhine_franconian
-# 			culture = culture:moselle_franconian
-# 		}
-# 		# Ars Belli: only a north German power may claim this
-# 		original_capital.region = region:north_german_region
-# 	}
-
-# 	name = NSA
-# 	flag = NSA
-# 	adjective = NSA_ADJ
-# 	tag = NSA
-# 	color = map_NSA
-	
-# 	locations = {
-# 		dillenburg hadamar siegen usingen wiesbaden
-# 	}
-# 	form_effect = {
-# 	}
-# }
-
-# # Mecklenburg
-# REPLACE:MKL_f = { 
-
-# 	required_locations_fraction = 0.75
-# 	level = 1
-# 	rule = historical
-# 	potential = {
-# 		culture = culture:western_pomeranian
-# 		# Ars Belli: only a north German power may claim this
-# 		original_capital.region = region:north_german_region
-# 	}
-	
-# 	name = MKL
-# 	flag = MKL
-# 	adjective = MKL_ADJ
-# 	tag = MKL
-# 	color = map_MKL
-	
-# 	areas = {
-# 		mecklenburg_area
-# 	}
-# 	form_effect = {
-# 	}
-# }
-
-# Holstein
-REPLACE:SHL_f = {
-	level = 2
-	required_locations_fraction = 0.75
-	rule = historical
-	
-	potential = {
-		culture = culture:holsatian
-		# Ars Belli: only a north German power may claim this
-		original_capital.region = region:north_german_region
-	}
-
-	name = SHL
-	flag = SHL
-	adjective = SHL_ADJ
-	tag = SHL
-	color = map_SHL
-	areas = {
-		holstein_area
 	}
 	form_effect = {
 	}
@@ -699,8 +499,6 @@ REPLACE:BEL_f = {
 	}
 }
 
-
-
 # Lotharingia
 REPLACE:LOT_f = {
 	level = 3
@@ -755,7 +553,7 @@ REPLACE:LOT_f = {
 # brandenburg), so this entry exists only so the tag has a formable definition.
 # potential = { always = no } means nobody can ever form it.
 BRA_f = {
-	level = 3
+	level = 2
 	required_locations_fraction = 1.0
 	rule = historical
 
@@ -770,6 +568,183 @@ BRA_f = {
 
 	areas = {
 		brandenburg_area
+	}
+}
+
+# # Bavaria
+# REPLACE:BAV_f = { 
+
+# 	level = 2
+# 	required_locations_fraction = 0.75
+# 	rule = historical
+
+# 	potential = {
+# 		culture = culture:danube_bavarian
+# 		# Ars Belli: only a south German power may claim this
+# 		original_capital.region = region:south_german_region
+# 	}
+
+# 	allow = {
+# 		NOT = {
+# 			has_estate_privilege = estate_privilege:bavarian_share_of_land
+# 		}
+# 		owns = location:munich
+# 	}
+	
+# 	name = BAV
+# 	flag = BAV
+# 	adjective = BAV_ADJ
+# 	tag = BAV
+# 	color = map_BAV
+	
+# 	areas = {
+# 		bavaria_area
+# 	}
+# 	locations = {
+# 		braunau
+# 		ried
+# 		scharding
+# 	}
+# 	form_effect = {
+# 	}
+# }
+
+# # Austria
+# REPLACE:HAB_f = { 
+
+# 	level = 2
+# 	required_locations_fraction = 0.6
+# 	rule = historical
+	
+# 	potential = {
+# 		OR = {
+# 			culture = culture:danube_bavarian
+# 			culture = culture:southern_bavarian
+# 		}
+# 		# Ars Belli: only a south German power may claim this
+# 		original_capital.region = region:south_german_region
+# 	}
+# 	allow = {
+# 		owns = location:vienna
+# 	}
+	
+# 	name = HAB
+# 	flag = HAB
+# 	adjective = HAB_ADJ
+# 	tag = HAB
+# 	color = map_austrian
+
+# 	areas = {
+# 		austria_area
+# 		styria_area
+# 		carinthia_area
+# 	}
+# 	provinces = {
+# 		traungau_province
+# 		muhlviertel_province
+# 	}
+	
+# 	locations = {
+# 		st_georgen linz braunau
+# 	}
+# 	form_effect = {
+# 	}
+# }
+
+# # Bohemia
+# REPLACE:BOH_f = { 
+# 	level = 2
+# 	required_locations_fraction = 0.75
+# 	rule = historical
+	
+# 	potential = {
+# 		OR = {
+# 			culture = culture:czech
+# 			culture = culture:moravian
+# 		}
+# 		# Ars Belli: only a south German power may claim this
+# 		original_capital.region = region:south_german_region
+# 	}
+# 	allow = {
+# 		owns = location:prague
+# 	}
+	
+# 	name = BOH
+# 	flag = BOH
+# 	adjective = BOH_ADJ
+# 	tag = BOH
+# 	color = map_BOH
+
+# 	areas = {
+# 		bohemia_area
+# 		moravia_area
+# 	}
+# 	form_effect = {
+# 	}
+# }
+
+# # Saxony
+# REPLACE:SAX_f = { # Saxony
+
+# 	level = 2
+# 	required_locations_fraction = 0.25
+# 	rule = historical
+
+# 	potential = {
+# 		OR = {
+# 			culture = culture:saxon
+# 			culture = culture:lower_saxon
+# 		}
+# 		# Ars Belli: only a north German power may claim this
+# 		original_capital.region = region:north_german_region
+# 	}
+
+# 	allow = {
+# 		international_organization:hre ?= {
+# 			country_has_special_status = {
+# 				type = special_status:elector
+# 				country = root
+# 			}
+# 		}
+# 	}
+
+# 	name = SAX
+# 	flag = SAX
+# 	adjective = SAX_ADJ
+# 	tag = SAX
+# 	color = map_SAX
+	
+# 	areas = {
+# 		lower_saxony_area upper_saxony_area 
+# 	}
+# 	provinces = {
+# 		flaming_province
+# 	}
+# 	form_effect = {
+# 	}
+# }
+
+# Holstein
+REPLACE:SHL_f = {
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+	
+	potential = {
+		culture = culture:holsatian
+		# Ars Belli: only a north German power may claim this
+		original_capital.region = region:north_german_region
+	}
+
+	name = SHL
+	flag = SHL
+	adjective = SHL_ADJ
+	tag = SHL
+	color = map_SHL
+	areas = {
+		holstein_area
+	}
+	form_effect = {
 	}
 }
 
@@ -797,3 +772,57 @@ HSA_f = {
 		holstein_area
 	}
 }
+
+# # Nassau
+# REPLACE:NSA_f = { # Nassau
+
+# 	level = 1
+# 	required_locations_fraction = 1
+# 	rule = historical
+
+# 	potential = {
+# 		OR = {
+# 			culture = culture:rhine_franconian
+# 			culture = culture:moselle_franconian
+# 		}
+# 		# Ars Belli: only a north German power may claim this
+# 		original_capital.region = region:north_german_region
+# 	}
+
+# 	name = NSA
+# 	flag = NSA
+# 	adjective = NSA_ADJ
+# 	tag = NSA
+# 	color = map_NSA
+	
+# 	locations = {
+# 		dillenburg hadamar siegen usingen wiesbaden
+# 	}
+# 	form_effect = {
+# 	}
+# }
+
+# # Mecklenburg
+# REPLACE:MKL_f = { 
+
+# 	required_locations_fraction = 0.75
+# 	level = 1
+# 	rule = historical
+# 	potential = {
+# 		culture = culture:western_pomeranian
+# 		# Ars Belli: only a north German power may claim this
+# 		original_capital.region = region:north_german_region
+# 	}
+	
+# 	name = MKL
+# 	flag = MKL
+# 	adjective = MKL_ADJ
+# 	tag = MKL
+# 	color = map_MKL
+	
+# 	areas = {
+# 		mecklenburg_area
+# 	}
+# 	form_effect = {
+# 	}
+# }

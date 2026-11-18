@@ -985,3 +985,11 @@ different tiles are allowed to cross. Only the three below follow it so far; SHL
   - `original_capital.province_definition` is NOT attested anywhere in vanilla (only `original_capital.region` 74x and `.area` 18x), so a candidate rooted in Danzig is not covered by the capital gate; it is limited to holstein/mecklenburg/pomerania areas.
   - Culture gate left as eastern/western_pomeranian + polabian (not german_group), so a holsatian-culture Holstein still cannot form it even though Holstein's land is required - change on request.
   - Requirement total: 32 + 16 + 13 + 6 = 67 locations, 0.6 => ~40.
+
+## 2026-11-18 - abm_formables_germany.txt sorted by rank
+- All 21 blocks (15 live + 6 commented-out) now run highest level first: 4 GER_f HRE_f | 3 PRU_f SWI_f POM_f SWA_f WES_f FKN_f HAN_f NED_f BEL_f LOT_f BRA_f | 2 BAV_f* HAB_f* BOH_f* SAX_f* SHL_f HSA_f | 1 NSA_f* MKL_f* (* = disabled).
+- Stable sort: within a level the previous file order is kept. Commented-out blocks sort with their own `level` rather than being pushed to the end.
+- Header gained two lines stating the order and the level->rank mapping (`country_ranks/00_default.txt`: rank_empire 4, rank_kingdom 3, rank_duchy 2, rank_county 1).
+- Proof a pure move: the line multiset of the file is unchanged except for those 2 header lines; diff is 322 insertions / 322 deletions.
+- Re-sorting must re-count braces in commented blocks too - a naive brace scanner that strips `#` comments returns depth 0 on every line of a commented block and swallows it as a one-line chunk. Strip the leading `# ` first when the block start line is commented.
+- Checker 0 errors/warnings. The other `abm_formables_*.txt` files were left in their authored order (not sorted).
