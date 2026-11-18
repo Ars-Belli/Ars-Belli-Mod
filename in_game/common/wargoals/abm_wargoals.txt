@@ -111,3 +111,16 @@ REPLACE:clan_expansion_wargoal = {
 	}
 	ticking_war_score = 1
 }
+
+# Ars Belli: Restore Roman Borders conquer cost -50% -> -40% (vanilla 0.5)
+REPLACE:superiority_restore_roman_borders = {
+	type = take_country
+	attacker = { conquer_cost = 0.6 subjugate_cost = 0.5 antagonism = 0.5 }
+	defender = { conquer_cost = 0.5 antagonism = 0.5 }
+	allowed_locations = {
+		scope:location = {
+			is_in_scripted_geography = scripted_geography:roman_borders_geography
+		}
+	}
+	ticking_war_score = 0.5
+}

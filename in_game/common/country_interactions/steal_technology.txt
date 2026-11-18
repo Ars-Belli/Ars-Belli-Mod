@@ -1,0 +1,40 @@
+﻿steal_technology =  { 
+	type = diplomacy
+	category = CATEGORY_COVERT_ACTIONS
+
+	diplomatic_cost = steal_technology_cost
+
+	# Ars Belli: only countries that took the Espionage focus pick (Age of Discovery) may steal research.
+	allow = {
+		scope:actor = { has_advance = abm_industrial_espionage }
+	}
+
+	block_when_at_war = no
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "choose_country"
+		default_sort = will
+		column = {
+			data = country_diplomacy_info_covert
+		}
+		visible = {
+			num_of_advances_researched > scope:actor.num_of_advances_researched
+		}
+        enabled = {
+			research_progress > 20
+		}
+	}
+
+	# Ars Belli: the target no longer loses research progress (vanilla took 10% of it), so
+	# several players stealing from one target cannot grind its research down.
+	effect = {
+		scope:actor = {
+			add_research_progress = {
+				value = scope:recipient.research_progress
+				multiply = 0.20
+			}
+		}
+	}
+}	

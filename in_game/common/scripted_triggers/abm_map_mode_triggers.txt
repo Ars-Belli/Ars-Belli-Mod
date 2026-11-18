@@ -1,6 +1,16 @@
 ﻿# Ars Belli map modes (in_game/gfx/map/map_modes/abm_map_modes.txt): Bailiffs and Urbanisation.
 # All triggers are location scope.
 
+# The locations a map mode colours: the viewing country's, which is the selected country, else the player. An observer with
+# nothing selected has neither, so every owned location shows; a bare owner = scope:actor logs an error per location there.
+abm_map_mode_shows_location = {
+	has_owner = yes
+	trigger_if = {
+		limit = { exists = scope:actor }
+		owner = scope:actor
+	}
+}
+
 # Raw goods worth keeping rural and worth a bailiff before the tax base is there:
 # vanilla default_market_price 2.5 or more (goods/00_raw_materials, 01_plantation_goods, 03_food).
 abm_has_high_value_raw_material = {
@@ -105,5 +115,66 @@ abm_bailiff_worth_it = {
 	OR = {
 		location_tax_base >= abm_bailiff_min_tax_base
 		abm_has_high_value_raw_material = yes
+	}
+}
+
+# Advanced Create Town map mode. Numbers: script_values/abm_map_mode_values.txt.
+
+# A food RGO: food value 3 or more.
+abm_is_food_rgo = {
+	raw_material ?= { food_value >= 3 }
+}
+
+# Nothing else in the province makes up for what a town costs.
+abm_is_only_food_rgo = {
+	abm_is_food_rgo = yes
+	NOT = {
+		province = {
+			any_location_in_province = {
+				abm_is_food_rgo = yes
+				count >= 2
+			}
+		}
+	}
+}
+
+abm_adv_town_cuts_rgo = {
+	abm_adv_town_rgo_kept < abm_adv_town_min_rgo_kept
+}
+
+abm_adv_town_keep_rural = {
+	abm_has_high_value_raw_material = yes
+	abm_adv_town_cuts_rgo = yes
+}
+
+abm_adv_town_causes_shortage = {
+	abm_is_food_rgo = yes
+	OR = {
+		abm_is_only_food_rgo = yes
+		abm_adv_town_food_surplus_after < 0
+	}
+}
+
+abm_adv_town_costs_growth = {
+	abm_is_food_rgo = yes
+	abm_adv_town_food_surplus_after < abm_adv_town_full_growth_surplus
+}
+
+abm_adv_town_tight_staple = {
+	abm_has_food_8_raw_material = yes
+	abm_adv_town_food_surplus_after < abm_adv_town_comfortable_surplus
+}
+
+# A small high-value RGO: not cut today, but a town limits it to half for good.
+abm_adv_town_lower_priority = {
+	OR = {
+		abm_has_high_value_raw_material = yes
+		AND = {
+			abm_adv_town_cuts_rgo = yes
+			OR = {
+				abm_has_medium_value_raw_material = yes
+				abm_adv_town_tight_staple = yes
+			}
+		}
 	}
 }

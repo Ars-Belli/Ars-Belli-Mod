@@ -1,0 +1,140 @@
+﻿# ARS BELLI: covert action that strips a location's forts of the pops that man them.
+#
+# Every fort building sets pop_type = soldiers (see vanilla building_types/forts.txt and
+# coastal_forts.txt), so the fort in a location is staffed by the soldier pops living
+# there. Turning every soldier pop in the target location into peasants leaves the fort
+# with nobody to work it until the location promotes pops back into soldiers on its own,
+# which is what makes this a temporary sabotage rather than a permanent demolition.
+#
+# Wartime only: the target must be a country we are at war with. Unlocked solely by the
+# Espionage focus pick (advance abm_sabotage_fort_advance, abm_focus_picks_economic.txt - generated
+# from .tools/scripts/focus_picks/focus_data.js), and limited to one use per 2 years.
+
+abm_sabotage_fort = {
+	type = diplomacy
+	category = CATEGORY_COVERT_ACTIONS
+
+	diplomatic_cost = abm_sabotage_fort_cost
+
+	# Gold on top of the spy network, scaled to the target's own monthly income - see the
+	# note on the price itself. payer defaults to scope:actor and payee is left unset on
+	# purpose, so the bribe money leaves the game rather than enriching the victim.
+	price = price:abm_sabotage_fort_price
+
+	block_when_at_war = no
+
+	# show_message / show_message_to_target are left at their default (yes) on purpose.
+	# The victim is meant to learn that it happened, who did it, and which location, so
+	# they can march a garrison in or rebuild. Do not suppress these to make the action
+	# "properly covert" - that removes the counterplay the action is balanced around.
+
+	# Player-only. Every vanilla country_interaction that picks a location this way
+	# (transfer_occupation, give_location_to_subject, seize_location_from_subject) does the
+	# same - the AI has no sensible way to drive a location selection stage.
+	ai_tick = never
+	ai_will_do = {
+		add = -1000
+	}
+
+	potential = {
+		scope:actor = {
+			has_limited_diplomacy = no
+		}
+	}
+
+	# Only countries that took the Espionage focus pick (same pattern as steal_technology).
+	allow = {
+		scope:actor = { has_advance = abm_sabotage_fort_advance }
+	}
+
+	# One use per 2 years for the actor, whoever the target is. The victim also gets a
+	# 2-year cooldown (timed variable abm_sabotage_fort_victim_cd, set in the effect and
+	# checked in the country stage), so allies cannot take turns on the same country.
+	cooldown = {
+		type = abm_sabotage_fort_cd
+		years = 2
+	}
+
+	select_trigger = {
+		looking_for_a = country
+		target_flag = recipient
+		name = "abm_sabotage_fort_select_country"
+		none_available_msg_key = "abm_sabotage_fort_no_countries"
+		column = {
+			data = name
+		}
+		visible = {
+			this != scope:actor
+			is_at_war_with = scope:actor
+			within_diplomatic_range = scope:actor
+		}
+		enabled = {
+			custom_tooltip = {
+				text = abm_sabotage_fort_needs_a_fort_tt
+				any_owned_location = {
+					has_fort = yes
+					is_capital = no
+				}
+			}
+			custom_tooltip = {
+				text = abm_sabotage_fort_victim_cd_tt
+				NOT = { has_variable = abm_sabotage_fort_victim_cd }
+			}
+		}
+	}
+
+	select_trigger = {
+		looking_for_a = location
+		source = recipient
+		source_flags = only_actual_locations
+		target_flag = target
+		name = "abm_sabotage_fort_select_location"
+		none_available_msg_key = "abm_sabotage_fort_no_locations"
+		column = {
+			data = name
+		}
+		column = {
+			data = population
+		}
+		visible = {
+			owner = scope:recipient
+			has_fort = yes
+			# Capitals are off limits. A capital fort is usually the single most
+			# load-bearing one a country has, and losing it to a 50 spy network click
+			# with no warning is not counterplay, it is a decapitation.
+			is_capital = no
+		}
+		enabled = {
+			custom_tooltip = {
+				text = abm_sabotage_fort_needs_soldiers_tt
+				any_pop = {
+					pop_type = pop_type:soldiers
+				}
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists = scope:target
+			}
+			scope:target = {
+				every_pop = {
+					limit = {
+						pop_type = pop_type:soldiers
+					}
+					change_pop_type = pop_type:peasants
+				}
+			}
+			hidden_effect = {
+				scope:recipient = {
+					set_variable = { name = abm_sabotage_fort_victim_cd value = yes years = 2 }
+				}
+			}
+		}
+		else = {
+			custom_tooltip = abm_sabotage_fort_tt
+		}
+	}
+}

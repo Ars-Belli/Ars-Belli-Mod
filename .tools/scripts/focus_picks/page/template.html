@@ -1,0 +1,364 @@
+<title>Ars Belli Focus Picks</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral+SC:wght@500;600&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: an atlas of the five ages; each age is a plate with an Economic and a Military row of three branch cards, each card a flat list of its advances. */
+:root {
+	--bg: #eef0ee;
+	--surface: #fbfcfa;
+	--ink: #1d2422;
+	--muted: #5c6662;
+	--line: #d3d9d5;
+	--eco: #23705e;
+	--eco-soft: #dcebe5;
+	--mil: #9a3324;
+	--mil-soft: #f3e0dc;
+	--good: #2f6b3a;
+	--bad: #a1372a;
+	--combat: #9a3324;
+	--chip: #e2e6e3;
+	--tip-bg: #1d2422;
+	--tip-fg: #f2f5f3;
+	--font-display: "Spectral SC", "Palatino Linotype", Palatino, Georgia, serif;
+	--font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+	--font-num: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835;
+		--eco: #6cc4a8; --eco-soft: #1f3530; --mil: #e8826f; --mil-soft: #3a2420;
+		--good: #86c890; --bad: #f08a7a; --combat: #e8826f; --chip: #26302d; --tip-bg: #e5ebe8; --tip-fg: #141917;
+		color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--bg: #141917; --surface: #1c2220; --ink: #e5ebe8; --muted: #9aa6a1; --line: #2f3835;
+	--eco: #6cc4a8; --eco-soft: #1f3530; --mil: #e8826f; --mil-soft: #3a2420;
+	--good: #86c890; --bad: #f08a7a; --combat: #e8826f; --chip: #26302d; --tip-bg: #e5ebe8; --tip-fg: #141917;
+	color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+	background: var(--bg);
+	color: var(--ink);
+	font-family: var(--font-body);
+	font-size: 15px;
+	line-height: 1.45;
+}
+.wrap {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding-block: 28px 48px;
+	padding-left: max(16px, env(safe-area-inset-left, 0px));
+	padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: 0.01em; line-height: 1.1; }
+.lede { max-width: 68ch; margin: 12px 0 0; font-size: 16.5px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px 24px; margin: 18px 0 0; padding: 0; list-style: none; max-width: 980px; }
+.facts li { border-top: 1px solid var(--line); padding-top: 8px; color: var(--muted); min-width: 0; }
+.facts b { color: var(--ink); font-weight: 600; display: block; }
+.status { margin-top: 16px; font-size: 13px; color: var(--muted); }
+
+nav.ages {
+	position: sticky;
+	top: env(safe-area-inset-top, 0px);
+	z-index: 5;
+	background: var(--bg);
+	border-bottom: 1px solid var(--line);
+	margin-top: 24px;
+	padding-block: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+nav.ages a {
+	text-decoration: none;
+	color: var(--ink);
+	background: var(--chip);
+	border-radius: 999px;
+	padding: 4px 12px;
+	font-size: 13.5px;
+	font-weight: 600;
+}
+nav.ages a:hover, nav.ages a:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+nav.ages .spacer { flex: 1; }
+.toggle {
+	font: inherit;
+	font-size: 13.5px;
+	font-weight: 600;
+	border: 1px solid var(--line);
+	background: var(--surface);
+	color: var(--ink);
+	border-radius: 999px;
+	padding: 4px 12px;
+	cursor: pointer;
+}
+.toggle[aria-pressed="true"] { background: var(--combat); border-color: var(--combat); color: var(--surface); }
+.toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+section.age { margin-top: 36px; scroll-margin-top: 64px; }
+.age-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.age-head .numeral { font-family: var(--font-display); font-size: 15px; color: var(--muted); letter-spacing: 0.08em; }
+.age-head h2 { font-size: clamp(24px, 3.4vw, 30px); }
+.slot { margin-top: 16px; }
+.slot-label {
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+.slot-label::before { content: ""; width: 10px; height: 10px; border-radius: 2px; background: currentColor; }
+.slot.eco .slot-label { color: var(--eco); }
+.slot.mil .slot-label { color: var(--mil); }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 920px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .cards { grid-template-columns: minmax(0, 1fr); } }
+.card {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-top: 3px solid var(--slot);
+	border-radius: 6px;
+	padding: 12px 14px 14px;
+	min-width: 0;
+}
+.slot.eco .card { --slot: var(--eco); --slot-soft: var(--eco-soft); }
+.slot.mil .card { --slot: var(--mil); --slot-soft: var(--mil-soft); }
+.card h3 { font-size: 20px; }
+.card .desc { color: var(--muted); margin: 2px 0 10px; font-size: 14px; }
+
+ul.advs { list-style: none; margin: 0; padding: 0; }
+.adv { padding-block: 7px; border-top: 1px solid var(--line); }
+.adv:first-child { border-top: 0; padding-top: 2px; }
+.adv-name { font-weight: 700; display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.adv-name .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--slot); }
+.fx { margin: 3px 0 0; padding: 0; list-style: none; display: grid; gap: 1px; }
+.fx li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; min-width: 0; }
+.fx .label { color: var(--muted); min-width: 0; }
+.fx .val { font-family: var(--font-num); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fx .val.good { color: var(--good); }
+.fx .val.bad { color: var(--bad); }
+.fx .val.neutral { color: var(--ink); }
+.fx li.combat .label { color: var(--ink); font-weight: 600; }
+.fx li.combat .label::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--combat); margin-right: 6px; vertical-align: 2px; }
+.fx li.unlock .label { color: var(--slot); font-weight: 600; }
+.fx li { position: relative; }
+.fx .lbtn {
+	font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0;
+	text-align: left; cursor: help; min-width: 0;
+	text-decoration: underline dotted; text-decoration-color: var(--line); text-underline-offset: 3px;
+}
+.fx .lbtn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 2px; }
+.fx li.unlock .lbtn { text-decoration: none; }
+.fx li.unlock .lbtn::after {
+	content: "?"; display: inline-grid; place-items: center; width: 16px; height: 16px; margin-left: 6px;
+	border-radius: 50%; border: 1px solid currentColor; font-size: 11px; font-weight: 700; vertical-align: 1px;
+}
+.tip {
+	display: none; position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 20;
+	background: var(--tip-bg); color: var(--tip-fg); border-radius: 6px; padding: 8px 10px;
+	font-size: 13px; line-height: 1.4; font-weight: 400; white-space: pre-line;
+	box-shadow: 0 6px 18px rgb(0 0 0 / 0.25);
+}
+.fx li.open > .tip { display: block; }
+@media (hover: hover) { .fx li.has-tip:hover > .tip { display: block; } }
+body.combat-only .fx li:not(.combat) { opacity: 0.28; }
+body.combat-only .fx li.combat .val { font-weight: 700; }
+
+.notes { margin-top: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.note { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; min-width: 0; }
+.note h3 { font-size: 19px; margin-bottom: 6px; }
+.note p { margin: 6px 0 0; max-width: 65ch; }
+.note dl { margin: 8px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px; }
+.note dt { color: var(--muted); }
+.note dd { margin: 0; min-width: 0; }
+.changes { margin-top: 48px; scroll-margin-top: 64px; }
+.changes h2 { font-size: clamp(24px, 3.4vw, 30px); }
+.changes-note { color: var(--muted); font-size: 13.5px; margin: 4px 0 0; }
+.changes-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 0; max-width: 860px; }
+.change { display: grid; grid-template-columns: minmax(150px, 190px) minmax(0, 1fr); gap: 4px 20px; padding-block: 12px; border-top: 1px solid var(--line); }
+.change time { font-family: var(--font-num); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 2px; }
+.change h3 { font-family: var(--font-body); font-size: 15.5px; font-weight: 700; }
+.change ul { margin: 4px 0 0; padding-left: 18px; }
+.change li { margin-top: 2px; }
+@media (max-width: 620px) { .change { grid-template-columns: minmax(0, 1fr); } }
+#last-change a { color: inherit; }
+.footnote { margin-top: 28px; font-size: 13px; color: var(--muted); max-width: 80ch; }
+.legend { display: inline-flex; align-items: center; gap: 6px; }
+.legend::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--combat); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="wrap">
+	<header>
+		<h1>Ars Belli Focus Picks</h1>
+		<p class="lede">From the Age of Renaissance on, every country makes two picks each age: one Economic and one Military focus, each chosen from three branches. A pick unlocks that branch's advances in the tech tree. The branches you don't pick stay hidden.</p>
+		<ul class="facts">
+			<li><b>Where to pick</b>The Focus Picks button in the top bar, next to the Tier List.</li>
+			<li><b>Changing your mind</b>Up to 3 changes per game, and only before you research an advance from the pick you're leaving.</li>
+			<li><b>Age of Traditions</b>No picks. The first pair comes with the Renaissance.</li>
+			<li><b>AI countries</b>Never pick a focus.</li>
+		</ul>
+		<p class="status">Work in progress: these are the values on the focus-picks development branch, not yet in a released version of the mod. <span id="last-change"></span></p>
+	</header>
+
+	<nav class="ages" aria-label="Ages" id="age-nav">
+		<span class="spacer"></span>
+		<button type="button" class="toggle" id="combat-toggle" aria-pressed="false">Highlight combat stats</button>
+	</nav>
+
+	<main id="ages"></main>
+
+	<section class="notes" aria-label="Espionage actions">
+		<div class="note">
+			<h3>Sabotage Fort</h3>
+			<p>Pick a country you are at war with, then one of its locations with a fort. Every soldier pop there becomes peasants, and the fort stands unmanned until the location raises new soldiers.</p>
+			<dl>
+				<dt>Unlocked by</dt><dd>Espionage focus, Sabotage Fort advance</dd>
+				<dt>Cost</dt><dd>50 spy network, plus gold equal to 3 months of the target's income (at least 25)</dd>
+				<dt>Cooldown</dt><dd>2 years for the user. A sabotaged country can't be targeted again by anyone for 2 years.</dd>
+				<dt>Limits</dt><dd>Wartime only. Capitals can't be targeted. The victim is told who did it and where.</dd>
+			</dl>
+		</div>
+		<div class="note">
+			<h3>Infiltration</h3>
+			<p>Both versions lift the fog of war over the target's whole territory and cost the same. The focus version lasts eight times as long.</p>
+			<dl>
+				<dt>Infiltrate Administration</dt><dd>Espionage focus. 50 spy network, 24 months.</dd>
+				<dt>Lesser Infiltration</dt><dd>Renaissance tree, open to everyone. 50 spy network, 3 months.</dd>
+			</dl>
+		</div>
+		<div class="note">
+			<h3>Steal Technology</h3>
+			<p>Take 20% of the target's current research progress. The target loses nothing.</p>
+			<dl>
+				<dt>Unlocked by</dt><dd>Espionage focus, Industrial Espionage advance</dd>
+				<dt>Cost</dt><dd>100 spy network</dd>
+				<dt>Targets</dt><dd>Countries with more advances researched than you</dd>
+			</dl>
+		</div>
+	</section>
+
+	<section class="changes" id="changes" aria-labelledby="changes-title">
+		<h2 id="changes-title">Change log</h2>
+		<p class="changes-note">Newest first. Times are Central European time (CET, or CEST during summer time).</p>
+		<ol class="changes-list" id="changes-list"></ol>
+	</section>
+
+	<p class="footnote"><span class="legend">Combat stats</span>, including army and navy upkeep, are marked in each list. Hover over a bonus, or tap it on a phone, to see what it does; lines marked ? explain what the advance unlocks. Bonuses use the game's own modifier names and number formats, and are green or red the way the game colours them. Advances marked New are added by the mod; the rest are base-game advances moved into a focus, some with changed values.</p>
+</div>
+
+<script>
+const AGES = __FOCUS_DATA__;
+const CHANGES = __CHANGELOG__;
+const ROMAN = { 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI' };
+let tipSeq = 0;
+
+function el(tag, attrs, ...kids) {
+	const n = document.createElement(tag);
+	for (const [k, v] of Object.entries(attrs || {})) {
+		if (k === 'class') n.className = v; else n.setAttribute(k, v);
+	}
+	for (const c of kids) if (c != null) n.append(c);
+	return n;
+}
+
+function effectList(effects) {
+	const ul = el('ul', { class: 'fx' });
+	for (const e of effects) {
+		const cls = [e.unlock ? 'unlock' : '', e.combat ? 'combat' : '', e.info ? 'has-tip' : ''].join(' ').trim();
+		const text = e.unlock || e.label;
+		const li = el('li', { class: cls });
+		if (e.info) {
+			const id = 'tip-' + (++tipSeq);
+			li.append(el('button', { type: 'button', class: 'label lbtn', 'aria-expanded': 'false', 'aria-describedby': id }, text));
+		} else {
+			li.append(el('span', { class: 'label' }, text));
+		}
+		if (!e.unlock) li.append(el('span', { class: 'val ' + (e.neutral ? 'neutral' : e.good ? 'good' : 'bad') }, e.value));
+		if (e.info) li.append(el('div', { class: 'tip', role: 'tooltip', id: 'tip-' + tipSeq }, e.info));
+		ul.append(li);
+	}
+	return ul;
+}
+
+function advItem(a) {
+	const name = el('div', { class: 'adv-name' }, a.name);
+	if (a.isNew) name.append(el('span', { class: 'tag' }, 'New'));
+	return el('li', { class: 'adv' }, name, effectList(a.effects));
+}
+
+const main = document.getElementById('ages');
+const nav = document.getElementById('age-nav');
+const spacer = nav.querySelector('.spacer');
+for (const age of AGES) {
+	const id = 'age-' + age.n;
+	nav.insertBefore(el('a', { href: '#' + id }, age.name.replace('Age of ', '')), spacer);
+	const sec = el('section', { class: 'age', id },
+		el('div', { class: 'age-head' },
+			el('span', { class: 'numeral' }, 'Age ' + ROMAN[age.n]),
+			el('h2', {}, age.name)));
+	for (const slot of age.slots) {
+		const cards = el('div', { class: 'cards' });
+		for (const br of slot.branches) {
+			const list = el('ul', { class: 'advs' }, ...br.advances.map(advItem));
+			cards.append(el('article', { class: 'card', id: br.id },
+				el('h3', {}, br.name),
+				el('p', { class: 'desc' }, br.desc),
+				list));
+		}
+		sec.append(el('div', { class: 'slot ' + (slot.slot === 'Economic' ? 'eco' : 'mil') },
+			el('div', { class: 'slot-label' }, slot.slot + ' focus'), cards));
+	}
+	main.append(sec);
+}
+
+function closeTips(except) {
+	for (const li of document.querySelectorAll('.fx li.open')) {
+		if (li === except) continue;
+		li.classList.remove('open');
+		li.querySelector('.lbtn').setAttribute('aria-expanded', 'false');
+	}
+}
+document.addEventListener('click', ev => {
+	const btn = ev.target.closest('.lbtn');
+	if (!btn) { closeTips(null); return; }
+	const li = btn.closest('li');
+	closeTips(li);
+	const open = li.classList.toggle('open');
+	btn.setAttribute('aria-expanded', String(open));
+});
+document.addEventListener('keydown', ev => { if (ev.key === 'Escape') closeTips(null); });
+
+const changesList = document.getElementById('changes-list');
+for (const c of CHANGES) {
+	const items = el('ul', {}, ...c.items.map(i => el('li', {}, i)));
+	changesList.append(el('li', { class: 'change' },
+		el('time', { datetime: c.time }, c.when),
+		el('div', {}, el('h3', {}, c.title), items)));
+}
+if (CHANGES.length) {
+	const last = document.getElementById('last-change');
+	last.append('Last changed ', el('a', { href: '#changes' }, CHANGES[0].when), '.');
+}
+
+const toggle = document.getElementById('combat-toggle');
+toggle.addEventListener('click', () => {
+	const on = toggle.getAttribute('aria-pressed') !== 'true';
+	toggle.setAttribute('aria-pressed', String(on));
+	document.body.classList.toggle('combat-only', on);
+});
+
+if (/^#[A-Za-z0-9._~-]+$/.test(location.hash)) {
+	const t = document.getElementById(location.hash.slice(1));
+	if (t) t.scrollIntoView();
+}
+</script>
