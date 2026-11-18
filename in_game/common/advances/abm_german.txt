@@ -2383,6 +2383,13 @@ abm_swi_ideas_tradition_1 = {
 	age = age_1_traditions
 	icon = administrative_leadership
 	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
 		has_or_had_tag = SWI
 	}
 
@@ -2396,6 +2403,13 @@ abm_swi_ideas_tradition_2 = {
 	age = age_1_traditions
 	icon = glorious_arms
 	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
 		has_or_had_tag = SWI
 	}
 
@@ -2465,49 +2479,59 @@ abm_swi_ideas_tradition_2 = {
 #	global_defensive = 0.15
 #}
 
-abm_oasis_of_peace_and_prosperity = {
-	age = age_4_reformation
-	icon = merchants_and_trade
-	potential = {
-		has_or_had_tag = SWI
-	}
+# ABM 2026-11-18: disabled - duplicates the vanilla advance swiss_recovery_and_prosperity (sheet mark "--abm_oasis_of_peace_and_prosperity").
+#abm_oasis_of_peace_and_prosperity = {
+#	age = age_4_reformation
+#	icon = merchants_and_trade
+#	potential = {
+#		has_or_had_tag = SWI
+#	}
+#
+#	requires = confessionalism_advance
+#
+#	# development_cost = -0.1
+#	global_monthly_prosperity = 0.001
+#}
 
-	requires = confessionalism_advance
+# ABM 2026-11-18: disabled - duplicates the vanilla advance swiss_religious_refuge (sheet mark "--abm_haven_for_refugees").
+#abm_haven_for_refugees = {
+#	age = age_4_reformation
+#	icon = library_advance
+#	potential = {
+#		has_or_had_tag = SWI
+#	}
+#
+#	requires = diplomatic_range_age_3
+#
+#	# prestige = 1
+#	monthly_prestige = 0.10
+#}
 
-	# development_cost = -0.1
-	global_monthly_prosperity = 0.001
-}
-
-abm_haven_for_refugees = {
-	age = age_4_reformation
-	icon = library_advance
-	potential = {
-		has_or_had_tag = SWI
-	}
-
-	requires = diplomatic_range_age_3
-
-	# prestige = 1
-	monthly_prestige = 0.10
-}
-
-abm_clockwork = {
-	age = age_5_absolutism
-	icon = court_accounting
-	potential = {
-		has_or_had_tag = SWI
-	}
-
-	requires = grand_shipyard_advance
-
-	# production_efficiency = 0.1
-	global_production_efficiency = 0.10
-}
+# ABM 2026-11-18: disabled - duplicates the vanilla advance swiss_clockwork (sheet mark "--abm_clockwork").
+#abm_clockwork = {
+#	age = age_5_absolutism
+#	icon = court_accounting
+#	potential = {
+#		has_or_had_tag = SWI
+#	}
+#
+#	requires = grand_shipyard_advance
+#
+#	# production_efficiency = 0.1
+#	global_production_efficiency = 0.10
+#}
 
 abm_swi_ideas_ambition = {
 	age = age_6_revolutions
 	icon = abacus_advance
 	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
 		has_or_had_tag = SWI
 	}
 
