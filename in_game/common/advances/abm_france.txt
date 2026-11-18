@@ -571,3 +571,49 @@ abm_pro_ideas_ambition = {
 	army_initiative = 0.10
 }
 
+
+# ---------------------------------------------------------------------------
+# FRA (vanilla country_fra.txt) - re-gated: the original capital must be Paris
+# ---------------------------------------------------------------------------
+
+# Elan
+REPLACE:elan = {
+	age = age_2_renaissance
+	icon = elan
+	content_priority = 1100
+	potential = {
+		has_or_had_tag = FRA
+		# Ars Belli: only a France whose original capital is Paris
+		original_capital ?= { this = location:paris }
+	}
+	land_morale_modifier = 0.2
+	
+	ai_weight = { add = 20 }
+}
+
+# Gendarmes
+REPLACE:fra_gendarmes = {
+	age = age_3_discovery
+	icon = fra_gendarmes
+	content_priority = 500
+	potential = {
+		has_or_had_tag = FRA
+		# Ars Belli: only a France whose original capital is Paris
+		original_capital ?= { this = location:paris }
+	}
+	army_heavy_cavalry_power = 0.1
+	ai_weight = { add = 10 }
+	army_maintenance_efficiency = 0.1
+}
+
+# French Ambition
+REPLACE:french_ambition = {
+	age = age_6_revolutions
+	icon = french_ambition
+	potential = {
+		has_or_had_tag = FRA
+		# Ars Belli: only a France whose original capital is Paris
+		original_capital ?= { this = location:paris }
+	}
+	discipline = 0.05
+}

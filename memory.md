@@ -1091,3 +1091,44 @@ Ids stay exactly as they are (`abm_swiss_mercenaries`, ...); only the displayed 
 | abm_clockwork | Clockwork | Clockwork Precision |
 - Edited only the name keys in `main_menu/localization/english/abm_advances_german_l_english.yml` (rows 347-359); the `_desc` keys still hold the original flavour text, and `abm_swi_ideas_tradition_1/_2` + `abm_swi_ideas_ambition` are untouched ("Swiss Tradition I/II", "Swiss Ambition").
 - Checked: each of the 10 keys has exactly one loc definition in the mod, every new name occurs exactly once mod-wide (no collisions with other advances, e.g. the Italy file's "Mercenary Companies"), 7 insertions / 7 deletions, BOM + CRLF intact (582 CRLF, 0 bare LF).
+
+## 2026-11-18 - abm_germany column G: all remaining pseudocode translated (25 rows)
+- Every `<...>` cell in `modifier - NEW` is gone; 25 cells rewritten in place (rows G59 G76 G78 G81 G96 G157 G161 G162 G163 G175 G191 G222 G223 G244 G245 G246 G248 G249 G252 G257 G269 G270 G275 G310 G329). Verified: CSV diff vs the pre-write snapshot = exactly 25 cells, all in column G, and no `<` left in the column.
+- **Where the canonical keys come from:** `main_menu/common/modifier_type_definitions/*.txt` (2710 keys) for existence, `MAIN_MENU/common/script_values/default_values.txt` (969 tokens) for the `small/medium/large` wordings, and `main_menu/localization/english/modifier_types_l_english.yml` (`MODIFIER_TYPE_NAME_<key>`) to disambiguate names.
+- **`<size>_<key>_<bonus>` is the level convention** (`tiny 0.05 / small 0.10 / medium 0.20 / large 0.40 / huge 0.66`). Used `medium_tax_income_efficiency_bonus`, `medium_trade_land_efficiency_bonus`, `medium_trade_sea_efficiency_bonus`, `medium/small_permanent_target_satisfaction`.
+- **A key whose NAME is the answer:** `global_estate_target_satisfaction` localises as **"Estates Satisfaction Equilibrium"** - so "global estate equilibrium" = that key (not `*_satisfaction_recovery`).
+- **"efficiency" pseudo-words are cost modifiers with the sign flipped**: `army heavy_infantry maintenance efficiency = 0.10` -> `army_heavy_infantry_maintenance_cost_modifier = -0.10` (same for light infantry and light cavalry precedent already in the sheet). `army_reinforce cost = -0.10` -> `army_reinforce_efficiency = 0.10` (the loc string for that key literally says "reducing its gold and manpower cost").
+- **There is no generic army reinforce-cost key** - only unit-specific `army_<unit>_reinforce_cost_modifier` plus `army_reinforce_efficiency`.
+- **Judgement calls (no exact EU5 equivalent - review these):**
+  - `trade advantage` -> `global_trade_center_power = 0.10`. No `trade_advantage*` key exists at all; `trade_importance_modifier` is AI-valuation ("how much the AI country values trade"), so it was rejected.
+  - `artists skill` -> `skill_of_new_artists` (loc "Skill of New Artists"); the alternative `artist_skill_level_gain` is "Artist Skill Development" (growth, not level).
+  - `cabinet advisor power` -> `country_cabinet_efficiency` (loc "Efficiency of Our Cabinet"); the only other cabinet-ish keys are `*_estate_power_from_cabinet`.
+  - `global estate tax = large` -> `global_estate_max_tax = 0.40` with the standard bonus scale. Vanilla advances only ever use 0.1, so 0.40 is deliberately above vanilla norm - dial down to 0.25 if it feels too strong.
+- Sheet size note: the tab is 374 rows x 26 cols; `AA400` triggers "range exceeds sheet size".
+- Local mirror re-synced afterwards (`.tools/sheets/abm_germany.csv`), so it now equals the live tab byte for byte.
+- Follow-up (2026-11-18, user): both `global_estate_max_tax` cells use the tax-family level magnitudes rather than the trade-family ones - G157 (FRI ambition) = 0.03 (medium) and G163 (HES estates) = 0.02 (small). `default_values.txt` has NO level tokens for `*_max_tax`, so this modifier must always be written as a number; the scale used matches `small/medium/large_tax_income_efficiency_bonus` = 0.02 / 0.03 / 0.05, which is what the user's own 0.05/0.03 edits followed.
+
+## 2026-11-18 - vanilla FRA advances re-gated to an original capital in Paris
+- New `REPLACE:` blocks appended to `in_game/common/advances/abm_france.txt` for **`elan`**, **`fra_gendarmes`** and **`french_ambition`** (all three are vanilla `country_fra.txt` blocks with only `potential = { has_or_had_tag = FRA }`). Each body is vanilla verbatim plus one added line in `potential`.
+- Gate used: `original_capital ?= { this = location:paris }`. Both halves are vanilla-attested: `original_capital ?= { <trigger> }` (75 uses, e.g. `advances/0_age_of_traditions.txt:249`) and `this = location:X` comparing a capital location (`auto_modifiers/byzantium.txt:349`, inside `capital ?= { ... }`). Vanilla has **no** direct `original_capital ?= location:X` comparison (all 75 are block form), so the block form was chosen over the shorter one.
+- `paris` is a real location (`map_data/definitions.txt:931`, in `pays_france_province`).
+- The three ids were not overridden anywhere else in the mod before this, so no duplicate definitions.
+- Sheet note: these three rows exist in the `abm_germany` tab (FRA, france_region, tier 3) with `Modded = no`; all 16 FRA rows there are `no`. Left untouched - flipping them to `yes` is the user's call.
+- Checker: 0 errors on abm_france.txt; the advances folder keeps its single pre-existing warning (`abm_ruthenia.txt:160`, space indents).
+- `REPLACE:GER_f` potential gained `NOT = { has_or_had_tag = BOH }` (2026-11-18, user request). **It is not redundant:** `czech` belongs to `german_group` (`cultures/west_slavic.txt`, groups = bohemian_group + german_group + slavic_group), so Bohemia passed the existing `culture = { has_culture_group = culture_group:german_group }` gate. `moravian` and `silesian` are NOT in german_group, only `czech` and `german_silesian` are. `NOT = { has_or_had_tag = X }` is vanilla-attested (e.g. `advances/country_sco.txt:60`).
+
+## 2026-11-18 - `BUR_f` stub: the first france_region formables file
+- New file `in_game/common/formable_countries/abm_formables_france.txt` (BOM + CRLF + tabs, header comment) with a single block, **`BUR_f` at `level = 3`**, written with the established unformable-stub idiom (`potential = { always = no }`, `allow = { }`, `areas = { burgundy_area }`).
+- Placement follows the rule in this file's own header ("formables of other regions live in `abm_formables_<region>.txt`"): Burgundy's capital Dijon is in `burgundy_area` / `france_region`, so it does not belong in `abm_formables_germany.txt` even though Burgundy's northern lands (brabant/flanders/wallonia/friesland) are `north_german_region` areas.
+- Vanilla has no `BUR_f`, and the id is not defined anywhere in the mod, so this is a NEW id (no `REPLACE:`), same as `BRA_f` and `HSA_f`.
+- BUR exists at 1337 (`10_countries_france_region.txt:624`, capital `dijon`, `country_rank = rank_duchy`), so the entry can never be formed - it only gives the tag a formable definition whose `level` the export scripts read as its tier.
+- Pre-existing assets confirmed: `map_BUR = hsv360 { 340 80 58 }` (`named_colors/02_map.txt:100`), flag definition `BUR` (`flag_definitions:1270`), loc `BUR: "Burgundy"` / `BUR_ADJ: "Burgundian"` (`country_names_l_english.yml:865`).
+- Checker: 0 errors/warnings; folder now 17 files; no duplicate `<id>_f` across all of them.
+
+## 2026-11-18 - Occitania (`OCC_f`) added to the France formables file
+- `in_game/common/formable_countries/abm_formables_france.txt` gained **`REPLACE:OCC_f`**, body byte-identical to vanilla `00_formable_countries.txt:5362` (level 3, `rule = plausible`, fraction 0.75, `culture.dialect = dialect:occitan_dialect / gascon_dialect` gate, 2 areas + 15 provinces + 17 locations, empty `form_effect`).
+- Vanilla ALREADY ships OCC_f, so this is a `REPLACE:` (id-scoped) not a new id - unlike `BUR_f`. Verbatim copy, so vanilla changes must be re-synced by hand (same trade-off as `abm_formables_germany.txt`).
+- Assets all pre-exist: `map_OCC = rgb { 200 20 30 }` (`named_colors/02_map.txt:231`), CoA `OCC` in `coat_of_arms/coat_of_arms/pre_scripted_countries.txt:29936` (no flag_definitions entry - pre-scripted only, like SWI/HSA), loc `OCC: "Occitania"` / `OCC_ADJ: "Occitan"` (`country_names_l_english.yml:1098`), dialects in `languages/00_france.txt:257`.
+- The same session the user moved **`REPLACE:LOT_f`** out of `abm_formables_germany.txt` into this France file themselves - the file now holds BUR_f, LOT_f, OCC_f and there is exactly one LOT_f in the mod (no duplicate-definition conflict).
+- Note the `culture.dialect = dialect:X` trigger shape - that is how the regional culture gate is written for Occitania (not `culture = culture:X`).
+- Checker 0 errors/warnings, folder 17 files, no duplicate ids.

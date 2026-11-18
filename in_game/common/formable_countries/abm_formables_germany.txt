@@ -16,6 +16,8 @@ REPLACE:GER_f = {
 	rule = plausible
 	potential = {
 		culture = { has_culture_group = culture_group:german_group }
+		# Ars Belli: Bohemia has its own crown and may not become Germany
+		NOT = { has_or_had_tag = BOH }
 		# Ars Belli: only a German power may claim this
 		OR = {
 			original_capital.region = region:north_german_region
@@ -491,55 +493,6 @@ REPLACE:BEL_f = {
 
 	form_effect = {
 		
-	}
-}
-
-# Lotharingia
-REPLACE:LOT_f = {
-	level = 3
-	required_locations_fraction = 0.5
-	rule = plausible
-
-	potential = {
-		OR = {
-			culture = culture:rhine_alemannic
-			culture = culture:burgundian
-			culture = culture:franc_comtois
-			culture = culture:lorrain
-			culture = culture:walloon
-			OR = {
-				tag = LOR
-				tag = BUR
-			}
-		}
-		# Ars Belli: only a German power may claim this
-		OR = {
-			original_capital.region = region:north_german_region
-			original_capital.region = region:south_german_region
-		}
-	}
-
-	allow = {
-	}
-	
-	name = LOT
-	flag = LOT
-	adjective = LOT_ADJ
-	tag = LOT
-	color = map_LOT
-	provinces = {
-		palatinate_province
-		rhine_valley_province
-	}
-	areas = {
-		lorraine_area
-		wallonia_area
-		brabant_area
-		friesland_area
-		rhineland_area
-		alsace_area
-	}
-	form_effect = {
 	}
 }
 
