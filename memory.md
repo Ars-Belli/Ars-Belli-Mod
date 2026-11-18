@@ -1052,3 +1052,42 @@ Written up as `Ars Belli - Switzerland advances.md` (repo root, next to the othe
 - Typical `high_alemannic` SWI state: sections tag + Swiss tree + german_group = ~23 advances. Ungated advances are not listed.
 - Method notes worth reusing: (1) when merging mod-over-vanilla by key, `REPLACE:` blocks must be applied **last**, not in file order - otherwise the mod's `REPLACE:swiss_alpine_passes` gets overwritten by the same-name full copy and the report shows vanilla values. (2) ANB: Swiss locations' cultures (from `setup/1337/06_pops.txt`) are `high_alemannic` everywhere, plus `rhine_alemannic` (Basel), `romansh` (Chur/Disentis/Ilanz), `arpitan` (Sion/Lausanne/Fribourg/Gruyere), `franc_comtois` (Neuchatel), `lombard` (Bellinzona/Lugano/Mesocco), `danube_bavarian` and `ashkenazi` minorities. (3) `SWI_f` requiring `swiss_group` while the German formables require `german_group` means `high_alemannic` sits in `swiss_group`; whether `swiss_group` also counts as `german_group` is not verifiable locally (no `culture_groups/*.txt` in the repo).
 - Found while building it: the sheet lists `abm_swi_ideas_tradition_1/_2` as `age_2_renaissance` but both blocks are `age_1_traditions` in `abm_german.txt` (sheet error, 2 cells, not yet fixed).
+
+## 2026-11-18 - SWI sheet: pseudocode replaced with real modifier keys
+The user rewrote the `modifier - NEW` cells of the `SWI` block (now at sheet rows 332-341) as pseudocode describing the *intended* effects. Replaced the `<...>` placeholders with real keys, verified from `.tools/eu5/eu5_modifiers_country.csv` + existing repo usage:
+| row | advance | pseudocode | real key written |
+|---|---|---|---|
+| 332 | abm_swi_ideas_tradition_1 | `<possible burghers in towsn/cities>` | `global_burghers_city_desired_pop = 0.10` (loc "Possible Burghers in Towns and Cities"; `japanese_unique.txt:2061` uses 0.1) |
+| 336 | --abm_the_swiss_confederation | `<gov reform slot = 1>` | `government_reform_slots = 1` (loc "Possible Government Reforms") |
+| 337 | --abm_alpine_defensiveness | `<fort limit mod = 0.20>` | `fort_limit_modifier = 0.20` (multiplicative; `fort_limit` is the integer variant) |
+| 339 | --abm_haven_for_refugees | `<migration attraction>; <pop promotion speed>` | `non_rural_migration_attraction = 0.10; global_pop_promotion_speed_modifier = 0.10` |
+| 340 | --abm_clockwork | `<tools output mod = 0.20>` | `global_tools_output_modifier = 0.20` |
+| 341 | abm_swi_ideas_ambition | `<livestock output mod = 0.20>; <food output mod = severe>` | `global_livestock_output_modifier = 0.20; global_monthly_food_modifier = monthly_food_productivity_severe_bonus` |
+Rows 333/334/335/338 already held real syntax and were left alone (`army_light_infantry_power = 0.10`, `discipline = 0.05`, `tolerance_own = 1`, `global_monthly_prosperity = 0.001`).
+- Sheet verified: 6 changed cells, nothing else touched.
+- **The code does NOT match the sheet yet** - these are design targets, not implementations: `abm_swi_ideas_tradition_1` still has `mercenary_maintenance_efficiency = 0.15`, `_tradition_2` `army_heavy_infantry_power` (sheet wants light), `--abm_swiss_tolerance` `tolerance_heretic` (sheet wants `tolerance_own`), `--abm_the_swiss_confederation` `stability_cost_efficiency` (sheet wants reform slots), `--abm_alpine_defensiveness` fort_maintenance+global_defensive (sheet wants fort limit), `--abm_haven_for_refugees` `monthly_prestige` (sheet wants migration/promotion), `--abm_clockwork` `global_production_efficiency` (sheet wants tools output), `abm_swi_ideas_ambition` `discipline = 0.05` (sheet wants livestock+food). The four `--` ones are commented out; `tradition_1`, `tradition_2` and `ambition` are live.
+- `monthly_food_productivity_severe_bonus` is **unverified**: only `_mild_bonus` and `_extreme_bonus` occur anywhere in the repo, so the token needs an in-game check (numeric fallback: `global_monthly_food_modifier = 0.20`).
+- Ages still disagree: the sheet says `age_2_renaissance` for both traditions, the blocks say `age_1_traditions`.
+- Browser note: clicking `#t-name-box` started timing out ("waiting for element to be visible, enabled and stable"), so navigation now uses the name-box shortcut instead - `Meta+j`, type the address, Enter.
+
+## 2026-11-18 - SWI `abm_*` advances re-enabled and re-statted from the sheet
+The user removed the `--` marks from the sheet (rows 334-340 are plain `abm_*` again) and asked for the code to follow: uncomment + apply the sheet's `modifier - NEW` values.
+- All **10** SWI blocks in `abm_german.txt` were rebuilt to the same shape (`age`, `icon`, `potential` with the Swiss capital-area gate + `has_or_had_tag = SWI`, `requires`, then the sheet's modifiers one per line). 7 blocks were uncommented.
+- Per-advance modifiers now live: tradition_1 `global_burghers_city_desired_pop = 0.10`; tradition_2 `army_light_infantry_power = 0.10` (was heavy); swiss_mercenaries `discipline = 0.05`; swiss_tolerance `tolerance_own = 1` (was heretic); the_swiss_confederation `government_reform_slots = 1`; alpine_defensiveness `fort_limit_modifier = 0.20`; oasis_of_peace_and_prosperity `global_monthly_prosperity = 0.001`; haven_for_refugees `non_rural_migration_attraction = 0.10` + `global_pop_promotion_speed_modifier = 0.10`; clockwork `global_tools_output_modifier = 0.20`; ambition `global_livestock_output_modifier = 0.20` + `global_monthly_food_modifier = monthly_food_productivity_severe_bonus`.
+- The `# ABM ...: disabled - ...` marker lines and the stale EU4 comment notes inside those blocks were dropped; the "SWI (EU4 idea set SWI_ideas)" header stays.
+- Verified: active advances 240 -> 247 (+7), no duplicate ids, braces 650/650, 4203 CRLF / 0 bare LF, BOM intact, all 12 modifier keys exist except the goods-output pair which the `eu5_modifiers_country.csv` omits but the repo already uses (`global_tools_output_modifier` in `abm_china_south.txt:278`, `global_livestock_output_modifier` in `abm_ireland.txt:1765`).
+- **Left open on purpose (not requested):** (a) the tool now wants 7 new `requires` because the new modifiers changed each advance's theme - `abm_swi_ideas_tradition_1`->`organized_religion`, `abm_swiss_mercenaries`->`professional_armies_advance`, `abm_swiss_tolerance`->`renaissance_advance`, `abm_the_swiss_confederation`->`foreign_cultural_law_advance`, `abm_alpine_defensiveness`->`unlock_matchlock_levy`, `abm_haven_for_refugees`->`pharmacology_advance`, `abm_swi_ideas_ambition`->`brewery_mill_advance`; (b) 5 age mismatches against the sheet (traditions sheet age_2 vs code age_1; mercenaries/tolerance sheet age_3 vs code age_2; alpine_defensiveness sheet age_4 vs code age_3; haven_for_refugees sheet age_5 vs code age_4); (c) `monthly_food_productivity_severe_bonus` still unverified in-game.
+
+## 2026-11-18 - SWI `abm_*` advances renamed in localisation only
+Ids stay exactly as they are (`abm_swiss_mercenaries`, ...); only the displayed names changed, so they are no longer carbon copies of the vanilla advances they mirror. Traditions and the ambition were excluded per the user.
+| key | was | now |
+|---|---|---|
+| abm_swiss_mercenaries | Swiss Mercenaries | Swiss Mercenary Companies |
+| abm_swiss_tolerance | Swiss Tolerance | Confessional Coexistence |
+| abm_the_swiss_confederation | The Swiss Confederation | League of the Cantons |
+| abm_alpine_defensiveness | Alpine Defensiveness | Alpine Fortifications |
+| abm_oasis_of_peace_and_prosperity | Oasis of Peace and Prosperity | Bastion of Peace and Prosperity |
+| abm_haven_for_refugees | Haven for Refugees | Sanctuary for Exiles |
+| abm_clockwork | Clockwork | Clockwork Precision |
+- Edited only the name keys in `main_menu/localization/english/abm_advances_german_l_english.yml` (rows 347-359); the `_desc` keys still hold the original flavour text, and `abm_swi_ideas_tradition_1/_2` + `abm_swi_ideas_ambition` are untouched ("Swiss Tradition I/II", "Swiss Ambition").
+- Checked: each of the 10 keys has exactly one loc definition in the mod, every new name occurs exactly once mod-wide (no collisions with other advances, e.g. the Italy file's "Mercenary Companies"), 7 insertions / 7 deletions, BOM + CRLF intact (582 CRLF, 0 bare LF).
