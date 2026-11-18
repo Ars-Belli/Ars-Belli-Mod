@@ -8,6 +8,8 @@ Ars Belli Mod is a gameplay-focused mod primarily designed for multiplayer sessi
 
 **Game Path:** `E:\Steam\steamapps\common\Europa Universalis V` (as of May 2026)
 
+**Simulators and research (moved 2026-11-03):** `.tools/scripts/battle_sim/`, `.tools/scripts/location_sim/` and the two `EU5 ... Mechanics (1.4.4).md` docs live in the private local repo `simulator-findings-eu5` (same paths, same branches). References to them below point there.
+
 ## Core Features & Systems
 
 ### 1. Multiplayer Power Ranking System (`mp_limits`)
@@ -288,7 +290,7 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Maghreb rate `abm_levy_maghreb_cavalry_size` 3% -> 2%.
 - Tribal size: `in_game/common/unit_types/abm_tribal_levy_sizes.txt`, INJECT/TRY_INJECT `max_strength = 0.2` on six units. Stat lines ADD, 0.2 + 0.2 = 400 men (vanilla steppe horde 0.2 + 0.4 = 600). FIRST INJECT in unit_types: check in game, regiment tooltip must show 400. `a_steppe_horde` left alone (mod's own 200), `a_chieftains` left alone (nobles).
 - `REPLACE:levy_tribal_cavalry` in abm_d009_maghreb_levies.txt: Masmuda tribesmen barred with D009, else 400-man cavalry beats Atlas Infantry in pick.
-- Event timeout: `NGame.EVENT_MP_TIMEOUT_MONTHS` 3 -> 5. One define for all events. Read only in CEventWindow constructor (`0x147c1bcd0`): date window created + months. Expiry check `0x147c1dd60`. Code does not explain 1.5 month reports. `NDiplomacy.AUTO_TIME_OUT_MONTHS` 2 is diplomacy offers, left alone.
+- Event timeout: `NGame.EVENT_MP_TIMEOUT_MONTHS` 3 -> 5. One define for all events. An event window expires at its creation date + these months; that does not explain the 1.5 month reports. `NDiplomacy.AUTO_TIME_OUT_MONTHS` 2 is diplomacy offers, left alone.
 - Strait: `in_game/events/DHE/flavor_cas_rio_salado.txt` same-name copy, calls to .3 (Granada) and .4 (Portugal) removed, events stay defined. Refuse cost -20 prestige -20 legitimacy, not -50 stability. Situation's own Force Tribute and Demand War Entry kept, Morocco's `mor_vassalize_granada` kept.
 - Castile's Vassalize Granada blocked only while Granada is a player: `in_game/common/generic_actions/battle_for_the_strait.txt` is a same-name copy of the D009 file, the FIRST mod file to shadow a DLC file. One check added to `vassalize_granada`'s allow, `c:GRA ?= { is_ai = yes }`, tooltip `abm_bfts_granada_is_ai`. The button stays and greys out. An outright removal with a copied panel was tried first and dropped the same day. Event .31 and Morocco's action unchanged. Against a played Granada Castile's situation win needs Granada conquered. Check in game: with a played Granada the button greys out and names that reason. If not, the copy did not bind.
 - Speed: ARMY 0.9 -> 0.675, NAVY 3.525 -> 2.64375. Numbers mine, user gave none.
@@ -307,9 +309,8 @@ Significant changes to siege mechanics and fort limits (documented in `changes.t
 - Levies cannot be lent whatever the AI wants. The route that avoids this is `appanage_request_levies`: overlord-side, moves 12 months of the subject's manpower. Vanilla: appanages only, subject not at war.
 
 ### 3s. Movement spread crash (1.3.11 only)
-- Crash: AV on `Network/Session thread`, top frame `ffxFsr2ResourceIsNull (+ 18700188)` = eu5+0x4b0b0cc, daily tick, `CMovement` spread (movement.cpp). NOT disease. Found 2026-10-30, 1568 MP game, Lutheranism movement. Two machines die same tick, same table slot. Reload no help.
-- Why: `FUN_144b0ab90` loops over regiments that carry a movement (X, CMovement+0x178 set, 1595 ids, save key `#39a1`), keeps a pointer to X's slot in a hash map, then loops X's army mates (Z) and inserts Z in the same map. An insert can grow the map; the old table is freed and the next Z read uses a stale pointer. Only unsafe site found. Location -> unit inserts refetch the pointer, safe.
-- Trap: the set vtable says `CLocationSet` but ids are SUB-UNIT ids (save `#31dd`), high byte = generation.
+- Crash: AV on `Network/Session thread`, daily tick, in the movement spread. NOT disease. Found 2026-10-30, 1568 MP game, Lutheranism movement. Two machines die same tick, same table slot. Reload no help.
+- Why: the spread between army mates keeps a stale pointer while its table can grow; the spread from a location is safe.
 - Fix on the 1.3 line only: `NSpreadable.ESTIMATED_MIXING_WITHIN_UNITS = 0` in `loading_screen/common/defines/01_abm_defines.txt`, on branch `release/game.1.3.11.mod.25-crash-fix`. Side effect: regiments catch a movement only from the location. 1.4.6 reads X once before the loop, bug gone, so 1.4 has no such define.
 
 ### 4. Economy & Town Setups
