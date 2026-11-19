@@ -23,29 +23,11 @@ abm_expel_trade_offices = {
 			is_ai = no
 			has_limited_diplomacy = no
 		}
-		scope:recipient = {
-			is_ai = no
-		}
 	}
 
 	allow = {
-		scope:actor != scope:recipient
 		scope:actor = {
 			num_of_diplomats >= 1
-		}
-		# Kept in allow rather than potential so the entry greys out with a reason instead of the
-		# action vanishing for every country that holds nothing here.
-		custom_tooltip = {
-			text = abm_expel_trade_offices_has_offices_tt
-			scope:actor = {
-				any_owned_location = {
-					location_building_level = {
-						building_type = building_type:trade_office
-						value > 0
-						owner = scope:recipient
-					}
-				}
-			}
 		}
 	}
 
@@ -60,6 +42,21 @@ abm_expel_trade_offices = {
 		visible = {
 			this != scope:actor
 			within_diplomatic_range = scope:actor
+		}
+		enabled = {
+			is_ai = no
+			custom_tooltip = {
+				text = abm_expel_trade_offices_has_offices_tt
+				scope:actor = {
+					any_owned_location = {
+						location_building_level = {
+							building_type = building_type:trade_office
+							value > 0
+							owner = root
+						}
+					}
+				}
+			}
 		}
 	}
 

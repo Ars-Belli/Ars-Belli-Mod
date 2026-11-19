@@ -4,6 +4,216 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.4.9.mod.30
+
+Since game.1.4.8.mod.29 → game.1.4.9.mod.30:
+
+### Patch Compatibility
+
+- updated for game 1.4.9
+
+### Battles and Armies
+
+- cavalry needs five times the horses [was ×10]: every horse unit pays ×5 horses to build, reinforce
+  and maintain, and every camel unit ×5 camels
+- cavalry pays twice the other goods: weaponry, leather, cloth and firearms (and the elephants of
+  elephant cavalry) cost ×2 for light, heavy, steppe horse archer, camel, clan retainer and elephant
+  cavalry, and for the Jinetes, Cuantiosos and Tornadizos. Infantry, auxiliaries and the tribesmen
+  levy are unchanged
+- cavalry combat power by age, from Traditions to Revolutions: 2.4 / 2.4 / 2.4 / 2.65 / 3.05 / 3.05
+  [was 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2, vanilla 2.6 / 2.6 / 2.6 / 2.85 / 3.25 / 3.25]. Light and
+  heavy cavalry, mercenaries included
+
+### Buildings and Reforms
+
+- **Stud Farm:** at most 1 level per location [was 2]
+- **Governor offices**, four new buildings that each use up one unused governor post:
+  - **Provincial Chancellery:** +1 government reform slot. Built in the capital or a cored city of
+    the capital's area
+  - **Court Secretariat:** +1 cabinet seat. Same build locations as the Provincial Chancellery
+  - **Admiralty Board:** uses a naval governor post, +1 cabinet seat. Built in a port city that is
+    not the capital
+  - **Proconsulate:** uses a naval governor post. Built where a local governor stands, it makes his
+    proximity source 25% stronger
+  - up to 4 of each. Demolishing one gives the post back but costs 3 months of income, −10 stability
+    and political influence
+- **Provincial Administration:** uses a naval governor post. Every owned location in its area gets
+  +0.25% monthly control, +0.2% monthly development, +0.2% monthly prosperity and +1% population
+  growth. One per area; every location you own there must be a core with your religion and an
+  accepted culture, and your average control must be 70% or more. It is torn down if average control
+  falls below 50%
+- naval governors are no longer limited to ports cut off from the capital
+- **Sergeantry, City Guard, Temple Militia, Warrior Temple, Jurchen Barracks and Order Headquarters**
+  can be built up to 3 levels [was 1]. Estate power does not grow with level
+- **Recognized Communes:** −2.5% nobles max tax in place of the base game's −5% max control
+- **Harbor Administration** applies to every location in a province that has a port [vanilla: coastal
+  locations]
+- rough-terrain proximity advances (Persia, Austria, Savoy, the Swiss, Albania, Scotland, Tibet, the
+  Inca, Morocco, Ethiopia, Nepal) no longer remove the proximity cost of mountains, hills and
+  plateaus across the whole country. They unlock the **Homeland Proximity Administration** reform
+  instead, which removes it only in the region of your historical capital. Savoy, the Swiss and
+  Provence get the **Alpine Proximity Administration**, which covers the whole Alpine arc
+- **Kingdom of God:** back to vanilla, plus +10% damage against heretics and heathens
+- **Genoa:** Alberghi and Compagna Communis give +1 reform slot. Great and Minor Councils gives +10%
+  crown power [vanilla −10%]
+- **Confucian content** (Confucian school and academy, Imperial Examination, Scholar Officials, Petty
+  Bureaucracy) stays open to Korean, Tamna, Vietnamese, Muong and Japanese cultures, which leave the
+  Confucian culture group
+- **conquistadors removed:** the advance is unavailable, and an event-spawned conquistador country
+  can no longer conquer land just by occupying it
+
+### Societal Values
+
+- **Offensive:** also +10% army movement speed and +10% regiment reinforcement speed
+- **Defensive:** also +10% combat speed and +5% morale recovery in friendly territory
+- **Aristocracy:** also +0.25 monthly diplomats
+- **Plutocracy:** also +20% military tactics. Burghers grow to 2% of all pops [vanilla 1% of city
+  pops]
+- **Capital Economy:** +20% urban building efficiency, +33% RGO size outside rural areas, +5% raw
+  material impact, +25% cost to expand mining and farming RGOs, no food penalty
+- **Traditional Economy:** +33% RGO size in rural areas, +25% rural building efficiency, no food
+  bonus
+- **Spiritualist:** +50% assimilation [vanilla −50%], −2 heretic and heathen tolerance
+- **Humanist:** +2 heretic and heathen tolerance [vanilla +1], +1 culture capacity, −25% accepted
+  culture cost, −25% conversion and assimilation speed
+- **Traditionalist:** institution embrace cost +100% [vanilla +200%], −2% diplomatic spending cost,
+  no policy change discount
+
+### Economy and Gold-Transfers
+
+- loans between countries have a minimum interest of 2% [vanilla 1%]
+- Commerce focus: **Trade Manipulation** gives +5% trade center power [was +10%]
+- colonial boom: applies once to each location that joins a colonial nation, for 35 years [was the
+  capital region of a new colonial nation, for 20 years]. Road building time −65% [was −50%], and
+  +2% population growth [was +1%] while the location is under half its population capacity
+
+### Religion and Culture
+
+- the state religion can no longer be switched to the ruler's personal faith. A faith from outside
+  your religious group needs more than 75% of your population
+- the state culture can no longer be switched to the ruler's culture. The new culture needs at least
+  50% of your pops, or more than 75% if it is outside your culture group
+- **Monasticism** gives +0.01 monthly literacy in place of +5 clergy max literacy
+- **Participation of Women** gives +2.5 max literacy
+- Orthodox gets a tiny bonus to population growth
+- Cathars can no longer take **Sola Scriptura**
+
+### National Flavour
+
+- **Pontic steppe and Crimea:**
+  - new advance sets for Taurica, Zaporozhia, Gazaria, Gothia, Crimea, Nogai, Astrakhan, Kazan and
+    the Golden Horde
+  - new culture regiments: Crimean and Astrakhani horse archers, Mishar horsemen, Gothic cataphracts
+    and spearmen, Cossack cavalry and infantry, Ligurian and Ruthenian infantry
+  - **Steppe Redoubts**, a small fort building for flatland steppe locations
+  - **Settle the Steppe** cabinet action, which grows population in a steppe province you fully own
+    and that already has your culture
+  - decisions to open coal, iron, copper, lead and tin mines and timber works, to change a pastoral
+    location's goods (10 stability, 10 political influence, 100–300 gold) and to set up timber
+    workings (1,500 gold)
+  - **Cossack Open Plains** and **Tribal Open Plains** privileges: +10% proximity efficiency in
+    flatland locations, −2 road proximity cost, one-time +10 centralisation
+  - **Black Soil Rights** town right: +80% RGO size and +25% food for arable towns
+- **Gazaria:** a player-run Gazaria can break free of Genoa (with or without an alliance), then
+  choose its culture once it holds Theodoro and Lusta. New Gazarian Arsenal building; starts with a
+  named consul and 2 light cavalry
+- **Zaporozhia:** playable, starts with 3 light cavalry as a Golden Horde tributary. +100% noble and
+  tribal levies until the Black Death reaches it
+- **Italy:** new advances for Venice, Florence, Genoa, Tuscany, the Two Sicilies, Sardinia, the Papal
+  States and Dalmatia; new Corazzieri, Bersaglieri and Carabinieri units; a **Genoese Arsenal**
+  building; Venice's **Dalmatian Possession** decision (+0.2% monthly control and +0.1% development
+  in Croatia)
+- **Greek culture group, Byzantium, Trebizond, Anatolia (Karaman, Candar, Cyprus, Cilicia) and the
+  Ottomans:** new advances
+- **Caucasus:** shared Caucasian advances and new sets for Georgia, Circassia, Armenia, Shirvan and
+  the mountain states; **Greater Georgia**, **Greater Armenia** and **Greater Caucasus**
+  proclamations at 80% integration of the region, each with its own reform; updated Georgian events
+- **Crescent:** new advances for the Qara Qoyunlu, Aq Qoyunlu, Egypt, Hasankeyf and Jerusalem.
+  Jerusalem can proclaim the **Kingdom of Heaven** at 80% of the Levant, which makes it a Catholic
+  theocracy with +1 reform slot
+- **Germany and the Low Countries:** advance sets for about 30 countries, including Bavaria, Saxony,
+  Brandenburg, Prussia, Austria, Bohemia, Flanders, the Netherlands, Luxembourg, Lorraine and the
+  Palatinate; 13 Swiss advances; the **Crown of Great Moravia** decision (empire rank, own reform)
+  and the Hansa's **Hanseatic Merchant Federation** decision
+- **France:** new advances for France, Provence, Occitania, Brittany and Burgundy
+- **British Isles:** new advances for Wales, Northumberland, Mann and Cornwall, and advance sets for
+  14 Irish states
+- **Iberia:** new advances for Galicia and Asturias
+- the **Turmoil in Brandenburg** disaster is disabled
+
+### Pops, Map and Campaign Setup
+
+- the **Hansa** starts as a landed country holding Lübeck, Hamburg and Bremen. Its kontors keep
+  working
+- many landless start vassals are folded into their overlords (Wales, Ireland, France, the
+  Palatinate, Trier and others)
+- Moravia starts independent, Slovakia as a Hungarian vassal
+- new Balkan duchies **Sumadija** and **Banat**; Croatian and Slavonian borders redrawn
+- border changes in Italy, Germany, France, the British Isles and Ireland
+- pop updates for the Italian states, Germany, the Hansa, Flanders and Crimea
+- Kaffa gets more buildings, and Kaffa and Lusta more development
+- the Black Death also starts in Crimea
+- Tunis starts at war with Tlemcen over Algiers
+- Castile starts with 15 galleys in Seville
+
+### Formables
+
+- new or reworked: Germany, the Holy Roman Empire, Bohemia, Prussia, Switzerland, Pomerania, Swabia,
+  Westphalia, Franconia, Hanover, the Netherlands, Belgium, Holstein, Lotharingia, Occitania, Italy,
+  Dalmatia, Sardinia-Piedmont, the Two Sicilies, Tuscany, Ulster, Connacht, Munster, the Qara
+  Qoyunlu, the Aq Qoyunlu, Taurica and Gothia
+- **Taurica** replaces the Crimea formable
+- steppe and Central Asian formables are one tier lower (Golden Horde, Nogai, Astrakhan, Kazan,
+  Greater Khorasan, Bukhara, Chagatai, Uzbek, Transoxiana, Khiva and others)
+- **Pontus** needs 80% of its locations [was 75%]
+
+### UI and Quality of Life
+
+- with the Time Steps game rule on Hourly, game speeds 1 to 4 run at 2 / 1.5 / 1 / 0.75 seconds a day [vanilla 6 / 3
+  / 1.2 / 0.6]. Speed 5 stays uncapped
+- **Expel Trade Offices** and **Expel Fondacos, Kontors and Enclaves:** the country list greys out
+  countries that have no trade posts in your land and says why. Before, the whole action was greyed
+  out
+- many regional and unit advances, plus Deus Vult, Lesser Infiltration and the supply depot advances,
+  have new places in the advancement tree and new icons
+
+## game.1.4.8.mod.29
+
+Since game.1.4.6.mod.28 → game.1.4.8.mod.29:
+
+### Patch Compatibility
+
+- updated for game 1.4.8, the 1.4.7 changes included. Play this version on 1.4.8: some of the
+  updated files use script that game 1.4.7 does not have
+
+### Battles and Armies
+
+- cavalry needs ten times the horses: every horse unit pays ×10 horses to build, reinforce and
+  maintain, and every camel unit ×10 camels. Their other goods are unchanged
+- cavalry combat power by age, from Traditions to Revolutions: 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2
+  [vanilla 2.6 / 2.6 / 2.6 / 2.85 / 3.25 / 3.25]. Light and heavy cavalry, mercenaries included
+- cavalry maintenance costs 6% of its men in manpower a month [vanilla 4%; infantry 2%]
+- land battle damage is back to vanilla [was doubled]
+- heavy infantry combat speed is back to vanilla 2 [was 2.25]
+- armies and navies move at vanilla speed again [was 25% slower]
+- tribal levies raise 350-man regiments [was 400, vanilla 200]: Tribal Cavalry, Tribal Camelry and
+  the Zenata, Sanhaja, Tuareg and Hilali levies
+
+### Buildings and Reforms
+
+- **Stud Farm:** at most 2 levels per location
+- **Hanseatic Kontor:** fixed an error in its definition that could drop the limit to Hanseatic
+  League members
+
+### UI and Quality of Life
+
+- economy panel: a checkbox beside the army maintenance slider stops reinforcement in all your
+  armies. While it is off your regiments do not refill and cost nothing to reinforce. The AI does
+  not use it
+- **Expel Trade Offices** and **Expel Fondacos, Kontors and Enclaves** have their own messages for
+  both sides, with toggles in the message settings
+- regiment, mercenary and battle tooltips: fixed the rules that hide ship-only stats on land units
+
 ## game.1.4.6.mod.28
 
 Since game.1.4.6.mod.27 → game.1.4.6.mod.28:

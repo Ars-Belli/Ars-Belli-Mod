@@ -26,41 +26,11 @@ abm_expel_fondacos = {
 			is_ai = no
 			has_limited_diplomacy = no
 		}
-		scope:recipient = {
-			is_ai = no
-		}
 	}
 
 	allow = {
-		scope:actor != scope:recipient
 		scope:actor = {
 			num_of_diplomats >= 1
-		}
-		# Kept in allow rather than potential so the entry greys out with a reason instead of the
-		# action vanishing for every country that holds nothing here.
-		custom_tooltip = {
-			text = abm_expel_fondacos_has_fondacos_tt
-			scope:actor = {
-				any_owned_location = {
-					OR = {
-						location_building_level = {
-							building_type = building_type:fondaco
-							value > 0
-							owner = scope:recipient
-						}
-						location_building_level = {
-							building_type = building_type:hanseatic_kontor
-							value > 0
-							owner = scope:recipient
-						}
-						location_building_level = {
-							building_type = building_type:abm_merchant_enclave
-							value > 0
-							owner = scope:recipient
-						}
-					}
-				}
-			}
 		}
 	}
 
@@ -75,6 +45,33 @@ abm_expel_fondacos = {
 		visible = {
 			this != scope:actor
 			within_diplomatic_range = scope:actor
+		}
+		enabled = {
+			is_ai = no
+			custom_tooltip = {
+				text = abm_expel_fondacos_has_fondacos_tt
+				scope:actor = {
+					any_owned_location = {
+						OR = {
+							location_building_level = {
+								building_type = building_type:fondaco
+								value > 0
+								owner = root
+							}
+							location_building_level = {
+								building_type = building_type:hanseatic_kontor
+								value > 0
+								owner = root
+							}
+							location_building_level = {
+								building_type = building_type:abm_merchant_enclave
+								value > 0
+								owner = root
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 

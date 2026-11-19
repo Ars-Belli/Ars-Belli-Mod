@@ -175,3 +175,13 @@ abm_zaz_levy_surge = {
 	nobles_estate_levy_size = 1.0
 	tribes_estate_levy_size = 1.0
 }
+
+# Reinforcement switched off by the checkbox beside the army maintenance slider (in_game/gui/economy_lateralview.gui,
+# in_game/common/scripted_guis/abm_reinforcement_gui.txt). The engine treats a rate below 0 as no reinforcement, and
+# -1000% keeps it there whatever speed bonuses a country has. The army slider stays vanilla.
+abm_reinforcement_stopped = {
+	game_data = {
+		category = country
+	}
+	regiment_reinforcement_speed = -10
+}
