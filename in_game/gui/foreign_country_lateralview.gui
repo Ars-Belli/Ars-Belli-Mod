@@ -2613,8 +2613,12 @@ lateralview = {
 										visible = no
 									}
 
-									visible = "[And(HeirSelectionCandidate.GetHeirSelection.ShouldShowCandidates, Country.Exists)]"
+									visible = "[Country.Exists]"
 									allow_outside = yes
+
+									blockoverride "character_portrait_visible" {
+										visible = "[HeirSelectionCandidate.GetHeirSelection.ShouldShowCandidates]"
+									}
 
 									blockoverride "estate_icon" {
 										visible = no
