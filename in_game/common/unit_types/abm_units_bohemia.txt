@@ -1,0 +1,28 @@
+﻿# Bohemia - Wagenburg line
+# Keeps the unique wagon fort after Age II (vanilla sent it into generic halberdiers)
+# and carries it into Age III on the Age III heavy infantry template.
+REPLACE:a_wagenburg = {
+	copy_from = a_age_2_renaissance_heavy_infantry
+	is_special = yes
+	upgrades_to = a_abm_late_wagenburg
+	buildable = yes
+
+	limit = wagenburg_unit_limit
+
+	strength_damage_taken = -0.1
+	morale_damage_taken = -0.1
+	secure_flanks_defense = 0.025
+}
+
+a_abm_late_wagenburg = {
+	copy_from = a_age_3_discovery_heavy_infantry
+	is_special = yes
+	upgrades_to = a_pikemen
+	buildable = yes
+
+	limit = wagenburg_unit_limit
+
+	strength_damage_taken = -0.1
+	morale_damage_taken = -0.1
+	secure_flanks_defense = 0.025
+}

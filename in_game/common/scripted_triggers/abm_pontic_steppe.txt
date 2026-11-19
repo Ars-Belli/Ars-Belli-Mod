@@ -173,9 +173,13 @@ abm_steppe_province_is_our_culture = {
 		}
 	}
 }
-# Province scope. True when at least one land location in the province still
-# falls short of the settlement target: 20 development, and at least half of
-# its population capacity filled.
+# Province scope. True when at least one land location in the province is still
+# below 20 development (20.01, because development is fractional - a location at
+# exactly 20.00 would otherwise keep the province in the picker forever).
+#
+# Development is the ONLY criterion: population no longer decides whether a
+# province can be settled, it only caps the pop-growth half of the cabinet
+# action's location modifier (see abm_settle_the_steppe).
 #
 # Used in both directions by abm_settle_the_steppe - to decide whether the
 # province is worth offering in the picker, and (negated) as the is_finished
@@ -183,9 +187,6 @@ abm_steppe_province_is_our_culture = {
 abm_steppe_province_needs_settling = {
 	any_location_in_province = {
 		is_land = yes
-		NAND = {
-			development >= 20
-			location_population_percentage >= 0.5
-		}
+		development < 20.01
 	}
 }
