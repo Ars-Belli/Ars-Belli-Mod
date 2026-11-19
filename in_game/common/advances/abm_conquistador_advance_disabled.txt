@@ -1,0 +1,24 @@
+﻿# Ars Belli - no Conquistadors (issue #42, HIGH Nr.8).
+#
+# conquistador_advance is the ONLY source of `allow_conquistadors = yes` in 1.4.9
+# (the modifier is read by generic_actions/conquistadors.txt and
+# generic_action_ai_lists/conquistador_list.txt). Without it no country ever gets
+# the modifier, so create_conquistador is unavailable to players, the AI and
+# delegation automation, and the AI stops polling conquistador_list.
+#
+# This gate alone is NOT enough: flavor_cas.35/.36 -> conquistador.1 ->
+# create_army_country_in_location force-adds conquistador_country without any
+# modifier check. The mechanic itself is defanged in
+# government_reforms/abm_conquistador_reform_disabled.txt.
+#
+# Copied from vanilla advances/religion_catholic.txt (1.4.9) minus the modifier.
+REPLACE:conquistador_advance = {
+	icon = new_world_advance
+	age = age_3_discovery
+
+	potential = {
+		always = no
+	}
+
+	requires = colonial_charters
+}
