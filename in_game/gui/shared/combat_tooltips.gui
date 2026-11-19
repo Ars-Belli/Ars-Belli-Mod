@@ -269,7 +269,7 @@ template SubUnitType_tooltip {
 
 		blockoverride "title_button" {
 			# Ars Belli: mercenary age badge. Vanilla has only the first icon here. a_abm_merc_* units have no age of their own, so the others read it from a marker stat set in abm_mercenary_unit_types.txt
-			widget = {
+			hbox = {
 				ignoreinvisible = yes
 				icon = {
 					visible = "[Not(Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('anti_piracy_warfare')), Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('maritime_presence')), Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('blockade_capacity')), Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('hull_size')), Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('transport_capacity')), And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('crew_size'))))))))]"
@@ -730,7 +730,7 @@ template SubUnitUpgradePath {
 			hbox = {
 				spacing = 4
 				# Ars Belli: mercenary age badge. Vanilla has only the first icon here. a_abm_merc_* units have no age of their own, so the others read it from a marker stat set in abm_mercenary_unit_types.txt
-				widget = {
+				hbox = {
 					ignoreinvisible = yes
 					icon = {
 						visible = "[Not(Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('anti_piracy_warfare')), Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('maritime_presence')), Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('blockade_capacity')), Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('hull_size')), Or(And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('transport_capacity')), And(SubUnitType.GetCategory.IsArmy, SubUnitType.HasStat('crew_size'))))))))]"
