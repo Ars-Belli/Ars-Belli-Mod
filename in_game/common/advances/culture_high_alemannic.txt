@@ -1,0 +1,243 @@
+﻿# Ars Belli: vanilla culture_high_alemannic.txt (EU5 1.4.x) with one change - every
+# Swiss advance is gated on the original capital lying in Romandy, Switzerland or
+# Raetia (western/central/eastern_switzerland_area), so the Swiss cultural tree
+# cannot be grabbed by a state whose court sits outside the Alps. Kept as a full
+# same-name copy because the gate has to go into `potential`, which REPLACE:/INJECT:
+# cannot extend. Re-sync with vanilla if the file gains new advances.
+
+#Age of Traditions
+REPLACE:swiss_oath_of_rutli = {
+	age = age_1_traditions
+	icon = swiss_oath_of_rutli
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	peasants_estate_levy_size = 0.2
+
+	requires = feudalism_advance
+}
+REPLACE:swiss_halberd_infantry = {
+	age = age_1_traditions
+	icon = swiss_halberd_infantry
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	army_heavy_infantry_power = 0.1
+
+	requires = swiss_oath_of_rutli
+}
+REPLACE:swiss_eternal_alliance = {
+	age = age_1_traditions
+	icon = swiss_eternal_alliance
+	potential = {
+		culture = { has_culture_group = culture_group:swiss_group }
+		OR = {
+			has_or_had_tag = URI
+			has_or_had_tag = SYZ
+			has_or_had_tag = OBW
+		}
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+	}
+	monthly_diplomats = 0.1
+	monthly_prestige = 0.1
+
+	requires = swiss_oath_of_rutli
+}
+#Age of Renaissance
+swiss_mercenaries = {
+	age = age_2_renaissance
+	icon = swiss_mercenaries
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	global_mercenaries_modifier = 0.25
+	mercenary_payment_to_owner = 0.5
+
+	requires = medieval_military
+}
+REPLACE:the_swiss_confederation = {
+	age = age_2_renaissance
+	icon = the_swiss_confederation
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	stability_cost_efficiency = 0.2
+
+	requires = diplomatic_range_age_1
+}
+#Age of Discovery
+REPLACE:swiss_reislaufer = {
+	age = age_3_discovery
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	unlock_unit = a_reislaufer
+
+	requires = unlock_halberdiers_advance
+}
+REPLACE:swiss_recovery_and_prosperity = {
+	age = age_3_discovery
+	icon = swiss_recovery_and_prosperity
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	global_monthly_development = 0.001
+	global_monthly_prosperity = 0.001
+
+	requires = formalized_relations
+}
+#Age of Reformation
+REPLACE:alpine_defensiveness = {
+	age = age_4_reformation
+	icon = alpine_defensiveness
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	military_tactics = 0.1
+	global_defensive = 0.25
+	ai_weight = { add = 10 }
+
+	requires = supply_depot_advance_age_4_reformation
+}
+REPLACE:swiss_religious_refuge = {
+	age = age_4_reformation
+	icon = swiss_religious_refuge
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	requires = alpine_defensiveness
+	invite_artist_cost_modifier = -0.1
+	non_rural_migration_attraction = 0.2
+}
+#Age of Absolutism
+REPLACE:swiss_tolerance = {
+	age = age_5_absolutism
+	icon = swiss_tolerance
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	tolerance_heretic = 1
+
+	requires = the_constitution
+}
+REPLACE:swiss_clockwork = {
+	age = age_5_absolutism
+	icon = swiss_clockwork
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	global_production_efficiency = medium_production_efficiency_bonus
+
+	requires = construction_speed_absolutism
+}
+#Age of Revolutions
+REPLACE:swiss_ambition = {
+	age = age_6_revolutions
+	icon = swiss_ambition
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	monthly_republican_tradition = 0.1
+
+	requires = enlightened_court
+}
+REPLACE:swiss_banking = {
+	age = age_6_revolutions
+	icon = swiss_banking
+	potential = {
+		original_capital ?= {
+			OR = {
+				area = area:western_switzerland_area
+				area = area:central_switzerland_area
+				area = area:eastern_switzerland_area
+			}
+		}
+		is_swiss_for_advances = yes
+	}
+	bank_interest = -0.02
+
+	requires = joint_stock_companies
+}

@@ -1,0 +1,123 @@
+﻿namespace = flavor_geo
+
+# Ars Belli: single-event override of vanilla DHE/flavor_geo.txt (Event modding > Modifying base game events).
+# The file name sorts before the vanilla one, so "Duplicated event ID" for flavor_geo.16 in error.log is expected and harmless.
+flavor_geo.16 = { #[ShowReligionAdjectiveWithNoTooltip('catholic')] Presence in [target_location.GetNameWithNoTooltip]
+	type = country_event
+	title = flavor_geo.16.title
+	desc = flavor_geo.16.desc
+	outcome = neutral
+
+	fire_only_once = yes
+	dynamic_historical_event = {
+		tag = GEO
+		from = 1340.1.1
+		to = 1375.3.14
+		monthly_chance = 1
+	}
+
+	trigger = {
+		any_owned_location = {
+			has_building = building_type:missionary_building
+		}
+	}
+
+	illustration_tags = {
+		10 = interior
+		10 = regular
+	}
+
+	immediate = {
+		event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		save_scope_as = target_country2
+		ruler_or_regent = { save_scope_as = target_character1 }
+		ordered_owned_location = {
+			limit = {
+				has_building = building_type:missionary_building
+			}
+			order_by = population
+			max = 1
+			check_range_bounds = no
+			save_scope_as = target_location1
+			event_illustration_estate_effect = { foreground = estate_type:clergy_estate background = estate_type:clergy_estate }
+		}
+		c:PAP = {
+			save_scope_as = target_country
+			capital = { save_scope_as = target_location2 }
+			ruler_or_regent = { save_scope_as = target_character2 }
+		}
+	}
+
+	option = {
+		name = flavor_geo.16.a
+		historical_option = yes
+
+		add_opinion_mutual_effect = {
+			target = c:PAP
+			modifier = opinion_catholic_presence_in_georgia
+		}
+
+		add_estate_satisfaction = { type = estate_type:clergy_estate value = estate_satisfaction_mild_penalty }
+	}
+
+	option = {
+		name = flavor_geo.16.b
+
+		every_owned_location = {
+			limit = {
+				has_building = building_type:missionary_building
+			}
+			destroy_building = "building(building_type:missionary_building|scope:target_country)"
+		}
+
+		custom_tooltip = {
+			text = suffer_20_opinion_with_every_catholic_in_range_tt
+			every_known_country = {
+				limit = {
+					within_diplomatic_range = root
+					religion = religion:catholic
+				}
+				add_opinion = {
+					modifier = opinion_demolished_catholic_embassies
+					target = root
+				}
+			}
+		}
+
+		c:PAP = { trigger_event_non_silently = flavor_geo.17 }
+	}
+
+	option = {
+		name = flavor_geo.16.c
+
+		trigger = { has_ruler = yes }
+
+		change_religion = religion:catholic
+
+		ruler_or_regent = {
+			change_character_religion = religion:catholic
+			every_child = {
+				limit = {
+					is_alive = yes
+				}
+				change_character_religion = religion:catholic
+			}
+		}
+		if = {
+			limit = { has_consort = yes }
+			consort = { change_character_religion = religion:catholic  }
+		}
+		if = {
+			limit = { has_heir = yes }
+			heir = { change_character_religion = religion:catholic  }
+		}
+		add_stability = stability_mild_penalty
+		add_all_estate_satisfaction = { value = estate_satisfaction_mild_penalty }
+		add_opinion_mutual_effect = {
+			target = c:PAP
+			modifier = opinion_royal_line_embraced_catholicism
+		}
+
+		c:PAP = { trigger_event_non_silently = flavor_geo.18 }
+	}
+}

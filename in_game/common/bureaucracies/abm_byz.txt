@@ -43,7 +43,12 @@
 
 	#positive
 	positive_modifier = {
-		scale = { value = scope:maintenance }
+		scale = {
+			value = {
+				add = scope:maintenance
+				desc = "[bureaucracy_maintenance|e]"
+			}
+		}
 
 		train_general_ability = 10 #was 25
 		train_admiral_ability = 10 #was 25
@@ -53,8 +58,14 @@
 	#negative
 	negative_modifier = {
 		scale = {
-			value = 1
-			subtract = scope:maintenance
+			value = {
+				add = 1
+				desc = BASE_VALUE
+			}
+			subtract = {
+				value = scope:maintenance
+				desc = "[bureaucracy_maintenance|e]"
+			}
 		}
 		monthly_legitimacy = -0.2
 		global_nobles_estate_power = 0.5

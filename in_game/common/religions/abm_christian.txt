@@ -1,4 +1,10 @@
 ﻿
+INJECT:orthodox = {
+	definition_modifier = {
+		global_population_growth = 0.0001
+	}
+}
+
 REPLACE:bogomilism = {
 	color = color_bogomilism
 	group = christian
@@ -114,44 +120,11 @@ REPLACE:calvinist = {
 	custom_tags = { protestant church_aspects }
 }
 
-REPLACE:miaphysite = {
-	color = color_miaphysite
-	group = christian
-
-	has_religious_influence = yes
-	has_autocephalous_patriarchates = yes
-	has_canonization = yes
-	religious_aspects = 3
-
-	goods_demand_modifier = {
-		livestock = 0.5
-	}
-	clergy_goods_demand_modifier = {
-		incense = 2
-	}
-
+INJECT:miaphysite = {
 	definition_modifier = {
-
-		clergy_estate_max_tax = -0.5
-		tolerance_heretic = -1
-
-		tolerance_own = 1
 		global_max_literacy = 5
 		army_maintenance_efficiency = 0.10
-
-		clergy_estate_cannot_marry = yes
-		monthly_religious_influence = 0.1
-
-		maximum_religious_influence = 400
-		country_allow_canonization = yes
-
 	}
-
-	opinions = {
-		orthodox = kindred
-	}
-
-	tags = { eastern_christian_gfx christian_gfx abrahamic_gfx }
 }
 
 

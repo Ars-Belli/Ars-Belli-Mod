@@ -1,20 +1,161 @@
 ﻿REPLACE:offensive_vs_defensive = {
 	left_modifier = {
-		global_defensive = -0.2
-		siege_ability = 0.2
-		assault_ability = 0.2
+		siege_ability = 0.20
+		assault_ability = 0.20
+
+		global_defensive = -0.20
+		army_movement_speed = 0.10
 		army_logistics_distance_modifier = 0.25
-		defence_importance_modifier = -0.2
+		defence_importance_modifier = -0.20
+		regiment_reinforcement_speed = 0.10
 		# Ars Belli: vanilla's bias_for_militarist_policies = 50 and
 		# antagonism_declared_war_no_cb_giving_modifier = -0.1 are left out (as in mod.25)
 	}
 	right_modifier = {
+		fort_maintenance_efficiency = 0.40
+		combat_speed_modifier = 0.10
+
 		global_defensive = 0.5
-		siege_ability = -0.1
+		siege_ability = -0.10
+		morale_recovery_in_friendly = 0.05
+
 		fort_limit_modifier = 0.25
-		fort_maintenance_efficiency = 0.4
-		defence_importance_modifier = 0.2
+
+		defence_importance_modifier = 0.20
 		# Ars Belli: vanilla's bias_for_diplomat_policies = 50 is left out (as in mod.25)
 	}
 }
 
+REPLACE:aristocracy_vs_plutocracy = { #
+
+	left_modifier = {
+		discipline = 0.10
+		global_nobles_estate_power = 0.50
+		global_nobles_city_desired_pop_scaled = 0.01
+		global_nobles_pop_growth = 0.25
+
+		court_spending_efficiency = -0.25
+		court_language_is_market_language_importance_modifier = -1.5
+		monthly_diplomats = 0.25			#NEW
+
+		bias_for_patron_of_arts_policies = 50
+		bias_for_militarist_policies = 25
+	}
+	right_modifier = {
+		military_tactics = 0.20				#NEW - to compensate for discipline
+		global_burghers_estate_power = 0.50
+		global_burghers_desired_pop_scaled = 0.02	# 2% of all pops, not just in cities
+		selling_efficiency = small_selling_efficiency_bonus
+
+		court_spending_efficiency  = 0.5
+		court_language_is_market_language_importance_modifier = 1.5
+		market_building_levels = 0.5
+
+		bias_for_patron_of_arts_policies = 50
+		bias_for_capitalist_policies = 25
+	}
+}
+
+REPLACE:capital_economy_vs_traditional_economy = {
+	left_modifier = {
+		global_production_efficiency = huge_production_efficiency_bonus
+		bank_interest = -0.03
+		global_urban_build_buildings_efficiency = 0.20
+		global_max_rgo_size_modifier_in_non_rural = 0.33
+		raw_material_in_province_impact = 0.05
+
+		expand_rgo_mining_cost_modifier = 0.25
+		expand_rgo_farming_cost_modifier = 0.25
+
+		court_language_is_market_language_importance_modifier = 1.5
+		bias_for_capitalist_policies = 100
+	}
+	right_modifier = {
+		global_raw_material_output = 0.20
+		global_population_capacity_modifier = 0.25
+		global_max_rgo_size_modifier_in_rural = 0.33
+		global_rural_build_buildings_efficiency = 0.25
+
+		global_building_establishment_speed = -0.25
+
+		court_language_is_market_language_importance_modifier = -1.5
+		bias_for_capitalist_policies = -100
+	}
+}
+
+REPLACE:spiritualist_vs_humanist = {
+	left_modifier = {
+		global_clergy_city_desired_pop_scaled = 0.02
+		tolerance_own = 2
+
+		global_pop_conversion_speed_modifier = 0.50
+		global_pop_assimilation_speed_modifier = 0.50
+
+		tolerance_heretic = -2
+		tolerance_heathen = -2
+
+		religious_unity_importance_modifier = 0.2
+		court_language_is_liturgical_language_importance_modifier = 0.75
+		bias_for_scholar_policies = 25
+		bias_for_tolerant_policies = -100
+		antagonism_religion_influence = 0.5
+
+		national_lutheranism_movement_resistance_modifier = 0.1
+		national_calvinism_movement_resistance_modifier = 0.1
+	}
+	right_modifier = {
+		tolerance_heretic = 2
+		tolerance_heathen = 2
+
+		accepted_culture_maintenance_cost_modifier = -0.25
+		cultures_capacity_modifier = 1.0
+
+		global_pop_conversion_speed_modifier = -0.25
+		global_pop_assimilation_speed_modifier = -0.25
+
+		religious_unity_importance_modifier = -0.2
+		court_language_is_liturgical_language_importance_modifier = -0.75
+		bias_for_scholar_policies = 25
+		bias_for_tolerant_policies = 100
+		antagonism_religion_influence = -0.5
+
+		national_lutheranism_movement_resistance_modifier = -0.2
+		national_calvinism_movement_resistance_modifier = -0.2
+	}
+}
+
+REPLACE:traditionalist_vs_innovative = {
+    left_modifier = {
+        global_estate_target_satisfaction = small_permanent_target_satisfaction
+        cultural_tradition_modifier = 1.0
+
+
+        stability_investment = 0.1                     
+        diplomatic_spending_cost = -0.020			   #NEW
+        embrace_institution_cost_modifier = 1.0        #2.0 was too much
+
+        language_change_threshold_modifier = 1
+        societal_value_importance_modifier = 0.2
+        institution_importance_modifier = -0.2
+        bias_for_scholar_policies = -100
+
+        national_lutheranism_movement_resistance_modifier = 0.05
+        national_calvinism_movement_resistance_modifier = 0.05
+    }
+    right_modifier = {
+        global_max_literacy = 10
+        cultural_influence_modifier = 1.0
+
+        stability_investment = -0.1
+        change_policy_cost_modifier = 0.15
+        embrace_institution_cost_modifier = -0.5
+
+        language_change_threshold_modifier = -1
+        societal_value_importance_modifier = -0.2
+        institution_importance_modifier = 0.2
+        bias_for_scholar_policies = 100
+
+        national_lutheranism_movement_resistance_modifier = -0.2
+        national_calvinism_movement_resistance_modifier = -0.2
+    }
+}

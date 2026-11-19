@@ -15,3 +15,26 @@
 		global_peasants_estate_power = 0.25
 	}
 }
+
+abm_secured_dalmatia = {
+	estate = peasants_estate
+
+	potential = {
+		has_variable = abm_secured_dalmatia
+	}
+
+	allow = {
+	}
+
+	can_revoke = {
+		always = no
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			area = area:croatia_area
+		}
+		local_monthly_control = 0.002
+		local_monthly_development = 0.001
+	}
+}

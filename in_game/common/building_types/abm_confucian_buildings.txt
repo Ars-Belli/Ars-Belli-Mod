@@ -1,0 +1,60 @@
+﻿# Ars Belli - Confucian content kept for cultures that leave the Confucian group
+# (issue #42 HIGH Nr.5 + Nr.7). Vanilla 1.4.9 copy with the
+# `has_culture_group = culture_group:confucian_group` branch replaced by
+# abm_has_confucian_content (scripted_triggers/
+# abm_confucian_content_trigger.txt). Every other vanilla branch
+# (sanjiao religion, sect IO policy, has_neo_confucianism, Middle Kingdom
+# membership) is unchanged. Re-sync with vanilla when the game updates.
+
+REPLACE:confucian_school = {
+	audio_tier = 1
+	is_special = yes
+	is_foreign = no
+	max_levels = 1
+	pop_type = nobles
+	
+	employment_size = noble_cultural_employment
+	category = cultural_category
+	
+	AI_ignore_available_worker_flag = yes #since we may build this to increase pop promotion we don't want lack of workers to block it
+
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	build_time = cultural_building_time
+
+	
+	
+	country_potential = {
+		OR = {
+			culture = { abm_has_confucian_content = yes }
+			religion ?= religion:sanjiao
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			custom_tooltip = {
+				text = has_neo_confucianism_tt
+				has_variable = has_neo_confucianism
+			}
+			is_member_of_international_organization = international_organization:middle_kingdom
+		}
+	}
+	
+	possible_production_methods = {
+		confucian_school_maintenance
+	}
+
+	construction_demand = school_construction
+	
+	modifier = {
+		local_max_literacy = 5
+		local_pop_promotion_speed = 0.001
+		local_institution_growth_modifier = 0.25
+	}
+	capital_country_modifier = {
+		monthly_towards_sinicized = societal_value_tiny_monthly_move
+	}
+}

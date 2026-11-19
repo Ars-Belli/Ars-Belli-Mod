@@ -1,0 +1,61 @@
+﻿# ARS BELLI: settlement boom for every location that joins a colonial nation.
+# Vanilla hook (common/on_action/_hardcoded.txt): root = the location,
+# scope:loser = previous owner, scope:winner = new owner (can be null).
+# The boom follows the land, not the colonial nation, so a location taken away from
+# one is stripped of the leftover modifier - the location variable stays, so it still
+# cannot earn a second boom.
+on_location_changed_owner = {
+	effect = {
+		if = {
+			limit = {
+				exists = scope:winner
+				scope:winner = { is_colonial_subject = yes }
+			}
+			abm_new_colonial_nation_boom = yes
+		}
+		else_if = {
+			limit = {
+				exists = scope:winner
+				OR = {
+					has_location_modifier = new_colonial_nation_founded
+					has_location_modifier = abm_colonial_growth_boom
+				}
+				scope:winner = { NOT = { is_colonial_subject = yes } }
+			}
+			if = {
+				limit = { has_location_modifier = new_colonial_nation_founded }
+				remove_location_modifier = new_colonial_nation_founded
+			}
+			if = {
+				limit = { has_location_modifier = abm_colonial_growth_boom }
+				remove_location_modifier = abm_colonial_growth_boom
+			}
+		}
+	}
+}
+
+# The boom's growth surge is capped at half of the location's population capacity.
+# A static modifier cannot hold a condition, so the modifier is taken off the location
+# instead - monthly, and only for colonial subjects that still carry it somewhere.
+monthly_country_pulse = {
+	on_actions = {
+		abm_colonial_boom_growth_ceiling
+	}
+}
+
+abm_colonial_boom_growth_ceiling = {
+	# no any_owned_location pre-check on purpose: the loop below is already a single
+	# cheap pass and does nothing when no location carries the modifier
+	trigger = {
+		is_colonial_subject = yes
+	}
+	effect = {
+		every_owned_location = {
+			limit = {
+				has_location_modifier = abm_colonial_growth_boom
+				location_population_percentage >= 0.5
+			}
+			remove_location_modifier = abm_colonial_growth_boom
+		}
+	}
+}

@@ -1,0 +1,88 @@
+﻿# Kingdom of Jerusalem (KOJ): proclaim the Kingdom of Heaven in the Levant.
+#
+# scope:actor = country (KOJ)
+#
+# The 80% requirement counts owned AND cored locations of area:levant_area.
+# levant_area holds 81 locations (map_data/definitions.txt), so 80% = 64.8 -> 65.
+abm_koj_proclaim_kingdom_of_heaven = {
+	type = owncountry
+	icon = restore_rome_primacy
+	show_message = no
+
+	potential = {
+		scope:actor = {
+			has_or_had_tag = KOJ
+			NOT = { has_reform = government_reform:abm_koj_kingdom_of_heaven_reform }
+		}
+	}
+
+	allow = {
+		scope:actor = {
+			in_civil_war = no
+			religion = religion:catholic
+			NOT = { has_reform = government_reform:abm_koj_kingdom_of_heaven_reform }
+			custom_tooltip = {
+				text = abm_koj_proclaim_kingdom_of_heaven_tt
+				area:levant_area = {
+					any_location_in_area = {
+						owner ?= scope:actor
+						integration_level = core
+						count >= 65
+					}
+				}
+			}
+		}
+	}
+
+	cooldown = {
+		type = abm_koj_proclaim_kingdom_of_heaven
+		years = 5
+	}
+
+	automation_tick = never
+	automation_tick_frequency = 12
+
+	ai_tick = monthly
+	ai_tick_frequency = 12
+
+	effect = {
+		scope:actor = {
+			# A military order is a theocracy carrying military_order_reform, and that
+			# reform needs the monastic_order law: convert, set the law, then the reform.
+			if = {
+				limit = {
+					NOT = {
+						AND = {
+							government_type = government_type:theocracy
+							has_reform = government_reform:military_order_reform
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { government_type = government_type:theocracy } }
+					change_government_type = government_type:theocracy
+				}
+				if = {
+					limit = { NOT = { has_policy = monastic_order } }
+					add_policy = policy:monastic_order
+				}
+				if = {
+					limit = {
+						NOT = { has_reform = government_reform:military_order_reform }
+						# military_order_reform is locked out while this privilege is held
+						NOT = { has_estate_privilege = estate_privilege:clergy_military_orders }
+					}
+					add_reform = government_reform:military_order_reform
+				}
+			}
+
+			unlock_government_reform_effect = { type = abm_koj_kingdom_of_heaven_reform }
+			add_reform = government_reform:abm_koj_kingdom_of_heaven_reform
+
+			add_prestige = prestige_severe_bonus
+			add_government_power = government_power_severe_bonus
+		}
+	}
+
+	ai_will_do = { value = 100 }
+}

@@ -1702,12 +1702,12 @@ types SingleUnitWindowTypes
 										blockoverride "concept_link" {
 											text = "[attrition|e]"
 										}
-										lowpriotextcontext =  "[Location.GetAttritionDescription]"
+										lowpriotextcontext =  "[Location.GetAttritionDescriptionForCountry(Siege.GetBesieger.GetCountry)]"
 									}
 								}
 								text_single = {
 									maximumsize = { 40 20 }
-									text = "[Location.GetAppliedAttrition(Player.Self)|=-1/%]"
+									text = "[Location.GetAppliedAttrition(Siege.GetBesieger.GetCountry)|=-1/%]"
 									align = right|nobaseline
 									fontsize = 14
 								}

@@ -16,12 +16,9 @@ countries = {
 	countries = {
 	HUN = {	#Hungary
 		own_control_core = {
-			osijek
-			aiud hunedoara cincu
-			cristuru_secuiesc reghin
 			mezhorje sighet
-			baita carei hodod
-			recas semlacu_mare
+			carei hodod
+			recas
 			cheresig ineu lipova mako oradea szarvas
 			baja_hungary
 			csurgo simontornya kaposvar mohacs nagykanizsa siklos zalaegerszeg
@@ -29,40 +26,42 @@ countries = {
 			abrahamtelke heves kecskemet adony solt
 			hajduszoboszlo miskolc szabolcs
 			gonc mukachevo satoraljaujhely velikyi_bereznyi
-			bardejov podmuran roznava
-			kremnica krupina nograd salgotarjan zvolen
-			prievidza trnava
-			povazska_bystrica zilina
-			pancevo
+			krupina nograd salgotarjan
+			trnava
 			kikinda titel modos
-			belgrad debrc sabac
 			buda pest kalocsa felegyhaza
 			sopron vasvar magyarovar zalavar
 			veszprem gyor komarom fehervar esztergom
 			somogyvar tolna pecs segesd
 			bacs zenta bodrog halas
-			samorin nitra hlohovec holic
-			hont balassagyarmat stary_tekov banska_bystrica
-			trencin oravsky_podzamok turciansky_svaty_martin liptovsky_mikulas
-			gemer rimavska_sobota levoca lubica presov turna
-			zemplin kosice humenne uzhorod beregovo
-			miercurea_cluc chezdi_osorheiu covasna odorhei gheorgheni
-			bistrita cuhea rakhiv khust sic dej
-			turda targu_mures cetatea_balta felvint cluj
-			fagaras sibiu sebes alba_iulia medias sighisoara brasov sfantu_gheorghe
-			hateg caransebes lugoj deva
-			bihar beius baia_de_aries huedin crasna
+			samorin nitra holic
+			hont balassagyarmat stary_tekov
+			gemer turna
+			zemplin kosice uzhorod beregovo
+			cuhea rakhiv khust
+			lugoj
+			bihar beius crasna
 			debrecen nagyboszormeny nagykallo nagyecsed varda szatmar syvlyush zalau baia_mare
 			szolnok eger karcag borsod
 			bekes csanad szeged
-			kovin veliky_beckerek carasova mihalt
+			veliky_beckerek
 			timisoara arad zarand
-			dabaca baia_crisului gurghiu
+			baia_crisului
 			cakovec #zala
-			#Banate of Croatia
-			bjelovar koprivnica kutina pakrac vaska virovitica
-			vukovar ilok pozega sremska_mitrovica petrovaradin
-			varazdin #Zagorje
+		}
+
+		our_cores_conquered_by_others = {
+			#Lands lost when Transylvania, Slavonia, Sumadija and the Banat went their own way
+			dabaca baita bistrita dej sic alba_iulia
+			aiud cetatea_balta deva felvint hateg hunedoara
+			turda baia_de_aries cluj huedin reghin sibiu
+			brasov cincu fagaras medias sebes sighisoara
+			targu_mures chezdi_osorheiu covasna cristuru_secuiesc gheorgheni gurghiu
+			odorhei sfantu_gheorghe miercurea_cluc varazdin bjelovar koprivnica
+			kutina pakrac vaska virovitica pozega osijek
+			vukovar ilok belgrad debrc sabac sremska_mitrovica
+			petrovaradin pancevo semlacu_mare kovin carasova mihalt
+			caransebes
 		}
 
 		own_control_integrated = {
@@ -201,7 +200,7 @@ countries = {
 		liturgical_language = church_slavonic_language
 
 		country_rank = rank_duchy
-		capital = targoviste
+		capital = arges
 	}
 	MOL = {	#Moldavia
 		own_control_core = {
@@ -333,7 +332,7 @@ countries = {
 		capital = storozhynets
 	}
 	TRA = { #Transylvania
-		our_cores_conquered_by_others = {
+		own_control_core = {
 			dabaca baita bistrita dej sic #doboka_province
 			alba_iulia aiud cetatea_balta deva felvint hateg hunedoara #feher_province
 			turda baia_de_aries cluj huedin reghin #torda_province
@@ -342,7 +341,7 @@ countries = {
 		}
 		starting_technology_level = 3
 		include = "expl_eastern_europe"
-		include = "eastern_european_catholic_monarchy_no_auxilium_no_coast_not_present"
+		include = "eastern_european_catholic_monarchy_no_auxilium_no_coast"
 		government = {
 			type = monarchy
 			heir_selection = cognatic_primogeniture
@@ -350,6 +349,27 @@ countries = {
 		}
 		country_rank = rank_duchy
 		capital = huedin
+	}
+	SLO = { #Slovakia - vassal of Hungary
+		own_control_core = {
+			#Slovak-majority lands of Upper Hungary
+			hlohovec prievidza povazska_bystrica trencin
+			oravsky_podzamok turciansky_svaty_martin zilina liptovsky_mikulas
+			kremnica banska_bystrica zvolen levoca lubica
+			podmuran roznava rimavska_sobota
+			bardejov presov humenne
+		}
+
+		starting_technology_level = 3
+		include = "expl_eastern_europe"
+		include = "eastern_european_catholic_monarchy_no_auxilium_no_coast"
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler = random
+		}
+		country_rank = rank_duchy
+		capital = hlohovec
 	}
 	
 #	MSH = { #Mishmi

@@ -1,0 +1,14 @@
+﻿on_location_changed_rank = {
+	effect = {
+		if = {
+			limit = {
+				has_town_rights = town_rights_type:abm_abtau_black_soil_rights
+				OR = {
+					location_rank = location_rank:city
+					location_rank = location_rank:megalopolis
+				}
+			}
+			revoke_town_rights_of_type = town_rights_type:abm_abtau_black_soil_rights
+		}
+	}
+}

@@ -1,0 +1,77 @@
+﻿# Armenia (ARM) and Cilicia (CIL): restore the united Armenian realm from the
+# Cilician plain to the highlands of the homeland.
+#
+# scope:actor = country (ARM or CIL)
+#
+# The 80% requirement counts owned AND cored locations across four areas.
+# Together they hold 201 locations (map_data/definitions.txt:
+# cilicia_area 47, cappadocia_area 58, armenian_highlands_area 63,
+# armenia_area 33), so 80% = 160.8 -> 161 for strictly more than 80%.
+# Yerevan, Sis and Sivas are also required outright: the three historic
+# seats of the Armenian realm a claimant cannot do without.
+abm_arm_greater_armenia = {
+	type = owncountry
+	icon = restore_rome_primacy
+	show_message = no
+
+	potential = {
+		scope:actor = {
+			OR = {
+				has_or_had_tag = ARM
+				has_or_had_tag = CIL
+			}
+			NOT = { has_reform = government_reform:abm_arm_greater_armenia_reform }
+		}
+	}
+
+	allow = {
+		scope:actor = {
+			in_civil_war = no
+			NOT = { has_reform = government_reform:abm_arm_greater_armenia_reform }
+			custom_tooltip = {
+				text = abm_arm_greater_armenia_tt
+				any_owned_location = {
+					integration_level = core
+					OR = {
+						area = area:cilicia_area
+						area = area:cappadocia_area
+						area = area:armenian_highlands_area
+						area = area:armenia_area
+					}
+					count >= 161
+				}
+				owns = location:yerevan
+				owns = location:sis
+				owns = location:sivas
+			}
+		}
+	}
+
+	cooldown = {
+		type = abm_arm_greater_armenia
+		years = 5
+	}
+
+	automation_tick = never
+	automation_tick_frequency = 12
+
+	ai_tick = monthly
+	ai_tick_frequency = 12
+
+	effect = {
+		scope:actor = {
+			unlock_government_reform_effect = { type = abm_arm_greater_armenia_reform }
+			add_reform = government_reform:abm_arm_greater_armenia_reform
+
+			if = {
+				limit = { country_rank_level < 4 }
+				set_country_rank = country_rank:rank_empire
+			}
+
+			add_prestige = prestige_severe_bonus
+			add_government_power = government_power_severe_bonus
+		}
+	}
+
+	ai_will_do = { value = 100 }
+}

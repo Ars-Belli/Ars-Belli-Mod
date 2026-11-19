@@ -1,0 +1,88 @@
+﻿mlo_restore_kingdom_lombardy = {
+	
+	potential = {
+		tag = MLO 
+		has_variable = lombard_ambitions_variable
+	}
+	ability = mil 
+	allow_multiple = yes
+	
+	allow = {
+		any_province = {
+			area = {
+				OR = {
+					this = area:lombardy_area
+					this = area:emilia_area
+					this = area:piemonte_area
+					this = area:liguria_area
+					this = area:veneto_area
+					this = area:tuscany_area
+				}
+			}
+			any_location_in_province = {
+				integration_level = conquered
+			}
+		}
+	}
+	
+	select_trigger = {
+		looking_for_a = province
+		source = actor
+		target_flag = target
+		name = "integrate_province_select_province"
+		none_available_msg_key = "integrate_province_no_provinces"
+		column = {
+			data = name
+		}
+		column = {
+			data = integration
+		}
+		column = {
+			data = population
+		}
+		visible = {
+			NOT = { cabinet_already_performing_same_task_on_target = { cabinet_action = mlo_restore_kingdom_lombardy interaction_target = target } }
+			any_location_in_province = {
+				integration_level = conquered
+			}
+		}
+		map_color = {
+			lerp = {
+				min_color = define:NMapColors|MAP_COLOR_LOW
+				max_color = define:NMapColors|MAP_COLOR_HIGH
+				factor = integration_progress
+			}
+		}
+	}
+
+	is_finished = {
+		scope:target = {
+			any_location_in_province = {
+				OR = {
+					integration_level = integrated
+					integration_level = core
+				}
+				count = all
+			}
+		}
+	}
+	
+	province_modifier = {
+		province_integration_speed = 1.5
+	}
+
+	location_modifier = {
+		local_devastation_recovery = 0.05
+		local_population_growth = 0.001
+	}
+
+	progress = {
+		scope:target = {
+			value = province_average_integration
+		}
+	}
+
+	map_marker = {
+		show_for_owner = yes
+	}
+}

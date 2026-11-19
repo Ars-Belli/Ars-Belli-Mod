@@ -1,0 +1,39 @@
+﻿# Dalmatia: once Venice holds every ownable location of the two Dalmatian
+# provinces it may be ruled as a possession outright. The privilege it grants to the
+# Commoners (common/estate_privileges/abm_peasants_estate.txt) is one of the conditions
+# the Dalmatian advances check for the Venetian branch - see the dalmatian_* / dal_*
+# blocks at the end of in_game/common/advances/abm_italy.txt.
+abm_secure_dalmatia_decision = {
+	decision_category = country_specific_decisions
+	only_once = yes
+
+	potential = {
+		has_or_had_tag = VEN
+		NOT = { has_variable = abm_secured_dalmatia }
+	}
+
+	allow = {
+		at_war = no
+		# every ownable location of North and South Dalmatia must be ours
+		province_definition:north_dalmatia_province = {
+			NOT = { any_location_in_province_definition = { is_ownable = yes NOT = { owner ?= root } } }
+		}
+		province_definition:south_dalmatia_province = {
+			NOT = { any_location_in_province_definition = { is_ownable = yes NOT = { owner ?= root } } }
+		}
+	}
+
+	ai_will_do = {
+		value = 100
+	}
+
+	option = {
+		name = abm_secure_dalmatia_decision.a
+		ai_chance = { value = 100 }
+
+		effect = {
+			set_variable = { name = abm_secured_dalmatia value = 1 }
+			grant_estate_privilege = estate_privilege:abm_secured_dalmatia
+		}
+	}
+}

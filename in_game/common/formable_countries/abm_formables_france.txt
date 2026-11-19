@@ -1,0 +1,133 @@
+﻿# ---------------------------------------------------------------------------
+# Ars Belli: the formables of france_region. Formables of other regions live in
+# abm_formables_<region>.txt. A comment line above each block carries the
+# formable name as the game shows it.
+# ---------------------------------------------------------------------------
+
+# Lotharingia
+REPLACE:LOT_f = {
+	level = 3
+	required_locations_fraction = 0.5
+	rule = plausible
+
+	potential = {
+		OR = {
+			culture = culture:rhine_alemannic
+			culture = culture:burgundian
+			culture = culture:franc_comtois
+			culture = culture:lorrain
+			culture = culture:walloon
+			OR = {
+				tag = LOR
+				tag = BUR
+			}
+		}
+		# Ars Belli: only a German power may claim this
+		OR = {
+			original_capital.region = region:north_german_region
+			original_capital.region = region:south_german_region
+		}
+	}
+
+	allow = {
+	}
+	
+	name = LOT
+	flag = LOT
+	adjective = LOT_ADJ
+	tag = LOT
+	color = map_LOT
+	provinces = {
+		palatinate_province
+		rhine_valley_province
+	}
+	areas = {
+		lorraine_area
+		wallonia_area
+		brabant_area
+		friesland_area
+		rhineland_area
+		alsace_area
+	}
+	form_effect = {
+	}
+}
+
+# Occitania
+# Ars Belli: verbatim vanilla 00_formable_countries.txt entry (level 3), moved here
+# so it can be edited per region.
+REPLACE:OCC_f = { #Occitania
+	level = 3
+	rule = plausible
+	required_locations_fraction = 0.75
+
+	potential = {
+		OR = {
+			culture.dialect = dialect:occitan_dialect
+			culture.dialect = dialect:gascon_dialect
+		}
+	}
+
+	allow = {
+	}
+
+	tag = OCC
+	name = OCC
+	adjective = OCC_ADJ
+	flag = OCC
+	color = map_OCC
+
+	areas = {
+		provence_area
+		languedoc_area
+	}
+	provinces = {
+		valentinois_province
+		agenais_province
+		bazadais_province
+		perigord_province
+		quercy_province
+		rouergue_province
+		turenne_province
+		limousin_province
+		lower_auvergne_province
+		combraille_province
+		upper_auvergne_province
+		armagnac_province
+		bearn_bigorre_province
+		comminges_province
+		tursan_province
+	}
+	locations = {
+		briancon gap
+		bordeaux benauges castelnau_de_medoc la_teste_de_buch lesparre_medoc
+		gueret aubusson bellac bourganeuf rochechouart
+		cuneo saluzzo pinerolo pragelato la_mure romans vielha chabanais
+	}
+	form_effect = {
+	}
+}
+
+# Burgundy
+# Ars Belli: BUR exists at start (main_menu/setup/1337/10_countries_france_region.txt,
+# capital Dijon, country_rank = rank_duchy), so this entry exists only so the tag
+# has a formable definition at kingdom level. potential = { always = no } means
+# nobody can ever form it.
+BUR_f = {
+	level = 2
+	required_locations_fraction = 1.0
+	rule = historical
+
+	potential = { always = no }
+	allow = { }
+
+	name = BUR
+	flag = BUR
+	adjective = BUR_ADJ
+	tag = BUR
+	color = map_BUR
+
+	areas = {
+		burgundy_area
+	}
+}

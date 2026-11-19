@@ -1,0 +1,1047 @@
+﻿#############################
+# Taurica (ABTAU) - custom formable
+# Greek colonies (Chersonesus, Bosporan Kingdom), Crimean Goths,
+# Genoese Gazaria (Caffa) and the Pontic steppe.
+#############################
+
+abm_abtau_tradition_1 = {
+	age = age_2_renaissance
+	icon = city_building_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = renaissance_development
+
+	global_max_literacy = 5
+	tolerance_own = 1
+}
+
+abm_abtau_tradition_2 = {
+	age = age_2_renaissance
+	icon = legalism_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = national_assemblies_advance
+
+	government_size = 1
+	global_max_bureaucracy_slots = 1
+}
+
+abm_abtau_gothic_military_legacy = {
+	age = age_3_discovery
+	icon = a_central_power
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = pike_and_shot_advance
+
+	monthly_army_tradition = 0.10
+}
+
+abm_abtau_harbours_of_gazaria = {
+	age = age_3_discovery
+	icon = rudimentary_coastal_ship_repair
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = unlock_carrack_advance
+
+	sea_cost_on_distance_from_capital_when_maritime = -0.5
+	port_cost_distance_from_capital = -5
+}
+
+abm_abtau_steppe_warriors = {
+	age = age_3_discovery
+	icon = nor_bounties_of_the_sea
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = pike_and_shot_advance
+
+	army_maintenance_efficiency = 0.10
+}
+
+abm_abtau_steppe_black_soil = {
+	age = age_4_reformation
+	icon = agriculture_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = naval_battery_advance
+
+	global_monthly_food_modifier = monthly_food_productivity_extreme_bonus
+}
+
+abm_abtau_emporia_of_the_steppe = {
+	age = age_4_reformation
+	icon = new_world_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = shipyard_advance
+
+	trade_range_modifier = 0.20
+	trade_income = 0.10
+}
+
+abm_abtau_tauric_granaries = {
+	age = age_4_reformation
+	icon = local_nobility
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = unlock_baggage_train
+
+	global_monthly_development_modifier = 0.10
+	fort_limit_modifier = 0.25
+}
+
+abm_abtau_commune_of_caffa = {
+	age = age_5_absolutism
+	icon = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = crown_rights_laws_advance
+
+	monthly_republican_tradition = 0.10
+	court_spending_efficiency = 0.10
+}
+
+abm_abtau_cave_cities_of_gothia = {
+	age = age_5_absolutism
+	icon = merchant_power_from_maritime_reformation_advance
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = scientific_revolution_advance
+
+	global_population_growth = 0.0003
+}
+
+abm_abtau_ambition = {
+	age = age_6_revolutions
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = ABTAU
+	}
+	requires = levee_en_masse_advance
+
+	global_defensive = 0.20
+	global_garrison_size_modifier = 0.20
+}
+
+#############################
+# Gazaria (GAZ) - Genoese Ideas
+#############################
+
+abm_gen_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = city_building_advance
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = agriculture_advance
+
+	# trade_efficiency = 0.10
+	export_efficiency = medium_trade_efficiency_bonus
+	import_efficiency = medium_trade_efficiency_bonus
+}
+
+abm_gen_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = legalism_advance
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = agriculture_advance
+
+	# interest = -0.5
+	bank_interest = -0.01
+	global_monthly_prosperity = 0.001
+
+	unlock_building = galley_barracks
+}
+
+abm_reunited_genoa = {
+	age = age_2_renaissance
+	icon = a_central_power
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = national_assemblies_advance
+
+	# stability_cost_modifier = -0.10
+	# justify_trade_conflict_cost = -0.10
+	court_spending_efficiency = 0.10
+	global_pop_assimilation_speed_modifier = 0.25
+}
+
+abm_lessons_of_chiogga = {
+	age = age_2_renaissance
+	icon = rudimentary_coastal_ship_repair
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = rudimentary_coastal_ship_repair
+
+	# naval_morale = 0.20
+	naval_morale_modifier = 0.10
+	naval_damage_taken = -0.10
+}
+
+abm_genoese_trade = {
+	age = age_3_discovery
+	icon = nor_bounties_of_the_sea
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = unlock_carrack_advance
+
+	# global_foreign_trade_power = 0.10
+	# global_sailors_modifier = 0.20
+	global_merchant_power = 0.10
+	global_sailors_modifier = 0.10
+}
+
+abm_the_genoese_arsenal = {
+	age = age_3_discovery
+	icon = new_world_advance
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = foreign_cultural_law_advance
+
+	# galley_cost = -0.33
+	global_burghers_estate_power = -0.25
+	possible_frontage_modifier = 0.10
+
+	unlock_building = abm_gazarian_arsenal
+	#unlock_building = abm_gazarian_headquarters
+}
+
+abm_overhauled_bureaucracy = {
+	age = age_4_reformation
+	icon = local_nobility
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = bastion_advance
+
+	# global_tax_modifier = 0.1
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+	trade_land_efficiency = medium_trade_land_efficiency_bonus
+}
+
+abm_the_office_of_grand_admiral = {
+	age = age_4_reformation
+	icon = maritime_advance_age_4
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = unlock_galleon_advance
+
+	# naval_forcelimit_modifier = 0.25
+	ship_repair_at_sea = 0.02
+	ship_repair_at_sea_to_max_strength = 0.20
+}
+
+abm_standardisation_of_designs = {
+	age = age_5_absolutism
+	icon = merchant_power_from_maritime_reformation_advance
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = unlock_frigate_advance
+
+	# global_ship_recruit_speed = -0.10
+	ship_build_speed = 1
+}
+
+abm_gen_ideas_ambition = {
+	age = age_6_revolutions
+	icon = royal_navy
+	potential = {
+		has_or_had_tag = GAZ
+	}
+	requires = unlock_heavy_frigate_advance
+
+	# naval_maintenance_modifier = -0.2
+	navy_maintenance_efficiency = 0.20
+}
+
+#############################
+# Zaporizhia
+#############################
+
+abm_zaz_tradition_1 = {
+	age = age_1_traditions
+	icon = finest_of_horses
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+	requires = power_projection_advance_1
+
+	# loot_amount = 0.25
+	army_light_cavalry_power = 0.10
+}
+
+abm_zaz_tradition_2 = {
+	age = age_1_traditions
+	icon = offensive_army
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+	requires = power_projection_advance_1
+
+	# manpower_recovery_speed = 0.1
+	army_maintenance_efficiency = 0.10
+}
+
+abm_zaz_fort_builders = {
+	age = age_2_renaissance
+	icon = government_size
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+
+	requires = national_assemblies_advance
+
+	# development_cost = -0.1
+	global_monthly_development = 0.001
+}
+
+abm_zaz_hetmanate = {
+	age = age_2_renaissance
+	icon = bonded_by_loyalty
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+
+	requires = national_assemblies_advance
+
+	# global_unrest = -1
+	monthly_republican_tradition = 0.10
+	court_spending_efficiency = 0.10
+}
+
+abm_zaz_steppe_riders = {
+	age = age_3_discovery
+	icon = maritime_advance_age_2
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+
+	requires = unlock_flute_advance
+
+	# land_attrition = -0.15
+	army_initiative = 0.10
+}
+
+abm_zaz_cossack_hit_and_run = {
+	age = age_3_discovery
+	icon = supply_depot_advance_age_3_discovery
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+
+	requires = unlock_matchlock_levy
+
+	# leader_land_manuever = 1
+	correct_box_chance = 0.10
+	combat_speed_modifier = 0.10
+}
+
+abm_zaz_classy_diplomacy = {
+	age = age_4_reformation
+	icon = students_of_foreign_courts
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+	requires = diplomatic_range_age_3
+
+	# power_projection_from_insults = 1
+	monthly_diplomats = 0.10
+	max_diplomats = 1
+}
+
+abm_zaz_zaporzhian_tolerance = {
+	age = age_4_reformation
+	icon = religious_melting_pot
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+
+	requires = confessionalism_advance
+
+	# religious_unity = 0.25
+	tolerance_own = 2
+}
+
+abm_zaz_army_first = {
+	age = age_5_absolutism
+	icon = letters_of_marque
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+	requires = militiamen_advance
+
+	# cavalry_cost = -0.1, infantry_cost = -0.1
+	army_reinforce_efficiency = 0.10
+}
+
+abm_zaz_ambition = {
+	age = age_6_revolutions
+	icon = defensive_army
+	potential = {
+		has_or_had_tag = ZAZ
+	}
+	requires = global_supply_limit_modifier_advance_6
+
+	# global_manpower_modifier = 0.2
+	global_manpower_modifier = 0.15
+}
+
+
+#############################
+# Crimea
+#############################
+
+abm_cri_tradition_1 = {
+	age = age_1_traditions
+	icon = meritocracy
+	potential = {
+		has_or_had_tag = CRI
+	}
+	requires = meritocracy_advance
+
+
+	# ae_impact = -0.1
+	cultures_capacity = 2
+}
+
+abm_cri_tradition_2 = {
+	age = age_1_traditions
+	icon = defensive_mentality
+	potential = {
+		has_or_had_tag = CRI
+	}
+	requires = power_projection_advance_1
+
+	# leader_land_manuever = 1
+	army_initiative = 0.10
+}
+
+INJECT:cri_genghisid_legacy = {
+	army_light_cavalry_power = -0.10
+}
+
+# abm_cri_genghisid_legacy = {
+# 	age = age_2_renaissance
+# 	icon = cavalry_warfare
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# cavalry_power = 0.2
+# 	requires = horse_riding_advance
+
+# 	army_light_cavalry_power = 0.2
+# }
+
+# abm_cri_slavers = {
+# 	age = age_2_renaissance
+# 	icon = privateers
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# global_own_trade_power = 0.15
+# 	requires = privateers
+
+# 	global_merchant_power = 0.15
+# }
+
+# abm_cri_ruthenian_raids = {
+# 	age = age_3_discovery
+# 	icon = mercenary_advance
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# loot_amount = 0.25
+# 	requires = recruitment_improvements_renaissance
+
+# 	amount_looted_modifier = 0.25
+# }
+
+abm_cri_despoilers = {
+	age = age_3_discovery
+	icon = global_supply_limit_modifier_advance_5
+	potential = {
+		has_or_had_tag = CRI
+	}
+	requires = pike_and_shot_advance
+
+	# leader_land_shock = 1
+	land_morale_modifier = 0.10
+}
+
+# abm_cri_free_cattle_grazing = {
+# 	age = age_4_reformation
+# 	icon = efficient_mining
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# production_efficiency = 0.1
+# 	requires = rgo_logistics_discovery
+
+# 	global_production_efficiency = 0.1
+# }
+
+abm_cri_settle_the_steppes = {
+	age = age_4_reformation
+	icon = efficient_mining
+	potential = {
+		has_or_had_tag = CRI
+	}
+	requires = naval_battery_advance
+
+	# build_cost = -0.1, manpower_recovery_speed = 0.1
+	global_build_buildings_efficiency = 0.10
+	army_maintenance_efficiency = 0.10
+}
+
+# abm_cri_allow_nogai_protectorates = {
+# 	age = age_5_absolutism
+# 	icon = regimental_system
+# 	potential = {
+# 		has_or_had_tag = CRI
+# 	}
+# 	# global_manpower_modifier = 0.25
+# 	requires = military_revolution_advance
+
+# 	global_manpower_modifier = 0.10
+# }
+
+abm_cri_ambition = {
+	age = age_5_absolutism
+	icon = cultural_acceptance_advance
+	potential = {
+		has_or_had_tag = CRI
+	}
+	requires = spy_construction_absolutism
+
+	# core_creation = -0.25
+	global_integration_speed_modifier = 0.25
+}
+
+############################
+# Astrakhan
+############################
+abm_horde_ideas_tradition_1 = {
+	age = age_1_traditions
+	icon = grand_banquets
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = written_alphabet
+	# ae_impact = -0.10
+	cultures_capacity_modifier = 0.25
+}
+
+abm_horde_ideas_tradition_2 = {
+	age = age_1_traditions
+	icon = efficient_spies
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = mining_advance
+
+	# years_of_nationalism = -5
+	global_separatism = -0.10
+}
+
+abm_horde_ideas_traditions_of_the_great_khan = {
+	age = age_2_renaissance
+	icon = elephant_cavalry
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = professional_armies_advance
+
+	# cavalry_power = 0.20
+	army_light_cavalry_power = 0.10
+	army_heavy_cavalry_power = 0.10
+}
+
+abm_horde_ideas_horse_supplies = {
+	age = age_2_renaissance
+	icon = gunpowder_advance
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = professional_armies_advance
+
+	# land_maintenance_modifier = -0.05
+	army_maintenance_efficiency = 0.10
+}
+
+abm_horde_ideas_steppe_leaders = {
+	age = age_3_discovery
+	icon = pike_and_shot_advance
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = unlock_flute_advance
+
+	# leader_land_shock = 1
+	train_general_ability = 15
+}
+
+abm_horde_ideas_life_of_steppe_warrior = {
+	age = age_3_discovery
+	icon = maritime_advance_age_2
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = unlock_matchlock_levy
+
+	# land_attrition = -0.20
+	land_unit_attrition = -0.20
+}
+
+abm_horde_ideas_tradition_of_conquest = {
+	age = age_4_reformation
+	icon = students_of_foreign_courts
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = diplomatic_range_age_3
+
+	# core_creation = -0.25
+	global_integration_speed_modifier = 0.25
+}
+
+abm_horde_ideas_logistics_of_khan = {
+	age = age_4_reformation
+	icon = artillery_institution_advance
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = unlock_flintlock_levy
+
+	# manpower_recovery_speed = 0.20
+	army_reinforce_efficiency = 0.20
+}
+
+abm_horde_ideas_glory_of_conquest = {
+	age = age_5_absolutism
+	icon = military_revolution_advance
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = military_revolution_advance
+
+	# global_manpower_modifier = 0.25
+	global_manpower_modifier = 0.10
+}
+
+abm_horde_ideas_ambition = {
+	age = age_5_absolutism
+	icon = letters_of_marque
+	potential = {
+		OR = {
+			has_or_had_tag = ATR
+			has_or_had_tag = NOG
+			has_or_had_tag = ABUZB
+		}
+	}
+	requires = militiamen_advance
+
+	# stability_cost_modifier = -0.10
+	land_cost_on_distance_from_capital_speed_propagation = 0.15
+}
+
+
+#############################
+# Kazan (KAZ)
+#############################
+
+abm_kaz_tradition_1 = {
+	age = age_1_traditions
+	icon = meritocracy
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = meritocracy_advance
+
+	# ae_impact = -0.10
+	cultures_capacity_modifier = 0.25
+}
+
+abm_kaz_tradition_2 = {
+	age = age_1_traditions
+	icon = grand_banquets
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = written_alphabet
+
+	# tolerance_heathen = 2
+	tolerance_heathen = 2
+}
+
+abm_kaz_religious_unity = {
+	age = age_2_renaissance
+	icon = improved_foraging
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = renaissance_development
+
+	# religious_unity = 0.25
+	tolerance_own = 2
+}
+
+abm_kaz_core_creation = {
+	age = age_2_renaissance
+	icon = zakah
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = improve_relation_impact_renaissance
+
+	# core_creation = -0.25
+	global_integration_speed_modifier = 0.25
+}
+
+abm_kaz_cavalry_power = {
+	age = age_3_discovery
+	icon = finest_of_horses
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = unlock_flute_advance
+
+	# cavalry_power = 0.20
+	army_light_cavalry_power = 0.10
+	army_heavy_cavalry_power = 0.10
+}
+
+abm_kaz_manpower = {
+	age = age_3_discovery
+	icon = defensive_army_attrition
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = pike_and_shot_advance
+
+	# global_manpower_modifier = 0.25
+	global_manpower_modifier = 0.15
+}
+
+abm_kaz_leadership = {
+	age = age_4_reformation
+	icon = regiment_reinforcement_speed_renaissance
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = artillery_institution_advance
+
+	# leader_land_manuever = 1
+	combat_speed_modifier = 0.10
+	correct_box_chance = 0.10
+}
+
+abm_kaz_defensiveness = {
+	age = age_4_reformation
+	icon = recruitment_improvements_renaissance
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = standardisation_of_calibre
+
+	# defensiveness = 0.15
+	fort_limit_modifier = 0.15
+}
+
+abm_kaz_trade = {
+	age = age_5_absolutism
+	icon = fla_cloth
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = grand_shipyard_advance
+
+	# trade_efficiency = 0.1
+	export_efficiency = small_trade_efficiency_bonus
+	import_efficiency = tiny_trade_efficiency_bonus
+}
+
+abm_kaz_ambition = {
+	age = age_6_revolutions
+	icon = enlightenment_advance
+	potential = {
+		has_or_had_tag = ABKAZ
+	}
+	requires = conscription_advance
+
+	# cavalry_flanking = 0.5
+	army_initiative = 0.20
+}
+
+#############################################
+# Steppe redoubts (building)
+#############################################
+
+# Unlocks abm_steppe_redoubts (building_types/abm_steppe_buildings.txt). The
+# capital gate keeps the advance out of the trees of countries that will never
+# own flat steppe land; the building itself is gated on the location.
+abm_steppe_redoubts_advance = {
+	age = age_1_traditions
+	icon = debt_and_loans
+
+	potential = {
+		capital ?= {
+			region = region:steppes_region
+		}
+	}
+
+	requires = agriculture_advance
+	unlock_building = abm_steppe_redoubts
+	allow_children = no
+}
+
+#############################################
+# Settle the Steppe (cabinet action)
+#############################################
+
+# Unlocks abm_settle_the_steppe (cabinet_actions/abm_settle_the_steppe.txt).
+# Planted in the Age of Discovery alongside vanilla's other settlement tools
+# (send_people_to_colonial_charter, settle_the_frontier).
+#
+# Offered to any monarchy, republic or theocracy of a settled (non-pagan)
+# faith with a steppe foothold: an original capital there, a current capital
+# there, or any owned location there. The province restriction the player
+# actually cares about lives in the cabinet action itself, which only offers
+# steppe provinces.
+abm_settle_the_steppe_advance = {
+	age = age_3_discovery
+	icon = defensive_army_attrition
+	
+	potential = {
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:republic
+			government_type = government_type:theocracy
+		}
+		is_country_religion_pagan = no
+		OR = {
+			original_capital.region ?= region:steppes_region
+			capital.region ?= region:steppes_region
+			any_owned_location = {
+				region = region:steppes_region
+			}
+		}
+	}
+
+	requires = foreign_cultural_law_advance
+	unlock_cabinet_action = abm_settle_the_steppe
+}
+
+REPLACE:feo_gothic_hellenic_synthesis_advance = {
+	age = age_1_traditions
+	icon = cultural_acceptance_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+
+	}
+
+	accepted_culture_maintenance_cost_modifier = -0.25
+	cultures_capacity = 2
+
+	requires = meritocracy_advance
+}
+
+REPLACE:feo_the_bastion_of_mangup_advance = {
+	age = age_2_renaissance
+	icon = feo_the_bastion_of_mangup_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	global_defensive = 0.25
+	global_monthly_development = 0.001
+
+
+	requires = national_assemblies_advance
+}
+
+REPLACE:feo_the_gothic_red_guard_advance = {
+	age = age_3_discovery
+	icon = glorious_arms
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	discipline = 0.05
+
+	requires = pike_and_shot_advance
+}
+
+REPLACE:feo_black_sea_fur_trade_advance = {
+	age = age_4_reformation
+	icon = global_trade_routes_advance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	global_merchant_power = 0.20
+	trade_sea_efficiency = medium_trade_sea_efficiency_bonus
+
+	requires = global_trade_advance
+}
+
+REPLACE:feo_the_northern_star_of_greece_advance = {
+	age = age_5_absolutism
+	icon = crown_power_advance_renaissance
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	monthly_devotion = 0.1
+	monthly_legitimacy = 0.1
+	monthly_republican_tradition = 0.1
+
+	monthly_religious_influence = 0.1
+
+	requires = sanitation_advance
+}
+
+REPLACE:feo_the_iron_harvest_advance = {
+	age = age_6_revolutions
+	icon = imperial_ambitions
+
+	potential = {
+		OR = {
+			has_or_had_tag = FEO
+			AND = {
+				has_or_had_tag = ABGOT
+				culture = culture:gothic_culture
+			}
+		}
+	}
+
+	global_war_score_efficiency = 0.2
+	global_max_control = 0.05
+
+	requires = conscription_advance
+}
+
+############################
+# Golden Horde (GLH) - vanilla tag rebalance
+############################
+#
+# Three of the eight vanilla advances are touched. Two are INJECT deltas; the
+# third has to stay a REPLACE because the mod *swaps* a modifier key there
+# (maintenance cost -> reinforce cost) and INJECT can only append, never remove.
+# INJECT deltas are relative to the vanilla figure - recompute them if vanilla
+# rebalances the base value.
+#
+# glh_legacy_of_jochi: REPLACE, because `army_light_cavalry_maintenance_cost_modifier
+# -0.20` has to disappear and `army_light_cavalry_reinforce_cost_modifier -0.15`
+# take its place.
+REPLACE:glh_legacy_of_jochi = {
+	age = age_1_traditions
+	icon = glh_legacy_of_jochi
+	potential = {
+		has_or_had_tag = GLH
+	}
+
+	requires = power_projection_advance_1
+
+	army_light_cavalry_reinforce_cost_modifier = -0.15 #was army_light_cavalry_maintenance_cost_modifier = -0.20
+}
+
+INJECT:glh_perso_mongol_administration = {
+	global_integration_speed_modifier = -0.05 # 0.25 -> 0.20
+}
+
+INJECT:glh_tatar_traditions = {
+	army_light_cavalry_power = -0.10 # 0.20 -> 0.10
+}
+
+INJECT:cossacks_recruitment = {
+	army_light_cavalry_power = -0.05
+	army_light_cavalry_maintenance_cost_modifier = -0.10
+}

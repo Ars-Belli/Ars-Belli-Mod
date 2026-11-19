@@ -15,3 +15,64 @@
 		cossacks_estate_target_satisfaction = medium_privilege_target_satisfaction
 	}
 }
+
+# Ars Belli - open plains privilege (steppe nations, kingdom rank or above,
+# settled faith via is_country_religion_pagan).
+#
+# The location-side effect is flatland proximity efficiency
+# (local_distance_from_capital_speed_propagation). Roads are a country-level curve
+# (road_cost_on_distance_from_capital, category = country), so the -2 applies
+# country-wide - the steppes_region limit comes from this privilege's gate, not
+# from a location modifier.
+#
+# The +10 centralisation is a one-time societal shift, gated by a shared variable so
+# revoking and re-granting either privilege cannot farm it.
+
+
+# Cossacks administer the open plains in the crown's name.
+abm_cossack_open_plains_privilege = {
+	estate = cossacks_estate
+
+	potential = {
+		original_capital ?= {
+			region = region:steppes_region
+		}
+		country_rank_level >= 3
+		# vanilla trigger: the folk/pagan faiths are flagged on the religion itself
+		is_country_religion_pagan = no
+	}
+
+	# mutually exclusive with the other estate's version of this privilege
+	allow = {
+		NOT = { has_estate_privilege = estate_privilege:abm_tribal_open_plains_privilege }
+	}
+
+	can_revoke = { }
+
+	country_modifier = {
+		road_cost_on_distance_from_capital = -1
+		global_cossacks_estate_power = 0.10
+		pure_tooltip_entry = abm_open_plains_privilege_tt
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			custom_tooltip = {
+				text = abm_tt_steppe_flatland_location
+				topography = flatland
+			}
+		}
+		local_distance_from_capital_speed_propagation = 0.10
+	}
+
+	on_activate = {
+		if = {
+			limit = { NOT = { has_variable = abm_open_plains_centralisation } }
+			change_societal_value = {
+				type = centralization_vs_decentralization
+				value = 10
+			}
+			set_variable = { name = abm_open_plains_centralisation value = 1 }
+		}
+	}
+}

@@ -8,10 +8,10 @@ BASE = "/home/zp/Games/Modding/Ars-Belli-Mod/in_game/common/advances"
 
 # Files to process (formable sections only)
 FILES = [
-    "abm_f4-t2_india_deccan.txt",
-    "abm_f4-t2_india_hindustan.txt",
-    "abm_f4-t2_india_west.txt",
-    "abm_f4-t2_indochina.txt",
+    "abm_india_deccan.txt",
+    "abm_india_hindustan.txt",
+    "abm_india_west.txt",
+    "abm_indochina.txt",
 ]
 
 # Age to default requires mapping

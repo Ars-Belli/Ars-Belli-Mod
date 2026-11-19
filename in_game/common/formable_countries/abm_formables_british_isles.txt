@@ -62,3 +62,75 @@ REPLACE:IRE_lordship_of_ireland_f = {
 		ireland_region
 	}
 }
+
+# Level-1 Irish area formables soft-disabled: Ulster, Connacht and Munster are start tags
+# in this start date, so the "form the area kingdom" goals are removed from the list
+# (potential = always = no keeps the definitions valid instead of deleting them).
+REPLACE:ULS_f = {
+	level = 1
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		always = no
+	}
+
+	allow = {
+	}
+
+	name = ULS
+	flag = ULS
+	adjective = ULS_ADJ
+	tag = ULS
+	color = map_ULS
+
+	areas = {
+		ulster_area
+	}
+}
+
+REPLACE:CNN_f = {
+	level = 1
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		always = no
+	}
+
+	allow = {
+	}
+
+	name = CNN
+	flag = CNN
+	adjective = CNN_ADJ
+	tag = CNN
+	color = map_CNN
+
+	areas = {
+		connaught_area
+	}
+}
+
+REPLACE:MCM_f = {
+	level = 1
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		always = no
+	}
+
+	allow = {
+	}
+
+	name = MCM
+	flag = MCM
+	adjective = MCM_ADJ
+	tag = MCM
+	color = map_MCM
+
+	areas = {
+		munster_area
+	}
+}
