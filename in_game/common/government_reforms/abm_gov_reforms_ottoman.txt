@@ -1,0 +1,38 @@
+﻿#####ArsBelliMod#####
+
+# Ottomans toned down: the Timar System reforms give half their light cavalry bonuses.
+# Full copies of vanilla country_specific.txt (game 1.4.9), changes marked #ABM. Re-sync on game updates.
+
+REPLACE:basic_timariot_system = {
+	unique = yes
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = TUR
+		has_advance = timariots
+		NOR = {
+			has_variable = abolished_timariot_system
+			has_reform = government_reform:expanded_timariot_system
+		}
+	}
+	country_modifier = {
+		army_light_cavalry_power = 0.05 #ABM half, vanilla 0.1
+		army_light_cavalry_maintenance_cost_modifier = -0.05 #ABM half, vanilla -0.1
+	}
+	years = 2
+}
+
+REPLACE:expanded_timariot_system = {
+	unique = yes
+	age = age_3_discovery
+	potential = {
+		has_or_had_tag = TUR
+		has_variable = expanded_timariot_system
+		NOT = { has_variable = abolished_timariot_system }
+	}
+	country_modifier = {
+		army_light_cavalry_power = 0.1 #ABM half, vanilla 0.2
+		army_light_cavalry_maintenance_cost_modifier = -0.1 #ABM half, vanilla -0.2
+		monthly_towards_aristocracy = societal_value_monthly_move
+	}
+	years = 2
+}
