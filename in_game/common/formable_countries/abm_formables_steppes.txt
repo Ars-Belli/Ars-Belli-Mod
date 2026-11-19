@@ -19,7 +19,9 @@ ABTAU_f = {
 	}
 	
 	allow = {
-		owns = area:crimea_area
+		area:crimea_area = { # every ownable location of the Crimea area (owns takes locations only)
+			NOT = { any_ownable_location_in_area = { NOT = { owner ?= root } } }
+		}
 		owns = location:qalancaq
 		owns = location:melitopol
 		owns = location:domakha
