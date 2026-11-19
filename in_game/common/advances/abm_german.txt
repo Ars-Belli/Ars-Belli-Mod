@@ -3592,19 +3592,29 @@ abm_noble_cadets = {
 	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction
 }
 
-# ABM 2026-11-17: disabled - duplicates a vanilla advance of the same name for the same tag (sheet mark "--abm_goose_step").
-#abm_goose_step = {
-#	age = age_4_reformation
-#	icon = merchants_and_trade
-#	potential = {
-#		has_or_had_tag = PRU
-#	}
-#
-#	requires = supply_depot_advance_age_4_reformation
-#
-# infantry_power = 0.20
-#	army_heavy_infantry_power = 0.10
-#}
+abm_goose_step = {
+	age = age_4_reformation
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = PRU
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+infantry_power = 0.20
+	army_heavy_infantry_power = 0.10
+}
+
+REPLACE:goose_step = {
+	age = age_6_revolutions
+	icon = goose_step
+	potential = {
+		always = no
+	}
+	army_heavy_infantry_power = 0.2
+	army_light_infantry_power = 0.1
+	requires = military_tactics_advance_6
+}
 
 abm_regimental_cantons = {
 	age = age_4_reformation
