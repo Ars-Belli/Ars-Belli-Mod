@@ -1,35 +1,30 @@
-﻿# Ars Belli - rough-terrain homeland reforms.
+﻿# Ars Belli - rough-terrain estate privileges (peasants).
 #
-# Every advance that used to grant a country-wide <topography>_proximity_impact
-# bonus now unlocks one of the reforms below instead (see in_game/common/advances/).
-# The bonus is applied through location modifiers, so the country only gets it in
-# the locations the reform selects, never country-wide.
+# These two lived in government_reforms until 2026-11-19. An estate privilege is the
+# better home: it costs no government reform slot, and advances can unlock privileges
+# directly (unlock_estate_privilege, vanilla peasants_yeomanry / vij_tamil_trading_rights),
+# so nothing about the "granted by a rough-terrain advance" design is lost.
 #
-# - abm_homeland_proximity_reform: the region of the country's original capital.
-# - abm_alpine_proximity_reform: the same set, unlocked by Alpine advances for
-#   Savoy, the Swiss and Provence.
-#
-# mountains_proximity_impact / plateau_proximity_impact / hills_proximity_impact
-# only exist at country scope (main_menu/common/modifier_type_definitions), so
-# each rough terrain gets its own location_modifier block instead, holding the
-# exact inverse of that terrain's own penalties from in_game/common/topography:
+# mountains_proximity_impact / plateau_proximity_impact / hills_proximity_impact only
+# exist at country scope (main_menu/common/modifier_type_definitions), so each rough
+# terrain gets its own location_modifier block holding the exact inverse of that
+# terrain's own penalties from in_game/common/topography:
 #   proximity:        local_distance_from_capital_speed_propagation = 1/speed - 1
 #                     (mountains 0.50 -> +100%, hills 0.75 -> +33%, plateau 0.875 -> +14%)
 #   development:      local_monthly_development_modifier = -penalty
 #                     (mountains -0.50, hills -0.25, plateau -0.10)
 #
 # Shapes copied from vanilla:
-# - location_modifier + potential_trigger + custom_tooltip:
-#   in_game/common/laws/10_italian_wars_laws.txt (italian_catepanate_policy)
-# - several location_modifier blocks on one object, with location-scope triggers
-#   (vegetation/climate) inside potential_trigger:
-#   in_game/common/estate_privileges/tribes_estate.txt (desert_power)
-# Both reforms also grant government_reform_slots = 1 (vanilla peasant_republic_reform,
-# constitutional_parliament...), so they are slot-neutral: taking one never costs a slot.
+# - peasants privilege with several location_modifier + potential_trigger blocks:
+#   in_game/common/estate_privileges/peasants_estate.txt (lat_compromise_with_greek_populace)
+# - advance-unlocked privilege: the advance key makes it available, the privilege's
+#   potential repeats the same `has_advance` gate (vanilla clergy_estate.txt
+#   clergy_literacy_rights + 0_age_of_traditions.txt unlock_estate_privilege).
+#   `has_unlocked_estate_privilege_trigger` is NOT this: it reads the country variable
+#   `unlocked_estate_privilege_<id>` that only `unlock_estate_privilege_effect` sets.
 # Shared location conditions: in_game/common/scripted_triggers/abm_rough_terrain_triggers.txt
-abm_homeland_proximity_reform = {
-	unique = yes
-	age = age_1_traditions
+abm_homeland_proximity_privilege = {
+	estate = peasants_estate
 
 	potential = {
 		OR = {
@@ -49,6 +44,11 @@ abm_homeland_proximity_reform = {
 		}
 	}
 
+	# Once granted, it cannot be taken back (vanilla burghers_estate/nobles_estate idiom).
+	can_revoke = {
+		always = no
+	}
+
 	location_modifier = {
 		potential_trigger = {
 			abm_rough_terrain_mountains_in_original_capital_region = yes
@@ -75,22 +75,18 @@ abm_homeland_proximity_reform = {
 		local_distance_from_capital_speed_propagation = 0.143
 		local_monthly_development_modifier = 0.10
 	}
-
 	country_modifier = {
-		# Pays for its own reform slot, so taking it never costs a slot.
-		government_reform_slots = 1
-		pure_tooltip_entry = abm_homeland_proximity_reform_tt
+		# Every vanilla privilege declares the estate power it grants; without it the game
+		# logs "has no power set" (estate_privilege.cpp:577) and the privilege stays unavailable.
+		global_peasants_estate_power = 0.2
+		pure_tooltip_entry = abm_homeland_proximity_privilege_tt
 	}
-
-	years = 2
-	ai_will_do = { add = 10 }
 }
 
-# Alpine advances unlock a separate reform, but its benefit is limited to the same
-# original-capital region as the standard homeland reform.
-abm_alpine_proximity_reform = {
-	unique = yes
-	age = age_1_traditions
+# Alpine advances unlock a second privilege with the same effect; both are limited to
+# the region of the country's own original capital.
+abm_alpine_proximity_privilege = {
+	estate = peasants_estate
 
 	potential = {
 		OR = {
@@ -100,6 +96,11 @@ abm_alpine_proximity_reform = {
 		}
 	}
 
+	# Once granted, it cannot be taken back (vanilla burghers_estate/nobles_estate idiom).
+	can_revoke = {
+		always = no
+	}
+
 	location_modifier = {
 		potential_trigger = {
 			abm_rough_terrain_mountains_in_original_capital_region = yes
@@ -126,13 +127,10 @@ abm_alpine_proximity_reform = {
 		local_distance_from_capital_speed_propagation = 0.143
 		local_monthly_development_modifier = 0.10
 	}
-
 	country_modifier = {
-		# Pays for its own reform slot, so taking it never costs a slot.
-		government_reform_slots = 1
-		pure_tooltip_entry = abm_alpine_proximity_reform_tt
+		# Every vanilla privilege declares the estate power it grants; without it the game
+		# logs "has no power set" (estate_privilege.cpp:577) and the privilege stays unavailable.
+		global_peasants_estate_power = 0.2
+		pure_tooltip_entry = abm_alpine_proximity_privilege_tt
 	}
-
-	years = 2
-	ai_will_do = { add = 10 }
 }

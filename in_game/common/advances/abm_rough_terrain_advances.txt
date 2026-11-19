@@ -1,20 +1,20 @@
 ﻿# Ars Belli - rough-terrain advances (vanilla overrides).
 #
 # These vanilla advances used to grant country-wide <topography>_proximity_impact
-# bonuses. The bonus is replaced by unlock_government_reform: the advance now
-# unlocks a homeland reform whose benefit is limited to the original capital's region
+# bonuses. The bonus is replaced by unlock_estate_privilege: the advance now unlocks
+# a peasants privilege whose benefit is limited to the original capital's region
 # of the country (location_modifier + potential_trigger in
-# in_game/common/government_reforms/abm_gov_reforms_rough_terrain.txt).
+# in_game/common/estate_privileges/abm_rough_terrain_privileges.txt).
 #
 # Each block is a REPLACE: of the vanilla entry, copied verbatim minus the
 # proximity modifiers - keep it in sync with vanilla when the game updates.
 #
-# Exception: swiss_alpine_passes and sav_alpine_identity unlock
-# abm_alpine_proximity_reform instead; it is also limited to the original capital's region
-# (Provence joins them through abm_tarascon_castle).
+# Exception: swiss_alpine_passes and sav_alpine_identity unlock the alpine
+# privilege (abm_alpine_proximity_privilege) instead; it is also limited to the
+# original capital's region (Provence joins them through abm_tarascon_castle).
 #
 # Every advance in this file is age_1_traditions and requires an age_1 advance, so the
-# reform is reachable from the start (same for the mod-owned unlockers elsewhere).
+# privilege is available from the start (same for the mod-owned unlockers elsewhere).
 
 REPLACE:ira_persian_plateau = {
 	age = age_1_traditions
@@ -25,7 +25,7 @@ REPLACE:ira_persian_plateau = {
 			culture = { has_culture_group = culture_group:iranian_group }
 		}
 	}
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = cultural_traditions_law_advance
 }
@@ -42,13 +42,13 @@ REPLACE:hab_expert_mountaineers = {
 		}
 	}
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = mining_law_advance
 }
 
 # Swiss - Alpine-advance variant, limited to the original capital's region
-# (government_reforms/abm_gov_reforms_rough_terrain.txt).
+# (estate_privileges/abm_rough_terrain_privileges.txt).
 # Ars Belli: no REPLACE: - the mod's same-name culture_high_alemannic.txt hides the game's definition, so this is the only one.
 swiss_alpine_passes = {
 	age = age_1_traditions
@@ -63,7 +63,7 @@ swiss_alpine_passes = {
 		}
 		is_swiss_for_advances = yes
 	}
-	unlock_government_reform = abm_alpine_proximity_reform
+	unlock_estate_privilege = abm_alpine_proximity_privilege
 
 	requires = mapmaking
 }
@@ -77,7 +77,7 @@ REPLACE:sav_alpine_identity = {
 		has_or_had_tag = SAV
 	}
 
-	unlock_government_reform = abm_alpine_proximity_reform
+	unlock_estate_privilege = abm_alpine_proximity_privilege
 
 	requires = mining_law_advance
 }
@@ -94,7 +94,7 @@ REPLACE:albanian_prokletije = {
 		}
 	}
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = codified_laws
 }
@@ -111,7 +111,7 @@ REPLACE:scottish_highland_tradition = {
 			culture = { has_culture_group = culture_group:scottish_group }
 		}
 	}
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
 # Tibet
@@ -124,7 +124,7 @@ REPLACE:drokpa = {
 
 	global_merchant_capacity_modifier = 0.05
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
 # Inca
@@ -137,7 +137,7 @@ REPLACE:inc_vertical_economy = {
 			has_or_had_tag = CSU
 		}
 	}
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = mapmaking
 }
@@ -151,7 +151,7 @@ REPLACE:mor_atlas_strongholds = {
 		has_or_had_tag = MOR
 	}
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = mining_law_advance
 }
@@ -166,7 +166,7 @@ REPLACE:a_permanent_capital = {
 	}
 	global_distance_from_capital_speed_propagation = 0.1
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
 # Nepal
@@ -174,7 +174,7 @@ REPLACE:npl_himalayan_homeland = {
 	age = age_1_traditions
 	icon = feudalism_advance
 	potential = { OR = { culture.language = language:nepali_language has_or_had_tag = NPL } }
-	unlock_government_reform = abm_homeland_proximity_reform
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = codified_laws
 }
