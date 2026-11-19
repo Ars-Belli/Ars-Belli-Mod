@@ -4,7 +4,16 @@
 # The boom follows the land, not the colonial nation, so a location taken away from
 # one is stripped of the leftover modifier - the location variable stays, so it still
 # cannot earn a second boom.
+# Chained through on_actions, not an effect block of its own: an on_action keeps only ONE
+# effect, so an effect here replaced the game's whole on_location_changed_owner effect
+# (Rome, Byzantine cities, Hagia Sophia, Andalusi integration ...).
 on_location_changed_owner = {
+	on_actions = {
+		abm_colonial_nation_location_changed_owner
+	}
+}
+
+abm_colonial_nation_location_changed_owner = {
 	effect = {
 		if = {
 			limit = {
