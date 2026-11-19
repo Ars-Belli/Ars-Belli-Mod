@@ -10,6 +10,7 @@
 # CHE - Chen - theocracy
 # MNG - Ming - monarchy
 # Structure per tag: 2x age_1, 2x age_2, 2x age_3, 2x age_4, 1x age_5
+# CHE exception: abm_che_wetland_adaptation sits at age_1 (it unlocks the homeland proximity reform).
 
 ########################################
 # CGU (Guo) - noble republic and river commerce
@@ -1034,14 +1035,14 @@ abm_che_religious_tolerance_edict = {
 }
 
 abm_che_wetland_adaptation = {
-	age = age_2_renaissance
+	age = age_1_traditions
 	icon = professional_armies_advance
 
 	potential = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = national_assemblies_advance
+	requires = agriculture_advance
 
 	unlock_government_reform = abm_homeland_proximity_reform
 

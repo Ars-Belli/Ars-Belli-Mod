@@ -2,30 +2,31 @@
 #
 # Every advance that used to grant a country-wide <topography>_proximity_impact
 # bonus now unlocks one of the reforms below instead (see in_game/common/advances/).
-# The bonus is a location modifier: the country only gets the proximity benefit
-# inside a set of locations fixed by the reform, never country-wide.
+# The bonus is applied through location modifiers, so the country only gets it in
+# the locations the reform selects, never country-wide.
 #
-# - abm_homeland_proximity_reform: the set is the region of the country's own home
-#   capital - the historical capital if it has one, otherwise the original capital.
-# - abm_alpine_proximity_reform: the set is the Alpine arc (Savoy, the Swiss,
-#   Provence), regardless of where the capital is.
+# - abm_homeland_proximity_reform: the region of the country's original capital.
+# - abm_alpine_proximity_reform: the same set, unlocked by Alpine advances for
+#   Savoy, the Swiss and Provence.
 #
 # mountains_proximity_impact / plateau_proximity_impact / hills_proximity_impact
-# only exist at country scope (main_menu/common/modifier_type_definitions), so the
-# local equivalent is local_distance_from_capital_speed_propagation ("Local
-# Proximity Efficiency", location scope). +100% cancels the rough-terrain proximity
-# cost of the location, and does nothing on flat land.
+# only exist at country scope (main_menu/common/modifier_type_definitions), so
+# each rough terrain gets its own location_modifier block instead, holding the
+# exact inverse of that terrain's own penalties from in_game/common/topography:
+#   proximity:        local_distance_from_capital_speed_propagation = 1/speed - 1
+#                     (mountains 0.50 -> +100%, hills 0.75 -> +33%, plateau 0.875 -> +14%)
+#   development:      local_monthly_development_modifier = -penalty
+#                     (mountains -0.50, hills -0.25, plateau -0.10)
 #
 # Shapes copied from vanilla:
 # - location_modifier + potential_trigger + custom_tooltip:
 #   in_game/common/laws/10_italian_wars_laws.txt (italian_catepanate_policy)
-# - save_temporary_scope_as inside a trigger:
-#   in_game/common/scripted_triggers/00_event_illustration_triggers.txt
-# - comparing a region against a scope's region:
-#   in_game/common/country_interactions/invite_prince.txt (capital ?= { region = scope:actor.capital.region })
-# - is_historical_capital at location scope:
-#   in_game/common/building_types/capital_buildings.txt (location_potential)
-
+# - several location_modifier blocks on one object, with location-scope triggers
+#   (vegetation/climate) inside potential_trigger:
+#   in_game/common/estate_privileges/tribes_estate.txt (desert_power)
+# Both reforms also grant government_reform_slots = 1 (vanilla peasant_republic_reform,
+# constitutional_parliament...), so they are slot-neutral: taking one never costs a slot.
+# Shared location conditions: in_game/common/scripted_triggers/abm_rough_terrain_triggers.txt
 abm_homeland_proximity_reform = {
 	unique = yes
 	age = age_1_traditions
@@ -50,48 +51,34 @@ abm_homeland_proximity_reform = {
 
 	location_modifier = {
 		potential_trigger = {
-			save_temporary_scope_as = abm_homeland_location
-			# The region of the historical capital wins when the country has one.
-			trigger_if = {
-				limit = {
-					owner ?= {
-						any_owned_location = {
-							is_historical_capital = yes
-						}
-					}
-				}
-				custom_tooltip = {
-					text = abm_tt_homeland_historical_capital_region
-					owner ?= {
-						any_owned_location = {
-							is_historical_capital = yes
-							region = scope:abm_homeland_location.region
-						}
-					}
-				}
-			}
-			# Otherwise we fall back to the region of the original capital.
-			trigger_else = {
-				custom_tooltip = {
-					text = abm_tt_homeland_original_capital_region
-					owner ?= {
-						original_capital ?= {
-							region = scope:abm_homeland_location.region
-						}
-					}
-				}
-			}
+			abm_rough_terrain_mountains_in_original_capital_region = yes
 		}
-		# mountains_/plateau_/hills_proximity_impact are country-only modifiers
-		# (modifier_type_definitions: category = country), so they are ignored in a
-		# location_modifier. The location-scope equivalent of "rough terrain costs no
-		# proximity here" is this: +100% cancels the mountains penalty (-50%) and
-		# clamps for hills (-25%) and plateau (-12.5%); flatland has no penalty to
-		# cancel, so it gains nothing.
+		# Each value cancels the terrain's own penalty exactly: the proximity term is
+		# 1 / terrain_speed - 1 (mountains 0.50, hills 0.75, plateau 0.875), the
+		# development term is -1 x the terrain's local_monthly_development_modifier.
 		local_distance_from_capital_speed_propagation = 1.0
+		local_monthly_development_modifier = 0.5
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			abm_rough_terrain_hills_in_original_capital_region = yes
+		}
+		local_distance_from_capital_speed_propagation = 0.333
+		local_monthly_development_modifier = 0.25
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			abm_rough_terrain_plateaus_in_original_capital_region = yes
+		}
+		local_distance_from_capital_speed_propagation = 0.143
+		local_monthly_development_modifier = 0.10
 	}
 
 	country_modifier = {
+		# Pays for its own reform slot, so taking it never costs a slot.
+		government_reform_slots = 1
 		pure_tooltip_entry = abm_homeland_proximity_reform_tt
 	}
 
@@ -99,13 +86,8 @@ abm_homeland_proximity_reform = {
 	ai_will_do = { add = 10 }
 }
 
-# Savoy, the Swiss and Provence live on the Alpine passes themselves, so for them
-# the benefit follows the mountain range rather than the capital: it covers every
-# location in the Alpine arc below, wherever the court sits. Area ids and their
-# vanilla names: provence_area (Provence), savoy_area (Savoy and Dauphine),
-# western/central/eastern_switzerland_area (Romandy, Switzerland, Raetia),
-# tirol_area (Tyrol and Trentino), lombardy_area, veneto_area (Veneto and Friuli),
-# carinthia_area, styria_area.
+# Alpine advances unlock a separate reform, but its benefit is limited to the same
+# original-capital region as the standard homeland reform.
 abm_alpine_proximity_reform = {
 	unique = yes
 	age = age_1_traditions
@@ -120,26 +102,34 @@ abm_alpine_proximity_reform = {
 
 	location_modifier = {
 		potential_trigger = {
-			custom_tooltip = {
-				text = abm_tt_alpine_areas
-				OR = {
-					area = area:provence_area
-					area = area:savoy_area
-					area = area:western_switzerland_area
-					area = area:central_switzerland_area
-					area = area:eastern_switzerland_area
-					area = area:tirol_area
-					area = area:lombardy_area
-					area = area:veneto_area
-					area = area:carinthia_area
-					area = area:styria_area
-				}
-			}
+			abm_rough_terrain_mountains_in_original_capital_region = yes
 		}
+		# Each value cancels the terrain's own penalty exactly: the proximity term is
+		# 1 / terrain_speed - 1 (mountains 0.50, hills 0.75, plateau 0.875), the
+		# development term is -1 x the terrain's local_monthly_development_modifier.
 		local_distance_from_capital_speed_propagation = 1.0
+		local_monthly_development_modifier = 0.5
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			abm_rough_terrain_hills_in_original_capital_region = yes
+		}
+		local_distance_from_capital_speed_propagation = 0.333
+		local_monthly_development_modifier = 0.25
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			abm_rough_terrain_plateaus_in_original_capital_region = yes
+		}
+		local_distance_from_capital_speed_propagation = 0.143
+		local_monthly_development_modifier = 0.10
 	}
 
 	country_modifier = {
+		# Pays for its own reform slot, so taking it never costs a slot.
+		government_reform_slots = 1
 		pure_tooltip_entry = abm_alpine_proximity_reform_tt
 	}
 

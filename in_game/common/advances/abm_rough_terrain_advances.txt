@@ -2,7 +2,7 @@
 #
 # These vanilla advances used to grant country-wide <topography>_proximity_impact
 # bonuses. The bonus is replaced by unlock_government_reform: the advance now
-# unlocks a homeland reform whose benefit is limited to the historical home region
+# unlocks a homeland reform whose benefit is limited to the original capital's region
 # of the country (location_modifier + potential_trigger in
 # in_game/common/government_reforms/abm_gov_reforms_rough_terrain.txt).
 #
@@ -10,8 +10,11 @@
 # proximity modifiers - keep it in sync with vanilla when the game updates.
 #
 # Exception: swiss_alpine_passes and sav_alpine_identity unlock
-# abm_alpine_proximity_reform instead, which covers the whole Alpine arc rather
-# than the capital's region (Provence joins them through abm_tarascon_castle).
+# abm_alpine_proximity_reform instead; it is also limited to the original capital's region
+# (Provence joins them through abm_tarascon_castle).
+#
+# Every advance in this file is age_1_traditions and requires an age_1 advance, so the
+# reform is reachable from the start (same for the mod-owned unlockers elsewhere).
 
 REPLACE:ira_persian_plateau = {
 	age = age_1_traditions
@@ -29,7 +32,7 @@ REPLACE:ira_persian_plateau = {
 
 # Austria (HAB/TIR/STY) -> South Germany
 REPLACE:hab_expert_mountaineers = {
-	age = age_2_renaissance
+	age = age_1_traditions
 	icon = hab_expert_mountaineers
 	potential = {
 		OR = {
@@ -41,11 +44,11 @@ REPLACE:hab_expert_mountaineers = {
 
 	unlock_government_reform = abm_homeland_proximity_reform
 
-	requires = national_assemblies_advance
+	requires = mining_law_advance
 }
 
-# Swiss - Alpine arc variant: the bonus covers the whole Alpine range, not the
-# capital's region (government_reforms/abm_gov_reforms_rough_terrain.txt).
+# Swiss - Alpine-advance variant, limited to the original capital's region
+# (government_reforms/abm_gov_reforms_rough_terrain.txt).
 # Ars Belli: no REPLACE: - the mod's same-name culture_high_alemannic.txt hides the game's definition, so this is the only one.
 swiss_alpine_passes = {
 	age = age_1_traditions
@@ -65,7 +68,7 @@ swiss_alpine_passes = {
 	requires = mapmaking
 }
 
-# Savoy - Alpine arc variant
+# Savoy - Alpine-advance variant
 REPLACE:sav_alpine_identity = {
 	age = age_1_traditions
 	icon = arduous_terrain
@@ -155,8 +158,8 @@ REPLACE:mor_atlas_strongholds = {
 
 # Ethiopia
 REPLACE:a_permanent_capital = {
-	age = age_3_discovery
-	requires = foreign_cultural_law_advance
+	age = age_1_traditions
+	requires = codified_laws
 	icon = a_permanent_capital
 	potential = {
 		has_or_had_tag = ETH

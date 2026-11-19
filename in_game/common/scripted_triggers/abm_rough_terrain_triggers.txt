@@ -1,0 +1,41 @@
+﻿# Location-scope triggers shared by the rough-terrain reforms
+# (government_reforms/abm_gov_reforms_rough_terrain.txt). Each one matches a single
+# rough terrain inside the region of the country's own original capital.
+abm_rough_terrain_mountains_in_original_capital_region = {
+	save_temporary_scope_as = abm_rough_terrain_location
+	custom_tooltip = {
+		text = abm_tt_rough_terrain_mountains
+		topography = mountains
+		owner ?= {
+			original_capital ?= {
+				region = scope:abm_rough_terrain_location.region
+			}
+		}
+	}
+}
+
+abm_rough_terrain_hills_in_original_capital_region = {
+	save_temporary_scope_as = abm_rough_terrain_location
+	custom_tooltip = {
+		text = abm_tt_rough_terrain_hills
+		topography = hills
+		owner ?= {
+			original_capital ?= {
+				region = scope:abm_rough_terrain_location.region
+			}
+		}
+	}
+}
+
+abm_rough_terrain_plateaus_in_original_capital_region = {
+	save_temporary_scope_as = abm_rough_terrain_location
+	custom_tooltip = {
+		text = abm_tt_rough_terrain_plateaus
+		topography = plateau
+		owner ?= {
+			original_capital ?= {
+				region = scope:abm_rough_terrain_location.region
+			}
+		}
+	}
+}
