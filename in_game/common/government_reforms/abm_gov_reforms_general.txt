@@ -95,8 +95,10 @@ abm_trade_emporium = {
 
 
 # Traditional economy (societal value positive side = right-hand term, i.e. traditional)
-# opens up more of the countryside for settlement: extra population capacity in rural
-# locations only, applied through a location_modifier with a potential_trigger.
+# opens up more of the countryside for settlement: population capacity, prosperity and
+# production efficiency in rural locations only, applied through a location_modifier with
+# a potential_trigger. Upkeep efficiency has NO rural-scoped key (only the country-wide
+# `building_upkeep_efficiency`), so that half sits in country_modifier and helps towns too.
 abm_traditional_land_tenure = {
 	societal_values = {
 		traditional_economy_focus
@@ -114,6 +116,8 @@ abm_traditional_land_tenure = {
 	location_modifier = {
 		local_population_capacity_modifier = 0.25
 		local_monthly_prosperity = 0.001
+		local_production_efficiency = medium_production_efficiency_bonus
+
 		potential_trigger = {
 			custom_tooltip = {
 				text = abm_rural_free_land_tt
@@ -126,9 +130,10 @@ abm_traditional_land_tenure = {
 }
 
 # Urban counterpart of abm_traditional_land_tenure: chartered guilds instead of open
-# markets. `is_city = yes` is the vanilla urban test (towns, cities and megalopolises);
-# the prosperity half is a country modifier because the game has no location-scope
-# prosperity equivalent that reads well here.
+# markets. `is_city = yes` is the vanilla urban test (towns, cities and megalopolises).
+# Growth, not capacity: pop capacity only bites at the ceiling, which towns are far from,
+# and there is no non-rural growth key - hence local_population_growth on an is_city
+# location_modifier. +0.001 a year is ~+40% relative on a typical ~0.25%/yr location.
 abm_guild_charters = {
 	societal_values = {
 		traditional_economy_focus
@@ -142,13 +147,14 @@ abm_guild_charters = {
 	country_modifier = {
 		government_reform_slots = 1
 		global_non_rural_monthly_prosperity = 0.001
+		raw_material_in_province_impact = 0.025
 	}
 
 	location_modifier = {
-		local_population_capacity_modifier = 0.25
+		local_population_growth = 0.001
 		potential_trigger = {
 			custom_tooltip = {
-				text = abm_urban_free_land_tt
+				text = abm_urban_growth_tt
 				is_city = yes
 			}
 		}
