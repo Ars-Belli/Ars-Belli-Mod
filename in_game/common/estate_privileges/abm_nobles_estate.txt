@@ -15,3 +15,23 @@
 		global_nobles_estate_power = 0.25
 	}
 }
+
+# Ars Belli: game 1.4.9 recognized_communes (estate_privileges/nobles_estate.txt) without its
+# global_max_control = -0.05, plus nobles_estate_max_tax = -0.025. REPLACE rather than INJECT so the tooltip
+# shows no -5% / +5% Max Control pair. Re-sync with the game's block on updates (resync_blocks.js).
+REPLACE:recognized_communes = {
+	estate = nobles_estate
+
+	potential = {
+		government_type = government_type:republic
+	}
+
+	
+	country_modifier = {
+		monthly_towards_decentralization = societal_value_monthly_move
+		global_monthly_prosperity = 0.001
+		nobles_estate_target_satisfaction = medium_privilege_target_satisfaction
+		global_nobles_estate_power = 0.5
+		nobles_estate_max_tax = -0.025 # Ars Belli; game global_max_control = -0.05 removed
+	}
+}
