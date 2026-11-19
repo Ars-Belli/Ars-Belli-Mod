@@ -40,3 +40,63 @@ abm_trade_office_max_level = {
 		}
 	}
 }
+
+# ARS BELLI: age-scaling level cap for the capital manpower buildings - order_headquarters,
+# sergeantry, city_guard and temple_militia (all in building_types/abm_capital_buildings.txt).
+#
+# One step per age: 3 levels in the Age of Traditions and +3 in every following age
+# (3 / 6 / 9 / 12 / 15 / 18). Vanilla's janissary_barracks_size is the proven shape: a script
+# value that adds levels per age and is referenced by `max_levels = <value name>`. The value is
+# evaluated in the building's location scope and current_age_or_later is global, so it works here.
+# The cap only grows, so levels already built are never invalidated.
+abm_starting_manpower_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 3
+	}
+	if = {
+		limit = {
+			current_age_or_later = { age = age_2_renaissance }
+		}
+		add = {
+			desc = age_2_renaissance
+			value = 3
+		}
+	}
+	if = {
+		limit = {
+			current_age_or_later = { age = age_3_discovery }
+		}
+		add = {
+			desc = age_3_discovery
+			value = 3
+		}
+	}
+	if = {
+		limit = {
+			current_age_or_later = { age = age_4_reformation }
+		}
+		add = {
+			desc = age_4_reformation
+			value = 3
+		}
+	}
+	if = {
+		limit = {
+			current_age_or_later = { age = age_5_absolutism }
+		}
+		add = {
+			desc = age_5_absolutism
+			value = 3
+		}
+	}
+	if = {
+		limit = {
+			current_age_or_later = { age = age_6_revolutions }
+		}
+		add = {
+			desc = age_6_revolutions
+			value = 3
+		}
+	}
+}
