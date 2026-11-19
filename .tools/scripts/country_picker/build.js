@@ -734,6 +734,27 @@ for (const f of formables) { if (!f.pot) continue; const r = EV.run(f.pot, { tag
 // condition, not something that rules one country out: keep those formables and show the allow text
 const NOCTX = { tag: null, tags: new Set(), culture: null, groups: new Set(), accepted: new Set(), geo: null };
 for (const f of formables) f.alF = Array.isArray(f.al) && f.al.length && EV.run(f.al, NOCTX, 'country').v !== F;
+// potential false even without a country: formed by an event (always = no) or a world state, not the formable menu
+for (const f of formables) f.ev = !!f.pot && EV.run(f.pot, NOCTX, 'country').v === F;
+// which formables a primary culture reaches (potential and allow not false), with no tag, capital, government or
+// religion: evaluated once per culture and shared by every country that can take that culture
+const CUL_MEMBERS = new Map();
+for (const c of CU.cultures.values()) for (const g of c.groups) { if (!CUL_MEMBERS.has(g)) CUL_MEMBERS.set(g, []); CUL_MEMBERS.get(g).push(c.id); }
+const reachCache = new Map();
+function cultureReach(cul) {
+  if (reachCache.has(cul)) return reachCache.get(cul);
+  const c = CU.cultures.get(cul); const out = new Set();
+  if (c) {
+    const ctx = { tag: null, tags: new Set(), culture: cul, groups: new Set(c.groups), language: c.language, family: c.family, accepted: new Set(), geo: null,
+      religion: null, religionGroup: null, govType: null, govFixed: false, relFixed: false, isSubject: null };
+    formables.forEach((f, i) => {
+      if (f.pot && EV.run(f.pot, ctx, 'country').v === F) return;
+      if (f.alF && EV.run(f.al, ctx, 'country').v === F) return;
+      out.add(i);
+    });
+  }
+  reachCache.set(cul, out); return out;
+}
 // which formables each country can pursue
 for (const cc of countries) {
   // formables keep religion and government as "Needs" text: the selectors don't re-evaluate them
@@ -754,7 +775,23 @@ for (const cc of countries) {
     if (!r.hits.size) { cc.fo.push(i); continue; }
     cc.forms.push(r.res.length ? [i, r.res.join('; ')] : [i]);
   }
+  // reachable with its own culture once the capital, tag or start state no longer stands in the way: open too
+  const have = new Set([...cc.forms.map(x => x[0]), ...cc.fo]);
+  const base = cc.c.culture ? cultureReach(cc.c.culture) : new Set();
+  for (const i of base) if (!have.has(i) && formables[i].tag !== cc.c.tag) { cc.fo.push(i); have.add(i); }
+  // a country may change its primary culture to another culture of its own culture group(s): fc = [formableIdx,
+  // ...cultures that reach it] for formables its own culture doesn't reach
+  const via = new Map();
+  const cand = [...new Set((cc.c.groups || []).flatMap(g => CUL_MEMBERS.get(g) || []))].filter(x => x !== cc.c.culture).sort((a, b) => nm(a).localeCompare(nm(b)));
+  for (const x of cand) for (const i of cultureReach(x)) {
+    if (have.has(i) || formables[i].tag === cc.c.tag) continue;
+    if (!via.has(i)) via.set(i, []); via.get(i).push(x);
+  }
+  cc.fc = [...via].map(([i, xs]) => [i, ...xs.slice(0, 3)]);
 }
+// cultures named by fc: [name, groupNames, languageName], indexed in the output
+const fcCults = new Map();
+for (const cc of countries) for (const e of cc.fc) for (let j = 1; j < e.length; j++) { if (!fcCults.has(e[j])) fcCults.set(e[j], fcCults.size); e[j] = fcCults.get(e[j]); }
 log('formables resolved');
 
 // ---------------------------------------------------------------- output
@@ -806,19 +843,20 @@ const data = {
   items: outItems,
   mods: modTable,
   scopes: scopeTable,
-  formables: formables.map(f => ({ tag: f.tag, n: f.n, lvl: f.lvl, req: f.req, frac: f.frac, allow: f.allow, pn: f.pn, m: f.m, refs: fixRefs(f.refs) })),
+  formables: formables.map(f => ({ tag: f.tag, n: f.n, lvl: f.lvl, req: f.req, frac: f.frac, allow: f.allow, pn: f.pn, ev: f.ev ? 1 : undefined, m: f.m, refs: fixRefs(f.refs) })),
   govs: GOVS.map(g => [g, nm(g, 'government_type_')]),
   religions: [...RELIGION_DB.keys()].filter(r => REL_GROUP.get(r)).map(r => REL_ASPN.has(r) ? [r, nm(r), REL_GROUP.get(r), REL_ASPN.get(r)] : [r, nm(r), REL_GROUP.get(r)]),
   rc: Object.fromEntries([...rc].map(([R, x]) => [R, Object.keys(x.gx).length ? { refs: fixRefs(x.refs), gx: Object.fromEntries(Object.entries(x.gx).map(([g, d]) => [g, fixRefs(d)])) } : { refs: fixRefs(x.refs) }])),
   rgroups: [...new Set(REL_GROUP.values())].filter(Boolean).map(g => [g, nm(g)]),
-  countries: countries.map(({ c, refs, gx, rx, forms, fo }) => ({
+  cults: [...fcCults.keys()].map(id => { const c = CU.cultures.get(id); return [nm(id), [...c.groups].map(g => nm(g)), c.language ? nm(c.language) : null]; }),
+  countries: countries.map(({ c, refs, gx, rx, forms, fo, fc }) => ({
     tag: c.tag, n: nm(c.tag), cap: c.capital ? nm(c.capital) : null,
     reg: c.geo ? geoName(c.geo.region) : null, sub: c.geo ? geoName(c.geo.sub_continent) : null, area: c.geo ? geoName(c.geo.area) : null,
     cul: c.culture ? nm(c.culture) : null, grp: c.groups.map(g => nm(g)), lang: c.language ? nm(c.language) : null,
     rel: c.religion ? nm(c.religion) : null, gov: c.govType ? nm(c.govType, 'government_type_') : null, rank: c.rank ? nm(c.rank) : null,
     locs: c.locCount, ovl: c.overlord ? { tag: c.overlord.tag, n: nm(c.overlord.tag), t: nm(c.overlord.type) } : null,
     gk: c.govType || null,
-    refs: fixRefs(refs.filter(r => r[1] !== 'f')), forms, fo: fo && fo.length ? fo : undefined, // religion content (via 'f') lives in rc[rk]
+    refs: fixRefs(refs.filter(r => r[1] !== 'f')), forms, fo: fo && fo.length ? fo : undefined, fc: fc && fc.length ? fc : undefined, // religion content (via 'f') lives in rc[rk]
     gx: Object.keys(gx).length ? Object.fromEntries(Object.entries(gx).map(([g, d]) => [g, fixRefs(d)])) : undefined,
     rk: c.religion || null,
     rx: rx.length ? rx.map(([i, tab]) => [remap.get(i), Object.fromEntries(Object.entries(tab).map(([k, r]) => [k, r ? fixRefs([r])[0] : 0]))]) : undefined,

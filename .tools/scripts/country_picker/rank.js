@@ -22,22 +22,51 @@ function relContent(rel, gov) {
 }
 const baseNeeds = (needs, own) => needs.split('one of: ').join('').split(' / ').join('; ').split(' and ').join('; ').split('; ').every(p => {
   p = p.trim(); if (/^(Advance|Age|Institution): /.test(p)) return true;
-  const m = p.match(/^(Reform|Privilege): (.*)$/); return !!(m && own.has(m[2]));
+  // a law policy is the country's pick: one on its own list, or one open to every country (those aren't in the data)
+  const m = p.match(/^(Reform|Privilege|Policy): (.*)$/); return !!m && (own.has(m[2]) || (m[1] === 'Policy' && !POLN.has(m[2])));
 });
+const POLN = new Set(I.filter(it => it.t === 'pol').map(it => it.n));
+// A reform named in a condition that depends on play ("Reform: X" / "not Reform: X") is the country's choice: taken
+// when it can adopt the reform (on its list, Needs met in this pass) and that scores more, the reform's own modifiers
+// included. A Catholic theocracy takes Military Order: Military Orders then gives +5% discipline instead of +2.5%.
+const RFX = /^(not )?Reform: (.+)$/;
+function reformTake(refs, ok) {
+  const W = (m, v) => v * (MILW.get(m) || 0);
+  const avail = new Map(), gain = new Map();
+  for (const r of refs) {
+    if (!ok(r)) continue;
+    const it = I[r[0]], cs = r[3] || '';
+    if (it.t === 'ref') avail.set(it.n, (it.mv || []).reduce((t, [m, sc, v]) => t + (SC_OK.has(sc) ? W(m, v) : 0), 0));
+    for (const [m, sc, v, ci] of it.mc || []) {
+      const k = SC_OK.has(sc) && (cs[ci] || 'U') === 'U' && RFX.exec(it.cd[ci] || ''); if (!k) continue;
+      gain.set(k[2], (gain.get(k[2]) || 0) + (k[1] ? -1 : 1) * W(m, v));
+    }
+  }
+  const yes = new Set(), no = new Set();
+  for (const [n, g] of gain) if (avail.has(n)) (g + avail.get(n) > 0 ? yes : no).add(n);
+  return { yes, no };
+}
 function score(c) {
   let refs = c.refs.concat(relContent(c.rk, c.gk));
   if (NOREL) refs = refs.filter(r => r[1] !== 'f' && I[r[0]].t !== 'rel');
-  const own = new Set(refs.filter(r => !r[2]).map(r => I[r[0]]).filter(it => it.t === 'ref' || it.t === 'priv').map(it => it.n));
+  const own = new Set(refs.filter(r => !r[2]).map(r => I[r[0]]).filter(it => it.t === 'ref' || it.t === 'priv' || it.t === 'pol').map(it => it.n));
   const aspN = ASPN.get(c.rk) || 0;
   const run = strict => {
     const sum = new Map(), contrib = new Map(), laws = new Map(), asps = [];
     const put = (i, m, v) => { sum.set(m, (sum.get(m) || 0) + v); const w = MILW.get(m); if (w) contrib.set(i, (contrib.get(i) || 0) + v * w); };
+    const ok = r => !(strict && r[2] && !baseNeeds(r[2], own));
+    const rf = reformTake(refs, ok);
     for (const r of refs) {
       const it = I[r[0]]; if (!it.mv && !it.mc) continue;
-      if (strict && r[2] && !baseNeeds(r[2], own)) continue;
+      if (!ok(r)) continue;
+      if (it.t === 'ref' && rf.no.has(it.n)) continue; // a reform the country is better off without
       const cs = r[3] || ''; const lines = [];
       for (const [m, sc, v] of it.mv || []) if (SC_OK.has(sc)) lines.push([m, sc, v]);
-      for (const [m, sc, v, ci] of it.mc || []) if (SC_OK.has(sc) && (cs[ci] === 'T' || (cs[ci] !== 'F' && /^not Reform: /.test(it.cd[ci])))) lines.push([m, sc, v]);
+      for (const [m, sc, v, ci] of it.mc || []) {
+        const st = cs[ci] || 'U'; if (!SC_OK.has(sc) || st === 'F') continue;
+        const k = st === 'U' && RFX.exec(it.cd[ci] || '');
+        if (st === 'T' || (k && (k[1] ? !rf.yes.has(k[2]) : rf.yes.has(k[2])))) lines.push([m, sc, v]);
+      }
       if (it.t === 'pol') { const key = it.x || it.id; if (!laws.has(key)) laws.set(key, new Map()); const lm = laws.get(key);
         for (const [m, , v] of lines) { const w = MILW.get(m); if (!w) continue; const o = lm.get(m); if (!o || v * w > o.v * w) lm.set(m, { v, i: r[0] }); } continue; }
       if (it.t === 'asp') { asps.push({ i: r[0], lines, pts: lines.reduce((t, [m, , v]) => t + v * (MILW.get(m) || 0), 0) }); continue; }
