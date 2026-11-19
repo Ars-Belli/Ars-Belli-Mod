@@ -1,0 +1,75 @@
+﻿#####ArsBelliMod#####
+
+# Morocco toned down: its Across the Pillars reforms Sharifian Sultanate and Amir al-Muslimin give +5% manpower instead of +10%
+# (TRY_REPLACE: the keys exist only with the DLC). Byzantium toned down: Modern Imperial Army gives +10% army maintenance
+# efficiency instead of +20% (the Reformed Tagmata law gets the same cut in laws/abm_recruitment_law.txt).
+# Full copies of d009_country_specific.txt and country_specific.txt (game 1.4.9), changes marked #ABM. Re-sync on game updates.
+
+TRY_REPLACE:mor_sharifian_sultanate_reform = {
+	age = age_4_reformation
+	unique = yes
+
+	potential = {
+		has_dlc = "d009_across_the_pillars"
+		has_or_had_tag = MOR
+		religion.group = religion_group:muslim
+	}
+
+	country_modifier = {
+		country_cabinet_efficiency = 0.05
+		global_manpower_modifier = 0.05 #ABM half, vanilla 0.1
+		land_morale_modifier = 0.05
+		monthly_towards_centralization = societal_value_minor_monthly_move
+	}
+
+	years = 2
+}
+
+TRY_REPLACE:amir_al_muslimin = {
+	major = yes
+	unique = yes
+
+	potential = {
+		has_dlc = "d009_across_the_pillars"
+		has_or_had_tag = MOR
+		religion.group = religion_group:muslim
+	}
+
+	allow = {
+		region:iberia_region = {
+			any_ownable_location_in_region = {
+				top_owner = root
+				percent >= 0.20
+			}
+		}
+	}
+
+	country_modifier = {
+		damage_done_versus_heathens_modifier = 0.1
+		diplomatic_reputation = diplomatic_reputation_mild_bonus
+		global_manpower_modifier = 0.05 #ABM half, vanilla 0.1
+		monthly_towards_jurisprudence = societal_value_monthly_move
+		tolerance_own = 1
+	}
+
+	years = 2
+}
+
+REPLACE:modern_imperial_army = {
+	age = age_2_renaissance
+	potential = {
+		has_or_had_tag = BYZ
+		has_unlocked_government_reform_trigger = { type = modern_imperial_army }
+	}
+	allow = {
+		NOT = { has_reform = government_reform:theme_system }
+	}
+	country_modifier = {
+		government_size = 1
+		government_reform_slots = 1
+		army_maintenance_efficiency = 0.1 #ABM half, vanilla 0.2
+		discipline = 0.05
+		num_of_varangian_units = 2
+	}
+	years = 2
+}

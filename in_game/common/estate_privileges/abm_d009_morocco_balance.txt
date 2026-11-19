@@ -1,0 +1,54 @@
+﻿#####ArsBelliMod#####
+
+# Morocco toned down: its Across the Pillars privileges give +5% manpower instead of +10%.
+# Volunteers of the Faith is also open to Granada and every Muslim Andalusi, Maghrebi or Amazigh country, so they get the same cut.
+# TRY_REPLACE: the keys exist only with the Across the Pillars DLC; without it the entry is skipped with no error.
+# Full copies of the DLC's d009_peasants_estate.txt and d009_tribes_estate.txt (game 1.4.9), changes marked #ABM. Re-sync on game updates.
+
+TRY_REPLACE:gra_volunteers_of_faith = {
+	estate = peasants_estate
+
+	potential = {
+		has_dlc = "d009_across_the_pillars"
+		OR = {
+			has_or_had_tag = GRA
+			culture = culture:andalusi
+			culture = { has_culture_group = culture_group:maghrebi_group }
+			culture = { has_culture_group = culture_group:amazigh_group }
+		}
+		religion ?= { group = religion_group:muslim }
+	}
+
+	on_activate = {
+		custom_tooltip = gra_volunteers_of_faith_unlocks_mutatawwia_tt
+	}
+
+	country_modifier = {
+		global_levy_size_modifier = 0.05
+		global_manpower_modifier = 0.05 #ABM half, vanilla 0.1
+		global_peasants_estate_power = 0.25
+		land_morale_modifier = 0.05
+		peasants_estate_target_satisfaction = medium_privilege_target_satisfaction
+	}
+}
+
+TRY_REPLACE:mor_abid_al_bukhari = {
+	estate = tribes_estate
+
+	potential = {
+		has_dlc = "d009_across_the_pillars"
+		has_or_had_tag = MOR
+	}
+
+	allow = {
+		has_advance = slave_soldiers
+	}
+
+	country_modifier = {
+		discipline = 0.05
+		global_manpower_modifier = 0.05 #ABM half, vanilla 0.1
+		global_tribes_estate_power = 0.25
+		monthly_towards_centralization = societal_value_minor_monthly_move
+		tribes_estate_target_satisfaction = medium_privilege_target_satisfaction
+	}
+}
