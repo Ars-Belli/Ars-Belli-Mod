@@ -150,6 +150,8 @@ section.sec > h3 b { color: var(--ink); font-size: 1.08rem; letter-spacing: 0.04
 .share { font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
 details.more > summary { cursor: pointer; color: var(--brass); font-size: 0.82rem; padding: 2px 0; }
 .form { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; display: grid; gap: 6px; min-width: 0; }
+.fopen { margin-top: 10px; }
+.fopen > .cards { margin-top: 8px; }
 .form .hd { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
 .form .hd strong { font-family: var(--f-display); font-size: 1.02rem; }
 .mini { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 0.82rem; }
@@ -601,9 +603,14 @@ const DATA = /*__DATA__*/null;
     }
     return { html, toc, hidden, visible };
   }
+  // formables a country can pursue: linked by its culture, language, tag or capital region, then the open ones
+  // (no such link; their potential's conditions are FM[fi].pn)
+  const formNeeds = (need, f) => [...new Set([need, f.allow].filter(Boolean).join('; ').split('; '))].join('; '); // potential + allow
+  const formList = c => [...(c.forms || []).map(([fi, need]) => ({ fi, need })), ...(c.fo || []).map(fi => ({ fi, need: FM[fi].pn, open: true }))];
   function formHtml(c) {
-    if (!c.forms || !c.forms.length) return '';
-    const parts = c.forms.map(([fi, cond]) => {
+    const linked = c.forms || [], open = c.fo || [];
+    if (!linked.length && !open.length) return '';
+    const card = (fi, cond) => {
       const f = FM[fi];
       const refs = f.refs.filter(r => (!abOnly || I[r[0]].m) && ageOk(I[r[0]]));
       const req = [f.lvl ? 'Level ' + f.lvl : null, f.frac ? f.frac + '% of the land' : null].filter(Boolean).join(' · ');
@@ -614,15 +621,19 @@ const DATA = /*__DATA__*/null;
       }).join('');
       const inner = refs.length ? `<details class="more"><summary>What forming ${esc(f.n)} unlocks (${refs.length})</summary><ul class="mini">${lis}</ul></details>` : '<p class="none">No content tied to this tag.</p>';
       const badge = f.m === 'new' ? '<span class="pill ab">Ars Belli</span>' : f.m === 'chg' ? '<span class="pill ab">changed</span>' : '';
-      const needs = [cond, f.allow].filter(Boolean).join('; ');
+      const needs = formNeeds(cond, f);
       return `<div class="form">
         <div class="hd"><strong>${esc(f.n)}</strong><span class="tagchip">${esc(f.tag)}</span>${badge}${req ? `<span class="pill">${esc(req)}</span>` : ''}</div>
         ${f.req ? `<div class="desc">${esc(f.req)}</div>` : ''}
         ${needs ? `<div class="cond"><b>Needs</b> ${esc(needs)}</div>` : ''}
         ${inner}
       </div>`;
-    });
-    return `<section class="sec" id="sec-form"><h3><b>Formable nations</b> ${c.forms.length}</h3><div class="cards">${parts.join('')}</div></section>`;
+    };
+    const byLvl = (a, b) => (FM[a].lvl || 0) - (FM[b].lvl || 0) || FM[a].n.localeCompare(FM[b].n);
+    const openHtml = open.length ? `<details class="more fopen"${linked.length ? '' : ' open'}><summary>Open to any country (${open.length}): not tied to a culture or region, they need the land and the conditions shown</summary>
+      <div class="cards">${open.slice().sort(byLvl).map(fi => card(fi, FM[fi].pn)).join('')}</div></details>` : '';
+    return `<section class="sec" id="sec-form"><h3><b>Formable nations</b> ${linked.length}${open.length ? ` <small class="inl">+${open.length} open to any country</small>` : ''}</h3>
+      ${linked.length ? `<div class="cards">${linked.map(([fi, cond]) => card(fi, cond)).join('')}</div>` : `<p class="none">None tied to this country’s culture or capital region.</p>`}${openHtml}</section>`;
   }
   // filters, totals and section links shared by a country page and a built country (ids are unique: only one is rendered)
   function wireContent(box, rerender) {
@@ -671,7 +682,7 @@ const DATA = /*__DATA__*/null;
       ['Government at start', c.gov, c.rank],
       ['Religion at start', c.rel, null],
       ['Land at start', c.locs + ' locations', c.ovl ? `Subject of ${c.ovl.n} (${c.ovl.t})` : 'Independent'],
-      ['Specific content', `${c.refs.length} items`, `${c._own} for this country or culture · ${c._mod} Ars Belli · ${(c.forms || []).length} formables · plus ${relContent(c.rk, c.gk).length} from the start religion`],
+      ['Specific content', `${c.refs.length} items`, `${c._own} for this country or culture · ${c._mod} Ars Belli · ${(c.forms || []).length} formables (+${(c.fo || []).length} open to any country) · plus ${relContent(c.rk, c.gk).length} from the start religion`],
     ];
     aspPicks = REL.get(relPick || c.rk)?.asp || 0;
     const S = renderSections(refsFor(c));
@@ -719,7 +730,7 @@ const DATA = /*__DATA__*/null;
     })();
     const REL_BTNS = 8;
     const fh = formHtml(c);
-    const toc = S.toc.slice(); if (fh) toc.push(`<a href="#sec-form" data-sec="form">Formables <b>${c.forms.length}</b></a>`);
+    const toc = S.toc.slice(); if (fh) toc.push(`<a href="#sec-form" data-sec="form">Formables <b>${(c.forms || []).length + (c.fo || []).length}</b></a>`);
     box.innerHTML = `
       <button class="back" type="button" id="back">← All countries</button>
       <div class="ctitle"><h2>${esc(c.n)}</h2><span class="tagchip">${esc(c.tag)}</span>${c._mod ? `<span class="pill ab">${c._mod} Ars Belli items</span>` : ''}<a class="buildlink" href="#build?c=${esc(c.tag)}">Build from ${esc(c.n)} →</a></div>
@@ -927,14 +938,14 @@ const DATA = /*__DATA__*/null;
     if (location.hash.startsWith('#build') && bd.base) history.replaceState(null, '', buildHash());
   }
   function setForms(list, c) { // keep formables the base qualifies for, one per tier, above its level, in rising order
-    const ok = new Set((c.forms || []).map(([fi]) => fi)); const used = new Set(); const lv0 = baseLevel(c);
+    const ok = new Set(formList(c).map(x => x.fi)); const used = new Set(); const lv0 = baseLevel(c);
     bd.forms = list.filter(fi => ok.has(fi)).sort((a, b) => flv(a) - flv(b)).filter(fi => flv(fi) > lv0 && !used.has(flv(fi)) && used.add(flv(fi)));
   }
   function parseBuild(h) { // 'build?c=CAS&g=monarchy&r=catholic&f=SPA,ROM'
     const q = new URLSearchParams(h.split('?')[1] || ''); const tag = q.get('c'); if (!tag || !byTag.has(tag)) return;
     const c = byTag.get(tag);
     bd.base = tag; bd.gov = GOVN.has(q.get('g')) && q.get('g') !== c.gk ? q.get('g') : ''; bd.rel = REL.has(q.get('r')) && q.get('r') !== c.rk ? q.get('r') : '';
-    setForms((q.get('f') || '').split(',').map(t => (c.forms || []).map(([fi]) => fi).find(fi => FM[fi].tag === t)).filter(fi => fi != null), c);
+    setForms((q.get('f') || '').split(',').map(t => formList(c).map(x => x.fi).find(fi => FM[fi].tag === t)).filter(fi => fi != null), c);
   }
   function buildSetup() {
     const c = byTag.get(bd.base); const g = bd.gov || c.gk, r = bd.rel || c.rk;
@@ -1004,22 +1015,22 @@ const DATA = /*__DATA__*/null;
     $('#bGov').innerHTML = GOVS.map(([g, n]) => `<option value="${esc(g)}"${g === S.g ? ' selected' : ''}>${esc(n)}${g === S.c.gk ? ' (start)' : ''}</option>`).join('');
     $('#bRel').innerHTML = relOptions(S.c, S.r);
     // formable nations by tier
-    const forms = (S.c.forms || []).map(([fi, need]) => ({ fi, f: FM[fi], need }));
+    const forms = formList(S.c).map(x => Object.assign(x, { f: FM[x.fi] }));
     const levels = [...new Set(forms.map(x => x.f.lvl || 0))].sort((a, b) => a - b);
     const at = new Map(bd.forms.map(fi => [flv(fi), fi]));
-    tiers.innerHTML = forms.length ? `<p class="bnote">Formable nations, at most one per tier. The game only lets a country form a nation of a higher tier than its current one, so they are formed from the lowest tier up${lv0 ? `; ${esc(S.c.n)} is itself tier ${lv0}` : ''}.</p>` + levels.map(L => {
+    tiers.innerHTML = forms.length ? `<p class="bnote">Formable nations, at most one per tier. The game only lets a country form a nation of a higher tier than its current one, so they are formed from the lowest tier up${lv0 ? `; ${esc(S.c.n)} is itself tier ${lv0}` : ''}. Nations marked <span class="pill">any country</span> aren’t tied to a culture or region: anyone holding the land and meeting the conditions can form them.</p>` + levels.map(L => {
       const blocked = L <= lv0;
       return `<fieldset class="tier"${blocked ? ' disabled' : ''}><legend>Tier ${L}${blocked ? ` · not above ${esc(S.c.n)}’s tier ${lv0}` : ''}</legend>
         <label class="fopt"><input type="radio" name="tier${L}" value=""${at.has(L) ? '' : ' checked'}><span>None</span></label>
         ${forms.filter(x => (x.f.lvl || 0) === L).map(x => {
-          const st = resolveNeeds(x.need, S.B);
-          const nd = [st === false ? x.need : st, x.f.allow].filter(Boolean).join('; ');
+          const all = formNeeds(x.need, x.f); const st = resolveNeeds(all, S.B);
+          const nd = st === false ? all : st;
           const req = [x.f.req, x.f.frac ? x.f.frac + '% of the land' : null].filter(Boolean).join(' · ');
-          return `<label class="fopt"><input type="radio" name="tier${L}" value="${x.fi}"${at.get(L) === x.fi ? ' checked' : ''}><span><b>${esc(x.f.n)}</b> <span class="tagchip">${esc(x.f.tag)}</span>${x.f.m === 'new' ? ' <span class="pill ab">Ars Belli</span>' : ''}
+          return `<label class="fopt"><input type="radio" name="tier${L}" value="${x.fi}"${at.get(L) === x.fi ? ' checked' : ''}><span><b>${esc(x.f.n)}</b> <span class="tagchip">${esc(x.f.tag)}</span>${x.f.m === 'new' ? ' <span class="pill ab">Ars Belli</span>' : ''}${x.open ? ' <span class="pill">any country</span>' : ''}
             ${req ? `<small>${esc(req)}</small>` : ''}${nd ? `<small class="${st === false ? 'bad' : ''}">${st === false ? 'Not possible with this government or religion: ' : 'Needs '}${esc(nd)}</small>` : ''}<small>${x.f.refs.length} items tied to the tag</small></span></label>`;
         }).join('')}
       </fieldset>`;
-    }).join('') : `<p class="none">${esc(S.c.n)} qualifies for no formable nation by its culture or capital region.</p>`;
+    }).join('') : `<p class="none">${esc(S.c.n)} can form no nation.</p>`;
     // the built country's content, score and rank
     aspPicks = REL.get(S.r)?.asp || 0;
     const refs = buildRefs(S);

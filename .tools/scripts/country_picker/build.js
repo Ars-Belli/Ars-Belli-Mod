@@ -710,7 +710,7 @@ for (const [id, r] of DB.formable_countries) {
   const frac = SV.num(P.get(b, 'required_locations_fraction'));
   const allowRes = EV.run(P.get(b, 'allow') || [], { tag: null, tags: new Set(), culture: null, groups: new Set(), accepted: new Set(), geo: null }, 'country').res;
   formIdx.set(id, formables.length);
-  formables.push({ id, tag, n: nm(P.get(b, 'name') || tag), lvl: SV.num(P.get(b, 'level')) || undefined, req: req.join(' · ') || undefined, frac: frac != null ? Math.round(frac * 100) : undefined, allow: shortText([...new Set(allowRes)].join('; '), 400) || undefined, m: modFlag(r), pot, refs: [] });
+  formables.push({ id, tag, n: nm(P.get(b, 'name') || tag), lvl: SV.num(P.get(b, 'level')) || undefined, req: req.join(' · ') || undefined, frac: frac != null ? Math.round(frac * 100) : undefined, allow: shortText([...new Set(allowRes)].join('; '), 400) || undefined, m: modFlag(r), pot, al: P.get(b, 'allow'), refs: [] });
 }
 // content gated on the formed tag (evaluated with an unknown culture so only tag checks count)
 const formTags = new Map();
@@ -728,17 +728,30 @@ for (const [tag] of formTags) {
   formTags.set(tag, refs);
 }
 for (const f of formables) f.refs = formTags.get(f.tag) || [];
+// conditions of each formable's potential without a country (culture, religion and government unknown)
+for (const f of formables) { if (!f.pot) continue; const r = EV.run(f.pot, { tag: null, tags: new Set(), culture: null, groups: new Set(), accepted: new Set(), geo: null }, 'country'); if (r.res.length) f.pn = cleanRes(r.res, { n: f.n }).join('; ') || undefined; }
+// allow that fails without any country (always = no, a world state such as an IO existing) is an event or world
+// condition, not something that rules one country out: keep those formables and show the allow text
+const NOCTX = { tag: null, tags: new Set(), culture: null, groups: new Set(), accepted: new Set(), geo: null };
+for (const f of formables) f.alF = Array.isArray(f.al) && f.al.length && EV.run(f.al, NOCTX, 'country').v !== F;
 // which formables each country can pursue
 for (const cc of countries) {
   // formables keep religion and government as "Needs" text: the selectors don't re-evaluate them
-  const ctx = Object.assign(ctxOf(cc.c), { govFixed: false, relFixed: false });
-  cc.forms = [];
+  // a subject can break free and a capital can move: neither rules a formable out
+  const ctx = Object.assign(ctxOf(cc.c), { govFixed: false, relFixed: false, isSubject: null });
+  const actx = Object.assign({}, ctx, { geo: null });
+  cc.forms = []; cc.fo = [];
   for (let i = 0; i < formables.length; i++) {
     const f = formables[i];
     if (f.tag === cc.c.tag) continue;
-    if (!f.pot) continue;
-    const r = EV.run(f.pot, ctx, 'country');
-    if (r.v === F || !r.hits.size) continue;
+    // every formable whose potential doesn't rule the country out counts: forming one needs land, which a country
+    // can conquer. forms = the ones its culture, language, tag or capital region points to; fo = the other, open
+    // ones (indexes only: their conditions are formables[i].pn, checked against the country in the page)
+    const r = f.pot ? EV.run(f.pot, ctx, 'country') : { v: T, res: [], hits: new Set() };
+    if (r.v === F) continue;
+    // allow rules a country out too: Livonia's potential is open, its allow wants the German culture group
+    if (f.alF && EV.run(f.al, actx, 'country').v === F) continue;
+    if (!r.hits.size) { cc.fo.push(i); continue; }
     cc.forms.push(r.res.length ? [i, r.res.join('; ')] : [i]);
   }
 }
@@ -793,19 +806,19 @@ const data = {
   items: outItems,
   mods: modTable,
   scopes: scopeTable,
-  formables: formables.map(f => ({ tag: f.tag, n: f.n, lvl: f.lvl, req: f.req, frac: f.frac, allow: f.allow, m: f.m, refs: fixRefs(f.refs) })),
+  formables: formables.map(f => ({ tag: f.tag, n: f.n, lvl: f.lvl, req: f.req, frac: f.frac, allow: f.allow, pn: f.pn, m: f.m, refs: fixRefs(f.refs) })),
   govs: GOVS.map(g => [g, nm(g, 'government_type_')]),
   religions: [...RELIGION_DB.keys()].filter(r => REL_GROUP.get(r)).map(r => REL_ASPN.has(r) ? [r, nm(r), REL_GROUP.get(r), REL_ASPN.get(r)] : [r, nm(r), REL_GROUP.get(r)]),
   rc: Object.fromEntries([...rc].map(([R, x]) => [R, Object.keys(x.gx).length ? { refs: fixRefs(x.refs), gx: Object.fromEntries(Object.entries(x.gx).map(([g, d]) => [g, fixRefs(d)])) } : { refs: fixRefs(x.refs) }])),
   rgroups: [...new Set(REL_GROUP.values())].filter(Boolean).map(g => [g, nm(g)]),
-  countries: countries.map(({ c, refs, gx, rx, forms }) => ({
+  countries: countries.map(({ c, refs, gx, rx, forms, fo }) => ({
     tag: c.tag, n: nm(c.tag), cap: c.capital ? nm(c.capital) : null,
     reg: c.geo ? geoName(c.geo.region) : null, sub: c.geo ? geoName(c.geo.sub_continent) : null, area: c.geo ? geoName(c.geo.area) : null,
     cul: c.culture ? nm(c.culture) : null, grp: c.groups.map(g => nm(g)), lang: c.language ? nm(c.language) : null,
     rel: c.religion ? nm(c.religion) : null, gov: c.govType ? nm(c.govType, 'government_type_') : null, rank: c.rank ? nm(c.rank) : null,
     locs: c.locCount, ovl: c.overlord ? { tag: c.overlord.tag, n: nm(c.overlord.tag), t: nm(c.overlord.type) } : null,
     gk: c.govType || null,
-    refs: fixRefs(refs.filter(r => r[1] !== 'f')), forms, // religion content (via 'f') lives in rc[rk]
+    refs: fixRefs(refs.filter(r => r[1] !== 'f')), forms, fo: fo && fo.length ? fo : undefined, // religion content (via 'f') lives in rc[rk]
     gx: Object.keys(gx).length ? Object.fromEntries(Object.entries(gx).map(([g, d]) => [g, fixRefs(d)])) : undefined,
     rk: c.religion || null,
     rx: rx.length ? rx.map(([i, tab]) => [remap.get(i), Object.fromEntries(Object.entries(tab).map(([k, r]) => [k, r ? fixRefs([r])[0] : 0]))]) : undefined,
