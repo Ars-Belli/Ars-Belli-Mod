@@ -100,3 +100,23 @@ abm_starting_manpower_max_level = {
 		}
 	}
 }
+
+# ARS BELLI: half-size manpower buildings (building_types/abm_small_manpower_buildings.txt).
+# Armory, Training Fields, Barracks, Regimental Camp and Conscription Center get twice vanilla's
+# manpower_max_level (base 1 + population x 0.025), so the cap rises in steps half as big.
+# Vanilla manpower_max_level is left as it is: a D009 unique barracks and a Mali event read it.
+
+abm_manpower_max_level = {
+	add = {
+		desc = "BUILDING_LEVEL_BASE"
+		value = 2
+	}
+	add = {
+		desc = "BUILDING_LEVEL_POPULATION"
+		value = population
+		multiply = 0.05
+	}
+}
+
+# Soldier employment per level of those buildings, half of vanilla manpower_employment (1.0).
+abm_half_manpower_employment = 0.5
