@@ -15,3 +15,13 @@
 		global_nobles_estate_power = 0.25
 	}
 }
+
+# recognized_communes is a nobles estate privilege (game estate_privileges/nobles_estate.txt), so the INJECT
+# lives here; it used to be in government_reforms/abm_gov_reforms_general.txt, where it found no entry.
+# First INJECT in estate_privileges: check in game that the privilege tooltip shows these two lines.
+INJECT:recognized_communes = {
+	country_modifier = {
+		global_max_control = 0.05
+		nobles_estate_max_tax = -0.025
+	}
+}
