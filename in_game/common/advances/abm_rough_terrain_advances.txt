@@ -15,6 +15,13 @@
 #
 # Every advance in this file is age_1_traditions and requires an age_1 advance, so the
 # privilege is available from the start (same for the mod-owned unlockers elsewhere).
+#
+# All 16 unlockers carry starting_technology_level = 1 (age of traditions only), the
+# vanilla pairing for an advance that unlocks a privilege - written_alphabet (level 2)
+# + clergy_literacy_rights, whose potential is has_advance = written_alphabet. Countries
+# that match an advance's potential therefore start with the advance researched, and the
+# ones that start with the advance list the privilege in
+# main_menu/setup/1337/10_countries_*.txt. No runtime grant is needed.
 
 REPLACE:ira_persian_plateau = {
 	age = age_1_traditions
@@ -25,6 +32,7 @@ REPLACE:ira_persian_plateau = {
 			culture = { has_culture_group = culture_group:iranian_group }
 		}
 	}
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = cultural_traditions_law_advance
@@ -42,6 +50,7 @@ REPLACE:hab_expert_mountaineers = {
 		}
 	}
 
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = mining_law_advance
@@ -63,6 +72,7 @@ swiss_alpine_passes = {
 		}
 		is_swiss_for_advances = yes
 	}
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_alpine_proximity_privilege
 
 	requires = mapmaking
@@ -77,6 +87,7 @@ REPLACE:sav_alpine_identity = {
 		has_or_had_tag = SAV
 	}
 
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_alpine_proximity_privilege
 
 	requires = mining_law_advance
@@ -94,6 +105,7 @@ REPLACE:albanian_prokletije = {
 		}
 	}
 
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = codified_laws
@@ -111,6 +123,7 @@ REPLACE:scottish_highland_tradition = {
 			culture = { has_culture_group = culture_group:scottish_group }
 		}
 	}
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
@@ -124,6 +137,7 @@ REPLACE:drokpa = {
 
 	global_merchant_capacity_modifier = 0.05
 
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
@@ -137,6 +151,7 @@ REPLACE:inc_vertical_economy = {
 			has_or_had_tag = CSU
 		}
 	}
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = mapmaking
@@ -151,6 +166,7 @@ REPLACE:mor_atlas_strongholds = {
 		has_or_had_tag = MOR
 	}
 
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = mining_law_advance
@@ -166,6 +182,7 @@ REPLACE:a_permanent_capital = {
 	}
 	global_distance_from_capital_speed_propagation = 0.1
 
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
@@ -174,6 +191,7 @@ REPLACE:npl_himalayan_homeland = {
 	age = age_1_traditions
 	icon = feudalism_advance
 	potential = { OR = { culture.language = language:nepali_language has_or_had_tag = NPL } }
+	starting_technology_level = 1
 	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = codified_laws

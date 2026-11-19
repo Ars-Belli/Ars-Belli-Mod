@@ -229,3 +229,70 @@ abm_china_ahimsa_code = {
 	}
 
 }
+
+# Ars Belli: vanilla warring_state with the dead red_turban_rebellions branches removed.
+# The situation is emptied by this mod, so both branches were always false while
+# is_situation_active logged an error every evaluation.
+REPLACE:warring_state = {
+	age = age_1_traditions
+	potential = {
+		NOT = { has_or_had_tag = CHI }
+		has_reform = government_reform:warring_state
+		has_variable = unlocked_warring_state
+		trigger_if = {
+			limit = { exists = international_organization:middle_kingdom }
+			NOT = { is_leader_of_international_organization = international_organization:middle_kingdom }
+		}
+		OR = {
+			culture.language.language_family ?= language_family:chinese_language_family
+			culture.language = language:yi_language
+			culture.language = language:hmong_language
+			culture.language.language_family ?= language_family:tai_language_family
+			culture.language = language:tibetan_language
+			culture.language = language:jurchen_language
+			culture.language = language:nanai_language
+			culture.language = language:udege_language
+		}
+	}
+	locked = {
+		NOT = { has_or_had_tag = CHI }
+		has_reform = government_reform:warring_state
+		exists = international_organization:middle_kingdom
+		OR = {
+			culture.language.language_family ?= language_family:chinese_language_family
+			culture.language = language:yi_language
+			culture.language = language:hmong_language
+			culture.language.language_family ?= language_family:tai_language_family
+			culture.language = language:tibetan_language
+		}
+	}
+	country_modifier = {
+		monthly_war_exhaustion = -0.1
+		monthly_towards_belligerent = societal_value_monthly_move
+		can_create_red_turban_rebellions_cb = yes
+		government_reform_slots = 1
+		global_levy_size_modifier = 0.1
+		global_levy_recruitment_speed_modifier = 0.1
+		blocked_from_creating_subjects = yes
+		government_size = 1
+		#AI Aggressiveness modifiers
+		peace_offer_fairness = -0.5
+		aggressiveness_modifier = 0.33
+		expected_warscore_modifier = 0.33
+		win_war_chance_threshold = -0.2
+		coalition_strength_tolerance = 0.15
+	}
+
+	location_modifier = {
+		potential_trigger = {
+			custom_tooltip = {
+				text = mch_warring_state_modifier_trigger
+				ROOT = { has_variable = mch_korea_conquest }
+				dominant_culture = {
+					has_culture_group = culture_group:chinese_group
+				}
+			}
+		}
+		local_integration_speed_modifier = 0.25
+	}
+}

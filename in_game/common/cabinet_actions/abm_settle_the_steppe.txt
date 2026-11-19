@@ -43,7 +43,7 @@ abm_settle_the_steppe = {
 		any_province = {
 			region = region:steppes_region
 			# the whole province, not just the settled part of it
-			abm_owns_entire_province = { PROVINCE = this COUNTRY = root } # allow has no scope:actor
+			abm_owns_entire_province = { COUNTRY = root } # allow has no scope:actor
 			abm_steppe_province_is_our_culture = yes
 			abm_steppe_province_needs_settling = yes
 		}
@@ -71,7 +71,7 @@ abm_settle_the_steppe = {
 				region = region:steppes_region
 			}
 			# only land we hold in full, wasteland aside
-			abm_owns_entire_province = { PROVINCE = this COUNTRY = scope:actor }
+			abm_owns_entire_province = { COUNTRY = scope:actor }
 			# room left to fill: some location is still short of 20 development
 			# or of half its population capacity
 			abm_steppe_province_needs_settling = yes
