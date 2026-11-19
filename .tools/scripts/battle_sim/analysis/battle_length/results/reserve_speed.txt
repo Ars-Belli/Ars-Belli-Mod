@@ -1,0 +1,84 @@
+600 battles a cell, both seats, both land damage x2. Armies of 30 regiments, +30% morale, 50 experience, generals 60/59/61, frontage 10. Reserve = the loser's regiments still waiting when 6 v 6 ended.
+A reserve joins the line with a daily chance of combat speed x 0.1 x (1 + modifiers). Heavy infantry 2 is unit_categories/01_army_heavy_infantry.txt, every unit x2 is NCombat.COMBAT_SPEED_SCALE 0.2.
+
+=== Infantry II
+combat speed                     6v6 days  lost  reserve  7v6 wins  7v5 wins  6v7 +5% wins
+before: heavy infantry 2               74   53%       0%       98%      100%           10%
+now: heavy infantry 2.25               73   54%       0%       97%      100%           11%
+heavy infantry 2.5                     73   54%       0%       96%      100%           15%
+heavy infantry 3                       74   54%       0%       94%      100%           17%
+heavy infantry 4                       74   53%       0%       91%      100%           21%
+heavy infantry 5, like cavalry         75   53%       0%       89%      100%           23%
+every unit x1.5                        74   54%       0%       94%      100%           17%
+every unit x2                          74   53%       0%       91%      100%           21%
+
+=== Infantry V
+combat speed                     6v6 days  lost  reserve  7v6 wins  7v5 wins  6v7 +5% wins
+before: heavy infantry 2               38   50%      24%       55%       64%           61%
+now: heavy infantry 2.25               44   59%      10%       69%       81%           50%
+heavy infantry 2.5                     45   64%       4%       78%       91%           38%
+heavy infantry 3                       45   67%       0%       94%      100%           17%
+heavy infantry 4                       44   68%       0%       94%      100%           11%
+heavy infantry 5, like cavalry         45   68%       0%       91%      100%           17%
+every unit x1.5                        45   67%       0%       94%      100%           17%
+every unit x2                          44   68%       0%       94%      100%           11%
+
+=== Mixed V: 20 infantry, 6 cavalry, 4 artillery
+combat speed                     6v6 days  lost  reserve  7v6 wins  7v5 wins  6v7 +5% wins
+before: heavy infantry 2               43   59%      16%       64%       78%           56%
+now: heavy infantry 2.25               46   64%       7%       78%       90%           41%
+heavy infantry 2.5                     47   66%       3%       87%       97%           28%
+heavy infantry 3                       47   67%       1%       94%      100%           17%
+heavy infantry 4                       46   67%       1%       94%      100%           20%
+heavy infantry 5, like cavalry         46   67%       0%       91%      100%           17%
+every unit x1.5                        46   68%       0%       96%      100%           11%
+every unit x2                          46   68%       0%       94%      100%           16%
+
+=== Cavalry III
+combat speed                     6v6 days  lost  reserve  7v6 wins  7v5 wins  6v7 +5% wins
+before: heavy infantry 2               79   50%       0%       88%      100%           23%
+now: heavy infantry 2.25               79   50%       0%       88%      100%           23%
+heavy infantry 2.5                     79   50%       0%       88%      100%           23%
+heavy infantry 3                       79   50%       0%       88%      100%           23%
+heavy infantry 4                       79   50%       0%       88%      100%           23%
+heavy infantry 5, like cavalry         79   50%       0%       88%      100%           23%
+every unit x1.5                        80   50%       0%       84%       98%           28%
+every unit x2                          80   50%       0%       87%       99%           28%
+
+=== Light infantry at each combat speed, heavy infantry 2.25
+unit, light combat speed                     6v6 days  lost  reserve  7v6 wins  7v5 wins  6v7 +5% wins
+Light infantry II                     3            67   46%       0%       95%      100%           16%
+                                      3.375        68   46%       0%       94%      100%           16%
+                                      4            69   46%       0%       92%      100%           20%
+Light infantry IV                     3            52   52%       0%       96%      100%           12%
+                                      3.375        52   52%       0%       94%      100%           16%
+                                      4            53   52%       0%       93%      100%           19%
+Light infantry V                      3            42   57%       1%       89%       98%           27%
+                                      3.375        41   58%       0%       95%      100%           15%
+                                      4            40   58%       0%       96%      100%           16%
+Light infantry levy II                3            67   46%       0%       95%      100%           22%
+                                      3.375        68   46%       0%       94%      100%           21%
+                                      4            69   46%       0%       92%      100%           27%
+Age V: 20 heavy, 10 light infantry    3            43   59%       7%       72%       86%           44%
+                                      3.375        44   61%       4%       80%       91%           38%
+                                      4            44   62%       2%       84%       94%           34%
+
+=== Holding armies next door until the reserve runs out, current combat speed. The side of 7 against an enemy with everything in on day 0
+plan                    Infantry V v 5          Infantry V v 6          Mixed V v 5             Mixed V v 6             
+all 7 on day 0          81%, 40 days            69%, 44 days            90%, 41 days            78%, 47 days            
+5 in, 2 next door       66%, 40 days            46%, 42 days            53%, 41 days            21%, 42 days            
+4 in, 3 next door       48%, 38 days            34%, 39 days            21%, 36 days            9%, 35 days             
+3 in, 4 next door       27%, 34 days            17%, 35 days            7%, 29 days             3%, 28 days             
+2 in, 5 next door       11%, 28 days            6%, 28 days             1%, 23 days             1%, 22 days             
+
+=== Relay, 4 armies, 3 in and 1 away, armies 25% slower. 600 battles a cell, 50% means no edge
+Infantry V, before: heavy infantry 2        61.0% (57-65)       41 days
+Infantry V, now: heavy infantry 2.25        57.7% (54-62)       42 days
+Infantry V, heavy infantry 3                54.3% (50-58)       42 days
+Infantry V, heavy infantry 4                57.7% (54-62)       41 days
+Infantry V, heavy infantry 5                62.3% (58-66)       41 days
+Veteran infantry V, before: heavy infantry 269.3% (66-73)       67 days
+Veteran infantry V, now: heavy infantry 2.2570.5% (67-74)       67 days
+Veteran infantry V, heavy infantry 3        73.3% (70-77)       67 days
+Veteran infantry V, heavy infantry 4        72.0% (68-76)       67 days
+Veteran infantry V, heavy infantry 5        71.3% (68-75)       68 days
