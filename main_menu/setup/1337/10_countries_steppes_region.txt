@@ -420,7 +420,7 @@ countries = {
 	ZAZ = { #Zaporozhia
 		starting_technology_level = 3
 		include = "expl_eastern_europe"
-		include = "eurasian_horde_not_present"
+		#include = "eurasian_horde_not_present" #ABM 2026-11-20: horde template gave ZAZ banal lordship, noble serfdom rights, tribal levies - a Cossack host needs the privileges below instead
 		court_language = ukrainian_dialect
 
 
@@ -445,18 +445,64 @@ countries = {
 				abm_cossack_hetmanate_reform
 			}
 
+			centralization_vs_decentralization = 30
+			traditionalist_vs_innovative = -40
+			spiritualist_vs_humanist = -20
+			aristocracy_vs_plutocracy = 60
+			serfdom_vs_free_subjects = 100
+			mercantilism_vs_free_trade = 40
+			belligerent_vs_conciliatory = 60
+			quality_vs_quantity = 40
+			offensive_vs_defensive = 60
+			land_vs_naval = -60
+			capital_economy_vs_traditional_economy = 60
+			individualism_vs_communalism = 70
+			outward_vs_inward = -20
+
+			parliament = {
+				parliament_type = assembly
+			}
+
 			laws = {
 				marriage_law = monogamous_marriage
 				heir_religion_law = heir_same_religion
 				recruitment_law = noble_levies_policy
+				cultural_traditions_law = martial_society
+				legal_code_law = civil_law_policy
+				coin_laws = gold_and_silver_coins
+				immigration_law = open_borders_law
+				education_masses_law = basic_religious_education
+				administrative_system = central_councils
 			}
 			privilege = {
+				#Nobles - army quality
+				primacy_of_nobility
+				nobles_offensive_military_doctrine
+				nobility_council
+				#Cossacks
+				cossack_private_armies_privilege
+				cossacks_sanctioned_atamans
+				cossacks_rada_autonomy
+				cossacks_register
+				cossacks_military_service
+				cossacks_land_rights
+				cossacks_allowed_free_roaming
+				cossacks_government_positions
+				cossacks_respected_traditions
 				#Clergy
 				clergy_powerful_dioceses
+				clergy_literacy_rights
 				#Burghers
 				market_fairs
-
-				cossack_identity
+				allow_trade_center_sponsorship
+				land_of_commerce
+				building_roads_rights
+				#Commoners
+				communal_lands
+				peasants_free_peasantry
+				peasants_allowed_weapons_privilege
+				allow_hunting
+				#cossack_identity #ABM 2026-11-20: no such privilege exists, engine drops it
 			}
 		}
 		country_rank = rank_duchy
