@@ -1823,5 +1823,34 @@ countries = {
 #	}
 
 	
+
+	ORK = { # Orkney
+		own_control_core = { }
+		our_cores_conquered_by_others = {
+			thurso # sutherland_province
+			strathearn # perthshire_province
+		}
+		include = "catholic_monarchy"
+		include = "expl_northern_europe"
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+			ruler_term = { character = ork_malise_v start_date = 1330.1.1 regnal_number = 5 }
+			ruler = ork_malise_v
+
+			reforms = {
+				galley_lords_reform
+			}
+
+			laws = {
+				piracy_law = state_piracy_policy
+				legal_code_law = civil_law_policy
+			}
+			
+			land_vs_naval = 100
+			belligerent_vs_conciliatory = -30
+		}
+		capital = orkney
+	}
 }
 }

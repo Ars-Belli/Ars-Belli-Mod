@@ -1778,5 +1778,97 @@ countries = {
 #	}
 
 	
+
+	BIJ = {
+		own_control_core = { }
+
+		starting_technology_level = 3
+		include = "expl_muslim_mediterranean"
+		include = "muslim_monarchy_no_abrahamic_dhimmi"
+		country_rank = rank_duchy
+		
+		government = {
+			type = monarchy
+			heir_selection = cognatic_primogeniture
+
+			ruler = tun_abu_zakariya_yahya
+
+			regnal_numbers = {
+				Abd_al-Wahid = 1
+				name_abdullah = 1
+				name_john = 2
+				name_muhammad = 2
+				name_abraham = 1
+				name_abd_al_aziz = 1
+				name_omar = 1
+				Khalid = 1
+				name_zechariah = 1
+				name_abu_bakr = 1
+			}
+ 
+			laws = {
+				piracy_law = state_piracy_policy
+			}
+			privilege = {
+				#Nobles
+				noble_sponsored_navy
+				#Ulama
+				waqf_payments
+				#Burghers
+				land_of_commerce
+				allow_trade_center_sponsorship
+				al_caid
+				andalusi_elite
+				#Dhimmi
+				dhimmi_pact_of_umar
+				#Tribes
+				tribes_tribal_levies
+				tribes_allow_gatherings
+				desert_power
+			}
+			laws = {
+				amazigh_familial_connections = reliance_on_local_tribes
+				sharia_law = maliki_policy
+			}
+			bureaucracies = {
+				# The Hafsid court upheld the western-Mediterranean muhtasib tradition.
+				{ type = hisba_bureaucracy date = 1250.1.1 entrenchment = 50 }
+			}
+		}
+		include = "hafsid_state"
+
+		religious_school = maliki_school
+		government = { mysticism_vs_jurisprudence = -5 }
+
+		accepted_cultures = {
+			tunisian
+		}
+
+		tolerated_cultures = {
+			kabyle
+			chaoui
+			mustaarabi
+		}
+
+		capital = bejaia
+		dynasty = hafsid_dynasty
+	}
+	CNR = {
+		own_control_core = { }
+
+
+		discovered_areas = {
+			canary_islands_area
+			madeira_sea_area
+		}
+
+		include = "eurasian_tribe"
+		starting_technology_level = 0
+		government = {
+			type = tribe
+			heir_selection = tribal_oldest_male
+			ruler = random
+		}
+	}
 }
 }
