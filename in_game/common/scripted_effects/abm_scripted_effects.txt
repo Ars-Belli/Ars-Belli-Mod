@@ -784,6 +784,35 @@ mp_limits_calculate_diplo_weights = {
 	}
 }
 
+# One-off settlement boom for a location that has just joined a colonial nation.
+# The location variable makes it strictly once per location, so a location that
+# later falls away and rejoins - the same colonial nation or another one - never
+# gets a second helping. Called from setup_colonial_nation below and from
+# on_location_changed_owner (on_action/abm_colonial_nation_on_actions.txt).
+abm_new_colonial_nation_boom = {
+	if = {
+		limit = {
+			NOT = { has_variable = abm_new_colonial_nation_founded }
+		}
+		set_variable = { name = abm_new_colonial_nation_founded value = 1 }
+		add_location_modifier = {
+			modifier = new_colonial_nation_founded
+			years = 35
+		}
+		# the growth surge only makes sense while the location still has room to grow; from
+		# 50% of capacity on it is stripped monthly by abm_colonial_boom_growth_ceiling
+		if = {
+			limit = {
+				location_population_percentage < 0.5
+			}
+			add_location_modifier = {
+				modifier = abm_colonial_growth_boom
+				years = 35
+			}
+		}
+	}
+}
+
 # New Colonial Nation Modifier
 REPLACE:setup_colonial_nation = {
 	change_government_type = government_type:republic
@@ -792,17 +821,6 @@ REPLACE:setup_colonial_nation = {
 	add_reform = government_reform:colonial_subject
 	every_owned_location = {
 		change_control = control_radical_bonus
-	}
-	
-	capital.region = {
-		every_location_in_region = {
-			limit = {
-				owner = root
-			}
-			add_location_modifier = {
-				modifier = new_colonial_nation_founded
-				years = 20
-			}
-		}
+		abm_new_colonial_nation_boom = yes
 	}
 }

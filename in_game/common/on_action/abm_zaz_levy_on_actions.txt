@@ -1,0 +1,18 @@
+﻿# Ars Belli: Zaporozhia starts under a pre-plague levy surge (+100% noble and
+# tribal levies). It lapses the month the Black Death reaches any ZAZ location.
+monthly_country_pulse = {
+	on_actions = {
+		abm_zaz_levy_surge_check
+	}
+}
+
+abm_zaz_levy_surge_check = {
+	trigger = {
+		tag = ZAZ
+		has_country_modifier = abm_zaz_levy_surge
+		country_has_disease = disease:bubonic_plague
+	}
+	effect = {
+		remove_country_modifier = abm_zaz_levy_surge
+	}
+}

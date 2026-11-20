@@ -1,0 +1,25 @@
+﻿# Ars Belli - "this culture still gets the Confucian content" test (issue #42 HIGH Nr.5/Nr.7).
+#
+# Scope: a CULTURE (call as `culture = { abm_has_confucian_content = yes }`).
+# Replacement for vanilla's bare `has_culture_group = culture_group:confucian_group`
+# in the six systems that group used to gate:
+#   advances/1_building_unlocks.txt       confucian_school_advance, confucian_academy_advance
+#   building_types/culture_buildings.txt confucian_school
+#   laws/02_country_specific.txt          imperial_examination_law
+#   estate_privileges/burghers_estate.txt petty_bureaucracy
+#   estate_privileges/nobles_estate.txt   scholar_officials
+#
+# Korean, Tamna, Vietnamese, Muong and the four Japanese cultures lost their
+# Confucian group membership (they would otherwise merge the whole 71-culture bloc
+# via the merge_culture_group cabinet action) but keep the content through this list.
+# Bai stays in confucian_group, so the first branch still covers it.
+abm_has_confucian_content = {
+	OR = {
+		has_culture_group = culture_group:confucian_group
+		has_culture_group = culture_group:japanese_group
+		this = culture:korean_culture
+		this = culture:tamna_culture
+		this = culture:vietnamese_culture
+		this = culture:muong_culture
+	}
+}

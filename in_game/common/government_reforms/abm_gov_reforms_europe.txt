@@ -272,3 +272,53 @@ REPLACE:great_and_minor_councils_of_genoa = {
 	}
 	years = 2
 }
+REPLACE:hanseatic_merchant_federation = {
+	# Ars Belli: the Hansa is a landed country now, so the reform no longer requires
+	# country_type = building. Without this it would be dropped at game start and every
+	# hanseatic_kontor (country_potential = allows_hanseatic_federation_buildings) with it.
+	content_priority = 1100
+	unique = yes
+
+	# Ars Belli: pickable from the reform list by the Hansa itself (2026-11-19). It used to be
+	# granted only by abm_hanseatic_federation_decision (self-referencing potential +
+	# is_locked_mechanic, the vanilla legatus_natus pattern), which kept it out of the list
+	# entirely; the decision still grants it as a shortcut. No government_type lock, so any
+	# government that keeps the reform (e.g. via the decision) does not lose it.
+	potential = {
+		has_or_had_tag = HSA
+	}
+
+	country_modifier = {
+		# cannot_be_subjugated = yes
+		global_burghers_estate_power = 0.10
+		merchant_maintenance_efficiency = 0.10
+		allows_hanseatic_federation_buildings = yes
+		legislative_efficiency = 0.10
+		#court_language_is_market_language_importance_modifier = 15
+	}
+
+	years = 2
+}
+
+abm_crown_of_great_moravia_reform = {
+	age = age_1_traditions
+	unique = yes
+	major = no
+
+	locked = {
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = abm_crown_of_great_moravia_reform
+		}
+	}
+
+	potential = {
+		has_reform = government_reform:abm_crown_of_great_moravia_reform
+	}
+
+	country_modifier = {
+		monthly_legitimacy = 0.10
+		global_crown_estate_power = 0.10
+		global_monthly_control = 0.0005
+	}
+}

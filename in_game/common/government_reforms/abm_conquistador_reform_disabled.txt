@@ -1,0 +1,32 @@
+﻿# Ars Belli - Conquistadors defanged (issue #42, HIGH Nr.8).
+#
+# `auto_conquer_different_religion_at_war` lets a conquistador country take a
+# location by simply occupying it instead of only in a peace deal - the exploit
+# the issue asks to remove. It is the only source of that modifier in the game
+# (the other one, auto_conquer_at_war, belongs to Timur/situation code).
+#
+# The reform keeps its vanilla 1.4.9 shape (the `locked` block still hides it from
+# the reform list) but carries no modifier, so a conquistador country spawned by
+# flavor_cas.35/.36 -> conquistador.1 is an ordinary army subject: it has to fight
+# and take land in a peace deal like everyone else. `blocked_from_peace` comes from
+# subject_types/conquistador.txt, not from here, so event subjects stay sane.
+#
+# Re-sync with vanilla government_reforms/country_specific.txt when the game updates.
+REPLACE:conquistador_country = {
+	major = yes
+
+	potential = {
+		always = no
+	}
+	allow = {
+	}
+	locked = {
+		is_locked_mechanic = {
+			mechanic = government_reform
+			type = conquistador_country
+		}
+	}
+	country_modifier = {
+	}
+	years = 2
+}

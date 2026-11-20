@@ -10,6 +10,7 @@
 # CHE - Chen - theocracy
 # MNG - Ming - monarchy
 # Structure per tag: 2x age_1, 2x age_2, 2x age_3, 2x age_4, 1x age_5
+# CHE exception: abm_che_wetland_adaptation sits at age_1 (it unlocks the homeland proximity privilege).
 
 ########################################
 # CGU (Guo) - noble republic and river commerce
@@ -23,7 +24,7 @@ abm_cgu_china_tradition_1 = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = monarchy_reform_traditions_advance
+	requires = mining_law_advance
 
 	court_spending_efficiency = 0.10
 }
@@ -36,7 +37,7 @@ abm_cgu_china_tradition_2 = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = guilds
+	requires = organized_religion
 
 	nobles_estate_levy_size = 0.25
 }
@@ -49,7 +50,7 @@ abm_cgu_trade_guild_charter = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = slave_center_advance
+	requires = banking_advance
 
 	global_merchant_capacity_modifier = 0.25
 }
@@ -62,7 +63,7 @@ abm_cgu_prefectural_administration = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = crown_power_advance_renaissance
+	requires = national_assemblies_advance
 
 	global_monthly_control = 0.002
 }
@@ -75,7 +76,7 @@ abm_cgu_envoy_training_academy = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = explorer_commisions_advance
+	requires = new_world_advance
 
 	monthly_diplomats = 0.10
 	unlock_subject_type = march
@@ -89,7 +90,7 @@ abm_cgu_gentry_town_residence = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = colonial_charters
+	requires = foreign_cultural_law_advance
 
 	global_nobles_city_desired_pop_scaled = 0.005
 	global_nobles_rural_desired_pop_scaled = 0.001
@@ -105,7 +106,7 @@ abm_cgu_army_regulation_reform = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = regiment_reinforcement_speed_reformation
+	requires = unlock_flintlock_levy
 
 	discipline = 0.025
 	monthly_army_tradition = 0.10
@@ -122,7 +123,7 @@ abm_cgu_estate_fiscal_code = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = crown_power_advance_reformation
+	requires = confessional_court
 
 	global_estate_max_tax = 0.05
 }
@@ -135,7 +136,7 @@ abm_cgu_siege_warfare_bureau = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = line_infantry
+	requires = militiamen_advance
 
 	artillery_bonus_vs_fort = 1
 }
@@ -148,7 +149,7 @@ abm_cgu_china_ambition = {
 		has_or_had_tag = CGU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = government_size_revolutions
+	requires = slave_trade_act_advance
 
 	government_size = 1
 }
@@ -163,7 +164,7 @@ abm_cfn_china_tradition_1 = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = pest_house_advance
+	requires = agriculture_advance
 
 	export_efficiency = medium_trade_efficiency_bonus
 }
@@ -176,7 +177,7 @@ abm_cfn_china_tradition_2 = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = efficient_logistics
+	requires = mining_advance
 
 	import_efficiency = medium_trade_efficiency_bonus
 }
@@ -189,7 +190,7 @@ abm_cfn_distant_seas_command = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = naval_initiative_ren
+	requires = rudimentary_coastal_ship_repair
 
 	naval_range_modifier = 0.20
 }
@@ -216,7 +217,7 @@ abm_cfn_maritime_outpost_chain = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = port_cost_distance_from_capital_advance
+	requires = unlock_carrack_advance
 
 	global_maritime_presence_modifier = 0.20
 }
@@ -232,7 +233,7 @@ abm_cfn_maritime_supply_chain = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = repair_at_sea_aod
+	requires = unlock_carrack_advance
 
 	sea_cost_on_distance_from_capital_when_maritime = -1
 }
@@ -245,7 +246,7 @@ abm_cfn_armored_warships = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = global_trade_routes_advance
+	requires = unlock_galleon_advance
 
 	naval_damage_taken = -0.10
 }
@@ -258,7 +259,7 @@ abm_cfn_coastal_recruitment = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = letters_of_marque
+	requires = unlock_galleon_advance
 
 	global_sailors_modifier = 0.10
 }
@@ -271,7 +272,7 @@ abm_cfn_coastal_blockade_corps = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = maritime_advance_age_5
+	requires = unlock_frigate_advance
 
 	blockade_efficiency = 0.20
 }
@@ -284,7 +285,7 @@ abm_cfn_china_ambition = {
 		has_or_had_tag = CFN
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = military_tactics_advance_6
+	requires = global_supply_limit_modifier_advance_6
 
 	army_disembark_speed = 0.35
 }
@@ -303,7 +304,7 @@ abm_wuu_china_tradition_1 = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = guilds
+	requires = organized_religion
 
 	burghers_estate_max_tax = 0.05
 }
@@ -332,7 +333,7 @@ abm_wuu_realm_satisfaction_code = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = global_clergy_max_literacy_advance
+	requires = global_burghers_max_literacy_advance
 
 	global_estate_target_satisfaction = 0.025
 }
@@ -345,7 +346,7 @@ abm_wuu_rgo_expansion_edict = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = entrepot_advance
+	requires = banking_advance
 
 	global_max_rgo_size_modifier_in_non_rural = 0.25
 }
@@ -358,7 +359,7 @@ abm_wuu_government_innovation_edict = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = battle_leadership_law_advance
+	requires = foreign_cultural_law_advance
 
 	unlock_government_reform = abm_wuu_people_granary_circuit_reform
 }
@@ -371,7 +372,7 @@ abm_wuu_metal_mining_reform = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = local_governor_advance
+	requires = house_of_parliament_advance
 
 	global_copper_output_modifier = 0.10
 	global_tin_output_modifier = 0.10
@@ -401,7 +402,7 @@ abm_wuu_prosperity_encouragement = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = pop_promotion_speed_age_4
+	requires = pharmacology_advance
 
 	global_monthly_prosperity = 0.001
 }
@@ -428,7 +429,7 @@ abm_wuu_china_ambition = {
 		has_or_had_tag = WUU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = quinine
+	requires = distiller_mill_advance
 
 	global_supply_limit_modifier = 0.20
 }
@@ -445,7 +446,7 @@ abm_cnp_china_tradition_1 = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = cultural_acceptance_advance
+	requires = written_alphabet
 
 	global_migration_speed_modifier = 0.10
 }
@@ -458,7 +459,7 @@ abm_cnp_china_tradition_2 = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = government_sanctioned_celebrations
+	requires = meritocracy_advance
 
 	global_pop_assimilation_speed_modifier = 0.10
 }
@@ -471,7 +472,7 @@ abm_cnp_urban_attraction_charter = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = anatomy_advance
+	requires = renaissance_advance
 
 	non_rural_migration_attraction = 0.20
 }
@@ -487,7 +488,7 @@ abm_cnp_social_mobility_charter = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = anatomy_advance
+	requires = renaissance_development
 
 	global_pop_promotion_speed_modifier = 0.20
 }
@@ -500,7 +501,7 @@ abm_cnp_construction_efficiency_edict = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = new_world_crops
+	requires = trade_through_owned_disc_advance
 
 	global_build_buildings_efficiency = 0.20
 }
@@ -513,7 +514,7 @@ abm_cnp_road_construction_corps = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = colonial_administration_advance
+	requires = dry_dock_advance
 
 	global_road_building_time = -0.25
 }
@@ -526,7 +527,7 @@ abm_cnp_highway_efficiency_edict = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = barracks_advance
+	requires = shipyard_advance
 
 	road_cost_on_distance_from_capital = -1
 }
@@ -539,7 +540,7 @@ abm_cnp_forced_march_doctrine = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = war_score_reformations_advance
+	requires = standardisation_of_calibre
 
 	army_movement_speed = 0.10
 	morale_recovery_in_friendly = 0.10
@@ -553,7 +554,7 @@ abm_cnp_rgo_expansion_edict = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = firearms_manufactory_advance
+	requires = manufactories_advance
 
 	global_max_rgo_size_modifier_in_non_rural = 0.25
 }
@@ -566,7 +567,7 @@ abm_cnp_china_ambition = {
 		has_or_had_tag = CNP
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = correct_box_advance_revolutions
+	requires = levee_en_masse_advance
 
 	land_unit_attrition = -0.20
 }
@@ -583,7 +584,7 @@ abm_jnx_china_tradition_1 = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = province_governors
+	requires = diplomatic_capacity_traditions
 
 	monthly_diplomats = 0.10
 }
@@ -596,7 +597,7 @@ abm_jnx_china_tradition_2 = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = agriculture_advance
+	requires = cultural_traditions_law_advance
 
 	government_reform_slots = 1
 }
@@ -609,7 +610,7 @@ abm_jnx_diplomatic_prestige_office = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = spy_construction_renaissance
+	requires = improve_relation_impact_renaissance
 
 	diplomatic_reputation = 2
 	spy_network_construction = 0.20
@@ -623,7 +624,7 @@ abm_jnx_diplomatic_engagement = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = spy_construction_renaissance
+	requires = improve_relation_impact_renaissance
 
 	improve_relation_impact = 0.20
 	counter_espionage = 0.20
@@ -637,7 +638,7 @@ abm_jnx_realm_unification_board = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = native_policy_advance
+	requires = foreign_cultural_law_advance
 
 	diplomatic_annexation_efficiency = 0.20
 }
@@ -650,7 +651,7 @@ abm_jnx_heavy_cavalry_reform = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = unlock_carrack_advance
+	requires = unlock_flute_advance
 
 	army_heavy_cavalry_power = 0.10
 	army_heavy_infantry_power = 0.10
@@ -664,7 +665,7 @@ abm_jnx_subject_loyalty_edict = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = reformation_subject_opinions_advance
+	requires = subject_income_reformation_advance
 
 	subject_loyalty = 5
 	subject_income_modifier = 0.10
@@ -692,7 +693,7 @@ abm_jnx_stability_ordinance = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = pacify_population_advance
+	requires = crown_rights_laws_advance
 
 	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction
 	stability_cost_efficiency = 0.20
@@ -706,7 +707,7 @@ abm_jnx_china_ambition = {
 		has_or_had_tag = ABJNX
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = combined_arms_advance_revolutions
+	requires = slave_trade_act_advance
 
 	court_spending_efficiency = 0.20
 }
@@ -723,7 +724,7 @@ abm_ctw_china_tradition_1 = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = efficient_logistics
+	requires = mining_advance
 
 	global_build_buildings_efficiency = 0.10
 }
@@ -736,7 +737,7 @@ abm_ctw_china_tradition_2 = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = educated_bureaucrats
+	requires = meritocracy_advance
 
 	global_monthly_prosperity = 0.001
 }
@@ -749,7 +750,7 @@ abm_ctw_levy_training_reform = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = unlock_cavalry_advance
+	requires = professional_armies_advance
 
 	levy_combat_efficiency_modifier = 0.10
 	global_levy_size_modifier = 0.25
@@ -763,7 +764,7 @@ abm_ctw_highway_efficiency_edict = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = renaissance_sculptures
+	requires = banking_advance
 
 	road_cost_on_distance_from_capital = -1
 }
@@ -779,7 +780,7 @@ abm_ctw_development_commission = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = regulate_court_procedures
+	requires = foreign_cultural_law_advance
 
 	global_monthly_development = 0.001
 }
@@ -792,7 +793,7 @@ abm_ctw_scholarly_education_board = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = print_culture
+	requires = printing_press_advance
 
 	global_max_literacy = 10
 }
@@ -819,7 +820,7 @@ abm_ctw_integrated_advancement = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = combined_arms_advance_reformation
+	requires = confessional_court
 
 	combined_bonus_per_type = 0.01
 }
@@ -832,7 +833,7 @@ abm_ctw_attrition_warfare_code = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = correct_box_advance_absolutism
+	requires = unlock_wagon_train
 
 	global_hostile_attrition = 1
 }
@@ -845,7 +846,7 @@ abm_ctw_china_ambition = {
 		has_or_had_tag = CTW
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = modern_bureaucracy
+	requires = slave_trade_act_advance
 
 	global_estate_satisfaction_recovery = 0.002
 }
@@ -862,7 +863,7 @@ abm_chu_china_tradition_1 = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = city_building_advance
+	requires = agriculture_advance
 
 	minting_income_factor = 0.10
 }
@@ -888,7 +889,7 @@ abm_chu_gold_extraction_bureau = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = pound_lock_canals_advance
+	requires = banking_advance
 
 	global_goods_gold_output_modifier = 0.15
 	global_silver_output_modifier = 0.15
@@ -902,7 +903,7 @@ abm_chu_gem_crafting_office = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = renaissance_court
+	requires = banking_advance
 
 	global_jewelry_output_modifier = 0.15
 }
@@ -915,7 +916,7 @@ abm_chu_ironworks_expansion = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = green_vitriol
+	requires = house_of_parliament_advance
 
 	global_iron_output_modifier = 0.20
 	global_coal_output_modifier = 0.20
@@ -945,7 +946,7 @@ abm_chu_price_regulation_edict = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = construction_speed_reformation
+	requires = bastion_advance
 
 	monthly_inflation = -0.001
 }
@@ -958,7 +959,7 @@ abm_chu_veteran_cadre_system = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = unlock_heavy_lancers_advance
+	requires = artillery_institution_advance
 
 	experience_decay = -0.01
 	monthly_experience_gain = 0.10
@@ -972,7 +973,7 @@ abm_chu_frontage_reform_ordinance = {
 		has_or_had_tag = ABCHU
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = gustavian_infantry
+	requires = unlock_wagon_train
 
 	possible_frontage_modifier = 0.20
 }
@@ -1002,7 +1003,7 @@ abm_che_china_tradition_1 = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = alchemy_advance
+	requires = meritocracy_advance
 
 	global_pop_conversion_speed_modifier = 0.15
 }
@@ -1015,7 +1016,7 @@ abm_che_china_tradition_2 = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = unlock_traditional_galley_advance
+	requires = power_projection_advance_1
 
 	army_heavy_infantry_power = 0.10
 }
@@ -1028,22 +1029,23 @@ abm_che_religious_tolerance_edict = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = grant_privilege_cost_modifier_renaissance_advance
+	requires = renaissance_development
 
 	tolerance_own = 2
 }
 
 abm_che_wetland_adaptation = {
-	age = age_2_renaissance
+	age = age_1_traditions
 	icon = professional_armies_advance
 
 	potential = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = unlock_peasant_levy_advance
+	requires = agriculture_advance
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	hills_proximity_impact = 0.25
 }
@@ -1056,7 +1058,7 @@ abm_che_diverse_customs_charter = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = print_culture
+	requires = surgery_advance
 
 	cultures_capacity = 2
 }
@@ -1069,7 +1071,7 @@ abm_che_light_infantry_doctrine = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = supply_lines
+	requires = unlock_matchlock_levy
 
 	army_light_infantry_power = 0.10
 }
@@ -1096,7 +1098,7 @@ abm_che_territorial_control_edict = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = reduce_inflations_advance
+	requires = clergy_rights_laws_advance
 
 	global_max_control = 0.025
 }
@@ -1109,7 +1111,7 @@ abm_che_gunpowder_ordinance_office = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = war_score_absolutism_advance
+	requires = military_revolution_advance
 
 	army_artillery_power = 0.10
 }
@@ -1122,7 +1124,7 @@ abm_che_china_ambition = {
 		has_or_had_tag = CHE
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = unlock_flying_battery_advance
+	requires = levee_en_masse_advance
 
 	artillery_bonus_vs_fort = 1
 }
@@ -1139,7 +1141,7 @@ abm_mng_tradition_1 = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = castle_advance
+	requires = power_projection_advance_1
 
 	fort_limit_modifier = 0.20
 }
@@ -1155,7 +1157,7 @@ abm_mng_tradition_2 = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = feudalism_advance
+	requires = mapmaking
 
 	government_reform_slots = 1
 }
@@ -1168,7 +1170,7 @@ abm_mng_nine_garrisons_of_the_great_wall = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = army_initiative_ren
+	requires = professional_armies_advance
 
 	global_defensive = 0.20
 }
@@ -1181,7 +1183,7 @@ abm_mng_revived_three_grand_divisions = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = power_projection_advance_2
+	requires = professional_armies_advance
 
 	discipline = 0.05
 }
@@ -1194,7 +1196,7 @@ abm_mng_inward_perfection = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = battle_leadership_law_advance
+	requires = foreign_cultural_law_advance
 
 	stability_cost_efficiency = 0.10
 }
@@ -1207,7 +1209,7 @@ abm_mng_yellow_river_dykes = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = merchants_quarters_advance
+	requires = trade_through_owned_disc_advance
 
 	global_production_efficiency = medium_production_efficiency_bonus
 }
@@ -1220,7 +1222,7 @@ abm_mng_salt_monopoly  = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = town_rights_ref_advance
+	requires = naval_battery_advance
 
 	selling_efficiency = small_trade_efficiency_bonus
 	export_efficiency = small_trade_efficiency_bonus
@@ -1234,7 +1236,7 @@ abm_mng_single_whip_law = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = correct_box_advance_reformation
+	requires = bastion_advance
 
 	tax_income_efficiency = large_tax_income_efficiency_bonus
 }
@@ -1247,7 +1249,7 @@ abm_mng_the_red_cannon = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = regiment_reinforcement_speed_absolutism
+	requires = unlock_wagon_train
 
 	siege_ability = 0.20
 }
@@ -1260,7 +1262,7 @@ abm_mng_ambition = {
 		has_or_had_tag = MNG
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = government_size_revolutions
+	requires = slave_trade_act_advance
 
 	research_speed_modifier = 0.05
 }

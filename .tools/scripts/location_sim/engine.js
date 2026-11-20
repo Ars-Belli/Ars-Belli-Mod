@@ -763,5 +763,9 @@
 	const api = { levyUnknown, setData, setTracking, Mods, LocationMods, scriptValue, locationState, countryState, locationModifiers, baseModifiers, employment, capacity, valueContext,
 		maxLevel, employmentSize, methodOf, methodsOf, fillOf, isProducing, growth, military, levies, rgo, buildingEconomy, food, devProsperity, maxRgo, tax, control, evaluate, advance, project, targetPrice, priceStep,
 		MILITARY_CONTROL_FLOOR, get DB() { return DB; } };
-	if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.LocationSim = api;
+	if (typeof module !== 'undefined' && module.exports) {
+		// Node: always the lowest priority, so a simulation never takes time from any other program (as battle_sim/engine.js)
+		try { const os = require('os'); os.setPriority(os.constants.priority.PRIORITY_LOW); } catch (e) {}
+		module.exports = api;
+	} else root.LocationSim = api;
 })(typeof self !== 'undefined' ? self : this);

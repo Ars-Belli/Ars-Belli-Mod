@@ -8,34 +8,42 @@ diplomacy_manager = {
     dependency = { first = SCO second = ROS subject_type = vassal }
     dependency = { first = SCO second = MOY subject_type = vassal }
 
-    dependency = { first = WLS second = GWR subject_type = vassal }
-    dependency = { first = WLS second = GMG subject_type = vassal }
-    dependency = { first = WLS second = MAC subject_type = vassal }
-    dependency = { first = WLS second = AUD subject_type = vassal }
-    dependency = { first = WLS second = BRO subject_type = vassal }
-    dependency = { first = WLS second = POS subject_type = vassal }
-    dependency = { first = WLS second = EWY subject_type = vassal }
-    dependency = { first = WLS second = PMB subject_type = vassal }
+    # WLS/GWR: left out of the Welsh annexation (the vassal holds no land)
+    #dependency = { first = WLS second = GWR subject_type = vassal }
+    # WLS/GMG: left out of the Welsh annexation (the vassal holds no land)
+    #dependency = { first = WLS second = GMG subject_type = vassal }
+    # WLS/MAC: left out of the Welsh annexation (the vassal holds no land)
+    #dependency = { first = WLS second = MAC subject_type = vassal }
+    # WLS/AUD: left out of the Welsh annexation (the vassal holds no land)
+    #dependency = { first = WLS second = AUD subject_type = vassal }
+    # WLS/BRO: left out of the Welsh annexation (the vassal holds no land)
+    #dependency = { first = WLS second = BRO subject_type = vassal }
+    # WLS/POS: left out of the Welsh annexation (the vassal holds no land)
+    #dependency = { first = WLS second = POS subject_type = vassal }
+    # WLS/EWY: left out of the Welsh annexation (the vassal holds no land)
+    #dependency = { first = WLS second = EWY subject_type = vassal }
+    # WLS/PMB: left out of the Welsh annexation (the vassal holds no land)
+    #dependency = { first = WLS second = PMB subject_type = vassal }
 
     #dependency = { first = PLE second = CLR subject_type = vassal }
-    dependency = { first = PLE second = CWM subject_type = vassal }
     #dependency = { first = PLE second = MYO subject_type = vassal }
-    dependency = { first = PLE second = KID subject_type = vassal }
-    dependency = { first = PLE second = ORD subject_type = vassal }
-    dependency = { first = PLE second = DMS subject_type = vassal }
-    dependency = { first = PLE second = ULS subject_type = vassal }
-    dependency = { first = PLE second = AMA subject_type = vassal }
-    dependency = { first = PLE second = DCI subject_type = vassal }
     #dependency = { first = PLE second = GLE subject_type = vassal }
 
-    dependency = { first = TRY second = AMH subject_type = vassal }
-    dependency = { first = TYR second = INI subject_type = vassal }
-    dependency = { first = TYR second = KEE subject_type = vassal }
-    dependency = { first = LEI second = OSS subject_type = vassal }
-    dependency = { first = MCM second = BEA subject_type = vassal }
+    # TRY annexed into AMH (2026-11-13): the overlord no longer exists on the map.
+    #dependency = { first = TRY second = AMH subject_type = vassal }
+    # TYR/INI: left out of the EU4-map rework (INI holds no land)
+    #dependency = { first = TYR second = INI subject_type = vassal }
+    # TYR/KEE: left out of the EU4-map rework (KEE holds no land)
+    #dependency = { first = TYR second = KEE subject_type = vassal }
+    # LEI/OSS: left out of the EU4-map rework (OSS holds no land)
+    #dependency = { first = LEI second = OSS subject_type = vassal }
+    # MCM/BEA: left out of the EU4-map rework (BEA holds no land)
+    #dependency = { first = MCM second = BEA subject_type = vassal }
 
-    scripted_mutual = { first = THO second = CWM type = alliance }
-    scripted_mutual = { first = MYO second = UMH type = alliance }
+    # THO/CWM: left out of the EU4-map rework (CWM holds no land)
+    #scripted_mutual = { first = THO second = CWM type = alliance }
+    # MYO/UMH: left out of the EU4-map rework (MYO holds no land)
+    #scripted_mutual = { first = MYO second = UMH type = alliance }
 
     # Scandinavia
 
@@ -108,9 +116,10 @@ diplomacy_manager = {
 	dependency = { first = GLH second = ZAZ subject_type = tributary }
 
     #Hanseatic League
-    dependency = { first = HSA second = LUB subject_type = hanseatic_member }
-    dependency = { first = HSA second = HAM subject_type = hanseatic_member }
-    dependency = { first = HSA second = BRM subject_type = hanseatic_member }
+    #Ars Belli: LUB, HAM and BRM are annexed into the Hansa, which is now a landed country
+    #dependency = { first = HSA second = LUB subject_type = hanseatic_member }
+    #dependency = { first = HSA second = HAM subject_type = hanseatic_member }
+    #dependency = { first = HSA second = BRM subject_type = hanseatic_member }
 
 
     #India
@@ -158,13 +167,16 @@ diplomacy_manager = {
     dependency = { first = FRA second = ANG subject_type = appanage }
 
     #Vassal, Fief Mouvant of France
-    dependency = { first = FRA second = VDM subject_type = vassal } #NEW used to be appanage but is invalid after patch 1.2
-    dependency = { first = FRA second = FOI subject_type = vassal }
+    #Ars Belli: VDM annexed into the royal domain
+    #dependency = { first = FRA second = VDM subject_type = vassal } #NEW used to be appanage but is invalid after patch 1.2
+    #Ars Belli: FOI annexed into the royal domain
+    #dependency = { first = FRA second = FOI subject_type = vassal }
     dependency = { first = FRA second = AMG subject_type = vassal }
     dependency = { first = FRA second = BAR subject_type = vassal }
     dependency = { first = FRA second = BLS subject_type = vassal }
     dependency = { first = FRA second = AST subject_type = vassal }
-    dependency = { first = FRA second = COM subject_type = vassal }
+    #Ars Belli: COM annexed into the royal domain
+    #dependency = { first = FRA second = COM subject_type = vassal }
     dependency = { first = FRA second = IJO subject_type = vassal }
     dependency = { first = FRA second = MRT subject_type = vassal }
     dependency = { first = FRA second = PER subject_type = vassal }
@@ -179,8 +191,8 @@ diplomacy_manager = {
     #Vassals of vassals
     dependency = { first = ANJ second = MIE subject_type = fiefdom }
     dependency = { first = FLA second = NAM subject_type = vassal }
-    dependency = { first = FOI second = BRR subject_type = fiefdom }
-    dependency = { first = FOI second = MDM subject_type = fiefdom }
+    dependency = { first = FRA second = BRR subject_type = fiefdom } #Ars Belli: Foix annexed, its fiefdoms pass to the crown
+    dependency = { first = FRA second = MDM subject_type = fiefdom } #Ars Belli: Foix annexed, its fiefdoms pass to the crown
     dependency = { first = ALE second = PRC subject_type = fiefdom }
     dependency = { first = BOU second = MRC subject_type = fiefdom }
 
@@ -247,13 +259,15 @@ diplomacy_manager = {
     scripted_mutual = { first = MOR second = TUN type = alliance }
 
     #-------Germany-------
-    dependency = { first = PAL second = MSB subject_type = vassal }
-    dependency = { first = PAL second = ERB subject_type = vassal }
-    dependency = { first = AUG second = AGC subject_type = vassal }
+    #Ars Belli: MSB, ERB and AGC annexed, so their vassalage is dropped (all three are landless now)
+    #dependency = { first = PAL second = MSB subject_type = vassal }
+    #dependency = { first = PAL second = ERB subject_type = vassal }
+    #dependency = { first = AUG second = AGC subject_type = vassal }
     dependency = { first = BRE second = DIT subject_type = vassal }
     dependency = { first = LAU second = RTB subject_type = vassal }
     dependency = { first = WUR second = HBR subject_type = vassal }
-    dependency = { first = TRI second = PSZ subject_type = vassal }
+    #Ars Belli: PSZ annexed by its own overlord Trier
+    #dependency = { first = TRI second = PSZ subject_type = vassal }
     dependency = { first = KMM second = NWG subject_type = vassal } #NEW used to be fiefdom but no longer valid since patch 1.2
     dependency = { first = BRA second = SOR subject_type = fiefdom }
     scripted_mutual = { first = MEI second = HES type = alliance }
@@ -282,7 +296,8 @@ diplomacy_manager = {
     dependency = { first = LIT second = VBK subject_type = vassal }
 
     #-------Bohemia-------
-	dependency = { first = BOH second = MVA subject_type = fiefdom }
+	# MVA: Moravia is independent (the fiefdom of Bohemia was dissolved).
+	#dependency = { first = BOH second = MVA subject_type = fiefdom }
     scripted_mutual = { first = BOH second = LBV type = alliance }
 
     #-------Poland-------
@@ -294,6 +309,9 @@ diplomacy_manager = {
     dependency = { first = POL second = PLK subject_type = vassal }
     dependency = { first = POL second = RAW subject_type = vassal }
     dependency = { first = POL second = CZK subject_type = vassal }
+
+    #-------Hungary-------
+    dependency = { first = HUN second = SLO subject_type = vassal } #Slovakia
 
     #Balkans:
     scripted_oneway = { first = HUN second = HAB type = embargo_nation }

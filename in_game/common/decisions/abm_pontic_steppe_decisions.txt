@@ -4,6 +4,9 @@
 # kezlev is the only location this changes; kalay, aqmecit, jurchi and
 # or_qapi keep their vanilla goods.
 #
+# All three province decisions here require full ownership of their province
+# (abm_owns_entire_province), not only the locations whose goods they rewrite.
+#
 # Campaign-global, not per country: only_once stops the same country from
 # taking it twice, and abm_or_qapi_rgos_developed is the global flag that
 # removes the decision for every other country as well - including any
@@ -16,7 +19,7 @@ abm_develop_or_qapi_rgos = {
 	potential = {
 		NOT = { has_global_variable = abm_or_qapi_rgos_developed }
 
-		owns = location:kezlev
+		province_definition:or_qapi_province = { abm_owns_entire_province_definition = { COUNTRY = root } }
 
 		NOT = { location:kezlev = { raw_material = goods:stone } }
 	}
@@ -62,9 +65,7 @@ abm_develop_cafa_rgos = {
 	potential = {
 		NOT = { has_global_variable = abm_cafa_rgos_developed }
 
-		owns = location:kaffa
-		owns = location:soldaia
-		owns = location:vosporo
+		province_definition:cafa_province = { abm_owns_entire_province_definition = { COUNTRY = root } }
 
 		OR = {
 			NOT = { location:kaffa = { raw_material = goods:dyes } }
@@ -130,10 +131,7 @@ abm_develop_gothia_rgos = {
 	potential = {
 		NOT = { has_global_variable = abm_gothia_rgos_developed }
 
-		owns = location:qirq_yer
-		owns = location:qarasuvbazar
-		owns = location:lusta
-		owns = location:theodoro
+		province_definition:gothia_province = { abm_owns_entire_province_definition = { COUNTRY = root } }
 
 		OR = {
 			NOT = { location:qirq_yer = { raw_material = goods:coal } }

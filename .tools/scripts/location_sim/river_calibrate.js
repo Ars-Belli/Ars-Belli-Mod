@@ -5,6 +5,7 @@
 //   node .tools/scripts/location_sim/river_calibrate.js <save|latest> [--report 30]   -> river_fixes.json
 // build_map.js applies river_fixes.json; rerun it after this. Fixes from earlier saves are kept unless this save disagrees.
 const fs = require('fs');
+try { require('os').setPriority(require('os').constants.priority.PRIORITY_LOW); } catch (e) {} // lowest priority, like the simulators
 const path = require('path');
 const { openSave, latestSave } = require('../battle_sim/paradox.js');
 const DATA = JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'));

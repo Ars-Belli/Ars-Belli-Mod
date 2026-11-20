@@ -275,6 +275,36 @@ REPLACE:TWS_f = {
 	}
 }
 
+# Tuscany
+# Ars Belli: vanilla TUS_f is level = 1 (county); this raises it to a tier 2
+# (duchy-level) formable. Everything else is the vanilla block verbatim.
+REPLACE:TUS_f = {
+	level = 2
+	required_locations_fraction = 0.75
+	rule = historical
+
+	potential = {
+		culture = culture:tuscan
+	}
+	allow = {
+		owns = location:florence
+	}
+
+	name = TUS
+	flag = TUS	
+	adjective = TUS_ADJ
+	tag = TUS
+	color = map_TUS
+
+	areas = {
+		tuscany_area
+	}
+
+	form_effect = {
+		
+	}
+}
+
 # ABKOG_f = { # Kingdom of God — commented out, use generic_action instead (papacy reform blocks forming)
 #	 level = 4
 #	 required_locations_fraction = 0.60
@@ -304,3 +334,26 @@ REPLACE:TWS_f = {
 #		 set_variable = { name = abm_is_kingdom_of_god value = 1 }
 #	 }
 # }
+
+# Venice
+# Ars Belli: VEN exists at start (main_menu/setup/1337/10_countries_italy_region.txt)
+# and is already a duchy, so this entry only gives the tag a formable definition of
+# the same level. potential = { always = no } means nobody can ever form it.
+VEN_f = {
+	level = 2
+	required_locations_fraction = 1.0
+	rule = historical
+
+	potential = { always = no }
+	allow = { }
+
+	name = VEN
+	flag = VEN
+	adjective = VEN_ADJ
+	tag = VEN
+	color = map_venice
+
+	areas = {
+		veneto_area
+	}
+}

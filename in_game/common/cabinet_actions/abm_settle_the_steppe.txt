@@ -2,10 +2,12 @@
 # grassland of the Pontic steppe.
 #
 # Deliberately modelled on vanilla's swe_slash_and_burn_new_farms
-# (in_game/common/cabinet_actions/): a province picker whose `visible` block
-# rejects provinces that are already populous, plus per-location growth and
+# (in_game/common/cabinet_actions/): a province picker, per-location growth and
 # migration modifiers while the action runs, and an is_finished condition that
-# ends it once the province is settled.
+# ends it once the province is settled. Settlement is measured in DEVELOPMENT
+# only (every land location >= 20.01); the pop half stops by itself once a
+# location holds 30 (thousand) pops - a fixed floor, not a share of capacity -
+# while development keeps going.
 #
 # Differences from the vanilla reference:
 #   - gated on region:steppes_region instead of a hardcoded area list, so it
@@ -14,7 +16,9 @@
 #     location in it must have a primary or accepted culture as its dominant
 #     culture. Vanilla's action colonises culturally foreign land, which is not
 #     what we want here - this is about filling up land we have already
-#     assimilated.
+#     assimilated;
+#   - and it must be ours in full (abm_owns_entire_province, wasteland aside),
+#     matching the full-ownership rule the steppe RGO decisions use.
 #
 # Unlock: vanilla cabinet actions are unlocked either by a `modifier:allow_...`
 # country modifier on an advance, or by `unlock_cabinet_action`. This one uses
@@ -40,7 +44,8 @@ abm_settle_the_steppe = {
 	allow = {
 		any_province = {
 			region = region:steppes_region
-			owner ?= root # allow has no scope:actor; root is the country
+			# the whole province, not just the settled part of it
+			abm_owns_entire_province = { COUNTRY = root } # allow has no scope:actor
 			abm_steppe_province_is_our_culture = yes
 			abm_steppe_province_needs_settling = yes
 		}
@@ -67,16 +72,9 @@ abm_settle_the_steppe = {
 			any_location_in_province = {
 				region = region:steppes_region
 			}
-			# only land we actually hold
-			NOT = {
-				any_location_in_province = {
-					has_owner = yes
-					is_land = yes
-					NOT = { owner ?= scope:actor }
-				}
-			}
-			# room left to fill: some location is still short of 20 development
-			# or of half its population capacity
+			# only land we hold in full, wasteland aside
+			abm_owns_entire_province = { COUNTRY = scope:actor }
+			# room left to fill: some land location is still below 20 development
 			abm_steppe_province_needs_settling = yes
 			# and it must already be ours in culture, not a colony project
 			abm_steppe_province_is_our_culture = yes
@@ -97,17 +95,36 @@ abm_settle_the_steppe = {
 		}
 	}
 
-	# Finished once EVERY location in the province has reached 20 development
-	# and is at least half full against its population capacity.
+	# Finished once EVERY land location in the province has reached 20 development.
+	# Population plays no part in finishing the action.
 	is_finished = {
 		scope:target ?= {
 			NOT = { abm_steppe_province_needs_settling = yes }
 		}
 	}
 
+	# Development always runs, so the province reaches the 20-development finish
+	# even if the population part below has switched itself off.
+	# 0.035/month = one point per ~28.5 months, i.e. ~30 years for a province whose
+	# settlements start at 6-9 development (14 points / 0.035 = 400 months, 11.5 / 0.035
+	# = 329). The province ends when its LAST location reaches 20.01, so the slowest
+	# location sets the duration. Raise/lower this one number for a different pace.
 	location_modifier = {
+		local_monthly_development = 0.035
+	}
+
+	# Pops only while the location is still small: a FIXED floor of 30 (thousand) pops,
+	# deliberately not a share of population capacity - capacity grows with development
+	# and with buildings, so a percentage would keep re-arming itself and turn this into a
+	# cheap pop pump after every epidemic, war or resettlement. Above the floor the growth
+	# and migration attraction stop while development keeps going.
+	# `potential_trigger` is the supported gate for a cabinet action's location modifier
+	# (common/cabinet_actions/readme.txt).
+	location_modifier = {
+		potential_trigger = {
+			population < 30
+		}
 		local_population_growth = 0.020
-		local_monthly_development = 0.010
 		local_migration_attraction = 0.250
 	}
 

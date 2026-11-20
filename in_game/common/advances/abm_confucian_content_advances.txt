@@ -1,0 +1,68 @@
+﻿# Ars Belli - Confucian content kept for cultures that leave the Confucian group
+# (issue #42 HIGH Nr.5 + Nr.7). Vanilla 1.4.9 copy with the
+# `has_culture_group = culture_group:confucian_group` branch replaced by
+# abm_has_confucian_content (scripted_triggers/
+# abm_confucian_content_trigger.txt). Every other vanilla branch
+# (sanjiao religion, sect IO policy, has_neo_confucianism, Middle Kingdom
+# membership) is unchanged. Re-sync with vanilla when the game updates.
+
+REPLACE:confucian_school_advance = {
+	age = age_1_traditions
+	
+	requires = scriptorium_advance
+	potential = {
+		OR =  {
+			culture = { abm_has_confucian_content = yes }
+			religion = religion:sanjiao
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			custom_tooltip = {
+				text = has_neo_confucianism_tt
+				has_variable = has_neo_confucianism
+			}
+			# Ars Belli: Middle Kingdom IO removed (empty override) - branch was dead and logged "unset scope".
+		}
+	}
+	
+	unlock_building = confucian_school
+}
+
+REPLACE:confucian_academy_advance = {
+	age = age_2_renaissance
+	
+	requires = government_size_renaissance
+	
+	potential = {
+
+		OR =  {
+			culture = { abm_has_confucian_content = yes }
+			religion = religion:sanjiao
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			custom_tooltip = {
+				text = has_neo_confucianism_tt
+				has_variable = has_neo_confucianism
+			}
+			# Ars Belli: Middle Kingdom IO removed (empty override) - branch was dead and logged "unset scope".
+		}
+	}
+	
+	unlock_building = confucian_academy
+}
+
+# Ars Belli: vanilla advance gated on the removed Middle Kingdom IO. Its potential scoped into
+# international_organization:middle_kingdom, which logged "unset scope" for every country each
+# month. Kept as an unreachable node so the cabinet action unlock stays defined.
+REPLACE:direct_domestic_migration_middle_kingdom_advance = {
+	age = age_1_traditions
+	allow_children = no
+	potential = {
+		always = no
+	}
+
+	unlock_cabinet_action = direct_domestic_migration
+}

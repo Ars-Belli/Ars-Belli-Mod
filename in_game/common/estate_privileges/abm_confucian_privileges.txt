@@ -1,0 +1,72 @@
+﻿# Ars Belli - Confucian content kept for cultures that leave the Confucian group
+# (issue #42 HIGH Nr.5 + Nr.7). Vanilla 1.4.9 copy with the
+# `has_culture_group = culture_group:confucian_group` branch replaced by
+# abm_has_confucian_content (scripted_triggers/
+# abm_confucian_content_trigger.txt). Every other vanilla branch
+# (sanjiao religion, sect IO policy, has_neo_confucianism, Middle Kingdom
+# membership) is unchanged. Re-sync with vanilla when the game updates.
+
+REPLACE:petty_bureaucracy = { #https://en.wikipedia.org/wiki/Jungin
+	estate = burghers_estate
+		
+	potential = {
+		OR = {
+			culture ?= { abm_has_confucian_content = yes }
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			has_variable = has_neo_confucianism
+			# Ars Belli: Middle Kingdom IO removed (empty override) - branch was dead and logged "unset scope".
+		}
+	}
+	allow = {
+		has_imperial_examinations = yes
+	}
+
+	can_revoke = {
+		not = { has_imperial_examinations = yes }
+	}
+
+	country_modifier = {
+		burghers_estate_max_tax = -0.05
+		global_burghers_estate_power = 0.33
+
+		global_burghers_max_literacy = 5
+		country_cabinet_efficiency = 0.1
+		monthly_towards_centralization = societal_value_large_monthly_move
+	}
+}
+
+REPLACE:scholar_officials = { #https://en.wikipedia.org/wiki/Scholar-official
+	estate = nobles_estate
+		
+	potential = {
+		OR = {
+			culture ?= { abm_has_confucian_content = yes }
+			any_international_organizations_member_of = {
+				international_organization_type = international_organization_type:sect
+				international_organization_has_policy = policy:confucianism_policy
+			}
+			has_variable = has_neo_confucianism
+			# Ars Belli: Middle Kingdom IO removed (empty override) - branch was dead and logged "unset scope".
+		}
+	}
+	allow = {
+		has_imperial_examinations = yes
+	}
+
+	can_revoke = {
+		not = { has_imperial_examinations = yes }
+	}
+
+	country_modifier = {
+		nobles_estate_max_tax = -0.05
+		global_nobles_estate_power = 0.33
+		
+		global_nobles_max_literacy = 5
+		research_speed_modifier = 0.1
+
+		monthly_towards_innovative = societal_value_large_monthly_move
+	}
+}

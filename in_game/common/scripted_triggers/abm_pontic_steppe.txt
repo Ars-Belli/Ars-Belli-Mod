@@ -20,39 +20,15 @@ abm_location_settled_and_loyal = {
 # Country-scope checks: true when every owned land location in the province
 # passes abm_location_settled_and_loyal.
 abm_can_develop_or_qapi_rgos = {
-	province:or_qapi_province = {
-		NOT = {
-			any_location_in_province = {
-				has_owner = yes
-				is_land = yes
-				NOT = { abm_location_settled_and_loyal = yes }
-			}
-		}
-	}
+	province_definition:or_qapi_province = { abm_can_develop_province_definition_rgos = yes }
 }
 
 abm_can_develop_cafa_rgos = {
-	province:cafa_province = {
-		NOT = {
-			any_location_in_province = {
-				has_owner = yes
-				is_land = yes
-				NOT = { abm_location_settled_and_loyal = yes }
-			}
-		}
-	}
+	province_definition:cafa_province = { abm_can_develop_province_definition_rgos = yes }
 }
 
 abm_can_develop_gothia_rgos = {
-	province:gothia_province = {
-		NOT = {
-			any_location_in_province = {
-				has_owner = yes
-				is_land = yes
-				NOT = { abm_location_settled_and_loyal = yes }
-			}
-		}
-	}
+	province_definition:gothia_province = { abm_can_develop_province_definition_rgos = yes }
 }
 
 # Location-scope: raw material is one of the steppe's pastoral goods.
@@ -103,6 +79,8 @@ abm_steppe_pastoral_location = {
 #   decision        -> abm_steppe_pastoral_province = { COUNTRY = root }
 abm_steppe_pastoral_province = {
 	region = region:steppes_region
+	# the whole province must be ours, not just the pastoral part of it
+	abm_owns_entire_province = { COUNTRY = $COUNTRY$ }
 	# at least one location still open for reorganisation
 	any_location_in_province = {
 		has_owner = yes
@@ -121,21 +99,57 @@ abm_steppe_pastoral_province = {
 	}
 }
 
-# Country-scope, parameterised province gate used by the historical mineral
-# decisions (Luhansk, Bakhmut, Tana, Izium, Kursk, Belgorod, Donetsk).
-#   abm_can_develop_province_rgos = { PROVINCE = province:luhan_province }
-# Every owned land location in the province must pass
-# abm_location_settled_and_loyal. A scope parameter can be used as a block
-# root - vanilla does the same in religion_triggers.txt
-# (`crusade_target_relations_valid_trigger` uses `$ACTOR$ = { ... }`).
+# Province-scope (root = province): $COUNTRY$ owns every ownable location of it, so the
+# province-wide RGO decisions cannot be taken off a single foothold. Wasteland
+# (is_ownable = no) is ignored; unowned ownable land counts against full ownership.
+# Call it from the province you mean: it runs at province scope, e.g. inside
+# `any_province = { ... abm_owns_entire_province = { COUNTRY = root } }`.
+# (2026-11-19: a `PROVINCE` parameter carrying `province:<key>` is NOT usable as a block
+# root - the engine logs "Failed to scope to province. Province does not exist". Use the
+# `_definition` variant below for a province named by its map key.)
+abm_owns_entire_province = {
+	NOT = {
+		any_location_in_province = {
+			is_ownable = yes
+			NOT = { owner ?= $COUNTRY$ }
+		}
+	}
+}
+
+# Province-scope (root = province) gate used by the historical mineral decisions
+# (Luhansk, Bakhmut, Tana, Izium, Kursk, Belgorod, Donetsk). Every owned land
+# location in the province must pass abm_location_settled_and_loyal.
+#   any_province = { abm_can_develop_province_rgos = yes }
 abm_can_develop_province_rgos = {
-	$PROVINCE$ = {
-		NOT = {
-			any_location_in_province = {
-				has_owner = yes
-				is_land = yes
-				NOT = { abm_location_settled_and_loyal = yes }
-			}
+	NOT = {
+		any_location_in_province = {
+			has_owner = yes
+			is_land = yes
+			NOT = { abm_location_settled_and_loyal = yes }
+		}
+	}
+}
+
+# Province-definition scope (root = province_definition): the same two checks for callers
+# that name a province by its map definition key. `province:<key>` is NOT a usable scope
+# here (it logs "Failed to scope to province. Province does not exist"), while
+# `province_definition:<key>` + `any_location_in_province_definition` is the vanilla pair
+# (country_interactions/sell_corsica.txt, building_types/unique_buildings.txt).
+abm_owns_entire_province_definition = {
+	NOT = {
+		any_location_in_province_definition = {
+			is_ownable = yes
+			NOT = { owner ?= $COUNTRY$ }
+		}
+	}
+}
+
+abm_can_develop_province_definition_rgos = {
+	NOT = {
+		any_location_in_province_definition = {
+			has_owner = yes
+			is_land = yes
+			NOT = { abm_location_settled_and_loyal = yes }
 		}
 	}
 }
@@ -159,9 +173,13 @@ abm_steppe_province_is_our_culture = {
 		}
 	}
 }
-# Province scope. True when at least one land location in the province still
-# falls short of the settlement target: 20 development, and at least half of
-# its population capacity filled.
+# Province scope. True when at least one land location in the province is still
+# below 20 development (20.01, because development is fractional - a location at
+# exactly 20.00 would otherwise keep the province in the picker forever).
+#
+# Development is the ONLY criterion: population no longer decides whether a
+# province can be settled, it only caps the pop-growth half of the cabinet
+# action's location modifier (see abm_settle_the_steppe).
 #
 # Used in both directions by abm_settle_the_steppe - to decide whether the
 # province is worth offering in the picker, and (negated) as the is_finished
@@ -169,9 +187,6 @@ abm_steppe_province_is_our_culture = {
 abm_steppe_province_needs_settling = {
 	any_location_in_province = {
 		is_land = yes
-		NAND = {
-			development >= 20
-			location_population_percentage >= 0.5
-		}
+		development < 20.01
 	}
 }

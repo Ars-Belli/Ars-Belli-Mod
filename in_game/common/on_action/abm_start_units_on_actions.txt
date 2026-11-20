@@ -1,0 +1,65 @@
+﻿# Ars Belli: units scripted at game start.
+# `create_sub_unit_with_owner` is the vanilla effect that spawns a subunit/ship in the
+# effect's location (in_game/events/disaster/D008_fate_of_the_phoenix.txt spawns five
+# galleys with it, in_game/events/disaster/revolution_disaster.txt spawns whole armies).
+# Both start hooks are used because on_game_start fires during bookmark initialisation,
+# while on_game_started_after_lobby fires once the start state is fully in place; every
+# block below is idempotent so the pair cannot double up.
+on_game_start = {
+	on_actions = {
+		abm_start_units_game_start
+	}
+}
+
+on_game_started_after_lobby = {
+	on_actions = {
+		abm_start_units_game_start
+	}
+}
+
+# Zaporozhia's clean-up also runs on the first monthly pulse, in case whatever hands the
+# host its extra regiment does so after both start hooks (window closes on 1337.6.1).
+monthly_country_pulse = {
+	on_actions = {
+		abm_start_units_monthly
+	}
+}
+
+abm_start_units_game_start = {
+	effect = {
+		# Castile: fifteen galleys in Seville.
+		c:CAS = {
+			if = {
+				limit = { total_sub_unit_type_count:n_traditional_galley < 15 }
+				location:sevilla = {
+					while = {
+						count = 15
+						create_sub_unit_with_owner = {
+							type = n_traditional_galley
+							owner = c:CAS
+							origin = this
+						}
+					}
+				}
+			}
+		}
+
+		# Zaporozhia: light cavalry only. The three regiments come from the setup block in
+		# 27_armies_abm.txt; anything else the start state hands the host is removed.
+		c:ZAZ = {
+			abm_zaz_light_cavalry_only = yes
+		}
+	}
+}
+
+abm_start_units_monthly = {
+	effect = {
+		if = {
+			limit = {
+				tag = ZAZ
+				current_date < 1337.6.1
+			}
+			abm_zaz_light_cavalry_only = yes
+		}
+	}
+}

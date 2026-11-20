@@ -1,0 +1,10 @@
+﻿# Ars Belli: start-state unit helpers.
+# `sub_unit_type` / `every_country_sub_unit` / `destroy_subunit` are the vanilla idioms
+# (in_game/common/scripted_effects/unit_effects.txt:39, dlc/D009 .../decisions/cas_decisions.txt:30).
+abm_zaz_light_cavalry_only = {
+	every_country_sub_unit = {
+		limit = { NOT = { sub_unit_type = unit_type:a_horsemen } }
+		debug_log = "abm_start_units: removing a non-cavalry Zaporozhian subunit"
+		destroy_subunit = yes
+	}
+}

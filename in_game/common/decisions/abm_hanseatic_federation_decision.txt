@@ -1,0 +1,111 @@
+﻿# Hansa: a merchant power holding the Wendish and Holstein coast, the heaths and
+# marshes behind them and the three great cities crowns itself a merchant
+# federation. The Hanseatic Merchant Federation reform is granted by this decision
+# (it is locked out of the reform list otherwise) and unlocks the imported HSA
+# advances in abm_german.txt.
+abm_hanseatic_federation_decision = {
+	decision_category = country_specific_decisions
+	only_once = yes
+	potential = {
+		NOT = { has_reform = government_reform:hanseatic_merchant_federation }
+		has_or_had_tag = HSA
+	}
+	allow = {
+		at_war = no
+		# the three cities themselves, in full
+		owns = location:lubeck
+		owns = location:bremen
+		owns = location:hamburg
+		# 70% of the ownable locations of each area / province, counted by owner
+		# mecklenburg 11/15, holstein 10/13, Luneburg Heath 7/9, Middle Aller 4/5,
+		# Middle Weser 3/4, Weser Marshes 5/7, Elbe Marshes 5/6
+		area:mecklenburg_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 10 } }
+		area:holstein_area = { any_location_in_area = { is_ownable = yes owner ?= root count > 9 } }
+		province_definition:luneburger_heide_province = { any_location_in_province_definition = { is_ownable = yes owner ?= root count > 6 } }
+		province_definition:aller_province = { any_location_in_province_definition = { is_ownable = yes owner ?= root count > 3 } }
+		province_definition:middle_weser_province = { any_location_in_province_definition = { is_ownable = yes owner ?= root count > 2 } }
+		province_definition:wesermarch_province = { any_location_in_province_definition = { is_ownable = yes owner ?= root count > 4 } }
+		province_definition:elbmarch_province = { any_location_in_province_definition = { is_ownable = yes owner ?= root count > 4 } }
+	}
+	ai_will_do = {
+		value = 100
+	}
+	option = {
+		name = abm_hanseatic_federation_decision.a
+		ai_chance = { value = 100 }
+		effect = {
+			set_country_rank_effect = { rank = country_rank:rank_kingdom }
+			add_reform = government_reform:hanseatic_merchant_federation
+			area:mecklenburg_area = {
+				every_location_in_area = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			area:holstein_area = {
+				every_location_in_area = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			province_definition:luneburger_heide_province = {
+				every_location_in_province_definition = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			province_definition:aller_province = {
+				every_location_in_province_definition = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			province_definition:middle_weser_province = {
+				every_location_in_province_definition = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			province_definition:wesermarch_province = {
+				every_location_in_province_definition = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+			province_definition:elbmarch_province = {
+				every_location_in_province_definition = {
+					limit = {
+						is_ownable = yes
+						owner ?= root
+						NOT = { is_core_of = root }
+					}
+					add_core = root
+				}
+			}
+		}
+	}
+}

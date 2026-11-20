@@ -119,7 +119,13 @@ REPLACE:restoration_of_the_mongol_empire = {
 	army_reinforce_efficiency = 0.10 #was 0.66
 }
 
-# Make it stronger, last 20 years, and apply to capital region
+# Make it stronger. Applied per location, for 35 years, by
+# abm_new_colonial_nation_boom (scripted_effects/abm_scripted_effects.txt) - once per
+# location, ever. Location-category only: build_*_road_cost_modifier are country
+# modifiers and do nothing here, so road work is sped up by local_road_building_time.
+# The population growth surge lives in abm_colonial_growth_boom below and lapses once
+# the location is half full: on an already crowded location +2% growth compounds into
+# far more than a new colony's whole economy.
 REPLACE:new_colonial_nation_founded = {
 	game_data = {
 		category = location
@@ -128,12 +134,23 @@ REPLACE:new_colonial_nation_founded = {
 
 	local_unrest = -1
 	local_pop_promotion_speed_modifier = 1.0
-	local_population_growth = 0.010
-	local_road_building_time = -0.50
+	local_road_building_time = -0.65
 	local_masonry_output_modifier = 1
 	local_lumber_output_modifier = 1
 	local_sand_output_modifier = 1
 	local_iron_output_modifier = 1
+}
+
+# Growth half of the colonial boom: it carries a location with room to grow up to a
+# working size, but a static modifier cannot carry a condition, so it is stripped from
+# any colonial location that reaches 50% of its population capacity - see
+# abm_colonial_boom_growth_ceiling (on_action/abm_colonial_nation_on_actions.txt).
+abm_colonial_growth_boom = {
+	game_data = {
+		category = location
+	}
+
+	local_population_growth = 0.020
 }
 
 # ARS BELLI: consequence of expelling another country's trade posts (abm_expel_fondacos).
@@ -146,4 +163,25 @@ abm_expelled_foreign_merchants = {
 	trade_income = -0.10
 	global_merchant_capacity_modifier = -0.10
 	trade_range_modifier = -0.10
+}
+
+# Zaporozhia's pre-Black-Death levy surge. Removed by abm_zaz_levy_surge_check
+# (in_game/common/on_action/abm_zaz_levy_on_actions.txt) once bubonic_plague
+# reaches one of ZAZ's own locations.
+abm_zaz_levy_surge = {
+	game_data = {
+		category = country
+	}
+	nobles_estate_levy_size = 1.0
+	tribes_estate_levy_size = 1.0
+}
+
+# Reinforcement switched off by the checkbox beside the army maintenance slider (in_game/gui/economy_lateralview.gui,
+# in_game/common/scripted_guis/abm_reinforcement_gui.txt). The engine treats a rate below 0 as no reinforcement, and
+# -1000% keeps it there whatever speed bonuses a country has. The army slider stays vanilla.
+abm_reinforcement_stopped = {
+	game_data = {
+		category = country
+	}
+	regiment_reinforcement_speed = -10
 }

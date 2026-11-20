@@ -5,6 +5,7 @@ Following files were replaced and need updating along with vanilla files:
 #############################################################
 
 # GUI (same-name full-file replacements; reapply # Ars Belli / # MP Rank blocks on vanilla update)
+in_game/common/unit_types/00_age_templates_land.txt # cavalry combat_power by age 2.4 / 2.4 / 2.4 / 2.65 / 3.05 / 3.05, light and heavy (#ABM on each); abm_tech_line_no_mercenaries.txt and abm_mercenary_unit_types.txt carry the same values for their written-out cavalry
 in_game/gui/alertmanager.gui
 in_game/gui/army_builder.gui
 in_game/gui/context_menu.gui
@@ -14,6 +15,7 @@ in_game/gui/foreign_country_lateralview.gui
 in_game/gui/war_lateralview.gui
 in_game/gui/panels/organization/union.gui
 in_game/gui/panels/right_panel/right_panel.gui
+in_game/gui/economy_lateralview.gui # reinforcement checkbox after both army auto-maintenance checkboxes (# Ars Belli (military costs))
 in_game/gui/select_war_to_intervene.gui
 in_game/gui/sell_location_action_view.gui
 in_game/gui/regiments_overview.gui # mercenary age badge (zero naval stat marker -> abm_age_badge_N)
@@ -47,6 +49,8 @@ in_game/common/disasters/death_of_hayan_wuruk.txt
 in_game/common/disasters/decline_of_majapahit.txt
 in_game/common/disasters/decline_of_mali.txt
 in_game/common/disasters/dissolution_of_delhi.txt
+in_game/common/disasters/turmoil_in_brandenburg.txt # disabled - the vanilla can_start spam-logs "Event target link 'ruler' returned an unset scope" every month and the disaster is not wanted
+in_game/common/goods_demand/army_demands.txt # every horses line and every camels line x5, every other good in cavalry-only baskets x2 (#ABM on each); D009 baskets are TRY_REPLACE: in abm_d009_army_demands.txt
 in_game/common/generic_action_ai_lists/crisis_of_the_chinese_dynasty_list.txt
 in_game/common/generic_action_ai_lists/decline_of_majapahit_list.txt
 in_game/common/generic_action_ai_lists/lordship_of_ireland.txt
@@ -70,6 +74,8 @@ in_game/common/international_organizations/red_turban_rebels.txt
 in_game/common/laws/01_legal_system.txt
 in_game/common/laws/20_middle_kingdom.txt
 in_game/common/laws/23_lordship_of_ireland.txt
+in_game/common/movements/calvinism_movement.txt # Catholic heresies (catharism/lollardy/waldensian) spread to their pops at 0.05 instead of 0.5/absent; re-sync the rest
+in_game/common/movements/lutheranism_movement.txt # same change
 in_game/common/peace_treaties/claim_timurid_empire.txt
 in_game/common/peace_treaties/delhi_peace_treaties.txt
 in_game/common/peace_treaties/peace_seize_opposition_leadership.txt # Delhi-only treaty; fall_of_delhi situation removed
@@ -91,7 +97,6 @@ in_game/common/situations/fall_of_delhi.txt
 in_game/common/situations/red_turban_rebellions.txt
 in_game/common/situations/rise_of_timur.txt
  #1.4.6: in_game/common/levies/abm_d009_maghreb_levies.txt also holds REPLACE:levy_tribal_cavalry, a copy from 06_tribal_levies.txt with a NOT added to allow; re-sync the rest
- #1.4.6: in_game/common/unit_categories/abm_army_heavy_infantry.txt holds REPLACE:army_heavy_infantry, a copy of 01_army_heavy_infantry.txt with combat_speed 2.25; re-sync the rest
  #1.4.6: in_game/common/levies/abm_d009_maghreb_levies.txt holds TRY_REPLACE: copies of levy_zenati_horse, levy_sanhaja_camel_cavalry and levy_saharan_camelry from dlc/D009_across_the_pillars/in_game/common/levies/d009_traditions_levies.txt; only size differs, re-sync the rest
  #1.4: in_game/common/unit_types/abm_tech_line_no_mercenaries.txt holds REPLACE: copies of the 34 tech-line land units from 2_unlocked_through_tech.txt with the stats of 00_age_templates_land.txt written out; abm_mercenary_unit_types.txt repeats them as a_abm_merc_* (pool weights included). Re-sync both when vanilla changes those units or templates
  #1.4: in_game/common/town_setups/00_default.txt is NO LONGER a full-file replacement - ABM's town_setup changes moved to in_game/common/town_setups/abm_town_setups.txt as REPLACE:<name> entries
@@ -180,11 +185,12 @@ main_menu/setup/templates/expl_horn_of_africa_no_coast.txt
 main_menu/setup/templates/subsaharan_tribe.txt
 
 # main_menu/setup/1337 (renamed from setup/start in game 1.4: the bookmark folder is the start date)
-# 11 of these 73 files share a name with vanilla (listed below); the other 62 are
+# 12 of these 73 files share a name with vanilla (listed below); the other 62 are
 # mod-only `10_countries_<region>_region.txt` splits of 10_countries.txt. The mod's
 # own start-state MUST load, otherwise vanilla's 10_countries.txt aborts on the
 # countries Ars Belli deleted (see `in_game/setup/countries` note above).
 main_menu/setup/1337/03_markets.txt
+main_menu/setup/1337/05_characters.txt # GENERATED - vanilla copy with the 976 characters of deleted countries commented out; regenerate with .tools/scripts/filter_characters.py after every vanilla update
 main_menu/setup/1337/06_pops.txt
 main_menu/setup/1337/07_cities_and_buildings.txt
 main_menu/setup/1337/08_institutions.txt

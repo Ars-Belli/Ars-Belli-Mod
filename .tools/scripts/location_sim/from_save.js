@@ -6,6 +6,7 @@
 // owner's country modifiers (summed from base values, advances, laws, privileges, reforms, timed modifiers, societal
 // values, ruler and cabinet traits and the state religion; "notes" lists every source; the engine adds the estates' satisfaction) and an "observed" block with the game's own numbers to check the simulator against.
 const fs = require('fs');
+try { require('os').setPriority(require('os').constants.priority.PRIORITY_LOW); } catch (e) {} // lowest priority, like the simulators
 const path = require('path');
 const { loadDb, get, openSave, latestSave, tokenize, parseSaveTokens } = require('../battle_sim/paradox.js');
 const DATA = JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'));

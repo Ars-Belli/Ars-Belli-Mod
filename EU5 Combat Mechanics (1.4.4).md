@@ -187,7 +187,7 @@ Category combat speed: light infantry 3, heavy infantry 2, cavalry 5, artillery 
 - **Deployment** (`AddUnit`, `0x142473ae0`, *code*): a regiment enters its box while that section holds **less than** 1.25 × W frontage (so the last one may overfill it slightly); otherwise it waits in reserve. Auxiliaries go to reserve.
 - **Late arrivals:** an army that is not there at the start reaches its box only with `correct_box_chance` ("Correct Section Chance": "the chance of a unit late to a battle joining their intended section"); otherwise it goes to reserve. The base is 0. Several age advances give +10%, and a general gives +0.1% per administrative point.
   - **What it is worth** (`analysis/correct_box.js`): identical Spain-size sides fed in as needed, so every late regiment rolls it. At age III heavy cavalry, +30% (50% vs the vanilla 20%) wins 53.8% ±1.5 of battles, saves about 1,000 of 50,000 men lost, and is +1 point of manpower reserve after 24 months; +60% is no better. At age V heavy infantry, +30% (70% vs 40%) wins 56%, saves about 4,000 of 91,000, and is +5 points after 24 months; +60% gives 60% and +10 points. That is about a +1–2% discipline edge, and nothing when all armies are there from the start.
-- **Reserves** (`HandleReserves`): each day a side spends a frontage budget of W on reserve regiments. Each considered regiment scores every section as *enemy engaged frontage facing it + our free room* and moves into the best one with its combat-speed chance (section 5).
+- **Reserves** (`HandleReserves`): each day a side spends a frontage budget of W on reserve regiments, strongest first. Each considered regiment scores every section as *enemy engaged frontage facing it + our free room* (0 if the section has no room for it) and moves with its combat-speed chance (section 5) into: the centre if it scores above both wings, else the left if it scores above the right, else the right if its score is above 0. So equal scores go right, then left, then centre. **Room changed in game 1.4.8:** it is 1.25 × W minus the frontage of every regiment in the section; up to 1.4.7 only *engaged* regiments counted, so a section never looked full and nearly all reserves piled into the right wing. In 1.4.8 they spread over the three sections and a section holds at most 125% of the frontage. Battles with big reserves end about 10% sooner; armies that fit in the line are unaffected.
 - **Targets** (`0x142481230`): an engaged regiment hits the enemy section **facing** it (left faces their right, centre faces centre). It keeps its last target while that target is still in the section; otherwise it picks a random **engaged** enemy there, or any enemy there if none is engaged. If the facing section is empty, it looks in this order: the enemy centre, left, right, reserve, then any other section, and there it can pick only an engaged regiment.
 - **Flank attack** (× flanking ability): the target is not in the section facing the attacker, the attacker's side has regiments facing the target's section, and the enemy section facing the attacker is empty. In short: a section whose opposite number is gone helps a neighbouring fight from the side.
 - **Secured flanks** (the `SECURED_FLANKS` factor): a target on a flank counts 1 secured flank if its own centre is occupied; a target in the centre counts one per occupied flank. Infantry take 5% less damage per secured flank.
@@ -549,7 +549,7 @@ Morocco's real levy is not `a_tribesmen`. D009's `levy_sanhaja_camel_cavalry`, `
 - **Sparse terrain** (Sanhaja +20%) moves the age I stack vs 30 hi from 11% to 36%, and elsewhere changes little.
 - **Not checked against a real battle.** Saves keep battle records only for wars still running, and the 1372 war had no levy battle. Regiment counts, men and maximum morale were checked on saves: levies reach the same 4.53 as regulars. A 250-regiment stack's supply and attrition are not modelled.
 
-**The Ars Belli rate.** Since 2026-11-01 it is 2% with 400-man regiments, see section 14; the rest of this section is the 3% run. `TRY_REPLACE:` in `abm_d009_maghreb_levies.txt` puts all three at `abm_levy_maghreb_cavalry_size` = 3%, so Morocco raises 24k men, not 55k, Accepted. The same-population country is worth 33 / 23 / 17 heavy cavalry at ages I / II / III. Whole levy, one stack, open farmland (`levy_meta.js rate`; the Sanhaja and Zenata regiments follow the rate, the rest of the levy stays):
+**The Ars Belli rate.** Since 2026-11-01 it is 2% with bigger regiments (400 men, 350 since 2026-11-10), see section 14; the rest of this section is the 3% run. `TRY_REPLACE:` in `abm_d009_maghreb_levies.txt` puts all three at `abm_levy_maghreb_cavalry_size` = 3%, so Morocco raises 24k men, not 55k, Accepted. The same-population country is worth 33 / 23 / 17 heavy cavalry at ages I / II / III. Whole levy, one stack, open farmland (`levy_meta.js rate`; the Sanhaja and Zenata regiments follow the rate, the rest of the levy stays):
 
 | Share of tribesmen | Tolerated: men, worth in hc at ages I / II | Accepted: men, worth in hc at ages I / II / III |
 |---|---|---|
@@ -694,7 +694,7 @@ Taking an army out needs no replacement either: on the same terms, 5 armies of 3
 
 **What doesn't work:** raising `MINIMUM_COMBAT_DAYS` (15 changes nothing, 30 costs infantry about 10 points), halving morale recovery (cavalry stays at 100%), and `COMBAT_DAILY_MORALE_TICK` ×2 (battles 15–30% shorter, relay unchanged).
 
-**The stronger option, not used. The mod runs both ×2, see section 14:** `LAND_MORALE_DAMAGE_MODIFIER` 0.25 → 1.0 and `LAND_STRENGTH_DAMAGE_MODIFIER` 0.04 → 0.12. Only the land hit function reads them (`0x142481f60`), so sieges and navies are untouched; `COMBAT_DAMAGE_MULT` also reaches sieges (`0x143475bf0`). Losses stay close to vanilla at normal sizes (1,200 battles a cell, +30% morale, 50 experience):
+**The stronger option, not used. The mod ran both ×2 from 2026-11-01 to 2026-11-10 and is back to vanilla:** `LAND_MORALE_DAMAGE_MODIFIER` 0.25 → 1.0 and `LAND_STRENGTH_DAMAGE_MODIFIER` 0.04 → 0.12. Only the land hit function reads them (`0x142481f60`), so sieges and navies are untouched; `COMBAT_DAMAGE_MULT` also reaches sieges (`0x143475bf0`). Losses stay close to vanilla at normal sizes (1,200 battles a cell, +30% morale, 50 experience):
 
 | Battle | Days | Men lost, first side | Men lost, second side |
 |---|---|---|---|
@@ -711,7 +711,7 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - **Quality decides a little less.** +5% discipline wins 66% → 62% (infantry 30 v 30), 73% → 63% (120 v 120), 70% → 62% (cavalry 30 v 30).
 - **Cavalry keeps some edge.** 84% in the table, and a player who adapts how they swap gets more: 94% at both damage ×4 (`levers.txt`). The infantry case, which is what players reported, goes.
 
-**Limits.** The opponent never reacts, forces are even, there is no artillery, days per location are assumed, and none of this is tested in game. At the mod's both ×2 with armies and navies 25% slower, the relay is 58% / 70% / 96% with heavy infantry 2.25 (`results/land_damage_relay.txt`), and at 6 and 7 armies 61–71% on infantry V, 98–100% on cavalry III. Rerun the focus and army balance before releasing the change: sections 11 to 11b and the focus numbers predate it.
+**Limits.** The opponent never reacts, forces are even, there is no artillery, days per location are assumed, and none of this is tested in game. At both ×2 with armies and navies 25% slower (the mod from 2026-11-01 to 2026-11-10), the relay is 58% / 70% / 96% with heavy infantry 2.25 (`results/land_damage_relay.txt`), and at 6 and 7 armies 61–71% on infantry V, 98–100% on cavalry III.
 
 ---
 
@@ -765,6 +765,8 @@ No stack wipes in any cell, even at 3:1. What it costs:
 
 **Hourly ticks cannot come back in a mod** *(code, 1.4.6)*. 1.3's `HOUR_TICK` 2 gave 12 ticks a day. All the hour defines are gone from eu5.exe, the date step adds a literal 24 hours (`0x142fd82e0`; 1.3 added a stored value at `0x144104ea0`), and the tick tasks are compiled daily (`CombatDailyUpdate`, `MovementDailyUpdate`). In 1.4 ticks in a battle equal days in a battle. Tick size alone was worth nothing; the gain was more dice rolls per battle. `DAYS_PER_PHASE` 2 is the closest stand-in for 1.3's dice (`analysis/battle_length/results/tick_sweep.txt`: +5% discipline, infantry 30 v 30: 1.3 rules 64%, `DAYS_PER_PHASE` 4 63%, 2 66%, 1 70%).
 
+**Game 1.4.8 brought them back as a game rule** ("Time Steps", read 2026-11-10). Every combat and movement define now exists twice, `_DAILY` and `_HOURLY`, and the battle code picks by the rule. Daily values are the 1.4.7 ones, so a daily game fights as before apart from the reserve change in section 5. Hourly values: phase 5 ticks, bombard 5, minimum battle 24 (naval 72), `COMBAT_DAMAGE_MULT` 0.01, morale tick 0.01, initiative 0.1 base / 0.01 each / 0.01 per tick of the phase / 0.15 max, `COMBAT_SPEED_SCALE` 0.05, land strength 0.16, land morale 1.0, army speed 0.13, navy 0.5. In hourly mode the initiative time term uses the phase counter, as 1.3 did; in daily mode the battle age. The simulator models both since 2026-11-10: `setTimeSteps('hourly')` in `engine.js`, `--hourly` in `sim.js`, and the "Hourly time steps" box on the page. An hourly battle runs the same steps as a daily one with those values and two differences: the bombard phase ends on tick 5 itself (daily: after day 3), and the initiative time term above. A tick does a third of a daily round's damage, so a day does four times as much: the quick-battle default lasts 4.9 days against 21.4. Days in a scenario (arrival, retreat) stay days, results report days, and `ticks` has the steps. Not checked against battles played with hourly steps.
+
 ---
 
 ## 14. Ars Belli changes that touch combat
@@ -775,11 +777,11 @@ No stack wipes in any cell, even at 3:1. What it costs:
 - `high_horde_unity`: discipline +5% (vanilla +10%). `horde_army_expectation`: land morale −10% (vanilla −50%).
 - Steppe unit sizes: `a_steppe_horde` and `a_steppe_horse_archers` lose vanilla's +0.4 `max_strength` (200 men, not 600). `a_late_steppe_horde` (400 men, advance `abm_steppe_renaissance_levy`, age II) takes over from `a_steppe_horde`. Levy men come from pops, so this means more, smaller regiments, not fewer men; section 11b has what that is worth.
 - D009's Sanhaja, Zenata and Tuareg cavalry levies raise 2% of tribesmen, vanilla 10% (section 11b).
-- All six 200-man land levies on tribesmen raise 400-man regiments (`abm_tribal_levy_sizes.txt`, 2026-11-01): Tribal Cavalry, Tribal Camelry, Zenata, Sanhaja, Tuareg, Hilali. Same men from the same pops, half as many regiments. At 400 men Tribal Cavalry would out-power Atlas Infantry in the levy pick, so `REPLACE:levy_tribal_cavalry` keeps Masmuda tribesmen off it.
+- All six 200-man land levies on tribesmen raise 350-man regiments (`abm_tribal_levy_sizes.txt`; 400 from 2026-11-01, 350 since 2026-11-10): Tribal Cavalry, Tribal Camelry, Zenata, Sanhaja, Tuareg, Hilali. Same men from the same pops, about 43% fewer regiments. At 350 men Tribal Cavalry would out-power Atlas Infantry in the levy pick, so `REPLACE:levy_tribal_cavalry` keeps Masmuda tribesmen off it.
 - Mercenary hiring costs back to vanilla (2026-10-28).
-- Land damage modifiers doubled: `LAND_STRENGTH_DAMAGE_MODIFIER` 0.08, `LAND_MORALE_DAMAGE_MODIFIER` 0.5 (2026-11-01). The formulas in section 2 show vanilla's 0.04 and 0.25; `engine.js` uses the mod's. 30 v 30: infantry II 34 → 21 days, cavalry II 39 → 23, infantry V 19 → 13. 6 v 6 with heavy infantry 2.25: infantry II 106 → 73, cavalry III 110 → 80, infantry V 69 → 44. A side loses 58% of its men, not 53%. +5% discipline wins 67% on infantry and 63% on cavalry, not 70%. Section 11d has why not more. Raw numbers in `analysis/battle_length/results/land_damage.txt` and `big_battles.txt`.
-- Heavy infantry combat speed 2.25, vanilla 2 (`abm_army_heavy_infantry.txt`, 2026-11-01), so reserves join the line 12.5% more often. Combat speed lines on unit types still add to it. Section 11d has why. A save shows `REPLACE:` binds in `unit_categories`: 58 of 67 armies with auxiliaries match the mod's 7,000 food storage exactly, and the other 9 sit higher.
-- Armies and navies 25% slower: `ARMY_MOVEMENT_SPEED` 0.675, `NAVY_MOVEMENT_SPEED` 2.64375 (`0x14351cef0` multiplies each regiment's speed by these). Morale lost to marching is per day, so a march costs a third more morale.
+- `REPLACE:` binds in `unit_categories` (a save: 58 of 67 armies with auxiliaries match the mod's 7,000 food storage exactly, and the other 9 sit higher). Heavy infantry combat speed 2.25 (2026-11-01) is back to vanilla 2 since 2026-11-10.
+- Cavalry combat power by age 2.2 / 2.4 / 2.6 / 2.85 / 3.0 / 3.2, vanilla 2.6 / 2.6 / 2.6 / 2.85 / 3.25 / 3.25, light and heavy alike (2026-11-10, feature/military-costs; the table in section 10 shows vanilla). At the same regiment count ages 1 and 2 go from pure cavalry to mixed armies; age 3 stays pure cavalry; at the same maintenance manpower cavalry still wins to age 4, and pure heavy cavalry still wins wars to age 5. `analysis/cav_power/README.md`.
+- Cavalry maintenance manpower 0.06 a man a month, vanilla 0.04 (2026-11-10, feature/military-costs, `abm_prices.txt`); the price table in section 15 shows vanilla.
 
 ---
 
@@ -796,6 +798,8 @@ No stack wipes in any cell, even at 3:1. What it costs:
 | Artillery | 200 / 1 | 10 / 1 | 2.0 / 0.04 |
 | Auxiliary | 100 / 1 | 5 / 1 | 1.0 / 0.02 |
 
+These are vanilla. Ars Belli keeps them; a dearer reinforcement price was tried on `feature/military-costs` and sits commented out, see the end of this section.
+
 *(code, `0x144d189c0`)*
 - **Manpower** = price × max strength (1 = the regiment's men). Recruiting costs the regiment's full size; reinforcing costs one man per man; upkeep is 2% of the regiment's men a month for infantry and auxiliaries, 4% for cavalry and artillery.
 - **Gold** = price × max strength ÷ `BASE_REGIMENT_PRICE_SCALE` 0.1 ("100 men is a base"), i.e. the price is per 100 men. A 500-man Footmen regiment recruits for 250 gold.
@@ -808,8 +812,28 @@ No stack wipes in any cell, even at 3:1. What it costs:
   - So **upkeep scales with current strength**, and efficiency divides it. The simulator does both.
 - **Checked on the 1342 save:**
   - Manpower upkeep matches to the man. Moldavia's 16 Horsemen cost 0.04 × 0.2 × 16 ÷ 1.0635 = 120 a month; with 9 a month of income, the save's net change is −111.2 (formula −111.3). Halych's 16 Footmen cost 150; the save's net change is −133.7 (formula −133.7).
-  - Gold upkeep in the budget was about **68%** of the price-list value for both armies (20.8 vs 30.1, 25.2 vs 37.6). A common factor is missing (not traced).
-  - The goods baskets (`goods_demand/army_demands.txt`) are the regiments' market **demand**, not their gold cost: priced at base, they come out 3–5× below the budget. The earlier reading of `0x14357a730` as "goods × strength" is that demand.
+  - Gold upkeep in the budget was about **68%** of the price-list value for both armies (20.8 vs 30.1, 25.2 vs 37.6). That is the market goods impact below, near its -33% floor in a cheap market.
+  - The goods baskets (`goods_demand/army_demands.txt`) are the regiments' market **demand**, not a bill: priced at base, they come out 3–5× below the budget. Their only link to gold is the goods impact. The earlier reading of `0x14357a730` as "goods × strength" is that demand.
+
+**Goods and gold** *(code 1.4.6, `0x142575ad0`; fitted on a 1338 save, 8,329 market and basket pairs, slope 1.005)*:
+
+```
+gold price = price list x modifiers x (1 + goods impact)
+goods impact = sum(amount x market price) / sum(amount x base price) - 1     for the unit's basket in that market, floor about -0.33
+```
+
+- Each market stores it as `impacts={ heavy_cavalry_maintenance=-0.07 ... }` in the save. Tooltip `PRICE_COST_GOODS_IMPACT`.
+- Build uses the construction basket, upkeep the maintenance basket, reinforcement `repair_demand` or else the construction basket. Manpower is not affected.
+- Horse prices run from a third of the base price of 3 to 4 times it (`MAX_PRICE_IMPACT`), and move 5% of the way to their target each month (`MONTHLY_PRICE_CHANGE`).
+
+**What a regiment does with its basket** *(save 1338, checked by hand on regiments of several types)*:
+- It holds `missing={ demand=heavy_cavalry_maintenance horses=0.2 }`, the month's amounts it could not buy, and `goods_access_factor`, the share of the basket by **quantity** it did buy. A 200-man heavy cavalry regiment with no horses: (1.6 - 1.0) / 1.6 = 0.375. Amounts scale with strength.
+- While reinforcing, `demand` switches to the construction basket.
+- The factor feeds reinforcement speed (`0x14351ff40`, read by `0x143491750`, the ship version and tooltips): the army's mean, weighted by regiment size, so cavalry short of horses also slows the infantry in the same army. No combat function decompiled so far reads it.
+- Pops and units share a short market, with units ahead: in 1338 units got 91% of the horses they asked for, pops 75%.
+- 1338: 666 horses a month world-wide, pops ask 534, units 15. 49 of 149 markets have none, the median market makes 2.6, the best 30.5. Great Britain in 1547 makes 244 in 7 markets, units 37.
+
+**Recruiting without the goods** *(code, `0x1425eeb40`, `0x14357f390`)*: for each good in the construction basket, the check fails when 2 × (two market values) < (two others) + the basket amount, not scaled by regiment size. The factor is `MARKET_CONSTRUCTION_NEEDS_BLOCK_FACTOR` 2. The market fields were not identified; the likely reading is supply and stockpile. The six small wrappers read pass the flag that makes it a warning (`CONSTRUCTION_RESOURCES_LACK_WARNING`), not a refusal, and the loc says the construction then stalls until the goods are there. The command and AI call sites were not resolved.
 
 **Reinforcement**, per month (`0x143491290`, `0x14352ed50`):
 
@@ -819,7 +843,10 @@ amount  = min(missing men, rate x max strength)
 cost    = (reinforce price for those men: gold and manpower, plus a goods basket) / (1 + army_reinforce_efficiency)   (floored at -50%)
 ```
 
-- A regiment refills at most 25% of its size a month before speed bonuses. The situation factor (supply, location, at war or not) was not traced.
+- A regiment refills at most 25% of its size a month before speed bonuses. The situation factor is the army's goods access (above) times location terms (`REINFORCE_UNOWNED`), not traced further.
+- Gold and manpower are charged for the men actually added, and reinforcing goes on while gold stays above **-10,000** (`0x1428d85b0`, called from `0x14352f210`), so a country runs into debt rather than stopping.
+- **The army slider multiplies the monthly rate** *(code, `0x14288f970`: country +0x44b0, navy +0x44b8)*, so also the month's bill; the price of a man does not change. The slider's minimum is **50%**, hard-coded for army, navy and forts (`0x1475aab30`, table `0x14cd2c1d8`), not a define. In vanilla a country therefore always reinforces, at half speed at worst. The save agrees: 2,037 countries, none below 0.5, and the AI sits at exactly 0.5 (1,604) or 1 (433).
+- Max morale is multiplied by the slider too, floor 0.1, so 50% means half morale; siege ability takes -50% (`army_maintenance_reverse_mod`). Holding the slider down in a war is not free.
 - **Reinforce efficiency divides both the gold and the manpower** *(game tooltip, checked on a save)*: the modifier tooltip says "reducing its Ducats and Manpower cost". Spain 1527 (+20% reinforce efficiency, the user's screenshots) matches it:
   - A Falconet at 403 of 600 men takes 178 men a month: 600 × 25% × (1 + 10% Early Military Logistics + 10% Permanent Field Training) × 0.99 for lacking goods = 178.2.
   - The 1er Ejército's 7 Falconets therefore take about 1,247 men a month, and their "Reinforce and Repair" line costs **1,043 manpower**: 1,247 ÷ 1.196 ≈ ÷ (1 + 20%).
@@ -832,6 +859,55 @@ cost    = (reinforce price for those men: gold and manpower, plus a goods basket
 - Max manpower = `MAX_MANPOWER_YEARS` **5** years of monthly income (tooltip `MAX_MANPOWER_TT`). So income = max ÷ 60.
 - The save's `monthly_manpower` is the **net** change: income − the upkeep of every army. It can be negative, as for both countries in the test save.
 - Levies cost no manpower: they are raised from pops, and levies that die are pops lost (`LEVY_RECOVERY_MONTHS` 240).
+
+**Ars Belli, `feature/military-costs`: horses and camel cavalry camels ×10, a checkbox to stop reinforcement.** Every `horses` line in the army baskets is ×10 (13 in `army_demands.txt`, jinetes and cuantiosos in `abm_d009_army_demands.txt`). Camel cavalry pays ×10 camels too since 2026-11-02 (8 lines: light and heavy, early and late, build and upkeep), so camels are no longer a way round the horse limit; camel auxiliaries and elephants are vanilla. Tuareg Camelry and Veiled Cavalry copy horse cavalry, so they pay the horses. Reinforcement prices stay vanilla, 5% of `_build`: half and then a quarter of `_build` were tried and are commented out in `abm_prices.txt`; the tables below show what they would do. Scripts and raw results: `analysis/military_costs/`.
+
+**A checkbox stops reinforcement** (2026-11-02, replacing a coupling to the army slider). It sits beside the army maintenance slider in the economy panel, after the auto-maintenance checkbox. Unticked, the country gets `abm_reinforcement_stopped`, `regiment_reinforcement_speed` -1000%, and since the engine treats a rate below 0 as none, no regiment refills or pays for it, whatever its speed bonuses. The slider works as in vanilla again, 50% to 100% of the rate. A scripted GUI does the toggle, so it is synced in multiplayer; the AI never uses it and reinforces as in vanilla. Not tested in game.
+
+| | Vanilla | Now |
+|---|---|---|
+| Refill 1,000 heavy infantry | 25 gold | 250 |
+| Refill 1,000 heavy cavalry | 75 gold | 750 |
+| A regiment's horses a month, heavy cavalry at 200 / 600 men | 0.2 / 0.6 | 2 / 6 |
+| Heavy cavalry without horses: goods access | 0.375 | 0.057 |
+
+Castile in 1338 earns 74 gold a month, so 1,000 heavy cavalry men now take 10 months of its whole income to replace, against 1.
+
+Estimates for one market (price from demand ÷ supply, units served first, steady state; not played):
+
+| Heavy cavalry in one market | Castile 1338, 14 horses a month: gold × | speed × | Britain 1547, 133 a month: gold × | speed × |
+|---|---|---|---|---|
+| 10 regiments | 1.6 (vanilla 0.8) | 0.66 | 0.7 (0.7) | 1 |
+| 20 | 2.9 (0.8) | 0.38 | 1.1 (0.7) | 0.97 |
+| 30 | 3.8 (0.9) | 0.27 | 1.6 (0.7) | 0.69 |
+| 60 | 3.8 (1.2) | 0.17 | 2.8 (0.8) | 0.39 |
+
+The Castile column uses 200-man regiments, the Britain column 600.
+
+**Simulated, same gold.** 30 heavy infantry against the cavalry the same upkeep buys, ages I to IV, upkeep 60% of a gold budget that also pays reinforcement, 120-month wars, fighting when both are ready. Wars won, infantry / cavalry; the rest are undecided. Ages II and III match age I to within a few points, except at × 2 and 5%, where cavalry takes 49% to 98%; age IV is better for infantry. Rerun 2026-11-02 with the battle changes of `update/1.4` (both land damage ×2, heavy infantry combat speed 2.25).
+
+| Cavalry gold × | Age I regiments | Wars, reinforce 5% | 25% | 50% | 100% |
+|---|---|---|---|---|---|
+| 1 | 25 | 0 / 100 | 20 / 78 | 56 / 15 | 36 / 11 |
+| 1.5 | 17 | 0 / 100 | 100 / 0 | 100 / 0 | 100 / 0 |
+| 2 | 12 | 0 / 49 | 100 / 0 | 100 / 0 | 100 / 0 |
+
+- The reinforcement price alone moves wars. At 5% gold never runs out and the war is decided by men lost, which cavalry wins; from 25% the budget decides it once cavalry's gold is × 1.5 or more.
+- The mod keeps vanilla 5% (2026-11-02, the user's call); 25% and 50% are commented out. At cavalry's base price 25% would leave cavalry ahead, 20 / 78, and 50% would give infantry 56 / 15; from × 1.5 both give infantry every war. Horses ×10 put most markets there: Castile's 30 heavy cavalry from one market run about × 3.8 (table above). 100% adds nothing over 50%: more undecided wars, a heavier bill. With upkeep at 85% of the budget most wars stay undecided at × 1 (age I: 11 / 4 at 25%, 19 / 11 at 50%).
+- Infantry wins 63% of the first battles at the same gold at ages I to III (93% at age IV), even at vanilla prices, because the gold buys 15,000 men against 5,000. The meta's "cavalry to age III" is at equal regiments.
+
+**Simulated, same regiments, no gold limit.** 30 against 30: prices cannot act here, only goods access can, through reinforcement speed.
+
+| Cavalry reinforce speed × | Fighting when ready | A battle every 2 months |
+|---|---|---|
+| 1 | 0 / 100 | 0 / 100 |
+| 0.5 | 0 / 100 | 49 / 51 |
+| 0.2 | 26 / 74 | 97 / 3 |
+| 0.06 | 98 / 2 | 100 / 0 |
+
+So a country rich enough to ignore gold, patient enough to wait for refills, and with fair horse access keeps pure cavalry. Battle power is untouched. The change works on a player short of gold, of horses, or of time.
+
+Not modelled: cavalry's market price rising over months (the tables use steady state), debt, the pops who lose their horses. The war model's gold budget stops refills at 0, where the game goes on to -10,000.
 
 ---
 
@@ -1127,7 +1203,10 @@ Kit: `E:\Tools\ghidra-scripts` (README there). Addresses change every patch; re-
 | Bombard hits | `0x142481ba0` | `BOMBARD_BASE_CHANCE` |
 | Battle frontage W | `0x14247a0d0` | reads location modifier `local_frontage_allowed` (index `0x14f0a37ea`) |
 | Regiment maintenance | `0x14357a730` | `LEVY_MAINTENANCE_FACTOR`, `MOTHBALL_MAINTENANCE_FACTOR`; labels `SUBUNIT_MAINTENANCE_FACTOR`, `LEVY_MAINTENANCE_RATE_TOOLTIP` |
-| Reinforcement rate / cost | `0x143491290` / `0x14352ed50` | `MONTHLY_REINFORCE`; `army_reinforce_efficiency` (`0x14f0a3676`) |
+| Reinforcement rate / cost | `0x143491290` / `0x14352ed50` (1.4.6: `0x143491750` / `0x14352f210`) | `MONTHLY_REINFORCE`; `army_reinforce_efficiency` (`0x14f0a3676`) |
+| Army goods access | 1.4.6 `0x14351ff40` (tooltip `0x14351f4b0`) | regiment +0x68, the save's `goods_access_factor` by matching values, weighted by regiment size; `UNIT_MISSING_GOODS_HEADER` |
+| Price to cost, goods impact | 1.4.6 `0x142575ad0` (lookup `0x143f41020`) | market +0x8468; `PRICE_COST_GOODS_IMPACT` |
+| Market short of construction goods | 1.4.6 `0x1425eeb40`, regiments `0x14357f390` | `MARKET_CONSTRUCTION_NEEDS_BLOCK_FACTOR`; `CONSTRUCTION_RESOURCES_LACK`, `_WARNING` |
 | Regiment strength setter | `0x1423fbcc0` | writes strength (+0x40) only, so refilled men keep the regiment's experience (+0x60) |
 | Battle end: experience, war exhaustion, tradition | `0x14249c2d0` | `EXPERIENCE_GAIN` × side losses (stats +0x38, `GetTotalLossesValue`) ÷ (side men (stats +0x20) + 1), min 0.01; land if a side's first unit has flag +0xa46 |
 | Experience to every regiment of a side | `0x142475d80` | adds a flat amount to each regiment, clamped 0–100 |

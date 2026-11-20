@@ -16,20 +16,20 @@ countries = {
 	countries = {
 	SYG = { #Shenyang
 		own_control_core = {
-			liaoyang fushun_liaoyang hetu_ala jabiyan qinhe shenyang
-			dingliao dandong donggo kuandian wanggika
-			gaizhou fuzhou_liaoyang jinzhou_dalian xiuyan zhuanghe
-			guangning kaicheng wangping yizhou_jinzhou
-			jinzhou_liaoyang dalinghe haizhou_liaoyang ningyuan_jinzhou
-			kaiyuan_jurchen tieling
-			#NEW
-			fuxin
-			ningchang tongliao yehe yizhou_jurchen #Yizhou
-			naiman #Daning
+			dingliao dandong donggo kuandian wanggika # dingliao_province
+			gaizhou fuzhou_liaoyang jinzhou_dalian xiuyan zhuanghe # gaizhou_province
+			guangning fuxin kaicheng wangping yizhou_jinzhou # guangning_province
+			jinzhou_liaoyang dalinghe haizhou_liaoyang ningyuan_jinzhou # jinzhou_province
+			liaoyang fushun_liaoyang hetu_ala jabiyan qinhe shenyang # liaoyang_province
+			yizhou_jurchen kaiyuan_jurchen ningchang tieling tongliao yehe # yizhou_liaodong_province
+			naiman # daning_province
+			# NEW
+			# Yizhou
+			# Daning
 		}
 
 		own_control_integrated = {
-			qiantun
+			qiantun # jinzhou_province
 		}
 
 		accepted_cultures = {
@@ -135,12 +135,12 @@ countries = {
 	}
 	HCN = { #Hachiun Horde
 		own_control_core = {
-			avnagar chono khuuchid sangiin_dalai sorin_nuur ulgain uzemchin
-			haihaer kailu linhuang qingzhou_mongol xinkai
-			pingdisonglin quanning yingchang
-			tuliemao
-			buir_nuur barun_xiabaer tamsabulag
-			matad sharga_uul
+			tuliemao # taoer_province
+			haihaer kailu linhuang qingzhou_mongol xinkai # xiliao_province
+			buir_nuur barun_xiabaer tamsabulag # buir_nuur_province
+			matad sharga_uul # dariganga_province
+			avnagar chono khuuchid sangiin_dalai sorin_nuur ulgain uzemchin # shilingol_province
+			quanning pingdisonglin yingchang # quanning_province
 		}
 
 		starting_technology_level = 3
@@ -155,7 +155,7 @@ countries = {
 			ruler_term = {	 character = hcn_munanzi_borjigin start_date = 1330.1.1 regnal_number = 1	}
 
 			reforms = {
-				legacy_of_genghis
+				#legacy_of_genghis #ABM 2026-11-20: invalid at start, engine drops it anyway
 			}
 		}
 		country_rank = rank_duchy
@@ -168,20 +168,19 @@ countries = {
 	}
 	OTC = { #Otchigin Horde
 		own_control_core = {
-			chaghankhot gorlos huolin taluhe wafang
-			taizhou_jurchen buteha chol hurle
-			bayan_ula xuguit yimin
-			zhengjiatun
-			khalkh
-			hailar
-			talaha sart
+			taizhou_jurchen buteha chol hurle # chol_province
+			talaha sart # lower_non_province
+			chaghankhot gorlos huolin taluhe wafang # taoer_province
+			zhengjiatun # xiliao_province
+			khalkh # buir_nuur_province
+			hailar bayan_ula xuguit yimin # hailar_province
 		}
 
 		own_control_integrated = {
-			nongan
-			zhaozhou_jurchen
-			zhalong
-			arun bila nuomin
+			zhaozhou_jurchen # lalin_province
+			nongan # middle_songhua_province
+			zhalong # lower_non_province
+			arun bila nuomin # nuomin_province
 		}
 
 		starting_technology_level = 3
@@ -196,7 +195,7 @@ countries = {
 			ruler_term = {	 character = otc_yanashiri_borjigin start_date = 1328.11.14 regnal_number = 1	}
 
 			reforms = {
-				legacy_of_genghis
+				#legacy_of_genghis #ABM 2026-11-20: invalid at start, engine drops it anyway
 			}
 		}
 		country_rank = rank_kingdom
@@ -211,13 +210,20 @@ countries = {
 	EVK = { #Evenk
 
 		own_control_core = {
-			amgun dukin imilen kerbi suluk #Amgun
-			bir_amur #Humar
-			chenqing nioman zhanhe #Lower Bureya
-			gromatukha birma tehcha tom tygde yor #Lower Zeya
-			selemde burunda buse kogan mamyn nehru ulma #Selemdhzha
-			upper_nioman akishma olongki tujun tyrma urgal #Upper Bureya
-			djee argi dep kupuri mulmuga tok #Upper Zeya
+			amgun dukin imilen kerbi suluk # amgun_province
+			bir_amur # humar_province
+			chenqing nioman zhanhe # lower_bureya_province
+			gromatukha birma tehcha tom tygde yor # lower_zeya_province
+			selemde burunda buse kogan mamyn nehru ulma # selemdzha_province
+			upper_nioman akishma olongki tujun tyrma urgal # upper_bureya_province
+			djee argi dep kupuri mulmuga tok # upper_zeya_province
+			# Amgun
+			# Humar
+			# Lower Bureya
+			# Lower Zeya
+			# Selemdhzha
+			# Upper Bureya
+			# Upper Zeya
 		}
 
 		include = "expl_manchurian_tribe"
@@ -232,11 +238,16 @@ countries = {
 	}
 	NVK = { #Nivkh
 		own_control_core = {
-			porokotan wuliehe idy_sakhalin nanghaer #Northern Sakhalin
-			kushunkotan guohuo nayoro boluohe #Southern Sakhalin
-			dzhuk #Amgun
-			nurgan bulava shantar torom tugur usalgin #Amur Estuary
-			deren #Tumnin
+			dzhuk # amgun_province
+			nurgan bulava shantar torom tugur usalgin # amur_estuary_province
+			nanghaer idy_sakhalin porokotan wuliehe # northern_sakhalin_province
+			guohuo boluohe kushunkotan nayoro # southern_sakhalin_province
+			deren # tumnin_province
+			# Northern Sakhalin
+			# Southern Sakhalin
+			# Amgun
+			# Amur Estuary
+			# Tumnin
 		}
 
 		include = "expl_manchurian_tribe"
@@ -252,7 +263,8 @@ countries = {
 	ORC = { #Oroch
 
 		own_control_core = {
-			datta koppi tumzhdin #Tumnin
+			datta koppi tumzhdin # tumnin_province
+			# Tumnin
 		}
 
 		include = "expl_manchurian_tribe"
@@ -269,9 +281,12 @@ countries = {
 	ORQ = { #Oroqen
 
 		own_control_core = {
-			mergen menlu non #Upper Non
-			humar kuanhe tahe #Humar
-			aigun xunhe #Lower Bureya
+			humar kuanhe tahe # humar_province
+			aigun xunhe # lower_bureya_province
+			mergen menlu non # upper_non_province
+			# Upper Non
+			# Humar
+			# Lower Bureya
 		}
 
 		include = "expl_manchurian_tribe"
@@ -287,9 +302,12 @@ countries = {
 	}
 	UDE = { #Udege
 		own_control_core = {
-			urmi bidzhan bira kukan kur sutara #Tunguska
-			jiajin arkhara #Lower Bureya
-			taowen	#Tangwang
+			urmi bidzhan bira kukan kur sutara # tunguska_province
+			arkhara jiajin # lower_bureya_province
+			taowen # tangwang_province
+			# Tunguska
+			# Lower Bureya
+			# Tangwang
 		}
 
 		include = "expl_manchurian_tribe"
@@ -305,8 +323,10 @@ countries = {
 	}
 	ULC = { #Ulch
 		own_control_core = {
-			achan nemptu simmi uninka xungake #Bolon
-			kedar bitki evur pilda uschu #Gorin
+			achan nemptu simmi uninka xungake # bolon_province
+			kedar bitki evur pilda uschu # gorin_province
+			# Bolon
+			# Gorin
 		}
 
 
@@ -428,7 +448,7 @@ countries = {
 	}
 	JUS = { #Jusheri
 		own_control_core = {
-			juxeri
+			juxeri # upper_songhua_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -444,7 +464,7 @@ countries = {
 	}
 	NEY = { #Neyen
 		own_control_core = {
-			golmin_salggiyan
+			golmin_salggiyan # upper_songhua_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -505,7 +525,7 @@ countries = {
 	}
 	EJI = { #Ejimi
 		own_control_core = {
-			hvlan
+			hvlan # hulan_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -519,11 +539,11 @@ countries = {
 	}
 	FUY = { #Fuyu
 		own_control_core = {
-			dalaiketun
+			dalaiketun # lower_non_province
 		}
 
 		own_control_integrated = {
-			laha qiqihar
+			qiqihar laha # nuomin_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -537,7 +557,7 @@ countries = {
 	}
 	NAL = { #Nalaji
 		own_control_core = {
-			ougen
+			ougen # hulan_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -551,7 +571,7 @@ countries = {
 	}
 	NEM = { #Nemer
 		own_control_core = {
-			nemeri
+			nemeri # lower_non_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -566,7 +586,7 @@ countries = {
 	}
 	SNC = { #Sancaha
 		own_control_core = {
-			boduna
+			boduna # lalin_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -580,7 +600,7 @@ countries = {
 	}
 	TAS = { #Tashan
 		own_control_core = {
-			hulan
+			hulan # hulan_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -594,7 +614,7 @@ countries = {
 	}
 	WEJ = { #Weji
 		own_control_core = {
-			hailun
+			hailun # hulan_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -608,7 +628,7 @@ countries = {
 	}
 	ASU = { #Asu
 		own_control_core = {
-			ningguta
+			ningguta # mudan_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -622,7 +642,8 @@ countries = {
 	}
 	BAY = { #Bayan
 		own_control_core = {
-			bayan_susu chalin
+			bayan_susu # hulan_province
+			chalin # tangwang_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -636,7 +657,7 @@ countries = {
 	}
 	DLA = { #Dala
 		own_control_core = {
-			odoli
+			odoli # mudan_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -650,7 +671,7 @@ countries = {
 	}
 	FLN = { #Fulun
 		own_control_core = {
-			hailang
+			hailang # mudan_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -664,7 +685,7 @@ countries = {
 	}
 	GIL = { #Gilemi
 		own_control_core = {
-			lahasusu
+			lahasusu # sanjiang_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -678,7 +699,7 @@ countries = {
 	}
 	HIJ = { #Hijan
 		own_control_core = {
-			boli
+			boli # bolon_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -692,8 +713,10 @@ countries = {
 	}
 	HRO = { #Horo
 		own_control_core = {
-			katen xunka bikinka #Greater Ussuri
-			samarginka kema #Tumnin
+			kema samarginka # tumnin_province
+			bikinka katen xunka # greater_ussuri_province
+			# Greater Ussuri
+			# Tumnin
 		}
 
 		include = "expl_manchurian_tribe"
@@ -707,7 +730,8 @@ countries = {
 	}
 	HUR = { #Hurga
 		own_control_core = {
-			ilan_hala mudan_ula tulguur
+			ilan_hala mudan_ula # mudan_province
+			tulguur # sanjiang_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -721,7 +745,7 @@ countries = {
 	}
 	ILU = { #Ilu
 		own_control_core = {
-			anchun
+			anchun # smaller_ussuri_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -735,7 +759,7 @@ countries = {
 	}
 	IMN = { #Imanka
 		own_control_core = {
-			imanka vaka
+			imanka vaka # greater_ussuri_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -749,7 +773,7 @@ countries = {
 	}
 	MRE = { #Muren
 		own_control_core = {
-			jixi mishan mulun
+			jixi mishan mulun # muling_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -777,7 +801,7 @@ countries = {
 	}
 	NRO = { #Noro
 		own_control_core = {
-			nuoluo shuangyashan
+			nuoluo shuangyashan # sanjiang_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -791,7 +815,8 @@ countries = {
 	}
 	SMN = { #Shilimian
 		own_control_core = {
-			hulin yiman	namunka noto_ussuri #Smaller Ussuri
+			hulin namunka noto_ussuri yiman # smaller_ussuri_province
+			# Smaller Ussuri
 		}
 
 		include = "expl_manchurian_tribe"
@@ -805,7 +830,7 @@ countries = {
 	}
 	TOX = { #Ton
 		own_control_core = {
-			wanhufu
+			wanhufu # tangwang_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -819,7 +844,7 @@ countries = {
 	}
 	USS = { #Ussuri
 		own_control_core = {
-			alchan
+			alchan # greater_ussuri_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -833,7 +858,7 @@ countries = {
 	}
 	WEK = { #Weken
 		own_control_core = {
-			wehe
+			wehe # tangwang_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -861,7 +886,7 @@ countries = {
 	}
 	AID = { #Aidan
 		own_control_core = {
-			yenji
+			yenji # tumen_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -875,7 +900,7 @@ countries = {
 	}
 	AAR = { #Abdari
 		own_control_core = {
-			kahari
+			kahari # tumen_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -889,7 +914,7 @@ countries = {
 	}
 	FUT = { #Futi
 		own_control_core = {
-			futi
+			futi # sanjiang_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -903,8 +928,8 @@ countries = {
 	}
 	HLN = { #Halan
 		own_control_core = {
-			helong longjing
-			hamheung dancheon bukcheong
+			hamheung dancheon bukcheong # hamheung_province
+			helong longjing # tumen_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -918,7 +943,7 @@ countries = {
 	}
 	HNC = { #Huncun
 		own_control_core = {
-			huncun
+			huncun # tumen_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -932,7 +957,7 @@ countries = {
 	}
 	HOT = { #Hotonggi
 		own_control_core = {
-			sunggari
+			sunggari # upper_songhua_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -946,7 +971,7 @@ countries = {
 	}
 	HUI = { #Huiba
 		own_control_core = {
-			hoifa huifacheng
+			huifacheng hoifa # upper_songhua_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -960,7 +985,7 @@ countries = {
 	}
 	ITU = { #Itun
 		own_control_core = {
-			changchun
+			changchun # middle_songhua_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -974,7 +999,7 @@ countries = {
 	}
 	JHT = { #Juru Hoton
 		own_control_core = {
-			juru_hoton
+			juru_hoton # muling_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -988,7 +1013,7 @@ countries = {
 	}
 	LAL = { #Lalin
 		own_control_core = {
-			shangjing shulan yushu
+			shangjing shulan yushu # lalin_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1016,7 +1041,7 @@ countries = {
 	}
 	LLU = { #Lalu
 		own_control_core = {
-			hulawen
+			hulawen # lalin_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1030,7 +1055,7 @@ countries = {
 	}
 	MAH = { #Mahiyan
 		own_control_core = {
-			malong
+			malong # mudan_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1044,7 +1069,7 @@ countries = {
 	}
 	MIC = { #Michen
 		own_control_core = {
-			yilaha
+			yilaha # lower_non_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1058,7 +1083,7 @@ countries = {
 	}
 	MUH = { #Muhiya
 		own_control_core = {
-			yongmingcheng
+			yongmingcheng # suifun_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1072,7 +1097,7 @@ countries = {
 	}
 	SHI = { #Shilin
 		own_control_core = {
-			tulazi
+			tulazi # tumen_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1086,7 +1111,7 @@ countries = {
 	}
 	SIR = { #Sirin
 		own_control_core = {
-			shili
+			shili # suifun_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1100,7 +1125,8 @@ countries = {
 	}
 	SUI = { #Suifun
 		own_control_core = {
-			kaiyuan_warka dongning
+			dongning # muling_province
+			kaiyuan_warka # suifun_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1114,7 +1140,7 @@ countries = {
 	}
 	TOD = { #Todo
 		own_control_core = {
-			lefu
+			lefu # upper_songhua_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1128,7 +1154,7 @@ countries = {
 	}
 	WUY = { #Wuyemu
 		own_control_core = {
-			girin_ula gongjiang_jurchen
+			girin_ula gongjiang_jurchen # middle_songhua_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1142,7 +1168,7 @@ countries = {
 	}
 	YRN = { #Yaran
 		own_control_core = {
-			anju_nurgan
+			anju_nurgan # suifun_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1156,7 +1182,7 @@ countries = {
 	}
 	YIM = { #Yimahu
 		own_control_core = {
-			itu_jilin
+			itu_jilin # middle_songhua_province
 		}
 
 		include = "expl_manchurian_tribe"
@@ -1170,7 +1196,7 @@ countries = {
 	}
 	YOO = { #Yoose
 		own_control_core = {
-			nogule
+			nogule # suifun_province
 		}
 
 		include = "expl_manchurian_tribe"
