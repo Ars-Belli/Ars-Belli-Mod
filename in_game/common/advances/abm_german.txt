@@ -2480,7 +2480,9 @@ abm_swiss_tolerance = {
 		has_or_had_tag = SWI
 	}
 
-	requires = legalism_advance
+	# Ars Belli: legalism_advance is Age 1 while this advance is Age 2, which the game rejects
+	# (an advance may only require advances of its own age). No Age 2 tolerance advance is
+	# open to a Catholic Swiss state, so the advance is gated by its potential alone.
 
 	tolerance_own = 1
 }
@@ -3615,7 +3617,7 @@ abm_goose_step = {
 
 	requires = supply_depot_advance_age_4_reformation
 
-infantry_power = 0.20
+	#infantry_power = 0.20 # Ars Belli: invalid modifier key - use army_heavy/light_infantry_power
 	army_heavy_infantry_power = 0.10
 }
 
