@@ -17,10 +17,15 @@ countries = {
 	HSA = {	#Hansa
 		type = location
 		own_control_core = {
-			lubeck hamburg bremen #Ars Belli: the three Hanseatic cities, absorbed from LUB/HAM/BRM
-			#Ars Belli: Holstein and the Lower Elbe, taken from HPL/RZB/LBB/HSP/BRE/OLD/HOY/LUN
-			heiligenhafen ratzeburg eutin pinneberg
-			osterholz achim delmenhorst hoya harburg winsen
+			lubeck heiligenhafen ratzeburg eutin # lubeck_province
+			pinneberg # holstein_province
+			bremen osterholz delmenhorst # wesermarch_province
+			hoya # middle_weser_province
+			harburg hamburg # elbmarch_province
+			winsen # luneburger_heide_province
+			achim # aller_province
+			# Ars Belli: the three Hanseatic cities, absorbed from LUB/HAM/BRM
+			# Ars Belli: Holstein and the Lower Elbe, taken from HPL/RZB/LBB/HSP/BRE/OLD/HOY/LUN
 		}
 
 		starting_technology_level = 3
@@ -82,15 +87,18 @@ countries = {
 	}
 	BRA = {	#Brandenburg
 		own_control_core = {
-			brandenburg berlin teltow potsdam freienwalde herzfelde templin
-			chojna soltyn
-			stendal osterburg salzwedel gardelegen
-			wittenberge pritzwalk treuenbrietzen
-			angermunde prenzlau
+			chojna soltyn # neumark_province
+			stendal gardelegen salzwedel osterburg # altmark_province
+			pritzwalk wittenberge # prignitz_province
+			prenzlau templin angermunde # uckermark_province
+			berlin teltow treuenbrietzen herzfelde freienwalde brandenburg potsdam # mittelmark_province
 		}
 
 		own_control_integrated = {
-			torzym swidwin choszczno drawsko czaplinek walcz czlopa santok gorzow
+			gorzow santok torzym # neumark_province
+			swidwin # koslin_province
+			choszczno drawsko # pyritz_province
+			walcz czaplinek czlopa # arnskrone_province
 		}
 
 		include = "expl_western_europe"
@@ -224,7 +232,7 @@ countries = {
 	}
 	ALL = {	#Saxony-Allstedt
 		own_control_core = {
-			sangerhausen
+			sangerhausen # harz_province
 		}
 		include = "expl_western_europe"
 		include = "catholic_monarchy_no_coast"
@@ -262,8 +270,9 @@ countries = {
 	}
 	LDB = { #Landsberg
 		own_control_core = {
-			weissenfels zwickau rochlitz grimma delitzsch
-			leipzig chemnitz altenburg
+			zwickau chemnitz # erzgebirge_province
+			leipzig grimma rochlitz altenburg delitzsch # leipziger_bucht_province
+			weissenfels # saale_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -308,8 +317,8 @@ countries = {
 	}
 	MEI = { #Meissen
 		own_control_core = {
-			meissen sayda freiberg dresden
-			pirna annaburg
+			meissen dresden pirna annaburg # elbtal_province
+			freiberg sayda # erzgebirge_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -357,11 +366,16 @@ countries = {
 	}
 	MAG = {	#Magdeburg
 		own_control_core = {
-			magdeburg calbe jerichow burg quedlinburg #Magdeburg Borde
-			haldensleben wolmirstedt #Altmark
-			halle_an_der_saale #Lower Saale
-			ballenstedt #Harz
-			juterbog #Flaming Heath
+			haldensleben wolmirstedt # altmark_province
+			juterbog # flaming_province
+			ballenstedt # harz_province
+			magdeburg calbe quedlinburg burg jerichow # magdeburger_borde_province
+			halle_an_der_saale # saale_province
+			# Magdeburg Borde
+			# Altmark
+			# Lower Saale
+			# Harz
+			# Flaming Heath
 		}
 
 		starting_technology_level = 3
@@ -390,7 +404,9 @@ countries = {
 	}
 	THU = {	#Thuringia - PU under Meissen
 		own_control_core = {
-			eisenach gotha langensalza freyburg eisenberg apolda
+			eisenberg apolda langensalza # thuringer_becken_province
+			eisenach gotha # thuringer_wald_province
+			freyburg # saale_province
 		}
 
 		starting_technology_level = 3
@@ -411,7 +427,9 @@ countries = {
 	}
 	BRE = {	#Bremen
 		own_control_core = {
-			stade neuhaus gestenthorpe bremervorde zeven
+			gestenthorpe # wesermarch_province
+			stade neuhaus bremervorde # elbmarch_province
+			zeven # aller_province
 		}
 
 		our_cores_conquered_by_others = {
@@ -475,7 +493,8 @@ countries = {
 	}
 	BRG = {	#Berg
 		own_control_core = {
-			dusseldorf remscheid siegburg solingen
+			remscheid siegburg solingen # bergisches_land_province
+			dusseldorf # niederrhein_province
 		}
 
 		starting_technology_level = 3
@@ -507,13 +526,14 @@ countries = {
 	}
 	MAI = {	#Mainz
 		own_control_core = {
-			mainz darmstadt offenbach oppenheim #Lower Main
-			aschaffenburg miltenberg #Spessart
-			tauberbischofsheim #Tauber Franconia
-			bensheim buchen #Odenwald
-			worms
-			mosbach
-			erbach
+			worms mainz darmstadt offenbach oppenheim # untermain_province
+			miltenberg aschaffenburg # spessart_province
+			bensheim mosbach buchen erbach # odenwald_province
+			tauberbischofsheim # tauberfranken_province
+			# Lower Main
+			# Spessart
+			# Tauber Franconia
+			# Odenwald
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -578,8 +598,9 @@ countries = {
 	}
 	STE = {	#Stettin
 		own_control_core = {
-			stettin ueckermunde gryfow pyrzyce
-			demmin anklam
+			anklam demmin # vorpommern_province
+			stettin ueckermunde # stettin_province
+			pyrzyce gryfow # pyritz_province
 		}
 
 		starting_technology_level = 3
@@ -611,7 +632,7 @@ countries = {
 	}
 	HPL = { #Holstein-Plön
 		own_control_core = {
-			kiel plon
+			kiel plon # holstein_province
 		}
 
 		our_cores_conquered_by_others = {
@@ -651,7 +672,7 @@ countries = {
 	}
 	HTR = { #Holstein-Rendsburg
 		own_control_core = {
-			stormarn segeberg rendsburg steinburg
+			steinburg rendsburg stormarn segeberg # holstein_province
 		}
 
 		starting_technology_level = 3
@@ -679,7 +700,7 @@ countries = {
 	}
 	DIT = {	#Dithmarschen
 		own_control_core = {
-			heide
+			heide # holstein_province
 		}
 
 		capital = heide
@@ -736,7 +757,10 @@ countries = {
 	}
 	LUX = {
 		own_control_core = {
-			luxembourg arlon bastogne la_roche orchimont neufchateau_luxembourg st_vith thionville vianden
+			luxembourg arlon thionville vianden # east_luxembourg_province
+			st_vith # liege_province
+			orchimont # namur_province
+			bastogne la_roche neufchateau_luxembourg # west_luxembourg_province
 		}
 
 		starting_technology_level = 3
@@ -779,8 +803,8 @@ countries = {
 	}
 	HAI = {
 		own_control_core = {
-			valenciennes #France
-			ath chimay enghien maubeuge mons
+			mons ath chimay enghien maubeuge valenciennes # hainaut_province
+			# France
 		}
 
 		starting_technology_level = 3
@@ -827,10 +851,10 @@ countries = {
 	}
 	FLA = {
 		own_control_core = {
-			cassel dunkirk oudenaarde ypres veurne
-			ostend bruges hulst ghent sint_niklaas aalst kortriik
-			lille douai tournai
-        }
+			ghent aalst hulst kortriik oudenaarde sint_niklaas # east_flanders_province
+			lille douai tournai # roman_flanders_province
+			bruges cassel dunkirk ostend veurne ypres # west_flanders_province
+		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
 		include = "catholic_monarchy"
@@ -880,9 +904,12 @@ countries = {
 	}
 	HOL = {
 		own_control_core = {
-			amsterdam alkmaar hoorn #North Holland
-			the_hague leiden rotterdam dordrecht geertruidenberg #South Holland
-			nijmegen arnhem tiel harderwijk apeldoorn #Guelderland
+			amsterdam alkmaar hoorn # north_holland_province
+			the_hague dordrecht geertruidenberg rotterdam leiden # south_holland_province
+			arnhem apeldoorn harderwijk nijmegen tiel # gelderland_province
+			# North Holland
+			# South Holland
+			# Guelderland
 		}
 
 		starting_technology_level = 3
@@ -927,7 +954,7 @@ countries = {
 	}
 	ZEE = {
 		own_control_core = {
-			middelburg
+			middelburg # south_holland_province
 		}
 
 		starting_technology_level = 3
@@ -976,8 +1003,9 @@ countries = {
 	}
 	BRB = {
 		own_control_core = {
-			brussels nivelles leuven mechelen antwerp turnhout eindhoven
-			bergen_zoom breda hertogenbosch helmond
+			antwerp bergen_zoom breda turnhout mechelen # antwerp_province
+			helmond hertogenbosch eindhoven # kempenland_province
+			brussels leuven nivelles # brabant_province
 		}
 
 		starting_technology_level = 3
@@ -1020,7 +1048,8 @@ countries = {
 	}
 	LIE = {
 		own_control_core = {
-			liege dinant walcourt
+			liege # liege_province
+			dinant walcourt # namur_province
 		}
 
 		starting_technology_level = 3
@@ -1054,7 +1083,7 @@ countries = {
 	}
 	BLL = {
 		own_control_core = {
-			bouillon
+			bouillon # west_luxembourg_province
 		}
 
 		starting_technology_level = 3
@@ -1123,9 +1152,10 @@ countries = {
 	}
 	HNB = {	#Henneberg
 		own_control_core = {
-			meiningen schleusingen schmalkalden
-			aschach
-			coburg hildburghausen #Lordship of Coburg
+			hildburghausen schmalkalden meiningen schleusingen # thuringer_wald_province
+			aschach # main_franconia_province
+			coburg # frankenwald_province
+			# Lordship of Coburg
 		}
 
 		starting_technology_level = 3
@@ -1151,7 +1181,7 @@ countries = {
 	}
 	RIE = {	#Rieneck
 		own_control_core = {
-			lohr
+			lohr # spessart_province
 		}
 
 		starting_technology_level = 3
@@ -1173,7 +1203,7 @@ countries = {
 	}
 	BMS = {  # Bishopric of Meissen
 		own_control_core = {
-			wurzen
+			wurzen # leipziger_bucht_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1196,7 +1226,7 @@ countries = {
 	}
 	BLB = {  # Bishopric of Lebus
 		own_control_core = {
-			lebus
+			lebus # mittelmark_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1255,7 +1285,7 @@ countries = {
 	}
 	BSK = {  # Beeskow-Starkow
 		own_control_core = {
-			beeskow
+			beeskow # niederlausitz_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1273,7 +1303,7 @@ countries = {
 	}
 	WGO = {  # Wernigerode
 		own_control_core = {
-			wernigerode
+			wernigerode # harz_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1304,7 +1334,7 @@ countries = {
 	}
 	BHL = {  # Beichlingen
 		own_control_core = {
-			beichlingen
+			beichlingen # saale_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1321,7 +1351,7 @@ countries = {
 	}
 	GLN = {  # Gleichen (North Germany)
 		own_control_core = {
-			ohrdruf
+			ohrdruf # thuringer_wald_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1396,7 +1426,7 @@ countries = {
 	}
 	RBG = {  # Rietberg (North Germany)
 		own_control_core = {
-			rietberg
+			rietberg # lippe_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1423,8 +1453,7 @@ countries = {
 	}
 	FLK = {  # Falkenstein (South Germany)
 		own_control_core = {
-			friedberg_hesse
-			giessen
+			giessen friedberg_hesse # wetterau_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1446,8 +1475,8 @@ countries = {
 	}
 	KTZ = {  # Katzenelnbogen (North Germany)
 		own_control_core = {
-			katzenelnbogen
-			coblenz
+			coblenz # westerwald
+			katzenelnbogen # taunus_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1460,7 +1489,7 @@ countries = {
 	}
 	NSW = {  # Nassau Weilburg (North Germany)
 		own_control_core = {
-			usingen
+			usingen # taunus_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1487,7 +1516,7 @@ countries = {
 	}
 	NSI = {  # Nassau Idstein (North Germany)
 		own_control_core = {
-			wiesbaden
+			wiesbaden # taunus_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1513,7 +1542,7 @@ countries = {
 	}
 	NSH = {  # Nassau Hadamar (North Germany)
 		own_control_core = {
-			hadamar
+			hadamar # taunus_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1539,8 +1568,10 @@ countries = {
 	}
 	NSS = {  # Nassau Siegen (North Germany)
 		own_control_core = {
-			dillenburg #Nassau Dillenburg
-			siegen #Nassau Siegen
+			dillenburg # taunus_province
+			siegen # sauerland_province
+			# Nassau Dillenburg
+			# Nassau Siegen
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1608,7 +1639,7 @@ countries = {
 	}
 	NID = {  # Nidda (North Germany)
 		own_control_core = {
-			nidda
+			nidda # wetterau_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1698,7 +1729,7 @@ countries = {
 	}
 	EVS = {  # Everstein (North Germany)
 		own_control_core = {
-			holzminden
+			holzminden # leine_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1711,7 +1742,7 @@ countries = {
 	}
 	JEV = {  # Jever (North Germany)
 		own_control_core = {
-			jever
+			jever # east_friesland_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1727,7 +1758,7 @@ countries = {
 	}
 	ABSEL = { #Upper Lusatia
 		own_control_core = {
-		bautzen gorlitz hoyerswerda rothenburg_oberlausitz marienstern
+			gorlitz bautzen hoyerswerda rothenburg_oberlausitz marienstern # oberlausitz_province
 		}
 
 		starting_technology_level = 3
@@ -1746,7 +1777,7 @@ countries = {
 	}
 	WIE = {  # Wied (North Germany)
 		own_control_core = {
-			wied
+			wied # westerwald
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1762,7 +1793,7 @@ countries = {
 	}
 	PLN = { #Plauen
 		own_control_core = {
-			plauen hof
+			plauen hof # vogtland_province
 		}
 
 		starting_technology_level = 3
@@ -1792,7 +1823,7 @@ countries = {
 	}
 	SOR = { #Lusatia
 		own_control_core = {
-			cottbus guben lubben luckau calau zossen
+			cottbus guben calau lubben luckau zossen # niederlausitz_province
 		}
 		starting_technology_level = 3
 		include = "expl_western_europe"
@@ -1819,7 +1850,7 @@ countries = {
 	}
 	SPB = { #Spremberg
 		own_control_core = {
-			spremberg
+			spremberg # niederlausitz_province
 		}
 
 		starting_technology_level = 3
@@ -1840,7 +1871,7 @@ countries = {
 	}
 	GLA = { #Glauchau
 		own_control_core = {
-			glauchau
+			glauchau # erzgebirge_province
 		}
 
 		starting_technology_level = 3
@@ -1871,7 +1902,8 @@ countries = {
 	}
 	SWB = { #Saxe-Wittenberg
 		own_control_core = {
-			wittenberg belzig schweinitz bitterfeld torgau liebenwerda
+			schweinitz wittenberg belzig bitterfeld # flaming_province
+			liebenwerda torgau # elbtal_province
 		}
 
 		starting_technology_level = 3
@@ -1902,7 +1934,7 @@ countries = {
 	}
 	RUP = { #Ruppin
 		own_control_core = {
-			ruppin
+			ruppin # prignitz_province
 		}
 
 		starting_technology_level = 3
@@ -1931,7 +1963,7 @@ countries = {
 	}
 	HVB = {	#Havelberg
 		own_control_core = {
-			havelberg wittstock
+			havelberg wittstock # prignitz_province
 		}
 
 		starting_technology_level = 3
@@ -1957,7 +1989,7 @@ countries = {
 	}
 	SWR = { #Schwerin
 		own_control_core = {
-			schwerin butzow
+			schwerin butzow # schwerin_province
 		}
 
 		starting_technology_level = 3
@@ -1986,7 +2018,9 @@ countries = {
 	}
 	MKL = { #Mecklenburg
 		own_control_core = {
-			wismar strelitz neubrandenburg grabow hagenow grevesmuhlen doberan ribnitz rostock
+			hagenow grevesmuhlen wismar doberan grabow rostock # schwerin_province
+			neubrandenburg strelitz # seenplatte_province
+			ribnitz # vorpommern_province
 		}
 
 		starting_technology_level = 3
@@ -2062,7 +2096,7 @@ countries = {
 	}
 	WRN = { #Waren
 		own_control_core = {
-			waren malchin
+			malchin waren # seenplatte_province
 		}
 
 		starting_technology_level = 3
@@ -2135,7 +2169,7 @@ countries = {
 	}
 	GSW = { #Gustrow
 		own_control_core = {
-			gustrow parchim malchow
+			gustrow parchim malchow # seenplatte_province
 		}
 
 		starting_technology_level = 3
@@ -2193,9 +2227,11 @@ countries = {
 	}
 	WOL = { #Wolgast
 		own_control_core = {
-			wolgast stralsund rugen grimmen swinousjcie miastko szadzko
-			nowoszczecin gryfia_gora bialogard slawno slupsk
-			goleniow kamien resko
+			stralsund grimmen rugen swinousjcie wolgast # vorpommern_province
+			kamien goleniow # stettin_province
+			bialogard gryfia_gora resko nowoszczecin # koslin_province
+			slupsk miastko slawno # stolp_province
+			szadzko # pyritz_province
 		}
 
 		starting_technology_level = 3
@@ -2227,7 +2263,7 @@ countries = {
 	}
 	KMM = {	#Cammin
 		own_control_core = {
-			koszalin bobolice kolobrzeg
+			koszalin kolobrzeg bobolice # koslin_province
 		}
 
 		starting_technology_level = 3
@@ -2247,7 +2283,7 @@ countries = {
 	}
 	NWG = {	#Nowogard
 		own_control_core = {
-			nowogard
+			nowogard # stettin_province
 		}
 
 		starting_technology_level = 3
@@ -2267,7 +2303,7 @@ countries = {
 	}
 	LAU = {	#Saxe-Lauenburg
 		own_control_core = {
-			lauenburg
+			lauenburg # lubeck_province
 		}
 
 		starting_technology_level = 3
@@ -2322,7 +2358,7 @@ countries = {
 	}
 	HBS = {	#Halberstadt
 		own_control_core = {
-			halberstadt
+			halberstadt # magdeburger_borde_province
 		}
 
 		starting_technology_level = 3
@@ -2348,7 +2384,7 @@ countries = {
 	}
 	BBG = {	#Blankenburg
 		own_control_core = {
-			blankenburg
+			blankenburg # harz_province
 		}
 
 		starting_technology_level = 3
@@ -2379,7 +2415,7 @@ countries = {
 	}
 	ANH = {	#Anhalt
 		own_control_core = {
-			zerbst
+			zerbst # flaming_province
 		}
 
 		starting_technology_level = 3
@@ -2408,7 +2444,7 @@ countries = {
 	}
 	BNB = {	#Bernburg
 		own_control_core = {
-			bernburg
+			bernburg # magdeburger_borde_province
 		}
 
 		starting_technology_level = 3
@@ -2439,7 +2475,7 @@ countries = {
 	}
 	MFE = {	#Mansfeld
 		own_control_core = {
-			eisleben
+			eisleben # saale_province
 		}
 
 		starting_technology_level = 3
@@ -2464,7 +2500,7 @@ countries = {
 	}
 	MRB = {	#Merseburg
 		own_control_core = {
-			merseburg
+			merseburg # saale_province
 		}
 
 		starting_technology_level = 3
@@ -2480,7 +2516,7 @@ countries = {
 	}
 	NMB = {	#Naumburg
 		own_control_core = {
-			naumburg
+			naumburg # saale_province
 		}
 
 		starting_technology_level = 3
@@ -2496,7 +2532,7 @@ countries = {
 	}
 	QUB = {	#Gera / sold by Quedlinburg
 		own_control_core = {
-			gera schleiz
+			gera schleiz # vogtland_province
 		}
 
 		starting_technology_level = 3
@@ -2517,7 +2553,7 @@ countries = {
 	}
 	WMA = {	#Weimar
 		own_control_core = {
-			weimar
+			weimar # thuringer_becken_province
 		}
 
 		starting_technology_level = 3
@@ -2544,7 +2580,7 @@ countries = {
 	}
 	SWZ = {	#Schwarzburg
 		own_control_core = {
-			arnstadt saalfeld
+			arnstadt saalfeld # thuringer_becken_province
 		}
 
 		starting_technology_level = 3
@@ -2602,7 +2638,7 @@ countries = {
 	}
 	SHS = {	#Sondershausen
 		own_control_core = {
-			sondershausen
+			sondershausen # thuringer_becken_province
 		}
 
 		starting_technology_level = 3
@@ -2627,7 +2663,7 @@ countries = {
 	}
 	NHS = {	#Nordhausen
 		own_control_core = {
-			nordhausen
+			nordhausen # harz_province
 		}
 
 		starting_technology_level = 3
@@ -2642,8 +2678,7 @@ countries = {
 	}
 	MLH = {	#Mühlhausen
 		own_control_core = {
-			muhlhausen
-			gottingen
+			gottingen muhlhausen # leine_province
 		}
 
 		starting_technology_level = 3
@@ -2658,7 +2693,7 @@ countries = {
 	}
 	ERF = {	#Erfurt
 		own_control_core = {
-			erfurt
+			erfurt # thuringer_becken_province
 		}
 
 		starting_technology_level = 3
@@ -2694,14 +2729,10 @@ countries = {
 	}
 	HES = {	#Hesse
 		own_control_core = {
-			kassel rotenburg eschwege frankenberg marburg melsungen #Hesse Highlands	
-			alsfeld #Vogelsberg
-			ziegenhain
-			lauterbach
-			korbach
-			hersfeld
-			hunfeld
-			fulda
+			kassel eschwege rotenburg korbach frankenberg marburg melsungen # hessen_bergland_province
+			fulda lauterbach hunfeld hersfeld ziegenhain alsfeld # vogelsberg_province
+			# Hesse Highlands
+			# Vogelsberg
 		}
 
 		starting_technology_level = 3
@@ -2746,7 +2777,7 @@ countries = {
 	}
 	PDB = {	#Paderborn
 		own_control_core = {
-			paderborn buren
+			paderborn buren # lippe_province
 		}
 
 		starting_technology_level = 3
@@ -2796,7 +2827,7 @@ countries = {
 	}
 	HNA = {	#Hanau
 		own_control_core = {
-			hanau
+			hanau # wetterau_province
 		}
 
 		starting_technology_level = 3
@@ -2820,7 +2851,7 @@ countries = {
 	}
 	BUD = {	#Büdingen
 		own_control_core = {
-			budingen
+			budingen # wetterau_province
 		}
 
 		starting_technology_level = 3
@@ -2843,7 +2874,7 @@ countries = {
 	}
 	WTZ = {	#Wetzlar
 		own_control_core = {
-			wetzlar
+			wetzlar # wetterau_province
 		}
 
 		starting_technology_level = 3
@@ -2858,19 +2889,12 @@ countries = {
 	}
 	TRI = {	#Trier
 		own_control_core = {
-			trier saarburg birkenfeld merzig #Hunsruck
-			bitburg wittlich mayen castellaun #Eifel
-			sarreguemines #Sarregueminois
-			simmern
-			schleiden
-			saarbrucken
-			prum
-			meisenheim
-			lichtenberg_veldenz
-			kreuznach
-			daun
-			cochem
-			ahrweiler
+			bitburg prum daun wittlich cochem mayen simmern ahrweiler schleiden castellaun # eifel_province
+			saarbrucken merzig lichtenberg_veldenz trier birkenfeld meisenheim saarburg kreuznach # hunsruck_province
+			sarreguemines # sarregueminois_province
+			# Hunsruck
+			# Eifel
+			# Sarregueminois
 		}
 
 		starting_technology_level = 3
@@ -2904,7 +2928,7 @@ countries = {
 	}
 	DIE = {	#Diez
 		own_control_core = {
-			diez
+			diez # taunus_province
 		}
 
 		starting_technology_level = 3
@@ -2927,7 +2951,7 @@ countries = {
 	}
 	FRN = {	#Frankfurt
 		own_control_core = {
-			frankfurt
+			frankfurt # wetterau_province
 		}
 
 		starting_technology_level = 3
@@ -2988,7 +3012,8 @@ countries = {
 	}
 	SYN = {	#Sayn
 		own_control_core = {
-			altenkirchen gummersbach
+			gummersbach # bergisches_land_province
+			altenkirchen # westerwald
 		}
 
 		starting_technology_level = 3
@@ -3019,8 +3044,10 @@ countries = {
 	}
 	KOL = {	#Cologne
 		own_control_core = {
-			cologne neuss attendorn brilon soest recklinghausen
-			bonn
+			cologne bonn neuss # koln_bucht_province
+			soest # lippe_province
+			brilon attendorn # sauerland_province
+			recklinghausen # ruhr_province
 		}
 
 		starting_technology_level = 3
@@ -3097,7 +3124,7 @@ countries = {
 	}
 	AAC = {	#Aachen
 		own_control_core = {
-			aachen
+			aachen # julich_province
 		}
 
 		starting_technology_level = 3
@@ -3117,7 +3144,9 @@ countries = {
 	}
 	JUL = {	#Jülich
 		own_control_core = {
-			bergheim duren monchengladbach
+			bergheim # koln_bucht_province
+			duren # julich_province
+			monchengladbach # niederrhein_province
 		}
 
 		starting_technology_level = 3
@@ -3151,7 +3180,8 @@ countries = {
 	}
 	GEL = {	#Guelders / Geldern / former EU4 Gelre
 		own_control_core = {
-			geldern roermond venlo 
+			venlo roermond # limburg_province
+			geldern # niederrhein_province
 		}
 
 		starting_technology_level = 3
@@ -3183,8 +3213,10 @@ countries = {
 	}
 	ZUT = {	#Zutphen
 		own_control_core = {
-			zutphen doetinchem #Guelderland
-			zwolle deventer #Overijssel
+			zwolle deventer # overijssel_province
+			doetinchem zutphen # gelderland_province
+			# Guelderland
+			# Overijssel
 		}
 
 		starting_technology_level = 3
@@ -3214,7 +3246,8 @@ countries = {
 	}
 	GMK = {	#(Grafschaft) Mark
 		own_control_core = {
-			hamm altena bochum
+			altena # sauerland_province
+			hamm bochum # ruhr_province
 		}
 
 		starting_technology_level = 3
@@ -3245,7 +3278,7 @@ countries = {
 	}
 	WTG = {	#Wittgenstein
 		own_control_core = {
-			berleburg
+			berleburg # sauerland_province
 		}
 
 		starting_technology_level = 3
@@ -3275,7 +3308,7 @@ countries = {
 	}
 	DTM = { #Dortmund
 		own_control_core = {
-			dortmund
+			dortmund # ruhr_province
 		}
 
 		starting_technology_level = 3
@@ -3290,7 +3323,7 @@ countries = {
 	}
 	ESS = {	#Essen
 		own_control_core = {
-			essen
+			essen # ruhr_province
 		}
 
 		starting_technology_level = 3
@@ -3313,7 +3346,7 @@ countries = {
 	}
 	MRS = {	#Moers
 		own_control_core = {
-			mors
+			mors # niederrhein_province
 		}
 
 		starting_technology_level = 3
@@ -3340,7 +3373,8 @@ countries = {
 	}
 	KLE = {	#Cleves
 		own_control_core = {
-			kleve wesel
+			kleve # niederrhein_province
+			wesel # ruhr_province
 		}
 
 		starting_technology_level = 3
@@ -3368,7 +3402,7 @@ countries = {
 	}
 	ANB = {	#Arnsberg
 		own_control_core = {
-			arnsberg meschede
+			arnsberg meschede # sauerland_province
 		}
 
 		starting_technology_level = 3
@@ -3398,7 +3432,7 @@ countries = {
 	}
 	LPP = {	#Lippe
 		own_control_core = {
-			lippstadt detmold
+			lippstadt detmold # lippe_province
 		}
 
 		starting_technology_level = 3
@@ -3428,8 +3462,7 @@ countries = {
 	}
 	HOX = {	#Corvey
 		own_control_core = {
-			hoxter
-			warburg
+			hoxter warburg # lippe_province
 		}
 
 		starting_technology_level = 3
@@ -3444,7 +3477,7 @@ countries = {
 	}
 	RVB = {	#Ravensberg
 		own_control_core = {
-			bielefeld
+			bielefeld # ostwestphalia_province
 		}
 
 		starting_technology_level = 3
@@ -3470,7 +3503,7 @@ countries = {
 	}
 	MDN = {	#Minden
 		own_control_core = {
-			minden
+			minden # ostwestphalia_province
 		}
 
 		starting_technology_level = 3
@@ -3491,7 +3524,8 @@ countries = {
 	}
 	OSN = {	#Osnabrück
 		own_control_core = {
-			osnabruck bersenbruck
+			osnabruck # ostwestphalia_province
+			bersenbruck # emsland_province
 		}
 
 		starting_technology_level = 3
@@ -3511,8 +3545,8 @@ countries = {
 	}
 	TCK = {	#Tecklenburg
 		own_control_core = {
-			tecklenburg lingen
-			cloppenburg friesoythe
+			friesoythe # wesermarch_province
+			lingen cloppenburg tecklenburg # emsland_province
 		}
 
 		starting_technology_level = 3
@@ -3534,8 +3568,10 @@ countries = {
 	}
 	BNT = {	#Bentheim
 		own_control_core = {
-			bentheim #Emsland
-			oldenzaal #Overijssel
+			oldenzaal # overijssel_province
+			bentheim # emsland_province
+			# Emsland
+			# Overijssel
 		}
 
 		starting_technology_level = 3
@@ -3570,7 +3606,9 @@ countries = {
 	}
 	MUN = {	#Münster
 		own_control_core = {
-			munster ahaus warendorf horstmar meppen vechta aschendorf rheine dulmen
+			munster warendorf ahaus horstmar dulmen # munsterland_province
+			meppen rheine aschendorf # emsland_province
+			vechta # middle_weser_province
 		}
 
 		starting_technology_level = 3
@@ -3605,11 +3643,11 @@ countries = {
 	}
 	LUN = {	#Lüneburg
 		own_control_core = {
-			luneburg celle ebstorf isenhagen winsen_aller fallingbostel
-			dannenberg #County of Danneberg
-			luchow #County of Lüchow
-			uelzen #Amt of Bodenteich
-
+			dannenberg luneburg uelzen winsen_aller isenhagen ebstorf luchow # luneburger_heide_province
+			celle fallingbostel # aller_province
+			# County of Danneberg
+			# County of Lüchow
+			# Amt of Bodenteich
 		}
 
 		our_cores_conquered_by_others = {
@@ -3659,8 +3697,11 @@ countries = {
 	}
 	BRU = {	#Brunswick (Lüneburg)
 		own_control_core = {
-			brunswick gifhorn helmstedt meinersen wolfenbuttel gandersheim #Duchy of Braunschweig-Wolfenbüttel
-			hanover hamelin neustadt_am_rubenberge #Duchy of Calemberg
+			hanover hamelin neustadt_am_rubenberge # hanover_province
+			brunswick wolfenbuttel helmstedt gifhorn meinersen # brunswick_province
+			gandersheim # harz_province
+			# Duchy of Braunschweig-Wolfenbüttel
+			# Duchy of Calemberg
 		}
 
 		starting_technology_level = 3
@@ -3701,8 +3742,8 @@ countries = {
 	}
 	GBH = {	#Grubenhagen
 		own_control_core = {
-			einbeck duderstadt herzberg
-			hofgeismar
+			einbeck hofgeismar duderstadt # leine_province
+			herzberg # harz_province
 		}
 
 		starting_technology_level = 3
@@ -3747,7 +3788,8 @@ countries = {
 	}
 	HDH = {	#Hildesheim
 		own_control_core = {
-			hildesheim alfeld burgdorf
+			hildesheim burgdorf # hanover_province
+			alfeld # harz_province
 		}
 
 		starting_technology_level = 3
@@ -3779,7 +3821,7 @@ countries = {
 	}
 	GOS = {	#Goslar
 		own_control_core = {
-			goslar
+			goslar # harz_province
 		}
 
 		starting_technology_level = 3
@@ -3794,7 +3836,7 @@ countries = {
 	}
 	SCB = {	#Schauenburg
 		own_control_core = {
-			buckeburg
+			buckeburg # hanover_province
 		}
 
 		starting_technology_level = 3
@@ -3855,7 +3897,7 @@ countries = {
 	}
 	NIE = {	#Nienburg
 		own_control_core = {
-			nienburg
+			nienburg # middle_weser_province
 		}
 
 		starting_technology_level = 3
@@ -3886,7 +3928,7 @@ countries = {
 	}
 	DPH = {	#Diepholz
 		own_control_core = {
-			diepholz
+			diepholz # middle_weser_province
 		}
 
 		starting_technology_level = 3
@@ -3918,7 +3960,8 @@ countries = {
 	}
 	VRD = {	#Verden
 		own_control_core = {
-			verden soltau
+			soltau # luneburger_heide_province
+			verden # aller_province
 		}
 
 		starting_technology_level = 3
@@ -3939,7 +3982,7 @@ countries = {
 	}
 	RTB = {	#Ritzebüttel
 		own_control_core = {
-			ritzebuttel
+			ritzebuttel # elbmarch_province
 		}
 
 		starting_technology_level = 3
@@ -3959,7 +4002,7 @@ countries = {
 	}
 	OLD = {	#Oldenburg
 		own_control_core = {
-			oldenburg elsfleth
+			oldenburg elsfleth # wesermarch_province
 		}
 
 		our_cores_conquered_by_others = {
@@ -3999,7 +4042,7 @@ countries = {
 	}
 	CHN = {	#Chiny - union under Loon
 		own_control_core = {
-			montmedy
+			montmedy # west_luxembourg_province
 		}
 
 		starting_technology_level = 3
@@ -4028,7 +4071,7 @@ countries = {
 	}
 	LIM = { #Limbourg - PU under Brabant
 		own_control_core = {
-			limbourg
+			limbourg # liege_province
 		}
 
 		starting_technology_level = 3
@@ -4064,7 +4107,7 @@ countries = {
 	}
 	NAM = { #Namur
 		own_control_core = {
-			namur
+			namur # namur_province
 		}
 
 		starting_technology_level = 3
@@ -4110,7 +4153,7 @@ countries = {
 	}
 	LOO = { #Loon
 		own_control_core = {
-			hasselt bree borgloon
+			borgloon hasselt bree # loon_province
 		}
 
 		starting_technology_level = 3
@@ -4136,7 +4179,7 @@ countries = {
 	}
 	VBG = { #Valkenburg - PU under Loon
 		own_control_core = {
-			maastricht
+			maastricht # limburg_province
 		}
 
 		starting_technology_level = 3
@@ -4161,7 +4204,7 @@ countries = {
 	}
 	HBG = { #Heinsberg - PU under Loon
 		own_control_core = {
-			heinsberg
+			heinsberg # julich_province
 		}
 
 		starting_technology_level = 3
@@ -4186,7 +4229,7 @@ countries = {
 	}
 	HRN = { #Horne
 		own_control_core = {
-			weert
+			weert # limburg_province
 		}
 
 		starting_technology_level = 3
@@ -4215,7 +4258,7 @@ countries = {
 	}
 	CJK = { #Cuijk
 		own_control_core = {
-			cuijk
+			cuijk # kempenland_province
 		}
 
 		starting_technology_level = 3
@@ -4243,7 +4286,7 @@ countries = {
 	}
 	UTR = {	#Utrecht
 		own_control_core = {
-			utrecht amersfoort 
+			amersfoort utrecht # north_holland_province
 		}
 
 		our_cores_conquered_by_others = {
@@ -4316,10 +4359,13 @@ countries = {
 	}
 	FRI = { #Frisia
 		own_control_core = {
-			leeuwarden sloten harlingen stavoren groningen appingedam wedde
-			leer emden aurich wolvega
-			assen coevorden meppel #Drenthe
-			kampen #Overijssel
+			emden aurich leer # east_friesland_province
+			appingedam groningen wedde # ommelanden_province
+			sloten harlingen leeuwarden stavoren wolvega # friesland_province
+			assen meppel coevorden # drenthe_province
+			kampen # overijssel_province
+			# Drenthe
+			# Overijssel
 		}
 
 		starting_technology_level = 3
@@ -4406,7 +4452,7 @@ countries = {
 	}
 	STV = { #Princely Abbey of Stavelot-Malmedy
 		own_control_core = {
-			stavelot
+			stavelot # liege_province
 		}
 
 		starting_technology_level = 3
