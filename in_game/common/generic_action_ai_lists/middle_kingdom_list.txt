@@ -1,2 +1,15 @@
-﻿#This is an empty file for now.
-#1.4: empty on purpose - pairs with the emptied common/generic_actions/middle_kingdom.txt
+﻿#1.4: Middle Kingdom is disabled (see international_organizations/middle_kingdom.txt and
+# generic_actions/middle_kingdom.txt). Its own actions are therefore gone, but vanilla's
+# start_a_treasure_voyage (generic_actions/chinese_treasure_voyages.txt) still exists and
+# needs a list, or it falls into vanilla's global_list and logs a startup performance
+# warning. Both its potential and this list require Middle Kingdom leadership, which can
+# never happen now, so the list never matches.
+middle_kingdom_list = {
+	potential = {
+		exists = international_organization:middle_kingdom
+		is_leader_of_international_organization = international_organization:middle_kingdom
+	}
+	actions = {
+		start_a_treasure_voyage
+	}
+}
