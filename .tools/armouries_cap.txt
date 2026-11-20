@@ -1,413 +1,269 @@
-Read 
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/memory.md"
-}
+ARS BELLI - ASSESSMENT: RAISING THE ARMORY CAP FOR SMALL / TALL NATIONS
+Generated 2026-11-20. Read-only analysis; no files were changed.
+Vanilla install used: /home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game
+
+--------------------------------------------------------------------------------
+1. ANSWER
+--------------------------------------------------------------------------------
+Yes. The armory cap is not hardcoded. It is a `max_levels` script value evaluated
+in the location's scope, so it can read the owner's size and grant extra levels.
+
+Current vanilla chain:
+  in_game/common/building_types/manpower_buildings.txt:82   armory = { ... }
+  same file :86                                             max_levels = manpower_max_level
+  same file :91-95                                          town = yes / city = yes / megalopolis = yes
+  in_game/common/script_values/building_caps.txt:461        manpower_max_level
+
+  manpower_max_level = 1 + 0.025 x population      (population in thousands)
+    20k pop -> 1.5 (1 level), 40k -> 2, 80k -> 3, 120k -> 4 (Sevilla's vanilla cap)
+
+There is no rank, development, or country-size term. A small nation's towns are
+capped low simply because the towns are small.
+
+Constraints and facts that shape the change:
+- `manpower_max_level` is shared by FIVE buildings: armory (86), training_fields (141),
+  barracks (188), regimental_camp (239), conscription_center (288). Do not rebalance
+  the shared value; give the armory its own cap.
+- Armory is town/city/megalopolis only; rural locations cannot build it.
+- `local_manpower` per armory level = 0.01 (about 10 men/month). +2 levels in each of
+  three towns is roughly +60 manpower/month.
+- One armory level costs goods upkeep (firearms 0.5, leather 0.5, cloth 0.10,
+  paper 0.20, weaponry 0.5, category building_maintenance) and consumes part of the
+  location's total building-level budget (see below), so extra cap is not free.
+- Total supported building levels per location: town 25, city 100, megalopolis 200
+  (in_game/common/location_ranks/00_default.txt:162, :104, :30), plus the age's
+  global_free_building_levels_modifier. This budget is shared by ALL buildings.
+- Levels above a cap are never demolished (see "Building caps" paragraph in
+  "EU5 Location Mechanics (1.4.4).md":54; Sevilla has 7 armories over a cap of 4).
+  A size-based cap therefore only gates new levels; it cannot destroy anything.
+- Armory is obsoleted by barracks (Age IV). Barracks is also town-only and uses the
+  same manpower_max_level, so an armory-only rule stops mattering at Age IV.
+- D009 adds `saqaliba_barracks` (dlc/D009_across_the_pillars/in_game/common/
+  building_types/d009_unique_buildings.txt:68) on the same shared value. A mod-owned
+  armory cap does not touch it.
+- There is NO country modifier for armory / manpower building levels. The modifier
+  list (".tools/eu5/Modifier_list_eu5.html") has only `hre_imperial_armory_level`,
+  which is internationalorganization scope and feeds `hre_imperial_armory_max_level`
+  for the HRE IO building. So the script-value route below is the only direct one.
+- `free_building_levels` (location) / `global_free_building_levels_modifier` (country)
+  raise the TOTAL level budget of a location, not a building's own cap, and would buff
+  every building. Not the right lever for "more armories".
+
+--------------------------------------------------------------------------------
+2. RECOMMENDED IMPLEMENTATION
+--------------------------------------------------------------------------------
+Step 1 - new mod-owned cap value.
+File: in_game/common/script_values/abm_building_caps.txt
+(add after abm_starting_manpower_max_level, line ~52; same comment style as the file)
 
-Search for `armour|armory|armoury`
-
-Search for `arm[u]?ou?r[y|ies]`
-
-Find files matching `in_game/common/building_types/*`
-
-Search for `armory|armoury|armories`
-
-Search for `armo`
-
-Search for `max_levels`
-
-Find files matching `in_game/common/script_values/*`
-
-Read 
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/in_game/common/script_values/abm_building_caps.txt"
-}
-
-Search for `max_levels|building_caps|REPLACE:`
-
-Search for `REPLACE:`
-
-Search for `building_level|armory|max_level`
-
-Read 
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/in_game/common/building_types/abm_forts.txt"
-}
-
-Search for `.`
-
-Search for `steamapps|Europa Universalis V|game path|install path`
-
-Read 
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/script_values/building_caps.txt"
-}
-
-Search for `^armory = \{`
-
-Search for `max_levels = manpower_max_level`
-
-Search for `manpower.*level|level.*manpower|army_building|barracks`
-
-Read , lines 120 to 300
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/building_types/manpower_buildings.txt",
-  "view_range": [
-    120,
-    300
-  ]
-}
-
-Search for `num_locations|num_owned_locations|num_provinces`
-
-Search for `num_locations`
-
-Read , lines 1 to 60
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/script_values/religious_order_values.txt",
-  "view_range": [
-    1,
-    60
-  ]
-}
-
-Search for `num_locations_impact`
-
-Search for `small nation|tall nation|playing tall|tall play|build tall|small country`
-
-Search for `military_building|max_building|building_max|num_arm|armory_|_armory|free_buil...`
-
-Read , lines 1 to 80
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/in_game/common/script_values/mp_limits_values.txt",
-  "view_range": [
-    1,
-    80
-  ]
-}
-
-Search for `owner\.|owner = \{|scope:`
-
-Read , lines 390 to 430
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/script_values/building_caps.txt",
-  "view_range": [
-    390,
-    430
-  ]
-}
-
-Search for `development`
-
-Read , lines 300 to 360
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/memory.md",
-  "view_range": [
-    300,
-    360
-  ]
-}
-
-Search for `average_development|value = total_development|\.total_development`
-
-Search for `\.num_locations`
-
-Search for `owner\.total_development|owner\.num_locations|owner\.total_population`
-
-Read 
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/in_game/common/building_types/abm_stud_farms.txt"
-}
-
-"Search" failed
-Tool execution failed: Search paths do not exist: /home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/localization/english
-
-Search for `BUILDING_LEVEL_FROM_OWNER_MODIFIERS|BUILDING_LEVEL_POPULATION`
-
-Read , lines 1 to 120
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/in_game/common/building_types/abm_capital_buildings.txt",
-  "view_range": [
-    1,
-    120
-  ]
-}
-
-Read , lines 7700 to 7740
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/main_menu/localization/english/interfaces_l_english.yml",
-  "view_range": [
-    7700,
-    7740
-  ]
-}
-
-Search for `^sergeantry_maintenance|^new_order_headquarters_maintenance`
-
-Search for `Stud Farm|stud farm|horse_breeders|INJECT:horse`
-
-Search for `INJECT`
-
-Read , lines 700 to 740
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/in_game/common/advances/abm_ruthenia.txt",
-  "view_range": [
-    700,
-    740
-  ]
-}
-
-Search for `building_levels|free_building_levels|manpower_max_level`
-
-Find files matching `in_game/localization/english/*`
-
-Search for `tall|small|armor|manpower`
-
-Find files matching `**/localization/**/abm_*`
-
-Read , lines 1 to 40
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/NEW ruleset.md",
-  "view_range": [
-    1,
-    40
-  ]
-}
-
-Read , lines 1 to 60
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/in_game/common/scripted_triggers/abm_governor_triggers.txt",
-  "view_range": [
-    1,
-    60
-  ]
-}
-
-Search for `effective_num_local_governors|lieutenancies_in_governor_pool`
-
-Search for `development >=|development >`
-
-Search for `manpower_max_level|armory|maxLevels|max_levels`
-
-Search for `max_levels|cap\b|manpower_max`
-
-Search for `max_levels`
-
-Search for `function scriptValue|function valueContext`
-
-Read , lines 40 to 230
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/.tools/scripts/location_sim/engine.js",
-  "view_range": [
-    40,
-    230
-  ]
-}
-
-Search for `^ [a-zA-Z_]+:`
-
-Search for `num_locations`
-
-Read , lines 1 to 60
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/in_game/common/auto_modifiers/abm_country.txt",
-  "view_range": [
-    1,
-    60
-  ]
-}
-
-Search for `manpower|building_caps|building_types`
-
-Search for `^[a-z_]+ = \{|max_levels|unique_production_methods|possible_production_methods`
-
-Read , lines 905 to 960
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/production_methods/unsorted_building_inputs.txt",
-  "view_range": [
-    905,
-    960
-  ]
-}
-
-Search for `armory_maintenance|^armory`
-
-Read , lines 185 to 245
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/events/colonization/conquistador.txt",
-  "view_range": [
-    185,
-    245
-  ]
-}
-
-Search for `^ [a-zA-Z_]+:`
-
-Search for `BUILDING_LEVEL|building_level`
-
-Search for `manpower_max_level`
-
-Search for `^\s*armory = \{|REPLACE:armory|INJECT:armory`
-
-Search for `manpower_max_level`
-
-Search for `building slot|slots`
-
-Search for `slot`
-
-Search for `<tr id="[^"]*level[^"]*">`
-
-Read , lines 17020 to 17040
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/.tools/eu5/Modifier_list_eu5.html",
-  "view_range": [
-    17020,
-    17040
-  ]
-}
-
-Search for `free_building_levels`
-
-Read , lines 11300 to 11320
-Completed with input: {
-  "path": "/home/zp/Games/Modding/Ars-Belli-Mod/.tools/eu5/Modifier_list_eu5.html",
-  "view_range": [
-    11300,
-    11320
-  ]
-}
-
-Read , lines 1 to 180
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/location_ranks/00_default.txt",
-  "view_range": [
-    1,
-    180
-  ]
-}
-
-Read , lines 82 to 136
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/building_types/manpower_buildings.txt",
-  "view_range": [
-    82,
-    136
-  ]
-}
-
-"Search" failed
-Tool execution failed: Search paths do not exist: /home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/employment_sizes
-
-Search for `^manpower_max_level = \{`
-
-Search for `free_building_levels`
-
-Search for `divide = \{`
-
-Read , lines 1 to 35
-Completed with input: {
-  "path": "/home/zp/Games/SteamLibrary/steamapps/common/Europa Universalis V/game/in_game/common/scripted_relations/inheritance_contract.txt",
-  "view_range": [
-    1,
-    35
-  ]
-}
-
-Search for `local_manpower`
-
-## Short answer
-
-Yes. The armory cap is not hardcoded — it is a `max_levels` **script value** evaluated in the location's scope, so it can be made to read the owner's size. Vanilla points the armory at `manpower_max_level`:
-
-- `manpower_buildings.txt` → `max_levels = manpower_max_level`, town/city/megalopolis only
-- `building_caps.txt` → `manpower_max_level = 1 + 0.025 × population` (population in thousands: 40k → 2, 120k → 4, i.e. Sevilla's vanilla cap). No rank, development or country-size term at all.
-
-So a small nation's towns are stuck with 1–2 armory levels simply because they are small, not because of anything about the country.
-
-Two things worth knowing before touching it:
-
-- `manpower_max_level` is shared by **five** buildings (armory, training_fields, barracks, regimental_camp, conscription_center), so replace the *armory's* reference, not the shared value.
-- Levels built above a cap are never removed (your `Location Mechanics doc` notes Sevilla's 7 armories over a cap of 4). A size-based cap therefore cannot demolish anything — it only gates new levels.
-
----
-
-## How to implement it
-
-**1. New mod-owned cap** in `abm_building_caps.txt` (same pattern as `abm_starting_manpower_max_level`):
-
-```
 abm_armory_max_level = {
-	add = manpower_max_level          # vanilla 1 + 0.025 x population
+    add = manpower_max_level          # vanilla 1 + 0.025 x population
 
-	if = {
-		limit = { owner ?= { num_locations <= 20 } }
-		add = { desc = "abm_building_level_small_nation" value = 1 }
-	}
-	if = {
-		limit = {
-			owner ?= { num_locations <= 20 }
-			development >= 20          # "tall": a developed town
-		}
-		add = { desc = "abm_building_level_small_tall_nation" value = 1 }
-	}
-	if = {
-		limit = { owner ?= { num_locations <= 5 } }
-		add = { desc = "abm_building_level_very_small_nation" value = 1 }
-	}
+    if = {
+        limit = { owner ?= { num_locations <= 20 } }
+        add = { desc = "abm_building_level_small_nation" value = 1 }
+    }
+    if = {
+        limit = {
+            owner ?= { num_locations <= 20 }
+            development >= 20          # "tall": a genuinely developed town
+        }
+        add = { desc = "abm_building_level_small_tall_nation" value = 1 }
+    }
+    if = {
+        limit = { owner ?= { num_locations <= 5 } }
+        add = { desc = "abm_building_level_very_small_nation" value = 1 }
+    }
 }
-```
 
-**2. Point the armory at it.** Cheapest first attempt, matching your Stud Farm precedent in `abm_stud_farms.txt`:
+Notes:
+- `add = <script value>` is proven vanilla syntax (building_caps.txt
+  jewelry_guild_max_level = { add = guild_max_level ... }).
+- `owner ?= { ... }` is the mod's own idiom for an optional scope
+  (abm_capital_buildings.txt remove_if uses `location.owner ?= {`; vanilla
+  building_caps.txt uses `scope:owner ?= {`).
+- Only triggers + constant adds are used, so no unproven constructs.
 
-```
+Step 2 - point the armory at it.
+First attempt (smallest footprint, mirrors the Stud Farm precedent):
+File: new in_game/common/building_types/abm_manpower_buildings.txt
+
 INJECT:armory = {
-	max_levels = abm_armory_max_level
+    max_levels = abm_armory_max_level
 }
-```
 
-Caveat from `memory.md`: INJECT overwriting an existing scalar in `building_types` is still unverified in game. Verify with the in-game cap tooltip (a new breakdown line must appear) and by trying to queue one more level; check `logs/error.log` for a duplicate `max_levels`. If it does not bind, the fallback is a full `REPLACE:armory` copy (the database is proven — see `abm_capital_buildings.txt` for `sergeantry`), **but** the vanilla block defines its production method inline (`unique_production_methods = { armory_maintenance = { … } }`). Inline PM names clash inside `REPLACE`, so move those five goods lines into `production_methods/` under a new name (`abm_armory_maintenance`) and reference it with `possible_production_methods = { abm_armory_maintenance }`, as the mod's other manpower buildings already do.
+CAVEAT: memory.md:336 and :471 say INJECT in `building_types` is unverified for that
+database, and specifically unverified for overwriting an existing scalar rather than
+appending a block. INJECT appends; a duplicate `max_levels` key may or may not bind
+and may log an error. VERIFY IN GAME (see section 6). If it does not bind, use:
 
-**3. Localization** for the two or three new `desc` keys (the breakdown line labels) — e.g. in `abm_buildings_l_english.yml`:
+FALLBACK - full REPLACE:armory (building_types REPLACE is proven; see
+in_game/common/building_types/abm_capital_buildings.txt:63 REPLACE:sergeantry).
+Do NOT copy the vanilla inline production method: vanilla armory defines
+`unique_production_methods = { armory_maintenance = { ... } }` (manpower_buildings.txt:118)
+and memory.md:336 records that inline PM names clash inside REPLACE. Move the five
+goods lines to a new global PM and reference it:
+  - production_methods: abm_armory_maintenance (icon_type = building_type, icon = armory,
+    firearms 0.5, leather 0.5, cloth 0.10, paper 0.20, weaponry 0.5,
+    category = building_maintenance) - same shape as sergeantry_maintenance in
+    vanilla production_methods/unsorted_building_inputs.txt:916
+  - in the REPLACE block: possible_production_methods = { abm_armory_maintenance }
+  - keep all other vanilla armory fields identical (audio_tier 1, is_foreign no,
+    pop_type soldiers, employment_size manpower_employment, town/city/megalopolis,
+    important_for_AI, build_time soldier_building, obsolete provincial_garrison /
+    korean_barracks, allow/remove_if culture rules, modifier local_manpower 0.01 +
+    can_recruit_regiment_in_this_location, construction_demand
+    early_soldier_building_construction) and add `max_levels = abm_armory_max_level`.
 
-```
+Do NOT REPLACE the shared `manpower_max_level` script value:
+- REPLACE in `script_values` is unproven in this mod (see the header comment in
+  abm_building_caps.txt about REPLACE being per-database), and
+- it would buff training_fields, barracks, regimental_camp and conscription_center too.
+
+Step 3 - localization for the breakdown lines.
+File: main_menu/localization/english/abm_buildings_l_english.yml
+(one leading space per key, matching the file)
+
  abm_building_level_small_nation: "Small Nation"
  abm_building_level_small_tall_nation: "Small and Developed Nation"
  abm_building_level_very_small_nation: "Very Small Nation"
-```
 
-**4. Keep the sim honest.** The cap evaluator in `engine.js` only knows location values; `owner.num_locations` / `owner.total_development` would be reported as unknown and treated as 0/false, so simulations would apply no bonus. It needs a country field (location count, total development) in the scenario/`from_save.js` and an `owner` case in `trigger()`. Then update the "Building caps" paragraph of the mechanics doc.
+These keys are rendered by the vanilla cap tooltip via
+BUILDING_SIZE_ENTRY_FORMAT: "$KEY$: $VALUE|+=2$" (main_menu/localization/english/
+interfaces_l_english.yml:7729; BUILDING_LEVEL_BASE is at :7712, the other vanilla
+BUILDING_LEVEL_* keys at :7712-7727).
 
----
+Step 4 - keep the location simulator honest.
+File: .tools/scripts/location_sim/engine.js
+- scriptValue() at :63, valueContext() at :192, trigger() at :104.
+- valueContext knows only location values; an `owner` scope is not handled, so
+  `owner.num_locations` / `owner.total_development` land in ctx.unknown and evaluate
+  to 0/false. Simulations would apply no bonus and would show the cap unchanged.
+- Needs: country location count and total development in the scenario (and
+  .tools/scripts/location_sim/from_save.js when rebuilding data), an `owner` case in
+  trigger(), and `owner.num_locations` / `owner.total_development` in valueContext.
+- Then update the "Building caps" paragraph in "EU5 Location Mechanics (1.4.4).md":54.
 
-## Defining "small" and "tall"
+--------------------------------------------------------------------------------
+3. DEFINING "SMALL" AND "TALL"
+--------------------------------------------------------------------------------
+Keep the two axes separate so neither is a proxy for the other.
 
-These are separate axes; keep them separate so neither is a proxy for the other.
+SMALL = how much land you own (country scope; checked on `owner`)
+  num_locations                                   own locations only; simplest
+  num_locations_owned_or_owned_by_subjects_or_below
+                                                  RECOMMENDED for MP: otherwise
+                                                  releasing vassals is a way to stay
+                                                  "small". Also counts colonies,
+                                                  which is arguably correct.
 
-**Small = how much land you own**
+  Suggested tiers (a 10-20 location duchy is a normal minor; majors are 100+):
+    <= 5 locations   -> +2
+    <= 20 locations  -> +1
+    above            -> 0
 
-| Metric | Notes |
-|---|---|
-| `num_locations` | Own locations only. Simplest, most legible. |
-| `num_locations_owned_or_owned_by_subjects_or_below` | Same but counts vassals/tributaries — **recommended in MP**, otherwise releasing vassals is a way to stay "small". Also counts colonies, which is arguably right (a colonial empire is not a small nation). |
+TALL = development concentrated in your cities
+  (a) Location rank: `location_rank ?= location_rank:city` / `:megalopolis`
+      Already the mod's idiom (abm_trade_office_max_level in abm_building_caps.txt),
+      but rank is mostly population (city needs 30k), which the cap already rewards.
+  (b) Local development: `development >= 20` (a second step at 40 is possible)
+      Vanilla decisions treat 18-25 as developed (mallorca_decisions.txt:17 -> 25,
+      maghrebi_culture_decisons.txt:63 -> 18). Sevilla is 60.5 in 1547.
+      Rewards the specific city the player develops.
+  (c) Country average development, as a trigger:
+        owner ?= { total_development >= { value = num_locations multiply = 20 } }
+      "average development per own location >= 20"; cannot be gamed by conquering
+      low-development land. `total_development` is a country trigger and a country
+      value (scripted_relations/inheritance_contract.txt:20 uses
+      scope:recipient.total_development). A block as the right operand of a trigger
+      comparison is proven in the mod (abm_governor_triggers.txt:24) and in vanilla
+      (decline_of_mali.txt:43 area).
 
-Suggested tiers (a 10–20 location duchy is a normal minor; majors are 100+):
-- ≤ 5 locations → +2
-- ≤ 20 locations → +1
-- above → 0
+RECOMMENDED RULE: grant the bonus only when BOTH hold - small by location count AND
+the location itself is developed (b), optionally with a second tier at 40.
+Rationale:
+- simple to explain: "a small nation may stack armouries in its great cities";
+- self-limiting: the levels compete for the same per-location building-level budget;
+- a sprawling minor with many undeveloped locations gains nothing.
 
-**Tall = development concentrated in your cities**
+Do NOT use the mod's `country_power_score` (mp_limits_values.txt: Minor < 2,
+Major 2-10, Great Power > 10) as the "small" test: a genuinely tall minor can score
+as a Major through economy/manpower, which would remove the bonus exactly when it is
+meant to apply.
 
-| Definition | Syntax | Trade-off |
-|---|---|---|
-| Location rank | `location_rank ?= location_rank:city` / `megalopolis` | Already the mod's idiom (`abm_trade_office_max_level`), but rank mostly means population (`city` needs 30k), which the cap already rewards. |
-| Local development | `development >= 20` (vanilla decisions treat 18–25 as developed; Sevilla 60.5 in 1547) | Rewards the city you actually develop; the extra level is local. |
-| Country average development | `owner ?= { total_development >= { value = num_locations multiply = 20 } }` | True "tall country" test (average dev/location ≥ 20); cannot be gamed by conquering low-dev land. Proven syntax: dotted country values in value blocks appear in `inheritance_contract.txt`, and block operands in triggers in your `abm_governor_triggers.txt` style. |
+Worked example with the recommended numbers:
+  8-location minor, 3 towns at 25 development each, 25k pop each.
+  Vanilla cap per town: 1 + 0.025 x 25 = 1.625 -> 1.
+  With the rule: +1 small, +1 small-and-developed = 3.625 -> 3 per town (9 total).
+  A 100-location major is unchanged; its towns still cap on population alone.
 
-**Recommended rule:** bonus only when *both* hold — small by location count **and** the location itself is developed (local `development >= 20`, maybe a second step at 40). That is simple to explain ("a small nation may stack armouries in its great cities"), it is self-limiting because the extra levels compete for the same building-level budget (town 25 / city 100 / megalopolis 200 from `location_ranks/00_default.txt`), and it does not hand free manpower to a sprawling minor with 40 one-temple villages.
+--------------------------------------------------------------------------------
+4. BACKGROUND USED (paths + line numbers, for re-checking)
+--------------------------------------------------------------------------------
+Vanilla:
+  game/in_game/common/building_types/manpower_buildings.txt
+    :82 armory, :86 max_levels = manpower_max_level, :118 unique PM armory_maintenance
+    :137 training_fields, :184 barracks, :235 regimental_camp, :284 conscription_center
+  game/in_game/common/script_values/building_caps.txt
+    :461 manpower_max_level (1 + population x 0.025)
+    :99/:134/:273 owner.modifier:market_building_levels (owner scope in a cap value)
+    :404 owner = { has_variable = ... } (owner scope as a limit)
+    :1061 lieutenancies_in_governor_pool, :1067 effective_num_local_governors
+  game/in_game/common/location_ranks/00_default.txt
+    :30 megalopolis free_building_levels 200, :104 city 100, :162 town 25
+  game/in_game/common/production_methods/unsorted_building_inputs.txt:916
+    sergeantry_maintenance (shape for a global maintenance PM)
+  game/main_menu/localization/english/interfaces_l_english.yml
+    :7712-7727 BUILDING_LEVEL_* keys, :7729 BUILDING_SIZE_ENTRY_FORMAT
+  game/in_game/common/scripted_relations/inheritance_contract.txt:20
+    scope:recipient.total_development (dotted country value)
+  game/in_game/events/colonization/conquistador.txt:202
+    owner.num_locations in a trigger (location -> owner)
+  game/in_game/common/decisions/mallorca_decisions.txt:17 (development >= 25)
+  game/in_game/common/decisions/maghrebi_culture_decisons.txt:63 (development >= 18)
+  game/dlc/D009_across_the_pillars/.../d009_unique_buildings.txt:68 saqaliba_barracks
 
-Avoid the mod's `country_power_score` (Minor/Major/GP in `mp_limits_values.txt`) as the "small" test: a genuinely tall minor can score as a Major through economy/manpower, which would remove the bonus exactly when it is meant to apply.
+Mod:
+  in_game/common/script_values/abm_building_caps.txt
+    :1 file, :46 abm_trade_office_max_level (rank-based cap), :52 abm_starting_manpower_max_level
+  in_game/common/building_types/abm_stud_farms.txt:5 INJECT:horse_breeders max_levels
+  in_game/common/building_types/abm_capital_buildings.txt:5/:63/:69/:116/:160
+    max_levels = abm_starting_manpower_max_level, REPLACE:sergeantry, possible_production_methods
+  in_game/common/scripted_triggers/abm_governor_triggers.txt:24
+    block operand on the right of a trigger comparison
+  in_game/common/auto_modifiers/abm_country.txt:26 REPLACE:num_locations_impact (scales_with num_locations)
+  in_game/common/script_values/mp_limits_values.txt:1 country_power_score tiers
+  main_menu/localization/english/abm_buildings_l_english.yml (mod building loc)
+  .tools/scripts/location_sim/engine.js:63 scriptValue, :192 valueContext, :104 trigger
+  memory.md:336 (Stud Farm INJECT note, inline PM clash warning), :470-471 (REPLACE vs INJECT)
+  "EU5 Location Mechanics (1.4.4).md":54 (Building caps), :86 (local_manpower sources)
 
-**Balance reference:** one armory level is `local_manpower = 0.01` (≈10 men/month). +2 levels in each of three towns ≈ +60 manpower/month, meaningful for a 10-location minor and negligible against a 100-location major. Also decide whether the bonus should follow the family into Age IV: `armory` is obsoleted by `barracks` (also town-only, same `manpower_max_level`), so armory-only means the rule dies when barracks unlock; extending it means replacing `barracks` too (same inline-PM caveat).
+--------------------------------------------------------------------------------
+5. DESIGN DECISIONS STILL OPEN (ask the user)
+--------------------------------------------------------------------------------
+1. Scope: armory only, or the whole town-capable manpower family (armory + barracks,
+   and later conscription_center)? Armory-only dies at Age IV.
+2. Thresholds: "small" at 5 / 15 / 20 / 25 locations? Tiering (+2/+1/0) or flat +1?
+3. "Tall": local development (20/40), country average development (20/25), or rank?
+4. Count subjects/colonies in "small" or not?
+5. Should the rule also apply to AI (it will, unless gated) and to subjects (it will:
+   a subject count is its own num_locations)?
+6. Whether this belongs in the mod's own "tall play" pitch (workshop description
+   already advertises tall play: governor offices, provincial administration,
+   sergeantry levels).
 
-Alternative levers, for completeness: `free_building_levels` / `global_free_building_levels_modifier` raise the *total* level budget of a location, not the armory's own cap, so they would buff every building — not the right tool here. There is no country modifier for armory/manpower building levels (`hre_imperial_armory_level` is an IO-scope modifier for the HRE building only), so the script value above is the only direct route.
-
-I can't apply any of this from this agent (read-only) — switch to an editing agent if you want the cap value, the armory override, loc and the simulator/docs updates made.
+--------------------------------------------------------------------------------
+6. VERIFICATION CHECKLIST (in game, after implementing)
+--------------------------------------------------------------------------------
+- logs/error.log: no duplicate `max_levels` error, no duplicate production-method
+  error. (memory.md notes EU5 rotates error.log; the fresh chunk takes the lowest free
+  number, so one session can be error.3.log -> error.log.)
+- Building tooltip in a town of a <=20-location nation shows the extra line(s)
+  ("Small Nation", ...) and the cap is one/two levels higher.
+- A location can queue the extra level (proves the cap, not just the tooltip, binds).
+- The same town after the nation grows past the threshold: no levels are lost, but
+  new levels cannot be queued until the cap is met again.
+- A >20-location nation's armory cap is unchanged (numeric equality with vanilla).
+- AI still builds armories normally (important_for_AI = yes is untouched).
+- If the location simulator is used for balance: run a saved location scenario and
+  confirm `unknown` no longer lists owner.num_locations and the cap matches the game.
