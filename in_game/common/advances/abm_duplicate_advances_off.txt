@@ -1,0 +1,53 @@
+﻿#####ArsBelliMod#####
+
+# Game advances that repeat an EU4 national idea the mod already gives the same country.
+# Both the mod and the game imported these countries' EU4 ideas, so the country got the idea twice.
+# The mod's version stays; the game's version no longer applies to that country.
+#   Smolensk: Smolenskian Resolve and The Armories of Smolensk (country_SMO.txt, Smolensk only, so off entirely)
+#   Mewar: Mandatory Firearm Drills and Reorganized Rajput Regiments (culture_rajasthani.txt; other Rajasthani countries keep them)
+# Full copies of the game 1.4.9 advances, changes marked #ABM. Re-sync on game updates.
+
+REPLACE:smolenskian_resolve = {
+	age = age_2_renaissance
+	potential = { always = no } #ABM Smolensk has the mod's own version (abm_smo_smolenskian_resolve); vanilla potential = { has_or_had_tag = SMO }
+	requires = crown_power_advance_renaissance
+
+	icon = religious_icon_power_advance
+
+	monthly_religious_rebel_growth = -0.01
+	religious_icon_power_modifier = 0.2
+}
+
+REPLACE:armories_of_smolensk = {
+	age = age_4_reformation
+	potential = { always = no } #ABM Smolensk has the mod's own version (abm_smo_armories_of_smolensk); vanilla potential = { has_or_had_tag = SMO }
+
+	icon = gunpowder_advance
+
+	requires = supply_depot_advance_age_4_reformation
+
+	army_artillery_power = 0.1
+}
+
+REPLACE:raj_mandatory_firearm_drilling = {
+	age = age_5_absolutism
+	icon = raj_mandatory_firearm_drilling
+	potential = {
+		culture.language = language:rajasthani_language
+		NOT = { has_or_had_tag = MEW } #ABM Mewar has the mod's own version (abm_mer_firearm_drilling)
+	}
+	discipline = 0.05
+	requires = regiment_reinforcement_speed_absolutism
+}
+
+REPLACE:raj_reorganized_rajput_regiments = {
+	age = age_2_renaissance
+	icon = raj_reorganized_rajput_regiments
+	potential = {
+		culture.language = language:rajasthani_language
+		NOT = { has_or_had_tag = MEW } #ABM Mewar has the mod's own version (abm_mer_reorganized_rajput_regiments)
+	}
+	land_morale_modifier = 0.1
+	ai_weight = { add = 10 }
+	requires = raj_marwari_horses
+}

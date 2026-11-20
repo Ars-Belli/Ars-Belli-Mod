@@ -615,8 +615,8 @@ in-game.
 - **Cossacks:** the Cossack Black Sea Raids privilege grants privateering, slave raiding, double
   loot and +2.5% desired soldier pops.
 - **Byzantium:** the Magister Militum bureaucracy is toned down — +0.1 monthly army and navy
-  tradition (was +0.2) and +10 general and admiral training (was +25). Its military tactics bonus and
-  its legitimacy and noble-power drawbacks are unchanged, and the other nine Byzantine bureaucracies
+  tradition (was +0.2), +10 general and admiral training (was +25) and +0.05 military tactics (was
+  +0.2; up to +0.1 once entrenched). Its legitimacy and noble-power drawbacks are unchanged, and the other nine Byzantine bureaucracies
   are left as the base game has them.
 - **Miaphysite and Nestorian churches** have two religious aspects of their own. *Martyrs' Shield*
   gives +10% military tactics, +5% morale recovery in friendly territory and monthly progress toward

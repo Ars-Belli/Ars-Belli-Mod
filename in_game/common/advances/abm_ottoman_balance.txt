@@ -1,0 +1,17 @@
+﻿#####ArsBelliMod#####
+
+# Ottomans toned down: Seljuk Roots gives half the discipline. It is also open to Anatolian beyliks
+# (government reform anatolian_beylik), so they get the same cut.
+# Full copy of vanilla beyliks.txt (game 1.4.9), change marked #ABM. Re-sync on game updates.
+
+REPLACE:seljuk_roots = {
+	age = age_2_renaissance
+	potential = {
+		OR = {
+			has_or_had_tag = TUR
+			has_reform = government_reform:anatolian_beylik
+		}
+	}
+	discipline = 0.025 #ABM half, vanilla 0.05
+	requires = regiment_reinforcement_speed_renaissance
+}
