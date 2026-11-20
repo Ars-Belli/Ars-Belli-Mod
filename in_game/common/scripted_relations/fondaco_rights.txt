@@ -1,6 +1,11 @@
 ﻿# ARS BELLI: same-name shadow of vanilla in_game/common/scripted_relations/fondaco_rights.txt.
-# Only the `visible` block differs: the Merchant Enclave's governments (custom ABM reforms) were
-# added so they can be granted the slot too. Everything else is vanilla - re-sync on updates.
+# Only the `visible` block and the competing-merchant-republic AI penalty differ:
+#   * visible - the Merchant Enclave's governments (custom ABM reforms) and the Hansa were added,
+#     so they can be granted the slot too (the Hansa needs it for hsa_burgtor, see
+#     building_types/abm_foreign_buildings.txt - its kontor never asks for rights).
+#   * wants_to_give - the Hansa is exempt from DIPLOREASON_COMPETING_MERCHANT_REPUBLIC, otherwise
+#     every AI host refuses the rights the burgtor needs (HSA is a merchant republic by reform).
+# Everything else is vanilla - re-sync on updates.
 fondaco_rights =  {
 	type = diplomacy
 	relation_type = oneway	
@@ -30,6 +35,8 @@ fondaco_rights =  {
 				has_reform = government_reform:abm_india_bazaar_republic
 				has_reform = government_reform:abm_bengaleese_meritocracy
 				has_reform = government_reform:abm_trade_emporium
+				# ARS BELLI: the Hansa needs the same permission to raise a burgtor abroad.
+				has_or_had_tag = HSA
 			}
 			within_diplomatic_range = scope:actor
 		}
@@ -102,6 +109,9 @@ fondaco_rights =  {
 			limit = {	
 				scope:recipient = { 
 					has_reform = government_reform:merchant_republic
+					# ARS BELLI: HSA is a merchant republic by reform, so without this exemption no AI
+					# host would ever grant it the Fondaco Rights a burgtor needs.
+					NOT = { has_or_had_tag = HSA }
 				}
 			}
 			subtract = {

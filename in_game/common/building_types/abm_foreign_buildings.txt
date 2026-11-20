@@ -1,4 +1,5 @@
-﻿# ARS BELLI: the mod's versions of the two foreign trade buildings - trade_office and fondaco.
+﻿# ARS BELLI: the mod's versions of the foreign buildings - trade_office, fondaco, the Hansa's three
+# federation buildings (hanseatic_kontor, shipwright guild, town hall) and its burgtor.
 #
 # ===========================================================================
 # trade_office  (vanilla source: in_game/common/building_types/foreign_buildings.txt)
@@ -262,6 +263,230 @@ REPLACE:hanseatic_kontor = {
 		kontor_maintenance
 	}
 	construction_demand = kontor_construction
+}
+
+# ---------------------------------------------------------------------------
+# hanseatic_shipwright_guild  (vanilla source: in_game/common/building_types/unique_buildings.txt)
+# A Hansa-network building: buildable ONLY in the ports of the Hansa's own subjects, never in HSA's
+# own land. Vanilla's location_potential already said that; what was missing is the cleanup -
+# vanilla had no remove_if, so a guild survived its host being annexed or changing hands as a dead
+# building. The guild is now destroyed as soon as the port is no longer owned by an HSA subject.
+# (HSA has no subjects at start, so the two vanilla setup guilds in lubeck and hamburg are
+# commented out in main_menu/setup/1337/07_cities_and_buildings.txt.)
+# ---------------------------------------------------------------------------
+REPLACE:hanseatic_shipwright_guild = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = yes
+	need_good_relation = yes
+
+	pop_type = laborers
+	max_levels = hanseatic_shipwright_guild_max_level
+	category = military_category
+	country_potential = {
+		modifier:allows_hanseatic_federation_buildings = yes
+	}
+	location_potential = {
+		owner ?= { is_subject_of = c:HSA }
+		is_port = yes
+	}
+	employment_size = dock_employment
+	pop_size_created = dock_employment
+	# town = yes
+	city = yes
+	megalopolis = yes
+	build_time = medium_port_building_time
+	expensive = yes
+	possible_production_methods = {
+		port_building_maintenance
+	}
+	construction_demand = port_building_construction
+	modifier = {
+		max_ships_built_at_same_time = 1
+		sailors_to_building_owner = 0.01
+		can_build_ships_in_this_location = yes
+		harbor_suitability = 0.1
+		local_repair_speed = 0.01
+	}
+	remove_if = {
+		OR = {
+			location = { has_owner = no }
+			location.owner ?= { NOT = { is_subject_of = c:HSA } }
+		}
+	}
+}
+
+# ---------------------------------------------------------------------------
+# hanseatic_town_hall  (vanilla source: in_game/common/building_types/unique_buildings.txt)
+# Same fields as vanilla apart from:
+#   * location_potential - vanilla hard-wired c:HSA.capital, i.e. the location variable, so the hall
+#     could only ever stand in whatever location happens to BE the Hansa's capital. It is now
+#     "the owner's own capital" (is_capital = yes), the same test vanilla uses for its capital-only
+#     buildings.
+#   * remove_if - vanilla destroyed the hall whenever its owner was NOT country_type = building, a
+#     guard for the building-country Hansa which deleted the lubeck hall on the first tick. The hall
+#     now dies with the federation reform, the same rule that drops the kontors.
+# ---------------------------------------------------------------------------
+REPLACE:hanseatic_town_hall = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = yes
+	need_good_relation = yes
+
+	pop_type = nobles
+
+	category = trade_category
+
+	max_levels = 2
+	employment_size = normal_noble_employment
+	pop_size_created = normal_noble_employment
+
+	rural_settlement = no
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	increase_per_level_cost = 0.5
+
+	expensive = yes
+
+	location_potential = {
+		is_capital = yes
+	}
+
+	country_potential = {
+		modifier:allows_hanseatic_federation_buildings = yes
+	}
+
+	build_time = large_capital_build_time
+
+	capital_country_modifier = {
+		country_cabinet_efficiency = 0.05
+		monthly_republican_tradition = 0.05
+		parliament_base_support = 0.05
+	}
+	remove_if = {
+		OR = {
+			location = { has_owner = no }
+			location.owner ?= {
+				NOT = { modifier:allows_hanseatic_federation_buildings = yes }
+			}
+		}
+	}
+
+	possible_production_methods = {
+		hanseatic_town_hall_maintenance
+	}
+	construction_demand = hanseatic_town_hall_construction
+}
+
+# ---------------------------------------------------------------------------
+# hsa_burgtor  (vanilla source: in_game/common/building_types/unique_buildings.txt)
+# The Hansa's city gate (Burgtor). The ONE Hansa building not gated on the federation reform - it
+# comes from the advance hsa_hanseatic_fortifications, which only HSA can take. Same fields as
+# vanilla apart from:
+#   * max_levels - 1 instead of the vanilla 2, so a location holds a single gate.
+#   * allow - a new block (vanilla had none): the location's OWNER must have granted us Fondaco
+#     Rights, the same permission the mod's fondaco needs. Own locations are exempt (a country
+#     cannot grant itself a relation, and the gate must be raisable in the Hansa's own cities).
+#   * remove_if - vanilla's three clauses plus one: the gate is torn down when the host revokes the
+#     rights (own locations exempt again). Vanilla also destroys it when the host's culture leaves
+#     the Hansa's culture group, when the location loses its owner, or when the host is at war with
+#     the building's owner.
+# ---------------------------------------------------------------------------
+REPLACE:hsa_burgtor = {
+	audio_tier = 3
+	is_special = yes
+	is_foreign = yes
+	max_levels = 1
+	pop_type = soldiers
+	need_good_relation = yes
+	category = defense_category
+	employment_size = castle_employment
+	pop_size_created = castle_employment
+	city = yes
+	megalopolis = yes
+	build_time = small_fort_building
+	expensive = yes
+	possible_production_methods = {
+		burgtor_maintenance
+	}
+
+	#root = location
+
+	location_potential = {
+		custom_tooltip = {
+			text = location_owner_same_culture_group_as_us_tt
+			owner ?= {
+				culture = {
+					any_culture_group = {
+						any_culture_in_culture_group = {
+							this = c:HSA.culture
+						}
+					}
+				}
+			}
+		}
+	}
+
+	allow = {
+		trigger_if = {
+			limit = { NOT = { owner = scope:actor } }
+			custom_tooltip = {
+				text = abm_burgtor_rights_required_tt
+				owner = {
+					giving_scripted_relation = {
+						type = relation_type:fondaco_rights
+						target = scope:actor
+					}
+				}
+			}
+		}
+	}
+
+	#root = building
+
+	remove_if = {
+		OR = {
+			location.owner ?= {
+				culture = {
+					any_culture_group = {
+						NOT = {
+							any_culture_in_culture_group = {
+								this = c:HSA.culture
+							}
+						}
+					}
+				}
+			}
+			location = { has_owner = no }
+			location.owner ?= {
+				is_at_war_with = root.owner
+			}
+			location.owner ?= {
+				NOT = {
+					OR = {
+						this = root.owner
+						giving_scripted_relation = {
+							type = relation_type:fondaco_rights
+							target = root.owner
+						}
+					}
+				}
+			}
+		}
+	}
+
+	#increase_per_level_cost = 1
+	construction_demand = fort_construction
+	modifier = {
+		manpower_to_building_owner = 0.002
+	}
+	raw_modifier = {
+		local_garrison_size = 0.1
+		local_defensive = 0.1
+		local_manpower_modifier = 0.05
+	}
 }
 
 # ---------------------------------------------------------------------------
