@@ -1,17 +1,27 @@
 ﻿# Ars Belli - rough-terrain advances (vanilla overrides).
 #
 # These vanilla advances used to grant country-wide <topography>_proximity_impact
-# bonuses. The bonus is replaced by unlock_government_reform: the advance now
-# unlocks a homeland reform whose benefit is limited to the historical home region
+# bonuses. The bonus is replaced by unlock_estate_privilege: the advance now unlocks
+# a peasants privilege whose benefit is limited to the original capital's region
 # of the country (location_modifier + potential_trigger in
-# in_game/common/government_reforms/abm_gov_reforms_rough_terrain.txt).
+# in_game/common/estate_privileges/abm_rough_terrain_privileges.txt).
 #
 # Each block is a REPLACE: of the vanilla entry, copied verbatim minus the
 # proximity modifiers - keep it in sync with vanilla when the game updates.
 #
-# Exception: swiss_alpine_passes and sav_alpine_identity unlock
-# abm_alpine_proximity_reform instead, which covers the whole Alpine arc rather
-# than the capital's region (Provence joins them through abm_tarascon_castle).
+# Exception: swiss_alpine_passes and sav_alpine_identity unlock the alpine
+# privilege (abm_alpine_proximity_privilege) instead; it is also limited to the
+# original capital's region (Provence joins them through abm_tarascon_castle).
+#
+# Every advance in this file is age_1_traditions and requires an age_1 advance, so the
+# privilege is available from the start (same for the mod-owned unlockers elsewhere).
+#
+# All 16 unlockers carry starting_technology_level = 1 (age of traditions only), the
+# vanilla pairing for an advance that unlocks a privilege - written_alphabet (level 2)
+# + clergy_literacy_rights, whose potential is has_advance = written_alphabet. Countries
+# that match an advance's potential therefore start with the advance researched, and the
+# ones that start with the advance list the privilege in
+# main_menu/setup/1337/10_countries_*.txt. No runtime grant is needed.
 
 REPLACE:ira_persian_plateau = {
 	age = age_1_traditions
@@ -22,14 +32,15 @@ REPLACE:ira_persian_plateau = {
 			culture = { has_culture_group = culture_group:iranian_group }
 		}
 	}
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = cultural_traditions_law_advance
 }
 
 # Austria (HAB/TIR/STY) -> South Germany
 REPLACE:hab_expert_mountaineers = {
-	age = age_2_renaissance
+	age = age_1_traditions
 	icon = hab_expert_mountaineers
 	potential = {
 		OR = {
@@ -39,13 +50,14 @@ REPLACE:hab_expert_mountaineers = {
 		}
 	}
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
-	requires = national_assemblies_advance
+	requires = mining_law_advance
 }
 
-# Swiss - Alpine arc variant: the bonus covers the whole Alpine range, not the
-# capital's region (government_reforms/abm_gov_reforms_rough_terrain.txt).
+# Swiss - Alpine-advance variant, limited to the original capital's region
+# (estate_privileges/abm_rough_terrain_privileges.txt).
 # Ars Belli: no REPLACE: - the mod's same-name culture_high_alemannic.txt hides the game's definition, so this is the only one.
 swiss_alpine_passes = {
 	age = age_1_traditions
@@ -60,12 +72,13 @@ swiss_alpine_passes = {
 		}
 		is_swiss_for_advances = yes
 	}
-	unlock_government_reform = abm_alpine_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_alpine_proximity_privilege
 
 	requires = mapmaking
 }
 
-# Savoy - Alpine arc variant
+# Savoy - Alpine-advance variant
 REPLACE:sav_alpine_identity = {
 	age = age_1_traditions
 	icon = arduous_terrain
@@ -74,7 +87,8 @@ REPLACE:sav_alpine_identity = {
 		has_or_had_tag = SAV
 	}
 
-	unlock_government_reform = abm_alpine_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_alpine_proximity_privilege
 
 	requires = mining_law_advance
 }
@@ -91,7 +105,8 @@ REPLACE:albanian_prokletije = {
 		}
 	}
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = codified_laws
 }
@@ -108,7 +123,8 @@ REPLACE:scottish_highland_tradition = {
 			culture = { has_culture_group = culture_group:scottish_group }
 		}
 	}
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
 # Tibet
@@ -121,7 +137,8 @@ REPLACE:drokpa = {
 
 	global_merchant_capacity_modifier = 0.05
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
 # Inca
@@ -134,7 +151,8 @@ REPLACE:inc_vertical_economy = {
 			has_or_had_tag = CSU
 		}
 	}
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = mapmaking
 }
@@ -148,22 +166,24 @@ REPLACE:mor_atlas_strongholds = {
 		has_or_had_tag = MOR
 	}
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = mining_law_advance
 }
 
 # Ethiopia
 REPLACE:a_permanent_capital = {
-	age = age_3_discovery
-	requires = foreign_cultural_law_advance
+	age = age_1_traditions
+	requires = codified_laws
 	icon = a_permanent_capital
 	potential = {
 		has_or_had_tag = ETH
 	}
 	global_distance_from_capital_speed_propagation = 0.1
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
 # Nepal
@@ -171,7 +191,8 @@ REPLACE:npl_himalayan_homeland = {
 	age = age_1_traditions
 	icon = feudalism_advance
 	potential = { OR = { culture.language = language:nepali_language has_or_had_tag = NPL } }
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 
 	requires = codified_laws
 }

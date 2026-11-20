@@ -17,12 +17,15 @@ countries = {
 	TRH = { #Torghut Horde
 		type = location
 		own_control_core = {
-			atanuul bodonch bulgan chinggil ulungur kara_irtysh burqin jeminay
-			#NEW
-			kurchum kandysu kokpekty #Kurchum
-			hoboksar utbulaq zhekdeliq #Gurbantunggut
-			khurgan
-			sarybulak #Sarybulak
+			khurgan # khovd_province
+			atanuul bodonch bulgan burqin chinggil jeminay kara_irtysh ulungur # altay_province
+			hoboksar utbulaq zhekdeliq # gurbantunggut_province
+			kurchum kandysu kokpekty # kurchum_province
+			sarybulak # sarybulak_province
+			# NEW
+			# Kurchum
+			# Gurbantunggut
+			# Sarybulak
 		}
 
 		own_control_integrated = {
@@ -79,7 +82,7 @@ countries = {
 			ruler = random
 
 			reforms = {
-				legacy_of_genghis
+				#legacy_of_genghis #ABM 2026-11-20: invalid at start, engine drops it anyway
 			}
 		}
 		country_rank = rank_duchy
@@ -101,6 +104,10 @@ countries = {
 		include = "east_asia_monarchy_no_coast"
 		government = {
 			ruler = random
+			privilege = {
+				# Ars Belli: rough-terrain home-region compensation (see estate_privileges/abm_rough_terrain_privileges.txt)
+				abm_homeland_proximity_privilege
+			}
 		}
 
 		tolerated_cultures = {
@@ -111,22 +118,23 @@ countries = {
 	}
 	ABKAS = { #Yarkand
 		own_control_core = {
-			#From Dughlat
-			kashgar artush barchuk maralbexi payzawat tokkuzak yingisar yopurga
-			khotan karakax keriya lop mazar_tagh qira
-			yarkand guma kargilik poskam
-			charchan niya
-			#From Mangalai
-			aksu bai_xinjiang kumtura qumbash shayar uqturpan kucha
-			#From Qocho
-			bugur kuerchu kurla tikenliq
-			charklik qietai tatrang waxxari
-			#From Transoxiana
-			koshoy_korgon naryn chon_naryn
-			#From Sarikol
-			sarikol akto kizilsu zarafshan
-			#Uncolonized
-			raskam sanju yalingkuo
+			koshoy_korgon chon_naryn naryn # naryn_province
+			aksu bai_xinjiang kumtura kucha qumbash shayar uqturpan # aksu_province
+			charchan charklik niya qietai tatrang waxxari # charchan_province
+			raskam sanju zarafshan # karakoram_province
+			kashgar artush barchuk maralbexi payzawat tokkuzak yingisar yopurga # kashgar_province
+			khotan karakax keriya lop qira # khotan_province
+			yalingkuo # kumkol_province
+			kurla bugur kuerchu # kurla_province
+			mazar_tagh tikenliq # taklamakan_province
+			sarikol akto kizilsu # sarikol_province
+			yarkand guma kargilik poskam # yarkand_province
+			# From Dughlat
+			# From Mangalai
+			# From Qocho
+			# From Transoxiana
+			# From Sarikol
+			# Uncolonized
 		}
 
 		starting_technology_level = 3
@@ -171,15 +179,14 @@ countries = {
 	}
 	QCH = { #Qocho
 		own_control_core = {
-			qocho turpan lukchun pichan toksun
-			beshbalik dunla guchung mori
-			dashahai bailongdui miran loulan
-			karasahr bosten kumux
-			yuanhu
-			nazhi hami geziyandun
-			#NEW
-			urumqi
-			barkul
+			barkul # barkul_province
+			beshbalik dunla guchung mori yuanhu # beshbalik_province
+			hami nazhi geziyandun # hami_province
+			turpan lukchun pichan qocho toksun # turpan_province
+			urumqi # yangjibaliq_province
+			karasahr kumux bosten # karasahr_province
+			dashahai bailongdui miran loulan # lop_nur_province
+			# NEW
 		}
 
 		starting_technology_level = 3

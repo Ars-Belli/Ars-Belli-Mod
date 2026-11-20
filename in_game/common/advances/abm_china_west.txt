@@ -3,6 +3,7 @@
 # CXI, ABHNG, CSI, ABGNS, ABBIG
 # Xi, Hangzhou, Li, Gansu, Bing
 # Structure per tag: 1x age_1, 2x age_2, 2x age_3, 2x age_4, 1x age_5
+# ABHNG/ABWCP exception: abm_hng_mountain_adaptation sits at age_1 (it unlocks the homeland proximity privilege).
 # Constraint: exactly one modifier per advance, and no modifier key repeats.
 
 ########################################
@@ -198,7 +199,7 @@ abm_hng_diverse_customs_charter = {
 }
 
 abm_hng_mountain_adaptation = {
-	age = age_2_renaissance
+	age = age_1_traditions
 	icon = drill_army_advance
 
 	potential = {
@@ -208,9 +209,10 @@ abm_hng_mountain_adaptation = {
 		}
 		culture = { has_culture_group = culture_group:chinese_group }
 	}
-	requires = national_assemblies_advance
+	requires = mining_law_advance
 
-	unlock_government_reform = abm_homeland_proximity_reform
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_homeland_proximity_privilege
 }
 
 abm_hng_government_expansion = {

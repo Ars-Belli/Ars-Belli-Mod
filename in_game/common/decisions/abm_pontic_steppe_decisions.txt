@@ -19,7 +19,7 @@ abm_develop_or_qapi_rgos = {
 	potential = {
 		NOT = { has_global_variable = abm_or_qapi_rgos_developed }
 
-		abm_owns_entire_province = { PROVINCE = province:or_qapi_province COUNTRY = root }
+		province_definition:or_qapi_province = { abm_owns_entire_province_definition = { COUNTRY = root } }
 
 		NOT = { location:kezlev = { raw_material = goods:stone } }
 	}
@@ -65,7 +65,7 @@ abm_develop_cafa_rgos = {
 	potential = {
 		NOT = { has_global_variable = abm_cafa_rgos_developed }
 
-		abm_owns_entire_province = { PROVINCE = province:cafa_province COUNTRY = root }
+		province_definition:cafa_province = { abm_owns_entire_province_definition = { COUNTRY = root } }
 
 		OR = {
 			NOT = { location:kaffa = { raw_material = goods:dyes } }
@@ -131,7 +131,7 @@ abm_develop_gothia_rgos = {
 	potential = {
 		NOT = { has_global_variable = abm_gothia_rgos_developed }
 
-		abm_owns_entire_province = { PROVINCE = province:gothia_province COUNTRY = root }
+		province_definition:gothia_province = { abm_owns_entire_province_definition = { COUNTRY = root } }
 
 		OR = {
 			NOT = { location:qirq_yer = { raw_material = goods:coal } }

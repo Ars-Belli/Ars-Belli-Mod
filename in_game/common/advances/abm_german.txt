@@ -450,7 +450,7 @@ abm_swabian_ideas_tradition_2 = {
 	requires = power_projection_advance_1
 
 	# merc_maintenance_modifier = -0.15
-	army_reinforce_efficiency = 0.10
+	army_maintenance_efficiency = 0.10
 }
 
 abm_swabian_mercenaries = {
@@ -2685,6 +2685,20 @@ abm_boh_elective_monarchy = {
 #	military_tactics = 0.10
 #}
 
+# Age III continuation of the vanilla wagenburg advance - the wagon fort stays
+# available (and keeps up with the Age III templates) instead of stopping in Age II.
+abm_late_wagenburg = {
+	age = age_3_discovery
+	icon = glorious_arms
+	potential = {
+		has_or_had_tag = BOH
+	}
+
+	requires = unlock_matchlock_levy
+
+	unlock_unit = a_abm_late_wagenburg
+}
+
 abm_letter_of_majesty = {
 	age = age_3_discovery
 	icon = road_building
@@ -3592,19 +3606,29 @@ abm_noble_cadets = {
 	nobles_estate_target_satisfaction = medium_permanent_target_satisfaction
 }
 
-# ABM 2026-11-17: disabled - duplicates a vanilla advance of the same name for the same tag (sheet mark "--abm_goose_step").
-#abm_goose_step = {
-#	age = age_4_reformation
-#	icon = merchants_and_trade
-#	potential = {
-#		has_or_had_tag = PRU
-#	}
-#
-#	requires = supply_depot_advance_age_4_reformation
-#
-# infantry_power = 0.20
-#	army_heavy_infantry_power = 0.10
-#}
+abm_goose_step = {
+	age = age_4_reformation
+	icon = merchants_and_trade
+	potential = {
+		has_or_had_tag = PRU
+	}
+
+	requires = supply_depot_advance_age_4_reformation
+
+infantry_power = 0.20
+	army_heavy_infantry_power = 0.10
+}
+
+REPLACE:goose_step = {
+	age = age_6_revolutions
+	icon = goose_step
+	potential = {
+		always = no
+	}
+	army_heavy_infantry_power = 0.2
+	army_light_infantry_power = 0.1
+	requires = military_tactics_advance_6
+}
 
 abm_regimental_cantons = {
 	age = age_4_reformation

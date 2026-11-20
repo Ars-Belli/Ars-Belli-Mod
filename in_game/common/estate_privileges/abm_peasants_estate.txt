@@ -30,6 +30,12 @@ abm_secured_dalmatia = {
 		always = no
 	}
 
+	# Every vanilla privilege declares the estate power it grants; without this the game
+	# logs "has no power set" (estate_privilege.cpp:577).
+	country_modifier = {
+		global_peasants_estate_power = 0.2
+	}
+
 	location_modifier = {
 		potential_trigger = {
 			area = area:croatia_area

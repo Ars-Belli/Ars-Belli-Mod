@@ -22,7 +22,7 @@ REPLACE:confucian_school_advance = {
 				text = has_neo_confucianism_tt
 				has_variable = has_neo_confucianism
 			}
-			is_member_of_international_organization = international_organization:middle_kingdom
+			# Ars Belli: Middle Kingdom IO removed (empty override) - branch was dead and logged "unset scope".
 		}
 	}
 	
@@ -47,9 +47,22 @@ REPLACE:confucian_academy_advance = {
 				text = has_neo_confucianism_tt
 				has_variable = has_neo_confucianism
 			}
-			is_member_of_international_organization = international_organization:middle_kingdom
+			# Ars Belli: Middle Kingdom IO removed (empty override) - branch was dead and logged "unset scope".
 		}
 	}
 	
 	unlock_building = confucian_academy
+}
+
+# Ars Belli: vanilla advance gated on the removed Middle Kingdom IO. Its potential scoped into
+# international_organization:middle_kingdom, which logged "unset scope" for every country each
+# month. Kept as an unreachable node so the cabinet action unlock stays defined.
+REPLACE:direct_domestic_migration_middle_kingdom_advance = {
+	age = age_1_traditions
+	allow_children = no
+	potential = {
+		always = no
+	}
+
+	unlock_cabinet_action = direct_domestic_migration
 }

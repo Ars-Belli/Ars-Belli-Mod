@@ -1,0 +1,70 @@
+﻿# Ars Belli: reforms that only the removed Middle Kingdom IO could grant.
+# The IO is an empty same-name override, so these could never be taken; their
+# potential is killed outright instead of leaving a dead
+# `is_leader_of_international_organization = international_organization:middle_kingdom`
+# check to be evaluated for every country. Modifiers are kept so a save that
+# already holds one of them keeps working.
+
+REPLACE:legacy_of_kublai_khan = {
+	unique = yes
+	major = yes
+	potential = {
+		always = no
+	}
+	country_modifier = {
+		cultures_capacity = 3
+	}
+}
+
+REPLACE:kor_sadae_reform = {
+	age = age_1_traditions
+	major = yes
+	potential = {
+		always = no
+	}
+	country_modifier = {
+		selling_efficiency = medium_selling_efficiency_bonus
+		monthly_legitimacy = 0.25
+		scale = { # goes from -0.5 to 0.5
+			value = -0.5
+			add = {
+				value = root.subject_loyalty
+				divide = 100
+			}
+		}
+	}
+	country_modifier = {
+		government_reform_slots = 1
+	}
+}
+
+REPLACE:empower_the_eunuchs = {
+	government = monarchy
+	age = age_2_renaissance
+	potential = {
+		always = no
+	}
+	country_modifier = {
+		country_cabinet_efficiency = 0.05
+		scale = {
+			value = 1
+			add = modifier:eunuch_power
+		}
+	}
+	country_modifier = {
+		court_spending_efficiency = -0.05
+		scale = {
+			value = 1
+			add = modifier:eunuch_power
+			multiply = {
+				value = 1
+				add = modifier:eunuch_power
+			}
+		}
+	}
+	country_modifier = {
+		government_reform_slots = 1
+		may_hire_eunuch_advisors = yes
+	}
+	years = 2
+}

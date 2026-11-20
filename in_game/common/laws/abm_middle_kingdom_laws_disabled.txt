@@ -1,0 +1,32 @@
+﻿# Ars Belli: law that only the removed Middle Kingdom IO could grant.
+# potential was `is_leader_of_international_organization = international_organization:middle_kingdom`,
+# which can never be true now; killed outright so it is not evaluated at all.
+# The policies are kept so a save that already runs this law keeps its options.
+
+REPLACE:status_of_the_han_law = {
+	unique = yes
+	law_category = administrative
+	potential = {
+		always = no
+	}
+
+	maintain_status_quo_in_han_policies = {
+		years = 2
+
+		country_modifier = {
+			monthly_towards_sinicized = societal_value_monthly_move
+			change_primary_culture_cost_modifier = -0.25
+			country_cabinet_efficiency = 0.05
+		}
+	}
+
+	limit_the_han_powers = {
+		years = 2
+
+		country_modifier = {
+			monthly_towards_unsinicized = societal_value_monthly_move
+			cultural_influence_modifier = 0.25
+			pop_join_rebel_threshold = 0.05
+		}
+	}
+}

@@ -1,7 +1,7 @@
 ﻿REPLACE:a_genoese_crossbowmen = {
 	copy_from = a_age_2_renaissance_light_infantry
 	is_special = yes
-	upgrades_to_only = a_abm_late_genoese_crossbowmen
+	upgrades_to = a_abm_late_genoese_crossbowmen
 
 	build_time_modifier = 0.5
 
@@ -65,7 +65,7 @@ a_abm_late_genoese_crossbowmen = {
 	copy_from = a_age_3_discovery_light_infantry
 	is_special = yes
 	age = age_3_discovery
-	upgrades_to_only = a_abm_genoese_arquebusiers
+	upgrades_to = a_abm_genoese_arquebusiers
 
 	build_time_modifier = 0.5
 	
@@ -129,7 +129,7 @@ a_abm_genoese_arquebusiers = {
 	copy_from = a_age_4_reformation_light_infantry
 	is_special = yes
 	age = age_4_reformation
-	upgrades_to_only = a_abm_genoese_musketeers
+	upgrades_to = a_abm_genoese_musketeers
 
 	build_time_modifier = 0.5
 	
@@ -189,7 +189,7 @@ a_abm_genoese_musketeers = {
 	copy_from = a_age_5_absolutism_light_infantry
 	is_special = yes
 	age = age_5_absolutism
-	upgrades_to_only = a_abm_genoese_riflemen
+	upgrades_to = a_abm_genoese_riflemen
 
 	build_time_modifier = 0.5
 
@@ -301,7 +301,7 @@ a_abm_balestrieri = {
 	copy_from = a_age_2_renaissance_heavy_infantry
 	is_special = yes
 	age = age_2_renaissance
-	upgrades_to_only = a_abm_late_balestrieri
+	upgrades_to = a_abm_late_balestrieri
 
 	combat_speed = -0.25
 
@@ -346,7 +346,7 @@ a_abm_late_balestrieri = {
 	copy_from = a_age_3_discovery_heavy_infantry
 	is_special = yes
 	age = age_3_discovery
-	upgrades_to_only = a_abm_archibugieri
+	upgrades_to = a_abm_archibugieri
 
 	combat_speed = -0.25
 
@@ -390,7 +390,7 @@ a_abm_archibugieri = {
 	copy_from = a_age_4_reformation_heavy_infantry
 	is_special = yes
 	age = age_4_reformation
-	upgrades_to_only = a_abm_corazze
+	upgrades_to = a_abm_corazze
 
 	initiative = -0.25
 	combat_speed = -0.25
@@ -423,7 +423,7 @@ a_abm_corazze = {
 	copy_from = a_age_5_absolutism_heavy_infantry
 	is_special = yes
 	age = age_5_absolutism
-	upgrades_to_only = a_abm_bersaglieri
+	upgrades_to = a_abm_bersaglieri
 
 	initiative = -0.25
 	combat_speed = -0.25
@@ -488,7 +488,7 @@ a_abm_venettian_stradioti = {
 	copy_from = a_age_2_renaissance_light_cavalry
 	is_special = yes
 	age = age_2_renaissance
-	upgrades_to_only = a_abm_late_venettian_stradioti
+	upgrades_to = a_abm_late_venettian_stradioti
 	
 	buildable = yes
 	
@@ -530,7 +530,7 @@ a_abm_late_venettian_stradioti = {
 	copy_from = a_age_3_discovery_light_cavalry
 	is_special = yes
 	age = age_3_discovery
-	upgrades_to_only = a_abm_venettian_cappelletti
+	upgrades_to = a_abm_venettian_cappelletti
 	
 	buildable = yes
 	
@@ -572,7 +572,7 @@ a_abm_venettian_cappelletti = {
 	copy_from = a_age_4_reformation_light_cavalry
 	is_special = yes
 	age = age_4_reformation
-	upgrades_to_only = a_abm_venettian_cravates
+	upgrades_to = a_abm_venettian_cravates
 	
 	buildable = yes
 	
@@ -614,7 +614,7 @@ a_abm_venettian_cravates = {
 	copy_from = a_age_5_absolutism_light_cavalry
 	is_special = yes
 	age = age_5_absolutism
-	upgrades_to_only = a_abm_venettian_dragoons
+	upgrades_to = a_abm_venettian_dragoons
 	
 	buildable = yes
 	
@@ -697,7 +697,7 @@ a_abm_italian_stradioti = {
 	copy_from = a_age_2_renaissance_heavy_cavalry
 	is_special = yes
 	age = age_2_renaissance
-	upgrades_to_only = a_abm_late_italian_stradioti
+	upgrades_to = a_abm_late_italian_stradioti
 	
 	buildable = yes
 	
@@ -734,7 +734,7 @@ a_abm_late_italian_stradioti = {
 	copy_from = a_age_3_discovery_heavy_cavalry
 	is_special = yes
 	age = age_3_discovery
-	upgrades_to_only = a_abm_italian_cappelletti
+	upgrades_to = a_abm_italian_cappelletti
 	
 	buildable = yes
 	
@@ -875,3 +875,83 @@ a_abm_italian_carabinieri = {
 	gfx_tags = { heavy_tag spear_tag }
 }
 
+
+# Genoa - Genoese Galley line (Ages II-III)
+# The unique genoese hull now keeps upgrading into a genoese galley in Ages II and III
+# instead of turning into the generic Mediterranean/War Galley.
+REPLACE:n_genoese_galley = {
+	is_special = yes
+	upgrades_to = n_abm_genoese_galley_2
+	category = navy_galley
+	copy_from = n_age_1_traditions_galley
+
+	movement_speed = 1
+
+	cannons = 2
+
+	crew_size = 0.03
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+
+	location_potential = {
+		unit_genoese_galley_location_trigger = yes
+	}
+
+	gfx_tags = { mediterranean_galley_tag }
+}
+
+n_abm_genoese_galley_2 = {
+	age = "age_2_renaissance"
+	is_special = yes
+	upgrades_to = n_abm_genoese_galley_3
+	category = navy_galley
+	copy_from = n_age_2_renaissance_galley
+
+	movement_speed = 1
+
+	cannons = 2
+
+	crew_size = 0.03
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+
+	location_potential = {
+		unit_genoese_galley_location_trigger = yes
+	}
+
+	gfx_tags = { mediterranean_galley_tag }
+}
+
+n_abm_genoese_galley_3 = {
+	age = "age_3_discovery"
+	is_special = yes
+	upgrades_to = n_galleass
+	category = navy_galley
+	copy_from = n_age_3_discovery_galley
+
+	movement_speed = 1
+
+	cannons = 2
+
+	crew_size = 0.03
+
+	#root = location. Checks location_potential first so don't need that scripting in
+	mercenaries_per_location = {
+		pop_type = burghers
+		multiply = 0.05
+	}
+
+	location_potential = {
+		unit_genoese_galley_location_trigger = yes
+	}
+
+	gfx_tags = { mediterranean_galley_tag }
+}

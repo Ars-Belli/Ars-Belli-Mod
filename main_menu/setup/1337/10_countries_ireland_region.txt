@@ -35,7 +35,8 @@ countries = {
 	}
 	MCM = { # Munster
 		own_control_core = {
-			killarney carbery kilbrittain muskerry dunhallow tralee dingle
+			killarney carbery kilbrittain muskerry dunhallow # desmond_province
+			tralee dingle # limerick_province
 		}
 
 		include = "gaelic_tribe"
@@ -69,6 +70,16 @@ countries = {
 	PLE = { # The Pale
 		our_cores_conquered_by_others = {
 			dublin fingal navan trim kells drogheda dundalk
+			ballymore
+			carlow
+			cork
+			kilkenny
+			limerick
+			mullingar
+			new_ross
+			waterford
+			wexford
+			wicklow
 		}
 		government = {
 			type = monarchy
@@ -117,8 +128,8 @@ countries = {
 	}
 	TYR = {
 		own_control_core = {
-			dungannon strabane clogher enniskillen belcoo derry coleraine
-			magherafelt
+			dungannon strabane clogher enniskillen belcoo # tyrone_province
+			derry coleraine magherafelt # derry_province
 		}
 
 		include = "gaelic_tribe_no_coast"
@@ -243,14 +254,19 @@ countries = {
 
 		government = {
 			ruler = gln_bisset
+			privilege = {
+				# Ars Belli: rough-terrain home-region compensation (see estate_privileges/abm_rough_terrain_privileges.txt)
+				abm_homeland_proximity_privilege
+			}
 		}
 		tolerated_cultures = { irish }
 		capital = ballycastle
 	}
 	LEI = { # Leinster
 		own_control_core = {
-			wexford new_ross ferns carlow kilkenny waterford dungarvan
-			carrickbeg
+			wexford new_ross ferns carlow # wexford_province
+			kilkenny # kilkenny
+			waterford dungarvan carrickbeg # waterford_province
 		}
 
 		tolerated_cultures = { anglo_irish }
@@ -266,7 +282,7 @@ countries = {
 	}
 	TRY = {
 		own_control_core = {
-			donegal kilmacrennan inishowen raphoe
+			donegal kilmacrennan inishowen raphoe # donegal_province
 		}
 
 		include = "gaelic_tribe"
@@ -344,7 +360,9 @@ countries = {
 	}
 	MTH = { # Meath Midhe
 		own_control_core = {
-			dublin fingal navan trim kells drogheda dundalk
+			dublin fingal # dublin_province
+			trim kells navan # meath_province
+			dundalk drogheda # oriel_province
 		}
 		our_cores_conquered_by_others = {
 			mullingar ballymore longford ardagh cavan killycolly monaghan carrickmacross dromahair leitrim killeshandra oriel
@@ -449,8 +467,9 @@ countries = {
 	}
 	CLR = {
 		own_control_core = {
-			galway athenry tuam kilconnell clifden roscommon castlereagh
-			castlebar burrishoole erris ballaghaderreen
+			galway clifden athenry tuam kilconnell # galway_province
+			roscommon castlereagh # roscommon_province
+			castlebar burrishoole erris ballaghaderreen # mayo_province
 		}
 
 		government = {
@@ -482,8 +501,9 @@ countries = {
 	}
 	ULS = { # Ulster
 		own_control_core = {
-			carrickfergus belfast ballymena ballycastle dunluce downpatrick iveagh
-			newtownards armagh monaghan carrickmacross oriel
+			carrickfergus belfast ballymena ballycastle dunluce # antrim_province
+			downpatrick iveagh newtownards # down_province
+			monaghan carrickmacross armagh oriel # oriel_province
 		}
 
 		government = {
@@ -517,7 +537,7 @@ countries = {
 	}
 	ORD = { # Ormond
 		own_control_core = {
-			tipperary nenagh clonmel cashel roscrea moycarn
+			tipperary nenagh clonmel cashel roscrea moycarn # tipperary_province
 		}
 
 		government = {
@@ -546,7 +566,7 @@ countries = {
 	}
 	DMS = { # Desmond
 		own_control_core = {
-			cork fermoy kinsale youghal
+			cork fermoy kinsale youghal # cork_province
 		}
 
 		government = {
@@ -565,7 +585,8 @@ countries = {
 	}
 	KID = { # Kildare
 		own_control_core = {
-			kildare naas athy dunamase wicklow glendalough
+			wicklow glendalough # dublin_province
+			kildare naas athy dunamase # kildare_province
 		}
 
 		government = {
@@ -600,7 +621,8 @@ countries = {
 	}
 	THO = { # Thomond
 		own_control_core = {
-			limerick killmallock adare castleconnell ennis bunratty moyarta
+			limerick killmallock adare castleconnell # limerick_province
+			ennis bunratty moyarta # clare_province
 		}
 
 		include = "gaelic_tribe"
@@ -619,7 +641,8 @@ countries = {
 	}
 	SLN = {
 		own_control_core = {
-			sligo skreen dromahair leitrim killeshandra cavan killycolly
+			sligo skreen # roscommon_province
+			dromahair leitrim killeshandra cavan killycolly # breifne_province
 		}
 
 		include = "gaelic_tribe"
@@ -632,8 +655,10 @@ countries = {
 	}
 	FLY = {
 		own_control_core = {
-			mullingar longford ardagh ballymore tullamore daingean cullahill
-			athlone
+			mullingar longford ardagh ballymore tullamore # meath_province
+			daingean # kildare_province
+			cullahill # kilkenny
+			athlone # roscommon_province
 		}
 
 		include = "gaelic_tribe_no_coast_no_censor"

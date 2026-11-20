@@ -1,9 +1,8 @@
-﻿#manpower buffed to 50 (from 20) and clergy employed increased to 100 (from 50)
-REPLACE:order_headquarters = {
+﻿REPLACE:order_headquarters = {
 	audio_tier = 2 # 1.4 vanilla
 	is_foreign = no
 	pop_type = clergy
-	max_levels = 3
+	max_levels = abm_starting_manpower_max_level
 	
 	category = government_category
 	
@@ -45,7 +44,7 @@ REPLACE:order_headquarters = {
 	}
 	
 	capital_modifier = {
-		local_manpower = 0.05
+		local_manpower = 0.020
 		can_recruit_regiment_in_this_location = yes
 	}
 	
@@ -62,6 +61,147 @@ REPLACE:order_headquarters = {
 
 	construction_demand = early_capital_building_construction
 }
+
+REPLACE:sergeantry = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = abm_starting_manpower_max_level
+	#increase_per_level_cost = 0.5
+	
+	category = military_category
+	forbidden_for_estates = yes
+	
+	employment_size = manpower_employment
+	
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	build_time = medium_soldier_building
+	
+	location_potential = {
+		counts_as_capital = yes
+	}
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = sergeantry }
+	}
+	country_potential = {
+		government_type ?= government_type:monarchy
+	}
+	remove_if = {
+		is_no_longer_capital = yes
+	}
+
+	capital_modifier = {
+		local_manpower = 0.015
+		can_recruit_regiment_in_this_location = yes
+	}
+
+	raw_modifier = {
+		local_crown_estate_power = 0.25
+	}
+
+	possible_production_methods =  {
+		sergeantry_maintenance
+	}
+	construction_demand = early_soldier_building_construction
+}
+
+REPLACE:city_guard = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = abm_starting_manpower_max_level
+	#increase_per_level_cost = 0.5
+	
+	category = military_category
+	forbidden_for_estates = yes
+	
+	employment_size = manpower_employment
+	
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	build_time = medium_soldier_building
+	
+	location_potential = {
+		counts_as_capital = yes
+	}
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = city_guard }
+	}
+	country_potential = {
+		government_type ?= government_type:republic
+	}
+	remove_if = {
+		is_no_longer_capital = yes
+	}
+	
+	capital_modifier = {
+		local_manpower = 0.020
+		can_recruit_regiment_in_this_location = yes
+		global_burghers_estate_power = -0.05
+	}
+
+	possible_production_methods =  {
+		city_guard_maintenance
+	}
+	construction_demand = early_soldier_building_construction
+}
+
+REPLACE:temple_militia = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = abm_starting_manpower_max_level
+	#increase_per_level_cost = 0.5
+
+	category = military_category
+	forbidden_for_estates = yes
+
+	employment_size = manpower_employment
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	build_time = medium_soldier_building
+
+	location_potential = {
+		counts_as_capital = yes
+	}
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = temple_militia }
+	}
+	country_potential = {
+		government_type ?= government_type:theocracy
+		# Military orders use order_headquarters as their capital manpower building instead.
+		NOT = { has_reform = government_reform:military_order_reform }
+	}
+	remove_if = {
+		OR = {
+			is_no_longer_capital = yes
+			location.owner ?= { has_reform = government_reform:military_order_reform }
+		}
+	}
+
+	capital_modifier = {
+		local_manpower = 0.015
+		can_recruit_regiment_in_this_location = yes
+		global_clergy_estate_power = -0.05
+	}
+
+	possible_production_methods =  {
+		temple_militia_maintenance
+	}
+	construction_demand = early_soldier_building_construction
+}
+
 
 abm_genoese_arsenal = { # https://www.museidigenova.it/en/darsena-dockyard
 	audio_tier = 6
@@ -136,8 +276,8 @@ abm_gazarian_arsenal = {
 	modifier = {
 		harbor_suitability = 0.15
 
-		local_manpower = 0.030
-		local_manpower_modifier = 0.10
+		local_manpower = 0.050
+		local_manpower_modifier = 0.25
 		
 		local_defensive = 0.10
 
@@ -221,3 +361,69 @@ abm_gazarian_arsenal = {
 
 # 	construction_demand = early_capital_building_construction
 # }
+
+
+# Ars Belli 2026-11-19: vanilla gates the Royal Garden on
+# `government_type ?= government_type:monarchy`; republics and theocracies may build it too.
+# Everything else is verbatim vanilla (including the missing remove_if - vanilla has none, so
+# the garden survives a government change).
+REPLACE:royal_garden = {
+	audio_tier = 2
+	is_foreign = no
+	pop_type = nobles
+	max_levels = 1
+
+	category = government_category
+
+	employment_size = noble_cultural_employment
+
+	town = yes
+	city = yes
+	megalopolis = yes
+
+	expensive = yes
+	build_time = large_capital_build_time
+
+	location_potential = {
+		counts_as_capital = yes
+	}
+
+	allow = {
+		is_capital = yes
+		country_has_no_other_copy_of_building = { type = royal_garden }
+	}
+
+	country_potential = {
+		OR = {
+			government_type ?= government_type:monarchy
+			government_type ?= government_type:republic
+			government_type ?= government_type:theocracy
+		}
+	}
+
+	capital_modifier = {
+	}
+
+	capital_country_modifier = {
+		diplomatic_capacity_modifier = 0.2
+		cultural_influence_modifier = 0.05
+		monthly_prestige = 0.05
+	}
+
+	unique_production_methods = {
+		royal_garden_maintenance = {
+			icon_type = building_type
+			icon = royal_garden
+			furniture = 0.1
+			tools = 0.1
+			glass = 0.1
+			fine_cloth = 0.05
+			books = 0.1
+			goods_gold = 0.05
+			marble = 0.05
+
+			category = building_maintenance
+		}
+	}
+	construction_demand = prestige_building_construction
+}

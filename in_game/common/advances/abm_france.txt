@@ -256,8 +256,8 @@ abm_bur_regimental_system = {
 	requires = military_revolution_advance
 
 	# global_manpower_modifier = 0.25
-	army_heavy_infantry_maintenance_cost_modifier = 0.10
-	army_light_infantry_maintenance_cost_modifier = 0.10
+	army_heavy_infantry_maintenance_cost_modifier = -0.10
+	army_light_infantry_maintenance_cost_modifier = -0.10
 }
 
 abm_bur_ideas_ambition = {
@@ -496,22 +496,24 @@ abm_composite_monarchy = {
 }
 
 abm_tarascon_castle = {
-	age = age_3_discovery
+	age = age_1_traditions
 	icon = road_building
 	potential = {
 		has_or_had_tag = PRO
 	}
 
-	requires = pike_and_shot_advance
+	requires = feudalism_advance
 
 	# defensiveness = 0.15
 	global_defensive = 0.10
 	fort_limit = 2
 	fort_limit_modifier = 0.10
 
-	# Alpine arc proximity, shared with Savoy and the Swiss
-	# (government_reforms/abm_gov_reforms_rough_terrain.txt).
-	unlock_government_reform = abm_alpine_proximity_reform
+	# Alpine proximity privilege, shared with Savoy and the Swiss and limited
+	# to the original capital's region
+	# (estate_privileges/abm_rough_terrain_privileges.txt).
+	starting_technology_level = 1
+	unlock_estate_privilege = abm_alpine_proximity_privilege
 }
 
 abm_public_weal = {

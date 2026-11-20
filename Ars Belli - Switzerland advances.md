@@ -29,7 +29,7 @@ For a typical Swiss state (SWI tag, `high_alemannic` primary culture, capital in
 
 | age | advance | modifiers | gate | source |
 | --- | --- | --- | --- | --- |
-| `age_1_traditions` | `swiss_alpine_passes` | `unlock_government_reform = abm_alpine_proximity_reform` | `is_swiss_for_advances` | abm_rough_terrain_advances.txt |
+| `age_1_traditions` | `swiss_alpine_passes` | `unlock_estate_privilege = abm_alpine_proximity_privilege` | `is_swiss_for_advances` | abm_rough_terrain_advances.txt |
 | `age_1_traditions` | `swiss_eternal_alliance` | `monthly_diplomats = 0.1`<br>`monthly_prestige = 0.1` | `culture_group:swiss_group` | culture_high_alemannic.txt |
 | `age_1_traditions` | `swiss_halberd_infantry` | `army_heavy_infantry_power = 0.1` | `is_swiss_for_advances` | culture_high_alemannic.txt |
 | `age_1_traditions` | `swiss_oath_of_rutli` | `peasants_estate_levy_size = 0.2` | `is_swiss_for_advances` | culture_high_alemannic.txt |
