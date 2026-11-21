@@ -4,10 +4,10 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.4.9.mod.31 | **Supported game version:** 1.4.\*
+**Mod version:** game.1.4.9.mod.32 | **Supported game version:** 1.4.\*
 **Compiled:** 21 November 2026 (cumulative section verified against the mod files on 31 October
 2026, the mod.28 changes on 9 November 2026, the mod.29 changes on 11 November 2026, the mod.30
-changes on 19 November 2026 and the mod.31 changes on 21 November 2026)
+changes on 19 November 2026 and the mod.31 and mod.32 changes on 21 November 2026)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -755,7 +755,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.4.\*** (mod version game.1.4.9.mod.30). Every base-game file the mod
+- Supported game version: **1.4.\*** (mod version game.1.4.9.mod.32). Every base-game file the mod
   replaces is brought up to game 1.4.9, the 1.4.7 and 1.4.8 changes and the Across the Pillars DLC included
   (interface, diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start: pops,
   buildings, roads, diplomacy and country cultures). Play it on 1.4.8: some of the updated files
@@ -788,7 +788,42 @@ Every advance and value, with the history of changes: https://claude.ai/artifact
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.4.9.mod.31 (current)
+## game.1.4.9.mod.32 (current)
+
+Since game.1.4.9.mod.31 → game.1.4.9.mod.32:
+
+### Battles and Armies
+
+- **Zaporozhian Foot** and **Sich Infantry:** +0.025 secure flanks defence [was +0.25, a typo ten
+  times the Wagenburg's value]
+
+### Buildings and Reforms
+
+- **Order Commandery:** +2.5 max literacy [was +0.025, a typo]
+- **Jesuit College:** +5 max literacy [was +0.05, a typo]
+- **Traditional Land Tenure** and **Guild Charters:** the descriptions now match what the reforms
+  do. Guild Charters is the Capital Economy reform (it already needed 65 toward Capital Economy),
+  and Traditional Land Tenure no longer promises building upkeep efficiency it never gave
+- **Provincial Chancellery, Court Secretariat, Admiralty Board and Proconsulate:** the building
+  tooltip now shows what each office gives
+- **Royal Garden:** no longer clashes with the base game's production method of the same name
+
+### National Flavour
+
+- **Lotharingia:** **Lotharingian Tradition II** gives +10% army reinforcement efficiency [was +10%
+  manpower], and **Glory of Charlemagne** gives +0.05 monthly army tradition and −0.1% army
+  tradition decay [was +10% morale]
+
+### Formables
+
+- **Lotharingia:** any Rhine Alemannic, Burgundian, Franc-Comtois, Lorrain or Walloon country can
+  form it [was only countries whose original capital is in Germany], and it needs 60% of its land
+  [was 50%]
+- **Occitania:** needs 65% of its land [was 75%]
+- **Burgundy** (Provence, Savoy, the Lyonnais, Franche-Comté and western Switzerland): needs 70% of
+  its land [vanilla 50%]
+
+## game.1.4.9.mod.31
 
 Since game.1.4.9.mod.30 → game.1.4.9.mod.31:
 

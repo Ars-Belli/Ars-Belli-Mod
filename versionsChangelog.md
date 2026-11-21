@@ -4,6 +4,41 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.4.9.mod.32
+
+Since game.1.4.9.mod.31 → game.1.4.9.mod.32:
+
+### Battles and Armies
+
+- **Zaporozhian Foot** and **Sich Infantry:** +0.025 secure flanks defence [was +0.25, a typo ten
+  times the Wagenburg's value]
+
+### Buildings and Reforms
+
+- **Order Commandery:** +2.5 max literacy [was +0.025, a typo]
+- **Jesuit College:** +5 max literacy [was +0.05, a typo]
+- **Traditional Land Tenure** and **Guild Charters:** the descriptions now match what the reforms
+  do. Guild Charters is the Capital Economy reform (it already needed 65 toward Capital Economy),
+  and Traditional Land Tenure no longer promises building upkeep efficiency it never gave
+- **Provincial Chancellery, Court Secretariat, Admiralty Board and Proconsulate:** the building
+  tooltip now shows what each office gives
+- **Royal Garden:** no longer clashes with the base game's production method of the same name
+
+### National Flavour
+
+- **Lotharingia:** **Lotharingian Tradition II** gives +10% army reinforcement efficiency [was +10%
+  manpower], and **Glory of Charlemagne** gives +0.05 monthly army tradition and −0.1% army
+  tradition decay [was +10% morale]
+
+### Formables
+
+- **Lotharingia:** any Rhine Alemannic, Burgundian, Franc-Comtois, Lorrain or Walloon country can
+  form it [was only countries whose original capital is in Germany], and it needs 60% of its land
+  [was 50%]
+- **Occitania:** needs 65% of its land [was 75%]
+- **Burgundy** (Provence, Savoy, the Lyonnais, Franche-Comté and western Switzerland): needs 70% of
+  its land [vanilla 50%]
+
 ## game.1.4.9.mod.31
 
 Since game.1.4.9.mod.30 → game.1.4.9.mod.31:
