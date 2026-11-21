@@ -22,10 +22,10 @@ fondaco_rights =  {
 	visible = {
 		scope:recipient = {
 			OR = {
-				AND = {
-					is_merchant_republic = yes
-					culture = { has_culture_group = culture_group:italian_group }
-				}
+				# ARS BELLI (2026-11-21): any merchant republic can be granted the rights. The FONDACO
+				# itself is limited to Italian and Greek cultures; every other merchant republic builds
+				# an abm_merchant_enclave instead (building_types/abm_foreign_buildings.txt).
+				is_merchant_republic = yes
 				has_policy = ara_consulate_sea
 				# ARS BELLI: the Merchant Enclave's governments can also receive these rights, so they
 				# can be granted the slot without being Italian merchant republics (see
@@ -45,7 +45,9 @@ fondaco_rights =  {
 	break_enabled = {
 		OR = {
 			scope:recipient = {
-				NOT = { has_reform = government_reform:merchant_republic }
+				# was has_reform = merchant_republic only, which missed the diarchy/signoria/council
+				# republics that can receive the rights (ARS BELLI 2026-11-21).
+				NOT = { is_merchant_republic = yes }
 				NOT = { has_policy = ara_consulate_sea }
 			}
 			scope:actor = {

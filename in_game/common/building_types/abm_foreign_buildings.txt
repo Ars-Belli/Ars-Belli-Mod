@@ -114,6 +114,9 @@ REPLACE:trade_office = {
 #     so to the host). raw_modifier is not scaled by building level or goods access.
 #   * allow - a location may hold only ONE fondaco, whoever owns it, so a second merchant republic
 #     cannot build where one already stands (the owner filter still lets the holder upgrade).
+#   * country_potential - vanilla's split restored and widened (2026-11-21): a Fondaco is the
+#     trade post of ITALIAN and GREEK merchant republics. Every other merchant republic builds
+#     abm_merchant_enclave instead, and the Hansa keeps its hanseatic_kontor.
 # allow is untouched: vanilla already gates fondacos behind fondaco_rights.
 # ---------------------------------------------------------------------------
 REPLACE:fondaco = {
@@ -140,14 +143,13 @@ REPLACE:fondaco = {
 
 	country_potential = {
 		is_merchant_republic = yes
+		culture = {
+			OR = {
+				has_culture_group = culture_group:italian_group
+				has_culture_group = culture_group:greek_group
+			}
+		}
 		NOT = { has_or_had_tag = HSA }
-		# OR = {
-		# 	AND = {
-		# 		is_merchant_republic = yes
-		#		culture = { has_culture_group = culture_group:italian_group }
-		#	}
-		#has_policy = ara_consulate_sea
-		#}
 	}
 	allow = {
 		within_naval_range_of = scope:actor
@@ -491,11 +493,11 @@ REPLACE:hsa_burgtor = {
 
 # ---------------------------------------------------------------------------
 # abm_merchant_enclave  (NEW - no vanilla counterpart)
-# A Merchant Enclave: the fondaco/kontor slot for the mod's own merchant governments - the Chinese
-# meritocratic government, the Indian maritime league and bazaar republic, the Bengalee meritocracy
-# and the trade emporium. Structurally identical to fondaco (same employment, upkeep PM, build time,
-# one level, shares the one-per-location slot, gated on vanilla fondaco_rights) but with modifiers
-# at ~75% of fondaco's, so it is a weaker version of the same thing.
+# A Merchant Enclave: the fondaco/kontor slot for every merchant government without a Fondaco -
+# any merchant republic that is not Italian or Greek, plus the mod's own Chinese meritocratic
+# government, Indian maritime league and bazaar republic, Bengalee meritocracy and trade emporium. Structurally identical to fondaco (same employment, upkeep PM, build time,
+# one level, shares the one-per-location slot, gated on vanilla fondaco_rights) but with its
+# modifier block at ~70% of the fondaco's (2026-11-21), so it is a weaker version of the same thing.
 # ---------------------------------------------------------------------------
 abm_merchant_enclave = {
 	audio_tier = 3
@@ -520,6 +522,21 @@ abm_merchant_enclave = {
 
 	country_potential = {
 		OR = {
+			# Ars Belli (2026-11-21): every merchant republic that is neither Italian nor Greek
+			# uses the enclave where it used to fall through to a Fondaco. The Hansa keeps its
+			# own hanseatic_kontor, and the Italian/Greek republics keep the Fondaco.
+			AND = {
+				is_merchant_republic = yes
+				NOT = {
+					culture = {
+						OR = {
+							has_culture_group = culture_group:italian_group
+							has_culture_group = culture_group:greek_group
+						}
+					}
+				}
+				NOT = { has_or_had_tag = HSA }
+			}
 			has_reform = government_reform:abm_china_meritocratic_government
 			has_reform = government_reform:abm_india_maritime_league
 			has_reform = government_reform:abm_india_bazaar_republic
@@ -556,8 +573,10 @@ abm_merchant_enclave = {
 
 	modifier = {
 		merchant_power_from_building = 1.5
-		building_owner_maritime_presence = 0.05
-		merchant_capacity_from_building = 0.5
+		building_owner_maritime_presence = 0.075
+		merchant_capacity_from_building = 0.7
+		# merchants settle in the new location
+		local_migration_attraction = 0.05
 	}
 
 	raw_modifier = {

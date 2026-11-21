@@ -1886,6 +1886,23 @@ building_manager = {
 	#Hanseatic Town Hall
 	hanseatic_town_hall = { tag = HSA level = 1 location = lubeck }
 
+	#Hanseatic posts across the Baltic and North Sea - one kontor and one trade office per tag.
+	#Ars Belli 2026-11-21. Kontors have no trade-range check (reform only); trade offices are
+	#seeded here and rely on allow_wrong_startup = yes when the market is out of HSA's early range.
+	#Novgorod and London already hold a kontor further up, so those two tags only needed the office.
+	hanseatic_kontor = { tag = HSA level = 1 location = kobenhavn } #DAN
+	trade_office = { tag = HSA level = 1 location = odense } #DAN - alternate: roskilde (capital)
+	hanseatic_kontor = { tag = HSA level = 1 location = stockholm } #SWE
+	trade_office = { tag = HSA level = 1 location = abo } #SWE (Finland)
+	hanseatic_kontor = { tag = HSA level = 1 location = bergen } #NOR - the Bryggen kontor
+	trade_office = { tag = HSA level = 1 location = oslo } #NOR (capital, market)
+	hanseatic_kontor = { tag = HSA level = 1 location = edinburgh } #SBL
+	trade_office = { tag = HSA level = 1 location = berwick } #SBL
+	hanseatic_kontor = { tag = HSA level = 1 location = glasgow } #SCO (capital, market)
+	trade_office = { tag = HSA level = 1 location = aberdeen } #SCO
+	trade_office = { tag = HSA level = 1 location = lynn } #ENG - alternate: boston
+	trade_office = { tag = HSA level = 1 location = staraya_ladoga } #NOV - alternate: vologda
+
 	#Merchant Guild Chapel
 	merchant_guild_chapel = { tag = HSA level = 1 location = lubeck }
 
@@ -2553,6 +2570,21 @@ building_manager = {
 	#	fondaco = { tag = GEN level = 1 location = soldaia } #fondaco needs a town/city, soldaia is a rural settlement
 	#	fondaco = { tag = GEN level = 1 location = tana } #fondaco needs a town/city, tana is a rural settlement
 	fondaco = { tag = GEN level = 1 location = vosporo }
+
+	#Ars Belli 2026-11-21: Genoese houses in the western Mediterranean and the Hejaz capitals.
+	#Fondaco + trade office in each capital; tunis and barcelona already hold a GEN trade office
+	#further up (so only the fondaco is added there). No shared-slot clash: the offices already
+	#standing in tunis (ARA, VEN) and fez (GRA) are trade offices, which do not occupy the slot.
+	fondaco = { tag = GEN level = 1 location = tunis } #TUN capital
+	fondaco = { tag = GEN level = 1 location = fez } #MOR capital
+	trade_office = { tag = GEN level = 1 location = fez } #MOR capital
+	fondaco = { tag = GEN level = 1 location = valladolid } #CAS capital
+	trade_office = { tag = GEN level = 1 location = valladolid } #CAS capital
+	fondaco = { tag = GEN level = 1 location = barcelona } #ARA capital (GEN office already up)
+	fondaco = { tag = GEN level = 1 location = lisbon } #POR capital
+	trade_office = { tag = GEN level = 1 location = lisbon } #POR capital
+	trade_office = { tag = GEN level = 1 location = medina } #MDA capital
+	trade_office = { tag = GEN level = 1 location = jeddah } #MEC capital (mecca itself is inland)
 
 	#Genoese Galley Barracks #Unique
 	galley_barracks = { tag = GEN level = 1 location = genoa }
