@@ -13,7 +13,7 @@ const { Evaluator, T, F, U, strip } = require('./gates');
 const argv = process.argv.slice(2);
 const arg = (n, d) => { const i = argv.indexOf(n); return i >= 0 ? argv[i + 1] : d; };
 const VANILLA = arg('--vanilla', process.env.EU5_VANILLA || 'E:/Modding/EU5/vanilla-game-1.4.9/game');
-const MOD = path.resolve(__dirname, '../../..');
+const MOD = path.resolve(arg('--mod', path.resolve(__dirname, '../../..'))); // --mod <dir>: build from another checkout, e.g. a release worktree
 const OUT = arg('--out', path.join(__dirname, 'out/country_picker.html'));
 const JSON_OUT = arg('--json', null);
 const DLC_DIRS = fs.existsSync(path.join(VANILLA, 'dlc')) ? fs.readdirSync(path.join(VANILLA, 'dlc')).sort().map(n => ({ name: n, dir: path.join(VANILLA, 'dlc', n) })) : [];
@@ -854,7 +854,7 @@ const data = {
     reg: c.geo ? geoName(c.geo.region) : null, sub: c.geo ? geoName(c.geo.sub_continent) : null, area: c.geo ? geoName(c.geo.area) : null,
     cul: c.culture ? nm(c.culture) : null, grp: c.groups.map(g => nm(g)), lang: c.language ? nm(c.language) : null,
     rel: c.religion ? nm(c.religion) : null, gov: c.govType ? nm(c.govType, 'government_type_') : null, rank: c.rank ? nm(c.rank) : null,
-    locs: c.locCount, ovl: c.overlord ? { tag: c.overlord.tag, n: nm(c.overlord.tag), t: nm(c.overlord.type) } : null,
+    locs: c.locCount, ovl: c.overlord ? { tag: c.overlord.tag, n: nm(c.overlord.tag), t: nm(c.overlord.type), k: c.overlord.type } : null,
     gk: c.govType || null,
     refs: fixRefs(refs.filter(r => r[1] !== 'f')), forms, fo: fo && fo.length ? fo : undefined, fc: fc && fc.length ? fc : undefined, // religion content (via 'f') lives in rc[rk]
     gx: Object.keys(gx).length ? Object.fromEntries(Object.entries(gx).map(([g, d]) => [g, fixRefs(d)])) : undefined,
