@@ -53,13 +53,16 @@ class Evaluator {
 
   or(entries, ctx, scope, pos, d) {
     const us = [];
-    let anyU = false;
+    let anyU = false, blank = false;
     for (const e of entries) {
       const r = this.atom(e, ctx, scope, pos, d);
       if (r.v === T) return { v: T, res: [] };
-      if (r.v === U) { anyU = true; if (r.res && r.res.length) us.push(r.res.join(' and ')); }
+      if (r.v === U) { anyU = true; if (r.res && r.res.length) us.push(r.res.join(' and ')); else blank = true; }
     }
     if (!anyU) return { v: F, res: [] };
+    // a route with no text is still a route: dropping it would make "A, or something not shown" read as "A" is required.
+    // Under a NOT (pos false) the routes are each ruled out, so leaving one out keeps the text true.
+    if (blank && us.length && pos) us.push('other conditions');
     if (us.length <= 1) return { v: U, res: us };
     return { v: U, res: ['one of: ' + us.join(' / ')] };
   }
@@ -81,15 +84,18 @@ class Evaluator {
     return eq ? T : F;
   }
 
+  scriptedBody(name, val) { // a scripted trigger's body, its parameters filled in
+    const body = this.st.get(name);
+    if (!val || !Array.isArray(val)) return body;
+    const params = {};
+    for (const e of val) if (e.k) params[e.k] = typeof e.v === 'string' ? e.v : '';
+    const sub = (b) => b.map(e => ({ k: typeof e.k === 'string' ? e.k.replace(/\$([A-Za-z0-9_]+)\$/g, (m, p) => params[p] ?? m) : e.k, op: e.op, v: Array.isArray(e.v) ? sub(e.v) : (typeof e.v === 'string' ? e.v.replace(/\$([A-Za-z0-9_]+)\$/g, (m, p) => params[p] ?? m) : e.v), tag: e.tag }));
+    return sub(body);
+  }
+
   expandScripted(name, val, ctx, scope, pos, d) {
-    let body = this.st.get(name);
-    if (val && Array.isArray(val)) { // parameters
-      const params = {};
-      for (const e of val) if (e.k) params[e.k] = typeof e.v === 'string' ? e.v : '';
-      const sub = (b) => b.map(e => ({ k: typeof e.k === 'string' ? e.k.replace(/\$([A-Za-z0-9_]+)\$/g, (m, p) => params[p] ?? m) : e.k, op: e.op, v: Array.isArray(e.v) ? sub(e.v) : (typeof e.v === 'string' ? e.v.replace(/\$([A-Za-z0-9_]+)\$/g, (m, p) => params[p] ?? m) : e.v), tag: e.tag }));
-      body = sub(body);
-      return this.and(body, ctx, scope, pos, d + 1);
-    }
+    const body = this.scriptedBody(name, val);
+    if (val && Array.isArray(val)) return this.and(body, ctx, scope, pos, d + 1); // parameters
     if (val === 'no') return this.not(this.and(body, ctx, scope, !pos, d + 1));
     return this.and(body, ctx, scope, pos, d + 1);
   }
@@ -291,7 +297,27 @@ class Evaluator {
   describeScope(k, v) {
     const m = /^(any|every|random)_(.+)$/.exec(k);
     if (m) return null; // iterators: too detailed to show
+    // area:X / province_definition:X = { every ownable location there is ours }, written out or through a scripted trigger
+    const g = /^(area|region|province|province_definition|sub_continent|continent):(.+)$/.exec(k);
+    if (g && this.ownsEvery(this.inlineScripted(v))) return 'Owns all of ' + this.nm(g[2]) + ' (' + ({ province_definition: 'province', sub_continent: 'subcontinent' }[g[1]] || g[1]) + ')';
     return null;
+  }
+
+  inlineScripted(entries) { // scripted triggers replaced by their bodies, one level deep
+    const out = [];
+    for (const e of entries) {
+      if (e.k && this.st.has(e.k) && (e.v === 'yes' || Array.isArray(e.v))) out.push(...this.scriptedBody(e.k, e.v));
+      else out.push(e);
+    }
+    return out;
+  }
+
+  ownsEvery(entries) { // NOT = { any_(ownable_)location_in_<...> = { NOT = { owner ?= root } } }
+    const es = entries.filter(e => e.k != null);
+    if (es.length !== 1 || !/^not$/i.test(es[0].k) || !Array.isArray(es[0].v)) return false;
+    const it = es[0].v.filter(e => e.k != null);
+    if (it.length !== 1 || !/^any_(ownable_)?location_in_/.test(it[0].k) || !Array.isArray(it[0].v)) return false;
+    return it[0].v.some(e => /^not$/i.test(e.k || '') && Array.isArray(e.v) && e.v.some(x => x.k === 'owner' && /^(root|ROOT|this|scope:actor)$/.test(String(x.v))));
   }
 
   describe(k, op, v) {
