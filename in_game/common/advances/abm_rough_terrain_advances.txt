@@ -10,8 +10,10 @@
 # proximity modifiers - keep it in sync with vanilla when the game updates.
 #
 # Exception: swiss_alpine_passes and sav_alpine_identity unlock the alpine
-# privilege (abm_alpine_proximity_privilege) instead; it is also limited to the
-# original capital's region (Provence joins them through abm_tarascon_castle).
+# privilege (abm_alpine_proximity_privilege) instead; it is NOT tied to the capital -
+# it applies to a fixed list of Alpine areas (abm_alpine_area in
+# scripted_triggers/abm_rough_terrain_triggers.txt). Provence joins them through
+# abm_tarascon_castle.
 #
 # Every advance in this file is age_1_traditions and requires an age_1 advance, so the
 # privilege is available from the start (same for the mod-owned unlockers elsewhere).
@@ -56,8 +58,8 @@ REPLACE:hab_expert_mountaineers = {
 	requires = mining_law_advance
 }
 
-# Swiss - Alpine-advance variant, limited to the original capital's region
-# (estate_privileges/abm_rough_terrain_privileges.txt).
+# Swiss - Alpine-advance variant. The privilege it unlocks is scoped to the Alpine
+# areas, not to the capital's region (estate_privileges/abm_rough_terrain_privileges.txt).
 # Ars Belli: no REPLACE: - the mod's same-name culture_high_alemannic.txt hides the game's definition, so this is the only one.
 swiss_alpine_passes = {
 	age = age_1_traditions
