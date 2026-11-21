@@ -4,6 +4,7 @@
 # (TRY_REPLACE: the keys exist only with the DLC). Byzantium toned down: Modern Imperial Army gives +10% army maintenance
 # efficiency instead of +20% (the Reformed Tagmata law gets the same cut in laws/abm_recruitment_law.txt).
 # Full copies of d009_country_specific.txt and country_specific.txt (game 1.4.9), changes marked #ABM. Re-sync on game updates.
+# Includes veche_republic (country_specific.txt) since 2026-11-21 - requirements narrowed to two cultures.
 
 TRY_REPLACE:mor_sharifian_sultanate_reform = {
 	age = age_4_reformation
@@ -71,5 +72,39 @@ REPLACE:modern_imperial_army = {
 		discipline = 0.05
 		num_of_varangian_units = 2
 	}
+	years = 2
+}
+
+#ABM: veche_republic was open to the whole russian_group; narrowed to muscovite + novgorodian
+#(2026-11-21). Copy of country_specific.txt:370, only potential/allow changed. The three 1337
+#holders - NOV, PSK and VYT (Vyatka) - are all novgorodian, so nothing is dropped at start.
+REPLACE:veche_republic = {
+	unique = yes
+	government = republic
+
+	potential = {
+		OR = {
+			culture = culture:muscovite
+			culture = culture:novgorodian
+		}
+	}
+
+	allow = {
+		OR = {
+			culture = culture:muscovite
+			culture = culture:novgorodian
+		}
+	}
+
+	country_modifier = {
+		nobles_estate_target_satisfaction = medium_permanent_target_satisfaction
+		global_nobles_estate_power = 0.1
+		peasants_estate_target_satisfaction = medium_permanent_target_satisfaction
+		global_peasants_estate_power = 0.1
+		burghers_estate_target_satisfaction = medium_permanent_target_satisfaction
+		global_burghers_estate_power = 0.1
+		country_cabinet_efficiency = 0.15
+	}
+
 	years = 2
 }
