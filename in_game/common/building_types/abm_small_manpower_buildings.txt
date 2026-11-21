@@ -2,9 +2,10 @@
 
 # Ars Belli - smaller manpower buildings. Armory, Training Fields and their successors
 # (Barracks, Regimental Camp, Conscription Center) come in half-size levels: half the manpower,
-# half the soldier employment, half the maintenance and construction goods per level, and twice
-# the level cap (abm_manpower_max_level in script_values/abm_building_caps.txt), so a location's
-# cap grows in finer steps. Training Fields give 40% less again: 0.003 manpower a level
+# half the soldier employment, half the maintenance and construction goods per level, and a
+# level cap of 1 + population x 0.05 (abm_manpower_max_level in script_values/abm_building_caps.txt):
+# vanilla's base level, twice vanilla's population share, so a location's cap grows in finer steps.
+# Training Fields give 40% less again: 0.003 manpower a level
 # (half of vanilla 0.01 is 0.005). Training slots per level (Barracks 1, Conscription Center 5)
 # and the gold price stay vanilla.
 #
@@ -15,7 +16,7 @@ REPLACE:armory = {
 	audio_tier = 1
 	is_foreign = no
 	pop_type = soldiers
-	max_levels = abm_manpower_max_level #ABM twice the levels, vanilla manpower_max_level
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
 	
 	category = military_category
 	forbidden_for_estates = yes
@@ -70,7 +71,7 @@ REPLACE:training_fields = {
 	audio_tier = 1
 	is_foreign = no
 	pop_type = soldiers
-	max_levels = abm_manpower_max_level #ABM twice the levels, vanilla manpower_max_level
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
 	
 	category = military_category
 	forbidden_for_estates = yes
@@ -117,7 +118,7 @@ REPLACE:barracks = {
 	audio_tier = 2
 	is_foreign = no
 	pop_type = soldiers
-	max_levels = abm_manpower_max_level #ABM twice the levels, vanilla manpower_max_level
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
 	
 	category = military_category
 	forbidden_for_estates = yes
@@ -168,7 +169,7 @@ REPLACE:regimental_camp = {
 	audio_tier = 2
 	is_foreign = no
 	pop_type = soldiers
-	max_levels = abm_manpower_max_level #ABM twice the levels, vanilla manpower_max_level
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
 	
 	category = military_category
 	forbidden_for_estates = yes
@@ -217,7 +218,7 @@ REPLACE:conscription_center = {
 	audio_tier = 3
 	is_foreign = no
 	pop_type = soldiers
-	max_levels = abm_manpower_max_level #ABM twice the levels, vanilla manpower_max_level
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
 	important_for_AI = yes	
 	employment_size = abm_half_manpower_employment #ABM half, vanilla manpower_employment (1)
 
