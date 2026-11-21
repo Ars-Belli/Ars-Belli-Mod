@@ -4,6 +4,170 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.4.9.mod.31
+
+Since game.1.4.9.mod.30 → game.1.4.9.mod.31:
+
+### Battles and Armies
+
+- **Armory, Training Fields, Barracks, Regimental Camp and Conscription Center** are half-size: each
+  level gives half the manpower, employs half the soldiers and costs half the goods to build and
+  maintain, and twice as many levels fit in a location (2 + 5% of population [vanilla 1 + 2.5%]).
+  Gold costs are unchanged. Manpower per level: Armory +5, Training Fields +3, Barracks +7.5,
+  Regimental Camp +10, Conscription Center +12.5 [vanilla +10 / +10 / +15 / +20 / +25]
+- **Combined Arms Drill** (Age of Renaissance) and **Combined Arms Doctrine** (Age of Discovery):
+  new advances with +0.5% combined arms bonus each, for monarchies, republics and theocracies whose
+  original capital is in Europe, North Africa, the Crescent or Anatolia
+- combined arms bonus halved to +0.5% [was +1%]: **Stratioti Levies** (Greek culture group, which
+  now also gives +10% army initiative), Tiānwán's **Integrated Advancement** and Greater Khorasan's
+  second advance. **Klephtic Recruitment** (Pontic Greeks and Goths) gains +0.5%
+
+### Country Balance
+
+- **Ottomans:** **Timar System** gives +5% light cavalry power and −5% light cavalry maintenance
+  [vanilla +10% / −10%], **Expanded Timar System** +10% / −10% [vanilla +20% / −20%], and **Seljuk
+  Roots** +2.5% discipline [vanilla +5%]
+- **Morocco and the Maghreb:** +5% manpower [vanilla +10%] from **Volunteers of the Faith**, **'Abīd
+  al-Buḵārī**, **Sharifian Sultanate** and **Amīr al-Muslimīn** (Across the Pillars), and from
+  **Slave Soldiers**. Volunteers of the Faith and Slave Soldiers apply to every Amazigh and Maghrebi
+  country, Volunteers also to Granada and the Andalusi
+- **Dīwān al-Jund** (Muslim bureaucracy): up to +7.5% manpower when fully funded [vanilla +10%]
+- **Byzantium:** the **Strategarchia** bureaucracy (called Magister Militum in the mod.30 notes)
+  gives +0.05 military tactics [was +0.2], up to +0.1 once entrenched. **Modern Imperial Army** and
+  the **Reformed Tágmata** policy give +10% army maintenance efficiency [vanilla +20%]
+- **Smolensk and Mewar** no longer get the base game's copies of their EU4 ideas on top of the mod's
+  own sets: **Smolenskian Resolve** and **The Armories of Smolensk** are gone, and **Mandatory
+  Firearm Drills** and **Reorganized Rajput Regiments** stay for every Rajasthani country except
+  Mewar
+- **Veche Republic** is open only to Muscovite and Novgorodian cultures [vanilla the whole Russian
+  group]
+
+### Buildings and Reforms
+
+- **Sergeantry, City Guard, Temple Militia and Order Headquarters:** the level cap grows by 3 each
+  age, 3 / 6 / 9 / 12 / 15 / 18 from Traditions to Revolutions [was 3]. **Order Headquarters** gives
+  +20 manpower per level [was +50, vanilla +20]. **City Guard** costs −5% burghers power and
+  **Temple Militia** −5% clergy power [was −10%]
+- correction to the mod.30 notes: **Warrior Temple** and **Jurchen Barracks** were not changed and
+  still have 1 level
+- **Royal Garden:** republics and theocracies can build it too [vanilla monarchies only]
+- **Gazarian Arsenal:** +50 manpower [was +30] and +25% local manpower [was +10%]
+- **Order Commandery:** also gives +2 manpower to its location
+- **Confucian School:** +2.5 max literacy [was +5] and no institution growth [was +25%]
+- rough-terrain proximity advances unlock a peasants privilege instead of a reform: the **Homeland
+  Proximity Privilege**, or the **Alpine Proximity Privilege** for Savoy, the Swiss and Provence. It
+  uses no reform slot, applies at once [was after 2 years], gives +20% peasants power and cannot be
+  revoked
+- both privileges work only on rough terrain in the region of your original capital (the Alpine one
+  no longer covers the whole Alpine arc): mountains +100% proximity efficiency and +50% development
+  growth, hills +33.3% and +25%, plateaus +14.3% and +10%, which cancels each terrain's own penalty
+  [was +100% proximity efficiency on every location]
+- all 16 of these advances are now Age of Traditions advances, and the 130 countries that qualify
+  at the 1337 start begin with the advance and the privilege. Moved forward: **Land of Mountains and
+  Rivers** (Austria), **A Permanent Capital** (Ethiopia), **Tarascon Castle** (Provence: +10% fort
+  defense, +2 and +10% fort limit), **Wetland Adaptation** (Chén) and **Mountain Adaptation**
+  (Hangzhou, Shu Han). The full list also includes Armenia (**Mount Ararat**) and Trebizond
+  (**Pontic Trail Mastery**), which the mod.30 notes left out
+- **Traditional Land Tenure:** new reform at 65 or more toward Traditional Economy. Rural locations
+  get +25% population capacity, +0.1% monthly prosperity and +2.5% production efficiency
+- **Guild Charters:** new reform at 65 or more toward Capital Economy. Towns and cities get +0.1%
+  population growth and +0.1% monthly prosperity, plus +2.5% raw material impact
+- **Hanseatic Merchant Federation:** the Hansa can pick the reform from the reform list [was only
+  through its decision], and the decision is now for the Hansa only. The reform gives +1 reform
+  slot, +10% burghers power [vanilla −50%], +10% legislative efficiency [vanilla −50%] and +10%
+  merchant maintenance efficiency [vanilla +50%]. It no longer makes the Hansa immune to subjugation
+- **Republican Electorate Law:** the **Landholders** policy gives +15% nobles levy size [vanilla
+  +10%] and +10% levy combat efficiency [vanilla +5%], and pushes toward Quality instead of Serfdom
+- **Genoa:** **Great and Minor Councils** gives +5% satisfaction for every estate [was +10% for
+  nobles and burghers and +2.5% for all] and −1% max tax for every estate. The +10% crown power stays
+- every Ars Belli government reform now has an icon
+
+### Trade Posts
+
+- **Fondaco:** only Italian and Greek merchant republics can build one [was any merchant republic
+  except the Hansa]
+- **Merchant Enclave:** now also the trade post of every other merchant republic (Novgorod among
+  them) and of the Dutch Republic. +0.075 maritime presence [was +0.05], +0.7 trade capacity [was
+  +0.5] and +0.05 migration attraction [new]
+- **Fondaco Rights:** can be granted to any merchant republic, the Dutch Republic and the Hansa [was
+  Italian merchant republics and the five merchant governments]. The AI no longer refuses the Hansa
+  as a competing merchant republic
+- **Burgtor:** 1 level per location [vanilla 2]. Building one in another country needs its Fondaco
+  Rights, and it is torn down when the rights are withdrawn. +5% local manpower, +2 manpower to the
+  Hansa [vanilla +5 per level] and half the upkeep goods
+- **Hanseatic Town Hall:** Lübeck's is no longer destroyed at game start; it is torn down only when
+  its owner loses the Hanseatic Merchant Federation. +5% cabinet efficiency [vanilla +10%]
+- **Hanseatic Shipwright Guild:** torn down once its port no longer belongs to a Hansa subject, and
+  no longer buildable in towns
+
+### Societal Values
+
+- **Capital Economy:** no raw material impact bonus [was +5%]
+- **Traditional Economy:** +25% raw materials output [was +20%]. In place of +25% population
+  capacity it gives +5% possible laborers in rural locations per 1,000 pops
+
+### Religion and Culture
+
+- **Cathar**, **Lollard** and **Waldensian** pops take Lutheranism and Calvinism at 0.05× the normal
+  rate [was 0.5× for Cathars, full rate for the others], and their countries get +50% resistance to
+  both movements
+- Black Sea culture opinions: **Gothic** likes Crimean, Cossack and Ligurian and is an enemy of
+  Mishar and Astrakhani, who return it; **Pontic** likes Cossack, Crimean and Ligurian; **Crimean**
+  and **Cossack** like Gothic and Pontic; **Ligurian** likes Pontic and Gothic [was kindred]
+- **Georgian** and **Armenian** like each other
+
+### National Flavour
+
+- **Sardinia-Piedmont:** its 10 advances now work. They were tied to a tag that does not exist, so a
+  formed Sardinia-Piedmont never got them
+- **Genoa:** new **Genoese War Galley** (Renaissance) and **Genoese Great Galley** (Discovery), each
+  that age's galley plus the Genoese Galley's +1 speed, +2 cannons and +0.03 crew size, unlocked by
+  the **Genoese War Galleys** and **Genoese Great Galleys** advances. Genoa, Gazaria and Ligurian
+  countries. Upgrade path: Genoese Galley → War Galley → Great Galley → Galleass
+- **Bohemia:** the **Late Wagenburg** advance (Discovery) unlocks the **Late Wagenburg** regiment,
+  Discovery heavy infantry with the Wagenburg's −10% strength and morale damage taken and +0.025
+  secure flanks defence. The Wagenburg upgrades into it [vanilla Halberdiers]
+- **Prussia:** the mod's **The Goose Step** is back (Reformation, +10% heavy infantry power) and the
+  base game's Revolutions version is switched off
+- **Zaporozhian Foot** and **Sich Infantry:** −15% morale damage taken [was −10%], −10% strength
+  damage taken [was −15%], +0.25 secure flanks defence [new]
+- Italian regiment lines (**Genoese Crossbowmen**, **Balestrieri**, **Venetian** and **Italian
+  Stradioti**): the next Italian unit is the preferred upgrade instead of the only one
+- **Swabia:** **Swabian City-State Tradition II** gives +10% army maintenance efficiency [was +10%
+  reinforcement efficiency]
+- **Burgundy:** **Create the Regimental System** gives −10% infantry maintenance cost [was +10%, a
+  sign error]
+- **Switzerland:** **Confessional Coexistence** no longer requires Legalism, which the game rejected
+- **Pontic Greeks and Goths:** **Greek Orthodox Faith** no longer gives +1 heretic tolerance
+- **Venice:** the **Dalmatian Possession** privilege also gives +20% peasants power
+- **Settle the Steppe:** a province counts as settled once every location has 20 development [was
+  also half its population capacity]. +0.035 monthly development [was +0.01]; the population growth
+  and migration bonuses stop at 30 population in a location
+- the 14 province mining and development decisions of the steppe and Crimea now become available;
+  they could not find their province before
+- **Taurica:** can also be formed by owning the Crimea, Pryazovia and Azov areas plus the Djambuluk,
+  Taman and Akhtar provinces. The old requirement still works
+
+### Pops, Map and Campaign Setup
+
+- the **Zaporozhian Host** starts as a Cossack host, not a steppe horde: Cossack privileges and
+  Cossack Private Armies, Offensive Military Doctrine, Civil Law, Religious Teachings, a Central
+  Council and its own societal values
+- **Bulgaria** starts as an empire [was kingdom]
+- **Georgia** starts with Armenian as an accepted culture [was tolerated]
+- Pamplona and Valladolid are markets instead of Burgos
+- the **Hansa** starts with Kontors in Copenhagen, Stockholm, Bergen, Edinburgh and Glasgow and Trade
+  Offices in Odense, Åbo, Oslo, Berwick, Aberdeen, Lynn and Ladoga. **Genoa** starts with Fondacos in
+  Tunis, Fez, Valladolid, Barcelona and Lisbon and Trade Offices in Fez, Valladolid, Lisbon, Madīna
+  and Jeddah
+- Seville, Toledo, Córdoba, Jaén, Murcia, the Algarve, Asturias and Orkney exist again as landless
+  countries with their cores, so they can be released. Japan, the Almohads, Bijaya, the Guanche,
+  Hawai'i, Kaua'i, Lahaina, Maui, O'ahu, Maden, Misool and Waigeo exist again too
+- 27 landless start countries get back their missing cores (48 locations), among them Bologna,
+  Padua, Trieste, the Pale and 11 South Indian states
+- leftover Middle Kingdom, Red Turban, Ilkhanate and Lordship of Ireland content is switched off
+  cleanly, so it no longer floods the error log. Nothing changes in play
+
 ## game.1.4.9.mod.30
 
 Since game.1.4.8.mod.29 → game.1.4.9.mod.30:
