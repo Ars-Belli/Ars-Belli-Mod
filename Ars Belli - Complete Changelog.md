@@ -4,10 +4,10 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.4.9.mod.32 | **Supported game version:** 1.4.\*
+**Mod version:** game.1.4.9.mod.33 | **Supported game version:** 1.4.\*
 **Compiled:** 21 November 2026 (cumulative section verified against the mod files on 31 October
 2026, the mod.28 changes on 9 November 2026, the mod.29 changes on 11 November 2026, the mod.30
-changes on 19 November 2026 and the mod.31 and mod.32 changes on 21 November 2026)
+changes on 19 November 2026 and the mod.31, mod.32 and mod.33 changes on 21 November 2026)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -419,7 +419,7 @@ Rebuilt from scratch.
 - Cavalry pays twice the other goods: weaponry, leather, cloth and firearms (and the elephants of
   elephant cavalry) cost ×2 for light, heavy, steppe horse archer, camel, clan retainer and elephant
   cavalry, and for the Jinetes, Cuantiosos and Tornadizos.
-- Cavalry combat power by age, from Traditions to Revolutions: 2.4 / 2.4 / 2.4 / 2.65 / 3.05 / 3.05.
+- Cavalry combat power by age, from Traditions to Revolutions: 2.4 / 2.4 / 2.4 / 2.75 / 3.02 / 3.25.
   [vanilla 2.6 / 2.6 / 2.6 / 2.85 / 3.25 / 3.25] Light and heavy cavalry, mercenaries included.
 - Cavalry maintenance costs 6% of its men in manpower a month. [vanilla 4%; infantry 2%]
 - Tribal levies raise 350-man regiments [vanilla 200]: Tribal Cavalry, Tribal Camelry and the
@@ -570,8 +570,9 @@ Cut hard, to make wars less static.
 - **Sergeantry, City Guard, Temple Militia and Order Headquarters:** the level cap grows by 3 each
   age, from 3 in the Age of Traditions to 18 in the Age of Revolutions. [vanilla 1]
 - **Armory, Training Fields, Barracks, Regimental Camp and Conscription Center** are half-size:
-  half the manpower, soldiers and goods per level, twice the levels per location, the same gold
-  price. Training Fields give +3 manpower per level. [vanilla +10]
+  half the manpower, soldiers and goods per level, the same gold price, and a level cap of 1 plus
+  one level per 20,000 people [vanilla 1 plus one per 40,000]. Training Fields give +3 manpower
+  per level. [vanilla +10]
 - Rough-terrain proximity advances (all Age of Traditions, researched at start by the countries
   that qualify) grant the **Homeland Proximity Privilege** (the **Alpine Proximity Privilege** for
   Savoy, the Swiss and Provence), a peasants privilege that cancels the proximity and development
@@ -755,7 +756,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.4.\*** (mod version game.1.4.9.mod.32). Every base-game file the mod
+- Supported game version: **1.4.\*** (mod version game.1.4.9.mod.33). Every base-game file the mod
   replaces is brought up to game 1.4.9, the 1.4.7 and 1.4.8 changes and the Across the Pillars DLC included
   (interface, diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start: pops,
   buildings, roads, diplomacy and country cultures). Play it on 1.4.8: some of the updated files
@@ -788,7 +789,24 @@ Every advance and value, with the history of changes: https://claude.ai/artifact
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.4.9.mod.32 (current)
+## game.1.4.9.mod.33 (current)
+
+Since game.1.4.9.mod.32 → game.1.4.9.mod.33:
+
+### Battles and Armies
+
+- **Cavalry combat power** in the later ages: 2.75 in the Age of Reformation [was 2.65], 3.02 in
+  the Age of Absolutism [was 3.05] and 3.25 in the Age of Revolutions [was 3.05, now vanilla].
+  Light and heavy cavalry, mercenaries included. The first three ages stay at 2.4. [vanilla 2.6 /
+  2.6 / 2.6 / 2.85 / 3.25 / 3.25]
+
+### Buildings
+
+- **Armory, Training Fields, Barracks, Regimental Camp and Conscription Center:** the level cap
+  is 1 plus one level per 20,000 people [was 2 plus one per 20,000; vanilla 1 plus one per 40,000
+  for its full-size levels]
+
+## game.1.4.9.mod.32
 
 Since game.1.4.9.mod.31 → game.1.4.9.mod.32:
 

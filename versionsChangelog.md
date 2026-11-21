@@ -4,6 +4,23 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.4.9.mod.33
+
+Since game.1.4.9.mod.32 → game.1.4.9.mod.33:
+
+### Battles and Armies
+
+- **Cavalry combat power** in the later ages: 2.75 in the Age of Reformation [was 2.65], 3.02 in
+  the Age of Absolutism [was 3.05] and 3.25 in the Age of Revolutions [was 3.05, now vanilla].
+  Light and heavy cavalry, mercenaries included. The first three ages stay at 2.4. [vanilla 2.6 /
+  2.6 / 2.6 / 2.85 / 3.25 / 3.25]
+
+### Buildings
+
+- **Armory, Training Fields, Barracks, Regimental Camp and Conscription Center:** the level cap
+  is 1 plus one level per 20,000 people [was 2 plus one per 20,000; vanilla 1 plus one per 40,000
+  for its full-size levels]
+
 ## game.1.4.9.mod.32
 
 Since game.1.4.9.mod.31 → game.1.4.9.mod.32:
