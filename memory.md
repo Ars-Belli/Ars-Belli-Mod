@@ -1413,3 +1413,10 @@ Ids stay exactly as they are (`abm_swiss_mercenaries`, ...); only the displayed 
 - All seven target locations are `rank = city`; tunis/fez/valladolid/barcelona/lisbon are market centres, medina/mecca are not (the Hejaz market is jeddah).
 - No shared-slot clash: the trade offices already standing there (ARA+VEN at tunis, GRA at fez, GEN's own at tunis/barcelona) are `trade_office`, which is not part of the fondaco/kontor/enclave slot check. No duplicate (tag,type,location) triples. GEN now has 20 trade offices and 7 fondacos.
 - Caveat for hand-rebuilding (setup skips `allow`): every one of these fondacos needs `within_naval_range_of` + `fondaco_rights` from the host, so landlocked valladolid and the far-off jeddah/medina are one-shot unless GEN grows its range; the trade offices need the market in trade range plus, in MP, `abm_trade_office_rights`.
+
+## 2026-11-21 - Merchant Enclave also for the Dutch Republic
+- `abm_merchant_enclave` `country_potential` gained `has_reform = government_reform:dutch_republic_reform` next to the five ABM reforms (note the `_reform` suffix - it is `dutch_republic_reform` in vanilla `government_reforms/country_specific.txt:3184`, tag NED, `major = yes`, `unique = yes`).
+- `scripted_relations/fondaco_rights.txt` `visible` got the same line, otherwise no host could grant the Dutch Republic the rights the enclave needs (buildings are gated on the relation, the relation is gated on `visible`).
+- Not added to the vanilla scripted trigger `is_merchant_republic` on purpose: that would also move the Dutch into the Fondaco branch, into every mod/vanilla trigger that reads it, and it is a vanilla file the mod does not shadow. The targeted reform line keeps the change inside the two files that matter.
+- `break_enabled` left alone - the ABM merchant governments are not merchant republics either, so the Dutch Republic behaves exactly like them (rights are cancellable).
+- Loc: `abm_merchant_enclave_desc` now names the Dutch Republic among the enclave's users.
