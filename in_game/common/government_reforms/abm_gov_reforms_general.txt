@@ -131,15 +131,14 @@ abm_traditional_land_tenure = {
 	years = 2
 }
 
-# Urban counterpart of abm_traditional_land_tenure: chartered guilds instead of open
-# markets. `is_city = yes` is the vanilla urban test (towns, cities and megalopolises).
+# Urban counterpart of abm_traditional_land_tenure, on the Capital Economy side (<= -65). `is_city = yes` is the vanilla urban test (towns, cities and megalopolises).
 # Growth, not capacity: pop capacity only bites at the ceiling, which towns are far from,
 # and there is no non-rural growth key - hence local_population_growth on an is_city
 # location_modifier. +0.001 a year is ~+40% relative on a typical ~0.25%/yr location.
 abm_guild_charters = {
 	icon = urban_guilds
 	societal_values = {
-		traditional_economy_focus
+		capital_economy_focus #ABM was traditional_economy_focus; the reform needs 65+ toward Capital Economy
 	}
 
 	potential = {

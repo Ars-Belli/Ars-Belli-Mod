@@ -20,7 +20,7 @@ function relContent(rel, gov) {
   const m = new Map(x.refs.map(r => [r[0], r])); for (const r of x.gx[gov]) { if (r.length === 1) m.delete(r[0]); else m.set(r[0], r); }
   return [...m.values()];
 }
-const baseNeeds = (needs, own) => needs.split('one of: ').join('').split(' / ').join('; ').split(' and ').join('; ').split('; ').every(p => {
+const baseNeeds = (needs, own) => needs.split('one of: ').join('').split(' / ').join('; ').split(' and ').join('; ').split('; ').filter(p => p.trim() !== 'other conditions').every(p => { // "other conditions": a route the gate text can't show, it only adds ways in
   p = p.trim(); if (/^(Advance|Age|Institution): /.test(p)) return true;
   // a law policy is the country's pick: one on its own list, or one open to every country (those aren't in the data)
   const m = p.match(/^(Reform|Privilege|Policy): (.*)$/); return !!m && (own.has(m[2]) || (m[1] === 'Policy' && !POLN.has(m[2])));
@@ -78,11 +78,11 @@ function score(c) {
     return { s, contrib };
   };
   const b = run(true), a = run(false);
-  return { tag: c.tag, n: c.n, locs: c.locs, ovl: !!c.ovl, rk: c.rk, base: b.s, cond: a.s - b.s, top: [...b.contrib].sort((x, y) => y[1] - x[1]).slice(0, 4).map(([i, p]) => I[i].n + '=' + p.toFixed(1)) };
+  return { tag: c.tag, n: c.n, locs: c.locs, ovl: !!c.ovl && c.ovl.k !== 'tributary', rk: c.rk, base: b.s, cond: a.s - b.s, top: [...b.contrib].sort((x, y) => y[1] - x[1]).slice(0, 4).map(([i, p]) => I[i].n + '=' + p.toFixed(1)) };
 }
 const out = d.countries.map(score);
 const big = out.filter(o => o.locs >= 8 && !o.ovl).sort((a, b) => b.base - a.base);
 const med = a => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
-console.log('independent 8+:', big.length, 'median base', med(big.map(o => o.base)).toFixed(1));
+console.log('independent or tributary 8+:', big.length, 'median base', med(big.map(o => o.base)).toFixed(1));
 for (const o of big.slice(0, 15)) console.log(o.tag.padEnd(6), o.n.slice(0, 20).padEnd(21), String(o.locs).padStart(3), (o.rk || '').padEnd(14), o.base.toFixed(1).padStart(6), ('+' + o.cond.toFixed(1)).padStart(7), '|', o.top.join('; '));
 if (OUT) fs.writeFileSync(OUT, JSON.stringify(out));
