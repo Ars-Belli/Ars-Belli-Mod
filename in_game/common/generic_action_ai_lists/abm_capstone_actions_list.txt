@@ -1,0 +1,30 @@
+﻿# Ars Belli: AI lists for the mod's owncountry capstone actions. Without an explicit
+# list these four actions fall into vanilla's global_list, which is evaluated for
+# every country and logs a start-up performance warning. The potentials below mirror
+# each action's own potential, so only countries that could ever take them are
+# evaluated.
+
+abm_caucasus_unification_actions_list = {
+	potential = {
+		OR = {
+			has_or_had_tag = GEO
+			has_or_had_tag = ARM
+			has_or_had_tag = CIL
+			original_capital ?= { region = region:caucasus_region }
+		}
+	}
+	actions = {
+		abm_geo_greater_georgia
+		abm_arm_greater_armenia
+		abm_greater_caucasus
+	}
+}
+
+abm_kingdom_of_heaven_actions_list = {
+	potential = {
+		has_or_had_tag = KOJ
+	}
+	actions = {
+		abm_koj_proclaim_kingdom_of_heaven
+	}
+}

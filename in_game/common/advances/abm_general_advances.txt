@@ -1,0 +1,69 @@
+﻿# Ars Belli - general (always-available) advances, all nations.
+#
+# Both sit at the bottom of their age's always-allow tree - the subtree that has no
+# `allow = { has_embraced_institution = ... }` gate - so only the prerequisite chain
+# gates them. The country gate is a monarchist/republican/theocratic state whose
+# original capital lies in Europe, North Africa, the Crescent or Anatolia. 5 advances
+# come before each of them (renaissance_development -> improve_relation_impact_renaissance
+# -> late_feudal_relations -> medieval_military -> land_morale_recovery_renaissance_advance,
+# and surgery_advance -> regulate_court_procedures -> crown_power_advance_discovery
+# -> government_size_discovery -> power_projection_advance_4).
+#
+# combined_bonus_per_type is the Combined Arms bonus per valid unit category, the same
+# modifier vanilla grants in combined_arms_advance_reformation / _revolutions.
+# icon = professional_armies_advance is the institution advance's own icon, so no new
+# art is needed (vanilla's two combined-arms advances carry no icon at all).
+
+abm_combined_arms_renaissance = {
+	icon = professional_armies_advance
+	age = age_2_renaissance
+
+	potential = {
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:republic
+			government_type = government_type:theocracy
+		}
+		original_capital ?= {
+			OR = {
+				continent = continent:europe
+				sub_continent = sub_continent:north_africa
+				region = region:crescent_region
+				region = region:anatolia_region
+			}
+		}
+	}
+
+	requires = land_morale_recovery_renaissance_advance
+
+	combined_bonus_per_type = 0.005
+
+	ai_weight = { add = 10 }
+}
+
+abm_combined_arms_discovery = {
+	icon = professional_armies_advance
+	age = age_3_discovery
+
+	potential = {
+		OR = {
+			government_type = government_type:monarchy
+			government_type = government_type:republic
+			government_type = government_type:theocracy
+		}
+		original_capital ?= {
+			OR = {
+				continent = continent:europe
+				sub_continent = sub_continent:north_africa
+				region = region:crescent_region
+				region = region:anatolia_region
+			}
+		}
+	}
+
+	requires = power_projection_advance_4
+
+	combined_bonus_per_type = 0.005
+
+	ai_weight = { add = 10 }
+}

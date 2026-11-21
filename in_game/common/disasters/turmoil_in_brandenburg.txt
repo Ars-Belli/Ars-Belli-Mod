@@ -1,1 +1,30 @@
-﻿#This is an empty file for now.
+﻿# Ars Belli: the Turmoil of Brandenburg disaster is disabled (previously this file was an
+# empty stub). A missing disaster entry is NOT silent: vanilla dispatches event
+# turmoil_in_brandenburg.2 from on_action/country_monthly.txt for every country every
+# month, and its trigger does
+#   any_active_disaster = { disaster_type = disaster_type:turmoil_in_brandenburg }
+# which logged "Invalid right side during comparison 'disaster_type'" on each evaluation
+# (~31 lines per minute of play). The definition is kept so the id resolves, but it can
+# never start, so the disaster, its events and its modifiers stay out of play.
+turmoil_in_brandenburg = {
+
+	image = "gfx/interface/illustrations/disaster/turmoil_in_brandenburg.dds"
+
+	monthly_spawn_chance = monthly_spawn_chance_unique
+
+	fire_only_once = yes
+
+	can_start = {
+		always = no
+	}
+
+	can_end = {
+		always = yes
+	}
+
+	modifier = {
+		global_max_control = -0.1
+		global_monthly_control = -0.0005
+		monthly_legitimacy = -0.02
+	}
+}

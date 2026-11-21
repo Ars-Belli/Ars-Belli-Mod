@@ -1,0 +1,21 @@
+﻿#####ArsBelliMod#####
+
+# Slave Soldiers (Amazigh and Maghrebi cultures: Morocco, Tlemcen, Tunis and the rest) gives +5% manpower instead of +10%.
+# Full copy from region_maghreb.txt (game 1.4.9), change marked #ABM. Re-sync on game updates.
+
+REPLACE:slave_soldiers = {
+	age = age_2_renaissance
+	icon = slave_soldiers
+
+	potential = {
+		OR = {
+			culture = { has_culture_group = culture_group:amazigh_group }
+			culture = { has_culture_group = culture_group:maghrebi_group }
+		}
+	}
+
+	army_heavy_infantry_power = 0.05
+	global_manpower_modifier = 0.05 #ABM half, vanilla 0.1
+
+	requires = armory_advance
+}
