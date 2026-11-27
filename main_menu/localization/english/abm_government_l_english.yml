@@ -97,7 +97,10 @@
  # Rough-terrain privileges (estate_privileges/abm_rough_terrain_privileges.txt)
  abm_homeland_proximity_privilege: "Homeland Proximity Privilege"
  abm_homeland_proximity_privilege_desc: "Our peasants know the mountains, hills and plateaus of the homeland better than any officer of the crown: which pass is open, which slope takes a plough, where a road can be kept. In exchange for this charter they keep the home region working - and the burden of its rough terrain falls on their shoulders rather than on the treasury."
- abm_homeland_proximity_privilege_tt: "In the region of our original [capital|e]: mountains gain +100% local [proximity|e] efficiency and +50% monthly [development|e]; hills gain +33% and +25%; plateaus gain +14% and +10%."
+ # The privilege _tt texts must not contain a percent sign: the game reads the satisfaction and power
+ # it shows for a privilege from the first number followed by one in the modifier text, and a
+ # pure_tooltip_entry is part of that text (eu5.exe 1.4.9 GetScaledSatisfaction, 0x144c224f0).
+ abm_homeland_proximity_privilege_tt: "In the region of our original [capital|e]: mountains gain +100 percent local [proximity|e] efficiency and +50 percent monthly [development|e]; hills gain +33 and +25 percent; plateaus gain +14 and +10 percent."
 
  # Location tooltips for the rough-terrain privileges' location_modifier potential_trigger
  abm_tt_rough_terrain_mountains: "Mountainous [locations|e] we own in the [region|e] of our original [capital|e] no longer pay the [proximity|e] and [development|e] penalties of their terrain:"
@@ -108,7 +111,7 @@
  # independent of where the court sits (see scripted_triggers/abm_rough_terrain_triggers.txt)
  abm_alpine_proximity_privilege: "Alpine Proximity Privilege"
  abm_alpine_proximity_privilege_desc: "The passes answer to our people, not to the accident of where the court happens to sit. Mountain guides, drovers and valley communes keep the roads open across the range, and the peasantry asks the crown only to let them hold the land that teaches them this - in the Alps themselves, wherever our border happens to run."
- abm_alpine_proximity_privilege_tt: "In the Alpine [areas|e] (Provence, Savoy, Piedmont, Lombardy, Switzerland, Romandy, Raetia, Tyrol, Carinthia): mountains gain +100% local [proximity|e] efficiency and +50% monthly [development|e]; hills gain +33% and +25%; plateaus gain +14% and +10%."
+ abm_alpine_proximity_privilege_tt: "In the Alpine [areas|e] (Provence, Savoy, Piedmont, Lombardy, Switzerland, Romandy, Raetia, Tyrol, Carinthia): mountains gain +100 percent local [proximity|e] efficiency and +50 percent monthly [development|e]; hills gain +33 and +25 percent; plateaus gain +14 and +10 percent."
 
  abm_tt_alpine_mountains: "Mountainous [locations|e] we own in the Alps (Provence, Savoy, Piedmont, Lombardy, Switzerland, Romandy, Raetia, Tyrol, Carinthia) no longer pay the [proximity|e] and [development|e] penalties of their terrain:"
  abm_tt_alpine_hills: "Hilly [locations|e] we own in the Alps (Provence, Savoy, Piedmont, Lombardy, Switzerland, Romandy, Raetia, Tyrol, Carinthia) no longer pay the [proximity|e] and [development|e] penalties of their terrain:"
@@ -123,7 +126,7 @@
  abm_cossack_open_plains_privilege_desc: "The Host takes over the administration of the open plains: post stations and patrols make the steppe governable. Our flatland [locations|e] gain #G +10%#! [proximity|e] efficiency, the [proximity|e] cost through [roads|e] drops by #G 2#!, and the state is pushed #G 10#! points towards centralisation. Requires a kingdom or empire whose original capital lies in the steppes and a settled faith, and cannot be combined with the tribal version."
  abm_tribal_open_plains_privilege: "Tribal Open Plains"
  abm_tribal_open_plains_privilege_desc: "The tribal elders take over the administration of the open plains: their riders keep the roads and the grazing routes open. Our flatland [locations|e] gain #G +10%#! [proximity|e] efficiency, the [proximity|e] cost through [roads|e] drops by #G 2#!, and the state is pushed #G 10#! points towards centralisation. Requires a kingdom or empire whose original capital lies in the steppes and a settled faith, and cannot be combined with the cossack version."
- abm_open_plains_privilege_tt: "Flatland [locations|e]: #G +10%#! [proximity|e] efficiency. [roads|e]: #G -2#! [proximity|e] cost. One-time: #G +10#! centralisation."
+ abm_open_plains_privilege_tt: "Flatland [locations|e]: #G +10 percent#! [proximity|e] efficiency. [roads|e]: #G -2#! [proximity|e] cost. One-time: #G +10#! centralisation."
  abm_tt_steppe_flatland_location: "Our flatland [locations|e] gain:"
 
 # --- from abm_estate_privileges_china_l_english.yml ---
