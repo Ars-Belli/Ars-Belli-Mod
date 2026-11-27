@@ -4,10 +4,11 @@ Here you can find a detailed list of all changes the Ars Belli Mod makes over th
 focus here is Gameplay Changes; the Starting Setup changes and country Unique Content are not listed
 here in full, but these can be easily seen in-game on the world map.
 
-**Mod version:** game.1.4.9.mod.33 | **Supported game version:** 1.4.\*
-**Compiled:** 21 November 2026 (cumulative section verified against the mod files on 31 October
+**Mod version:** game.1.4.9.mod.34 | **Supported game version:** 1.4.\*
+**Compiled:** 27 November 2026 (cumulative section verified against the mod files on 31 October
 2026, the mod.28 changes on 9 November 2026, the mod.29 changes on 11 November 2026, the mod.30
-changes on 19 November 2026 and the mod.31, mod.32 and mod.33 changes on 21 November 2026)
+changes on 19 November 2026, the mod.31, mod.32 and mod.33 changes on 21 November 2026 and the
+mod.34 changes on 27 November 2026)
 **Our Discord Server:** https://discord.gg/e7T8Ju4Ewv
 
 ---
@@ -575,8 +576,10 @@ Cut hard, to make wars less static.
   per level. [vanilla +10]
 - Rough-terrain proximity advances (all Age of Traditions, researched at start by the countries
   that qualify) grant the **Homeland Proximity Privilege** (the **Alpine Proximity Privilege** for
-  Savoy, the Swiss and Provence), a peasants privilege that cancels the proximity and development
-  penalties of mountains, hills and plateaus in the region of your original capital only.
+  Savoy, the Swiss and Provence), a peasants privilege (+10% peasants power, small satisfaction
+  bonus) that cancels the proximity and development penalties of mountains, hills and plateaus in
+  the region of your original capital. The Alpine one instead covers a fixed list of Alpine areas
+  (Provence, Savoy, Piedmont, Lombardy, Switzerland, Tyrol, Carinthia), wherever the capital is.
 - **Traditional Land Tenure** and **Guild Charters:** reforms for countries at 65 or more toward
   Traditional or Capital Economy, boosting rural locations or towns and cities.
 - **Merchant Enclave:** a trade post with about 75% of a fondaco's effects, for merchant republics
@@ -756,7 +759,7 @@ in-game.
 
 ## 18. Compatibility
 
-- Supported game version: **1.4.\*** (mod version game.1.4.9.mod.33). Every base-game file the mod
+- Supported game version: **1.4.\*** (mod version game.1.4.9.mod.34). Every base-game file the mod
   replaces is brought up to game 1.4.9, the 1.4.7 and 1.4.8 changes and the Across the Pillars DLC included
   (interface, diplomacy, laws, the HRE, buildings, levies, advances and the 1337 start: pops,
   buildings, roads, diplomacy and country cultures). Play it on 1.4.8: some of the updated files
@@ -789,7 +792,27 @@ Every advance and value, with the history of changes: https://claude.ai/artifact
 
 The same notes ship with each GitHub release; `versionsChangelog.md` in the repository is the source.
 
-## game.1.4.9.mod.33 (current)
+## game.1.4.9.mod.34 (current)
+
+Since game.1.4.9.mod.33 → game.1.4.9.mod.34:
+
+### Societal Values
+
+- **Plutocracy:** +10% military tactics [was +20%], and burghers grow to 1% of all pops [was 2%;
+  vanilla 1% of city pops]
+
+### Estate Privileges
+
+- **Alpine Proximity Privilege** (Savoy, the Swiss, Provence): now works on the rough terrain of a
+  fixed list of Alpine areas — Provence, Savoy, Piedmont, Lombardy, Switzerland (Romandy
+  included), Tyrol (Trentino included) and Carinthia — wherever your capital is [was the whole
+  region of your original capital]
+- **Alpine** and **Homeland Proximity Privilege:** +10% peasants power [was +20%] and now a small
+  peasants satisfaction bonus (+2.5%). Plateaus get +14.9% local proximity efficiency [was +14.3%]
+- **Alpine**, **Homeland**, **Cossack** and **Tribal Open Plains** privileges: their tooltips no
+  longer show a false +100% (or +10%) estate satisfaction. Display only
+
+## game.1.4.9.mod.33
 
 Since game.1.4.9.mod.32 → game.1.4.9.mod.33:
 

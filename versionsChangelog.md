@@ -4,6 +4,26 @@ Player-facing changes per release, newest first. This file is the source for the
 release notes. For the full current state of every mod system (not just what changed), see
 `Ars Belli - Complete Changelog.md`, which is also published as a Google Doc for players.
 
+## game.1.4.9.mod.34
+
+Since game.1.4.9.mod.33 → game.1.4.9.mod.34:
+
+### Societal Values
+
+- **Plutocracy:** +10% military tactics [was +20%], and burghers grow to 1% of all pops [was 2%;
+  vanilla 1% of city pops]
+
+### Estate Privileges
+
+- **Alpine Proximity Privilege** (Savoy, the Swiss, Provence): now works on the rough terrain of a
+  fixed list of Alpine areas — Provence, Savoy, Piedmont, Lombardy, Switzerland (Romandy
+  included), Tyrol (Trentino included) and Carinthia — wherever your capital is [was the whole
+  region of your original capital]
+- **Alpine** and **Homeland Proximity Privilege:** +10% peasants power [was +20%] and now a small
+  peasants satisfaction bonus (+2.5%). Plateaus get +14.9% local proximity efficiency [was +14.3%]
+- **Alpine**, **Homeland**, **Cossack** and **Tribal Open Plains** privileges: their tooltips no
+  longer show a false +100% (or +10%) estate satisfaction. Display only
+
 ## game.1.4.9.mod.33
 
 Since game.1.4.9.mod.32 → game.1.4.9.mod.33:
