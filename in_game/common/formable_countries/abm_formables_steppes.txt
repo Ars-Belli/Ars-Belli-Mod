@@ -4,7 +4,7 @@
 
 ABTAU_f = {
 
-	level = 3	
+	level = 3
 	required_locations_fraction = 0.51
 	rule = historical
 
@@ -17,26 +17,43 @@ ABTAU_f = {
 		}
 		original_capital ?= { continent = continent:europe }
 	}
-	
-	allow = {
-		area:crimea_area = { # every ownable location of the Crimea area (owns takes locations only)
-			NOT = { any_ownable_location_in_area = { NOT = { owner ?= root } } }
-		}
-		owns = location:qalancaq
-		owns = location:melitopol
-		owns = location:domakha
-		owns = location:tana
-		owns = location:taman
-		owns = location:susaco
 
+	allow = {
+		OR = {
+			AND = { # Crimea + the ports
+				area:crimea_area = { # every ownable location of the Crimea area (owns takes locations only)
+					NOT = { any_ownable_location_in_area = { NOT = { owner ?= root } } }
+				}
+				owns = location:qalancaq
+				owns = location:melitopol
+				owns = location:domakha
+				owns = location:tana
+				owns = location:taman
+				owns = location:susaco
+			}
+			AND = { # crimea, pryazovia, azov + Djambuluk (qalancak), Taman, Akhtar
+				area:crimea_area = {
+					NOT = { any_ownable_location_in_area = { NOT = { owner ?= root } } }
+				}
+				area:pryazovia_area = {
+					NOT = { any_ownable_location_in_area = { NOT = { owner ?= root } } }
+				}
+				area:azov_area = {
+					NOT = { any_ownable_location_in_area = { NOT = { owner ?= root } } }
+				}
+				province_definition:qalancak_province = { abm_owns_entire_province_definition = { COUNTRY = root } }
+				province_definition:taman_province = { abm_owns_entire_province_definition = { COUNTRY = root } }
+				province_definition:akhtar_province = { abm_owns_entire_province_definition = { COUNTRY = root } }
+			}
+		}
 	}
-	
+
 	name = ABTAU
 	flag = ABTAU
 	adjective = ABTAU_ADJ
 	tag = ABTAU
 	color = map_ABTAU
-	
+
 	areas = {
 		yedisan_area
 		crimea_area
@@ -53,8 +70,8 @@ ABTAU_f = {
 }
 
 ABGOT_f = {
-# FEO_f = {
-	level = 2	
+	# FEO_f = {
+	level = 2
 	required_locations_fraction = 1
 	rule = historical
 
@@ -65,11 +82,11 @@ ABGOT_f = {
 		}
 		original_capital ?= { region = region:steppes_region }
 	}
-	
+
 	allow = {
 		#owns = area:crimea_area
 	}
-	
+
 	tag = ABGOT
 	color = map_FEO
 	name = ABGOT
@@ -117,16 +134,16 @@ GLH_f = { #Golden Horde formable
 
 		culture = { has_culture_group = culture_group:tatar_group }
 
-		capital = { 
-			OR = { 
-			region = region:steppes_region
-			area = area:northern_caucasus_area 
-			area = area:tambov_area
-			area = area:samara_area
-			area = area:kazan_area
-			area = area:bolghar_area
-			area = area:bashkiria_area
-			} 
+		capital = {
+			OR = {
+				region = region:steppes_region
+				area = area:northern_caucasus_area
+				area = area:tambov_area
+				area = area:samara_area
+				area = area:kazan_area
+				area = area:bolghar_area
+				area = area:bashkiria_area
+			}
 		}
 	}
 
@@ -137,7 +154,7 @@ GLH_f = { #Golden Horde formable
 	}
 
 	areas = {
-		northern_caucasus_area  
+		northern_caucasus_area
 		tambov_area
 		samara_area
 		kazan_area
@@ -180,22 +197,22 @@ CRI_f = { #Crimean formable
 		# in_civil_war = no
 		# is_subject = no
 
-		# culture = culture:crimean	
+		# culture = culture:crimean
 
-		# capital = { 
-		# 	OR = { 
-		# 	area = area:yedisan_area 
+		# capital = {
+		# 	OR = {
+		# 	area = area:yedisan_area
 		# 	area = area:crimea_area
 		# 	area = area:pryazovia_area
 		# 	area = area:zaporizhzhia_area
-		# 	} 
+		# 	}
 		# }
 	}
 
 	tag = CRI
 
 	areas = {
-		yedisan_area 
+		yedisan_area
 		crimea_area
 		pryazovia_area
 		zaporizhzhia_area
@@ -233,20 +250,20 @@ NOG_f = { #Nogai formable
 		# in_civil_war = no
 		# is_subject = no
 
-		# culture = culture:nogai	
+		# culture = culture:nogai
 
-		# capital = { 
-		# 	OR = { 
-		# 	area = area:lower_yik_area 
+		# capital = {
+		# 	OR = {
+		# 	area = area:lower_yik_area
 		# 	area = area:desht_kipchak_area
-		# 	} 
+		# 	}
 		# }
 	}
 
 	tag = NOG
 
 	areas = {
-		lower_yik_area 
+		lower_yik_area
 	}
 	provinces = {
 		bolkhuny_province
@@ -283,13 +300,13 @@ ATR_f = { #Astrakhan formable
 		# in_civil_war = no
 		# is_subject = no
 
-		# culture = culture:astrakhani	
+		# culture = culture:astrakhani
 
-		# capital = { 
-		# 	OR = { 
-		# 	area = area:astrakhan_area 
+		# capital = {
+		# 	OR = {
+		# 	area = area:astrakhan_area
 		# 	area = area:lower_don_area
-		# 	} 
+		# 	}
 		# }
 	}
 
@@ -336,15 +353,15 @@ ABKAZ_f = { #Kazan formable
 		# OR = {
 		# 	culture = culture:bolghar_culture
 		# 	culture = culture:kazani
-		# }	
+		# }
 
-		# capital = { 
-		# 	OR = { 
-		# 	area = area:samara_area 
+		# capital = {
+		# 	OR = {
+		# 	area = area:samara_area
 		# 	area = area:kazan_area
 		# 	area = area:bolghar_area
 		# 	area = area:tambov_area
-		# 	} 
+		# 	}
 		# }
 	}
 
@@ -391,22 +408,22 @@ ABGKH_f = { #Greater Khorasan
 		is_subject = no
 		culture = { has_culture_group = culture_group:iranian_group }
 
-		capital = { 
-			OR = { 
-			area = area:khwarazm_area 
-			area = area:transoxiana_area
-			area = area:badakhshan_area
-			area = area:eastern_khorasan_area
-			area = area:western_khorasan_area
-			area = area:quhestan_area
-			} 
+		capital = {
+			OR = {
+				area = area:khwarazm_area
+				area = area:transoxiana_area
+				area = area:badakhshan_area
+				area = area:eastern_khorasan_area
+				area = area:western_khorasan_area
+				area = area:quhestan_area
+			}
 		}
 	}
 
 	tag = ABGKH
 
 	areas = {
-		khwarazm_area  
+		khwarazm_area
 		transoxiana_area
 		badakhshan_area
 		eastern_khorasan_area
@@ -433,14 +450,14 @@ ABBAC_f = { #Bactria - ahistorical formable
 	rule = fantasy
 
 	potential = {
-		capital = { 
-			OR = { 
-			area = area:khwarazm_area 
-			area = area:transoxiana_area
-			area = area:badakhshan_area
-			area = area:eastern_khorasan_area
-			area = area:western_khorasan_area
-			} 
+		capital = {
+			OR = {
+				area = area:khwarazm_area
+				area = area:transoxiana_area
+				area = area:badakhshan_area
+				area = area:eastern_khorasan_area
+				area = area:western_khorasan_area
+			}
 		}
 		NOT = { government_type = government_type:steppe_horde }
 		NOT = { religion.group = religion_group:muslim }
@@ -449,7 +466,7 @@ ABBAC_f = { #Bactria - ahistorical formable
 
 	allow = {
 		is_subject = no
-		
+
 		OR = {
 			culture = culture:khorezmian_culture
 			culture = culture:tajik_culture
@@ -459,21 +476,21 @@ ABBAC_f = { #Bactria - ahistorical formable
 			culture = culture:pontic_greek_culture
 		}
 
-		capital = { 
-			OR = { 
-				area = area:khwarazm_area 
+		capital = {
+			OR = {
+				area = area:khwarazm_area
 				area = area:transoxiana_area
 				area = area:badakhshan_area
 				area = area:eastern_khorasan_area
 				area = area:western_khorasan_area
-			} 
+			}
 		}
 	}
 
 	tag = ABBAC
 
 	areas = {
-		khwarazm_area  
+		khwarazm_area
 		transoxiana_area
 		badakhshan_area
 		eastern_khorasan_area
@@ -506,23 +523,23 @@ ABBUK_f = { #Bukhara
 		in_civil_war = no
 		is_subject = no
 
-		culture = { has_culture_group = culture_group:steppe_group }	  
+		culture = { has_culture_group = culture_group:steppe_group }
 
-		capital = { 
-			OR = { 
-			area = area:khwarazm_area 
-			area = area:transoxiana_area
-			area = area:badakhshan_area
-			area = area:eastern_khorasan_area
-			area = area:western_khorasan_area
-			} 
+		capital = {
+			OR = {
+				area = area:khwarazm_area
+				area = area:transoxiana_area
+				area = area:badakhshan_area
+				area = area:eastern_khorasan_area
+				area = area:western_khorasan_area
+			}
 		}
 	}
 
 	tag = ABBUK
 
 	areas = {
-		khwarazm_area  
+		khwarazm_area
 		transoxiana_area
 		badakhshan_area
 		eastern_khorasan_area
@@ -559,11 +576,11 @@ CHG_f = { #Chagatai formable
 		in_civil_war = no
 		is_subject = no
 
-		culture = { has_culture_group = culture_group:steppe_group }	 
+		culture = { has_culture_group = culture_group:steppe_group }
 
-		capital = { 
-			OR = { 
-				area = area:khwarazm_area 
+		capital = {
+			OR = {
+				area = area:khwarazm_area
 				area = area:transoxiana_area
 				area = area:badakhshan_area
 				area = area:tarim_area
@@ -573,14 +590,14 @@ CHG_f = { #Chagatai formable
 				area = area:kulykol_area
 				area = area:omsk_area
 				area = area:bursol_area
-			} 
+			}
 		}
 	}
 
 	tag = CHG
 
 	areas = {
-		khwarazm_area  
+		khwarazm_area
 		transoxiana_area
 		badakhshan_area
 		tarim_area
@@ -615,16 +632,16 @@ ABUZB_f = { #Uzbek formable
 		# in_civil_war = no
 		# is_subject = no
 
-		# culture = culture:uzbek_culture   
+		# culture = culture:uzbek_culture
 
-		# capital = { 
-		# 	OR = { 
-		# 	area = area:desht_kipchak_area 
+		# capital = {
+		# 	OR = {
+		# 	area = area:desht_kipchak_area
 		# 	area = area:kulykol_area
 		# 	area = area:chimgi_tura_area
 		# 	area = area:omsk_area
 		# 	area = area:bursol_area
-		# 	} 
+		# 	}
 		# }
 	}
 
@@ -670,11 +687,11 @@ ABTRS_f = { #Transoxiana formable
 		# in_civil_war = no
 		# is_subject = no
 
-		# culture = culture:khorezmian_culture   
+		# culture = culture:khorezmian_culture
 
-		# capital = { 
+		# capital = {
 		# 	area = area:transoxiana_area
-		# } 
+		# }
 	}
 
 	tag = ABTRS
@@ -707,11 +724,11 @@ ABKHI_f = { #Transoxiana formable
 		# in_civil_war = no
 		# is_subject = no
 
-		# culture = culture:khorezmian_culture   
+		# culture = culture:khorezmian_culture
 
-		# capital = { 
+		# capital = {
 		# 	area = area:khwarazm_area
-		# 	} 
+		# 	}
 	}
 
 	tag = ABKHI
@@ -741,17 +758,17 @@ ABKAS_f = { #Yarkand formable
 
 	allow = {
 		always = no
-	# 	in_civil_war = no
-	# 	is_subject = no
+		# 	in_civil_war = no
+		# 	is_subject = no
 
-	#    OR = {
-	# 		culture = culture:uyghur_culture
-	# 		culture = culture:khorezmian_culture
-	# 	}   
+		#    OR = {
+		# 		culture = culture:uyghur_culture
+		# 		culture = culture:khorezmian_culture
+		# 	}
 
-	# 	capital = { 
-	# 		area = area:tarim_area
-	# 	} 
+		# 	capital = {
+		# 		area = area:tarim_area
+		# 	}
 	}
 
 	tag = ABKAS
@@ -805,13 +822,13 @@ REPLACE:ILK_f = { #International Organization mechanics commented out.
 
 		culture = { has_culture_group = culture_group:steppe_group }
 	}
-	
+
 	name = ILK
 	flag = ILK
 	adjective = ILK_ADJ
 	tag = ILK
 	color = map_ILK
-	
+
 	regions = {
 		persia_region
 	}
@@ -851,13 +868,13 @@ ABTUM_f = { #Tumed formable
 		# in_civil_war = no
 		# is_subject = no
 
-		# culture = culture:tumed_culture	
+		# culture = culture:tumed_culture
 
-		# capital = { 
-		# 	OR = { 
-		# 	area = area:southern_gobi_area 
+		# capital = {
+		# 	OR = {
+		# 	area = area:southern_gobi_area
 		# 	area = area:datong_area
-		# 	} 
+		# 	}
 		# }
 	}
 
@@ -899,15 +916,15 @@ OIR_f = { #Oirat formable
 	allow = {
 		is_subject = no
 		in_civil_war = no
-		culture = culture:oirat_culture	
+		culture = culture:oirat_culture
 
-		capital = { 
-			OR = { 
-			area = area:mongolian_great_lakes_area 
-			area = area:upper_selenga_area
-			area = area:western_gobi_area
-			area = area:dzungaria_area
-			} 
+		capital = {
+			OR = {
+				area = area:mongolian_great_lakes_area
+				area = area:upper_selenga_area
+				area = area:western_gobi_area
+				area = area:dzungaria_area
+			}
 		}
 	}
 
@@ -946,7 +963,7 @@ REPLACE:MGO_f = { #National Mongolia tag
 		in_civil_war = no
 		is_subject = no
 	}
-	
+
 	name = MGO
 	flag = MGO
 	adjective = MGO_ADJ
@@ -955,7 +972,7 @@ REPLACE:MGO_f = { #National Mongolia tag
 	regions = {
 		mongolia_region
 	}
-	
+
 	areas = {
 		songnen_area
 		yanbei_area
@@ -974,9 +991,9 @@ REPLACE:MGE_f = { #Imperial Mongol Formable
 	level = 4 #was 4
 	required_locations_fraction = 0.75 #was 0.85
 	rule = historical
-	potential = {		
+	potential = {
 		culture = { has_culture_group = culture_group:steppe_group }
-		government_type = government_type:steppe_horde	
+		government_type = government_type:steppe_horde
 	}
 	allow = {
 		in_civil_war = no
@@ -986,7 +1003,7 @@ REPLACE:MGE_f = { #Imperial Mongol Formable
 		owns = location:dadu
 		owns = location:karakorum
 	}
-	
+
 	name = MGE
 	flag = MGE
 	adjective = MGE_ADJ

@@ -1,0 +1,1194 @@
+<title>Ars Belli Country Picker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: war-room ledger. Left = roster of 1337 countries, right = dossier of what the picked country gets. Phone: roster, then dossier. */
+:root {
+  --bg: #eef0f3;
+  --surface: #ffffff;
+  --sunk: #e4e8ee;
+  --ink: #1b2230;
+  --muted: #5a6475;
+  --line: #d5dae2;
+  --brass: #8a5f12;
+  --brass-soft: #f3e6c8;
+  --mod: #a8232c;
+  --mod-soft: #f8dfe0;
+  --good: #23704a;
+  --bad: #a83a28;
+  --focus: #2d5fb8;
+  --f-display: "Cinzel", "Trajan Pro", Georgia, serif;
+  --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151b; --surface: #181e27; --sunk: #0d1116; --ink: #e5e8ed; --muted: #98a2b1; --line: #2a3240;
+    --brass: #d8ac55; --brass-soft: #3a2f1a; --mod: #f07a7f; --mod-soft: #43201f; --good: #6cc995; --bad: #f08d78; --focus: #7ea6f0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151b; --surface: #181e27; --sunk: #0d1116; --ink: #e5e8ed; --muted: #98a2b1; --line: #2a3240;
+  --brass: #d8ac55; --brass-soft: #3a2f1a; --mod: #f07a7f; --mod-soft: #43201f; --good: #6cc995; --bad: #f08d78; --focus: #7ea6f0;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; line-height: 1.45; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+button, input, select { font: inherit; color: inherit; }
+a { color: var(--brass); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.mono { font-family: var(--f-mono); font-weight: 500; letter-spacing: 0.02em; }
+
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+header.top { position: relative; background: var(--surface); border-bottom: 1px solid var(--line); padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; }
+header.top h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; letter-spacing: 0.04em; }
+header.top h1 span { color: var(--brass); }
+header.top .meta { color: var(--muted); font-size: 0.8rem; }
+header.top details { margin-left: auto; font-size: 0.8rem; }
+header.top summary { cursor: pointer; color: var(--brass); }
+.about { position: absolute; top: 100%; right: max(16px, env(safe-area-inset-right, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); margin-top: 6px; max-width: 640px; margin-left: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; z-index: 5; box-shadow: 0 8px 24px rgb(0 0 0 / 0.18); max-height: 70vh; overflow: auto; }
+.about h3 { margin: 0.6em 0 0.3em; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.about p, .about li { font-size: 0.85rem; max-width: 65ch; }
+.about ul { padding-left: 1.1em; margin: 0.3em 0; display: grid; gap: 4px; }
+
+.panes { display: grid; grid-template-columns: minmax(300px, 380px) 1fr; min-height: 0; }
+.roster { border-right: 1px solid var(--line); display: grid; grid-template-rows: auto auto 1fr; min-height: 0; background: var(--surface); }
+.filters { padding: 12px 16px 8px; display: grid; gap: 8px; border-bottom: 1px solid var(--line); }
+.filters input[type=search], .filters select { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.toggles { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--muted); }
+.toggles label { display: inline-flex; gap: 5px; align-items: center; cursor: pointer; }
+.count { padding: 6px 16px; font-size: 0.75rem; color: var(--muted); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.count select { border: none; background: transparent; color: var(--muted); font-size: 0.75rem; }
+.list { overflow-y: auto; min-height: 0; }
+.ci { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; width: 100%; text-align: left; padding: 8px 16px; border: 0; border-bottom: 1px solid var(--line); background: transparent; cursor: pointer; }
+.ci:hover { background: var(--bg); }
+.ci[aria-current="true"] { background: var(--brass-soft); }
+.ci .nm { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ci .nm .mono { font-size: 0.72rem; color: var(--muted); margin-left: 6px; }
+.ci .sub { grid-column: 1; font-size: 0.75rem; color: var(--muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ci .nums { grid-row: 1 / span 2; grid-column: 2; display: flex; gap: 4px; align-items: center; font-variant-numeric: tabular-nums; }
+.pill { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 999px; background: var(--sunk); color: var(--muted); white-space: nowrap; font-size: 0.72rem; }
+.pill.ab { background: var(--mod-soft); color: var(--mod); font-weight: 600; }
+.pill.br { background: var(--brass-soft); color: var(--brass); font-weight: 600; }
+
+.dossier { overflow-y: auto; min-height: 0; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.dossier-in { max-width: 1000px; margin: 0 auto; display: grid; gap: 16px; }
+.back { display: none; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); padding: 6px 12px; cursor: pointer; justify-self: start; }
+.empty { color: var(--muted); padding: 40px 0; max-width: 62ch; }
+.empty h2 { font-family: var(--f-display); color: var(--ink); font-size: 1.5rem; margin: 0 0 8px; }
+.ctitle { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.ctitle h2 { margin: 0; font-family: var(--f-display); font-size: clamp(1.5rem, 3.5vw, 2.1rem); font-weight: 700; letter-spacing: 0.03em; text-wrap: balance; }
+.tagchip { font-family: var(--f-mono); font-weight: 500; font-size: 0.82rem; padding: 1px 7px; border: 1px solid var(--brass); color: var(--brass); border-radius: 4px; }
+.facts { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.fact { background: var(--surface); padding: 9px 12px; min-width: 0; }
+.fact dt { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.fact dd { margin: 2px 0 0; font-weight: 500; overflow-wrap: anywhere; }
+.fact dd small { display: block; color: var(--muted); font-weight: 400; font-size: 0.78rem; }
+.bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 0.82rem; color: var(--muted); }
+.bar label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.bar input[type=search] { padding: 5px 9px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); min-width: 0; width: 220px; max-width: 100%; }
+.ages { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; font-size: 0.8rem; color: var(--muted); }
+.ages > span { margin-right: 4px; }
+.agebtn { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 999px; padding: 2px 10px; font-size: 0.78rem; cursor: pointer; font-variant-numeric: tabular-nums; }
+.agebtn b { font-family: var(--f-display); font-weight: 700; margin-right: 3px; }
+.agebtn[aria-pressed="true"] { background: var(--brass-soft); color: var(--brass); border-color: var(--brass); font-weight: 600; }
+.agebtn.clear { border-style: dashed; }
+.totals { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; }
+.totals[open] { display: grid; gap: 8px; }
+.totals > summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; list-style: none; }
+.totals > summary::-webkit-details-marker { display: none; }
+.totals > summary::before { content: "▸"; color: var(--brass); }
+.totals[open] > summary::before { content: "▾"; }
+.totals > summary b { font-family: var(--f-display); font-size: 1.02rem; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; }
+.totals > summary span { color: var(--muted); font-size: 0.8rem; }
+.sumnote { margin: 0; font-size: 0.78rem; color: var(--muted); max-width: 75ch; }
+.sumgrp > h4 { margin: 6px 0 2px; font-size: 0.7rem; font-weight: 600; color: var(--brass); letter-spacing: 0.08em; text-transform: uppercase; }
+.sumgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 0 24px; }
+.srow { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 0.84rem; padding: 3px 0; border-bottom: 1px dotted var(--line); min-width: 0; }
+.srow span { min-width: 0; overflow-wrap: anywhere; }
+.srow span small { color: var(--muted); font-size: 0.72rem; margin-left: 4px; }
+.srow b { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; }
+.srow.g b { color: var(--good); }
+.srow.b b { color: var(--bad); }
+.toc { display: flex; flex-wrap: wrap; gap: 6px; }
+.toc a { text-decoration: none; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; font-size: 0.8rem; }
+.toc a b { color: var(--brass); font-variant-numeric: tabular-nums; }
+
+section.sec { display: grid; gap: 10px; scroll-margin-top: 8px; }
+section.sec > h3 { margin: 10px 0 0; display: flex; gap: 10px; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 6px; font-weight: 500; color: var(--muted); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+section.sec > h3 b { color: var(--ink); font-size: 1.08rem; letter-spacing: 0.04em; font-family: var(--f-display); font-weight: 700; }
+.grp { display: grid; gap: 8px; }
+.grp > h4 { margin: 4px 0 0; font-size: 0.7rem; font-weight: 600; color: var(--brass); letter-spacing: 0.08em; text-transform: uppercase; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 8px; align-items: start; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; display: grid; gap: 6px; min-width: 0; }
+.card.ab { border-color: color-mix(in srgb, var(--mod) 45%, var(--line)); }
+.card .hd { display: flex; gap: 8px; align-items: baseline; justify-content: space-between; }
+.card .hd strong { font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.fx { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.fx li { overflow-wrap: anywhere; }
+.fx li.g { color: var(--good); }
+.fx li.b { color: var(--bad); }
+.fx li.h { font-weight: 500; }
+.fx li.s { padding-left: 12px; font-size: 0.8rem; }
+.fx li.s.n { color: var(--muted); }
+.fx li small { color: var(--muted); font-size: 0.74rem; margin-left: 4px; font-weight: 400; }
+.fx li.off { color: var(--muted); }
+.fx li.off > span { text-decoration: line-through; }
+.fx li.cnd > span::before { content: "◇ "; color: var(--brass); }
+.bar select { padding: 4px 8px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+.cond { font-size: 0.78rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 5px; overflow-wrap: anywhere; }
+.cond b { font-weight: 600; color: var(--ink); }
+.desc { font-size: 0.8rem; color: var(--muted); }
+.share { font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
+details.more > summary { cursor: pointer; color: var(--brass); font-size: 0.82rem; padding: 2px 0; }
+.form { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; display: grid; gap: 6px; min-width: 0; }
+.fopen { margin-top: 10px; }
+.fopen > .cards, .fopen > .mini { margin-top: 8px; }
+details.foth { display: grid; gap: 6px; }
+details.foth > summary { cursor: pointer; font-size: 0.78rem; color: var(--muted); }
+details.foth[open] > summary { margin-bottom: 6px; }
+.form .hd { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.form .hd strong { font-family: var(--f-display); font-size: 1.02rem; }
+.mini { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 0.82rem; }
+.mini li { display: grid; gap: 1px; }
+.mini li span { color: var(--muted); font-size: 0.78rem; }
+.none { color: var(--muted); font-size: 0.85rem; margin: 0; }
+
+/* second view: military ranking table */
+.views { display: flex; gap: 4px; }
+.views a { text-decoration: none; font-size: 0.8rem; padding: 2px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+.views a[aria-current="page"] { background: var(--brass-soft); color: var(--brass); border-color: var(--brass); font-weight: 600; }
+.rankview { display: none; overflow-y: auto; min-height: 0; padding-block: 16px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.app.rank .panes { display: none; }
+.app.rank .rankview { display: block; }
+.rank-in { max-width: 1500px; margin: 0 auto; display: grid; gap: 12px; }
+.rank-in h2 { margin: 0; font-family: var(--f-display); font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: 0.03em; }
+.rank-in .lede { margin: 0; color: var(--muted); font-size: 0.85rem; max-width: 80ch; }
+.how ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: 0.8rem; color: var(--muted); max-width: 90ch; }
+.rctl { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 0.82rem; color: var(--muted); }
+.rctl label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; min-width: 0; max-width: 100%; }
+.rctl select, .rctl input[type=search], .rctl input[type=number] { padding: 4px 8px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); min-width: 0; max-width: 100%; }
+.rctl select { max-width: 220px; }
+.rctl input[type=search] { width: 200px; }
+.rctl input[type=number] { width: 4.5em; }
+.rcount { font-size: 0.78rem; color: var(--muted); }
+.tblwrap { overflow: auto; max-height: max(360px, calc(100dvh - 110px)); border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table.rank { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+table.rank th, table.rank td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; vertical-align: top; }
+table.rank .l { text-align: left; }
+table.rank thead th { position: sticky; top: 0; z-index: 2; background: var(--sunk); font-size: 0.72rem; font-weight: 600; color: var(--muted); padding: 0; }
+table.rank thead th button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 7px 8px; cursor: pointer; text-align: inherit; }
+table.rank thead th button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+table.rank thead th span.nb { display: block; padding: 7px 8px; }
+table.rank thead th[aria-sort] { color: var(--brass); }
+table.rank thead th[aria-sort="descending"] button::after { content: " ▾"; }
+table.rank thead th[aria-sort="ascending"] button::after { content: " ▴"; }
+table.rank .cn { position: sticky; left: 0; z-index: 1; background: var(--surface); box-shadow: 1px 0 0 var(--line); }
+table.rank thead th.cn { z-index: 3; background: var(--sunk); }
+table.rank td.cn a { font-weight: 600; color: var(--ink); text-decoration: none; }
+table.rank td.cn a:hover { color: var(--brass); text-decoration: underline; }
+table.rank td.cn .mono { font-size: 0.7rem; color: var(--muted); margin-left: 5px; }
+table.rank td.cn small { display: block; color: var(--muted); font-size: 0.7rem; }
+table.rank td.sc b { font-size: 0.9rem; }
+table.rank td.top { white-space: normal; min-width: 240px; font-size: 0.78rem; }
+table.rank td.top div { display: flex; justify-content: space-between; gap: 8px; }
+table.rank td.top b { color: var(--brass); font-weight: 600; }
+table.rank td.dim { color: var(--muted); }
+table.rank tbody tr:hover td { background: var(--bg); }
+table.rank .whybtn { all: unset; cursor: pointer; border-bottom: 1px dotted currentColor; font-variant-numeric: tabular-nums; }
+table.rank .whybtn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+table.rank .whybtn[aria-expanded="true"] { color: var(--brass); }
+table.rank tr.whyrow td { white-space: normal; text-align: left; background: var(--bg); padding: 8px 8px 12px; }
+table.rank .why { position: sticky; left: 8px; max-width: calc(100vw - 72px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 6px 28px; }
+table.rank .why h4 { margin: 0 0 4px; font-size: 0.7rem; font-weight: 600; color: var(--brass); letter-spacing: 0.08em; text-transform: uppercase; }
+table.rank .why ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; }
+table.rank .why li { display: grid; grid-template-columns: 3.4em minmax(0, 1fr); gap: 8px; font-size: 0.8rem; }
+table.rank .why li > b { text-align: right; color: var(--brass); font-weight: 600; }
+table.rank .why li small { display: block; color: var(--muted); font-size: 0.74rem; overflow-wrap: anywhere; }
+table.rank tr.mine td, table.rank tr.mine td.cn { background: var(--brass-soft); }
+table.rank tr.mine td.cn .pill { margin-left: 6px; }
+/* third view: build a country */
+.buildview { display: none; overflow-y: auto; min-height: 0; padding-block: 16px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.app.build .panes { display: none; }
+.app.build .buildview { display: block; }
+.build-in { max-width: 1000px; }
+.build-out { display: grid; gap: 16px; }
+.bctl { display: grid; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px; }
+.brow { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 0.82rem; color: var(--muted); }
+.brow label { display: inline-flex; gap: 6px; align-items: center; min-width: 0; max-width: 100%; }
+.brow input, .brow select { padding: 5px 9px; border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); min-width: 0; max-width: 100%; color: var(--ink); }
+.brow input { width: 260px; }
+.brow select { max-width: 220px; }
+.tiers { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); align-items: start; }
+.tiers > p { grid-column: 1 / -1; }
+fieldset.tier { margin: 0; min-width: 0; border: 1px solid var(--line); border-radius: var(--r); padding: 6px 10px 10px; display: grid; gap: 6px; }
+fieldset.tier legend { font-size: 0.7rem; font-weight: 600; color: var(--brass); letter-spacing: 0.08em; text-transform: uppercase; padding: 0 4px; }
+fieldset.tier[disabled] { opacity: 0.55; }
+.fopt { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; align-items: start; font-size: 0.84rem; cursor: pointer; }
+.fopt input { margin-top: 3px; }
+.fopt small { display: block; color: var(--muted); font-size: 0.74rem; overflow-wrap: anywhere; }
+.fopt small.bad { color: var(--bad); }
+.bnote { margin: 0; font-size: 0.78rem; color: var(--muted); max-width: 80ch; }
+.buildlink { font-size: 0.8rem; margin-left: auto; white-space: nowrap; }
+.fact dd small.inl { display: inline; margin-left: 4px; }
+.build-out .why { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 6px 28px; }
+.build-out .why h4 { margin: 0 0 4px; font-size: 0.7rem; font-weight: 600; color: var(--brass); letter-spacing: 0.08em; text-transform: uppercase; }
+.build-out .why ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; }
+.build-out .why li { display: grid; grid-template-columns: 3.4em minmax(0, 1fr); gap: 8px; font-size: 0.8rem; }
+.build-out .why li > b { text-align: right; color: var(--brass); font-weight: 600; }
+.build-out .why li small { display: block; color: var(--muted); font-size: 0.74rem; overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .panes { grid-template-columns: 1fr; }
+  .roster { border-right: 0; }
+  .app.detail .roster { display: none; }
+  .app:not(.detail) .dossier { display: none; }
+  .back { display: inline-block; }
+  header.top details { margin-left: 0; }
+  .rctl select { max-width: 100%; }
+  .rctl input[type=search] { width: 100%; }
+  .brow input { width: 100%; }
+  .brow select { max-width: 100%; }
+  .buildlink { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="app" id="app">
+  <header class="top">
+    <h1>Ars Belli <span>Country Picker</span></h1>
+    <span class="meta" id="meta"></span>
+    <nav class="views" aria-label="Views"><a href="#" id="vCountries">Countries</a><a href="#build" id="vBuild">Build a country</a><a href="#ranking" id="vRank">Military ranking</a></nav>
+    <details id="aboutBox">
+      <summary>How to read this page</summary>
+      <div class="about" id="about"></div>
+    </details>
+  </header>
+  <div class="panes">
+    <aside class="roster" aria-label="Countries">
+      <div class="filters">
+        <input type="search" id="q" placeholder="Search country, tag, culture, capital…" aria-label="Search countries" autocomplete="off">
+        <div class="row2">
+          <select id="fRegion" aria-label="Region"><option value="">All regions</option></select>
+          <select id="fGroup" aria-label="Culture group"><option value="">All culture groups</option></select>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="fMod"> Has Ars Belli content</label>
+          <label><input type="checkbox" id="fOwn"> Has own content</label>
+          <label title="Tributaries count as independent"><input type="checkbox" id="fInd"> Independent or tributary</label>
+        </div>
+      </div>
+      <div class="count"><span id="countTxt"></span>
+        <label>Sort <select id="sort" aria-label="Sort countries"><option value="size">by size</option><option value="name">by name</option><option value="own">by own content</option><option value="mod">by Ars Belli content</option></select></label>
+      </div>
+      <div class="list" id="list" role="list"></div>
+    </aside>
+    <main class="dossier" id="dossier">
+      <div class="dossier-in" id="detail"></div>
+    </main>
+  </div>
+  <section class="rankview" id="rankview" aria-labelledby="rankTitle">
+    <div class="rank-in">
+      <h2 id="rankTitle">Military ranking</h2>
+      <p class="lede">Every 1337 country ranked by the military modifiers of the content on its page. Click a column to sort, a score to see where its points come from, a name to open the country.</p>
+      <details class="totals how" id="rankHow"><summary><b>How the score works</b></summary><ul id="rankHowList"></ul></details>
+      <div class="rctl">
+        <input type="search" id="rQ" placeholder="Find country, tag, culture…" aria-label="Find a country in the ranking" autocomplete="off">
+        <label>Government <select id="rGov"><option value="">As at start</option></select></label>
+        <label>Religion <select id="rRel"><option value="">As at start</option></select></label>
+        <label>Region <select id="rReg"></select></label>
+        <label>Min. locations <input type="number" id="rMin" min="0" step="1" value="8" inputmode="numeric"></label>
+        <label title="Tributaries count as independent"><input type="checkbox" id="rInd" checked> Independent or tributary</label>
+      </div>
+      <div class="rcount" id="rCount" aria-live="polite"></div>
+      <div class="tblwrap"><table class="rank"><thead><tr id="rHead"></tr></thead><tbody id="rBody"></tbody></table></div>
+    </div>
+  </section>
+  <section class="buildview" id="buildview" aria-labelledby="buildTitle">
+    <div class="rank-in build-in">
+      <h2 id="buildTitle">Build a country</h2>
+      <p class="lede">Start from a 1337 country, choose the government and religion you plan to run and the nations you plan to form. The page lists what that country gets and scores it against the military ranking. The page address holds the build, so you can share it.</p>
+      <div class="bctl">
+        <div class="brow">
+          <label>Base country <input type="search" id="bBase" list="bCountries" placeholder="Type a country or tag…" autocomplete="off"></label>
+          <label>Government <select id="bGov" aria-label="Government type of the build"></select></label>
+          <label>Religion <select id="bRel" aria-label="Religion of the build"></select></label>
+        </div>
+        <datalist id="bCountries"></datalist>
+        <div id="buildTiers" class="tiers"></div>
+      </div>
+      <div id="buildOut" class="build-out"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+(function () {
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // a tributary declares its own wars, keeps full diplomacy and can't be annexed: the "Independent" filters count it
+  const isTrib = c => !!c.ovl && c.ovl.k === 'tributary';
+  const indep = c => !c.ovl || isTrib(c);
+  const subOf = c => (isTrib(c) ? 'tributary of ' : 'subject of ') + c.ovl.n;
+  const I = DATA.items, C = DATA.countries, FM = DATA.formables;
+  // a formable whose tag starts on the map stays listed: it can be formed once that country is gone (annexed, or dead)
+  const START_TAGS = new Map(C.map(c => [c.tag, c.n]));
+  const existsPill = f => START_TAGS.has(f.tag) ? ` <span class="pill" title="${esc(START_TAGS.get(f.tag))} starts on the map with this tag: it can be formed once that country is gone">exists at start</span>` : '';
+  const TYPES = [
+    ['rel', 'State religion'], ['asp', 'Religious aspects'], ['adv', 'Advances'], ['ref', 'Government reforms'], ['priv', 'Estate privileges'], ['pol', 'Laws & policies'], ['bur', 'Bureaucracies'],
+    ['unit', 'Unique units'], ['levy', 'Levies'], ['bld', 'Buildings'], ['dec', 'Decisions'], ['act', 'Actions'],
+    ['cab', 'Cabinet actions'], ['cb', 'Casus belli'], ['evt', 'Events (permanent)'],
+  ];
+  const TYPE_NAME = Object.fromEntries(TYPES);
+  const VIA = { f: 'State religion (follows the Religion pick)', t: 'Only this country', c: 'Primary culture', g: 'Culture group or language', r: 'Region of the capital', w: 'Broad content (continent-wide or shared by many countries)' };
+  const VIA_ORDER = ['f', 't', 'c', 'g', 'r', 'w'];
+  const AGES = ['', 'Age I · Traditions', 'Age II · Renaissance', 'Age III · Discovery', 'Age IV · Reformation', 'Age V · Absolutism', 'Age VI · Revolutions'];
+  const BROAD = 120; // region-gated items shared by more start countries than this are folded away
+
+  // --- per-country summaries
+  for (const c of C) {
+    let own = 0, mod = 0;
+    for (const r of c.refs) { const it = I[r[0]]; if (r[1] === 't' || r[1] === 'c') own++; if (it.m) mod++; }
+    c._own = own; c._mod = mod;
+    c._hay = [c.n, c.tag, c.cul, c.lang, c.cap, c.area, c.reg, c.sub, ...(c.grp || [])].join(' ').toLowerCase();
+  }
+  const byTag = new Map(C.map(c => [c.tag, c]));
+  const isBroad = (it, via) => via === 'w' || (via === 'r' && it.k > BROAD);
+
+  // --- header + notes
+  const st = DATA.stats || {};
+  $('#meta').textContent = `${DATA.version ? 'Mod ' + DATA.version + ' · ' : ''}1337 start · ${C.length} countries · built ${DATA.generated}`;
+  $('#about').innerHTML = `
+    <p>Pick a country to see the content gated to it by its tag, its primary culture, its culture group or language, the region of its capital, or its state religion. Effects are read from the game files and shown with their numbers.</p>
+    <h3>Labels</h3>
+    <ul>
+      <li><span class="pill ab">Ars Belli</span> is added by the mod; <span class="pill ab">changed</span> is vanilla content the mod overrides. Everything else is vanilla EU5 1.4.9. DLC content is labelled with the DLC.</li>
+      <li><b>Needs</b> lists conditions that depend on how the game goes: a reform, an advance, religion, an accepted culture. Conditions already met at the 1337 start are not shown.</li>
+      <li><b>Government</b>: governments change during play, so every country page can switch to any of the five types. The start government is only the default. Content limited to one government type, including reforms only that type can hold, appears when you pick that type, and the totals follow. “Under another government” shows how many items each other type adds (+) or removes (−).</li>
+      <li><b>Religion</b> works the same way: pick any religion and the culture, tag and region content that depends on religion follows, combined with the government pick. The religion's own content follows the pick too, grouped as “State religion” in each section: its own modifier, religion advances, religious actions, casus belli and events, and its <b>religious aspects</b>, which are choices: the religion holds a fixed number of them at once.</li>
+      <li>A modifier line with <b>◇</b> only applies under the condition shown next to it. Struck-through lines don't apply with the chosen setup.</li>
+      <li><b>Shared by N</b> counts the start countries that get the same item. Region and continent content shared by more than ${BROAD} countries is folded under “Show broad content”.</li>
+      <li><b>Formable nations</b> are those this country's culture or capital region qualifies it for, with what the formed tag unlocks.</li>
+      <li><b>Build a country</b> combines a base country, a government, a religion and the nations you plan to form (one per tier, rising, as the game requires) into one list with its military score. The build also shows as a highlighted row in the military ranking.</li>
+    </ul>
+    <h3>Left out</h3>
+    <ul>
+      <li>Events, unless an option grants a modifier with no expiry.</li>
+      <li>Content open to everyone (base advances, ordinary buildings and laws) and content gated only on flags set during play, such as Focus Picks.</li>
+      <li>Content for tags that do not exist at the start and are not formable: colonial nations, releasables, dynasty tags.${st.unattachedModItems ? ' ' + st.unattachedModItems.length + ' Ars Belli items are in this group.' : ''}</li>
+      <li>Allow conditions of decisions and buildings are summarised, not complete. Check in game before relying on an edge case.</li>
+    </ul>`;
+
+  // --- roster filters
+  const subs = new Map();
+  for (const c of C) { if (!c.sub) continue; if (!subs.has(c.sub)) subs.set(c.sub, new Set()); if (c.reg) subs.get(c.sub).add(c.reg); }
+  const fRegion = $('#fRegion');
+  for (const [s, regs] of [...subs.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+    const og = document.createElement('optgroup'); og.label = s;
+    const all = document.createElement('option'); all.value = 'S:' + s; all.textContent = 'All of ' + s; og.appendChild(all);
+    for (const r of [...regs].sort()) { const o = document.createElement('option'); o.value = 'R:' + r; o.textContent = r; og.appendChild(o); }
+    fRegion.appendChild(og);
+  }
+  const groups = new Map();
+  for (const c of C) for (const g of c.grp || []) groups.set(g, (groups.get(g) || 0) + 1);
+  const fGroup = $('#fGroup');
+  for (const g of [...groups.keys()].sort()) { const o = document.createElement('option'); o.value = g; o.textContent = `${g} (${groups.get(g)})`; fGroup.appendChild(o); }
+
+  const list = $('#list');
+  const rows = new Map();
+  for (const c of C) {
+    const b = document.createElement('button');
+    b.className = 'ci'; b.type = 'button'; b.setAttribute('role', 'listitem');
+    const sub = [c.cul, c.reg].filter(Boolean).join(' · ');
+    b.innerHTML = `<div class="nm">${esc(c.n)}<span class="mono">${esc(c.tag)}</span></div>
+      <div class="sub">${esc(sub)}${c.ovl ? ' · ' + esc(subOf(c)) : ''}</div>
+      <div class="nums">${c._mod ? `<span class="pill ab" title="Ars Belli items">${c._mod} AB</span>` : ''}<span class="pill" title="Locations owned at start">${c.locs} loc</span></div>`;
+    b.addEventListener('click', () => go(c.tag));
+    rows.set(c.tag, b);
+  }
+  function applyFilters() {
+    const terms = $('#q').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const reg = fRegion.value, grp = fGroup.value;
+    const mod = $('#fMod').checked, own = $('#fOwn').checked, ind = $('#fInd').checked;
+    const shown = C.filter(c => {
+      if (terms.length && !terms.every(t => c._hay.includes(t))) return false;
+      if (reg && !(reg.startsWith('S:') ? c.sub === reg.slice(2) : c.reg === reg.slice(2))) return false;
+      if (grp && !(c.grp || []).includes(grp)) return false;
+      if (mod && !c._mod) return false;
+      if (own && !c._own) return false;
+      if (ind && !indep(c)) return false;
+      return true;
+    });
+    const key = { size: (a, b) => b.locs - a.locs || a.n.localeCompare(b.n), name: (a, b) => a.n.localeCompare(b.n), own: (a, b) => b._own - a._own || b.locs - a.locs, mod: (a, b) => b._mod - a._mod || b.locs - a.locs }[$('#sort').value];
+    shown.sort(key);
+    list.replaceChildren(...shown.map(c => rows.get(c.tag)));
+    $('#countTxt').textContent = `${shown.length} of ${C.length} countries`;
+  }
+  for (const id of ['#q', '#fRegion', '#fGroup', '#fMod', '#fOwn', '#fInd', '#sort']) $(id).addEventListener(id === '#q' ? 'input' : 'change', applyFilters);
+
+  // --- dossier
+  let showBroad = false, abOnly = false, within = '';
+  const ages = new Set(); // selected advance ages; empty = all ages
+  const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI'];
+  const AGE_SHORT = ['', 'Traditions', 'Renaissance', 'Discovery', 'Reformation', 'Absolutism', 'Revolutions'];
+  const ageOk = it => it.t !== 'adv' || !ages.size || ages.has(it.a);
+  // modifier totals
+  const MODS = DATA.mods || [], SCOPES = DATA.scopes || [];
+  const sumTypes = new Set(['adv', 'rel']); let sumOpen = true;
+  // government type picked on the country page (null = the 1337 start government); content differences per
+  // government come precomputed in c.gx[gov] (a ref with only an index means the item is not available)
+  const GOVS = DATA.govs || [];
+  let govPick = null, shownTag = null;
+  // religion picked on the country page (null = start religion). Per item, religions fall into classes
+  // (item.rl = [named religions, named groups]); c.rx = [[item, {"gov|class": ref | 0}]] holds results that
+  // differ from the government-only result, "*|class" when the government doesn't matter.
+  const REL = new Map((DATA.religions || []).map(([id, n, g, asp]) => [id, { n, g, asp: asp || 0 }])); // asp: aspects the religion picks
+  let aspPicks = 0; // for the section heading of the religion shown
+  const RGN = new Map(DATA.rgroups || []);
+  const RGM = new Map(); for (const [id, x] of REL) { if (!RGM.has(x.g)) RGM.set(x.g, []); RGM.get(x.g).push(id); }
+  let relPick = null;
+  function relClass(rel, rl) {
+    if (rl[0].includes(rel)) return rel;
+    const g = REL.get(rel)?.g;
+    return g && rl[1].includes(g) ? g + '*' : '-';
+  }
+  function refsFor(c, gov, rel) {
+    const g = gov || govPick || c.gk;
+    const rs = rel || relPick || c.rk;
+    const m = new Map(c.refs.map(x => [x[0], x]));
+    if (g !== c.gk && c.gx && c.gx[g]) for (const x of c.gx[g]) { if (x.length === 1) m.delete(x[0]); else m.set(x[0], x); }
+    if (rs !== c.rk && c.rx) for (const [i, tab] of c.rx) {
+      const cls = relClass(rs, I[i].rl);
+      const v = tab[g + '|' + cls] ?? tab['*|' + cls];
+      if (v === undefined) continue;
+      if (v === 0) m.delete(i); else m.set(i, v);
+    }
+    // religion content (via 'f': the religion's own modifier, religion advances, religious actions, aspects)
+    // comes from the per-religion table, not from c.refs
+    for (const x of relContent(rs, g)) m.set(x[0], x);
+    return [...m.values()];
+  }
+  // DATA.rc[religion] = { refs: for a monarchy, gx: { gov: differences } }, same shapes as a country's refs / gx
+  const RC = DATA.rc || {};
+  function relContent(rel, gov) {
+    const x = RC[rel]; if (!x) return [];
+    if (!gov || gov === 'monarchy' || !x.gx || !x.gx[gov]) return x.refs;
+    const m = new Map(x.refs.map(r => [r[0], r]));
+    for (const r of x.gx[gov]) { if (r.length === 1) m.delete(r[0]); else m.set(r[0], r); }
+    return [...m.values()];
+  }
+  function relOptions(c, sel) {
+    const groups = new Map();
+    for (const [id, x] of REL) { if (!groups.has(x.g)) groups.set(x.g, []); groups.get(x.g).push([id, x.n]); }
+    return [...groups.entries()].sort((a, b) => (RGN.get(a[0]) || a[0]).localeCompare(RGN.get(b[0]) || b[0])).map(([g, list]) =>
+      `<optgroup label="${esc(RGN.get(g) || g)}">${list.sort((a, b) => a[1].localeCompare(b[1])).map(([id, n]) => `<option value="${esc(id)}"${id === sel ? ' selected' : ''}>${esc(n)}${id === c.rk ? ' (start)' : ''}</option>`).join('')}</optgroup>`).join('');
+  }
+  const SCOPE_LABEL = { '': 'Country-wide', 'Locations: ': 'Each location', 'Provinces: ': 'Each province', 'Capital: ': 'Capital', 'Ruler/characters: ': 'Ruler and characters',
+    'Always: ': 'Bureaucracy, always on', 'Well funded, up to: ': 'Bureaucracy, well funded (at most)', 'Underfunded, up to: ': 'Bureaucracy, underfunded (at most)' };
+  const scopeLabel = p => SCOPE_LABEL[p] ?? p.replace(/:\s*$/, '');
+  const sg = x => (x > 0 ? '+' : '') + x;
+  const rnd = (x, d) => { const y = +x.toFixed(d); return y === 0 && x !== 0 ? +x.toFixed(d + 3) : y; };
+  function fmtTotal(mi, v) {
+    const [name, f, dec, col] = MODS[mi];
+    if (f === 'b') return { name, txt: 'Yes', s: col };
+    if (Math.abs(v) < 1e-9) return null;
+    const txt = f === 'p' ? sg(rnd(v * 100, Math.max(0, dec - 2) + 1)) + '%' : f === 'a' ? sg(rnd(v, dec)) + '%' : sg(rnd(v, dec));
+    return { name, txt, s: col === 0 ? 0 : (v > 0 ? 1 : -1) * col };
+  }
+  function totalsHtml(visible) {
+    const hasMods = it => it.mv || it.mc;
+    const avail = TYPES.map(([t, label]) => [t, label, visible.filter(x => x.it.t === t && hasMods(x.it)).length]).filter(x => x[2]);
+    if (!avail.length) return '';
+    const tot = new Map(); const pending = []; let n = 0;
+    const add = (m, p, v, from) => {
+      const key = p + ':' + m;
+      let e = tot.get(key); if (!e) { e = { m, p, v: 0, from: [] }; tot.set(key, e); }
+      e.v += v; e.from.push(from);
+    };
+    for (const x of visible) {
+      if (!sumTypes.has(x.it.t) || !hasMods(x.it)) continue;
+      n++;
+      for (const [m, p, v] of x.it.mv || []) add(m, p, v, x.it.n);
+      // conditional blocks: added only when met for this country and government; play-dependent ones listed apart
+      for (const [m, p, v, ci] of x.it.mc || []) {
+        const s = (x.st && x.st[ci]) || 'U';
+        if (s === 'T') add(m, p, v, x.it.n);
+        else if (s === 'U') pending.push({ m, p, v, from: x.it.n, c: (x.it.cd || [])[ci] });
+      }
+    }
+    const groups = new Map();
+    for (const e of tot.values()) { const f = fmtTotal(e.m, e.v); if (!f) continue; if (!groups.has(e.p)) groups.set(e.p, []); groups.get(e.p).push({ ...f, from: e.from }); }
+    const first = p => (SCOPES[p] === '' ? 0 : 1); // country-wide first
+    const body = [...groups.entries()].sort((a, b) => first(a[0]) - first(b[0]) || a[0] - b[0]).map(([p, rows]) => {
+      rows.sort((a, b) => a.name.localeCompare(b.name));
+      return `<div class="sumgrp"><h4>${esc(scopeLabel(SCOPES[p]))}</h4><div class="sumgrid">${rows.map(r => `<div class="srow${r.s > 0 ? ' g' : r.s < 0 ? ' b' : ''}" title="${esc('From: ' + r.from.join(', '))}"><span>${esc(r.name)}${r.from.length > 1 ? `<small>×${r.from.length}</small>` : ''}</span><b>${esc(r.txt)}</b></div>`).join('')}</div></div>`;
+    }).join('');
+    const pendRows = pending.map(e => ({ ...fmtTotal(e.m, e.v), e })).filter(r => r.txt);
+    const pendHtml = pendRows.length ? `<div class="sumgrp"><h4>Only under conditions (not added)</h4><div class="sumgrid">${pendRows.map(r => `<div class="srow${r.s > 0 ? ' g' : r.s < 0 ? ' b' : ''}" title="${esc(r.e.from + ': only when ' + r.e.c)}"><span>${esc((SCOPES[r.e.p] ? scopeLabel(SCOPES[r.e.p]) + ': ' : '') + r.name)}<small>${esc(r.e.from)} · only when ${esc(r.e.c)}</small></span><b>${esc(r.txt)}</b></div>`).join('')}</div></div>` : '';
+    const chips = avail.map(([t, label, k]) => `<button type="button" class="agebtn" data-sum="${t}" aria-pressed="${sumTypes.has(t)}">${esc(label)} ${k}</button>`).join('');
+    return `<details class="totals" id="totals" ${sumOpen ? 'open' : ''}>
+      <summary><b>Modifier totals</b><span>${n ? `${tot.size} modifiers from ${n} items${pendRows.length ? ` · ${pendRows.length} conditional, not added` : ''}` : 'nothing selected to add up'}</span></summary>
+      <div class="ages" role="group" aria-label="Content types to add up"><span>Add up</span>${chips}</div>
+      <p class="sumnote">Sums the modifiers of the items shown below, so the filters above change it. Modifiers that only apply under a condition are added when the condition is met for this country, government type and religion, and listed apart when it depends on play. “Needs” conditions of whole items are not checked, and alternatives such as two policies of one law are both counted when included. Hover a row to see where it comes from.</p>
+      ${body || '<p class="none">No modifiers in the selected items.</p>'}
+      ${pendHtml}
+    </details>`;
+  }
+  // l = [text, sentiment, subLine, condIdx]; st = condition states for this country ("T"/"F"/"U" per item.cd)
+  function fxHtml(fx, st, cd) {
+    if (!fx || !fx.length) return '';
+    return '<ul class="fx">' + fx.map(l => {
+      const ci = l[3];
+      const s = ci != null ? ((st && st[ci]) || 'U') : null;
+      const cls = [l[2] ? 's' : '', s === 'F' ? 'off' : (l[1] === 1 ? 'g' : l[1] === -1 ? 'b' : l[1] === 2 ? 'h' : (l[2] ? 'n' : '')), s === 'U' ? 'cnd' : ''].filter(Boolean).join(' ');
+      const c = ci != null && cd ? cd[ci] : null;
+      const note = s === 'T' ? `<small>(applies: ${esc(c)})</small>` : s === 'F' ? `<small>(not with this setup: ${esc(c)})</small>` : s === 'U' ? `<small>(only when ${esc(c)})</small>` : '';
+      return `<li class="${cls}"><span>${esc(String(l[0]).trim())}</span>${note}</li>`;
+    }).join('') + '</ul>';
+  }
+  function chips(it) {
+    const out = [];
+    if (it.m === 'new') out.push('<span class="pill ab">Ars Belli</span>');
+    if (it.m === 'chg') out.push('<span class="pill ab">changed</span>');
+    if (it.a) out.push(`<span class="pill">${esc(AGES[it.a])}</span>`);
+    if (it.x) out.push(`<span class="pill">${esc(it.x)}</span>`);
+    if (it.dlc) out.push(`<span class="pill br">${esc(it.dlc)}</span>`);
+    return out.length ? `<div class="chips">${out.join('')}</div>` : '';
+  }
+  function card(it, cond, st) {
+    const share = it.k > 1 ? `<span class="share" title="Start countries that get this">shared by ${it.k}</span>` : '';
+    const noFx = ['cb', 'dec', 'act'].includes(it.t) ? '' : '<p class="none">No direct modifiers.</p>';
+    return `<div class="card${it.m ? ' ab' : ''}">
+      <div class="hd"><strong title="${esc(it.id)}">${esc(it.n)}</strong>${share}</div>
+      ${chips(it)}
+      ${it.d ? `<div class="desc">${esc(it.d)}</div>` : ''}
+      ${fxHtml(it.fx, st, it.cd) || noFx}
+      ${cond ? `<div class="cond"><b>Needs</b> ${esc(cond)}</div>` : ''}
+    </div>`;
+  }
+  function matchesWithin(it) {
+    if (!within) return true;
+    const h = (it.n + ' ' + it.id + ' ' + (it.x || '') + ' ' + (it.fx || []).map(l => l[0]).join(' ')).toLowerCase();
+    return within.split(/\s+/).every(t => h.includes(t));
+  }
+  const sortItems = (a, b) => (a.it.a || 0) - (b.it.a || 0) || a.it.n.localeCompare(b.it.n);
+  // via 'x<formable index>': content a built country gets from a formed tag
+  const viaLabel = v => VIA[v] || (/^x\d+$/.test(v) ? 'From forming ' + FM[+v.slice(1)].n : v);
+  function renderSections(refs) {
+    const byType = new Map(); let hidden = 0;
+    for (const r of refs) {
+      const it = I[r[0]];
+      if (abOnly && !it.m) continue;
+      if (!ageOk(it)) continue;
+      if (!matchesWithin(it)) continue;
+      if (isBroad(it, r[1]) && !showBroad) { hidden++; continue; }
+      if (!byType.has(it.t)) byType.set(it.t, []);
+      byType.get(it.t).push({ it, via: isBroad(it, r[1]) ? 'w' : r[1], cond: r[2], st: r[3] });
+    }
+    let html = ''; const toc = [];
+    const visible = [].concat(...byType.values());
+    for (const [t, label] of TYPES) {
+      const arr = byType.get(t); if (!arr || !arr.length) continue;
+      toc.push(`<a href="#sec-${t}" data-sec="${t}">${esc(label)} <b>${arr.length}</b></a>`);
+      const ageNote = t === 'adv' && ages.size ? ' · Age ' + [...ages].sort((a, b) => a - b).map(n => ROMAN[n]).join(', ')
+        : t === 'asp' ? (aspPicks ? ` · the religion picks ${aspPicks}` : ' · this religion has no aspect picks') : '';
+      html += `<section class="sec" id="sec-${t}"><h3><b>${esc(label)}</b> ${arr.length}${ageNote}</h3>`;
+      // fixed groups first, then any extra ones (a built country's "From forming X" groups)
+      const extra = [...new Set(arr.map(x => x.via))].filter(v => !VIA_ORDER.includes(v));
+      for (const v of [...VIA_ORDER, ...extra]) {
+        const g = arr.filter(x => x.via === v);
+        if (!g.length) continue;
+        g.sort(sortItems);
+        html += `<div class="grp"><h4>${esc(viaLabel(v))}</h4><div class="cards">${g.map(x => card(x.it, x.cond, x.st)).join('')}</div></div>`;
+      }
+      html += '</section>';
+    }
+    return { html, toc, hidden, visible };
+  }
+  // formables a country can pursue: linked by its culture, language, tag or capital region, then the open ones
+  // (no such link; their potential's conditions are FM[fi].pn)
+  const formNeeds = (need, f) => [...new Set([need, f.allow].filter(Boolean).join('; ').split('; '))].join('; '); // potential + allow
+  // every other formable stays available too (other: true): it needs another primary culture, or an event (FM[fi].ev)
+  const mainForms = c => new Set([...(c.forms || []).map(([fi]) => fi), ...(c.fo || []), ...(c.fc || []).map(([fi]) => fi)]);
+  // culture change within the culture group: c.fc = [formableIdx, ...cultures (DATA.cults: [name, groups, language])]
+  const CULT = DATA.cults || [];
+  const withCulture = (B, ci) => Object.assign({}, B, { cul: CULT[ci][0], grp: CULT[ci][1], lang: CULT[ci][2] });
+  const ccPick = (cs, need, B) => cs.find(ci => CULT[ci][0] === B.cul) ?? cs.find(ci => resolveNeeds(need, withCulture(B, ci)) !== false) ?? cs[0];
+  const ccText = cs => 'Change primary culture to ' + cs.map(ci => CULT[ci][0]).join(' or ');
+  const otherForms = c => { const m = mainForms(c); return FM.map((f, i) => i).filter(i => !m.has(i) && FM[i].tag !== c.tag); };
+  const formList = c => [...(c.forms || []).map(([fi, need]) => ({ fi, need })), ...(c.fo || []).map(fi => ({ fi, need: FM[fi].pn, open: true })),
+    ...(c.fc || []).map(([fi, ...cs]) => ({ fi, need: FM[fi].pn, cc: cs })),
+    ...otherForms(c).map(fi => ({ fi, need: FM[fi].pn, other: true }))];
+  const OTHER_LABEL = 'Needs a culture outside its culture group, or an event';
+  function formHtml(c) {
+    const linked = c.forms || [], open = c.fo || [], cch = c.fc || [];
+    if (!linked.length && !open.length && !cch.length && !otherForms(c).length) return '';
+    const card = (fi, cond, exact) => {
+      const f = FM[fi];
+      const refs = f.refs.filter(r => (!abOnly || I[r[0]].m) && ageOk(I[r[0]]));
+      const req = [f.lvl ? 'Level ' + f.lvl : null, f.frac ? f.frac + '% of the land' : null].filter(Boolean).join(' · ');
+      const lis = refs.map(r => {
+        const it = I[r[0]];
+        const first = (it.fx || []).filter(l => !l[2]).slice(0, 3).map(l => String(l[0]).trim()).join(', ');
+        return `<li><div><b>${esc(it.n)}</b> <span>${esc(TYPE_NAME[it.t] || it.t)}${it.m ? ' · Ars Belli' : ''}</span></div>${first ? `<span>${esc(first)}</span>` : ''}</li>`;
+      }).join('');
+      const inner = refs.length ? `<details class="more"><summary>What forming ${esc(f.n)} unlocks (${refs.length})</summary><ul class="mini">${lis}</ul></details>` : '<p class="none">No content tied to this tag.</p>';
+      const badge = f.m === 'new' ? '<span class="pill ab">Ars Belli</span>' : f.m === 'chg' ? '<span class="pill ab">changed</span>' : '';
+      const needs = exact ? cond : formNeeds(cond, f);
+      return `<div class="form">
+        <div class="hd"><strong>${esc(f.n)}</strong><span class="tagchip">${esc(f.tag)}</span>${badge}${existsPill(f)}${req ? `<span class="pill">${esc(req)}</span>` : ''}</div>
+        ${f.req ? `<div class="desc">${esc(f.req)}</div>` : ''}
+        ${needs ? `<div class="cond"><b>Needs</b> ${esc(needs)}</div>` : ''}
+        ${inner}
+      </div>`;
+    };
+    const byLvl = (a, b) => (FM[a].lvl || 0) - (FM[b].lvl || 0) || FM[a].n.localeCompare(FM[b].n);
+    const openHtml = open.length ? `<details class="more fopen"${linked.length ? '' : ' open'}><summary>Open to any country (${open.length}): not tied to a culture, they need the land and the conditions shown (a capital in the region counts: a capital can move)</summary>
+      <div class="cards">${open.slice().sort(byLvl).map(fi => card(fi, FM[fi].pn)).join('')}</div></details>` : '';
+    const ccB = { cul: c.cul, grp: c.grp || [], lang: c.lang }; // government and religion stay as text here
+    const ccHtml = cch.length ? `<details class="more fopen"><summary>With a culture change within its culture group (${cch.length})</summary>
+      <div class="cards">${cch.slice().sort((a, b) => byLvl(a[0], b[0])).map(([fi, ...cs]) => {
+        const all = formNeeds(FM[fi].pn, FM[fi]); const nd = resolveNeeds(all, withCulture(ccB, ccPick(cs, all, ccB)));
+        return card(fi, [ccText(cs), nd === false ? all : nd].filter(Boolean).join('; '), true);
+      }).join('')}</div></details>` : '';
+    const other = otherForms(c).sort(byLvl);
+    const otherHtml = other.length ? `<details class="more fopen"><summary>${OTHER_LABEL} (${other.length})</summary><ul class="mini">${other.map(fi => {
+      const f = FM[fi]; const nd = [f.ev ? 'Formed by an event' : '', formNeeds(f.pn, f)].filter(Boolean).join('; ');
+      return `<li><div><b>${esc(f.n)}</b> <span>${esc(f.tag)} · tier ${f.lvl || 0}${f.m === 'new' ? ' · Ars Belli' : ''}${START_TAGS.has(f.tag) ? ' · exists at start' : ''}${f.refs.length ? ` · ${f.refs.length} items tied to the tag` : ''}</span></div>${nd ? `<span>${esc(nd)}</span>` : ''}</li>`;
+    }).join('')}</ul></details>` : '';
+    return `<section class="sec" id="sec-form"><h3><b>Formable nations</b> ${linked.length}${open.length ? ` <small class="inl">+${open.length} open to any country</small>` : ''}${cch.length ? ` <small class="inl">+${cch.length} with a culture change</small>` : ''}</h3>
+      ${linked.length ? `<div class="cards">${linked.map(([fi, cond]) => card(fi, cond)).join('')}</div>` : `<p class="none">None tied to this country’s culture or capital region.</p>`}${openHtml}${ccHtml}${otherHtml}</section>`;
+  }
+  // filters, totals and section links shared by a country page and a built country (ids are unique: only one is rendered)
+  function wireContent(box, rerender) {
+    const q = s => box.querySelector(s);
+    q('#abOnly')?.addEventListener('change', e => { abOnly = e.target.checked; rerender(); });
+    q('#broad')?.addEventListener('change', e => { showBroad = e.target.checked; rerender(); });
+    box.querySelectorAll('.agebtn[data-age]').forEach(btn => btn.addEventListener('click', () => {
+      const n = +btn.dataset.age;
+      if (ages.has(n)) ages.delete(n); else ages.add(n);
+      rerender();
+      const again = box.querySelector(`.agebtn[data-age="${n}"]`); if (again) again.focus();
+    }));
+    box.querySelectorAll('.agebtn[data-sum]').forEach(btn => btn.addEventListener('click', () => {
+      const t = btn.dataset.sum;
+      if (sumTypes.has(t)) sumTypes.delete(t); else sumTypes.add(t);
+      rerender();
+      const again = box.querySelector(`.agebtn[data-sum="${t}"]`); if (again) again.focus();
+    }));
+    const totals = q('#totals'); if (totals) totals.addEventListener('toggle', () => { sumOpen = totals.open; });
+    q('#agesAll')?.addEventListener('click', () => { ages.clear(); rerender(); const first = box.querySelector('.agebtn[data-age="1"]'); if (first) first.focus(); });
+    q('#within')?.addEventListener('input', e => {
+      within = e.target.value.trim().toLowerCase();
+      const pos = e.target.selectionStart; rerender();
+      const n = box.querySelector('#within'); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (err) { /* ignore */ } }
+    });
+    box.querySelectorAll('.toc a').forEach(a => a.addEventListener('click', ev => {
+      ev.preventDefault(); const el = box.querySelector('#sec-' + a.dataset.sec); if (el) el.scrollIntoView({ block: 'start' });
+    }));
+  }
+  const agesRow = () => `<div class="ages" role="group" aria-label="Show advances from these ages">
+        <span>Advance ages</span>
+        ${[1, 2, 3, 4, 5, 6].map(n => `<button type="button" class="agebtn" data-age="${n}" aria-pressed="${ages.has(n)}" title="${esc(AGES[n])}"><b>${ROMAN[n]}</b>${AGE_SHORT[n]}</button>`).join('')}
+        ${ages.size ? '<button type="button" class="agebtn clear" id="agesAll">All ages</button>' : ''}
+      </div>`;
+  function renderDetail(tag) {
+    const c = byTag.get(tag);
+    const box = $('#detail');
+    if (!c) {
+      const sc = ['VEN', 'GEN', 'CRI', 'GEO', 'CAS', 'YUA', 'TYR', 'ABASK'].filter(t => byTag.has(t)).map(t => `<a href="#${t}">${esc(byTag.get(t).n)}</a>`).join(', ');
+      box.innerHTML = `<div class="empty"><h2>Choose a country</h2><p>Pick a 1337 start country to see its advances, reforms, privileges, unique units, levies, buildings, decisions and formable nations. Narrow the list by region or culture group, or tick “Has Ars Belli content” to see where the mod adds the most.</p><p>Try ${sc}.</p></div>`;
+      return;
+    }
+    const facts = [
+      ['Capital', c.cap, [c.area, c.reg, c.sub].filter(Boolean).join(' · ')],
+      ['Culture', c.cul, [c.lang ? c.lang + ' language' : null, (c.grp || []).join(', ')].filter(Boolean).join(' · ')],
+      ['Government at start', c.gov, c.rank],
+      ['Religion at start', c.rel, null],
+      ['Land at start', c.locs + ' locations', c.ovl ? `Subject of ${c.ovl.n} (${c.ovl.t})` : 'Independent'],
+      ['Specific content', `${c.refs.length} items`, `${c._own} for this country or culture · ${c._mod} Ars Belli · ${(c.forms || []).length} formables (+${(c.fo || []).length} open to any country, +${(c.fc || []).length} with a culture change) · plus ${relContent(c.rk, c.gk).length} from the start religion`],
+    ];
+    aspPicks = REL.get(relPick || c.rk)?.asp || 0;
+    const S = renderSections(refsFor(c));
+    const gSel = govPick || c.gk;
+    // what each other government type adds or removes for this country, so switching is discoverable
+    const curIds = new Set(refsFor(c, gSel).map(r => r[0]));
+    const govDiff = GOVS.filter(([g]) => g !== gSel).map(([g, name]) => {
+      const ids = new Set(refsFor(c, g).map(r => r[0]));
+      let add = 0, rem = 0;
+      for (const i of ids) if (!curIds.has(i)) add++;
+      for (const i of curIds) if (!ids.has(i)) rem++;
+      return { g, name, add, rem };
+    });
+    // same for religions: religions with the same outcome share one button, named by whole religion groups where
+    // every other member gives that outcome; the start religion keeps its own button to switch back
+    const rSel = relPick || c.rk;
+    const curOwn = new Set(refsFor(c, gSel).filter(r => r[1] !== 'f').map(r => r[0]));
+    const relDiff = (() => {
+      const bySig = new Map(), skip = new Set([rSel, c.rk]);
+      let back = null;
+      for (const [id, x] of REL) {
+        if (id === rSel) continue;
+        // religion content (via 'f') changes with every religion, so only the country's own content is compared
+        const ids = new Set(refsFor(c, gSel, id).filter(r => r[1] !== 'f').map(r => r[0]));
+        const add = [...ids].filter(i => !curOwn.has(i)), rem = [...curOwn].filter(i => !ids.has(i));
+        if (id === c.rk) { back = { pick: id, add: add.length, rem: rem.length, label: x.n + ' (start)', all: x.n + ' (start)' }; continue; }
+        if (!add.length && !rem.length) continue;
+        const sig = add.join(',') + '/' + rem.join(',');
+        if (!bySig.has(sig)) bySig.set(sig, { add: add.length, rem: rem.length, ids: [] });
+        bySig.get(sig).ids.push(id);
+      }
+      const out = [...bySig.values()].map(d => {
+        const set = new Set(d.ids), left = new Set(d.ids), parts = [];
+        for (const [g, mem] of RGM) {
+          const others = mem.filter(id => !skip.has(id));
+          if (others.length > 1 && others.every(id => set.has(id))) {
+            parts.push((RGN.get(g) || g) + (others.length < mem.length ? ' (others)' : ' (any)'));
+            others.forEach(id => left.delete(id));
+          }
+        }
+        for (const id of left) parts.push(REL.get(id).n);
+        return { pick: d.ids[0], add: d.add, rem: d.rem, all: parts.join(', '), label: parts.length > 2 ? parts.slice(0, 2).join(', ') + ` +${parts.length - 2} more` : parts.join(', ') };
+      }).sort((a, b) => b.add - a.add || a.rem - b.rem || a.label.localeCompare(b.label));
+      return back ? [back, ...out] : out;
+    })();
+    const REL_BTNS = 8;
+    const fh = formHtml(c);
+    const toc = S.toc.slice(); if (fh) toc.push(`<a href="#sec-form" data-sec="form">Formables <b>${(c.forms || []).length + (c.fo || []).length + (c.fc || []).length}</b></a>`);
+    box.innerHTML = `
+      <button class="back" type="button" id="back">← All countries</button>
+      <div class="ctitle"><h2>${esc(c.n)}</h2><span class="tagchip">${esc(c.tag)}</span>${c._mod ? `<span class="pill ab">${c._mod} Ars Belli items</span>` : ''}<a class="buildlink" href="#build?c=${esc(c.tag)}">Build from ${esc(c.n)} →</a></div>
+      <dl class="facts">${facts.map(f => `<div class="fact"><dt>${esc(f[0])}</dt><dd>${esc(f[1] || '–')}${f[2] ? `<small>${esc(f[2])}</small>` : ''}</dd></div>`).join('')}</dl>
+      <div class="bar">
+        <label>Government <select id="govSel" aria-label="Government type to show content for">${GOVS.map(([g, name]) => `<option value="${esc(g)}"${g === gSel ? ' selected' : ''}>${esc(name)}${g === c.gk ? ' (start)' : ''}</option>`).join('')}</select></label>
+        <label>Religion <select id="relSel" aria-label="Religion to show content for">${relOptions(c, rSel)}</select></label>
+        <label><input type="checkbox" id="abOnly" ${abOnly ? 'checked' : ''}> Ars Belli only</label>
+        <label><input type="checkbox" id="broad" ${showBroad ? 'checked' : ''}> Show broad content${S.hidden ? ` (${S.hidden} hidden)` : ''}</label>
+        <input type="search" id="within" placeholder="Find in ${esc(c.n)}…" value="${esc(within)}" aria-label="Find in this country">
+      </div>
+      <div class="ages" role="group" aria-label="Switch to another government type">
+        <span>Under another government</span>
+        ${govDiff.map(d => `<button type="button" class="agebtn" data-gov="${esc(d.g)}" title="${esc(`${d.name}: ${d.add} items added, ${d.rem} removed compared with what is shown now`)}">${esc(d.name)}${d.g === c.gk ? ' (start)' : ''} ${d.add || d.rem ? `<b>${d.add ? '+' + d.add : ''}${d.add && d.rem ? ' ' : ''}${d.rem ? '−' + d.rem : ''}</b>` : '· same'}</button>`).join('')}
+      </div>
+      <div class="ages" role="group" aria-label="Switch to another religion">
+        <span>Under another religion</span>
+        ${relDiff.length ? relDiff.slice(0, REL_BTNS).map(d => `<button type="button" class="agebtn" data-rel="${esc(d.pick)}" title="${esc(`${d.all}: ${d.add} items added, ${d.rem} removed compared with what is shown now. Switches to ${REL.get(d.pick).n}.`)}">${esc(d.label)} ${d.add || d.rem ? `<b>${d.add ? '+' + d.add : ''}${d.add && d.rem ? ' ' : ''}${d.rem ? '−' + d.rem : ''}</b>` : '· same'}</button>`).join('') + (relDiff.length > REL_BTNS ? `<span>and ${relDiff.length - REL_BTNS} more outcomes in the list</span>` : '') : '<span>· no other religion changes this country’s content</span>'}
+      </div>
+      ${agesRow()}
+      ${totalsHtml(S.visible)}
+      ${toc.length ? `<nav class="toc" aria-label="Sections">${toc.join('')}</nav>` : ''}
+      ${S.html || '<p class="none">Nothing country-, culture- or region-specific matches these filters.</p>'}
+      ${fh}`;
+    $('#back').addEventListener('click', () => { history.replaceState(null, '', location.pathname + location.search); show(''); });
+    wireContent(box, () => renderDetail(tag));
+    $('#govSel').addEventListener('change', e => { govPick = e.target.value === c.gk ? null : e.target.value; renderDetail(tag); $('#govSel').focus(); });
+    $('#relSel').addEventListener('change', e => { relPick = e.target.value === c.rk ? null : e.target.value; renderDetail(tag); $('#relSel').focus(); });
+    box.querySelectorAll('.agebtn[data-rel]').forEach(btn => btn.addEventListener('click', () => {
+      relPick = btn.dataset.rel === c.rk ? null : btn.dataset.rel; renderDetail(tag); $('#relSel').focus();
+    }));
+    box.querySelectorAll('.agebtn[data-gov]').forEach(btn => btn.addEventListener('click', () => {
+      govPick = btn.dataset.gov === c.gk ? null : btn.dataset.gov; renderDetail(tag); $('#govSel').focus();
+    }));
+  }
+  // --- military ranking: the ranking script (notes/op_rank_reference.js) ported onto the page's data
+  const MILW = new Map();
+  const WLIST = [['Discipline', 100], ['Army Morale', 25], ['Military Tactics', 50], ['Light Infantry Power', 33], ['Heavy Infantry Power', 33],
+    ['Light Cavalry Power', 33], ['Heavy Cavalry Power', 33], ['Artillery Power', 33], ['Manpower', 25], ['Levy Combat Efficiency', 20], ['Levy Size', 10],
+    ['Army Levy Size', 10], ['Army Maintenance Efficiency', 25], ['Mercenary Maintenance Efficiency', 5], ['Light Infantry Maintenance Cost', -8],
+    ['Heavy Infantry Maintenance Cost', -8], ['Light Cavalry Maintenance Cost', -8], ['Heavy Cavalry Maintenance Cost', -8], ['Artillery Maintenance Cost', -8]];
+  // flat base morale (land_morale, format 'n') is measured against base land morale 3.0: +1 = +33% morale
+  MODS.forEach(([n, f], i) => { const w = WLIST.find(x => x[0] === n); if (w) MILW.set(i, n === 'Army Morale' && f === 'n' ? w[1] / 3 : w[1]); });
+  const modsNamed = n => MODS.map((m, i) => (m[0] === n ? i : -1)).filter(i => i >= 0);
+  const RCOLS = [['disc', 'Discipline', modsNamed('Discipline')], ['mor', 'Morale', modsNamed('Army Morale').filter(i => MODS[i][1] === 'p')], ['tac', 'Tactics', modsNamed('Military Tactics')],
+    ['mp', 'Manpower', modsNamed('Manpower')], ['ame', 'Army maint. eff.', modsNamed('Army Maintenance Efficiency')]];
+  const SC_WF = SCOPES.indexOf('Well funded, up to: ');
+  const SC_OK = new Set([0, SCOPES.indexOf('Always: '), SC_WF].filter(i => i >= 0));
+  // Base = no Needs, or Needs only an advance / age / institution, or a reform / privilege the country has unconditionally
+  const baseNeeds = (needs, own) => needs.split('one of: ').join('').split(' / ').join('; ').split(' and ').join('; ').split('; ').filter(p => p.trim() !== 'other conditions').every(p => { // "other conditions": a route the gate text can't show, it only adds ways in
+    p = p.trim(); if (/^(Advance|Age|Institution): /.test(p)) return true;
+    // a law policy is the country's pick: one on its own list, or one open to every country (those aren't in the data)
+    const m = p.match(/^(Reform|Privilege|Policy): (.*)$/); return !!m && (own.has(m[2]) || (m[1] === 'Policy' && !POLN.has(m[2])));
+  });
+  const POLN = new Set(I.filter(it => it.t === 'pol').map(it => it.n));
+  // A reform named in a condition that depends on play ("Reform: X" / "not Reform: X") is the country's choice: taken
+  // when it can adopt the reform (on its list, Needs met in this pass) and that scores more, the reform's own modifiers
+  // included. A Catholic theocracy takes Military Order: Military Orders then gives +5% discipline instead of +2.5%.
+  const RFX = /^(not )?Reform: (.+)$/;
+  function reformTake(refs, ok) {
+    const W = (m, v) => v * (MILW.get(m) || 0);
+    const avail = new Map(), gain = new Map();
+    for (const r of refs) {
+      if (!ok(r)) continue;
+      const it = I[r[0]], cs = r[3] || '';
+      if (it.t === 'ref') avail.set(it.n, (it.mv || []).reduce((t, [m, sc, v]) => t + (SC_OK.has(sc) ? W(m, v) : 0), 0));
+      for (const [m, sc, v, ci] of it.mc || []) {
+        const k = SC_OK.has(sc) && (cs[ci] || 'U') === 'U' && RFX.exec(it.cd[ci] || ''); if (!k) continue;
+        gain.set(k[2], (gain.get(k[2]) || 0) + (k[1] ? -1 : 1) * W(m, v));
+      }
+    }
+    const yes = new Set(), no = new Set();
+    for (const [n, g] of gain) if (avail.has(n)) (g + avail.get(n) > 0 ? yes : no).add(n);
+    return { yes, no };
+  }
+  function milScore(c, gov, rel, refsIn) { // refsIn: a built country's items instead of the country's own
+    const refs = refsIn || refsFor(c, gov, rel);
+    const own = new Set(refs.filter(r => !r[2]).map(r => I[r[0]]).filter(it => it.t === 'ref' || it.t === 'priv' || it.t === 'pol').map(it => it.n));
+    const aspN = REL.get(rel || c.rk)?.asp || 0;
+    const needsOf = new Map(refs.map(r => [r[0], r[2] || null]));
+    const run = strict => {
+      const sum = new Map(), contrib = new Map(), laws = new Map(), asps = [];
+      // contrib: item -> { p: points, parts: modifier -> value counted, x2: bureaucracy value doubled }
+      const put = (i, m, v, x2) => {
+        sum.set(m, (sum.get(m) || 0) + v);
+        const w = MILW.get(m); if (!w) return;
+        let e = contrib.get(i); if (!e) contrib.set(i, e = { p: 0, parts: new Map(), x2: false });
+        e.p += v * w; e.parts.set(m, (e.parts.get(m) || 0) + v); if (x2) e.x2 = true;
+      };
+      const ok = r => !(strict && r[2] && !baseNeeds(r[2], own));
+      const rf = reformTake(refs, ok);
+      for (const r of refs) {
+        const it = I[r[0]];
+        if (!it.mv && !it.mc) continue;
+        if (!ok(r)) continue;
+        if (it.t === 'ref' && rf.no.has(it.n)) continue; // a reform the country is better off without
+        const cs = r[3] || '';
+        const lines = [];
+        for (const [m, sc, v] of it.mv || []) if (SC_OK.has(sc)) lines.push([m, sc, v]);
+        // conditional lines count when the condition holds; "Reform: X" / "not Reform: X" follow the reform choice
+        for (const [m, sc, v, ci] of it.mc || []) {
+          const st = cs[ci] || 'U'; if (!SC_OK.has(sc) || st === 'F') continue;
+          const k = st === 'U' && RFX.exec(it.cd[ci] || '');
+          if (st === 'T' || (k && (k[1] ? !rf.yes.has(k[2]) : rf.yes.has(k[2])))) lines.push([m, sc, v]);
+        }
+        if (it.t === 'pol') { // one policy per law: per modifier, the best policy of each law
+          const key = it.x || it.id; if (!laws.has(key)) laws.set(key, new Map()); const lm = laws.get(key);
+          for (const [m, , v] of lines) { const w = MILW.get(m); if (!w) continue; const o = lm.get(m); if (!o || v * w > o.v * w) lm.set(m, { v, i: r[0] }); }
+          continue;
+        }
+        if (it.t === 'asp') { asps.push({ i: r[0], lines, pts: lines.reduce((t, [m, , v]) => t + v * (MILW.get(m) || 0), 0) }); continue; }
+        for (const [m, sc, v] of lines) { const x2 = it.t === 'bur' && sc === SC_WF; put(r[0], m, x2 ? v * 2 : v, x2); } // entrenchment doubles well-funded values
+      }
+      for (const lm of laws.values()) for (const [m, { v, i }] of lm) put(i, m, v);
+      // religious aspects: the religion picks aspN of them, so the best aspN by military value count
+      for (const a of asps.filter(a => a.pts > 0).sort((x, y) => y.pts - x.pts).slice(0, aspN)) for (const [m, , v] of a.lines) put(a.i, m, v);
+      let score = 0; for (const [m, v] of sum) { const w = MILW.get(m); if (w) score += v * w; }
+      return { score, sum, contrib };
+    };
+    const b = run(true), a = run(false);
+    const cols = {}; for (const [k, , ids] of RCOLS) cols[k] = ids.reduce((t, m) => t + (b.sum.get(m) || 0), 0);
+    // where the points come from: every base item, and what the conditional items add (or replace) on top
+    const whyBase = [...b.contrib].filter(([, e]) => Math.abs(e.p) > 0.005).sort((x, y) => y[1].p - x[1].p)
+      .map(([i, e]) => ({ i, p: e.p, parts: [...e.parts], x2: e.x2 }));
+    const whyCond = [];
+    for (const [i, e] of a.contrib) {
+      const o = b.contrib.get(i); const p = e.p - (o ? o.p : 0);
+      if (Math.abs(p) <= 0.005) continue;
+      whyCond.push({ i, p, parts: [...e.parts].map(([m, v]) => [m, v - (o ? o.parts.get(m) || 0 : 0)]), x2: e.x2, needs: needsOf.get(i) });
+    }
+    for (const [i, o] of b.contrib) if (!a.contrib.has(i) && Math.abs(o.p) > 0.005) whyCond.push({ i, p: -o.p, parts: [...o.parts].map(([m, v]) => [m, -v]), x2: o.x2, needs: needsOf.get(i) });
+    whyCond.sort((x, y) => y.p - x.p);
+    return { c, base: b.score, cond: a.score - b.score, cols, whyBase, whyCond, top: whyBase.filter(x => x.p > 0).slice(0, 3).map(x => [x.i, x.p]) };
+  }
+  // breakdown texts for the score cells: hover tooltip (title) and the row opened by a click / tap
+  const rkOpen = new Set();
+  const partTxt = parts => parts.filter(([, v]) => Math.abs(v) > 1e-9).map(([m, v]) => { const t = fmtTotal(m, v); return t ? `${t.name} ${t.txt}` : ''; }).filter(Boolean).join(', ');
+  const whyNote = x => (x.x2 ? ' (bureaucracy, well-funded values ×2)' : '') + (x.needs ? ` · needs ${x.needs}` : '');
+  const sgn = p => (p > 0 ? '+' : '') + p.toFixed(1);
+  const whyTitle = (label, total, list) => `${label} ${total}` + (list.length ? '\n' + list.map(x => `${sgn(x.p)}  ${I[x.i].n}: ${partTxt(x.parts)}${whyNote(x)}`).join('\n') : '\nNothing counted') + '\nClick for the full list.';
+  const whyList = list => list.length ? `<ul>${list.map(x => `<li><b>${sgn(x.p)}</b><span>${esc(I[x.i].n)}${I[x.i].m ? ' <span class="pill ab">AB</span>' : ''}<small>${esc(partTxt(x.parts) + whyNote(x))}</small></span></li>`).join('')}</ul>` : '<p class="none">Nothing counted.</p>';
+  const rk = { gov: '', rel: '', q: '', reg: '', min: 8, ind: true, sort: 'base', dir: -1 };
+  const rankCache = new Map();
+  let carry = null; // government / religion picked in the ranking, carried to the country page opened from it
+  const RHEAD = [['rank', '#', ''], ['name', 'Country', 'l cn'], ['gov', 'Government', 'l'], ['rel', 'Religion', 'l'], ['locs', 'Locations', ''],
+    ['base', 'Base score', ''], ['cond', '+Conditional', ''], ...RCOLS.map(([k, label]) => [k, label, '']), ['top', 'Top contributors (base)', 'l']];
+  const TEXT_KEYS = new Set(['name', 'gov', 'rel']);
+  const GOVN = new Map(GOVS);
+  $('#rankHowList').innerHTML = `
+    <li>Adds up the military modifiers of each country's own content (tag, culture, culture group or language, capital region, state religion), weighted per 1.0 of modifier: Discipline 100, Army Morale 25 (flat base morale counts against base morale 3, so +1 is worth +33%), Military Tactics 50, each unit type's Power 33, Manpower 25, Army Maintenance Efficiency 25, Levy Combat Efficiency 20, Levy Size and Army Levy Size 10, Mercenary Maintenance Efficiency 5, each unit type's Maintenance Cost −8 (a cost cut scores positive). So +10% Discipline is 10 points, and +10% morale, +2.5% discipline and +0.05 military tactics are each worth 2.5.</li>
+    <li>Country-wide values count, plus bureaucracy “Always” and “Well funded” values. Location, capital, province and underfunded values are left out.</li>
+    <li>All bureaucracies count, with no slot limit, and their well-funded values are doubled because entrenchment doubles them. “Always” values count once.</li>
+    <li>A country holds one policy per law, so each law adds its best policy for each modifier.</li>
+    <li>Lines marked ◇ on the country pages count only when their condition holds with the chosen setup. A reform named in such a condition is the country’s choice: it is taken when the country can adopt it and that scores more, so a Catholic theocracy takes the Military Order reform and Military Orders gives +5% discipline instead of +2.5%.</li>
+    <li><b>Base score</b> counts items with no Needs, or whose Needs are only advances, ages, institutions, or a reform, privilege or law policy the country can pick (on its own list, or a policy open to every country such as Monastic Order). <b>+Conditional</b> is what the rest adds: other reforms, accepted cultures, subject status and similar.</li>
+    <li>Religion content counts like any other content and follows the Religion pick: the religion's own modifier, religion advances, and its religious aspects. A religion holds a fixed number of aspects, so only its best ones by military value count, that many of them; an aspect stacks with the religion's own modifier.</li>
+    <li>Generic content open to everyone and formable nations are not in the score. Locations are shown for size only.</li>
+    <li>“Independent or tributary” keeps tributaries in: a tributary declares its own wars, keeps full diplomacy and can’t be annexed by its overlord. Vassals, fiefdoms, appanages and other subjects are left out until you untick it.</li>
+    <li>Government and Religion re-evaluate every country as if it had that government type or religion. A country opened from here keeps the same picks.</li>
+    <li>A country you put together under “Build a country” is listed as a highlighted row with its own government and religion, whatever the filters.</li>`;
+  GOVS.forEach(([g, n]) => $('#rGov').insertAdjacentHTML('beforeend', `<option value="${esc(g)}">${esc(n)}</option>`));
+  $('#rRel').insertAdjacentHTML('beforeend', relOptions({}, null));
+  $('#rReg').innerHTML = fRegion.innerHTML;
+  const rankFmt = (k, v) => { const ids = RCOLS.find(x => x[0] === k)[2]; if (!ids.length || Math.abs(v) < 1e-9) return '–'; const t = fmtTotal(ids[0], v); return t ? t.txt : '–'; };
+  function renderRanking() {
+    const key = rk.gov + '|' + rk.rel;
+    if (!rankCache.has(key)) rankCache.set(key, C.map(c => milScore(c, rk.gov || c.gk, rk.rel || c.rk)));
+    const terms = rk.q.toLowerCase().split(/\s+/).filter(Boolean);
+    const rows = rankCache.get(key).filter(({ c }) => (!rk.ind || indep(c)) && c.locs >= rk.min
+      && (!rk.reg || (rk.reg.startsWith('S:') ? c.sub === rk.reg.slice(2) : c.reg === rk.reg.slice(2)))
+      && (!terms.length || terms.every(t => c._hay.includes(t))));
+    const others = rows.slice();
+    const mine = buildRow(); if (mine) rows.push(mine); // the built country is always listed, with its own government and religion
+    const byBase = [...rows].sort((a, b) => b.base - a.base || a.c.n.localeCompare(b.c.n));
+    const rankOf = new Map(byBase.map((r, i) => [r, i + 1]));
+    const govName = c => (c.tag === 'BUILD' ? c.gov : rk.gov ? GOVN.get(rk.gov) : c.gov) || '–';
+    const relName = c => (c.tag === 'BUILD' ? c.rel : rk.rel ? REL.get(rk.rel)?.n : c.rel) || '–';
+    const val = (r, k) => k === 'rank' ? rankOf.get(r) : k === 'name' ? r.c.n : k === 'gov' ? govName(r.c) : k === 'rel' ? relName(r.c) : k === 'locs' ? r.c.locs
+      : k === 'base' ? r.base : k === 'cond' ? r.cond : r.cols[k];
+    rows.sort((a, b) => { const x = val(a, rk.sort), y = val(b, rk.sort);
+      const d = TEXT_KEYS.has(rk.sort) ? String(x).localeCompare(String(y)) : x - y;
+      return d * (rk.sort === 'rank' ? -rk.dir : rk.dir) || rankOf.get(a) - rankOf.get(b); });
+    const med = a => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
+    $('#rCount').textContent = (others.length ? `${others.length} countries · median base score ${med(others.map(r => r.base)).toFixed(1)} · median with conditional ${med(others.map(r => r.base + r.cond)).toFixed(1)}` : 'No country matches these filters.')
+      + (mine ? ` · your build ${mine.c.n} ranks #${rankOf.get(mine)}` : '');
+    $('#rHead').innerHTML = RHEAD.map(([k, label, cls]) => k === 'top' ? `<th scope="col" class="${cls}"><span class="nb">${esc(label)}</span></th>`
+      : `<th scope="col" class="${cls}"${rk.sort === k ? ` aria-sort="${(rk.sort === 'rank' ? -rk.dir : rk.dir) < 0 ? 'descending' : 'ascending'}"` : ''}><button type="button" data-k="${k}">${esc(label)}</button></th>`).join('');
+    $('#rBody').innerHTML = rows.map(r => { const c = r.c; const open = rkOpen.has(c.tag);
+      const condTxt = Math.abs(r.cond) > 0.05 ? (r.cond > 0 ? '+' : '') + r.cond.toFixed(1) : '–';
+      return `<tr${r.mine ? ' class="mine"' : ''}>
+      <td>${rankOf.get(r)}</td>
+      <td class="l cn">${r.mine ? `<a href="${esc(buildHash())}">${esc(c.n)}</a><span class="pill br">Your build</span><small>${esc(c.from)}</small>`
+        : `<a href="#${esc(c.tag)}" data-tag="${esc(c.tag)}">${esc(c.n)}</a><span class="mono">${esc(c.tag)}</span>${c.ovl ? `<small>${esc(subOf(c))}</small>` : ''}`}</td>
+      <td class="l">${esc(govName(c))}</td><td class="l">${esc(relName(c))}</td><td>${c.locs}</td>
+      <td class="sc"><button type="button" class="whybtn" data-why="${esc(c.tag)}" aria-expanded="${open}" title="${esc(whyTitle('Base score', r.base.toFixed(1), r.whyBase))}"><b>${r.base.toFixed(1)}</b></button></td>
+      <td class="${r.cond > 0.05 ? '' : 'dim'}">${r.whyCond.length ? `<button type="button" class="whybtn" data-why="${esc(c.tag)}" aria-expanded="${open}" title="${esc(whyTitle('+Conditional', condTxt, r.whyCond))}">${condTxt}</button>` : condTxt}</td>
+      ${RCOLS.map(([k]) => `<td class="${Math.abs(r.cols[k]) < 1e-9 ? 'dim' : ''}">${rankFmt(k, r.cols[k])}</td>`).join('')}
+      <td class="l top">${r.top.map(([i, p]) => `<div><span>${esc(I[i].n)}${I[i].m ? ' <span class="pill ab">AB</span>' : ''}</span><b>${p.toFixed(1)}</b></div>`).join('') || '<span class="dim">–</span>'}</td></tr>`
+      + (open ? `<tr class="whyrow"><td colspan="${RHEAD.length}"><div class="why">
+        <div><h4>Base score ${r.base.toFixed(1)} · ${esc(c.n)}</h4>${whyList(r.whyBase)}</div>
+        <div><h4>+Conditional ${condTxt}</h4>${whyList(r.whyCond)}</div>
+      </div></td></tr>` : ''); }).join('');
+  }
+  $('#rHead').addEventListener('click', e => {
+    const b = e.target.closest('button[data-k]'); if (!b) return;
+    const k = b.dataset.k;
+    if (rk.sort === k) rk.dir = -rk.dir; else { rk.sort = k; rk.dir = TEXT_KEYS.has(k) ? 1 : -1; }
+    renderRanking(); const again = $(`#rHead button[data-k="${k}"]`); if (again) again.focus();
+  });
+  $('#rBody').addEventListener('click', e => {
+    const a = e.target.closest('a[data-tag]'); if (a) { carry = { g: rk.gov || null, r: rk.rel || null }; return; }
+    const w = e.target.closest('button[data-why]'); if (!w) return;
+    const tag = w.dataset.why, col = w.closest('td').cellIndex;
+    if (rkOpen.has(tag)) rkOpen.delete(tag); else rkOpen.add(tag);
+    renderRanking();
+    const again = [...document.querySelectorAll(`#rBody button[data-why="${tag}"]`)].find(b => b.closest('td').cellIndex === col); if (again) again.focus();
+  });
+  $('#rQ').addEventListener('input', e => { rk.q = e.target.value.trim(); renderRanking(); });
+  $('#rGov').addEventListener('change', e => { rk.gov = e.target.value; renderRanking(); });
+  $('#rRel').addEventListener('change', e => { rk.rel = e.target.value; renderRanking(); });
+  $('#rReg').addEventListener('change', e => { rk.reg = e.target.value; renderRanking(); });
+  $('#rMin').addEventListener('input', e => { const n = parseInt(e.target.value, 10); rk.min = Number.isFinite(n) && n > 0 ? n : 0; renderRanking(); });
+  $('#rInd').addEventListener('change', e => { rk.ind = e.target.checked; renderRanking(); });
+
+  // --- build a country: a base country, a government, a religion and the formable nations it plans to form.
+  // The game only lets a country form a nation of a higher level than its current one, so a build forms at most
+  // one nation per tier, in rising order, starting above the base country's own level.
+  const bd = { base: null, gov: '', rel: '', forms: [] }; // gov / rel '' = the base country's start value; forms = formable indexes
+  try { const s = JSON.parse(localStorage.getItem('abm-build') || 'null'); if (s && byTag.has(s.base)) Object.assign(bd, s, { forms: (s.forms || []).filter(i => FM[i]) }); } catch (e) { /* storage unavailable */ }
+  const baseLevel = c => Math.max(0, ...FM.filter(f => f.tag === c.tag).map(f => f.lvl || 0));
+  const flv = fi => FM[fi].lvl || 0;
+  const buildHash = () => '#build?' + [`c=${bd.base}`, bd.gov ? `g=${bd.gov}` : '', bd.rel ? `r=${bd.rel}` : '', bd.forms.length ? `f=${bd.forms.map(i => FM[i].tag).join(',')}` : ''].filter(Boolean).join('&');
+  function saveBuild() {
+    try { localStorage.setItem('abm-build', JSON.stringify(bd)); } catch (e) { /* storage unavailable */ }
+    if (location.hash.startsWith('#build') && bd.base) history.replaceState(null, '', buildHash());
+  }
+  function setForms(list, c) { // keep formables the base qualifies for, one per tier, above its level, in rising order
+    const ok = new Set(formList(c).map(x => x.fi)); const used = new Set(); const lv0 = baseLevel(c);
+    bd.forms = list.filter(fi => ok.has(fi)).sort((a, b) => flv(a) - flv(b)).filter(fi => flv(fi) > lv0 && !used.has(flv(fi)) && used.add(flv(fi)));
+  }
+  function parseBuild(h) { // 'build?c=CAS&g=monarchy&r=catholic&f=SPA,ROM'
+    const q = new URLSearchParams(h.split('?')[1] || ''); const tag = q.get('c'); if (!tag || !byTag.has(tag)) return;
+    const c = byTag.get(tag);
+    bd.base = tag; bd.gov = GOVN.has(q.get('g')) && q.get('g') !== c.gk ? q.get('g') : ''; bd.rel = REL.has(q.get('r')) && q.get('r') !== c.rk ? q.get('r') : '';
+    setForms((q.get('f') || '').split(',').map(t => formList(c).map(x => x.fi).find(fi => FM[fi].tag === t)).filter(fi => fi != null), c);
+  }
+  function buildSetup() {
+    const c = byTag.get(bd.base); const g = bd.gov || c.gk, r = bd.rel || c.rk;
+    return { c, g, r, B: { cul: c.cul, grp: c.grp || [], lang: c.lang, gov: GOVN.get(g), rel: REL.get(r)?.n, relGroup: RGN.get(REL.get(r)?.g) } };
+  }
+  // Content tied to a formed tag was evaluated without a culture, government or religion, so those conditions are
+  // in its Needs text. Check the simple ones against the build: true drops the condition, false drops the item.
+  function needAtom(a, B) {
+    let neg = false; if (a.startsWith('not ')) { neg = true; a = a.slice(4); }
+    const m = a.match(/^(Culture|Culture group|Language|Government|Religion|Religion group): (.+)$/); if (!m) return null;
+    const [, k, v] = m;
+    const have = k === 'Culture' ? B.cul : k === 'Culture group' ? B.grp : k === 'Language' ? B.lang : k === 'Government' ? B.gov : k === 'Religion' ? B.rel : B.relGroup;
+    if (have == null) return null;
+    const r = k === 'Culture' ? v === B.cul : k === 'Culture group' ? B.grp.includes(v) : k === 'Language' ? v === B.lang
+      : k === 'Government' ? v === B.gov : k === 'Religion' ? v === B.rel : v === B.relGroup;
+    return neg ? !r : r;
+  }
+  function resolveNeeds(needs, B) {
+    if (!needs) return '';
+    const keep = [];
+    for (const part of needs.split('; ')) {
+      const p = part.trim(); let v = null;
+      if (!p.includes('(')) {
+        const any = p.startsWith('one of: ') ? p.slice(8) : p.startsWith('not one of: ') ? p.slice(12) : null;
+        if (any != null) { const alts = any.split(' / ').map(x => needAtom(x, B)); v = alts.includes(true) ? true : alts.every(x => x === false) ? false : null; if (v != null && p.startsWith('not ')) v = !v; }
+        else v = needAtom(p, B);
+      }
+      if (v === false) return false;
+      if (v !== true) keep.push(part);
+    }
+    return keep.join('; ');
+  }
+  // the build's culture follows its formables: a culture-change formable takes that culture of the group; one of a
+  // culture outside the group leaves the culture open, so culture checks stay as Needs
+  const openCulture = B => Object.assign({}, B, { cul: null, grp: null, lang: null });
+  function buildCulture(S) {
+    let B = S.B, changed = null;
+    const byFi = new Map(formList(S.c).map(x => [x.fi, x]));
+    for (const fi of bd.forms) {
+      const x = byFi.get(fi); if (!x) continue;
+      if (x.other) { B = openCulture(B); changed = ''; }
+      else if (x.cc) { const ci = ccPick(x.cc, formNeeds(x.need, FM[fi]), B); B = withCulture(B, ci); changed = CULT[ci][0]; }
+    }
+    return { B, changed: changed === S.c.cul ? null : changed };
+  }
+  function buildRefs(S) {
+    const m = new Map(refsFor(S.c, S.g, S.r).map(x => [x[0], x]));
+    const B = buildCulture(S).B;
+    for (const fi of bd.forms) for (const ref of FM[fi].refs) {
+      if (m.has(ref[0])) continue;
+      const nd = resolveNeeds(ref[2], B); if (nd === false) continue;
+      const x = [ref[0], 'x' + fi]; if (nd || ref[3]) x.push(nd || null); if (ref[3]) x.push(ref[3]);
+      m.set(ref[0], x);
+    }
+    return [...m.values()];
+  }
+  const buildName = S => bd.forms.length ? FM[bd.forms[bd.forms.length - 1]].n : S.c.n;
+  const buildFrom = S => [S.c.n, ...bd.forms.map(fi => FM[fi].n)].join(' → ');
+  let buildCache = { key: null, row: null };
+  function buildRow() { // the build scored like a ranking row (with its own government and religion)
+    if (!bd.base) return null;
+    const key = JSON.stringify(bd); if (buildCache.key === key) return buildCache.row;
+    const S = buildSetup(); const sc = milScore(S.c, S.g, S.r, buildRefs(S));
+    const row = Object.assign(sc, { mine: true, c: Object.assign({}, S.c, { tag: 'BUILD', n: buildName(S), from: buildFrom(S), ovl: null, gov: GOVN.get(S.g), rel: REL.get(S.r)?.n }) });
+    buildCache = { key, row }; return row;
+  }
+  function startPool() { // every country at its start setup, independent or tributary with 8+ locations: the ranking's default view
+    if (!rankCache.has('|')) rankCache.set('|', C.map(c => milScore(c, c.gk, c.rk)));
+    return rankCache.get('|').filter(x => indep(x.c) && x.c.locs >= 8);
+  }
+  const bCountries = $('#bCountries');
+  bCountries.innerHTML = [...C].sort((a, b) => a.n.localeCompare(b.n)).map(c => `<option value="${esc(c.n)} (${esc(c.tag)})"></option>`).join('');
+  function renderBuild() {
+    const out = $('#buildOut'), tiers = $('#buildTiers');
+    $('#bBase').value = bd.base ? `${byTag.get(bd.base).n} (${bd.base})` : '';
+    $('#bGov').disabled = $('#bRel').disabled = !bd.base;
+    if (!bd.base) {
+      tiers.innerHTML = '';
+      out.innerHTML = '<div class="empty"><h2>Pick a base country</h2><p>Type a 1337 country or its tag above, or use “Build from …” on any country page.</p></div>';
+      return;
+    }
+    const S = buildSetup(); const lv0 = baseLevel(S.c);
+    $('#bGov').innerHTML = GOVS.map(([g, n]) => `<option value="${esc(g)}"${g === S.g ? ' selected' : ''}>${esc(n)}${g === S.c.gk ? ' (start)' : ''}</option>`).join('');
+    $('#bRel').innerHTML = relOptions(S.c, S.r);
+    // formable nations by tier
+    const forms = formList(S.c).map(x => Object.assign(x, { f: FM[x.fi] }));
+    const levels = [...new Set(forms.map(x => x.f.lvl || 0))].sort((a, b) => a - b);
+    const at = new Map(bd.forms.map(fi => [flv(fi), fi]));
+    tiers.innerHTML = forms.length ? `<p class="bnote">Formable nations, at most one per tier. The game only lets a country form a nation of a higher tier than its current one, so they are formed from the lowest tier up${lv0 ? `; ${esc(S.c.n)} is itself tier ${lv0}` : ''}. Nations marked <span class="pill">any country</span> aren’t tied to a culture: anyone holding the land and meeting the conditions can form them. Nations marked <span class="pill">culture change</span> need ${esc(S.c.n)} to switch to another culture of its culture group first. Nations marked <span class="pill">exists at start</span> are 1337 countries: they can be formed once that country is gone. Every other nation is under “${OTHER_LABEL}” in its tier.</p>` + levels.map(L => {
+      const blocked = L <= lv0;
+      const opt = x => {
+        const all = [x.f.ev ? 'Formed by an event' : '', formNeeds(x.need, x.f)].filter(Boolean).join('; ');
+        const st = resolveNeeds(all, x.other ? openCulture(S.B) : x.cc ? withCulture(S.B, ccPick(x.cc, all, S.B)) : S.B);
+        const nd = [x.cc ? ccText(x.cc) : '', st === false ? all : st].filter(Boolean).join('; ');
+        const req = [x.f.req, x.f.frac ? x.f.frac + '% of the land' : null].filter(Boolean).join(' · ');
+        return `<label class="fopt"><input type="radio" name="tier${L}" value="${x.fi}"${at.get(L) === x.fi ? ' checked' : ''}><span><b>${esc(x.f.n)}</b> <span class="tagchip">${esc(x.f.tag)}</span>${x.f.m === 'new' ? ' <span class="pill ab">Ars Belli</span>' : ''}${existsPill(x.f)}${x.open ? ' <span class="pill">any country</span>' : ''}${x.cc ? ' <span class="pill">culture change</span>' : ''}
+          ${req ? `<small>${esc(req)}</small>` : ''}${nd ? `<small class="${st === false ? 'bad' : ''}">${st === false ? 'Not possible with this government or religion: ' : 'Needs '}${esc(nd)}</small>` : ''}<small>${x.f.refs.length} items tied to the tag</small></span></label>`;
+      };
+      const here = forms.filter(x => (x.f.lvl || 0) === L), oth = here.filter(x => x.other);
+      return `<fieldset class="tier"${blocked ? ' disabled' : ''}><legend>Tier ${L}${blocked ? ` · not above ${esc(S.c.n)}’s tier ${lv0}` : ''}</legend>
+        <label class="fopt"><input type="radio" name="tier${L}" value=""${at.has(L) ? '' : ' checked'}><span>None</span></label>
+        ${here.filter(x => !x.other).map(opt).join('')}
+        ${oth.length ? `<details class="foth"${oth.some(x => at.get(L) === x.fi) ? ' open' : ''}><summary>${OTHER_LABEL} (${oth.length})</summary>${oth.map(opt).join('')}</details>` : ''}
+      </fieldset>`;
+    }).join('') : `<p class="none">${esc(S.c.n)} can form no nation.</p>`;
+    // the built country's content, score and rank
+    aspPicks = REL.get(S.r)?.asp || 0;
+    const refs = buildRefs(S);
+    const Sx = renderSections(refs);
+    const sc = buildRow();
+    const pool = startPool(); const rank = 1 + pool.filter(x => x.base > sc.base).length;
+    const bc = buildCulture(S);
+    const formedN = bd.forms.reduce((t, fi) => t + refs.filter(r => r[1] === 'x' + fi).length, 0);
+    const facts = [
+      ['Base country', `<a href="#${esc(S.c.tag)}">${esc(S.c.n)}</a>`, [S.c.cul, S.c.reg].filter(Boolean).join(' · ')],
+      ['Formed', bd.forms.length ? esc(bd.forms.map(fi => `${FM[fi].n} (tier ${flv(fi)})`).join(' → ')) : 'Nothing yet', bd.forms.length ? `${formedN} items from the formed tags` : 'Pick formable nations above'],
+      ['Culture', esc(bc.changed === '' ? 'Another culture' : bc.changed || S.c.cul || '–'), bc.changed == null ? 'as at start' : 'changed from ' + (S.c.cul || '–') + ' by the formables above'],
+      ['Government', esc(GOVN.get(S.g) || '–'), S.g === S.c.gk ? 'as at start' : 'changed from ' + (S.c.gov || '–')],
+      ['Religion', esc(REL.get(S.r)?.n || '–'), S.r === S.c.rk ? 'as at start' : 'changed from ' + (S.c.rel || '–')],
+      ['Military score', `${sc.base.toFixed(1)}${Math.abs(sc.cond) > 0.05 ? ` <small class="inl">+${sc.cond.toFixed(1)} conditional</small>` : ''}`, `#${rank} of ${pool.length + 1} next to the independent and tributary countries with 8+ locations at their start setup`],
+    ];
+    const toc = Sx.toc.slice();
+    out.innerHTML = `
+      <div class="ctitle"><h2>${esc(buildName(S))}</h2><span class="pill br">Your build</span><a class="buildlink" href="#ranking">See it in the ranking →</a></div>
+      <dl class="facts">${facts.map(f => `<div class="fact"><dt>${esc(f[0])}</dt><dd>${f[1]}${f[2] ? `<small>${esc(f[2])}</small>` : ''}</dd></div>`).join('')}</dl>
+      <details class="totals"><summary><b>Where the score comes from</b><span>top: ${esc(sc.top.map(([i, p]) => `${I[i].n} ${p.toFixed(1)}`).join(', ') || 'nothing')}</span></summary>
+        <div class="why"><div><h4>Base score ${sc.base.toFixed(1)}</h4>${whyList(sc.whyBase)}</div><div><h4>+Conditional ${sc.cond.toFixed(1)}</h4>${whyList(sc.whyCond)}</div></div></details>
+      <div class="bar">
+        <label><input type="checkbox" id="abOnly" ${abOnly ? 'checked' : ''}> Ars Belli only</label>
+        <label><input type="checkbox" id="broad" ${showBroad ? 'checked' : ''}> Show broad content${Sx.hidden ? ` (${Sx.hidden} hidden)` : ''}</label>
+        <input type="search" id="within" placeholder="Find in ${esc(buildName(S))}…" value="${esc(within)}" aria-label="Find in this build">
+      </div>
+      ${agesRow()}
+      ${totalsHtml(Sx.visible)}
+      ${toc.length ? `<nav class="toc" aria-label="Sections">${toc.join('')}</nav>` : ''}
+      ${Sx.html || '<p class="none">Nothing matches these filters.</p>'}
+      <p class="bnote">Content of the formed tags is checked against ${bc.changed === '' ? 'the chosen government and religion (the build takes a culture outside its group, so culture conditions stay as Needs)' : `the build’s culture (${esc(bc.changed || S.c.cul || '–')}) and the chosen government and religion`}; anything else shows as Needs. The base country’s own content was found with its start culture. The base country’s own tag content stays listed: items the game checks with <i>tag</i> (not <i>has or had tag</i>) stop once the tag changes.</p>`;
+    wireContent(out, renderBuild);
+  }
+  $('#bBase').addEventListener('change', e => {
+    const v = e.target.value.trim(); const m = v.match(/\(([A-Z0-9_]+)\)$/);
+    const tag = m && byTag.has(m[1]) ? m[1] : byTag.has(v.toUpperCase()) ? v.toUpperCase() : (C.find(c => c.n.toLowerCase() === v.toLowerCase()) || {}).tag;
+    if (!tag) return;
+    if (tag !== bd.base) Object.assign(bd, { base: tag, gov: '', rel: '', forms: [] });
+    saveBuild(); renderBuild();
+  });
+  $('#bGov').addEventListener('change', e => { const c = byTag.get(bd.base); bd.gov = e.target.value === c.gk ? '' : e.target.value; saveBuild(); renderBuild(); $('#bGov').focus(); });
+  $('#bRel').addEventListener('change', e => { const c = byTag.get(bd.base); bd.rel = e.target.value === c.rk ? '' : e.target.value; saveBuild(); renderBuild(); $('#bRel').focus(); });
+  $('#buildTiers').addEventListener('change', e => {
+    if (e.target.type !== 'radio') return;
+    const name = e.target.name, val = e.target.value;
+    setForms([...$('#buildTiers').querySelectorAll('input[type=radio]:checked')].map(i => i.value).filter(Boolean).map(Number), byTag.get(bd.base));
+    saveBuild(); renderBuild();
+    const again = $('#buildTiers').querySelector(`input[name="${name}"][value="${val}"]`); if (again) again.focus();
+  });
+  function go(tag) { if (location.hash.slice(1) === tag) show(tag); else location.hash = tag; }
+  function show(tag) {
+    const app = document.getElementById('app');
+    const view = tag === 'ranking' ? 'rank' : tag === 'build' || tag.startsWith('build?') ? 'build' : 'country';
+    app.classList.toggle('rank', view === 'rank'); app.classList.toggle('build', view === 'build');
+    for (const [id, v] of [['#vCountries', 'country'], ['#vBuild', 'build'], ['#vRank', 'rank']]) { if (v === view) $(id).setAttribute('aria-current', 'page'); else $(id).removeAttribute('aria-current'); }
+    if (view === 'rank') { app.classList.remove('detail'); renderRanking(); carry = null; return; }
+    if (view === 'build') {
+      // the build view and a country page share element ids, so only one of them is rendered at a time
+      app.classList.remove('detail'); $('#detail').innerHTML = ''; shownTag = null; carry = null;
+      if (tag.startsWith('build?')) parseBuild(tag);
+      saveBuild(); renderBuild(); $('#buildview').scrollTop = 0;
+      return;
+    }
+    $('#buildOut').innerHTML = '';
+    // each country opens on its start government and religion, or on the picks of the ranking it was opened from
+    if (tag !== shownTag) { govPick = carry && carry.g; relPick = carry && carry.r; shownTag = tag; }
+    carry = null;
+    rows.forEach((b, t) => b.setAttribute('aria-current', t === tag ? 'true' : 'false'));
+    renderDetail(tag);
+    document.getElementById('app').classList.toggle('detail', byTag.has(tag));
+    $('#dossier').scrollTop = 0;
+    if (byTag.has(tag)) { const r = rows.get(tag); if (r && r.isConnected) r.scrollIntoView({ block: 'nearest' }); }
+  }
+  window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+  applyFilters();
+  show(location.hash.slice(1));
+})();
+</script>

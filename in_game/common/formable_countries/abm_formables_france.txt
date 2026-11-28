@@ -7,7 +7,7 @@
 # Lotharingia
 REPLACE:LOT_f = {
 	level = 3
-	required_locations_fraction = 0.5
+	required_locations_fraction = 0.60
 	rule = plausible
 
 	potential = {
@@ -17,15 +17,6 @@ REPLACE:LOT_f = {
 			culture = culture:franc_comtois
 			culture = culture:lorrain
 			culture = culture:walloon
-			OR = {
-				tag = LOR
-				tag = BUR
-			}
-		}
-		# Ars Belli: only a German power may claim this
-		OR = {
-			original_capital.region = region:north_german_region
-			original_capital.region = region:south_german_region
 		}
 	}
 
@@ -59,7 +50,7 @@ REPLACE:LOT_f = {
 REPLACE:OCC_f = { #Occitania
 	level = 3
 	rule = plausible
-	required_locations_fraction = 0.75
+	required_locations_fraction = 0.65
 
 	potential = {
 		OR = {
@@ -103,6 +94,44 @@ REPLACE:OCC_f = { #Occitania
 		bordeaux benauges castelnau_de_medoc la_teste_de_buch lesparre_medoc
 		gueret aubusson bellac bourganeuf rochechouart
 		cuneo saluzzo pinerolo pragelato la_mure romans vielha chabanais
+	}
+	form_effect = {
+	}
+}
+
+REPLACE:BGP_f = {
+	level = 2
+	required_locations_fraction = 0.70
+	rule = plausible
+
+	potential = {
+		OR = {
+			culture = culture:arpitan
+			culture = culture:vivaro_alpine
+			culture = culture:franc_comtois
+			culture = culture:provencal
+			OR = {
+				tag = DAU
+				tag = SAV
+			}			
+		}
+	}
+
+	allow = {
+	}
+	
+	name = BGP
+	flag = BGP
+	adjective = BGP_ADJ
+	tag = BGP
+	color = map_arpitan
+	areas = {
+		provence_area
+		savoy_area
+		lyonnais_area
+		franche_comte_area
+		western_switzerland_area
+		central_switzerland_area
 	}
 	form_effect = {
 	}

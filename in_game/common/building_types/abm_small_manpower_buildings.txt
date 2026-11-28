@@ -1,0 +1,267 @@
+﻿#####ArsBelliMod#####
+
+# Ars Belli - smaller manpower buildings. Armory, Training Fields and their successors
+# (Barracks, Regimental Camp, Conscription Center) come in half-size levels: half the manpower,
+# half the soldier employment, half the maintenance and construction goods per level, and a
+# level cap of 1 + population x 0.05 (abm_manpower_max_level in script_values/abm_building_caps.txt):
+# vanilla's base level, twice vanilla's population share, so a location's cap grows in finer steps.
+# Training Fields give 40% less again: 0.003 manpower a level
+# (half of vanilla 0.01 is 0.005). Training slots per level (Barracks 1, Conscription Center 5)
+# and the gold price stay vanilla.
+#
+# REPLACE: blocks are full copies of vanilla manpower_buildings.txt (game 1.4.9); every change is
+# marked #ABM. Re-sync with vanilla on game updates. The 1337 start doubles its two armories.
+
+REPLACE:armory = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
+	
+	category = military_category
+	forbidden_for_estates = yes
+
+	employment_size = abm_half_manpower_employment #ABM half, vanilla manpower_employment (1)
+	
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	important_for_AI = yes
+
+	build_time = soldier_building
+	
+	obsolete = provincial_garrison
+	obsolete = korean_barracks
+	
+	allow = {
+		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+	}
+	remove_if = {
+		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+	}
+	
+	
+	modifier = {
+		local_manpower = 0.005 #ABM half, vanilla 0.01
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+		
+	unique_production_methods = {
+		abm_armory_maintenance = { #ABM renamed from armory_maintenance so it does not collide with the vanilla production method
+			icon_type = building_type
+			icon = armory
+			firearms = 0.25 #ABM half, vanilla 0.5
+			leather = 0.25 #ABM half, vanilla 0.5
+			cloth = 0.05 #ABM half, vanilla 0.10
+			paper = 0.1 #ABM half, vanilla 0.20
+			weaponry = 0.25 #ABM half, vanilla 0.5
+			
+			category = building_maintenance
+		}
+
+	}
+
+
+	construction_demand = abm_half_early_soldier_building_construction #ABM half the goods, vanilla early_soldier_building_construction
+}
+
+REPLACE:training_fields = {
+	audio_tier = 1
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
+	
+	category = military_category
+	forbidden_for_estates = yes
+	
+	employment_size = abm_half_manpower_employment #ABM half, vanilla manpower_employment (1)
+	
+	rural_settlement = yes
+
+	build_time = soldier_building
+	important_for_AI = yes
+	AI_ignore_available_worker_flag = yes #more important than some random RGO
+
+	allow = {
+		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+	}
+	remove_if = {
+		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+	}
+	
+	modifier = {
+		local_manpower = 0.003 #ABM half minus 40%, vanilla 0.01
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	unique_production_methods = {
+		abm_training_fields_maintenance = { #ABM renamed from training_fields_maintenance so it does not collide with the vanilla production method
+			icon_type = building_type
+			icon = training_fields
+			firearms = 0.3 #ABM half, vanilla 0.6
+			leather = 0.3 #ABM half, vanilla 0.6
+			cloth = 0.06 #ABM half, vanilla 0.12
+			paper = 0.12 #ABM half, vanilla 0.24
+			weaponry = 0.3 #ABM half, vanilla 0.6
+			
+			category = building_maintenance
+		}
+
+	}
+
+	construction_demand = abm_half_soldier_building_construction #ABM half the goods, vanilla soldier_building_construction
+}
+
+REPLACE:barracks = {
+	audio_tier = 2
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
+	
+	category = military_category
+	forbidden_for_estates = yes
+
+	employment_size = abm_half_manpower_employment #ABM half, vanilla manpower_employment (1)
+	important_for_AI = yes
+	
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	obsolete = armory
+	
+	build_time = soldier_building
+	
+	allow = {
+		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+	}
+	remove_if = {
+		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+	}
+
+	modifier = {
+		local_manpower = 0.0075 #ABM half, vanilla 0.015
+		can_recruit_regiment_in_this_location = yes
+		max_regiments_trained_at_same_time = 1
+	}
+	
+	unique_production_methods = {
+		abm_barracks_maintenance = { #ABM renamed from barracks_maintenance so it does not collide with the vanilla production method
+			icon_type = building_type
+			icon = barracks
+			firearms = 0.375 #ABM half, vanilla 0.75
+			leather = 0.375 #ABM half, vanilla 0.75
+			cloth = 0.075 #ABM half, vanilla 0.15
+			paper = 0.15 #ABM half, vanilla 0.30
+			weaponry = 0.375 #ABM half, vanilla 0.75
+			
+			category = building_maintenance
+		}
+
+	}
+
+	construction_demand = abm_half_soldier_building_construction #ABM half the goods, vanilla soldier_building_construction
+}
+
+REPLACE:regimental_camp = {
+	audio_tier = 2
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
+	
+	category = military_category
+	forbidden_for_estates = yes
+	important_for_AI = yes
+	AI_ignore_available_worker_flag = yes #more important than some random RGO
+
+	employment_size = abm_half_manpower_employment #ABM half, vanilla manpower_employment (1)
+	
+	obsolete = training_fields
+	
+	rural_settlement = yes
+
+	build_time = soldier_building
+	
+	allow = {
+		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+	}
+	remove_if = {
+		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+	}	
+
+	modifier = {
+		local_manpower = 0.01 #ABM half, vanilla 0.02
+		can_recruit_regiment_in_this_location = yes
+	}
+	
+	unique_production_methods = {
+		abm_regimental_camp_maintenance = { #ABM renamed from regimental_camp_maintenance so it does not collide with the vanilla production method
+			icon_type = building_type
+			icon = regimental_camp
+			firearms = 0.6 #ABM half, vanilla 1.2
+			leather = 0.6 #ABM half, vanilla 1.2
+			cloth = 0.12 #ABM half, vanilla 0.24
+			paper = 0.24 #ABM half, vanilla 0.48
+			weaponry = 0.6 #ABM half, vanilla 1.2
+			
+			category = building_maintenance
+		}
+
+	}
+
+	construction_demand = abm_half_soldier_building_construction #ABM half the goods, vanilla soldier_building_construction
+}
+
+REPLACE:conscription_center = {
+	audio_tier = 3
+	is_foreign = no
+	pop_type = soldiers
+	max_levels = abm_manpower_max_level #ABM 1 + population x 0.05, vanilla manpower_max_level is 1 + population x 0.025
+	important_for_AI = yes	
+	employment_size = abm_half_manpower_employment #ABM half, vanilla manpower_employment (1)
+
+	category = military_category
+	forbidden_for_estates = yes
+	
+	obsolete = regimental_camp
+	obsolete = barracks
+	
+	rural_settlement = yes
+	town = yes
+	city = yes
+	megalopolis = yes
+	
+	build_time = soldier_building
+	
+	allow = {
+		owner = { has_primary_or_accepted_culture = prev.dominant_culture }
+	}
+	remove_if = {
+		NOT = { owner = { has_primary_or_accepted_culture = prev.location.dominant_culture } }
+	}	
+
+	modifier = {
+		local_manpower = 0.0125 #ABM half, vanilla 0.025
+		can_recruit_regiment_in_this_location = yes
+		max_regiments_trained_at_same_time = 5
+	}
+	
+	unique_production_methods = {
+		abm_conscription_center_maintenance = { #ABM renamed from conscription_center_maintenance so it does not collide with the vanilla production method
+			icon_type = building_type
+			icon = conscription_center
+			firearms = 0.735 #ABM half, vanilla 1.47
+			leather = 0.735 #ABM half, vanilla 1.47
+			cloth = 0.145 #ABM half, vanilla 0.29
+			paper = 0.37 #ABM half, vanilla 0.74
+			weaponry = 0.735 #ABM half, vanilla 1.47
+			
+			category = building_maintenance
+		}
+
+	}
+
+	construction_demand = abm_half_soldier_building_construction #ABM half the goods, vanilla soldier_building_construction
+}

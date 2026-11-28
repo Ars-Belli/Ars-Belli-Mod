@@ -1,0 +1,80 @@
+﻿# Ars Belli - vanilla republican_electorate_law (laws/00_republic.txt), REPLACEd for
+# the landholders policy buff. Body is verbatim vanilla; re-sync on a vanilla update.
+# Only the landholders `country_modifier` differs: nobles_estate_levy_size 0.10 -> 0.15
+# and levy_combat_efficiency_modifier 0.05 -> 0.10. The other four policies are untouched.
+#
+# A policy cannot be overridden on its own (`REPLACE:` works on the law block, and the
+# policy ids are nested DB keys), hence the whole law is copied.
+
+REPLACE:republican_electorate_law = {
+	law_category = administrative
+
+	law_gov_group = republic
+
+	potential = {
+		government_type = government_type:republic
+	}
+
+	landholders = {
+		# Ars Belli: nobles_estate_levy_size 0.10 -> 0.15,
+		# levy_combat_efficiency_modifier 0.05 -> 0.10.
+		country_modifier = {
+			nobles_estate_levy_size = 0.15
+			levy_combat_efficiency_modifier = 0.10
+			nobles_estate_target_satisfaction = small_permanent_target_satisfaction
+			global_nobles_estate_power = 0.25
+			monthly_towards_quality = societal_value_monthly_move
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	citizenry = {
+		country_modifier = {
+			monthly_towards_quantity = societal_value_monthly_move
+			burghers_estate_levy_size = 0.10
+			levy_combat_efficiency_modifier = 0.05
+			burghers_estate_target_satisfaction = small_permanent_target_satisfaction
+			global_burghers_estate_power = 0.25
+		}
+		estate_preferences = {
+			burghers_estate
+		}
+		years = 2
+	}
+	dynastic_rule_policy = {
+		country_modifier = {
+			monthly_towards_aristocracy = societal_value_monthly_move
+			diplomatic_reputation = diplomatic_reputation_weak_bonus
+		}
+		estate_preferences = {
+			clergy_estate
+		}
+		years = 2
+	}
+	board_of_admirals_policy = {
+		allow = {
+			num_of_ports > 0
+		}
+		country_modifier = {
+			navy_tradition_decay = -0.001
+			monthly_towards_naval = societal_value_monthly_move
+		}
+		estate_preferences = {
+			burghers_estate
+		}
+		years = 2
+	}
+	military_rulership_policy = {
+		country_modifier = {
+			army_tradition_decay = -0.001
+			levy_combat_efficiency_modifier = 0.20
+			monthly_towards_land = societal_value_monthly_move
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+}

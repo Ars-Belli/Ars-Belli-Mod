@@ -1,1 +1,22 @@
-﻿#This is an empty file for now.
+﻿# Ars Belli: ilkhanate is removed from play. This definition is kept as an inert stub so
+# that vanilla references to international_organization:ilkhanate still resolve (they are
+# used in on_actions, triggers, events and customizable localization); the organization
+# can never be created, joined or led. Its creation is commented out in
+# main_menu/setup/1337/15_international_organizations.txt.
+ilkhanate = {
+	disband_if_no_leader = no
+
+	has_target = no
+	unique = yes
+	expel_members_who_are_targets_of_other_members = no
+	has_leader_country = yes
+	leader_type = none
+
+	create_visible_trigger = { always = no }
+	invite_visible_trigger = { always = no }
+	can_lead_trigger = { always = no }
+	can_join_trigger = { always = no }
+	can_leave_trigger = { always = no }
+	auto_leave_trigger = { always = no }
+	auto_disband_trigger = { always = no }
+}

@@ -43,7 +43,7 @@
 	civil_law_policy = {
 		potential = {
 			OR = {
-				capital.continent = continent:europe
+				capital ?= { continent = continent:europe }
 				religion.group = religion_group:christian
 			}
 		}
@@ -65,8 +65,8 @@
 		potential = {
 			OR = {
 				culture.language = language:english_language
-				capital.region = region:great_britain_region
-				capital.region = region:ireland_region
+				capital ?= { region = region:great_britain_region }
+				capital ?= { region = region:ireland_region }
 			}
 		}
 		allow = {			
@@ -279,9 +279,9 @@
 		potential = {
 			religion = religion:miaphysite
 			OR = {
-				capital.region = region:egypt_region
+				capital ?= { region = region:egypt_region }
 				AND = {
-					capital.region = region:ethiopia_region
+					capital ?= { region = region:ethiopia_region }
 					OR = {
 						has_unlocked_policy_trigger = { type = fetha_negest_policy }
 						current_year > 1500
@@ -291,7 +291,7 @@
 					}
 				}
 				AND = {
-					capital.region = region:nubia_region
+					capital ?= { region = region:nubia_region }
 					current_year > 1400
 					any_neighbor_country = {
 						has_policy = fetha_negest_policy
@@ -319,7 +319,7 @@
 			government_type = government_type:republic
 			OR = {
 				"estate_power(estate_type:burghers_estate)" >= 0.5
-				capital.continent = continent:europe
+				capital ?= { continent = continent:europe }
 				religion.group = religion_group:christian
 			}
 		}

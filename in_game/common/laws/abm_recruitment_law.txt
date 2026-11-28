@@ -1,0 +1,403 @@
+﻿#####ArsBelliMod#####
+
+# Byzantium toned down: the Reformed Tagmata policy gives +10% army maintenance efficiency instead of +20%.
+# A single policy cannot be overridden, so this is a full copy of recruitment_law from 01_military_laws.txt (game 1.4.9);
+# the only change is marked #ABM. Re-sync the whole law on game updates (no DLC injects into it as of 1.4.9).
+
+REPLACE:recruitment_law = {
+	law_category = military
+	#Age of Traditions
+	expanded_levies_policy = {
+		country_modifier = {
+			peasants_estate_levy_size = 0.05
+			monthly_towards_free_subjects = societal_value_monthly_move
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	noble_levies_policy = {
+		country_modifier = {
+			nobles_estate_levy_size = 0.2
+			monthly_towards_aristocracy = societal_value_monthly_move
+		}
+		estate_preferences = {
+			burghers_estate
+		}
+		years = 2
+	}
+	burghers_levies_policy = {
+		country_modifier = {
+			global_navy_levy_size_modifier = 0.2
+			monthly_towards_plutocracy = societal_value_monthly_move
+		}
+		estate_preferences = {
+			peasants_estate
+		}
+		years = 2
+	}
+	calpulli_policy = {
+		unique = yes
+		potential = {
+			culture = culture:nahua_culture
+		}
+		country_modifier = {
+			global_manpower_modifier = 0.1
+		}
+		estate_preferences = {
+			peasants_estate
+		}
+		years = 2
+	}
+	ottoman_war_slave_tax = {
+		unique = yes
+
+		potential = {
+			culture = culture:turkish_culture
+		}
+
+		country_modifier = {
+			global_slaves_goods_output_modifier = 0.5
+			global_slave_pop_satisfaction = -0.05
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+	#Age of Renaissance
+	reformed_hussite_armies_policy = {
+		unique = yes
+		potential = {
+			has_unlocked_policy_trigger = { type = reformed_hussite_armies_policy }
+			OR = {
+				religion = religion:hussite
+				"religion_percentage_in_country(religion:hussite)" > 0.25
+			}
+		}
+		country_modifier = {
+			monthly_towards_offensive = societal_value_monthly_move
+			global_manpower_modifier = 0.1
+		}
+		estate_preferences = {
+			nobles_estate
+			clergy_estate
+		}
+		years = 2
+	}
+	mercenary_army_policy = {
+		unique = yes
+		potential = {
+			NOT = { culture = { has_culture_group = culture_group:italian_group } }
+		}
+		allow = {
+			NOT = { current_age = age_1_traditions }
+		}
+		country_modifier = {
+			mercenary_maintenance_efficiency = 0.2
+			monthly_towards_individualism = societal_value_monthly_move
+		}
+		estate_preferences = {
+			nobles_estate
+			burghers_estate
+		}
+		years = 2
+	}
+	condottieri_contracts_policy = {
+		unique = yes
+		potential = {
+			culture = { has_culture_group = culture_group:italian_group }
+		}
+		allow = {
+			NOT = { current_age = age_1_traditions }
+		}
+		country_modifier = {
+			global_mercenaries_modifier = 0.2
+			mercenary_maintenance_efficiency = 0.1
+			monthly_towards_individualism = societal_value_monthly_move
+		}
+		estate_preferences = {
+			nobles_estate
+			burghers_estate
+		}
+		years = 2
+	}
+
+	devshirme_system_policy = {
+		unique = yes
+		potential = {
+			culture = culture:turkish_culture
+		}
+		allow = {
+			NOT = { current_age = age_1_traditions }
+			NOT = { current_age = age_2_renaissance }
+			custom_tooltip = {
+				text = devshirme_system_policy_why_tt
+				NOT = { has_variable = devshirme_abolished }
+			}
+		}
+		country_modifier = {
+			wrong_culture_levy_size = 0.25
+			monthly_towards_quantity = societal_value_monthly_move
+		}
+		estate_preferences = {
+			nobles_estate
+		}
+		years = 2
+	}
+	black_army_policy = {
+		unique = yes
+		potential = {
+			culture = culture:hungarian
+		}
+		allow = {
+			NOT = { current_age = age_1_traditions }
+			NOT = { current_age = age_2_renaissance }
+		}
+		country_modifier = {
+			discipline = 0.025
+			mercenary_maintenance_efficiency = 0.1
+			monthly_towards_quality = societal_value_monthly_move
+		}
+		estate_preferences = {
+			burghers_estate
+		}
+		years = 2
+	}
+	#Age of Absolutism
+	early_standing_army_policy = {
+		unique = yes
+		potential = {
+			NOT = { culture = { has_culture_group = culture_group:british_group } }
+			NOT = { culture = culture:swedish }
+			NOT = { culture = culture:finnish }
+			NOT = { tag = PRU }
+		}
+		allow = {
+			custom_tooltip = {
+				text = early_standing_army_policy_why
+				OR = {
+					current_age = age_5_absolutism
+					current_age = age_6_revolutions
+				}
+			}
+		}
+		country_modifier = {
+			global_manpower_modifier = 0.1
+		}
+		estate_preferences = {
+			crown_estate
+			peasants_estate
+		}
+		years = 2
+	}
+	new_model_army_policy = {
+		unique = yes
+		potential = {
+			culture = { has_culture_group = culture_group:british_group }
+		}
+		allow = {
+			OR = {
+				current_age = age_5_absolutism
+				current_age = age_6_revolutions
+			}
+		}
+		country_modifier = {
+			global_manpower_modifier = 0.1
+			food_consumption_modifier = -0.1
+			monthly_towards_quality = societal_value_monthly_move
+		}
+		estate_preferences = {
+			crown_estate
+			peasants_estate
+		}
+		years = 2
+	}
+	allotment_system_policy = {
+		unique = yes
+		potential = {
+			OR = {
+				culture = culture:swedish
+				culture = culture:finnish
+			}
+		}
+		allow = {
+			OR = {
+				current_age = age_5_absolutism
+				current_age = age_6_revolutions
+			}
+		}
+		country_modifier = {
+			global_manpower_modifier = 0.25
+		}
+		estate_preferences = {
+			crown_estate
+			peasants_estate
+		}
+		years = 2
+	}
+	canton_system_policy = {
+		unique = yes
+		potential = {
+			OR = {
+				has_or_had_tag = PRU
+				has_or_had_tag = BRA
+			}
+			has_unlocked_policy_trigger = { type = canton_system_policy }
+		}
+		allow = {
+			current_age = age_6_revolutions
+		}
+		country_modifier = {
+			global_manpower_modifier = 0.15
+			regiment_recruit_speed = 0.1
+			monthly_towards_quantity = societal_value_monthly_move
+		}
+		estate_preferences = {
+			crown_estate
+			peasants_estate
+		}
+		years = 2
+	}
+	mansabdar_system = {
+		unique = yes
+		potential = {
+			has_unlocked_policy_trigger = { type = mansabdar_system }
+		}
+		country_modifier = {
+			army_tradition_from_battle = 0.25
+			army_heavy_cavalry_maintenance_cost_modifier = -0.1
+			army_heavy_cavalry_power = 0.1
+		}
+		estate_preferences = {
+			crown_estate
+			nobles_estate
+		}
+		years = 2
+	}
+	#Age of Revolution
+	elite_training_policy = {
+		allow = {
+			current_age = age_6_revolutions
+		}
+		country_modifier = {
+			monthly_towards_quality = societal_value_monthly_move
+			global_manpower_modifier = -0.25
+			discipline = 0.05
+		}
+		estate_preferences = {
+			crown_estate
+			peasants_estate
+		}
+		years = 2
+	}
+	levee_en_masse_policy = {
+		allow = {
+			current_age = age_6_revolutions
+		}
+		country_modifier = {
+			monthly_towards_quantity = societal_value_monthly_move
+			global_manpower_modifier = 0.2
+		}
+		estate_preferences = {
+			crown_estate
+			peasants_estate
+		}
+		years = 2
+	}
+	military_settlements_policy = {
+		unique = yes
+		potential = {
+			culture = { has_culture_group = culture_group:russian_group }
+			has_variable = military_settlements
+		}
+		allow = {
+			current_age = age_6_revolutions
+		}
+		country_modifier = {
+			global_manpower_modifier = 0.2
+			army_maintenance_efficiency = 0.2
+			global_monthly_food_modifier = monthly_food_productivity_mild_penalty
+			monthly_towards_outward = societal_value_monthly_move
+		}
+		estate_preferences = {
+			crown_estate
+			peasants_estate
+		}
+		years = 2
+	}
+
+	benefits_for_privateers = {
+		unique = yes
+		potential = {
+			has_reform = government_reform:pirate_brethren_reform
+		}
+		country_modifier = {
+			global_sailors_modifier = 0.2
+			monthly_towards_naval = societal_value_monthly_move
+		}
+		estate_preferences = {
+			crown_estate
+			peasants_estate
+		}
+		years = 2
+	}
+
+	mch_green_standard_army = {
+		unique = yes
+		potential = {
+			has_unlocked_policy_trigger = {
+				type = mch_green_standard_army
+			}
+		}
+		country_modifier = {
+			pop_join_rebel_threshold = -0.01
+			monthly_towards_land = societal_value_monthly_move
+		}
+		location_modifier ={
+			potential_trigger = {
+				dominant_culture = {
+					has_culture_group = culture_group:chinese_group
+				}
+			}
+			local_manpower_modifier = 0.25
+			local_levy_size_modifier = 0.25
+		}
+		years = 2
+	}
+	byz_varangian_guard_policy = {
+		unique = yes
+		potential = {
+			has_or_had_tag = BYZ
+		}
+		country_modifier = {
+			num_of_varangian_units = 2
+			mercenary_range_modifier = 0.2
+			wrong_culture_levy_size = 0.1
+			monthly_towards_defensive = societal_value_monthly_move
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+	byz_tagmata_policy_upgraded = {
+		unique = yes
+		potential = {
+			has_or_had_tag = BYZ
+			has_dlc = "d008_fate_of_the_phoenix"
+			has_unlocked_policy_trigger = { type = byz_tagmata_policy_upgraded }
+		}
+		country_modifier = {
+			discipline = 0.025
+			army_tradition_from_battle = 0.5
+			army_maintenance_efficiency = 0.1 #ABM half, vanilla 0.2
+			monthly_towards_quality = societal_value_monthly_move
+		}
+		estate_preferences = {
+			crown_estate
+		}
+		years = 2
+	}
+}

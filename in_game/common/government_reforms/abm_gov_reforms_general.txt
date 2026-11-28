@@ -1,4 +1,5 @@
 ﻿abm_eastern_christian_militant_church = {
+	icon = shield_of_the_faith_reform
 	major = yes
 	unique = yes
 	age = age_1_traditions
@@ -100,12 +101,13 @@ abm_trade_emporium = {
 # a potential_trigger. Upkeep efficiency has NO rural-scoped key (only the country-wide
 # `building_upkeep_efficiency`), so that half sits in country_modifier and helps towns too.
 abm_traditional_land_tenure = {
+	icon = agrarian_community
 	societal_values = {
 		traditional_economy_focus
 	}
 
 	potential = {
-		societal_value:capital_economy_vs_traditional_economy >= 50
+		societal_value:capital_economy_vs_traditional_economy >= 65
 	}
 
 	# Costs no reform slot: the reform hands back the slot it occupies.
@@ -129,18 +131,18 @@ abm_traditional_land_tenure = {
 	years = 2
 }
 
-# Urban counterpart of abm_traditional_land_tenure: chartered guilds instead of open
-# markets. `is_city = yes` is the vanilla urban test (towns, cities and megalopolises).
+# Urban counterpart of abm_traditional_land_tenure, on the Capital Economy side (<= -65). `is_city = yes` is the vanilla urban test (towns, cities and megalopolises).
 # Growth, not capacity: pop capacity only bites at the ceiling, which towns are far from,
 # and there is no non-rural growth key - hence local_population_growth on an is_city
 # location_modifier. +0.001 a year is ~+40% relative on a typical ~0.25%/yr location.
 abm_guild_charters = {
+	icon = urban_guilds
 	societal_values = {
-		traditional_economy_focus
+		capital_economy_focus #ABM was traditional_economy_focus; the reform needs 65+ toward Capital Economy
 	}
 
 	potential = {
-		societal_value:capital_economy_vs_traditional_economy >= 50
+		societal_value:capital_economy_vs_traditional_economy <= -65
 	}
 
 	# Costs no reform slot: the reform hands back the slot it occupies.

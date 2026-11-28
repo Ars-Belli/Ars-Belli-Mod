@@ -39,3 +39,56 @@ abm_rough_terrain_plateaus_in_original_capital_region = {
 		}
 	}
 }
+
+# --- Alpine privilege -----------------------------------------------------------
+# A fixed list of areas instead of "the region of our original capital": the Alpine
+# privilege is about the Alps, not about where a country happens to keep its court.
+# How the requested names map to the game's area data (vanilla map_data/definitions.txt):
+#   provence   -> provence_area
+#   savoy      -> savoy_area
+#   piedmont   -> piemonte_area (Italian spelling in the data)
+#   lombardy   -> lombardy_area
+#   switzerland-> central_ / eastern_ / western_switzerland_area
+#   romandy    -> western_switzerland_area (already inside switzerland above)
+#   tyrol      -> tirol_area
+#   carinthia  -> carinthia_area
+#   raetia     -> no area of that name; it is graubunden_province (eastern_switzerland_area)
+#                 + valtellina_province (lombardy_area) + trentino_province (tirol_area),
+#                 so it is already fully covered by the three entries above.
+abm_alpine_area = {
+	OR = {
+		area = area:provence_area
+		area = area:savoy_area
+		area = area:piemonte_area
+		area = area:lombardy_area
+		area = area:central_switzerland_area
+		area = area:eastern_switzerland_area
+		area = area:western_switzerland_area
+		area = area:tirol_area
+		area = area:carinthia_area
+	}
+}
+
+abm_alpine_rough_terrain_mountains = {
+	custom_tooltip = {
+		text = abm_tt_alpine_mountains
+		topography = mountains
+		abm_alpine_area = yes
+	}
+}
+
+abm_alpine_rough_terrain_hills = {
+	custom_tooltip = {
+		text = abm_tt_alpine_hills
+		topography = hills
+		abm_alpine_area = yes
+	}
+}
+
+abm_alpine_rough_terrain_plateaus = {
+	custom_tooltip = {
+		text = abm_tt_alpine_plateaus
+		topography = plateau
+		abm_alpine_area = yes
+	}
+}
